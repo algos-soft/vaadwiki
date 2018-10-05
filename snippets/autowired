@@ -1,0 +1,75 @@
+
+    DEPRECATO
+    /**
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
+     */
+    @Autowired
+
+
+    /**
+     * L'istanza viene  dichiarata nel costruttore @Autowired della sottoclasse concreta <br>
+     */
+
+
+    /**
+     * Costruttore @Autowired <br>
+     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
+     */
+
+
+    /**
+     * Costruttore @Autowired <br>
+     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
+     * Regola il modello-dati specifico e lo passa al costruttore della superclasse <br>
+     */
+
+    /**
+     * Service (@Scope = 'singleton') iniettato dal costruttore @Autowired di Spring <br>
+     * Unico per tutta l'applicazione. Usato come libreria.
+     */
+    private RoleService service;
+
+
+    /**
+     * Recupera da StaticContextAccessor una istanza della classe <br>
+     * La classe deve avere l'annotation @Scope = 'singleton', and is created at the time of class loading <br>
+     */
+    public AddressPresenter addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
+
+
+    /**
+     * Service (@Scope = 'singleton') iniettato da StaticContextAccessor e usato come libreria <br>
+     * Unico per tutta l'applicazione. Usato come libreria.
+     */
+    public ATextService textService = StaticContextAccessor.getBean(ATextService.class);
+
+
+    /**
+     * Service (@Scope = 'singleton') recuperato come istanza dalla classe e usato come libreria <br>
+     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+     */
+    public ATextService text = ATextService.getInstance();
+
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected RoleData roleData;
+
+    /**
+     * Istanza (@Scope = 'prototype') inietta da Spring ogni volta che necessita<br>
+     */
+    @Autowired
+    private TurnoCell turno;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
+     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
+     */
+    @Autowired
+    @Qualifier(TASK_FUN)
+    private ATask task;
