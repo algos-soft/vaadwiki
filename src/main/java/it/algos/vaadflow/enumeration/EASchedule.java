@@ -18,11 +18,16 @@ import org.springframework.context.annotation.Scope;
 public enum EASchedule {
 
     giorno("0 0 * * *", "ogni giorno a mezzanotte"),
-    giornoQuintoMinuto("5 0 * * *", "ogni giorno 5 minuti dopo mezzanotte"),
-    giornoSestoMinuto("6 0 * * *", "ogni giorno 6 minuti dopo mezzanotte"),
-    giornoSettimoMinuto("7 0 * * *", "ogni giorno 7 minuti dopo mezzanotte"),
-    giornoOttavoMinuto("8 0 * * *", "ogni giorno 8 minuti dopo mezzanotte"),
-    giornoNonoMinuto("9 0 * * *", "ogni giorno 9 minuti dopo mezzanotte"),
+    giornoPrimoMinuto("1 0 * * *","ogni giorno 5 minuti dopo mezzanotte"),
+    giornoSecondoMinuto("2 0 * * *","ogni giorno 5 minuti dopo mezzanotte"),
+    giornoTerzoMinuto("3 0 * * *","ogni giorno 5 minuti dopo mezzanotte"),
+    giornoQuartoMinuto("4 0 * * *","ogni giorno 5 minuti dopo mezzanotte"),
+    giornoQuintoMinuto("5 0 * * *","ogni giorno 5 minuti dopo mezzanotte"),
+    giornoSestoMinuto("6 0 * * *","ogni giorno 6 minuti dopo mezzanotte"),
+    giornoSettimoMinuto("7 0 * * *","ogni giorno 7 minuti dopo mezzanotte"),
+    giornoOttavoMinuto("8 0 * * *","ogni giorno 8 minuti dopo mezzanotte"),
+    giornoNonoMinuto("9 0 * * *","ogni giorno 9 minuti dopo mezzanotte"),
+    giornoDecimoMinuto("10 0 * * *","ogni giorno 9 minuti dopo mezzanotte"),
     oraQuintoMinuto("5 * * * *", "ogni ora, al minuto 5"),
     minuto("* * * * *", "ogni minuto"),
     settimanaLunedi("0 0 * * 1", "ogni settimana nella notte tra domenica e lunedi");

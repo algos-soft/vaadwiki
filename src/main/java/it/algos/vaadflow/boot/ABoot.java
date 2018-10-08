@@ -1,11 +1,15 @@
 package it.algos.vaadflow.boot;
 
 import it.algos.vaadflow.modules.address.AddressData;
+import it.algos.vaadflow.modules.anno.AnnoData;
 import it.algos.vaadflow.modules.company.CompanyData;
+import it.algos.vaadflow.modules.giorno.GiornoData;
 import it.algos.vaadflow.modules.logtype.LogtypeData;
+import it.algos.vaadflow.modules.mese.MeseData;
 import it.algos.vaadflow.modules.person.PersonData;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.modules.role.RoleData;
+import it.algos.vaadflow.modules.secolo.SecoloData;
 import it.algos.vaadflow.modules.utente.UtenteData;
 import it.algos.vaadflow.service.ABootService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +74,26 @@ public abstract class ABoot implements ServletContextListener {
      */
     @Autowired
     private LogtypeData logtype;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    private SecoloData secolo;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    private MeseData mese;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    private AnnoData anno;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    private GiornoData giorno;
 
     /**
      * Executed on container startup
@@ -113,6 +137,10 @@ public abstract class ABoot implements ServletContextListener {
         this.person.loadData();
         this.company.loadData();
         this.logtype.loadData();
+        this.secolo.loadData();
+        this.mese.loadData();
+        this.anno.loadData();
+        this.giorno.loadData();
     }// end of method
 
 

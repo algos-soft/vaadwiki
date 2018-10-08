@@ -14,8 +14,15 @@ public class FlowCost {
 	public final static String TAG_TYP = "logtype";
     public final static String TAG_UTE = "utente";
     public final static String TAG_VER = "versione";
+    public final static String TAG_SEC = "secolo";
+    public final static String TAG_MES = "mese";
+    public final static String TAG_ANN = "anno";
+    public final static String TAG_GIO = "giorno";
     public static final Locale APP_LOCALE = Locale.US;
     public final static boolean DEBUG = false;
+
+    public static final String VUOTA = "";
+    public static final String SPAZIO = " ";
 
     public final static Class<? extends RouterLayout> LAYOUT = MainLayout.class;
     public final static String LAYOUT_NAME = "MainLayout";
@@ -133,6 +140,10 @@ public class FlowCost {
     public final static String SHOW_USER = "showUser";
     public final static String SHOW_LOG = "showLog";
     public final static String SHOW_LOGTYPE = "showLogType";
+    public final static String SHOW_SECOLO = "showSecolo";
+    public final static String SHOW_ANNO = "showAnno";
+    public final static String SHOW_MESE = "showMese";
+    public final static String SHOW_GIORNO = "showGiorno";
     public  static List<Class> MENU_CLAZZ_LIST = new ArrayList<>();
     public  static String PROJECT_NAME = "vaadinflow";
     public  static String PROJECT_VERSION = "0.1";
@@ -149,5 +160,14 @@ public class FlowCost {
 
     public final static String STOP_SAVE = "nonRegistrare";
 
+    //--chiavi mappa costruzione giorni
+    public final static String PRIMO_GIORNO_MESE = "1º";
+    public final static String KEY_MAPPA_GIORNI_MESE_NUMERO = "meseNumero";
+    public final static String KEY_MAPPA_GIORNI_MESE_TESTO = "meseTesto";
+    public final static String KEY_MAPPA_GIORNI_NORMALE = "normale";
+    public final static String KEY_MAPPA_GIORNI_BISESTILE = "bisestile";
+    public final static String KEY_MAPPA_GIORNI_NOME = "nome";
+    public final static String KEY_MAPPA_GIORNI_TITOLO = "titolo";
+    public final static String KEY_MAPPA_GIORNI_MESE_MESE = "meseMese";
 
 }// end of static class

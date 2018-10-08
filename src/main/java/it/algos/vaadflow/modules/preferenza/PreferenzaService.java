@@ -333,6 +333,39 @@ public class PreferenzaService extends AService {
     } // end of method
 
 
+    public Preferenza setBool(String keyCode, boolean value) {
+        Preferenza pref = findByKeyUnica(keyCode);
+
+        if (pref != null && pref.type == EAPrefType.bool) {
+            pref = this.setValue(keyCode, value);
+        }// end of if cycle
+
+        return pref;
+    } // end of method
+
+
+    public Preferenza setInt(String keyCode, int value) {
+        Preferenza pref = findByKeyUnica(keyCode);
+
+        if (pref != null && pref.type == EAPrefType.integer) {
+            pref = this.setValue(keyCode, value);
+        }// end of if cycle
+
+        return pref;
+    } // end of method
+
+
+    public Preferenza setDate(String keyCode, LocalDateTime value) {
+        Preferenza pref = findByKeyUnica(keyCode);
+
+        if (pref != null && pref.type == EAPrefType.date) {
+            pref = this.setValue(keyCode, value);
+        }// end of if cycle
+
+        return pref;
+    } // end of method
+
+
     public void saveValue(String keyCode, Object value) {
         Preferenza pref = setValue(keyCode, value);
 

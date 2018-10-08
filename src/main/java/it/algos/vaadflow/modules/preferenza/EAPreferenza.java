@@ -29,6 +29,10 @@ public enum EAPreferenza {
     showVersione(FlowCost.SHOW_VERSION, show(), EAPrefType.bool, true),
     showLog(FlowCost.SHOW_LOG, show(), EAPrefType.bool, true),
     showLogType(FlowCost.SHOW_LOGTYPE, show(), EAPrefType.bool, true),
+    showSecolo(FlowCost.SHOW_SECOLO, show(), EAPrefType.bool, true),
+    showAnno(FlowCost.SHOW_ANNO, show(), EAPrefType.bool, true),
+    showMese(FlowCost.SHOW_MESE, show(), EAPrefType.bool, true),
+    showGiorno(FlowCost.SHOW_GIORNO, show(), EAPrefType.bool, true),
     usaLogMail(FlowCost.USA_LOG_MAIL, "Uso della mail spedita da un log. Di default false", EAPrefType.bool, false),
     logMailAddress(FlowCost.LOG_MAIL_ADDRESS, "Email a cui spedire i log di posta", EAPrefType.string, "gac@algos.it"),;
 

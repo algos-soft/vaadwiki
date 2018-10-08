@@ -42,12 +42,6 @@ public class CompanyData extends AData {
     @Autowired
     protected PersonService personService;
 
-    /**
-     * Il service viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
-     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
-     */
-    private CompanyService service;
-
 
     /**
      * Costruttore @Autowired <br>
@@ -60,32 +54,14 @@ public class CompanyData extends AData {
     @Autowired
     public CompanyData(@Qualifier(TAG_COM) IAService service) {
         super(Company.class, service);
-        this.service = (CompanyService) service;
     }// end of Spring constructor
 
-
-    /**
-     * Metodo invocato da ABoot <br>
-     * <p>
-     * Creazione di una collezione - Solo se non ci sono records
-     */
-    @Override
-    public void loadData() {
-        int numRec = super.count();
-
-        if (numRec == 0) {
-            numRec = creaAll();
-            log.warn("Algos - Creazione dati iniziali CompanyData.loadData(): " + numRec + " schede");
-        } else {
-            log.info("Algos - Data. La collezione Company è presente: " + numRec + " schede");
-        }// end of if/else cycle
-    }// end of method
 
 
     /**
      * Creazione della collezione
      */
-    private int creaAll() {
+    protected int creaAll() {
         int num = 0;
         String code;
         String descrizione;
@@ -106,7 +82,7 @@ public class CompanyData extends AData {
             eaAddress = company.getAddress();
             indirizzo = addressService.newEntity(eaAddress);
 
-            service.crea(code, descrizione, contatto, telefono, email, indirizzo);
+            ((CompanyService)service).crea(code, descrizione, contatto, telefono, email, indirizzo);
             num++;
         }// end of for cycle
 

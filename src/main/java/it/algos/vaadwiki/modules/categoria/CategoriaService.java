@@ -49,12 +49,15 @@ public class CategoriaService extends AttNazProfCatService {
     private final static long serialVersionUID = 1L;
 
     private final static String NOME_CATEGORIA = "Nati nel 1812";
+
+
     /**
      * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
      * Spring costruisce una implementazione concreta dell'interfaccia MongoRepository (prevista dal @Qualifier) <br>
      * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
     public CategoriaRepository repository;
+
     @Autowired
     protected ADateService date;
 

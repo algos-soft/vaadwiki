@@ -118,6 +118,4 @@ public class @ENTITY@Service extends AService {
 
     @IDKEYSPECIFICA@
 
-    @NEWORDINE@
-
 }// end of class

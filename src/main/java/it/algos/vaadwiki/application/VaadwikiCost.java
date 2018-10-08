@@ -20,9 +20,15 @@ import it.algos.vaadflow.annotation.AIScript;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovrascrivibile = false)
 public class VaadwikiCost {
+	public final static String TAG_SEC = "secolo";
+	public final static String TAG_MES = "mese";
+	public final static String TAG_ANN = "anno";
+	public final static String TAG_GIO = "giorno";
+	public final static String TAG_PRO = "professione";
 	public final static String TAG_NAZ = "nazionalita";
 	public final static String TAG_ATT = "attivita";
     public final static String TAG_CAT = "categoria";
+    public final static String TAG_BIO = "bio";
 
     // daemons
     public final static String BIO = "Bio";

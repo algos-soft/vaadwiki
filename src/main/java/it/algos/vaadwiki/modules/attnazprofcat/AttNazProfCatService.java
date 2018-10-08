@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.modules.attnazprofcat;
 
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AService;
 import it.algos.wiki.Api;
@@ -34,6 +35,12 @@ public abstract class AttNazProfCatService extends AService {
     protected String titoloModulo;
     protected String codeLastDownload;
     protected String durataLastDownload;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected PreferenzaService pref;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -119,7 +126,7 @@ public abstract class AttNazProfCatService extends AService {
     protected void setLastDownload(long inizio) {
         int delta = 1000;
         LocalDateTime lastDownload = LocalDateTime.now();
-//        pref.setDate(codeLastDownload, lastDownload); @todo rimettere
+        pref.setDate(codeLastDownload, lastDownload);
 
         long fine = System.currentTimeMillis();
         long durata = fine - inizio;
@@ -129,7 +136,7 @@ public abstract class AttNazProfCatService extends AService {
         } else {
             value = 1;
         }// end of if/else cycle
-//        pref.setInt(durataLastDownload, value); @todo rimettere
+        pref.setInt(durataLastDownload, value);
     }// end of method
 
 }// end of class

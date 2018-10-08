@@ -1,6 +1,8 @@
 package it.algos.vaadflow.service;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.enumeration.EAMese;
 import it.algos.vaadflow.enumeration.EATime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -12,10 +14,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.util.*;
+
+import static it.algos.vaadflow.application.FlowCost.*;
 
 /**
  * Project springvaadin
@@ -30,6 +31,13 @@ import java.util.Locale;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class ADateService {
+
+
+    /**
+     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
+     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+     */
+    public AArrayService array = AArrayService.getInstance();
 
 
     private static final String INFERIORE_SECONDO = "meno di un sec.";
@@ -732,6 +740,98 @@ public class ADateService {
     public String deltaText(long inizio) {
         long fine = System.currentTimeMillis();
         return toText(fine - inizio);
+    }// end of method
+
+
+    /**
+     * Costruisce tutti i giorni dell'anno
+     * Considera anche l'anno bisestile
+     * <p>
+     * Restituisce un array di Map
+     * Ogni mappa ha:
+     * numeroMese
+     * #progressivoNormale
+     * #progressivoBisestile
+     * nome  (numero per il primo del mese)
+     * titolo (1° per il primo del mese)
+     */
+    public ArrayList<HashMap> getAllGiorni() {
+        ArrayList<HashMap> listaAnno = new ArrayList<HashMap>();
+        ArrayList<HashMap> listaMese;
+        int progAnno = 0;
+
+        for (int k = 1; k <= 12; k++) {
+            listaMese = getGiorniMese(k, progAnno);
+            listaAnno = array.somma(listaAnno, listaMese);
+            progAnno += listaMese.size();
+        }// end of for cycle
+
+        return listaAnno;
+    }// end of method
+
+
+    /**
+     * Costruisce tutti i giorni del mese
+     * Considera anche l'anno bisestile
+     * <p>
+     * Restituisce un array di Map
+     * Ogni mappa ha:
+     * numeroMese
+     * nomeMese
+     * #progressivoNormale
+     * #progressivoBisestile
+     * nome  (numero per il primo del mese)
+     * titolo (1° per il primo del mese)
+     *
+     * @param numMese  numero del mese, partendo da 1 per gennaio
+     * @param progAnno numero del giorno nell'anno, partendo da 1 per il 1° gennaio
+     * @return lista di mappe, una per ogni giorno del mese considerato
+     */
+    public  ArrayList<HashMap> getGiorniMese(int numMese, int progAnno) {
+        ArrayList<HashMap> listaMese = new ArrayList<HashMap>();
+        HashMap mappa;
+        int giorniDelMese;
+        String nomeMese;
+        EAMese mese = EAMese.getMese(numMese);
+        nomeMese = EAMese.getLong(numMese);
+        giorniDelMese = EAMese.getGiorni(numMese,2016);
+        final int taglioBisestile = 60;
+        String tag;
+        String tagUno;
+
+        //--patch per febbraio
+        if (numMese == 2) {
+            giorniDelMese++;
+        }// fine del blocco if
+
+        for (int k = 1; k <= giorniDelMese; k++) {
+            progAnno++;
+            tag = k + SPAZIO + nomeMese;
+            mappa = new HashMap();
+            mappa.put(KEY_MAPPA_GIORNI_MESE_NUMERO, numMese);
+            mappa.put(KEY_MAPPA_GIORNI_MESE_TESTO, nomeMese);
+            mappa.put(KEY_MAPPA_GIORNI_NOME, tag);
+            mappa.put(KEY_MAPPA_GIORNI_BISESTILE, progAnno);
+            mappa.put(KEY_MAPPA_GIORNI_NORMALE, progAnno);
+            mappa.put(KEY_MAPPA_GIORNI_MESE_MESE, mese);
+            if (k == 1) {
+                mappa.put(KEY_MAPPA_GIORNI_TITOLO, PRIMO_GIORNO_MESE + SPAZIO + nomeMese);
+            } else {
+                mappa.put(KEY_MAPPA_GIORNI_TITOLO, tag);
+            }// fine del blocco if-else
+
+            //--gestione degli anni bisestili
+            if (progAnno == taglioBisestile) {
+                mappa.put(KEY_MAPPA_GIORNI_NORMALE, 0);
+            }// fine del blocco if
+            if (progAnno > taglioBisestile) {
+                mappa.put(KEY_MAPPA_GIORNI_NORMALE, progAnno - 1);
+            }// fine del blocco if
+
+            listaMese.add(mappa);
+        } // fine del ciclo for
+
+        return listaMese;
     }// end of method
 
 }// end of class

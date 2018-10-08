@@ -100,6 +100,19 @@ public class PersonService extends AService {
         this.repository = (PersonRepository) repository;
     }// end of Spring constructor
 
+    /**
+     * Crea una entity <br>
+     *
+     * @param nome:      (obbligatorio, non unico)
+     * @param cognome:   (obbligatorio, non unico)
+     * @param telefono:  (facoltativo)
+     * @param indirizzo: via, nome e numero (facoltativo)
+     *
+     * @return la entity trovata o appena creata
+     */
+    public Person crea(String nome, String cognome, String telefono, Address indirizzo) {
+        return crea(nome, cognome, telefono, indirizzo, "", "", (List<Role>) null, "", false, false);
+    }// end of method
 
     /**
      * Crea una entity <br>
@@ -132,12 +145,7 @@ public class PersonService extends AService {
             String mail,
             boolean locked,
             boolean usaSuperClasse) {
-        Person entity;
-
-        entity = newEntity(nome, cognome, telefono, indirizzo, userName, passwordInChiaro, ruoli, mail, locked, usaSuperClasse);
-        save(entity);
-
-        return entity;
+        return (Person) save(newEntity(nome, cognome, telefono, indirizzo, userName, passwordInChiaro, ruoli, mail, locked, usaSuperClasse));
     }// end of method
 
     /**
@@ -305,6 +313,18 @@ public class PersonService extends AService {
         String cognome = persona.cognome != null ? persona.cognome : "";
 
         return pref.isBool(FlowCost.USA_SECURITY) ? utenteService.getPropertyUnica(entityBean) : nome + cognome;
+    }// end of method
+
+
+    /**
+     * Crea una entity <br>
+     *
+     * @param eaPerson: enumeration di dati iniziali di prova
+     *
+     * @return la entity trovata o appena creata
+     */
+    public Person crea(EAPerson eaPerson) {
+        return (Person) save(newEntity(eaPerson));
     }// end of method
 
 

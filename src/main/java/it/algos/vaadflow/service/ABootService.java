@@ -4,14 +4,18 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.developer.DeveloperView;
 import it.algos.vaadflow.modules.address.AddressViewList;
+import it.algos.vaadflow.modules.anno.AnnoViewList;
 import it.algos.vaadflow.modules.company.CompanyViewList;
+import it.algos.vaadflow.modules.giorno.GiornoViewList;
 import it.algos.vaadflow.modules.log.LogViewList;
 import it.algos.vaadflow.modules.logtype.LogtypeViewList;
+import it.algos.vaadflow.modules.mese.MeseViewList;
 import it.algos.vaadflow.modules.person.PersonViewList;
 import it.algos.vaadflow.modules.preferenza.EAPreferenza;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaViewList;
 import it.algos.vaadflow.modules.role.RoleViewList;
+import it.algos.vaadflow.modules.secolo.SecoloViewList;
 import it.algos.vaadflow.modules.utente.UtenteViewList;
 import it.algos.vaadflow.modules.versione.VersioneViewList;
 import it.algos.vaadflow.wizard.WizardView;
@@ -71,6 +75,18 @@ public class ABootService {
         }// end of if cycle
         if (pref.isBool(EAPreferenza.showVersione.getCode())) {
             FlowCost.MENU_CLAZZ_LIST.add(VersioneViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showSecolo.getCode())) {
+            FlowCost.MENU_CLAZZ_LIST.add(SecoloViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showAnno.getCode())) {
+            FlowCost.MENU_CLAZZ_LIST.add(AnnoViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showMese.getCode())) {
+            FlowCost.MENU_CLAZZ_LIST.add(MeseViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showGiorno.getCode())) {
+            FlowCost.MENU_CLAZZ_LIST.add(GiornoViewList.class);
         }// end of if cycle
 
         //--admin

@@ -64,6 +64,6 @@ public abstract class Cost {
     public static String TOKEN = "&meta=tokens";
     public static String NON_TROVATA = "Pagina non trovata";
     public static String SUCCESSO = "Success";
-    public static String TAG_BIO = "Bio";
+    public final static String TAG_WIKI_BIO = "Bio";
 
 }// end of static class

@@ -98,31 +98,28 @@ public abstract class AData {
     }// end of method
 
 
-//    /**
-//     * Creazione di una entity
-//     */
-//    public void crea(AEntity entity) {
-//        crea(entity, "");
-//    }// end of method
-//
-//
-//    /**
-//     * Creazione di una entity
-//     */
-//    public void crea(AEntity entity, String keyID) {
-//        entity.id = keyID;
-//        mongo.insert(entity, collectionName);
-//    }// end of method
+    /**
+     * Metodo invocato da ABoot (o da una sua sottoclasse) <br>
+     * <p>
+     * Creazione di una collezione - Solo se non ci sono records
+     */
+    public void loadData() {
+        int numRec = this.count();
+
+        if (numRec == 0) {
+            numRec = creaAll();
+            log.warn("Algos " + collectionName + "- Creazione dati iniziali loadData(): " + numRec + " schede");
+        } else {
+            log.info("Algos - Data. La collezione " + collectionName + " è presente: " + numRec + " schede");
+        }// end of if/else cycle
+    }// end of method
 
 
     /**
-     * Creazione di una collezione
-     * Solo se non ci sono records
-     * Controlla se la collezione esiste già
      * Creazione della collezione
      */
-    protected void loadData() {
+    protected int creaAll() {
+        return 0;
     }// end of method
-
 
 }// end of class

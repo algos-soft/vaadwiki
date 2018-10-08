@@ -4,6 +4,7 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
+import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIField;
@@ -12,6 +13,7 @@ import it.algos.vaadflow.converter.AConverterPrefByte;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import it.algos.vaadflow.ui.fields.*;
 import it.algos.vaadflow.validator.AIntegerZeroValidator;
+import it.algos.vaadflow.validator.ALongZeroValidator;
 import it.algos.vaadflow.validator.AStringNullValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +119,7 @@ public class AFieldService {
         String mess = "";
         StringLengthValidator stringValidator = null;
         StringToIntegerConverter integerConverter = null;
+        StringToLongConverter longConverter = null;
         String message;
         String messageSize;
         int min = 0;
@@ -136,7 +139,8 @@ public class AFieldService {
 //        boolean enabled = annotation.isFieldEnabled(reflectedJavaField, nuovaEntity);
         Class targetClazz = annotation.getComboClass(reflectionJavaField);
         AStringNullValidator nullValidator = new AStringNullValidator(messageNotNull);
-        AIntegerZeroValidator zeroValidator = new AIntegerZeroValidator();
+        AIntegerZeroValidator integerZeroValidator = new AIntegerZeroValidator();
+        ALongZeroValidator longZeroValidator = new ALongZeroValidator();
 
         if (type == null) {
             field = new ATextField(caption.equals("") ? "noname" : caption);
@@ -191,7 +195,21 @@ public class AFieldService {
                 field = new AIntegerField(caption);
                 binder.forField(field)
                         .withConverter(integerConverter)
-                        .withValidator(zeroValidator)
+                        .withValidator(integerZeroValidator)
+                        .bind(fieldName);
+
+                if (focus) {
+                    ((AIntegerField) field).focus();
+                }// end of if cycle
+                break;
+            case lungo:
+                mess = fieldName + intMessage;
+                message = text.isValid(message) ? message : mess;
+                longConverter = new StringToLongConverter(0L, message);
+                field = new AIntegerField(caption);
+                binder.forField(field)
+                        .withConverter(longConverter)
+                        .withValidator(longZeroValidator)
                         .bind(fieldName);
 
                 if (focus) {
@@ -231,8 +249,8 @@ public class AFieldService {
             case localdatetime:
                 //@todo andrà inserito quando ci sarà un DatePicker che accetti i LocalDateTime
 //                field = new ADatePicker(caption);
-//                field = new ATextField(caption);
-//                binder.forField(field).bind(fieldName);
+                field = new ATextField(caption);
+                binder.forField(field).bind(fieldName);
                 break;
             case link:
                 field = new ATextField(caption);

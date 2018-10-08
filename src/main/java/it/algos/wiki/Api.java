@@ -869,7 +869,7 @@ public class Api {
                 if (listaId.size() == listaTitle.size()) {
                     lista = new ArrayList<>();
                     for (int k = 0; k < listaId.size(); k++) {
-//                        lista.add(categoriaService.newEntity(listaId.get(k), listaTitle.get(k))); //@todo rimettere
+                        lista.add(categoriaService.newEntity(listaId.get(k), listaTitle.get(k)));
                     }// end of for cycle
                 }// end of if cycle
 

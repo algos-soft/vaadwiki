@@ -51,7 +51,7 @@ public abstract class LibWiki {
     public static final String REF_INI = "<ref>";
     public static final String REF_END = "</ref>";
     public static final String BOLD = "'''";
-    public static final String BIO = Cost.TAG_BIO;
+    public static final String BIO = Cost.TAG_WIKI_BIO;
 
     // tag per la stringa vuota
 

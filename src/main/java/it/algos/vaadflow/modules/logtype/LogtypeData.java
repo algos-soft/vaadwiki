@@ -25,15 +25,6 @@ public class LogtypeData extends AData {
 
 
     /**
-     * Il service iniettato dal costruttore, in modo che sia disponibile nella superclasse,
-     * dove viene usata l'interfaccia IAService
-     * Spring costruisce al volo, quando serve, una implementazione di IAService (come previsto dal @Qualifier)
-     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici
-     */
-    private LogtypeService service;
-
-
-    /**
      * Costruttore @Autowired
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
      * Si usa un @Qualifier(), per avere la sottoclasse specifica
@@ -43,36 +34,17 @@ public class LogtypeData extends AData {
      */
     public LogtypeData(@Qualifier(TAG_TYP) IAService service) {
         super(Logtype.class,service);
-        this.service = (LogtypeService) service;
     }// end of Spring constructor
-
-
-    /**
-     * Metodo invocato da ABoot <br>
-     * <p>
-     * Creazione di una collezione - Solo se non ci sono records
-     */
-    @Override
-    public void loadData() {
-        int numRec = super.count();
-
-        if (numRec == 0) {
-            numRec = creaAll();
-            log.warn("Algos - Creazione dati iniziali LogtypeData.inizia(): " + numRec + " schede");
-        } else {
-            log.info("Algos - Data. La collezione Logtype è presente: " + numRec + " schede");
-        }// end of if/else cycle
-    }// end of method
 
 
     /**
      * Creazione della collezione
      */
-    private int creaAll() {
+    protected int creaAll() {
         int num = 0;
 
         for (EALogType type : EALogType.values()) {
-            service.findOrCrea(type.getTag());
+            ((LogtypeService)service).findOrCrea(type.getTag());
             num++;
         }// end of for cycle
 

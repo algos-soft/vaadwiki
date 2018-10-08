@@ -29,11 +29,6 @@ import static it.algos.vaadflow.application.FlowCost.TAG_UTE;
 public class UtenteData extends AData {
 
 
-    /**
-     * Il service viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
-     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
-     */
-    private UtenteService service;
     @Autowired
     private RoleService roleService;
 
@@ -49,31 +44,13 @@ public class UtenteData extends AData {
     @Autowired
     public UtenteData(@Qualifier(TAG_UTE) IAService service) {
         super(Utente.class, service);
-        this.service = (UtenteService) service;
     }// end of Spring constructor
-
-
-    /**
-     * Metodo invocato da ABoot <br>
-     * <p>
-     * Creazione di una collezione - Solo se non ci sono records
-     */
-    public void loadData() {
-        int numRec = super.count();
-
-        if (numRec == 0) {
-            numRec = creaAll();
-            log.warn("Algos - Creazione dati iniziali UtenteData.loadData(): " + numRec + " schede");
-        } else {
-            log.info("Algos - Data. La collezione Utente è presente: " + numRec + " schede");
-        }// end of if/else cycle
-    }// end of method
 
 
     /**
      * Creazione della collezione
      */
-    private int creaAll() {
+    protected int creaAll() {
         int num = 0;
         String userName;
         String passwordInChiaro;
@@ -88,7 +65,7 @@ public class UtenteData extends AData {
             ruoli = roleService.getRoles(ruolo);
             mail = utente.getMail();
 
-            service.crea(userName, passwordInChiaro, ruoli, mail, false);
+            ((UtenteService)service).crea(userName, passwordInChiaro, ruoli, mail, false);
             num++;
         }// end of for cycle
 

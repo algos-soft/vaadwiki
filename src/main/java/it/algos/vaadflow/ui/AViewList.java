@@ -297,8 +297,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         creaGrid();
         creaBottomLayout();
         creaFooter();
-
-        updateView();
     }// end of method
 
 
@@ -315,8 +313,8 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         //--Flag di preferenza per usare il bottone new situato nella searchBar. Normalmente true.
         usaSearchBottoneNew = true;
 
-        //--Flag di preferenza per mostrare una caption sopra la grid. Normalmente true.
-        usaCaption = true;
+        //--Flag di preferenza per mostrare una caption sopra la grid. Normalmente false.
+        usaCaption = false;
 
         //--Flag di preferenza per modificare la entity. Normalmente true.
         isEntityModificabile = true;
@@ -412,41 +410,12 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         layout.setPadding(false);
         layout.setMargin(false);
         layout.setSpacing(false);
-        testo += entityClazz != null ? entityClazz.getSimpleName() + " - " : "";
-        int count = 0;
-        String siglaCompany = "";
-//        Company company = login.getCompany();
-//        if (company != null) {
-//            siglaCompany = " (" + company.getCode() + ")";
-//        }// end of if cycle
+        testo += getHeaderText(0);
+
+        layout.add(new Label(testo));
+        this.addCaption(layout);
 
         if (usaCaption) {
-//            if (pref.isBool(BaseCost.USA_COMPANY)) {
-//                count = service != null ? service.countByCompany(company) : 0;
-//            } else {
-            count = service != null ? service.count() : 0;
-//            }// end of if/else cycle
-
-            switch (count) {
-                case 0:
-//                    if (pref.isBool(BaseCost.USA_COMPANY)) {
-//                        testo += "Non ci sono elementi di questa company";
-//                    } else {
-                    testo += "Al momento non ci sono elementi in questa collezione";
-//                    }// end of if/else cycle
-                    break;
-                case 1:
-                    testo += "Collezione con un solo elemento";
-                    break;
-                default:
-                    testo += "Collezione di " + text.format(count) + " elementi";
-                    break;
-            } // end of switch statement
-            testo += siglaCompany;
-            layout.add(new Label(testo));
-
-            this.addCaption(layout);
-
             this.add(layout);
         }// end of if cycle
 
@@ -507,8 +476,38 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         this.add(layout);
         layout.setFlexGrow(1, grid);
         this.setFlexGrow(1, layout);
+
+        grid.prependHeaderRow().getCell(grid.getColumns().get(0)).setText(getHeaderText());
     }// end of method
 
+    /**
+     * Eventuale aggiunta alla caption sopra la grid
+     */
+    protected String getHeaderText() {
+        return getHeaderText(service != null ? service.count() : 0);
+    }// end of method
+
+
+    /**
+     * Eventuale aggiunta alla caption sopra la grid
+     */
+    protected String getHeaderText(int count) {
+        String testo = entityClazz != null ? entityClazz.getSimpleName() + " - " : "";
+
+        switch (count) {
+            case 0:
+                testo += "Al momento non ci sono elementi in questa collezione";
+                break;
+            case 1:
+                testo += "Collezione con un solo elemento";
+                break;
+            default:
+                testo += "Collezione di " + text.format(count) + " elementi";
+                break;
+        } // end of switch statement
+
+        return testo;
+    }// end of method
 
     /**
      * Eventuale aggiunta alla caption sopra la grid
@@ -634,6 +633,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 //        Collection items = service != null ? service.findFilter(searchField.getValue()) : null;
         Collection items = service != null ? service.findAll() : null;
 
+
         if (items != null) {
             try { // prova ad eseguire il codice
                 grid.deselectAll();
@@ -642,7 +642,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
                 log.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
-//        creaFooter();
+
     }// end of method
 
 

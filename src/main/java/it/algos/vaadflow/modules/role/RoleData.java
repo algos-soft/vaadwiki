@@ -47,31 +47,15 @@ public class RoleData extends AData {
     }// end of Spring constructor
 
 
-    /**
-     * Metodo invocato da ABoot <br>
-     * <p>
-     * Creazione di una collezione - Solo se non ci sono records
-     */
-    public void loadData() {
-        int numRec = super.count();
-
-        if (numRec == 0) {
-            numRec = creaAll();
-            log.warn("Algos - Creazione dati iniziali RoleData.loadData(): " + numRec + " schede");
-        } else {
-            log.info("Algos - Data. La collezione Role è presente: " + numRec + " schede");
-        }// end of if/else cycle
-    }// end of method
-
 
     /**
      * Creazione della collezione
      */
-    private int creaAll() {
+    protected int creaAll() {
         int num = 0;
 
         for (EARole ruolo : EARole.values()) {
-            service.findOrCrea(ruolo.toString());
+            ((RoleService)service).crea(ruolo.toString());
             num++;
         }// end of for cycle
 

@@ -39,7 +39,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script di algos <br>
  */
 @SpringBootApplication(scanBasePackages = {"it.algos.vaadflow", "it.algos.vaadwiki", "it.algos.wiki"})
-@EnableVaadin({"it.algos.vaadflow.modules", "it.algos.vaadflow.wizard", "it.algos.vaadflow.developer", "it.algos.vaadflow.ui", "it.algos.vaadwiki.application", "it.algos.vaadwiki.modules", "it.algos.wiki"})
+@EnableVaadin({"it.algos.vaadflow.modules", "it.algos.vaadflow.wizard", "it.algos.vaadflow.developer", "it.algos.vaadflow.ui", "it.algos.vaadwiki.application", "it.algos.vaadwiki.modules","it.algos.vaadwiki.service", "it.algos.wiki"})
 @EntityScan({"it.algos.vaadflow.modules", "it.algos.vaadwiki.modules"})
 @EnableMongoRepositories({"it.algos"})
 @AIScript(sovrascrivibile = false)

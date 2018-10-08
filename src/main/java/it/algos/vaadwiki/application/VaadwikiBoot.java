@@ -4,9 +4,11 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.boot.ABoot;
-import it.algos.vaadwiki.modules.categoria.CategoriaViewList;
 import it.algos.vaadwiki.modules.attivita.AttivitaViewList;
+import it.algos.vaadwiki.modules.bio.BioViewList;
+import it.algos.vaadwiki.modules.categoria.CategoriaViewList;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaViewList;
+import it.algos.vaadwiki.modules.professione.ProfessioneViewList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -39,6 +41,7 @@ public class VaadwikiBoot extends ABoot {
 
     public final static String PROJECT_VERSION = "0.3";
     public final static String DEMO_COMPANY_CODE = "demo";
+
 
     /**
      * Iniettata dal costruttore <br>
@@ -73,6 +76,10 @@ public class VaadwikiBoot extends ABoot {
      * Inizializzazione dei dati di alcune collections specifiche sul DB Mongo
      */
     protected void iniziaDataProgettoSpecifico() {
+//        this.secoloService.loadData();
+//        this.meseService.loadData();
+//        this.annoService.loadData();
+//        this.giornoService.loadData();
     }// end of method
 
 
@@ -113,10 +120,12 @@ public class VaadwikiBoot extends ABoot {
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
     protected void addRouteSpecifiche() {
-    	FlowCost.MENU_CLAZZ_LIST.add(NazionalitaViewList.class);
-		FlowCost.MENU_CLAZZ_LIST.add(AttivitaViewList.class);
-		FlowCost.MENU_CLAZZ_LIST.add(CategoriaViewList.class);
-	}// end of method
+        FlowCost.MENU_CLAZZ_LIST.add(AttivitaViewList.class);
+        FlowCost.MENU_CLAZZ_LIST.add(NazionalitaViewList.class);
+        FlowCost.MENU_CLAZZ_LIST.add(CategoriaViewList.class);
+        FlowCost.MENU_CLAZZ_LIST.add(ProfessioneViewList.class);
+        FlowCost.MENU_CLAZZ_LIST.add(BioViewList.class);
+    }// end of method
 
 
 }// end of boot class

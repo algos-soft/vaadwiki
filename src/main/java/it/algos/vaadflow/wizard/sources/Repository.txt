@@ -29,6 +29,6 @@ import static it.algos.@MODULELOWER@.application.@COST@.@QUALIFIER@;
 @AIScript(sovrascrivibile = false)
 public interface @ENTITY@Repository extends MongoRepository<@ENTITY@, String> {
 
-@QUERY@
+    @QUERY@
 
 }// end of class

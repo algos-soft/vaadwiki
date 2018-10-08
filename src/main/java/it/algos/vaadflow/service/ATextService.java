@@ -7,7 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
 /**
  * Project springvaadin
@@ -41,11 +44,13 @@ public class ATextService {
      * tag per il carattere barra
      */
     public static final String BARRA = "/";
-    /**
-     * tag per la stringa vuota
-     */
-    public static final String VUOTA = "";
     public static final String VIRGOLA = ",";
+    public static final String REF = "<ref";
+    public static final String NOTE = "<!--";
+    public static final String GRAFFE = "{{";
+    public static final int INT_NULLO = -1;
+    public static final String PARENTESI = "(";
+    public static final String INTERROGATIVO = "?";
     /**
      * Private final property
      */
@@ -712,6 +717,165 @@ public class ATextService {
 
         // valore di ritorno
         return numText;
+    }// end of method
+
+    /**
+     * Restituisce la posizione di un tag in un testo
+     * Riceve una lista di tag da provare
+     * Restituisce la prima posizione tra tutti i tag trovati
+     *
+     * @param testo in ingresso
+     * @param lista di stringhe, oppure singola stringa
+     *
+     * @return posizione della prima stringa trovata
+     * -1 se non ne ha trovato nessuna
+     * -1 se il primo parametro è nullo o vuoto
+     * -1 se il secondo parametro è nullo
+     * -1 se il secondo parametro non è ne una lista di stringhe, ne una stringa
+     */
+    public int getPos(String testo, ArrayList<String> lista) {
+        int pos = testo.length();
+        int posTmp;
+        ArrayList<Integer> posizioni = new ArrayList<Integer>();
+
+        if (!testo.equals("") && lista != null) {
+
+            for (String stringa : lista) {
+                posTmp = testo.indexOf(stringa);
+                if (posTmp != -1) {
+                    posizioni.add(posTmp);
+                }// fine del blocco if
+            } // fine del ciclo for-each
+
+            if (posizioni.size() > 0) {
+                for (Integer num : posizioni) {
+                    pos = Math.min(pos, num);
+                } // fine del ciclo for-each
+            } else {
+                pos = 0;
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return pos;
+    }// end of method
+
+
+    /**
+     * Elimina la parte di stringa successiva al tag, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata   stringa in ingresso
+     * @param tagFinale dopo il quale eliminare
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopo(String entrata, String tagFinale) {
+        String uscita = entrata;
+        int pos;
+
+        if (uscita != null && tagFinale != null) {
+            uscita = entrata.trim();
+            if (uscita.contains(tagFinale)) {
+                pos = uscita.indexOf(tagFinale);
+                uscita = uscita.substring(0, pos);
+                uscita = uscita.trim();
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return uscita;
+    }// end of method
+
+    /**
+     * Elimina la parte di stringa successiva al tag <ref>, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoRef(String entrata) {
+        return levaDopo(entrata, REF);
+    }// end of method
+
+    /**
+     * Elimina la parte di stringa successiva al tag <!--, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoNote(String entrata) {
+        return levaDopo(entrata, NOTE);
+    }// end of method
+
+    /**
+     * Elimina la parte di stringa successiva al tag {{, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoGraffe(String entrata) {
+        return levaDopo(entrata, GRAFFE);
+    }// end of method
+
+    /**
+     * Elimina la parte di stringa successiva al tag -virgola-, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoVirgola(String entrata) {
+        return levaDopo(entrata, VIRGOLA);
+    }// end of method
+
+    /**
+     * Elimina la parte di stringa successiva al tag -aperta parentesi-, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoParentesi(String entrata) {
+        return levaDopo(entrata, PARENTESI);
+    }// end of method
+
+    /**
+     * Elimina la parte di stringa successiva al tag -punto interrogativo-, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoInterrogativo(String entrata) {
+        return levaDopo(entrata, INTERROGATIVO);
     }// end of method
 
 }// end of class

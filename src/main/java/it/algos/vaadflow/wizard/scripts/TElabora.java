@@ -652,31 +652,37 @@ public class TElabora {
         String parCompany = "(Company company);";
         String companyText = flagCompany ? "ByCompany" : "";
         String companyBy = flagCompany ? "" : "By";
-        String entity = aCapo + "public " + newEntityName + " findBy";
+        String entity = "public " + newEntityName + " findBy";
         String entityCompany = entity + "CompanyAnd";
-        String listBase = aCapo + "public List<" + newEntityName + "> findAll" + companyText;
+        String listBase = "public List<" + newEntityName + "> findAll" + companyText;
         String listOrdine = listBase + companyBy + "OrderByOrdineAsc";
 
         if (flagCompany) {
             if (flagCode) {
                 queryText += entityCompany + PROPERTY_CODE_NAME + "(Company company, String " + PROPERTY_CODE_NAME.toLowerCase() + ");";
+                queryText += aCapo;
             }// end of if cycle
             if (flagOrdine) {
                 queryText += listOrdine + parCompany;
+                queryText += aCapo;
             } else {
                 queryText += listBase + parCompany;
+                queryText += aCapo;
             }// end of if/else cycle
         } else {
             if (flagCode) {
                 queryText += entity + PROPERTY_CODE_NAME + "(String " + PROPERTY_CODE_NAME.toLowerCase() + ");";
+                queryText += aCapo;
             }// end of if cycle
             if (flagOrdine) {
                 queryText += listOrdine + parVuoto;
+                queryText += aCapo;
             } else {
 //                queryText += listBase + parVuoto;
             }// end of if/else cycle
         }// end of if/else cycle
 
+        queryText = text.levaCoda(queryText, aCapo);
         return queryText;
     }// end of method
 
@@ -1012,8 +1018,9 @@ public class TElabora {
                 posEnd = textBootClass.indexOf(refMethodEnd, posIni + refMethod.length());
                 textCorpoMetodo = textBootClass.substring(posIni, posEnd);
                 textNew = textCorpoMetodo + aCapo + tagRoute;
+
                 textBootClass = text.sostituisce(textBootClass, textCorpoMetodo, textNew);
-                file.scriveFile(bootPath, textBootClass, true);
+                file.sovraScriveFile(bootPath, textBootClass);
 
                 System.out.println("Il package " + text.primaMaiuscola(newPackageName) + " è stato aggiunto a " + nameClassBoot);
             }// end of if/else cycle

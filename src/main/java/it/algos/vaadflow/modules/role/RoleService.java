@@ -88,6 +88,17 @@ public class RoleService extends AService {
     }// end of method
 
     /**
+     * Crea una entity <br>
+     *
+     * @param code di riferimento (obbligatorio ed unico)
+     *
+     * @return la entity trovata o appena creata
+     */
+    public Role crea(String code) {
+        return (Role) save(newEntity(0, code));
+    }// end of method
+
+    /**
      * Creazione in memoria di una nuova entity che NON viene salvata
      * Eventuali regolazioni iniziali delle property
      * Senza properties per compatibilità con la superclasse

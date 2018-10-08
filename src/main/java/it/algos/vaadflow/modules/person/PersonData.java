@@ -28,20 +28,6 @@ public class PersonData extends AData {
 
 
     /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    protected AddressService addressService;
-
-
-    /**
-     * Il service viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
-     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
-     */
-    private PersonService service;
-
-
-    /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
@@ -52,37 +38,18 @@ public class PersonData extends AData {
     @Autowired
     public PersonData(@Qualifier(TAG_PER) IAService service) {
         super(Person.class, service);
-        this.service = (PersonService) service;
     }// end of Spring constructor
-
-
-    /**
-     * Metodo invocato da ABoot <br>
-     * <p>
-     * Creazione di una collezione - Solo se non ci sono records
-     */
-    public void loadData() {
-        int numRec = super.count();
-
-        if (numRec == 0) {
-            numRec = creaAll();
-            log.warn("Algos - Creazione dati iniziali PersonData.loadData(): " + numRec + " schede");
-        } else {
-            log.info("Algos - Data. La collezione Person è presente: " + numRec + " schede");
-        }// end of if/else cycle
-    }// end of method
 
 
     /**
      * Creazione della collezione
      */
-    private int creaAll() {
+    protected int creaAll() {
         int num = 0;
         Person entity;
 
         for (EAPerson eaPersona : EAPerson.values()) {
-            entity = service.newEntity(eaPersona);
-            service.save(entity);
+            ((PersonService)service).crea(eaPersona);
             num++;
         }// end of for cycle
 

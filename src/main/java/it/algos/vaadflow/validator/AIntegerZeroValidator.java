@@ -42,7 +42,7 @@ public class AIntegerZeroValidator implements Validator {
         }// end of if cycle
 
         return ValidationResult.error("Qualcosa non ha funzionato");
-    }// end of methodù
+    }// end of method
 
     /**
      * Applies this function to the given arguments.

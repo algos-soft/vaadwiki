@@ -67,12 +67,7 @@ public class AddressService extends AService {
      * @return la entity trovata o appena creata
      */
     public Address crea(String indirizzo, String localita, String cap) {
-        Address entity;
-
-        entity = newEntity(indirizzo, localita, cap);
-        save(entity);
-
-        return entity;
+        return (Address) save(newEntity(indirizzo, localita, cap));
     }// end of method
 
     /**
@@ -101,9 +96,7 @@ public class AddressService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Address newEntity(String indirizzo, String localita, String cap) {
-        Address entity = null;
-
-        entity = Address.builderAddress()
+        Address entity = Address.builderAddress()
                 .indirizzo(text.isValid(indirizzo) ? indirizzo : null)
                 .localita(text.isValid(localita) ? localita : null)
                 .cap(text.isValid(cap) ? cap : null)
@@ -116,10 +109,11 @@ public class AddressService extends AService {
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
      *
      * @param eaAddress: enumeration di dati iniziali di prova
      *
-     * @return la nuova entity appena creata (non salvata)
+     * @return la entity trovata o appena creata
      */
     public Address newEntity(EAAddress eaAddress) {
         String indirizzo;
