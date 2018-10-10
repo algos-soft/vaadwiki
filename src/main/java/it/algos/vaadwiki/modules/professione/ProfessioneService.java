@@ -125,7 +125,6 @@ public class ProfessioneService extends AttNazProfCatService {
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
      * @param pagina wiki di riferimento per la professione - pipedlink (obbligatorio NON unico)

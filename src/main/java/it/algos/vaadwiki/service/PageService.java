@@ -107,19 +107,11 @@ public class PageService extends ABioService {
 
     private int registraBulk(ArrayList<Page> pages) {
         int numVociRegistrate = 0;
-        long pageid = 0;
-        String wikiTitle = "";
-        String template = "";
         Bio entity;
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
 
         for (Page page : pages) {
-            pageid = page.getPageid();
-            wikiTitle = page.getTitle();
-            template = api.estraeTmplBio(page);
-
-            entity = bioService.newEntity(pageid, wikiTitle, template, LocalDateTime.now());
-            elaboraService.esegueNoSave(entity);
+            entity = creaBio(page);
             listaBio.add(entity);
         }// end of for cycle
 
@@ -133,6 +125,31 @@ public class PageService extends ABioService {
         }// end of if cycle
 
         return numVociRegistrate;
+    }// end of method
+
+
+    public Bio creaBio(Page page) {
+        Bio entity = null;
+        long pageid = 0;
+        String wikiTitle = "";
+        String template = "";
+
+        if (page != null) {
+            pageid = page.getPageid();
+            wikiTitle = page.getTitle();
+            template = api.estraeTmplBio(page);
+        }// end of if cycle
+
+        if (pageid > 0 && text.isValid(wikiTitle) && text.isValid(template)) {
+            entity = bioService.newEntity(pageid, wikiTitle, template, LocalDateTime.now());
+            elaboraService.esegueNoSave(entity);
+        } else {
+            if (text.isEmpty(template)) {
+                log.warn("Manca il template alla voce " + wikiTitle);
+            }// end of if cycle
+        }// end of if/else cycle
+
+        return entity;
     }// end of method
 
 

@@ -1,5 +1,6 @@
 package it.algos.vaadflow.service;
 
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -447,6 +448,25 @@ public class AArrayService {
         }// end of if cycle
 
         return pos;
+    }// end of method
+
+
+    /**
+     * Costruisce una matrice di colonne della grid
+     *
+     * @param grid da esaminare
+     *
+     * @return matrice
+     */
+    public Grid.Column[] getColumnArray(Grid grid) {
+        List<Grid.Column> lista = grid.getColumns();
+        Grid.Column[] matrice = new Grid.Column[lista.size()];
+
+        for (int k = 0; k < lista.size(); k++) {
+            matrice[k] = lista.get(k);
+        }// end of for cycle
+
+        return matrice;
     }// end of method
 
 }// end of singleton class

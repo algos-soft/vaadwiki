@@ -6,7 +6,9 @@ import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.service.ATextService;
+import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -123,6 +125,18 @@ public class LibBio {
      */
     @Autowired
     private AnnoService anno;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    private AttivitaService attivita;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    private NazionalitaService nazionalita;
 
     /**
      * Estrae una mappa chiave valore dal testo di un template
@@ -2158,6 +2172,54 @@ public class LibBio {
         }// end of if cycle
 
         if (anno.isEsiste(testoValido)) {
+            return testoValido.trim();
+        } else {
+            return VUOTA;
+        }// end of if/else cycle
+    } // fine del metodo
+
+
+    /**
+     * Regola questo campo
+     * <p>
+     * Elimina il testo successivo a varii tag
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public  String fixAttivitaValida(String testoGrezzo) {
+        String testoValido = fixPropertyBase(testoGrezzo).toLowerCase();
+
+        if (text.isEmpty(testoGrezzo)) {
+            return VUOTA;
+        }// end of if cycle
+
+        if (attivita.isEsiste(testoValido)) {
+            return testoValido.trim();
+        } else {
+            return VUOTA;
+        }// end of if/else cycle
+    } // fine del metodo
+
+
+    /**
+     * Regola questo campo
+     * <p>
+     * Elimina il testo successivo a varii tag
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public  String fixNazionalitaValida(String testoGrezzo) {
+        String testoValido = fixPropertyBase(testoGrezzo).toLowerCase();
+
+        if (text.isEmpty(testoGrezzo)) {
+            return VUOTA;
+        }// end of if cycle
+
+        if (nazionalita.isEsiste(testoValido)) {
             return testoValido.trim();
         } else {
             return VUOTA;

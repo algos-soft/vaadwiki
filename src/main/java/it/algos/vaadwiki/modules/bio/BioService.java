@@ -119,7 +119,6 @@ public class BioService extends AService {
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * Properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      * @param pageId    della pagina wiki (obbligatorio, unico)
      * @param wikiTitle della pagina wiki (obbligatorio, unico)
@@ -135,7 +134,6 @@ public class BioService extends AService {
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * Properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      * @param pageId        della pagina wiki (obbligatorio, unico)
      * @param wikiTitle     della pagina wiki (obbligatorio, unico)
@@ -152,7 +150,6 @@ public class BioService extends AService {
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      * @param pageId                    della pagina wiki (obbligatorio, unico)
      * @param wikiTitle                 della pagina wiki (obbligatorio, unico)
@@ -163,11 +160,6 @@ public class BioService extends AService {
      */
     public Bio newEntity(long pageId, String wikiTitle, String tmplBioServer, LocalDateTime lastLettura) {
         Bio entity = null;
-
-        entity = findByKeyUnica(pageId);
-        if (entity != null) {
-            return findByKeyUnica(pageId);
-        }// end of if cycle
 
         entity = Bio.builderBio()
                 .pageId(pageId)

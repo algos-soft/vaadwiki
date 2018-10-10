@@ -1,17 +1,18 @@
 package it.algos.vaadwiki.modules.bio;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.presenter.IAPresenter;
+import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.ui.dialog.AViewDialog;
 import it.algos.vaadwiki.service.DeleteService;
 import it.algos.vaadwiki.service.ElaboraService;
 import it.algos.vaadwiki.service.PageService;
 import it.algos.vaadwiki.service.UploadService;
 import it.algos.wiki.Api;
-import it.algos.wiki.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +21,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.TAG_BIO;
+import static it.algos.vaadwiki.application.VaadwikiCost.*;
 
 
 /**
@@ -47,6 +48,8 @@ public class BioViewDialog extends AViewDialog<Bio> {
 
     private final Button downloadButton = new Button("DownloadOnly");
     private final Button elaboraOnlyButton = new Button("ElaboraOnly");
+    private final Button wikiShowButton = new Button("WikiShow");
+    private final Button wikiEditButton = new Button("WikiEdit");
     private final Button uploadButton = new Button("Upload");
 
     /**
@@ -93,6 +96,11 @@ public class BioViewDialog extends AViewDialog<Bio> {
     @Autowired
     protected BioService bioService;
 
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected ATextService text;
 
 
     /**
@@ -111,28 +119,33 @@ public class BioViewDialog extends AViewDialog<Bio> {
     protected void addBottoniSpecifici() {
         downloadButton.addClickListener(event -> downloadOnly());
         elaboraOnlyButton.addClickListener(event -> elaboraOnly());
+        wikiShowButton.addClickListener(event -> showWikiPage());
+        wikiEditButton.addClickListener(event -> editWikiPage());
         uploadButton.addClickListener(event -> upload());
 
         buttonBar.add(downloadButton);
         buttonBar.add(elaboraOnlyButton);
+        buttonBar.add(wikiShowButton);
+        buttonBar.add(wikiEditButton);
         buttonBar.add(uploadButton);
     }// end of method
 
 
     protected void downloadOnly() {
         long pageId = this.getPageId();
-        String wikiTitle;
+        String wikiTitle = this.getWikiTitle();
+        Bio bio;
 
         if (pageId > 0) {
-            Page pagina = api.leggePage(pageId);
-            if (pagina != null) {
-                wikiTitle = pagina.getTitle();
-                String templateText = api.estraeTmplBio(pagina);
-                currentItem.setTitolo(wikiTitle);
-                currentItem.setTmplBioServer(templateText);
-                elaboraOnly();
+            bio = api.leggeBio(pageId);
+            binder.setBean(bio);
+        } else {
+            if (text.isValid(wikiTitle)) {
+                bio = api.leggeBio(wikiTitle);
+                binder.setBean(bio);
             }// end of if cycle
-        }// end of if cycle
+        }// end of if/else cycle
+
     }// end of method
 
     /**
@@ -143,6 +156,19 @@ public class BioViewDialog extends AViewDialog<Bio> {
         Bio bio = elaboraService.esegueNoSave(currentItem);
         binder.setBean(bio);
         return bio;
+    }// end of method
+
+
+    protected void showWikiPage() {
+        String wikiTitle = this.getWikiTitle();
+        String link = "\"" + PATH_WIKI + wikiTitle + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+    protected void editWikiPage() {
+        String wikiTitle = this.getWikiTitle();
+        String link = "\"" + PATH_WIKI_EDIT_ANTE + wikiTitle + PATH_WIKI_EDIT_POST + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 
@@ -157,6 +183,7 @@ public class BioViewDialog extends AViewDialog<Bio> {
         super.close();
     }// end of method
 
+
     protected long getPageId() {
         long pageid = 0;
 
@@ -165,6 +192,16 @@ public class BioViewDialog extends AViewDialog<Bio> {
         }// end of if cycle
 
         return pageid;
+    }// end of method
+
+    protected String getWikiTitle() {
+        String title = "";
+
+        if (currentItem != null) {
+            title = currentItem.getWikiTitle();
+        }// end of if cycle
+
+        return title;
     }// end of method
 
 }// end of class

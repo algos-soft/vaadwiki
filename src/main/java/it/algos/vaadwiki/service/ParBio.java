@@ -19,7 +19,7 @@ public enum ParBio {
     },// end of single enumeration
     nome("Nome", true, true, true, false, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setNome(value.equals("") ? null : value);
         }// end of method
 
@@ -30,7 +30,7 @@ public enum ParBio {
     },// end of single enumeration
     cognome("Cognome", true, true, true, false, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setCognome(value.equals("") ? null : value);
         }// end of method
 
@@ -55,7 +55,7 @@ public enum ParBio {
     },// end of single enumeration
     sesso("Sesso", true, true, true, false, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setSesso(value.equals("") ? null : value);
         }// end of method
 
@@ -66,7 +66,7 @@ public enum ParBio {
     },// end of single enumeration
     luogoNascita("LuogoNascita", true, true, true, false, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setLuogoNato(value.equals("") ? null : value);
         }// end of method
 
@@ -105,7 +105,7 @@ public enum ParBio {
     },// end of single enumeration
     luogoMorte("LuogoMorte", true, true, true, false, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setLuogoMorto(value.equals("") ? null : value);
         }// end of method
 
@@ -146,8 +146,8 @@ public enum ParBio {
     },// end of single enumeration
     attivita("Attività", true, true, true, false, false) {
         @Override
-        public void setValue(Bio bio, String value) {
-            bio.setAttivita(value.equals("") ? null : value);
+        public void setValue(Bio bio, String value, LibBio libBio) {
+            bio.setAttivita(value.equals("") ? null : libBio.fixAttivitaValida(value));
         }// end of method
 
         @Override
@@ -157,8 +157,8 @@ public enum ParBio {
     },// end of single enumeration
     attivita2("Attività2", false, false, true, false, false) {
         @Override
-        public void setValue(Bio bio, String value) {
-            bio.setAttivita2(value.equals("") ? null : value);
+        public void setValue(Bio bio, String value, LibBio libBio) {
+            bio.setAttivita2(value.equals("") ? null : libBio.fixAttivitaValida(value));
         }// end of method
 
         @Override
@@ -168,8 +168,8 @@ public enum ParBio {
     },// end of single enumeration
     attivita3("Attività3", false, false, true, false, false) {
         @Override
-        public void setValue(Bio bio, String value) {
-            bio.setAttivita3(value.equals("") ? null : value);
+        public void setValue(Bio bio, String value, LibBio libBio) {
+            bio.setAttivita3(value.equals("") ? null : libBio.fixAttivitaValida(value));
         }// end of method
 
         @Override
@@ -185,8 +185,8 @@ public enum ParBio {
     },// end of single enumeration
     nazionalita("Nazionalità", true, true, true, false, false) {
         @Override
-        public void setValue(Bio bio, String value) {
-            bio.setNazionalita(value.equals("") ? null : value);
+        public void setValue(Bio bio, String value, LibBio libBio) {
+            bio.setNazionalita(value.equals("") ? null : libBio.fixNazionalitaValida(value));
         }// end of method
 
         @Override
@@ -349,18 +349,18 @@ public enum ParBio {
     }// end of method
 
 
-    /**
-     * Inserisce nell'istanza il valore passato come parametro
-     * La property dell'istanza ha lo stesso nome della enumeration
-     * DEVE essere sovrascritto (implementato)
-     *
-     * @param bio   istanza da regolare
-     * @param value valore da inserire
-     *
-     * @return istanza regolata
-     */
-    public void setValue(Bio bio, String value) {
-    }// end of method
+//    /**
+//     * Inserisce nell'istanza il valore passato come parametro
+//     * La property dell'istanza ha lo stesso nome della enumeration
+//     * DEVE essere sovrascritto (implementato)
+//     *
+//     * @param bio   istanza da regolare
+//     * @param value valore da inserire
+//     *
+//     * @return istanza regolata
+//     */
+//    public void setValue(Bio bio, String value) {
+//    }// end of method
 
     /**
      * Inserisce nell'istanza il valore passato come parametro

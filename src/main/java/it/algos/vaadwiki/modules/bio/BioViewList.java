@@ -4,7 +4,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Input;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -16,11 +15,14 @@ import com.vaadin.flow.server.StreamResource;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.presenter.IAPresenter;
+import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.fields.ATextField;
+import it.algos.vaadwiki.modules.categoria.CategoriaService;
 import it.algos.vaadwiki.service.*;
+import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,6 +31,7 @@ import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static it.algos.vaadwiki.application.VaadwikiCost.LAST_DOWNLOAD_BIO;
 import static it.algos.vaadwiki.application.VaadwikiCost.TAG_BIO;
@@ -70,45 +73,59 @@ public class BioViewList extends AViewList {
     protected Button updateButton;
     protected Button elaboraButton;
     protected Button uploadButton;
-
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected CategoriaService categoriaService;
     private ATextField input;
-
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private ADateService date;
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private CicloService cicloService;
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private DeleteService deleteService;
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private NewService newService;
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private UpdateService updateService;
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private ElaboraService elaboraService;
-
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private BioService service;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private PageService pageService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private Api api;
 
 
     /**
@@ -199,8 +216,9 @@ public class BioViewList extends AViewList {
     }// end of method
 
     private void creaCiclo() {
-        ciclodButton = new Button("Ciclo");
-        ciclodButton.addClickListener(e -> cicloService.esegue());
+        ciclodButton = new Button("CicloTest");
+//        ciclodButton.addClickListener(e -> cicloService.esegue());@todo definitivo
+        ciclodButton.addClickListener(e -> cicloTest());
     }// end of method
 
     private void creaDelete() {
@@ -228,6 +246,13 @@ public class BioViewList extends AViewList {
 //        uploadButton.addClickListener(e -> cicloService.esegue());
     }// end of method
 
+    private void cicloTest() {
+        ArrayList<Long> listaVociCategoriaSuServer;
+        listaVociCategoriaSuServer = categoriaService.findPageids();
+//        service.deleteAll();
+        newService.esegue(listaVociCategoriaSuServer);
+        super.updateView();
+    }// end of method
 
 
     protected void addBottoni() {

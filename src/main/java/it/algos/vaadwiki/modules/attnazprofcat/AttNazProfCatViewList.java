@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Scope;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
+import static it.algos.vaadwiki.application.VaadwikiCost.PATH_WIKI;
+
 /**
  * Project vaadbio2
  * Created by Algos
@@ -28,7 +30,6 @@ import java.time.LocalDateTime;
 public class AttNazProfCatViewList extends AViewList {
 
 
-    public final static String PATH_WIKI = "https://it.wikipedia.org/wiki/";
     protected Button deleteMongoButton;
     protected Button donwloadMongoButton;
     protected Button uploadStatisticheButton;

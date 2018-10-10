@@ -68,4 +68,8 @@ public class VaadwikiCost {
     public final static String DURATA_DOWNLOAD_PROFESSIONE = DURATA + PROF;
     public final static String DURATA_DOWNLOAD_CATEGORIA = DURATA + CAT;
 
+    public final static String PATH_WIKI = "https://it.wikipedia.org/wiki/";
+    public final static String PATH_WIKI_EDIT_ANTE = "https://it.wikipedia.org/w/index.php?title=";
+    public final static String PATH_WIKI_EDIT_POST = "&action=edit";
+
 }// end of static class

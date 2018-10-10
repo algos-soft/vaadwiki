@@ -545,7 +545,7 @@ public class ATextService {
         String num9;
         String num12;
 
-        if (numObj instanceof String || numObj instanceof Integer || numObj instanceof Long || numObj instanceof Double) {
+        if (numObj instanceof String || numObj instanceof Integer || numObj instanceof Long || numObj instanceof Double || numObj instanceof List||numObj instanceof Object[]) {
             if (numObj instanceof String) {
                 numText = (String) numObj;
                 numText = levaVirgole(numText);
@@ -564,6 +564,12 @@ public class ATextService {
                 }// fine del blocco if
                 if (numObj instanceof Double) {
                     numText = Double.toString((double) numObj);
+                }// fine del blocco if
+                if (numObj instanceof List) {
+                    numText = Integer.toString((int) ((List) numObj).size());
+                }// fine del blocco if
+                if (numObj instanceof Object[]) {
+                    numText = Integer.toString(((Object[]) numObj).length);
                 }// fine del blocco if
             }// fine del blocco if-else
         } else {

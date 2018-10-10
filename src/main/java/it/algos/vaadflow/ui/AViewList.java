@@ -2,6 +2,7 @@ package it.algos.vaadflow.ui;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -254,6 +255,8 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     protected boolean usaRefresh;
 
+    private Label headerHolder;
+
     /**
      * Costruttore @Autowired (nella sottoclasse concreta) <br>
      * La sottoclasse usa un @Qualifier(), per avere la sottoclasse specifica <br>
@@ -471,17 +474,27 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         grid.addClassName("pippoz");
         grid.getElement().setAttribute("theme", "row-dividers");
         layout.add(grid);
-//        layout.add(new Label("Pippoz"));
-//        layout.setSizeUndefined();
         this.add(layout);
         layout.setFlexGrow(1, grid);
         this.setFlexGrow(1, layout);
 
-        grid.prependHeaderRow().getCell(grid.getColumns().get(0)).setText(getHeaderText());
+        fixHeader();
     }// end of method
 
     /**
-     * Eventuale aggiunta alla caption sopra la grid
+     * Eventuale header text
+     */
+    protected void fixHeader() {
+        HeaderRow topRow = grid.prependHeaderRow();
+        Grid.Column[] matrix = array.getColumnArray(grid);
+        HeaderRow.HeaderCell informationCell = topRow.join(matrix);
+        headerHolder = new Label("x");
+        informationCell.setComponent(headerHolder);
+    }// end of method
+
+
+    /**
+     * Eventuale header text
      */
     protected String getHeaderText() {
         return getHeaderText(service != null ? service.count() : 0);
@@ -630,7 +643,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
 
     public void updateView() {
-//        Collection items = service != null ? service.findFilter(searchField.getValue()) : null;
         Collection items = service != null ? service.findAll() : null;
 
 
@@ -638,6 +650,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             try { // prova ad eseguire il codice
                 grid.deselectAll();
                 grid.setItems(items);
+                headerHolder.setText(getHeaderText());
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
             }// fine del blocco try-catch

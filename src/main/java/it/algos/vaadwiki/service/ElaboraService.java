@@ -192,7 +192,6 @@ public class ElaboraService extends ABioService {
                 for (ParBio par : ParBio.values()) {
                     value = (String) mappa.get(par.getTag());
                     if (value != null) {
-//                        par.setValue(bio, value);
                         par.setValue(bio, value, libBio);
                     }// end of if cycle
                 } // fine del ciclo for-each

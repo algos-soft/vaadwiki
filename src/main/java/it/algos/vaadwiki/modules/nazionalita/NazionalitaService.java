@@ -127,7 +127,6 @@ public class NazionalitaService extends AttNazProfCatService {
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
      * @param plurale   neutro (obbligatorio NON unico)
@@ -162,6 +161,17 @@ public class NazionalitaService extends AttNazProfCatService {
         return repository.findBySingolare(singolare);
     }// end of method
 
+
+    /**
+     * Controlla l'esistenza di una Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param singolare maschile e femminile (obbligatorio ed unico)
+     *
+     * @return true se trovata
+     */
+    public boolean isEsiste(String singolare) {
+        return findByKeyUnica(singolare) != null;
+    }// end of method
 
     /**
      * Property unica (se esiste).
