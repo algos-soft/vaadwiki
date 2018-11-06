@@ -1,6 +1,4 @@
-package it.algos.vaadflow.enumeration;
-
-import lombok.extern.slf4j.Slf4j;
+package it.algos.vaadflow.modules.role;
 
 /**
  * Project springvaadin

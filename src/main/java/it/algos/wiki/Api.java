@@ -4,11 +4,13 @@ package it.algos.wiki;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.service.AArrayService;
+import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.categoria.Categoria;
 import it.algos.vaadwiki.modules.categoria.CategoriaService;
 import it.algos.vaadwiki.service.PageService;
 import it.algos.wiki.request.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -19,6 +21,7 @@ import java.util.Map;
 
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Slf4j
 public class Api {
 
     private static String MAP_KEY_TYPE = "type";
@@ -50,6 +53,13 @@ public class Api {
      */
     @Autowired
     protected PageService pageService;
+
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected ATextService text;
 
     /**
      * Legge il contenuto (tutto) di una pagina
@@ -837,6 +847,12 @@ public class Api {
      */
     public String estraeTmplBio(Page page) {
         String testo = page.getText();
+
+        if (text.isEmpty(testo)) {
+            log.error("Manca il testo della pagina " + page.getTitle());
+            return "";
+        }// end of if cycle
+
         return LibWiki.estraeTmplBioCompresi(testo);
     }// end of method
 

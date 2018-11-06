@@ -5,17 +5,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.AViewList;
-import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.DURATA_DOWNLOAD_CATEGORIA;
-import static it.algos.vaadwiki.application.VaadwikiCost.LAST_DOWNLOAD_CATEGORIA;
-import static it.algos.vaadwiki.application.VaadwikiCost.TAG_CAT;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki <br>
@@ -55,7 +52,7 @@ public class CategoriaViewList extends AttNazProfCatViewList {
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
 
-   /**
+    /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
@@ -74,5 +71,13 @@ public class CategoriaViewList extends AttNazProfCatViewList {
         super.usaBottoneStatistiche = false;
     }// end of Spring constructor
 
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     */
+    protected void fixPreferenzeSpecifiche() {
+        super.usaSearchTextField = false;
+        super.usaSearchBottoneNew = false;
+    }// end of method
 
 }// end of class

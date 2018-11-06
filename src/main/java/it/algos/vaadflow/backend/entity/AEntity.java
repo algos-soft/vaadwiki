@@ -4,7 +4,7 @@ import it.algos.vaadflow.annotation.AIColumn;
 import it.algos.vaadflow.annotation.AIField;
 import it.algos.vaadflow.enumeration.EAFieldAccessibility;
 import it.algos.vaadflow.enumeration.EAFieldType;
-import it.algos.vaadflow.enumeration.EARoleType;
+import it.algos.vaadflow.modules.role.EARoleType;
 import lombok.Getter;
 
 import java.io.Serializable;

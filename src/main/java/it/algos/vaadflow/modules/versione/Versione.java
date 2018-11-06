@@ -1,15 +1,10 @@
 package it.algos.vaadflow.modules.versione;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.*;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import lombok.*;
-import com.vaadin.flow.spring.annotation.UIScope;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,15 +13,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
-
-import static it.algos.vaadflow.application.FlowCost.TAG_VER;
+import java.time.LocalDate;
 
 /**
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <p>
@@ -65,8 +58,8 @@ import static it.algos.vaadflow.application.FlowCost.TAG_VER;
 @Builder(builderMethodName = "builderVersione")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"id", "titolo", "nome", "timestamp"})
-@AIForm(fields = {"id", "titolo","nome", "timestamp"})
+@AIList(fields = {"id", "titolo", "descrizione", "timestamp"})
+@AIForm(fields = {"id", "titolo", "descrizione", "timestamp"})
 @AIScript(sovrascrivibile = false)
 public class Versione extends AEntity {
 
@@ -93,10 +86,10 @@ public class Versione extends AEntity {
      */
     @NotNull(message = "La descrizione è obbligatoria")
     @Size(min = 2, max = 50)
-    @Field("nome")
-    @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
+    @Field("desc")
+    @AIField(type = EAFieldType.textarea, firstCapital = true, widthEM = 24)
     @AIColumn(widthPX = 12)
-    public String nome;
+    public String descrizione;
 
     /**
      * momento in cui si effettua la modifica della versione (obbligatorio, non unica) <br>
@@ -105,9 +98,10 @@ public class Versione extends AEntity {
     @NotNull(message = "Il tempo è obbligatorio")
     @Size(min = 2, max = 50)
     @Field("time")
-    @AIField(type = EAFieldType.localdatetime, firstCapital = true, widthEM = 24)
+    @AIField(type = EAFieldType.localdate, firstCapital = true, widthEM = 24)
     @AIColumn(widthPX = 5)
-    public LocalDateTime timestamp;
+    public LocalDate timestamp;
+
 
     /**
      * @return a string representation of the object.

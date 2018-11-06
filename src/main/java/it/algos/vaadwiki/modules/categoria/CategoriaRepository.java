@@ -2,13 +2,12 @@ package it.algos.vaadwiki.modules.categoria;
 
 import java.util.List;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import static it.algos.vaadwiki.application.VaadwikiCost.TAG_CAT;
+import static it.algos.vaadwiki.application.WikiCost.TAG_CAT;
 
 /**
  * Project vaadwiki <br>
@@ -33,7 +32,10 @@ public interface CategoriaRepository extends MongoRepository<Categoria, String> 
 
 	public Categoria findByPageid(long pageid);
 
-	public List<Categoria> findTop50ByOrderByTitleAsc();
+	public List<Categoria> findTop100ByOrderByTitleAsc();
+	public List<Categoria> findTop1000ByOrderByTitleAsc();
+	public List<Categoria> findTop10000ByOrderByTitleAsc();
+	public List<Categoria> findTop100000ByOrderByTitleAsc();
 	public List<Categoria> findAllByOrderByTitleAsc();
 
 }// end of class

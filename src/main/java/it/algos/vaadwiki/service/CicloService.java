@@ -61,8 +61,8 @@ public class CicloService extends ABioService {
      */
     @SuppressWarnings("unchecked")
     public void esegue() {
-        ArrayList<Long> listaVociCategoriaSuServer;
-        ArrayList<Long> listaEsistentiDataBaseBio;
+        ArrayList<Long> listaVociCategoriaDelServer;
+        ArrayList<Long> listaEsistentiSulDataBaseLocale;
         ArrayList<Long> listaVociMancanti;
         ArrayList<Long> listaVociEccedenti;
 
@@ -86,18 +86,18 @@ public class CicloService extends ABioService {
         categoriaService.download();
 
         //--recupera la lista delle voci dalla collezione categoria
-        listaVociCategoriaSuServer = categoriaService.findPageids();
+        listaVociCategoriaDelServer = categoriaService.findPageids();
 
         //--recupera la lista delle voci dalla collezione categoria
-        listaEsistentiDataBaseBio = bioService.findPageids();
+        listaEsistentiSulDataBaseLocale = bioService.findPageids();
 
         //--elabora le liste delle differenze per la sincronizzazione
-        listaVociMancanti = LibWiki.delta(listaVociCategoriaSuServer, listaEsistentiDataBaseBio);
+        listaVociMancanti = LibWiki.delta(listaVociCategoriaDelServer, listaEsistentiSulDataBaseLocale);
+
+        //--elabora le liste delle differenze per la sincronizzazione
+        listaVociEccedenti = LibWiki.delta(listaEsistentiSulDataBaseLocale, listaVociCategoriaDelServer);
 
         //--Cancella tutti i records non più presenti nella categoria
-        listaVociEccedenti = LibWiki.delta(listaEsistentiDataBaseBio, listaVociCategoriaSuServer);
-
-        //--Scarica la lista di voci mancanti dal server e crea i nuovi records di Bio
         deleteService.esegue(listaVociEccedenti);
 
         //--Scarica la lista di voci mancanti dal server e crea i nuovi records di Bio

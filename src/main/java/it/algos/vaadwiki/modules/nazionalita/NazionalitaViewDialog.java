@@ -1,7 +1,6 @@
 package it.algos.vaadwiki.modules.nazionalita;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.dialog.AViewDialog;
@@ -10,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import static it.algos.vaadwiki.application.VaadwikiCost.TAG_NAZ;
+import static it.algos.vaadwiki.application.WikiCost.TAG_NAZ;
 
 /**
  * Project vaadwiki <br>

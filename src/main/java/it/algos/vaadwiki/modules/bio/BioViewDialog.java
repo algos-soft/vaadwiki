@@ -2,6 +2,8 @@ package it.algos.vaadwiki.modules.bio;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
@@ -21,7 +23,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 
 /**
@@ -118,10 +120,21 @@ public class BioViewDialog extends AViewDialog<Bio> {
     @PostConstruct
     protected void addBottoniSpecifici() {
         downloadButton.addClickListener(event -> downloadOnly());
+        downloadButton.setIcon(new Icon(VaadinIcon.ARROW_DOWN));
+
         elaboraOnlyButton.addClickListener(event -> elaboraOnly());
+        elaboraOnlyButton.setIcon(new Icon(VaadinIcon.ARROW_RIGHT));
+
         wikiShowButton.addClickListener(event -> showWikiPage());
+        wikiShowButton.setIcon(new Icon(VaadinIcon.SEARCH));
+
         wikiEditButton.addClickListener(event -> editWikiPage());
+        wikiEditButton.setIcon(new Icon(VaadinIcon.SEARCH));
+
         uploadButton.addClickListener(event -> upload());
+        uploadButton.setIcon(new Icon(VaadinIcon.ARROW_UP));
+        uploadButton.getElement().setAttribute("theme", "error");
+
 
         buttonBar.add(downloadButton);
         buttonBar.add(elaboraOnlyButton);

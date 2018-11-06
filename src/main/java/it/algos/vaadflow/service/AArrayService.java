@@ -1,10 +1,8 @@
 package it.algos.vaadflow.service;
 
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -15,33 +13,34 @@ import java.util.*;
  * Date: gio, 07-dic-2017
  * Time: 13:46
  * <p>
- * Classe di Libreria - Utility per la gestione degli array <br>
+ * Utility per la gestione degli array <br>
  * <p>
- * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
- * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Classe di libreria; NON deve essere astratta, altrimenti Spring non la costruisce <br>
+ * Implementa il 'pattern' SINGLETON; l'istanza può essere richiamata con: <br>
+ * 1) StaticContextAccessor.getBean(AArrayService.class); <br>
+ * 2) AArrayService.getInstance(); <br>
+ * 3) @Autowired private AArrayService arrayService; <br>
+ * <p>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
+ * NOT annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (inutile, basta il 'pattern') <br>
  * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
- * <p>
- * Due possibilità d'uso: <br>
- * 1) l'istanza singleton può essere iniettata da SpringBoot in automatico (se all'interno della catena di @Autowired) <br>
- * 2) l'istanza singleton può essere recuperata col metodo statico getInstance() (se creata con new AArrayService) <br>
- * <p>
- * Testata in AArrayServiceTest
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Service
 @Slf4j
-public class AArrayService {
+public class AArrayService extends AbstractService {
+
+    /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
+
 
     /**
      * Private final property
      */
     private static final AArrayService INSTANCE = new AArrayService();
 
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public ATextService text = ATextService.getInstance();
 
     /**
      * Private constructor to avoid client applications to use constructor

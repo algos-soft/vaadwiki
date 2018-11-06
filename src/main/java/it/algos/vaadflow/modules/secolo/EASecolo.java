@@ -1,4 +1,4 @@
-package it.algos.vaadflow.enumeration;
+package it.algos.vaadflow.modules.secolo;
 
 
 /**

@@ -15,10 +15,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Project vaadwiki <br>
+ * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 8-ott-2018 14.55.17 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <p>
@@ -110,7 +110,7 @@ public class Secolo extends AEntity {
     @Field("cod")
     @AIField(type = EAFieldType.checkbox, required = true, focus = true, widthEM = 12)
     @AIColumn(width = 210)
-    private boolean anteCristo;
+    public boolean anteCristo;
 
 
     /**

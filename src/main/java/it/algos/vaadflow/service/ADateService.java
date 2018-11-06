@@ -1,12 +1,9 @@
 package it.algos.vaadflow.service;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.FlowCost;
-import it.algos.vaadflow.enumeration.EAMese;
 import it.algos.vaadflow.enumeration.EATime;
+import it.algos.vaadflow.modules.mese.EAMese;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -24,20 +21,35 @@ import static it.algos.vaadflow.application.FlowCost.*;
  * User: gac
  * Date: lun, 05-feb-2018
  * Time: 14:58
- * Classe di Libreria
+ * <p>
  * Gestione e formattazione delle date e dei tempi
+ * <p>
+ * Classe di libreria; NON deve essere astratta, altrimenti Spring non la costruisce <br>
+ * Implementa il 'pattern' SINGLETON; l'istanza può essere richiamata con: <br>
+ * 1) StaticContextAccessor.getBean(ADateService.class); <br>
+ * 2) ADateService.getInstance(); <br>
+ * 3) @Autowired private ADateService dateService; <br>
+ * <p>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
+ * NOT annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (inutile, basta il 'pattern') <br>
+ * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
+ * <p>
  */
+@Service
 @Slf4j
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class ADateService {
+public class ADateService extends AbstractService {
+
+    /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
 
 
     /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+     * Private final property
      */
-    public AArrayService array = AArrayService.getInstance();
+    private static final ADateService INSTANCE = new ADateService();
 
 
     private static final String INFERIORE_SECONDO = "meno di un sec.";
@@ -49,13 +61,27 @@ public class ADateService {
     private static final String GIORNI = " gg.";
     private static final String ANNO = " anno";
     private static final String ANNI = " anni";
-
     private static final long MAX_MILLISEC = 1000;
     private static final long MAX_SECONDI = MAX_MILLISEC * 60;
     private static final long MAX_MINUTI = MAX_SECONDI * 60;
     private static final long MAX_ORE = MAX_MINUTI * 24;
     private static final long MAX_GIORNI = MAX_ORE * 365;
 
+
+    /**
+     * Private constructor to avoid client applications to use constructor
+     */
+    private ADateService() {
+    }// end of constructor
+
+    /**
+     * Gets the unique instance of this Singleton.
+     *
+     * @return the unique instance of this Singleton
+     */
+    public static ADateService getInstance() {
+        return INSTANCE;
+    }// end of static method
 
     /**
      * Convert java.util.Date to java.time.LocalDate
@@ -164,8 +190,8 @@ public class ADateService {
      * Not using leading zeroes in day <br>
      * Two numbers for year <b>
      *
-     * @param localDate da rappresentare
-     * @param patternEnum   enumeration di pattern per la formattazione
+     * @param localDate   da rappresentare
+     * @param patternEnum enumeration di pattern per la formattazione
      *
      * @return la data sotto forma di stringa
      */
@@ -785,16 +811,17 @@ public class ADateService {
      *
      * @param numMese  numero del mese, partendo da 1 per gennaio
      * @param progAnno numero del giorno nell'anno, partendo da 1 per il 1° gennaio
+     *
      * @return lista di mappe, una per ogni giorno del mese considerato
      */
-    public  ArrayList<HashMap> getGiorniMese(int numMese, int progAnno) {
+    public ArrayList<HashMap> getGiorniMese(int numMese, int progAnno) {
         ArrayList<HashMap> listaMese = new ArrayList<HashMap>();
         HashMap mappa;
         int giorniDelMese;
         String nomeMese;
         EAMese mese = EAMese.getMese(numMese);
         nomeMese = EAMese.getLong(numMese);
-        giorniDelMese = EAMese.getGiorni(numMese,2016);
+        giorniDelMese = EAMese.getGiorni(numMese, 2016);
         final int taglioBisestile = 60;
         String tag;
         String tagUno;

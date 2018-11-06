@@ -1,8 +1,8 @@
 package it.algos.vaadflow.modules.secolo;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.service.AService;
 import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
@@ -17,21 +17,21 @@ import static it.algos.vaadflow.application.FlowCost.TAG_SEC;
 
 
 /**
- * Project vaadwiki <br>
+ * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 8-ott-2018 14.55.17 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
- * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
+ * Business class. Layer di collegamento per la Repository. <br>
  * <br>
- * Annotated with @SpringComponent (obbligatorio) <br>
- * Annotated with @Service (ridondante) <br>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * NOT annotated with @VaadinSessionScope (sbagliato, perché SpringBoot va in loop iniziale) <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
  * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_SEC)
@@ -71,27 +71,31 @@ public class SecoloService extends AService {
 
 
     /**
-     * Crea una entity e la registra <br>
+     * Crea una entity solo se non esisteva <br>
      *
-     * @param titolo     (obbligatorio, unico)
-     * @param inizio     (obbligatorio, unico)
-     * @param fine       (obbligatorio, unico)
-     * @param anteCristo flag per i secoli prima di cristo (obbligatorio)
+     * @param eaSec: enumeration di dati iniziali di prova
      *
-     * @return la entity appena creata
+     * @return true se la entity è stata creata
      */
-    public Secolo crea(String titolo, int inizio, int fine, boolean anteCristo) {
-        return (Secolo) save(newEntity(titolo, inizio, fine, anteCristo));
+    public boolean creaIfNotExist(EASecolo eaSec) {
+        boolean creata = false;
+
+        if (isMancaByKeyUnica(eaSec.getTitolo())) {
+            AEntity entity = save(newEntity(eaSec.getTitolo(), eaSec.getInizio(), eaSec.getFine(), eaSec.isAnteCristo()));
+            creata = entity != null;
+        }// end of if cycle
+
+        return creata;
     }// end of method
 
+
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Senza properties per compatibilità con la superclasse
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    @Override
     public Secolo newEntity() {
         return newEntity("", 0, 0, false);
     }// end of method
@@ -101,7 +105,6 @@ public class SecoloService extends AService {
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      * Utilizza, eventualmente, la newEntity() della superclasse, per le property della superclasse <br>
      *
      * @param titolo     (obbligatorio, unico)
@@ -112,29 +115,21 @@ public class SecoloService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Secolo newEntity(String titolo, int inizio, int fine, boolean anteCristo) {
-        Secolo entity = null;
-
-        entity = findByKeyUnica(titolo);
-        if (entity != null) {
-            return findByKeyUnica(titolo);
-        }// end of if cycle
-
-        entity = Secolo.builderSecolo()
-                .titolo(titolo)
+        return Secolo.builderSecolo()
+                .titolo(text.isValid(titolo) ? titolo : null)
                 .inizio(inizio)
                 .fine(fine)
                 .anteCristo(anteCristo)
                 .build();
-
-        return (Secolo) creaIdKeySpecifica(entity);
     }// end of method
 
 
     /**
      * Property unica (se esiste).
      */
+    @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return text.isValid(((Secolo) entityBean).getTitolo()) ? ((Secolo) entityBean).getTitolo() : "";
+        return ((Secolo) entityBean).getTitolo();
     }// end of method
 
 
@@ -143,17 +138,16 @@ public class SecoloService extends AService {
      * Regolazioni automatiche di property <br>
      *
      * @param entityBean da regolare prima del save
-     * @param operation  del dialogo (NEW, EDIT)
+     * @param operation  del dialogo (NEW, Edit)
      *
      * @return the modified entity
      */
     @Override
-    public AEntity beforeSave(AEntity entityBean, AViewDialog.Operation operation) {
+    public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
         Secolo entity = (Secolo) super.beforeSave(entityBean, operation);
 
         if (text.isEmpty(entity.titolo) || entity.inizio == 0 || entity.fine == 0) {
             entity = null;
-            log.error("entity incompleta in SecoloService.beforeSave()");
         }// end of if cycle
 
         return entity;
@@ -171,5 +165,25 @@ public class SecoloService extends AService {
         return repository.findByTitolo(titolo);
     }// end of method
 
+
+    /**
+     * Creazione di alcuni dati demo iniziali <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
+     * La collezione viene svuotata <br>
+     * I dati possono essere presi da una Enumeration o creati direttamemte <br>
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     *
+     * @return numero di elementi creato
+     */
+    @Override
+    public int reset() {
+        int numRec = super.reset();
+
+        for (EASecolo eaSecolo : EASecolo.values()) {
+            numRec = creaIfNotExist(eaSecolo) ? numRec + 1 : numRec;
+        }// end of for cycle
+
+        return numRec;
+    }// end of method
 
 }// end of class

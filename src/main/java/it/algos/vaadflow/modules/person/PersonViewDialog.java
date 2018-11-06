@@ -2,10 +2,9 @@ package it.algos.vaadflow.modules.person;
 
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.application.StaticContextAccessor;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.address.Address;
 import it.algos.vaadflow.modules.address.AddressPresenter;
 import it.algos.vaadflow.modules.address.AddressService;
@@ -19,9 +18,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 
 import static it.algos.vaadflow.application.FlowCost.FLASH;
@@ -31,7 +27,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PER;
  * Project vaadflow <br>
  * Created by Algos
  * User: Gac
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <p>
  * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * <p>
@@ -91,7 +87,7 @@ public class PersonViewDialog extends AViewDialog<Person> {
 
         indirizzoField = (ATextField) getField(INDIRIZZO);
         if (indirizzoField != null) {
-            indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), Operation.EDIT));
+            indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), EAOperation.edit));
         }// end of if cycle
     }// end of method
 
@@ -118,7 +114,7 @@ public class PersonViewDialog extends AViewDialog<Person> {
     }// end of method
 
 
-    private void saveUpdate(Address entityBean, AViewDialog.Operation operation) {
+    private void saveUpdate(Address entityBean, EAOperation operation) {
         indirizzoTemporaneo = entityBean;
         indirizzoField.setValue(entityBean.toString());
         focusOnPost(INDIRIZZO);

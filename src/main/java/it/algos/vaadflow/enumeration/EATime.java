@@ -9,23 +9,23 @@ package it.algos.vaadflow.enumeration;
  */
 public enum EATime {
 
-    meseShort("meseShort", "d-MM"),
-    meseLong("meseLong", "d-MMM"),
-    shortDate("short", "d-MM-yy"),
-    normal("normal", "d-MMM-yy"),
-    weekShort("weekShort", "EEE d"),
-    weekLong("weekLong", "EEEE d"),
-    medium("medium", "d-MMMM-yy"),
-    lunga("lunga", "d-MMMM-yyy"),
-    completa("completa", "EEEE, d-MMMM-yyy"),
-    meseCorrente("meseCorrente", "MMMM yyy"),
+    meseShort("meseShort", "d-MM","5-10"),
+    meseLong("meseLong", "d-MMM","5-ott"),
+    shortDate("short", "d-MM-yy","5-10-14"),
+    normal("normal", "d-MMM-yy","5-ott-14"),
+    weekShort("weekShort", "EEE d","dom 5"),
+    weekLong("weekLong", "EEEE d","domenica 5"),
+    medium("medium", "d-MMMM-yy","5-ottobre-14"),
+    lunga("lunga", "d-MMMM-yyy","5-ottobre-2014"),
+    completa("completa", "EEEE, d-MMMM-yyy","domenica, 5-ottobre-2014"),
+    meseCorrente("meseCorrente", "MMMM yyy","ottobre 2014"),
     ;
 
     private String tag;
     private String pattern;
 
 
-    EATime(String tag, String pattern) {
+    EATime(String tag, String pattern,String nonUsato) {
         this.tag = tag;
         this.pattern = pattern;
     }// end of constructor

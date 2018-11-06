@@ -4,6 +4,7 @@ import com.vaadin.flow.router.RouterLayout;
 import it.algos.vaadflow.ui.MainLayout;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,14 +76,14 @@ public class FlowCost {
     public static final String DASHBOARD_ORDER_CARD_STYLE = "dashboard-order-card";
     public static final String STOREFRONT_ORDER_CARD_STYLE = "storefront-order-card";
 
-    public final static String BOT_ACCETTA = "accetta";
-    public final static String BOT_CONFERMA = "conferma";
-    public final static String BOT_ANNULLA = "annulla";
-    public final static String BOT_BACK = "back";
-    public final static String BOT_CREATE = "nuovo";
-    public final static String BOT_DELETE = "elimina";
-    public final static String BOT_EDIT = "edit";
-    public final static String BOT_SHOW = "show";
+    public final static String BOT_ACCETTA = "Accetta";
+    public final static String BOT_CONFERMA = "Conferma";
+    public final static String BOT_ANNULLA = "Annulla";
+    public final static String BOT_BACK = "Back";
+    public final static String BOT_CREATE = "Nuovo";
+    public final static String BOT_DELETE = "Elimina";
+    public final static String BOT_EDIT = "Edit";
+    public final static String BOT_SHOW = "Show";
     public final static String BOT_IMAGE = "immagine";
     public final static String BOT_IMPORT = "import";
     public final static String BOT_LINK_ACCETTA = "linkaccetta";
@@ -117,6 +118,9 @@ public class FlowCost {
     public final static String NEW = "New";
     public final static String EDIT = "Edit";
     public final static String DELETE = "Delete";
+    public final static String INFO = "Info";
+    public final static String WARN = "Warn";
+    public final static String ERROR = "Error";
     public final static String IMPORT = "Import";
 
     // generali
@@ -126,7 +130,9 @@ public class FlowCost {
     public final static String USA_CHECK_BOX = "usaCheckbox";
     public final static String USA_COMPANY = "usaCompany";
     public final static String USA_LOG_MAIL = "usaLogMail";
-    public final static String LOG_MAIL_ADDRESS = "logMailAddress";
+    public final static String MAIL_FROM = "mailFrom";
+    public final static String MAIL_TO = "mailTo";
+    public final static String MAX_RIGHE_GRID = "maxRigheGrid";
 
     // moduli visibili
     public final static String SHOW_COMPANY = "showCompany";
@@ -144,9 +150,12 @@ public class FlowCost {
     public final static String SHOW_ANNO = "showAnno";
     public final static String SHOW_MESE = "showMese";
     public final static String SHOW_GIORNO = "showGiorno";
+    public final static String LOAD_UTENTI = "loadUtenti";
     public  static List<Class> MENU_CLAZZ_LIST = new ArrayList<>();
+    public  static String LAYOUT_TITLE = "";
     public  static String PROJECT_NAME = "vaadinflow";
     public  static String PROJECT_VERSION = "0.1";
+    public  static LocalDate PROJECT_DATE = LocalDate.of(2018,1,1);
     private final static String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
     public final static List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
     private final static String[] esclusiList = {PROPERTY_ID, PROPERTY_SERIAL, PROPERTY_COMPANY, PROPERTY_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
@@ -169,5 +178,10 @@ public class FlowCost {
     public final static String KEY_MAPPA_GIORNI_NOME = "nome";
     public final static String KEY_MAPPA_GIORNI_TITOLO = "titolo";
     public final static String KEY_MAPPA_GIORNI_MESE_MESE = "meseMese";
+
+    public final static String KEY_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
+    public final static String KEY_LOGGED_USER = "loggedUser";
+    public final static String KEY_UNIQUE_USER_NAME = "uniqueUserName";
+    public final static String KEY_CONTEXT = "context";
 
 }// end of static class

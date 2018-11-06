@@ -1,17 +1,24 @@
 package it.algos.vaadflow.service;
 
+import com.mongodb.client.result.DeleteResult;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.server.VaadinSession;
+import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.backend.data.FlowData;
 import it.algos.vaadflow.backend.entity.ACEntity;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.backend.login.ALogin;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.company.Company;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
-import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.lang.reflect.Field;
@@ -20,6 +27,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static it.algos.vaadflow.application.FlowCost.KEY_CONTEXT;
+import static it.algos.vaadflow.ui.dialog.AViewDialog.DURATA;
 
 /**
  * Project springvaadin
@@ -31,69 +41,53 @@ import java.util.stream.Collectors;
 //@SpringComponent
 //@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public abstract class AService implements IAService {
+public abstract class AService extends AbstractService implements IAService {
 
 
     public final static String FIELD_NAME_ID = "id";
+
     public final static String FIELD_NAME_ORDINE = "ordine";
+
     public final static String FIELD_NAME_CODE = "code";
+
     public final static String FIELD_NAME_DESCRIZIONE = "descrizione";
+
     public final static String FIELD_NAME_COMPANY = "company";
 
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public AAnnotationService annotation = AAnnotationService.getInstance();
-    /**
-     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
-     */
-    @Autowired
-    public AFieldService field = AFieldService.getInstance();
+//    /**
+//     * Inietta da Spring come 'session'
+//     */
+//    @Autowired
+//    public ALogin login2;
 
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public AReflectionService reflection = AReflectionService.getInstance();
-
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public AArrayService array = AArrayService.getInstance();
-
-
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public ATextService text = ATextService.getInstance();
-    /**
-     * Inietta da Spring come 'session'
-     */
-    @Autowired
-    public ALogin login;
     //--il modello-dati specifico viene regolato dalla sottoclasse nel costruttore
     public Class<? extends AEntity> entityClass;
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    protected PreferenzaService pref;
-    //--la repository dei dati viene iniettata dal costruttore della sottoclasse concreta
-    protected MongoRepository repository;
-
 
     /**
      * Inietta da Spring
      */
     @Autowired
-    protected MongoOperations mongo;
+    public AMongoService mongo;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected FlowData flow;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected PreferenzaService pref;
+
+    //--la repository dei dati viene iniettata dal costruttore della sottoclasse concreta
+    protected MongoRepository repository;
 
 
 //    @Autowired
 //    private LogService logger;
+
 
     /**
      * Default constructor
@@ -111,15 +105,18 @@ public abstract class AService implements IAService {
         this.repository = repository;
     }// end of Spring constructor
 
+
     @Override
     public AAnnotationService getAnnotationService() {
         return annotation;
     }// end of method
 
+
     //    @Override
     public AFieldService getFieldService() {
         return field;
     }// end of method
+
 
     /**
      * Returns the number of entities available.
@@ -128,11 +125,7 @@ public abstract class AService implements IAService {
      */
     @Override
     public int count() {
-        if (repository != null) {
-            return (int) repository.count();
-        } else {
-            return 134;
-        }// end of if/else cycle
+        return mongo.count(entityClass);
     }// end of method
 
 
@@ -173,16 +166,16 @@ public abstract class AService implements IAService {
 
 
     /**
-     * Ricerca una entity <br>
-     * Se non esiste, la crea <br>
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
-     * @param idKey di riferimento (obbligatorio ed unico)
+     * @param keyUnica (obbligatoria, unica)
      *
-     * @return la entity trovata o appena creata
+     * @return istanza della Entity, null se non trovata
      */
-    public AEntity findOrCrea(String idKey) {
+    protected AEntity findByKeyUnica(String keyUnica) {
         return null;
     }// end of method
+
 
     /**
      * Retrieves an entity by its id.
@@ -255,6 +248,48 @@ public abstract class AService implements IAService {
 
 
     /**
+     * Returns only entities of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     * <p>
+     * Methods of this library return Iterable<T>, while the rest of my code expects Collection<T>
+     * L'annotation standard di JPA prevede un ritorno di tipo Iterable, mentre noi usiamo List
+     * Eseguo qui la conversione, che rimane trasparente al resto del programma
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     *
+     * @return all entities
+     */
+    public List<? extends AEntity> findAll(int offset, int size) {
+        return findAll(offset, size, (Sort) null);
+    }// end of method
+
+
+    /**
+     * Returns only entities of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     * <p>
+     * Methods of this library return Iterable<T>, while the rest of my code expects Collection<T>
+     * L'annotation standard di JPA prevede un ritorno di tipo Iterable, mentre noi usiamo List
+     * Eseguo qui la conversione, che rimane trasparente al resto del programma
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     * @param sort   ordinamento degli elementi
+     *
+     * @return all entities
+     */
+    public List<? extends AEntity> findAll(int offset, int size, Sort sort) {
+        Pageable page = PageRequest.of(offset, size);
+        return repository.findAll(page).getContent();
+    }// end of method
+
+
+    /**
      * Returns all entities of the type <br>
      * <p>
      * Ordinate secondo l'ordinamento previsto
@@ -279,6 +314,7 @@ public abstract class AService implements IAService {
         return lista;
     }// end of method
 
+
     /**
      * Fetches the entities whose 'main text property' matches the given filter text.
      * <p>
@@ -292,6 +328,7 @@ public abstract class AService implements IAService {
      * @return the list of matching entities
      */
     @Override
+    @Deprecated
     public List<? extends AEntity> findFilter(String filter) {
         List<? extends AEntity> lista = null;
         String normalizedFilter = filter.toLowerCase();
@@ -302,7 +339,7 @@ public abstract class AService implements IAService {
         boolean mancaCompany = mancaCompanyNecessaria();
 //        Company companyLoggata = login.getCompany();
 //        boolean nonEsisteCompany = companyLoggata == null;
-        boolean notDeveloper = !login.isDeveloper();
+//        boolean notDeveloper = !login.isDeveloper();
 //        String companyCode = companyLoggata != null ? companyLoggata.getCode() : "";
 
         if (mancaCompany) {
@@ -395,9 +432,11 @@ public abstract class AService implements IAService {
         return lista;
     }// end of method
 
+
     private Predicate<? extends AEntity> getPredicate(String normalizedFilter) {
         return entity -> getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
     }
+
 
     public boolean mancaCompanyNecessaria() {
         boolean status = false;
@@ -405,7 +444,7 @@ public abstract class AService implements IAService {
         boolean entityUsaCompany = annotation.getCompanyRequired(entityClass) == EACompanyRequired.obbligatoria;
 //        Company company = login.getCompany();
 //        boolean nonEsisteCompany = company == null;
-        boolean notDeveloper = !login.isDeveloper();
+//        boolean notDeveloper = !login.isDeveloper();
 
 //        if (appUsaCompany && entityUsaCompany && nonEsisteCompany) {
 //            status = true;
@@ -422,18 +461,21 @@ public abstract class AService implements IAService {
      * 3) Sovrascrive la lista nella sottoclasse specifica
      * todo ancora da sviluppare
      *
+     * @param context legato alla sessione
+     *
      * @return lista di nomi di properties
      */
     @Override
-    public List<String> getGridPropertyNamesList() {
+    public List<String> getGridPropertyNamesList(AContext context) {
         List<String> lista = annotation.getGridPropertiesName(entityClass);
 
-        if (lista.contains(FIELD_NAME_COMPANY) && !login.isDeveloper()) {
+        if (lista.contains(FIELD_NAME_COMPANY) && !context.getLogin().isDeveloper()) {
             lista.remove(FIELD_NAME_COMPANY);
         }// end of if cycle
 
         return lista;
     }// end of method
+
 
     /**
      * Costruisce una lista di nomi delle properties del Form nell'ordine:
@@ -442,13 +484,15 @@ public abstract class AService implements IAService {
      * 3) Sovrascrive la lista nella sottoclasse specifica di xxxService
      * todo ancora da sviluppare
      *
+     * @param context legato alla sessione
+     *
      * @return lista di nomi di properties
      */
     @Override
-    public List<String> getFormPropertyNamesList(AEntity curremtItem) {
+    public List<String> getFormPropertyNamesList(AEntity curremtItem, AContext context) {
         ArrayList<String> lista = annotation.getFormPropertiesName(entityClass);
 
-        if (lista.contains(FIELD_NAME_COMPANY) && !login.isDeveloper()) {
+        if (lista.contains(FIELD_NAME_COMPANY) && !context.getLogin().isDeveloper()) {
             lista.remove(FIELD_NAME_COMPANY);
         }// end of if cycle
 
@@ -457,9 +501,9 @@ public abstract class AService implements IAService {
 
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Senza properties per compatibilità con la superclasse
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -474,29 +518,19 @@ public abstract class AService implements IAService {
      *
      * @param entityBean da creare
      */
-    protected AEntity addCompany(AEntity entityBean) {
-        return addCompany(entityBean, (Company) null);
-    }// end of method
-
-    /**
-     * Se la nuova entity usa la company, la recupera dal login
-     * Se la campany manca, lancia l'eccezione
-     *
-     * @param entityBean da creare
-     * @param company    da utilizzare se valida (può essere nulla)
-     */
-    protected AEntity addCompany(AEntity entityBean, Company company) {
+    protected AEntity addCompanySeManca(AEntity entityBean) {
         EACompanyRequired tableCompanyRequired;
+        Company company = null;
 
-        //--se la EntityClass non estende ACCompany, nopn deve fare nulla
-        if (!(entityBean instanceof ACEntity)) {
+        //--se la EntityClass non estende ACEntity, non deve fare nulla
+        if ((entityBean instanceof ACEntity)) {
+            company = ((ACEntity) entityBean).company;
+        } else {
             return entityBean;
-        }// end of if cycle
+        }// end of if/else cycle
 
         if (company == null) {
-            if (login != null) {
-//                company = login.getCompany();
-            }// end of if cycle
+            company = this.getCompany();
         }// end of if cycle
 
         //--controlla l'obbligatorietà della Company
@@ -507,23 +541,23 @@ public abstract class AService implements IAService {
                 break;
             case facoltativa:
                 if (company != null) {
-//                    ((ACEntity) entityBean).company = company;
+                    ((ACEntity) entityBean).company = company;
                 } else {
-                    log.info("Nuova scheda senza company (facoltativa)");
+                    log.warn("Algos- Nuova scheda senza company (facoltativa) di " + entityBean.toString() + " della classe " + entityBean.getClass().getSimpleName());
                 }// end of if/else cycle
                 break;
             case obbligatoria:
                 if (company != null) {
-//                    ((ACEntity) entityBean).company = company;
+                    ((ACEntity) entityBean).company = company;
                 } else {
-                    entityBean = null;
+                    log.error("Algos- Manca la company (obbligatoria) di " + entityBean.toString() + " della classe " + entityBean.getClass().getSimpleName());
                 }// end of if/else cycle
                 break;
             default:
                 break;
         } // end of switch statement
 
-        return creaIdKeySpecifica(entityBean);
+        return entityBean;
     }// end of method
 
 
@@ -531,7 +565,7 @@ public abstract class AService implements IAService {
         boolean status = false;
         EACompanyRequired tableCompanyRequired = null;
 
-        //--se la EntityClass non estende ACCompany, nopn deve fare nulla
+        //--se la EntityClass non estende ACCompany, non deve fare nulla
         tableCompanyRequired = annotation.getCompanyRequired(entityClass);
         status = tableCompanyRequired == EACompanyRequired.obbligatoria || tableCompanyRequired == EACompanyRequired.facoltativa;
 
@@ -556,11 +590,16 @@ public abstract class AService implements IAService {
      */
     @Override
     public AEntity save(AEntity entityBean) {
-        AEntity entityValida = beforeSave(entityBean, AViewDialog.Operation.EDIT);
+        AEntity entityValida = beforeSave(entityBean, EAOperation.edit);
 
         if (entityValida != null) {
             entityValida = save(null, entityValida);
-        }// end of if cycle
+        } else {
+            if (UI.getCurrent() != null) {
+                Notification.show("La scheda non è completa", DURATA, Notification.Position.BOTTOM_START);
+            }// end of if cycle
+            log.error("Algos - La scheda " + entityBean.toString() + " di " + entityBean.getClass().getSimpleName() + " non è completa");
+        }// end of if/else cycle
 
         return entityValida;
     }// end of method
@@ -569,14 +608,16 @@ public abstract class AService implements IAService {
     /**
      * Operazioni eseguite PRIMA del save <br>
      * Regolazioni automatiche di property <br>
+     * Controllo della validità delle properties obbligatorie <br>
+     * Può essere sovrascritto - Invocare PRIMA il metodo della superclasse
      *
      * @param entityBean da regolare prima del save
-     * @param operation  del dialogo (NEW, EDIT)
+     * @param operation  del dialogo (NEW, Edit)
      *
      * @return the modified entity
      */
-    public AEntity beforeSave(AEntity entityBean, AViewDialog.Operation operation) {
-        return entityBean;
+    public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
+        return creaIdKeySpecifica(entityBean);
     }// end of method
 
 
@@ -683,30 +724,65 @@ public abstract class AService implements IAService {
      * @param entityBean da salvare
      */
     public AEntity creaIdKeySpecifica(AEntity entityBean) {
-        String idKey = getKeyUnica(entityBean);
-        if (text.isValid(idKey)) {
-            entityBean.id = idKey;
-        } else {
-            entityBean.id = null;
-        }// end of if/else cycle
+        String idKey = "";
+
+        if (text.isEmpty(entityBean.id)) {
+            idKey = getKeyUnica(entityBean);
+            if (text.isValid(idKey)) {
+                entityBean.id = idKey;
+            } else {
+                entityBean.id = null;
+            }// end of if/else cycle
+        }// end of if cycle
 
         return entityBean;
     }// end of method
 
 
     /**
-     * Opportunità di controllare (per le nuove schede) che la key unica non esista già
-     * Invocato appena prima del save(), solo per una nuova entity
+     * Opportunità di controllare (per le nuove schede) che la key unica non esista già <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
      *
      * @param newEntityBean nuova da creare
      */
     public boolean isEsisteEntityKeyUnica(AEntity newEntityBean) {
-        String keyID = getKeyUnica(newEntityBean);
-        if (text.isValid(keyID)) {
-            return findById(keyID) != null;
+//        String keyID = getKeyUnica(newEntityBean);
+//        if (text.isValid(keyID)) {
+//            return findById(keyID) != null;
+//        } else {
+//            return false;
+//        }// end of if/else cycle
+        return isEsisteByKeyUnica(getKeyUnica(newEntityBean));
+    }// end of method
+
+
+    /**
+     * Opportunità di controllare (per le nuove schede) che una entity con la keyUnica indicata non esista già <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
+     *
+     * @param keyUnica di riferimento (obbligatoria ed unica)
+     *
+     * @return true se la entity con la keyUnica indicata esiste
+     */
+    public boolean isEsisteByKeyUnica(String keyUnica) {
+        if (text.isValid(keyUnica)) {
+            return findById(keyUnica) != null;
         } else {
             return false;
         }// end of if/else cycle
+    }// end of method
+
+
+    /**
+     * Opportunità di controllare (per le nuove schede) che una entity con la keyUnica indicata non esista già <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
+     *
+     * @param keyUnica di riferimento (obbligatoria ed unica)
+     *
+     * @return true se la entity con la keyUnica indicata non esiste
+     */
+    public boolean isMancaByKeyUnica(String keyUnica) {
+        return !isEsisteByKeyUnica(keyUnica);
     }// end of method
 
 
@@ -720,14 +796,6 @@ public abstract class AService implements IAService {
      * Altrimenti, se esiste la property 'ordine', usa questa property come idKey <br>
      * Altrimenti, se esiste un metodo sovrascritto nella sottoclasse concreta, utilizza quello <br>
      * Altrimenti, restituisce un valore vuoto <br>
-     * <p>
-     * Se è prevista la company obbligatoria, antepone company.code a quanto sopra (se non è vuoto)
-     * Se manca la company obbligatoria, non registra
-     * <p>
-     * Se è prevista la company facoltativa, antepone company.code a quanto sopra (se non è vuoto)
-     * Se manca la company facoltativa, registra con idKey regolata come sopra
-     * <p>
-     * Per codifiche diverse, sovrascrivere il metodo
      *
      * @param entityBean da regolare
      *
@@ -736,7 +804,6 @@ public abstract class AService implements IAService {
     public String getKeyUnica(AEntity entityBean) {
         String keyUnica = "";
         String keyCode = getPropertyUnica(entityBean);
-        String companyCode = "";
 
         if (text.isEmpty(keyCode)) {
             if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
@@ -752,11 +819,43 @@ public abstract class AService implements IAService {
             return keyCode;
         }// end of if cycle
 
+        keyUnica = addKeyCompany(entityBean, keyCode);
+        return keyUnica;
+    }// end of method
+
+
+    /**
+     * Se è prevista la company obbligatoria, antepone company.code a quanto sopra (se non è vuoto)
+     * Se manca la company obbligatoria, non registra
+     * <p>
+     * Se è prevista la company facoltativa, antepone company.code a quanto sopra (se non è vuoto)
+     * Se manca la company facoltativa, registra con idKey regolata come sopra
+     * <p>
+     * Per codifiche diverse, sovrascrivere il metodo
+     *
+     * @param entityBean da regolare
+     *
+     * @return chiave univoca da usare come idKey nel DB mongo
+     */
+    public String addKeyCompany(AEntity entityBean, String keyCode) {
+        String keyUnica = "";
+        Company company = null;
+        String companyCode = "";
+
         if (usaCompany()) {
-            companyCode = getCompanyCode(entityBean);
+            if (entityBean instanceof ACEntity) {
+                company = ((ACEntity) entityBean).company;
+                if (company != null) {
+                    companyCode = company.getCode();
+                }// end of if cycle
+            }// end of if cycle
+
+            if (text.isEmpty(companyCode)) {
+                companyCode = getCompanyCode();
+            }// end of if cycle
 
             if (text.isValid(companyCode)) {
-                keyUnica = companyCode + keyCode;
+                keyUnica = companyCode + text.primaMaiuscola(keyCode);
             } else {
                 if (annotation.getCompanyRequired(entityClass) == EACompanyRequired.obbligatoria) {
                     keyUnica = null;
@@ -805,16 +904,6 @@ public abstract class AService implements IAService {
     }// end of method
 
 
-    public Company getCompany() {
-        Company company = null;
-
-        if (login != null) {
-//            company = login.getCompany();
-        }// end of if cycle
-
-        return company;
-    }// end of method
-
 //    /**
 //     * Property unica (se esiste) <br>
 //     * <p>
@@ -845,41 +934,43 @@ public abstract class AService implements IAService {
      * Incrementa di uno il risultato <br>
      */
     public int getNewOrdine() {
-        int ordine = 0;
-        AEntity entityBean = null;
-        Sort sort;
-        List lista = null;
-        Field field;
-        Object value;
-
-        if (!reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
-            return 0;
-        }// end of if/else cycle
-
-        sort = new Sort(Sort.Direction.DESC, FIELD_NAME_ORDINE);
-        if (usaCompany()) {
-            lista = findAllByCompany(sort);
-        } else {
-            lista = findAll(sort);
-        }// end of if/else cycle
-
-        if (array.isValid(lista)) {
-            entityBean = (AEntity) lista.get(0);
-        }// end of if cycle
-
-        if (entityBean != null) {
-            field = reflection.getField(entityClass, FIELD_NAME_ORDINE);
-            try { // prova ad eseguire il codice
-                value = field.get(entityBean);
-                if (value instanceof Integer) {
-                    ordine = (Integer) value;
-                }// end of if cycle
-            } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
-            }// fine del blocco try-catch
-        }// end of if cycle
-
-        return ordine + 1;
+//        int ordine = 0;
+//        AEntity entityBean = null;
+//        Sort sort;
+//        List lista = null;
+//        Field field;
+//        Object value;
+//
+//        if (!reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
+//            return 0;
+//        }// end of if/else cycle
+//
+//        sort = new Sort(Sort.Direction.DESC, FIELD_NAME_ORDINE);
+//        if (usaCompany()) {
+//            lista = findAllByCompany( sort);
+//        } else {
+//            lista = findAll( sort);
+//        }// end of if/else cycle
+//
+//        if (array.isValid(lista)) {
+//            entityBean = (AEntity) lista.get(0);
+//        }// end of if cycle
+//
+//        if (entityBean != null) {
+//            field = reflection.getField(entityClass, FIELD_NAME_ORDINE);
+//            try { // prova ad eseguire il codice
+//                value = field.get(entityBean);
+//                if (value instanceof Integer) {
+//                    ordine = (Integer) value;
+//                }// end of if cycle
+//            } catch (Exception unErrore) { // intercetta l'errore
+//                log.error(unErrore.toString());
+//            }// fine del blocco try-catch
+//        }// end of if cycle
+//
+//        return ordine + 1;
+//
+        return mongo.getNewOrdine(entityClass);
     }// end of method
 
 
@@ -899,9 +990,9 @@ public abstract class AService implements IAService {
         ACEntity companyEntity;
         String companyCode;
 
-        if (login != null) {
+//        if (login != null) {
 //            company = login.getCompany();
-        }// end of if cycle
+//        }// end of if cycle
 
         if (company != null) {
 //            companyCode = company.getCode();
@@ -1023,6 +1114,7 @@ public abstract class AService implements IAService {
 //        return true;
 //    }// end of method
 
+
     /**
      * Deletes a given entity.
      *
@@ -1034,25 +1126,65 @@ public abstract class AService implements IAService {
      */
     @Override
     public boolean delete(AEntity entityBean) {
-        repository.delete(entityBean);
-//        logDeleteBean(entityBean);
+        boolean status = false;
+        DeleteResult result;
 
-        //@todo aggiungere controllo se il record è stato cancellato
-        return true;
+        result = mongo.delete(entityBean);
+
+        if (result.getDeletedCount() == 1) {
+            status = true;
+        }// end of if cycle
+
+        return status;
     }// end of method
+
+
+    /**
+     * Delete a list of entities.
+     *
+     * @param listaEntities di elementi da cancellare
+     * @param clazz         della collezione
+     *
+     * @return numero di elementi cancellati
+     */
+    public int delete(List<? extends AEntity> listaEntities, Class<? extends AEntity> clazz) {
+        List<String> listaId = new ArrayList<String>();
+
+        for (AEntity entity : listaEntities) {
+            listaId.add(entity.id);
+        }// end of for cycle
+
+        return deleteBulk(listaId, clazz);
+    }// end of method
+
+
+    /**
+     * Delete a list of entities.
+     *
+     * @param listaId di ObjectId da cancellare
+     * @param clazz   della collezione
+     *
+     * @return numero di elementi cancellati
+     */
+    public int deleteBulk(List<String> listaId, Class<? extends AEntity> clazz) {
+        int cancellati = 0;
+        DeleteResult result = mongo.deleteBulk(listaId, clazz);
+
+        if (result != null) {
+            cancellati = (int) result.getDeletedCount();
+        }// end of if cycle
+
+        return cancellati;
+    }// end of method
+
 
     /**
      * Deletes all entities of the collection.
      */
     @Override
     public boolean deleteAll() {
-
-        for (AEntity entityBean : findAll()) {
-            repository.delete(entityBean);
-        }// end of for cycle
-
-        //@todo aggiungere controllo se i records sono stati cancellati
-        return true;
+        mongo.drop(entityClass);
+        return count() == 0;
     }// end of method
 
 
@@ -1076,6 +1208,148 @@ public abstract class AService implements IAService {
 //        repository.deleteAll();
 //        return repository.count() == 0;
 //    }// end of method
+
+
+    /**
+     * Metodo invocato da ABoot (o da una sua sottoclasse) <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
+     * Creazione di una collezione - Solo se non ci sono records
+     */
+    @Override
+    public void loadData() {
+        int numRec = this.count();
+        String collectionName = annotation.getCollectionName(entityClass);
+
+        if (numRec == 0) {
+            numRec = reset();
+            log.warn("Algos - Data. La collezione " + collectionName + " è stata creata: " + numRec + " schede");
+        } else {
+            log.info("Algos - Data. La collezione " + collectionName + " è già presente: " + numRec + " schede");
+        }// end of if/else cycle
+
+    }// end of method
+
+
+    /**
+     * Creazione di alcuni dati demo iniziali <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
+     * La collezione viene svuotata <br>
+     * I dati possono essere presi da una Enumeration o creati direttamemte <br>
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     *
+     * @return numero di elementi creato
+     */
+    @Override
+    public int reset() {
+        this.deleteAll();
+        return 0;
+    }// end of method
+
+
+    /**
+     * Importazione di dati <br>
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     *
+     * @return true se sono stati importati correttamente
+     */
+    public boolean importa() {
+        this.deleteAll();
+        return false;
+    }// end of method
+
+
+    /**
+     * Importazione di dati <br>
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     *
+     * @param company di riferimento
+     *
+     * @return true se sono stati importati correttamente
+     */
+    @Override
+    public boolean importa(Company company) {
+        this.deleteAll();
+        return false;
+    }// end of method
+
+
+    /**
+     * Recupera il context della session <br>
+     * Controlla che la session sia attiva <br>
+     *
+     * @return context della sessione
+     */
+    public AContext getContext() {
+        AContext context = null;
+        UI ui;
+        VaadinSession vaadSession = null;
+
+        ui = UI.getCurrent();
+        if (ui != null) {
+            vaadSession = ui.getSession();
+        }// end of if cycle
+
+        if (vaadSession != null) {
+            context = (AContext) vaadSession.getAttribute(KEY_CONTEXT);
+        }// end of if cycle
+
+        return context;
+    }// end of method
+
+
+    /**
+     * Recupera il login della session corrente <br>
+     * Controlla che la session sia attiva <br>
+     *
+     * @return context della sessione
+     */
+    public ALogin getLogin() {
+        ALogin login = null;
+        AContext context = getContext();
+
+        if (context != null) {
+            login = context.getLogin();
+        }// end of if cycle
+
+        return login;
+    }// end of method
+
+
+    /**
+     * Recupera la company della session corrente <br>
+     * Controlla che la session sia attiva <br>
+     *
+     * @return context della sessione
+     */
+    public Company getCompany() {
+        Company company = null;
+        AContext context = getContext();
+
+        if (context != null) {
+            company = context.getCompany();
+        }// end of if cycle
+
+        return company;
+    }// end of method
+
+
+    /**
+     * Recupera la sigla della company della session corrente (se esiste) <br>
+     * Controlla che la session sia attiva <br>
+     *
+     * @return context della sessione
+     */
+    public String getCompanyCode() {
+        String code = "";
+        Company company = getCompany();
+
+        if (company != null) {
+            code = company.getCode();
+        }// end of if cycle
+
+        return code;
+    }// end of method
+
 
     /**
      * Casting da una superclasse ad una sottoclasse <br>

@@ -36,6 +36,7 @@ public class DeleteService extends ABioService {
             for (Long pageid : listaVociEccedenti) {
                 bio = bioService.findByKeyUnica(pageid);
 //                bioService.delete(bio);
+//                bioService.d
             }// end of for cycle @todo rimettere
             log.info("Algos - Ciclo DELETE - eliminate le voci da mongoDB Bio (" + listaVociEccedenti.size() + " elementi) in " + date.deltaText(inizio));
         } else {

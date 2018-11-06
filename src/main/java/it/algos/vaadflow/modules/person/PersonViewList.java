@@ -5,7 +5,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
-import it.algos.vaadflow.enumeration.EARoleType;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.dialog.IADialog;
@@ -19,7 +19,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PER;
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
@@ -74,6 +74,8 @@ public class PersonViewList extends AViewList {
      */
     @Override
     protected void fixPreferenzeSpecifiche() {
+        super.usaBottoneDeleteAll = true;
+        super.usaBottoneReset = true;
         super.isEntityDeveloper = true;
         super.isEntityEmbadded = true;
     }// end of method

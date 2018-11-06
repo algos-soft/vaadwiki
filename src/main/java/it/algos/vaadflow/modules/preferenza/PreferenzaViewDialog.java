@@ -3,9 +3,8 @@ package it.algos.vaadflow.modules.preferenza;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.enumeration.EAPrefType;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.company.CompanyService;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.dialog.AViewDialog;
@@ -28,7 +27,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
  * Project vaadflow <br>
  * Created by Algos
  * User: Gac
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <p>
  * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * <p>
@@ -142,7 +141,7 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
 
         AComboBox comboType = (AComboBox) getField(TIPO_FIELD_NAME);
         comboType.setValue(type);
-        if (operation == Operation.ADD) {
+        if (operation == EAOperation.addNew) {
             comboType.setEnabled(true);
             comboType.addValueChangeListener(e -> sincro((EAPrefType) e.getValue()));
         } else {
@@ -154,7 +153,7 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
 
     /**
      * Cambia il valueField sincronizzandolo col comboBox
-     * Senza valori, perché è attivo SOLO in modalita ADD (new record)
+     * Senza valori, perché è attivo SOLO in modalita AddNew (new record)
      */
     protected AbstractField sincro(EAPrefType type) {
         String caption = "Valore ";

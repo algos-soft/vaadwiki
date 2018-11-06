@@ -1,30 +1,23 @@
 package it.algos.vaadflow.modules.address;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.*;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import lombok.*;
-import com.vaadin.flow.spring.annotation.UIScope;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import static it.algos.vaadflow.application.FlowCost.TAG_ADD;
 
 /**
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <p>
@@ -73,8 +66,6 @@ public class Address extends AEntity {
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
-
-
     /**
      * indirizzo: via, nome e numero (obbligatoria, non unica)
      */
@@ -84,8 +75,6 @@ public class Address extends AEntity {
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
     @AIColumn(width = 210)
     public String indirizzo;
-
-
     /**
      * località (obbligatoria, non unica)
      */
@@ -95,8 +84,6 @@ public class Address extends AEntity {
     @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
     @AIColumn(width = 370)
     public String localita;
-
-
     /**
      * codice di avviamento postale (facoltativo, non unica)
      */
@@ -105,7 +92,6 @@ public class Address extends AEntity {
     @AIField(type = EAFieldType.text, widthEM = 5)
     @AIColumn(width = 370)
     public String cap;
-
 
     /**
      * @return a string representation of the object.
@@ -116,9 +102,9 @@ public class Address extends AEntity {
         String spazio = " ";
         String sep = " - ";
 
-        value += indirizzo;
-        value += (localita != null && !localita.equals("")) ? sep + localita : "";
-        value += spazio + cap;
+        value += indirizzo != null ? indirizzo : "";
+        value += localita != null ? sep + localita : "";
+        value += cap != null ? spazio + cap : "";
 
         return value.trim();
     }// end of method

@@ -19,7 +19,7 @@ import it.algos.vaadflow.annotation.AIScript;
  */
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovrascrivibile = false)
-public class VaadwikiCost {
+public class WikiCost {
 	public final static String TAG_SEC = "secolo";
 	public final static String TAG_MES = "mese";
 	public final static String TAG_ANN = "anno";
@@ -68,8 +68,11 @@ public class VaadwikiCost {
     public final static String DURATA_DOWNLOAD_PROFESSIONE = DURATA + PROF;
     public final static String DURATA_DOWNLOAD_CATEGORIA = DURATA + CAT;
 
+    //--path di varie pagine wiki
     public final static String PATH_WIKI = "https://it.wikipedia.org/wiki/";
     public final static String PATH_WIKI_EDIT_ANTE = "https://it.wikipedia.org/w/index.php?title=";
     public final static String PATH_WIKI_EDIT_POST = "&action=edit";
+    public final static String CAT_BIO = "catBio";
+
 
 }// end of static class

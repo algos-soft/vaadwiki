@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDateTime;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 
 /**

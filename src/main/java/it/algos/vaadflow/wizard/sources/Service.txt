@@ -22,18 +22,18 @@ import static it.algos.@MODULELOWER@.application.@COST@.@QUALIFIER@;
  * User: @USER@ <br>
  * Fix date: @TODAY@ <br>
  * <br>
- * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
+ * Business class. Layer di collegamento per la Repository. <br>
  * <br>
- * Annotated with @SpringComponent (obbligatorio) <br>
- * Annotated with @Service (ridondante) <br>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * NOT annotated with @VaadinSessionScope (sbagliato, perché SpringBoot va in loop iniziale) <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
  * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@SpringComponent
 @Service
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@VaadinSessionScope
 @Qualifier(@QUALIFIER@)
 @Slf4j
 @AIScript(sovrascrivibile = false)
@@ -88,7 +88,6 @@ public class @ENTITY@Service extends AService {
       * Creazione in memoria di una nuova entity che NON viene salvata <br>
       * Eventuali regolazioni iniziali delle property <br>
       * All properties <br>
-      * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
       * Utilizza, eventualmente, la newEntity() della superclasse, per le property della superclasse <br>
      *
       @PARAMETERSDOC@

@@ -4,6 +4,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.StaticContextAccessor;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.address.Address;
 import it.algos.vaadflow.modules.address.AddressPresenter;
 import it.algos.vaadflow.modules.address.AddressService;
@@ -27,7 +28,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_COM;
  * Project vaadflow <br>
  * Created by Algos
  * User: Gac
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <p>
  * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * <p>
@@ -91,7 +92,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
         contattoDialog.fixConfermaAndNotRegistrazione();
         contattoField = (ATextField) getField(CONTATTO);
         if (contattoField != null) {
-            contattoField.addFocusListener(e -> contattoDialog.open(getContatto(), Operation.EDIT, CONTATTO));
+            contattoField.addFocusListener(e -> contattoDialog.open(getContatto(), EAOperation.edit, null, CONTATTO));//todo sistemare il null
         }// end of if cycle
 
         indirizzoPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
@@ -103,7 +104,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
         indirizzoDialog.fixConfermaAndNotRegistrazione();
         indirizzoField = (ATextField) getField(INDIRIZZO);
         if (indirizzoField != null) {
-            indirizzoField.addFocusListener(e -> indirizzoDialog.open(getIndirizzo(), Operation.EDIT, INDIRIZZO));
+            indirizzoField.addFocusListener(e -> indirizzoDialog.open(getIndirizzo(), EAOperation.edit, null, INDIRIZZO));//todo sistemare il null
         }// end of if cycle
     }// end of method
 
@@ -133,9 +134,9 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     }// end of method
 
 
-    protected void saveUpdateCon(Person entityBean, AViewDialog.Operation operation) {
+    protected void saveUpdateCon(Person entityBean, EAOperation operation) {
         Company company = super.getCurrentItem();
-        entityBean = (Person) contattoService.beforeSave(entityBean,operation);
+        entityBean = (Person) contattoService.beforeSave(entityBean, operation);
         contattoTemporaneo = entityBean;
 
         company.setContatto(contattoTemporaneo);
@@ -146,7 +147,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     }// end of method
 
 
-    protected void saveUpdateInd(Address entityBean, AViewDialog.Operation operation) {
+    protected void saveUpdateInd(Address entityBean, EAOperation operation) {
         Company company = super.getCurrentItem();
         entityBean = (Address) indirizzoService.beforeSave(entityBean, operation);
         indirizzoTemporaneo = entityBean;
@@ -224,7 +225,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
         Person persona = getContattoCorrente();
 
         if (persona == null) {
-            persona = contattoService.newEntityNoSuperclasse();
+            persona = contattoService.newEntity();
         }// end of if cycle
 
         return persona;

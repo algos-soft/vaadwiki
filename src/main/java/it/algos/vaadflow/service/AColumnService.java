@@ -4,16 +4,14 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAFieldType;
-import it.algos.vaadflow.enumeration.EAPrefType;
+import it.algos.vaadflow.modules.preferenza.EAPrefType;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
@@ -25,52 +23,40 @@ import java.time.LocalDateTime;
  * User: gac
  * Date: dom, 23-set-2018
  * Time: 21:18
- * Classe di libreria; NON deve essere astratta, altrimenti Spring non la costruisce
- * Implementa il 'pattern' SINGLETON; l'istanza può essere richiamata con:
- * 1) StaticContextAccessor.getBean(AFieldService.class);
- * 2) AFieldService.getInstance();
- * 3) @Autowired private AFieldService fieldService;
+ * <p>
+ * Gestisce la creazione delle colonne della Grid nel tipo adeguato <br>
+ * <p>
+ * Classe di libreria; NON deve essere astratta, altrimenti Spring non la costruisce <br>
+ * Implementa il 'pattern' SINGLETON; l'istanza può essere richiamata con: <br>
+ * 1) StaticContextAccessor.getBean(AColumnService.class); <br>
+ * 2) AColumnService.getInstance(); <br>
+ * 3) @Autowired private AColumnService columnService; <br>
+ * <p>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
+ * NOT annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (inutile, basta il 'pattern') <br>
+ * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Service
 @Slf4j
-public class AColumnService {
+public class AColumnService extends AbstractService {
+
+    /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
 
     /**
      * Private final property
      */
     private static final AColumnService INSTANCE = new AColumnService();
 
+
     /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
+     * Service (pattern SINGLETON) recuperato come istanza dalla classe <br>
      * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
      */
-    public AAnnotationService annotation = AAnnotationService.getInstance();
-
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public AReflectionService reflection = AReflectionService.getInstance();
-
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public ATextService text = ATextService.getInstance();
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    protected PreferenzaService pref;
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    protected ADateService date;
-
+    public PreferenzaService pref;
 
     /**
      * Private constructor to avoid client applications to use constructor
@@ -97,6 +83,7 @@ public class AColumnService {
      * @param propertyName della property
      */
     public void create(Grid<AEntity> grid, Class<? extends AEntity> entityClazz, String propertyName) {
+        pref = StaticContextAccessor.getBean(PreferenzaService.class);
         Grid.Column<AEntity> colonna = null;
         EAFieldType type = annotation.getFormType(entityClazz, propertyName);
         String header = annotation.getColumnName(entityClazz, propertyName);
@@ -104,8 +91,12 @@ public class AColumnService {
         Class clazz = annotation.getComboClass(entityClazz, propertyName);
 
         if (type == null) {
-            colonna = grid.addColumn(propertyName);
-            colonna.setSortProperty(propertyName);
+            try { // prova ad eseguire il codice
+                colonna = grid.addColumn(propertyName);
+                colonna.setSortProperty(propertyName);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
             return;
         }// end of if cycle
 

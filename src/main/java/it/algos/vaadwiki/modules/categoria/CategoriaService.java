@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.service.ADateService;
+import it.algos.vaadwiki.application.WikiCost;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki <br>
@@ -48,7 +49,9 @@ public class CategoriaService extends AttNazProfCatService {
      */
     private final static long serialVersionUID = 1L;
 
-    private final static String NOME_CATEGORIA = "Nati nel 1812";
+    //        private final static String NOME_CATEGORIA = "Nati nel 1812"; //circa 269
+//    private final static String NOME_CATEGORIA = "Nati nel 1946"; //circa 2.550
+    private final static String NOME_CATEGORIA = "BioBot"; //circa 356.000
 
 
     /**
@@ -79,6 +82,7 @@ public class CategoriaService extends AttNazProfCatService {
         super.durataLastDownload = DURATA_DOWNLOAD_CATEGORIA;
     }// end of Spring constructor
 
+
     /**
      * Crea una entity e la registra <br>
      *
@@ -90,6 +94,7 @@ public class CategoriaService extends AttNazProfCatService {
     public Categoria crea(long pageid, String title) {
         return (Categoria) save(newEntity(pageid, title));
     }// end of method
+
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata
@@ -160,7 +165,7 @@ public class CategoriaService extends AttNazProfCatService {
             if (sort != null) {
                 lista = repository.findAll(sort);
             } else {
-                lista = repository.findTop50ByOrderByTitleAsc();
+                lista = repository.findTop100ByOrderByTitleAsc();
             }// end of if/else cycle
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
@@ -205,17 +210,23 @@ public class CategoriaService extends AttNazProfCatService {
      * gruppi di 500 timestamp - 1 sec per 500 pagine = totale 11 minuti
      */
     public void download() {
-        long inizio = System.currentTimeMillis();
+        long inizio;
         ArrayList<Categoria> listaCat;
+        String nomeCategoria = pref.getStr(WikiCost.CAT_BIO);
 
-        mongo.dropCollection("categoria");
-        log.info("Algos - Delete mongoDB Categoria in " + date.deltaText(inizio));
-
-        listaCat = api.leggeCatCat(NOME_CATEGORIA);
+        inizio = System.currentTimeMillis();
+        listaCat = api.leggeCatCat(nomeCategoria);
         log.info("Algos - Lettura delle voci della categoria BioBot (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
 
-        mongo.insert(listaCat, "categoria");
-        log.info("Algos - Bulk insert in mongoDB Categoria (pageid e title) (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
+        inizio = System.currentTimeMillis();
+        mongo.drop(Categoria.class);
+        log.info("Algos - Drop mongoDB Categoria in " + date.deltaText(inizio));
+
+        inizio = System.currentTimeMillis();
+        mongo.insert(listaCat, Categoria.class);
+        long fine = System.currentTimeMillis();
+        long durata = fine - inizio;
+        log.info("Algos - Insert in mongoDB Categoria (pageid e title) (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
 
         setLastDownload(inizio);
     }// end of method

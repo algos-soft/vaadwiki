@@ -3,7 +3,7 @@ package it.algos.vaadflow.annotation;
 
 import it.algos.vaadflow.enumeration.EAFieldAccessibility;
 import it.algos.vaadflow.enumeration.EAFieldType;
-import it.algos.vaadflow.enumeration.EARoleType;
+import it.algos.vaadflow.modules.role.EARoleType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

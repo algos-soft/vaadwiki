@@ -1,9 +1,10 @@
 package it.algos.vaadflow.modules.mese;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.service.AService;
+import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,21 +17,21 @@ import static it.algos.vaadflow.application.FlowCost.TAG_MES;
 
 
 /**
- * Project vaadwiki <br>
+ * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 7-ott-2018 21.00.40 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
- * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
+ * Business class. Layer di collegamento per la Repository. <br>
  * <br>
- * Annotated with @SpringComponent (obbligatorio) <br>
- * Annotated with @Service (ridondante) <br>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * NOT annotated with @VaadinSessionScope (sbagliato, perché SpringBoot va in loop iniziale) <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
  * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_MES)
@@ -70,27 +71,31 @@ public class MeseService extends AService {
 
 
     /**
-     * Crea una entity e la registra <br>
+     * Crea una entity solo se non esisteva <br>
      *
-     * @param titoloLungo nome completo (obbligatorio, unico)
-     * @param titoloBreve nome abbreviato di tre cifre (obbligatorio, unico)
-     * @param giorni      numero di giorni presenti (obbligatorio)
+     * @param eaMese: enumeration di dati iniziali di prova
      *
-     * @return la entity appena creata
+     * @return true se la entity è stata creata
      */
-    public Mese crea(String titoloLungo, String titoloBreve, int giorni) {
-        return (Mese) save(newEntity(titoloLungo, titoloBreve, giorni));
+    public boolean creaIfNotExist(EAMese eaMese) {
+        boolean creata = false;
+
+        if (isMancaByKeyUnica(eaMese.getLungo())) {
+            AEntity entity = save(newEntity(eaMese.getLungo(), eaMese.getBreve(), eaMese.getGiorni()));
+            creata = entity != null;
+        }// end of if cycle
+
+        return creata;
     }// end of method
 
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Senza properties per compatibilità con la superclasse
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    @Override
     public Mese newEntity() {
         return newEntity("", "", 0);
     }// end of method
@@ -100,7 +105,6 @@ public class MeseService extends AService {
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      * Utilizza, eventualmente, la newEntity() della superclasse, per le property della superclasse <br>
      *
      * @param titoloLungo nome completo (obbligatorio, unico)
@@ -110,41 +114,74 @@ public class MeseService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Mese newEntity(String titoloLungo, String titoloBreve, int giorni) {
-        Mese entity = null;
-
-        entity = findByKeyUnica(titoloLungo);
-        if (entity != null) {
-            return findByKeyUnica(titoloLungo);
-        }// end of if cycle
-
-        entity = Mese.builderMese()
-                .titoloLungo(titoloLungo)
-                .titoloBreve(titoloBreve)
+        return Mese.builderMese()
+                .titoloLungo(text.isValid(titoloLungo) ? titoloLungo : null)
+                .titoloBreve(text.isValid(titoloBreve) ? titoloBreve : null)
                 .giorni(giorni)
                 .build();
-
-        return (Mese) creaIdKeySpecifica(entity);
     }// end of method
 
 
     /**
      * Property unica (se esiste).
      */
+    @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return text.isValid(((Mese) entityBean).getTitoloLungo()) ? ((Mese) entityBean).getTitoloLungo() : "";
+        return ((Mese) entityBean).getTitoloLungo();
+    }// end of method
+
+
+    /**
+     * Operazioni eseguite PRIMA del save <br>
+     * Regolazioni automatiche di property <br>
+     *
+     * @param entityBean da regolare prima del save
+     * @param operation  del dialogo (NEW, Edit)
+     *
+     * @return the modified entity
+     */
+    @Override
+    public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
+        Mese entity = (Mese) super.beforeSave(entityBean, operation);
+
+        if (text.isEmpty(entity.titoloLungo) || text.isEmpty(entity.titoloBreve) || entity.giorni == 0) {
+            entity = null;
+        }// end of if cycle
+
+        return entity;
     }// end of method
 
 
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
-     * @param titoloLungo nome completo (obbligatorio, unico)
+     * @param titolo (obbligatorio, unico)
      *
      * @return istanza della Entity, null se non trovata
      */
-    public Mese findByKeyUnica(String titoloLungo) {
-        return repository.findByTitoloLungo(titoloLungo);
+    public Mese findByKeyUnica(String titolo) {
+        return repository.findByTitoloLungo(titolo);
     }// end of method
 
+
+    /**
+     * Creazione di alcuni dati demo iniziali <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
+     * La collezione viene svuotata <br>
+     * I dati possono essere presi da una Enumeration o creati direttamemte <br>
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     *
+     * @return numero di elementi creato
+     */
+    @Override
+    public int reset() {
+        int numRec = super.reset();
+
+        for (EAMese eaMese : EAMese.values()) {
+            numRec = creaIfNotExist(eaMese) ? numRec + 1 : numRec;
+        }// end of for cycle
+
+        return numRec;
+    }// end of method
 
 }// end of class

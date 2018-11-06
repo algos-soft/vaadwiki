@@ -1,12 +1,14 @@
 package it.algos.vaadflow.modules.person;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.address.Address;
 import it.algos.vaadflow.modules.address.AddressService;
 import it.algos.vaadflow.modules.address.EAAddress;
+import it.algos.vaadflow.modules.company.Company;
 import it.algos.vaadflow.modules.preferenza.EAPreferenza;
 import it.algos.vaadflow.modules.role.Role;
 import it.algos.vaadflow.modules.utente.Utente;
@@ -30,22 +32,23 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PER;
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
- * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
+ * Business class. Layer di collegamento per la Repository. <br>
  * <br>
- * Annotated with @SpringComponent (obbligatorio) <br>
- * Annotated with @Service (ridondante) <br>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * NOT annotated with @VaadinSessionScope (sbagliato, perché SpringBoot va in loop iniziale) <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
  * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 
+
 /**
  * La newEntity() usa il metodo newEntity() della superclasse per usare 'builderUtente' <br>
  */
-@SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_PER)
@@ -55,6 +58,7 @@ public class PersonService extends AService {
 
     public final static List<String> PROPERTIES_SECURED =
             Arrays.asList("userName", "passwordInChiaro", "locked", "nome", "cognome", "telefono", "mail", "indirizzo");
+
     public final static List<String> PROPERTIES_NOT_SECURED =
             Arrays.asList("nome", "cognome", "telefono", "mail", "indirizzo");
 
@@ -100,65 +104,37 @@ public class PersonService extends AService {
         this.repository = (PersonRepository) repository;
     }// end of Spring constructor
 
-    /**
-     * Crea una entity <br>
-     *
-     * @param nome:      (obbligatorio, non unico)
-     * @param cognome:   (obbligatorio, non unico)
-     * @param telefono:  (facoltativo)
-     * @param indirizzo: via, nome e numero (facoltativo)
-     *
-     * @return la entity trovata o appena creata
-     */
-    public Person crea(String nome, String cognome, String telefono, Address indirizzo) {
-        return crea(nome, cognome, telefono, indirizzo, "", "", (List<Role>) null, "", false, false);
-    }// end of method
 
     /**
-     * Crea una entity <br>
-     * Se esiste già, la cancella prima di ricrearla <br>
+     * Crea una entity solo se non esisteva <br>
      *
-     * @param nome:            (obbligatorio, non unico)
-     * @param cognome:         (obbligatorio, non unico)
-     * @param telefono:        (facoltativo)
-     * @param indirizzo:       via, nome e numero (facoltativo)
-     * @param userName         userName o nickName (obbligatorio, unico)
-     * @param passwordInChiaro password in chiaro (obbligatoria, non unica)
-     *                         con inserimento automatico (prima del 'save') se è nulla
-     * @param ruoli            Ruoli attribuiti a questo utente (lista di valori obbligatoria)
-     *                         con inserimento del solo ruolo 'user' (prima del 'save') se la lista è nulla
-     *                         lista modificabile solo da developer ed admin
-     * @param mail             posta elettronica (facoltativo)
-     * @param locked           flag locked (facoltativo, di default false)
-     * @param usaSuperClasse   (transient) per utilizzare le properties di Security della superclasse Utente (facoltativo)
+     * @param eaPerson: enumeration di dati iniziali di prova
      *
-     * @return la entity trovata o appena creata
+     * @return true se la entity è stata creata
      */
-    public Person crea(
-            String nome,
-            String cognome,
-            String telefono,
-            Address indirizzo,
-            String userName,
-            String passwordInChiaro,
-            List<Role> ruoli,
-            String mail,
-            boolean locked,
-            boolean usaSuperClasse) {
-        return (Person) save(newEntity(nome, cognome, telefono, indirizzo, userName, passwordInChiaro, ruoli, mail, locked, usaSuperClasse));
+    public boolean creaIfNotExist(EAPerson eaPerson) {
+        boolean creata = false;
+
+        if (true) {//@todo da inventare
+            AEntity entity = save(newEntity(eaPerson));
+            creata = entity != null;
+        }// end of if cycle
+
+        return creata;
     }// end of method
 
+
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Senza properties per compatibilità con la superclasse
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    @Override
     public Person newEntity() {
-        return newEntity("", "");
+        return newEntity((Company) null, "", "", "", (Address) null, "", "", (List<Role>) null, "", false, false);
     }// end of method
+
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata
@@ -167,49 +143,63 @@ public class PersonService extends AService {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Person newEntityNoSuperclasse() {
-        return newEntity("", "", "", (Address) null, "", "", (List<Role>) null, "", false, false);
+    public Person newEntityConSuperclasse() {
+        return newEntity((Company) null, "", "", "", (Address) null, "", "", (List<Role>) null, "", false, true);
     }// end of method
 
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Properties obbligatorie
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Usa una enumeration di dati iniziali di prova <br>
      *
-     * @param nome:    obbligatorio
-     * @param cognome: obbligatorio
+     * @param eaPerson: enumeration di dati iniziali di prova
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Person newEntity(String nome, String cognome) {
-        return newEntity(nome, cognome, "", (Address) null);
+    public Person newEntity(EAPerson eaPerson) {
+        String nome;
+        String cognome;
+        String telefono;
+        EAAddress address;
+        Address indirizzo;
+        String mail;
+
+        nome = eaPerson.getNome();
+        cognome = eaPerson.getCognome();
+        telefono = eaPerson.getTelefono();
+        address = eaPerson.getAddress();
+        indirizzo = addressService.newEntity(address);
+        mail = eaPerson.getMail();
+
+        return newEntity(nome, cognome, telefono, indirizzo, mail);
     }// end of method
+
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata
      * Eventuali regolazioni iniziali delle property
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
      *
      * @param nome:      (obbligatorio, non unico)
      * @param cognome:   (obbligatorio, non unico)
      * @param telefono:  (facoltativo)
      * @param indirizzo: via, nome e numero (facoltativo)
+     * @param mail       posta elettronica (facoltativo)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Person newEntity(String nome, String cognome, String telefono, Address indirizzo) {
-        return newEntity(nome, cognome, telefono, indirizzo, "", "", (List<Role>) null, "", false, true);
+    public Person newEntity(String nome, String cognome, String telefono, Address indirizzo, String mail) {
+        return newEntity((Company) null, nome, cognome, telefono, indirizzo, "", "", (List<Role>) null, "", false, false);
     }// end of method
+
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      * Utilizza, eventualmente, la newEntity() della superclasse, per le property della superclasse <br>
      *
+     * @param company          di appartenenza (facoltativa)
      * @param nome:            (obbligatorio, non unico)
      * @param cognome:         (obbligatorio, non unico)
      * @param telefono:        (facoltativo)
@@ -227,6 +217,7 @@ public class PersonService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Person newEntity(
+            Company company,
             String nome,
             String cognome,
             String telefono,
@@ -249,7 +240,7 @@ public class PersonService extends AService {
         //--se non usa la security, utilizza il metodo builderPerson
         if (usaSuperClasse && pref.isBool(EAPreferenza.usaSecurity.getCode())) {
             //--prima viene creata una entity di Utente, usando le regolazioni automatiche di quella superclasse.
-            entityDellaSuperClasseUtente = utenteService.newEntity(userName, passwordInChiaro, ruoli, mail, locked);
+            entityDellaSuperClasseUtente = utenteService.newEntity(company, userName, passwordInChiaro, ruoli, mail, locked);
 
             //--poi vengono ricopiati i valori in Persona
             //--casting dalla superclasse alla classe attuale
@@ -272,16 +263,30 @@ public class PersonService extends AService {
 
 
     /**
+     * Property unica (se esiste).
+     */
+    @Override
+    public String getPropertyUnica(AEntity entityBean) {
+        Person persona = (Person) entityBean;
+        String nome = persona.nome != null ? persona.nome : "";
+        String cognome = persona.cognome != null ? persona.cognome : "";
+
+        return pref.isBool(FlowCost.USA_SECURITY) ? utenteService.getPropertyUnica(entityBean) : nome + cognome;
+    }// end of method
+
+
+    /**
      * Operazioni eseguite PRIMA del save <br>
      * Regolazioni automatiche di property <br>
+     * Controllo della validità delle properties obbligatorie <br>
      *
      * @param entityBean da regolare prima del save
-     * @param operation  del dialogo (NEW, EDIT)
+     * @param operation  del dialogo (NEW, Edit)
      *
      * @return the modified entity
      */
     @Override
-    public AEntity beforeSave(AEntity entityBean, AViewDialog.Operation operation) {
+    public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
         if (((Person) entityBean).usaSuperClasse) {
             entityBean = utenteService.beforeSave(entityBean, operation);
         }// end of if cycle
@@ -300,70 +305,46 @@ public class PersonService extends AService {
             entity.cognome = text.primaMaiuscola(entity.cognome);
         }// end of if cycle
 
+        if (text.isEmpty(entity.nome) && text.isEmpty(entity.cognome)) {
+            entity = null;
+        }// end of if cycle
+
         return entity;
     }// end of method
 
 
     /**
-     * Property unica (se esiste).
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param titolo (obbligatorio, unico)
+     *
+     * @return istanza della Entity, null se non trovata
      */
-    public String getPropertyUnica(AEntity entityBean) {
-        Person persona = (Person) entityBean;
-        String nome = persona.nome != null ? persona.nome : "";
-        String cognome = persona.cognome != null ? persona.cognome : "";
-
-        return pref.isBool(FlowCost.USA_SECURITY) ? utenteService.getPropertyUnica(entityBean) : nome + cognome;
+    public Person findByKeyUnica(String titolo) {
+        return null;
     }// end of method
 
 
     /**
-     * Crea una entity <br>
+     * Creazione di alcuni dati demo iniziali <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
+     * La collezione viene svuotata <br>
+     * I dati possono essere presi da una Enumeration o creati direttamemte <br>
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
      *
-     * @param eaPerson: enumeration di dati iniziali di prova
-     *
-     * @return la entity trovata o appena creata
+     * @return numero di elementi creato
      */
-    public Person crea(EAPerson eaPerson) {
-        return (Person) save(newEntity(eaPerson));
+    @Override
+    public int reset() {
+        int numRec = super.reset();
+
+        for (EAPerson eaPerson : EAPerson.values()) {
+            numRec = creaIfNotExist(eaPerson) ? numRec + 1 : numRec;
+        }// end of for cycle
+
+        return numRec;
     }// end of method
 
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata, per essere usata anche embedded <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @param eaPerson: enumeration di dati iniziali di prova
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Person newEntity(EAPerson eaPerson) {
-        String nome;
-        String cognome;
-        String telefono;
-        EAAddress eaAddress;
-        Address indirizzo;
-        String mail;
-        String userName;
-
-        if (eaPerson != null) {
-            nome = eaPerson.getNome();
-            cognome = eaPerson.getCognome();
-            telefono = eaPerson.getTelefono();
-            eaAddress = eaPerson.getAddress();
-            indirizzo = addressService.newEntity(eaAddress);
-            mail = eaPerson.getMail();
-            userName = eaPerson.getUserName();
-
-            if (pref.isBool(EAPreferenza.usaCompany.getCode())) {
-                return newEntity(nome, cognome, telefono, indirizzo, userName, "", (List<Role>) null, mail, false, false);
-            } else {
-                return newEntity(nome, cognome, telefono, indirizzo);
-            }// end of if/else cycle
-
-        } else {
-            return null;
-        }// end of if/else cycle
-    }// end of method
 
     /**
      * Costruisce una lista di nomi delle properties della Grid nell'ordine:
@@ -374,7 +355,7 @@ public class PersonService extends AService {
      * @return lista di nomi di properties
      */
     @Override
-    public List<String> getGridPropertyNamesList() {
+    public List<String> getGridPropertyNamesList(AContext context) {
         return pref.isBool(FlowCost.USA_SECURITY) ? PROPERTIES_SECURED : PROPERTIES_NOT_SECURED;
     }// end of method
 
@@ -388,7 +369,7 @@ public class PersonService extends AService {
      * @return lista di nomi di properties
      */
     @Override
-    public List<String> getFormPropertyNamesList(AEntity curremtItem) {
+    public List<String> getFormPropertyNamesList(AEntity curremtItem, AContext context) {
         return ((Person) curremtItem).usaSuperClasse ? PROPERTIES_SECURED : PROPERTIES_NOT_SECURED;
     }// end of method
 

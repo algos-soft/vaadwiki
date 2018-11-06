@@ -2,7 +2,6 @@ package it.algos.vaadwiki.modules.attivita;
 
 import java.util.List;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -11,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.TAG_ATT;
+import static it.algos.vaadwiki.application.WikiCost.TAG_ATT;
 
 /**
  * Project vaadwiki <br>

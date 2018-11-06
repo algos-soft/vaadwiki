@@ -2,25 +2,16 @@ package it.algos.vaadwiki.application;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.application.FlowCost;
-import it.algos.vaadflow.boot.AVersBoot;
+import it.algos.vaadflow.boot.AVers;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.modules.versione.VersioneService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import java.util.Date;
-
-import static it.algos.vaadwiki.application.VaadwikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Log delle versioni, modifiche e patch installate
@@ -36,10 +27,10 @@ import static it.algos.vaadwiki.application.VaadwikiCost.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class VaadwikiVers extends AVersBoot {
+public class WikiVers extends AVers {
 
 
-    private final static String CODE_PROJECT = "V";
+    private final static String CODE_PROJECT = "K";
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -66,8 +57,7 @@ public class VaadwikiVers extends AVersBoot {
      * L'ordine di inserimento è FONDAMENTALE
      */
     public int inizia() {
-        int k = 1;
-        super.inizia();
+        int k =super.inizia();
         codeProject = CODE_PROJECT;
 
         //--creata una nuova preferenza
@@ -138,6 +128,11 @@ public class VaadwikiVers extends AVersBoot {
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefInt(DURATA_DOWNLOAD_CATEGORIA, "Durata in secondi dell'ultimo download delle voci della categoria BioBot");
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefTxt(CAT_BIO, "Categoria attiva","BioBot");
         }// fine del blocco if
 
         return k;

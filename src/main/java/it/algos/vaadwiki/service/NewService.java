@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Scope;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.LAST_DOWNLOAD_BIO;
+import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_BIO;
 
 /**
  * Project vaadbio2

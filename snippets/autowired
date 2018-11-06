@@ -32,6 +32,7 @@
     private RoleService service;
 
 
+
     /**
      * Recupera da StaticContextAccessor una istanza della classe <br>
      * La classe deve avere l'annotation @Scope = 'singleton', and is created at the time of class loading <br>
@@ -60,7 +61,7 @@
     protected RoleData roleData;
 
     /**
-     * Istanza (@Scope = 'prototype') inietta da Spring ogni volta che necessita<br>
+     * Istanza (@Scope = 'prototype') inietta da Spring ogni volta che necessita <br>
      */
     @Autowired
     private TurnoCell turno;
@@ -73,3 +74,10 @@
     @Autowired
     @Qualifier(TASK_FUN)
     private ATask task;
+
+
+    /**
+     * Costruttore @Autowired <br>
+     */
+    public APresenter() {
+    }// end of Spring constructor

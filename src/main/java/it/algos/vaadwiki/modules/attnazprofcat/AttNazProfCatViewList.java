@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Scope;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.PATH_WIKI;
+import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 
 /**
  * Project vaadbio2
@@ -146,6 +146,20 @@ public class AttNazProfCatViewList extends AViewList {
                 topLayout.add(showStatisticheButton);
             }// end of if cycle
         }// end of if cycle
+//        if (topLayout != null && deleteMongoButton != null) {
+//            topLayout.removeAll();
+//            topLayout.add(deleteMongoButton);
+//            topLayout.add(donwloadMongoButton);
+//            if (usaBottoneUpload) {
+//                topLayout.add(uploadStatisticheButton);
+//            }// end of if cycle
+//            if (usaBottoneModulo) {
+//                topLayout.add(showModuloButton);
+//            }// end of if cycle
+//            if (usaBottoneStatistiche) {
+//                topLayout.add(showStatisticheButton);
+//            }// end of if cycle
+//        }// end of if cycle
     }// end of method
 
     /**

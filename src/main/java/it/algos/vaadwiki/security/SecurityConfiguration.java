@@ -38,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String LOGIN_PROCESSING_URL = "/login";
     private static final String LOGIN_FAILURE_URL = "/login?error";
     private static final String LOGIN_URL = "/login";
-    private static final String LOGOUT_SUCCESS_URL = "/role";//@todo cambiare in Tabellone
+    private static final String LOGOUT_SUCCESS_URL = "/";
 
     private final UserDetailsService userDetailsService;
 
@@ -72,7 +72,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public Utente currentUser(UtenteService userRepository) {
-        return userRepository.findByUserName(SecurityUtils.getUsername());
+        return userRepository.findByKeyUnica(SecurityUtils.getUsername());
     }// end of method
 
     /**

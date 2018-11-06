@@ -3,12 +3,11 @@ package it.algos.vaadflow.modules.utente;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
-import it.algos.vaadflow.enumeration.EARoleType;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.MainLayout;
@@ -18,16 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.lang.reflect.Field;
-import java.time.LocalDate;
-
 import static it.algos.vaadflow.application.FlowCost.TAG_UTE;
 
 /**
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
@@ -85,19 +81,29 @@ public class UtenteViewList extends AViewList {
 
 
     /**
-     * Le preferenze sovrascritte nella sottoclasse
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
     @Override
     protected void fixPreferenzeSpecifiche() {
         super.usaSearchTextField = false;
+        super.usaBottoneDeleteAll = true;
+        super.usaBottoneReset = true;
         super.isEntityDeveloper = true;
+        super.isEntityUsaDatiDemo = true;
     }// end of method
 
+
     /**
-     * Eventuale aggiunta alla caption sopra la grid
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
-    protected VerticalLayout addCaption(VerticalLayout layout) {
-        layout = super.addCaption(layout);
+    @Override
+    protected VerticalLayout creaTopAlert() {
+        VerticalLayout layout = super.creaTopAlert();
 
         layout.add(new Label("Questa lista non dovrebbe mai essere usata direttamente"));
         layout.add(new Label("Serve per la creazione e gestione interna degli accessi della security"));

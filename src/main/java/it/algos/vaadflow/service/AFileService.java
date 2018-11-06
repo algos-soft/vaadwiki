@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 
 import java.io.*;
@@ -18,33 +19,34 @@ import java.util.List;
  * Date: mar, 06-mar-2018
  * Time: 09:54
  * <p>
- * Classe di Libreria - Gestione dei file di sistema
+ * Gestione dei file di sistema
  * <p>
- * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
- * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Classe di libreria; NON deve essere astratta, altrimenti Spring non la costruisce <br>
+ * Implementa il 'pattern' SINGLETON; l'istanza può essere richiamata con: <br>
+ * 1) StaticContextAccessor.getBean(AFileService.class); <br>
+ * 2) AFileService.getInstance(); <br>
+ * 3) @Autowired private AFileService fileService; <br>
+ * <p>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
+ * NOT annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (inutile, basta il 'pattern') <br>
  * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * <p>
- * Due possibilità d'uso: <br>
- * 1) l'istanza singleton può essere iniettata da SpringBoot in automatico (se all'interno della catena di @Autowired) <br>
- * 2) l'istanza singleton può essere recuperata col metodo statico getInstance() (se creata con new AArrayService) <br>
- * <p>
- * Testata in AFileServiceTest
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Service
 @Slf4j
-public class AFileService {
+public class AFileService extends AbstractService {
+
+    /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
 
 
     /**
      * Private final property
      */
     private static final AFileService INSTANCE = new AFileService();
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public ATextService text = ATextService.getInstance();
 
     /**
      * Private constructor to avoid client applications to use constructor

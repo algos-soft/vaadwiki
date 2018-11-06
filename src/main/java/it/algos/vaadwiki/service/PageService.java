@@ -24,7 +24,7 @@ import java.util.List;
 public class PageService extends ABioService {
 
 
-    public final static int BLOCCO_PAGES = 500;
+    public final static int BLOCCO_PAGES = 200;
 
 
     /**
@@ -64,7 +64,7 @@ public class PageService extends ABioService {
      * @param bulk                 flag per inserimento 'massiccio' delle nuove pagine
      */
     private int downloadPagine(List<Long> listaVociDaScaricare, boolean bulk) {
-        long inizio = System.currentTimeMillis();
+        long inizioCiclo = System.currentTimeMillis();
         int numVociRegistrate = 0;
         List<Long> bloccoPageids;
         int dimBloccoLettura = BLOCCO_PAGES;
@@ -74,7 +74,7 @@ public class PageService extends ABioService {
             numCicliLetturaPagine = array.numCicli(listaVociDaScaricare.size(), dimBloccoLettura);
             for (int k = 0; k < numCicliLetturaPagine; k++) {
                 bloccoPageids = array.estraeSublistaLong(listaVociDaScaricare, dimBloccoLettura, k + 1);
-                numVociRegistrate += downloadSingoloBlocco(bloccoPageids, bulk);
+                numVociRegistrate += downloadSingoloBlocco(bloccoPageids, bulk, inizioCiclo);
             }// end of for cycle
         }// end of if cycle
 
@@ -86,17 +86,25 @@ public class PageService extends ABioService {
      * @param bloccoPageids lista (pageids) di pagine da scaricare dal server wiki
      * @param bulk          flag per inserimento 'massiccio' delle nuove pagine
      */
-    private int downloadSingoloBlocco(List<Long> bloccoPageids, boolean bulk) {
+    private int downloadSingoloBlocco(List<Long> bloccoPageids, boolean bulk, long inizioCiclo) {
         int numVociRegistrate = 0;
         ArrayList<Page> pages; // di norma 500
+        long inizio = System.currentTimeMillis();
 
-        if (bloccoPageids == null || bloccoPageids.size() > 500) {
+        if (bloccoPageids == null || bloccoPageids.size() > BLOCCO_PAGES) {
             return 0;
         }// end of if cycle
 
         pages = api.leggePages(bloccoPageids);
+        if (pages.size() == bloccoPageids.size()) {
+            log.info("Algos - Ciclo DOWNLOAD - lette " + pages.size() + " Pages in " + date.deltaText(inizio));
+        } else {
+            log.error("Algos - PageService.downloadSingoloBlocco() - Ci sono " + pages.size() + " Pages invece delle " + bloccoPageids.size() + " previste");
+            pages = api.leggePages(bloccoPageids);
+        }// end of if/else cycle
+
         if (bulk) {
-            numVociRegistrate = registraBulk(pages);
+            numVociRegistrate = registraBulk(pages, inizioCiclo);
         } else {
             numVociRegistrate = registraSingoloBlocco(pages);
         }// end of if/else cycle
@@ -105,24 +113,36 @@ public class PageService extends ABioService {
     }// end of method
 
 
-    private int registraBulk(ArrayList<Page> pages) {
+    private int registraBulk(ArrayList<Page> pages, long inizioCiclo) {
         int numVociRegistrate = 0;
         Bio entity;
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
+        int numVociTotali = 0;
 
         for (Page page : pages) {
             entity = creaBio(page);
-            listaBio.add(entity);
+            if (entity != null) {
+                listaBio.add(entity);
+            }// end of if cycle
         }// end of for cycle
 
+        long inizioBlocco = System.currentTimeMillis();
         if (listaBio.size() > 0) {
             try { // prova ad eseguire il codice
-                mongo.insert(listaBio, "bio");
+                mongo.updateBulk(listaBio, Bio.class);
                 numVociRegistrate = listaBio.size();
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
+
+        if (numVociRegistrate == pages.size()) {
+            log.info("Algos - Ciclo DOWNLOAD - aggiornate " + numVociRegistrate + " Biografie in " + date.deltaText(inizioBlocco));
+            numVociTotali = mongo.count(Bio.class);
+            log.info("Algos - DEBUG - In mongoDB ci sono " + numVociTotali + " elementi, caricati in " + date.deltaText(inizioCiclo));
+        } else {
+            log.error("Algos - PageService.registraBulk() - Ci sono " + pages.size() + " Pages e " + numVociRegistrate + " Bio");
+        }// end of if/else cycle
 
         return numVociRegistrate;
     }// end of method
@@ -145,7 +165,7 @@ public class PageService extends ABioService {
             elaboraService.esegueNoSave(entity);
         } else {
             if (text.isEmpty(template)) {
-                log.warn("Manca il template alla voce " + wikiTitle);
+                log.warn("Algos - Manca il template Bio alla voce " + wikiTitle);
             }// end of if cycle
         }// end of if/else cycle
 

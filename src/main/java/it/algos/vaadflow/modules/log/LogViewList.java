@@ -2,24 +2,24 @@ package it.algos.vaadflow.modules.log;
 
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
-import it.algos.vaadflow.enumeration.EARoleType;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.AViewList;
-import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.dialog.IADialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
 import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 
 /**
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
@@ -54,7 +54,7 @@ public class LogViewList extends AViewList {
     public static final String IRON_ICON = "history";
 
 
-   /**
+    /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
@@ -74,7 +74,12 @@ public class LogViewList extends AViewList {
     @Override
     protected void fixPreferenzeSpecifiche() {
         super.usaSearchTextField = false;
-        super.isEntityDeveloper = true;
+        super.usaSearchBottoneNew = false;
+        super.isEntityAdmin = true;
+        if (login.isDeveloper()) {
+            super.usaBottoneReset = true;
+        }// end of if cycle
     }// end of method
+
 
 }// end of class

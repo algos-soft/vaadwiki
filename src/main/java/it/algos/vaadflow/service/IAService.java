@@ -1,7 +1,10 @@
 package it.algos.vaadflow.service;
 
+import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.ui.dialog.AViewDialog;
+import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.company.Company;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -52,16 +55,6 @@ public interface IAService {
 
 
     /**
-     * Ricerca una entity <br>
-     * Se non esiste, la crea <br>
-     *
-     * @param idKey di riferimento (obbligatorio ed unico)
-     *
-     * @return la entity trovata o appena creata
-     */
-    public AEntity findOrCrea(String idKey);
-
-    /**
      * Retrieves an entity by its id.
      *
      * @param id must not be {@literal null}.
@@ -89,6 +82,43 @@ public interface IAService {
 
 
     /**
+     * Returns only entities of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     * <p>
+     * Methods of this library return Iterable<T>, while the rest of my code expects Collection<T>
+     * L'annotation standard di JPA prevede un ritorno di tipo Iterable, mentre noi usiamo List
+     * Eseguo qui la conversione, che rimane trasparente al resto del programma
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     *
+     * @return all entities
+     */
+    public List<? extends AEntity> findAll(int offset, int size);
+
+
+    /**
+     * Returns only entities of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     * <p>
+     * Methods of this library return Iterable<T>, while the rest of my code expects Collection<T>
+     * L'annotation standard di JPA prevede un ritorno di tipo Iterable, mentre noi usiamo List
+     * Eseguo qui la conversione, che rimane trasparente al resto del programma
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     * @param sort   ordinamento degli elementi
+     *
+     * @return all entities
+     */
+    public List<? extends AEntity> findAll(int offset, int size, Sort sort);
+
+
+    /**
      * Fetches the entities whose 'main text property' matches the given filter text.
      * <p>
      * The matching is case insensitive. When passed an empty filter text,
@@ -105,24 +135,25 @@ public interface IAService {
     /**
      * Operazioni eseguite PRIMA del save <br>
      * Regolazioni automatiche di property <br>
+     * Controllo della validità delle properties obbligatorie <br>
      *
      * @param entityBean da regolare prima del save
-     * @param operation del dialogo (NEW, EDIT)
+     * @param operation  del dialogo (NEW, Edit)
      *
      * @return the modified entity
      */
-    public AEntity beforeSave(AEntity entityBean, AViewDialog.Operation operation) ;
+    public AEntity beforeSave(AEntity entityBean, EAOperation operation);
 
 
-        /**
-          * Saves a given entity.
-          * Use the returned instance for further operations
-          * as the save operation might have changed the entity instance completely.
-          *
-          * @param entityBean to be saved
-          *
-          * @return the saved entity
-          */
+    /**
+     * Saves a given entity.
+     * Use the returned instance for further operations
+     * as the save operation might have changed the entity instance completely.
+     *
+     * @param entityBean to be saved
+     *
+     * @return the saved entity
+     */
     public AEntity save(AEntity entityBean);
 
 
@@ -145,9 +176,11 @@ public interface IAService {
      * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse)
      * 3) Sovrascrive la lista nella sottoclasse specifica di xxxService
      *
+     * @param context legato alla sessione
+     *
      * @return lista di nomi di properties
      */
-    public List<String> getGridPropertyNamesList();
+    public List<String> getGridPropertyNamesList(AContext context);
 
 
     /**
@@ -156,10 +189,11 @@ public interface IAService {
      * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse)
      * 3) Sovrascrive la lista nella sottoclasse specifica di xxxService
      *
+     * @param context legato alla sessione
+     *
      * @return lista di nomi di properties
      */
-    public List<String> getFormPropertyNamesList(AEntity curremtItem);
-
+    public List<String> getFormPropertyNamesList(AEntity curremtItem, AContext context);
 
 
 //    /**
@@ -197,9 +231,9 @@ public interface IAService {
 
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Senza properties per compatibilità con la superclasse
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -231,5 +265,50 @@ public interface IAService {
      * Deletes all entities of the collection.
      */
     public boolean deleteAll();
+
+
+    /**
+     * Metodo invocato da ABoot (o da una sua sottoclasse) <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
+     * Creazione di una collezione - Solo se non ci sono records
+     */
+    public void loadData();
+
+    /**
+     * Creazione di alcuni dati demo iniziali <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
+     * La collezione viene svuotata <br>
+     * I dati possono essere presi da una Enumeration o creati direttamemte <br>
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     *
+     * @return numero di elementi creato
+     */
+    public int reset();
+
+    /**
+     * Importazione di dati <br>
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     *
+     * @return true se sono stati importati correttamente
+     */
+    public boolean importa();
+
+    /**
+     * Importazione di dati <br>
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     *
+     * @param company di riferimento
+     *
+     * @return true se sono stati importati correttamente
+     */
+    public boolean importa(Company company);
+
+    /**
+     * Recupera il context della session <br>
+     * Controlla che la session sia attiva <br>
+     *
+     * @return context della sessione
+     */
+    public AContext getContext();
 
 }// end of interface

@@ -2,13 +2,12 @@ package it.algos.vaadwiki.modules.nazionalita;
 
 import java.util.List;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import static it.algos.vaadwiki.application.VaadwikiCost.TAG_NAZ;
+import static it.algos.vaadwiki.application.WikiCost.TAG_NAZ;
 
 /**
  * Project vaadwiki <br>

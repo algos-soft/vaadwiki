@@ -29,7 +29,6 @@ import java.util.Collection;
 @AIScript(sovrascrivibile = false)
 public class AUserDetailsService implements UserDetailsService {
 
-    private final ALogin login;
     private final UtenteService utenteService;
     private final RoleService roleService;
 
@@ -42,8 +41,7 @@ public class AUserDetailsService implements UserDetailsService {
     protected ABootService boot;
 
     @Autowired
-    public AUserDetailsService(ALogin login, UtenteService utenteService, RoleService roleService) {
-        this.login = login;
+    public AUserDetailsService( UtenteService utenteService, RoleService roleService) {
         this.utenteService = utenteService;
         this.roleService = roleService;
     }// end of Spring constructor
@@ -59,12 +57,11 @@ public class AUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String passwordHash = "";
         Collection<? extends GrantedAuthority> authorities;
-        Utente utente = utenteService.findByUserName(username);
+        Utente utente = (Utente) utenteService.findById(username);
 
         if (null == utente) {
             throw new UsernameNotFoundException("No user present with username: " + username);
         } else {
-            login.setUtenteAndCompany(utente, null);
             passwordHash = passwordEncoder.encode(utente.getPasswordInChiaro());
             authorities = roleService.getAuthorities(utente);
             return new User(utente.getUserName(), passwordHash, authorities);

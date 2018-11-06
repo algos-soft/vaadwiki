@@ -1,6 +1,7 @@
 package it.algos.vaadflow.backend.login;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow.modules.company.Company;
 import it.algos.vaadflow.modules.role.Role;
 import it.algos.vaadflow.modules.role.RoleService;
@@ -22,7 +23,8 @@ import java.util.List;
  * Time: 16:23
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@VaadinSessionScope
 public class ALogin {
 
     private Utente utente;
@@ -30,8 +32,8 @@ public class ALogin {
     private boolean developer = false;
     private boolean admin = false;
 
-    @Autowired
-    private RoleService roleService;
+//    @Autowired
+//    private RoleService roleService;
 
     public Utente getUtente() {
         return utente;
@@ -49,19 +51,17 @@ public class ALogin {
         this.admin = false;
 
         if (utente != null) {
-            List<Role> ruoli = utente.getRuoli();
-            if (ruoli.contains(roleService.getDeveloper())) {
-                this.developer = true;
-            }// end of if cycle
-            if (ruoli.contains(roleService.getAdmin())) {
-                this.admin = true;
-            }// end of if cycle
+            this.admin = utente.isAdmin();
+            this.developer = utente.isDev();
         }// end of if cycle
-
     }// end of method
 
     public Company getCompany() {
         return company;
+    }// end of method
+
+    public void setCompany(Company company) {
+        this.company = company;
     }// end of method
 
     public boolean isDeveloper() {

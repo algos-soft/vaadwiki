@@ -4,6 +4,9 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.boot.ABoot;
+import it.algos.vaadflow.modules.role.EARole;
+import it.algos.vaadflow.modules.role.RoleService;
+import it.algos.vaadflow.modules.utente.UtenteService;
 import it.algos.vaadwiki.modules.attivita.AttivitaViewList;
 import it.algos.vaadwiki.modules.bio.BioViewList;
 import it.algos.vaadwiki.modules.categoria.CategoriaViewList;
@@ -37,16 +40,20 @@ import static it.algos.vaadflow.application.FlowCost.PROJECT_NAME;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovrascrivibile = false)
-public class VaadwikiBoot extends ABoot {
+public class WikiBoot extends ABoot {
 
     public final static String PROJECT_VERSION = "0.3";
     public final static String DEMO_COMPANY_CODE = "demo";
 
+    @Autowired
+    private UtenteService utenteService;
 
+    @Autowired
+    private RoleService roleService;
     /**
      * Iniettata dal costruttore <br>
      */
-    private VaadwikiVers vaadwikiVers;
+    private WikiVers vaadwikiVers;
 
     /**
      * Costruttore @Autowired <br>
@@ -54,7 +61,7 @@ public class VaadwikiBoot extends ABoot {
      * @param wamVersBoot Log delle versioni, modifiche e patch installat
      */
     @Autowired
-    public VaadwikiBoot(VaadwikiVers vaadwikiVers) {
+    public WikiBoot(WikiVers vaadwikiVers) {
         super();
         this.vaadwikiVers = vaadwikiVers;
     }// end of Spring constructor
@@ -80,6 +87,10 @@ public class VaadwikiBoot extends ABoot {
 //        this.meseService.loadData();
 //        this.annoService.loadData();
 //        this.giornoService.loadData();
+
+
+        //--patch di accesso
+        utenteService.creaIfNotExist(null, "gac", "fulvia", roleService.getRoles(EARole.developer), "gac@algos.it");
     }// end of method
 
 

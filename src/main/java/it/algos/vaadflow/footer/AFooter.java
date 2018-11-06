@@ -3,17 +3,18 @@ package it.algos.vaadflow.footer;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.login.ALogin;
+import it.algos.vaadflow.enumeration.EATime;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
+import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDate;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 
@@ -38,7 +39,6 @@ public class AFooter extends VerticalLayout {
 
     //    @Autowired
 //    public AHtmlService html;
-    private final static LocalDate DATA = LocalDate.now();
     private final static String DEV_TAG = "Dev: ";
     private final static String ADMIN_TAG = "Admin: ";
     private final static String USER_TAG = "User: ";
@@ -46,13 +46,13 @@ public class AFooter extends VerticalLayout {
      * Inietta da Spring come 'session'
      */
     @Autowired
-    @Lazy
-    public ALogin login;
+    public ATextService text;
     /**
      * Inietta da Spring come 'session'
      */
     @Autowired
-    public ATextService text;
+    public ADateService date;
+    private ALogin login;
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -80,17 +80,10 @@ public class AFooter extends VerticalLayout {
 //            this.addStyleName("greenBg");
         }// end of if cycle
 
-        this.start();
     }// end of method
 
-    public Label setAppMessage(String message) {
-        this.message = message;
-        return this.start();
-    }// end of method
-
-
-    public Label start() {
-        String message = "";
+    public Label setAppMessage(String message, AContext context) {
+        ALogin login=context.getLogin();
         String sep = " - ";
         String spazio = " ";
         String tag = "all companies";
@@ -119,12 +112,11 @@ public class AFooter extends VerticalLayout {
 
 //        label = new LabelRosso(DEVELOPER_NAME + message);
 
-        String data;
         message = DEVELOPER_COMPANY + sep + PROJECT_NAME;
         message += spazio;
         message += PROJECT_VERSION;
         message += " del ";
-        message += DATA.toString();
+        message += date.get(PROJECT_DATE, EATime.normal);
         if (text.isValid(companyName)) {
             message += sep;
             message += companyName;

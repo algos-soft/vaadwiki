@@ -2,6 +2,7 @@ package it.algos.vaadflow.modules.log;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.*;
+import it.algos.vaadflow.backend.entity.ACEntity;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
@@ -31,7 +32,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <p>
@@ -69,11 +70,11 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 @AllArgsConstructor
 @Builder(builderMethodName = "builderLog")
 @EqualsAndHashCode(callSuper = false)
-@AIEntity(company = EACompanyRequired.nonUsata)
+@AIEntity(company = EACompanyRequired.obbligatoria)
 @AIList(fields = {"livello", "type", "descrizione", "evento"})
 @AIForm(fields = {"livello", "type", "descrizione", "evento"})
 @AIScript(sovrascrivibile = false)
-public class Log extends AEntity {
+public class Log extends ACEntity {
 
 
     /**

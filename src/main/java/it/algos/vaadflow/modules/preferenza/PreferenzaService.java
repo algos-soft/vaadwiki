@@ -1,10 +1,8 @@
 package it.algos.vaadflow.modules.preferenza;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.enumeration.EAPrefType;
-import it.algos.vaadflow.modules.company.Company;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.service.AService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,25 +21,24 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
- * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
+ * Business class. Layer di collegamento per la Repository. <br>
  * <br>
- * Annotated with @SpringComponent (obbligatorio) <br>
- * Annotated with @Service (ridondante) <br>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * NOT annotated with @VaadinSessionScope (sbagliato, perché SpringBoot va in loop iniziale) <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
  * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_PRE)
 @Slf4j
 @AIScript(sovrascrivibile = false)
 public class PreferenzaService extends AService {
-
 
     /**
      * versione della classe per la serializzazione
@@ -72,79 +69,79 @@ public class PreferenzaService extends AService {
         this.repository = (PreferenzaRepository) repository;
     }// end of Spring constructor
 
+
     /**
-     * Ricerca di una entity (la crea se non la trova) <br>
+     * Crea una entity solo se non esisteva <br>
      *
      * @param code        codice di riferimento (obbligatorio)
      * @param descrizione (facoltativa)
      * @param type        (obbligatorio) per convertire in byte[] i valori
      * @param value       (obbligatorio) memorizza tutto in byte[]
      *
-     * @return la entity trovata o appena creata
+     * @return true se la entity è stata creata
      */
-    public Preferenza findOrCrea(String code, String descrizione, EAPrefType type, Object value) {
-        Preferenza entity = findByKeyUnica(code);
+    public boolean creaIfNotExist(String code, String descrizione, EAPrefType type, Object value) {
+        boolean creata = false;
 
-        if (entity == null) {
-            entity = crea(code, descrizione, type, value);
+        if (isMancaByKeyUnica(code)) {
+            AEntity entity = save(newEntity(0, code, descrizione, type, value));
+            creata = entity != null;
         }// end of if cycle
 
-        return entity;
+        return creata;
     }// end of method
 
-    /**
-     * Crea una entity e la registra <br>
-     *
-     * @param code        codice di riferimento (obbligatorio)
-     * @param descrizione (facoltativa)
-     * @param type        (obbligatorio) per convertire in byte[] i valori
-     * @param value       (obbligatorio) memorizza tutto in byte[]
-     *
-     * @return la entity appena creata
-     */
-    public Preferenza crea(String code, String descrizione, EAPrefType type, Object value) {
-        Preferenza entity = newEntity((Company) null, 0, code, descrizione, type, value);
-        save(entity);
-        return entity;
-    }// end of method
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Senza properties per compatibilità con la superclasse
+     * Crea una entity solo se non esisteva <br>
      *
-     * @return la nuova entity appena creata (non salvata)
+     * @param eaPref: enumeration di dati iniziali di prova
+     *
+     * @return true se la entity è stata creata
      */
-    @Override
-    public Preferenza newEntity() {
-        return newEntity(null, 0, "", "", null, null);
+    public boolean creaIfNotExist(EAPreferenza eaPref) {
+        boolean creata = false;
+
+        if (isMancaByKeyUnica(eaPref.getCode())) {
+            AEntity entity = save(newEntity(eaPref));
+            creata = entity != null;
+        }// end of if cycle
+
+        return creata;
     }// end of method
 
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
-     * Properties obbligatorie
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
-     *
-     * @param code        codice di riferimento (obbligatorio)
-     * @param descrizione (facoltativa)
-     * @param type        (obbligatorio) per convertire in byte[] i valori
-     * @param value       (obbligatorio) memorizza tutto in byte[]
+     * Senza properties per compatibilità con la superclasse <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Preferenza newEntity(String code, String descrizione, EAPrefType type, Object value) {
-        return newEntity((Company) null, 0, code, descrizione, type, value);
+    public AEntity newEntity() {
+        return newEntity(0, "", "", null, null);
     }// end of method
+
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Usa una enumeration di dati iniziali di prova <br>
+     *
+     * @param eaPref: enumeration di dati iniziali di prova
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Preferenza newEntity(EAPreferenza eaPref) {
+        return newEntity(0, eaPref.getCode(), eaPref.getDesc(), eaPref.getType(), eaPref.getValue());
+    }// end of method
+
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
-     * @param company     di appartenenza (obbligatoria, se manca viene recuperata dal login)
      * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
      * @param code        codice di riferimento (obbligatorio)
      * @param descrizione (facoltativa)
@@ -153,15 +150,8 @@ public class PreferenzaService extends AService {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Preferenza newEntity(Company company, int ordine, String code, String descrizione, EAPrefType type, Object value) {
-        Preferenza entity = null;
-
-        entity = findByKeyUnica(code);
-        if (entity != null) {
-            return findByKeyUnica(code);
-        }// end of if cycle
-
-        entity = Preferenza.builderPreferenza()
+    public Preferenza newEntity(int ordine, String code, String descrizione, EAPrefType type, Object value) {
+        Preferenza entity = Preferenza.builderPreferenza()
                 .ordine(ordine != 0 ? ordine : this.getNewOrdine())
                 .code(text.isValid(code) ? code : null)
                 .descrizione(text.isValid(descrizione) ? descrizione : null)
@@ -169,30 +159,39 @@ public class PreferenzaService extends AService {
                 .value(type != null ? type.objectToBytes(value) : (byte[]) null)
                 .build();
 
-        return (Preferenza) addCompany(entity, company);
+        return (Preferenza) super.addCompanySeManca(entity);
     }// end of method
 
+
     /**
-     * Fetches the entities whose 'main text property' matches the given filter text.
-     * <p>
-     * Se esiste la company, filtrate secondo la company <br>
-     * The matching is case insensitive. When passed an empty filter text,
-     * the method returns all categories. The returned list is ordered by name.
-     * The 'main text property' is different in each entity class and chosen in the specific subclass
-     *
-     * @param filter the filter text
-     *
-     * @return the list of matching entities
+     * Property unica (se esiste).
      */
     @Override
-    public List<? extends AEntity> findFilter(String filter) {
-        return findAll(); //@todo PROVVISORIO
-    }
+    public String getPropertyUnica(AEntity entityBean) {
+        return ((Preferenza) entityBean).getCode();
+    }// end of method
+
+
+    /**
+     * Operazioni eseguite PRIMA del save <br>
+     * Regolazioni automatiche di property <br>
+     * Controllo della validità delle properties obbligatorie <br>
+     *
+     * @param entityBean da regolare prima del save
+     * @param operation  del dialogo (NEW, Edit)
+     *
+     * @return the modified entity
+     */
+    @Override
+    public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
+        return super.beforeSave(entityBean, operation);
+    }// end of method
+
 
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
-     * @param code di riferimento (obbligatorio)
+     * @param code (obbligatorio, unico)
      *
      * @return istanza della Entity, null se non trovata
      */
@@ -201,22 +200,90 @@ public class PreferenzaService extends AService {
     }// end of method
 
 
+//    /**
+//     * Fetches the entities whose 'main text property' matches the given filter text.
+//     * <p>
+//     * Se esiste la company, filtrate secondo la company <br>
+//     * The matching is case insensitive. When passed an empty filter text,
+//     * the method returns all categories. The returned list is ordered by name.
+//     * The 'main text property' is different in each entity class and chosen in the specific subclass
+//     *
+//     * @param filter the filter text
+//     *
+//     * @return the list of matching entities
+//     */
+//    @Override
+//    public List<? extends AEntity> findFilter(String filter) {
+//        return findAll(); //@todo PROVVISORIO
+//    }
+//
+//
+//    /**
+//     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
+//     *
+//     * @param code di riferimento (obbligatorio)
+//     *
+//     * @return istanza della Entity, null se non trovata
+//     */
+//    public Preferenza findByKeyUnica(String code) {
+//        return repository.findByCode(code);
+//    }// end of method
+//
+//
+//    /**
+//     * Returns all instances of the type <br>
+//     * La Entity è EACompanyRequired.nonUsata. Non usa Company. <br>
+//     * Lista ordinata <br>
+//     *
+//     * @return lista ordinata di tutte le entities
+//     */
+//    @Override
+//    public List<Preferenza> findAll() {
+//        List<Preferenza> lista = null;
+//
+//        lista = repository.findAllByOrderByOrdineAsc();
+//
+//        return lista;
+//    }// end of method
+
+
     /**
-     * Returns all instances of the type <br>
-     * La Entity è EACompanyRequired.nonUsata. Non usa Company. <br>
-     * Lista ordinata <br>
-     *
-     * @return lista ordinata di tutte le entities
+     * Metodo invocato da ABoot (o da una sua sottoclasse) <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
+     * Creazione di una collezione - Solo se non ci sono records
      */
     @Override
-    public List<Preferenza> findAll() {
-        List<Preferenza> lista = null;
-
-        lista = repository.findAllByOrderByOrdineAsc();
-
-        return lista;
+    public void loadData() {
+        this.reset();
     }// end of method
 
+
+    /**
+     * Creazione di alcuni dati demo iniziali <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
+     * La collezione viene svuotata <br>
+     * I dati possono essere presi da una Enumeration o creati direttamemte <br>
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     *
+     * @return numero di elementi creato
+     */
+    @Override
+    public int reset() {
+        int numRec = 0;
+        int numPref = count();
+
+        for (EAPreferenza eaPref : EAPreferenza.values()) {
+            numRec = creaIfNotExist(eaPref) ? numRec + 1 : numRec;
+        }// end of for cycle
+
+        if (numRec == 0) {
+            log.info("Algos - Data. Le preferenze sono già presenti (" + numPref + ") e non ne sono state aggiunte di nuove");
+        } else {
+            log.warn("Algos - Data. Sono state aggiunte: " + numRec + " nuove preferenze");
+        }// end of if/else cycle
+
+        return numRec;
+    }// end of method
 
 //    /**
 //     * Fetches the entities whose 'main text property' matches the given filter text.
@@ -241,14 +308,6 @@ public class PreferenzaService extends AService {
 
 
 //    /**
-//     * Property unica (se esiste).
-//     */
-//    @Override
-//    public String getPropertyUnica(AEntity entityBean) {
-//        return ((Preferenza) entityBean).getCode();
-//    }// end of method
-
-//    /**
 //     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>
 //     * Invocato appena prima del save(), solo per una nuova entity <br>
 //     *
@@ -268,6 +327,7 @@ public class PreferenzaService extends AService {
 //    protected void creaIdKeySpecifica(AEntity entityBean) {
 //        entityBean.id = ((Preferenza) entityBean).getCode();
 //    }// end of method
+
 
     /**
      * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company), <br>
@@ -310,18 +370,69 @@ public class PreferenzaService extends AService {
         return value;
     } // end of method
 
+
     public Boolean isBool(String keyCode) {
         boolean status = false;
         Object value = getValue(keyCode);
 
-        if (value != null && value instanceof Boolean) {
-            status = (boolean) value;
-        }// end of if cycle
+        if (value != null) {
+            if (value instanceof Boolean) {
+                status = (boolean) value;
+            } else {
+                log.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
+            }// end of if/else cycle
+        } else {
+            log.warn("Algos - Preferenze. Non esiste la preferenza: " + keyCode);
+        }// end of if/else cycle
 
         return status;
     } // end of method
 
 
+    public int getInt(String keyCode) {
+        int valoreIntero = 0;
+        Object value = getValue(keyCode);
+
+        if (value != null) {
+            if (value instanceof Integer) {
+                valoreIntero = (Integer) value;
+            } else {
+                log.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
+            }// end of if/else cycle
+        } else {
+            log.warn("Algos - Preferenze. Non esiste la preferenza: " + keyCode);
+        }// end of if/else cycle
+
+        return valoreIntero;
+    } // end of method
+
+
+    public String getStr(String keyCode) {
+        String valoreTesto = "";
+        Object value = getValue(keyCode);
+
+        if (value != null) {
+            if (value instanceof String) {
+                valoreTesto = (String) value;
+            } else {
+                log.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
+            }// end of if/else cycle
+        } else {
+            log.warn("Algos - Preferenze. Non esiste la preferenza: " + keyCode);
+        }// end of if/else cycle
+
+        return valoreTesto;
+    } // end of method
+
+
+    /**
+     * Regola il valore della entity che NON viene salvata <br>
+     *
+     * @param keyCode codice di riferimento (obbligatorio)
+     * @param value   (obbligatorio) memorizza tutto in byte[]
+     *
+     * @return la nuova entity appena regolata (non salvata)
+     */
     public Preferenza setValue(String keyCode, Object value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
@@ -333,6 +444,14 @@ public class PreferenzaService extends AService {
     } // end of method
 
 
+    /**
+     * Regola il valore della entity che NON viene salvata <br>
+     *
+     * @param keyCode codice di riferimento (obbligatorio)
+     * @param value   (obbligatorio) memorizza tutto in byte[]
+     *
+     * @return la nuova entity appena regolata (non salvata)
+     */
     public Preferenza setBool(String keyCode, boolean value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
@@ -344,6 +463,14 @@ public class PreferenzaService extends AService {
     } // end of method
 
 
+    /**
+     * Regola il valore della entity che NON viene salvata <br>
+     *
+     * @param keyCode codice di riferimento (obbligatorio)
+     * @param value   (obbligatorio) memorizza tutto in byte[]
+     *
+     * @return la nuova entity appena regolata (non salvata)
+     */
     public Preferenza setInt(String keyCode, int value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
@@ -355,6 +482,14 @@ public class PreferenzaService extends AService {
     } // end of method
 
 
+    /**
+     * Regola il valore della entity che NON viene salvata <br>
+     *
+     * @param keyCode codice di riferimento (obbligatorio)
+     * @param value   (obbligatorio) memorizza tutto in byte[]
+     *
+     * @return la nuova entity appena regolata (non salvata)
+     */
     public Preferenza setDate(String keyCode, LocalDateTime value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
@@ -366,13 +501,24 @@ public class PreferenzaService extends AService {
     } // end of method
 
 
-    public void saveValue(String keyCode, Object value) {
-        Preferenza pref = setValue(keyCode, value);
+    /**
+     * Regola il valore della entity e la salva <br>
+     *
+     * @param keyCode codice di riferimento (obbligatorio)
+     * @param value   (obbligatorio) memorizza tutto in byte[]
+     *
+     * @return true se la entity è stata salvata
+     */
+    public boolean saveValue(String keyCode, Object value) {
+        boolean salvata = false;
+        Preferenza entity = setValue(keyCode, value);
 
-        if (pref != null) {
-            this.save(pref);
+        if (entity != null) {
+            entity = (Preferenza) this.save(entity);
+            salvata = entity != null;
         }// end of if cycle
 
+        return salvata;
     } // end of method
 
 //    public  Boolean getBool(String code, Object defaultValue) {

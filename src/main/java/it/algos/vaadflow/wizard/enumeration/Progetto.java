@@ -17,7 +17,7 @@ public enum Progetto {
 
     vaadin("vaadflow", "vaadflow", "vaadtest", "Flow"),
     test("vaadflow", "vaadtest", "vaadtest", "Test"),
-    bio("vaadbio", "vaadbio", "vaadbio", "Bio"),
+    bio("vaadwiki", "vaadbio", "vaadbio", "Bio"),
     wam("vaadwam", "vaadwam", "vaadwam", "Wam"),
     ;
 

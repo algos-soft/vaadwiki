@@ -2,7 +2,6 @@ package it.algos.vaadflow.modules.preferenza;
 
 
 import it.algos.vaadflow.application.FlowCost;
-import it.algos.vaadflow.enumeration.EAPrefType;
 
 /**
  * Project it.algos.vaadflow
@@ -14,32 +13,39 @@ import it.algos.vaadflow.enumeration.EAPrefType;
 public enum EAPreferenza {
 
     usaDebug(FlowCost.USA_DEBUG, "Flag generale di debug (ce ne possono essere di specifici, validi solo se questo è vero)", EAPrefType.bool, false),
-    usaLogDebug(FlowCost.USA_LOG_DEBUG, "Uso del log di registrazione per il livello debug. Di default false", EAPrefType.bool, false),
+    usaLogDebug(FlowCost.USA_LOG_DEBUG, "Uso del log di registrazione per il livello debug. Di default false.", EAPrefType.bool, false),
     usaCompany(FlowCost.USA_COMPANY, "L'applicazione è multiCompany", EAPrefType.bool, false),
     usaSecurity(FlowCost.USA_SECURITY, "L'applicazione usa la security", EAPrefType.bool, false),
     usaCheckBox(FlowCost.USA_CHECK_BOX, "Uso del checkbox in lista, per i valori booleani", EAPrefType.bool, true),
-    showCompany(FlowCost.SHOW_COMPANY, show(), EAPrefType.bool, true),
-    showPreferenza(FlowCost.SHOW_PREFERENZA, show(), EAPrefType.bool, true),
-    showWizard(FlowCost.SHOW_WIZARD, show(), EAPrefType.bool, true),
-    showDeveloper(FlowCost.SHOW_DEVELOPER, show(), EAPrefType.bool, true),
-    showAddress(FlowCost.SHOW_ADDRESS, show(), EAPrefType.bool, true),
-    showPerson(FlowCost.SHOW_PERSON, show(), EAPrefType.bool, true),
-    showRole(FlowCost.SHOW_ROLE, show(), EAPrefType.bool, true),
-    showUser(FlowCost.SHOW_USER, show(), EAPrefType.bool, true),
-    showVersione(FlowCost.SHOW_VERSION, show(), EAPrefType.bool, true),
-    showLog(FlowCost.SHOW_LOG, show(), EAPrefType.bool, true),
-    showLogType(FlowCost.SHOW_LOGTYPE, show(), EAPrefType.bool, true),
-    showSecolo(FlowCost.SHOW_SECOLO, show(), EAPrefType.bool, true),
-    showAnno(FlowCost.SHOW_ANNO, show(), EAPrefType.bool, true),
-    showMese(FlowCost.SHOW_MESE, show(), EAPrefType.bool, true),
-    showGiorno(FlowCost.SHOW_GIORNO, show(), EAPrefType.bool, true),
+    showCompany(FlowCost.SHOW_COMPANY, show(FlowCost.TAG_COM), EAPrefType.bool, true),
+    showPreferenza(FlowCost.SHOW_PREFERENZA, show(FlowCost.TAG_PRE), EAPrefType.bool, true),
+    showWizard(FlowCost.SHOW_WIZARD, show(FlowCost.TAG_WIZ), EAPrefType.bool, true),
+    showDeveloper(FlowCost.SHOW_DEVELOPER, show(FlowCost.TAG_DEV), EAPrefType.bool, true),
+    showAddress(FlowCost.SHOW_ADDRESS, show(FlowCost.TAG_ADD), EAPrefType.bool, true),
+    showPerson(FlowCost.SHOW_PERSON, show(FlowCost.TAG_PER), EAPrefType.bool, true),
+    showRole(FlowCost.SHOW_ROLE, show(FlowCost.TAG_ROL), EAPrefType.bool, true),
+    showUser(FlowCost.SHOW_USER, show(FlowCost.TAG_UTE), EAPrefType.bool, true),
+    showVersione(FlowCost.SHOW_VERSION, show(FlowCost.TAG_VER), EAPrefType.bool, true),
+    showLog(FlowCost.SHOW_LOG, show(FlowCost.TAG_LOG), EAPrefType.bool, true),
+    showLogType(FlowCost.SHOW_LOGTYPE, show(FlowCost.TAG_TYP), EAPrefType.bool, true),
+    showSecolo(FlowCost.SHOW_SECOLO, show(FlowCost.TAG_SEC), EAPrefType.bool, false),
+    showAnno(FlowCost.SHOW_ANNO, show(FlowCost.TAG_ANN), EAPrefType.bool, false),
+    showMese(FlowCost.SHOW_MESE, show(FlowCost.TAG_MES), EAPrefType.bool, false),
+    showGiorno(FlowCost.SHOW_GIORNO, show(FlowCost.TAG_GIO), EAPrefType.bool, false),
+    loadUtenti(FlowCost.LOAD_UTENTI, "Flag per caricare gli utenti di prova allo startup del programma. Di default false.", EAPrefType.bool, false),
     usaLogMail(FlowCost.USA_LOG_MAIL, "Uso della mail spedita da un log. Di default false", EAPrefType.bool, false),
-    logMailAddress(FlowCost.LOG_MAIL_ADDRESS, "Email a cui spedire i log di posta", EAPrefType.string, "gac@algos.it"),;
+    mailFrom(FlowCost.MAIL_FROM, "Email di default da cui partono i log", EAPrefType.string, "info@algos.it"),
+    mailTo(FlowCost.MAIL_TO, "Email di default a cui spedire i log di posta", EAPrefType.string, "gac@algos.it"),
+    maxRigheGrid(FlowCost.MAX_RIGHE_GRID, "Elementi da visualizzare in ogni pagina della Grid", EAPrefType.integer, 20),
+    ;
 
 
     private String code;
+
     private String desc;
+
     private EAPrefType type;
+
     private Object value;
 
 
@@ -50,37 +56,46 @@ public enum EAPreferenza {
         this.setValue(value);
     }// fine del costruttore
 
-    public static String show() {
-        return "Flag per costruire la UI con il modulo visibile nel menu";
+
+    public static String show(String modulo) {
+        return "Flag per costruire la UI con il modulo " + modulo + " visibile nel menu";
     }// end of method
+
 
     public String getCode() {
         return code;
     }// end of method
 
+
     public void setCode(String code) {
         this.code = code;
     }// end of method
+
 
     public String getDesc() {
         return desc;
     }// end of method
 
+
     public void setDesc(String desc) {
         this.desc = desc;
     }// end of method
+
 
     public EAPrefType getType() {
         return type;
     }// end of method
 
+
     public void setType(EAPrefType type) {
         this.type = type;
     }// end of method
 
+
     public Object getValue() {
         return value;
     }// end of method
+
 
     public void setValue(Object value) {
         this.value = value;

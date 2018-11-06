@@ -5,7 +5,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
@@ -13,9 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.DURATA_DOWNLOAD_PROFESSIONE;
-import static it.algos.vaadwiki.application.VaadwikiCost.LAST_DOWNLOAD_PROFESSIONE;
-import static it.algos.vaadwiki.application.VaadwikiCost.TAG_PRO;
+import static it.algos.vaadwiki.application.WikiCost.DURATA_DOWNLOAD_PROFESSIONE;
+import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_PROFESSIONE;
+import static it.algos.vaadwiki.application.WikiCost.TAG_PRO;
 
 /**
  * Project vaadwiki <br>

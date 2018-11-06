@@ -2,7 +2,7 @@ package it.algos.vaadflow.annotation;
 
 
 import it.algos.vaadflow.enumeration.EACompanyRequired;
-import it.algos.vaadflow.enumeration.EARoleType;
+import it.algos.vaadflow.modules.role.EARoleType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

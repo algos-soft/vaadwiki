@@ -17,7 +17,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_TYP;
  * Project vaadflow <br>
  * Created by Algos
  * User: Gac
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <p>
  * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * <p>
@@ -32,7 +32,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_TYP;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Qualifier(TAG_TYP)
 @Slf4j
-@AIScript(sovrascrivibile = true)
+@AIScript(sovrascrivibile = false)
 public class LogtypeViewDialog extends AViewDialog<Logtype> {
 
 
@@ -44,7 +44,7 @@ public class LogtypeViewDialog extends AViewDialog<Logtype> {
      * @param presenter per gestire la business logic del package
      */
     @Autowired
-    public LogtypeViewDialog(@Qualifier(TAG_TYP) IAPresenter presenter) {
+    public LogtypeViewDialog(@Qualifier(TAG_LOG) IAPresenter presenter) {
         super(presenter);
     }// end of Spring constructor
 

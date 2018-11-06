@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.TAG_BIO;
+import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
 
 /**

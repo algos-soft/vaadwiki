@@ -6,6 +6,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.NativeButton;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -33,8 +34,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.LAST_DOWNLOAD_BIO;
-import static it.algos.vaadwiki.application.VaadwikiCost.TAG_BIO;
+import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_BIO;
+import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
 
 /**
@@ -161,7 +162,7 @@ public class BioViewList extends AViewList {
         creaUpload();
 
         addBottoni();
-        test();
+//        test();
     }// end of method
 
     private void test() {
@@ -216,14 +217,16 @@ public class BioViewList extends AViewList {
     }// end of method
 
     private void creaCiclo() {
-        ciclodButton = new Button("CicloTest");
-//        ciclodButton.addClickListener(e -> cicloService.esegue());@todo definitivo
-        ciclodButton.addClickListener(e -> cicloTest());
+        ciclodButton = new Button("Ciclo");
+        ciclodButton.setIcon(new Icon(VaadinIcon.REFRESH));
+        ciclodButton.addClickListener(e -> cicloService.esegue());//@todo definitivo
+//        ciclodButton.addClickListener(e -> cicloTest());
     }// end of method
 
     private void creaDelete() {
-        deleteButton = new Button("Delete");
-//        deleteButton.addClickListener(e -> deleteService.esegue(null));
+        deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
+        deleteButton.getElement().setAttribute("theme", "error");
+        deleteButton.addClickListener(e -> deleteService.esegue(null));
     }// end of method
 
     private void creaNew() {
@@ -233,17 +236,22 @@ public class BioViewList extends AViewList {
 
     private void creaUpdate() {
         updateButton = new Button("Update");
+        updateButton.setIcon(new Icon(VaadinIcon.ARROW_DOWN));
 //        updateButton.addClickListener(e -> updateService.esegue());
     }// end of method
 
     private void creaElabora() {
         elaboraButton = new Button("Elabora");
+        elaboraButton.setIcon(new Icon(VaadinIcon.ARROW_RIGHT));
         elaboraButton.addClickListener(e -> elaboraService.esegue());
     }// end of method
 
     private void creaUpload() {
         uploadButton = new Button("Upload");
-//        uploadButton.addClickListener(e -> cicloService.esegue());
+        uploadButton.setIcon(new Icon(VaadinIcon.ARROW_UP));
+        uploadButton.getElement().setAttribute("theme", "error");
+//        uploadButton.addClickListener(event -> upload());
+        //        uploadButton.addClickListener(e -> cicloService.esegue());
     }// end of method
 
     private void cicloTest() {
@@ -292,27 +300,27 @@ public class BioViewList extends AViewList {
     }// end of method
 
 
-    /**
-     * Eventuale caption sopra la grid
-     */
-    protected VerticalLayout creaCaption() {
-        VerticalLayout layout = super.creaCaption("");
-        LocalDateTime lastDownload = pref.getDate(LAST_DOWNLOAD_BIO);
-        String message = "";
-        String time = "";
-        int durata;
-        String durataTxt = "";
-
-        layout.add(new Label("Aggiornamento automatico: " + EASchedule.giorno.getNota()));
-        if (lastDownload != null) {
-//            message = pref.getDesc(LAST_DOWNLOAD_BIO) + ": ";@todo rimettere
-            time = date.getTime(lastDownload);
-//            durata = pref.getInt(durataLastDownload);
-//            durataTxt = " (" + durata + " sec)";
-            layout.add(new Label(message + time));
-        }// end of if cycle
-
-        return null;
-    }// end of method
+//    /**
+//     * Eventuale caption sopra la grid
+//     */
+//    protected VerticalLayout creaCaption() {
+//        VerticalLayout layout = super.creaCaption("");
+//        LocalDateTime lastDownload = pref.getDate(LAST_DOWNLOAD_BIO);
+//        String message = "";
+//        String time = "";
+//        int durata;
+//        String durataTxt = "";
+//
+//        layout.add(new Label("Aggiornamento automatico: " + EASchedule.giorno.getNota()));
+//        if (lastDownload != null) {
+////            message = pref.getDesc(LAST_DOWNLOAD_BIO) + ": ";@todo rimettere
+//            time = date.getTime(lastDownload);
+////            durata = pref.getInt(durataLastDownload);
+////            durataTxt = " (" + durata + " sec)";
+//            layout.add(new Label(message + time));
+//        }// end of if cycle
+//
+//        return null;
+//    }// end of method
 
 }// end of class

@@ -1,11 +1,12 @@
 package it.algos.vaadflow.modules.versione;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.enumeration.EAPrefType;
+import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.preferenza.EAPrefType;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.AService;
+import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,8 +16,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_VER;
 
@@ -24,18 +27,18 @@ import static it.algos.vaadflow.application.FlowCost.TAG_VER;
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
- * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
+ * Business class. Layer di collegamento per la Repository. <br>
  * <br>
- * Annotated with @SpringComponent (obbligatorio) <br>
- * Annotated with @Service (ridondante) <br>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * NOT annotated with @VaadinSessionScope (sbagliato, perché SpringBoot va in loop iniziale) <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
  * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_VER)
@@ -82,30 +85,37 @@ public class VersioneService extends AService {
         this.repository = (VersioneRepository) repository;
     }// end of Spring constructor
 
+
     /**
-     * Crea una entity e la registra <br>
+     * Crea una entity solo se non esisteva <br>
      *
-     * @param sigla  del progetto interessato (obbligatorio, un solo carattere) <br>
-     * @param titolo della versione (obbligatorio, non unico) <br>
-     * @param nome   descrittivo della versione (obbligatorio, unico) <br>
+     * @param sigla       del progetto interessato (transient, obbligatorio, un solo carattere) <br>
+     * @param titolo      della versione (obbligatorio, non unico) <br>
+     * @param descrizione nome descrittivo della versione (obbligatorio, unico)
      *
-     * @return la entity appena creata
+     * @return true se la entity è stata creata
      */
-    public Versione crea(String sigla, String titolo, String nome) {
-        return (Versione) save(newEntity(sigla, 0, titolo, nome, (LocalDateTime) null));
+    public boolean creaIfNotExist(String sigla, String titolo, String descrizione) {
+        boolean creata = false;
+
+        if (isMancaByKeyUnica(getIdKey(sigla))) {
+            AEntity entity = save(newEntity(sigla, titolo, descrizione));
+            creata = entity != null;
+        }// end of if cycle
+
+        return creata;
     }// end of method
 
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Senza properties per compatibilità con la superclasse
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    @Override
     public Versione newEntity() {
-        return newEntity("", 0, "", "", (LocalDateTime) null);
+        return newEntity("", "", "");
     }// end of method
 
 
@@ -113,32 +123,24 @@ public class VersioneService extends AService {
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
-     * @param sigla     del progetto interessato (obbligatorio, un solo carattere) <br>
-     * @param ordine    di presentazione (obbligatorio con inserimento automatico se è zero)
-     * @param titolo    della versione (obbligatorio, non unico) <br>
-     * @param nome      descrittivo della versione (obbligatorio, unico) <br>
-     * @param timestamp in cui si effettua la modifica della versione (obbligatorio, non unica) <br>
+     * @param sigla       del progetto interessato (transient, obbligatorio, un solo carattere) <br>
+     * @param titolo      della versione (obbligatorio, non unico) <br>
+     * @param descrizione della versione (obbligatoria, unica) <br>
+     *                    timestamp   in cui si effettua la modifica della versione
+     *                    (obbligatorio, con inserimento automatico) <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Versione newEntity(String sigla, int ordine, String titolo, String nome, LocalDateTime timestamp) {
-        Versione entity = null;
-        int newOrdine = 0;
-        String textOrdine;
-
-        entity = Versione.builderVersione()
+    public Versione newEntity(String sigla, String titolo, String descrizione) {
+        Versione entity = Versione.builderVersione()
                 .titolo(text.isValid(titolo) ? titolo : null)
-                .nome(text.isValid(nome) ? nome : null)
-                .timestamp(timestamp != null ? timestamp : LocalDateTime.now())
+                .descrizione(text.isValid(descrizione) ? descrizione : null)
+                .timestamp(LocalDate.now())
                 .build();
+        entity.id = getIdKey(sigla);
 
-        newOrdine = getNewOrdine(sigla, ordine);
-        textOrdine = newOrdine < 10 ? TAG + newOrdine : "" + newOrdine;
-        entity.id = sigla + textOrdine;
-
-        return (Versione)creaIdKeySpecifica(entity);
+        return entity;
     }// end of method
 
 
@@ -147,11 +149,27 @@ public class VersioneService extends AService {
      * Viene calcolato in automatico alla creazione della entity <br>
      * Recupera dal DB il valore massimo pre-esistente della property per lo specifico progetto <br>
      * Incrementa di uno il risultato <br>
+     *
+     * @param sigla del progetto interessato (transient, obbligatorio, un solo carattere) <br>
      */
-    public int getNewOrdine(String sigla, int ordine) {
-        int newOrdine = ordine;
+    public String getIdKey(String sigla) {
+        return getIdKey(sigla, 0);
+    }// end of method
+
+
+    /**
+     * Ordine di presentazione (obbligatorio, unico per ogni project), <br>
+     * Viene calcolato in automatico alla creazione della entity <br>
+     * Recupera dal DB il valore massimo pre-esistente della property per lo specifico progetto <br>
+     * Incrementa di uno il risultato <br>
+     *
+     * @param sigla     del progetto interessato (transient, obbligatorio, un solo carattere) <br>
+     * @param newOrdine progressivo della versione (transient, obbligatorio) <br>
+     */
+    public String getIdKey(String sigla, int newOrdine) {
+        String keyCode = "";
         List<Versione> lista = null;
-        String idKey = "";
+        String idKey = "0";
 
         if (newOrdine == 0) {
             lista = repository.findByIdRegex(sigla);
@@ -159,29 +177,96 @@ public class VersioneService extends AService {
                 idKey = lista.get(lista.size() - 1).getId();
                 idKey = idKey.substring(1);
                 idKey = idKey.startsWith(TAG) ? text.levaTesta(idKey, TAG) : idKey;
+                idKey = idKey.startsWith(TAG) ? text.levaTesta(idKey, TAG) : idKey;//doppio per numeri sopra i 10 e fino a 100
             }// end of if cycle
 
             try { // prova ad eseguire il codice
                 newOrdine = Integer.decode(idKey);
+                newOrdine++;
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
 
-        return newOrdine + 1;
+
+        if (newOrdine < 100) {
+            if (newOrdine < 10) {
+                keyCode = sigla + TAG + TAG + newOrdine;
+            } else {
+                keyCode = sigla + TAG + newOrdine;
+            }// end of if/else cycle
+        } else {
+            keyCode = sigla + newOrdine;
+        }// end of if/else cycle
+
+        return keyCode;
     }// end of method
 
 
     /**
-     * Retrieves an entity by its id.
-     * Codice formato da un carattere, un separatore ed un numero
+     * Operazioni eseguite PRIMA del save <br>
+     * Regolazioni automatiche di property <br>
+     *
+     * @param entityBean da regolare prima del save
+     * @param operation  del dialogo (NEW, Edit)
+     *
+     * @return the modified entity
      */
-    public Versione findByCode(String codeUnCarattere, int numProgressivo) {
-        if (numProgressivo < 10) {
-            return (Versione) findById(codeUnCarattere + TAG + numProgressivo);
-        } else {
-            return (Versione) findById(codeUnCarattere + numProgressivo);
-        }// end of if/else cycle
+    @Override
+    public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
+        Versione entity = (Versione) super.beforeSave(entityBean, operation);
+
+        if (text.isEmpty(entity.titolo) || text.isEmpty(entity.descrizione) || entity.timestamp == null) {
+            entity = null;
+        }// end of if cycle
+
+
+        return entity;
+    }// end of method
+
+
+    /**
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param keyCode (obbligatorio, unico)
+     *
+     * @return istanza della Entity, null se non trovata
+     */
+    public Versione findByKeyUnica(String keyCode) {
+        Versione entity = null;
+        Object optional = repository.findById(keyCode);
+
+        if (((Optional) optional).isPresent()) {
+            entity = (Versione) ((Optional) optional).get();
+        }// end of if cycle
+
+        return entity;
+    }// end of method
+
+
+    /**
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param sigla     del progetto interessato (transient, obbligatorio, un solo carattere) <br>
+     * @param newOrdine progressivo della versione (transient, obbligatorio) <br>
+     *
+     * @return istanza della Entity, null se non trovata
+     */
+    public Versione findByKeyUnica(String sigla, int newOrdine) {
+        return findByKeyUnica(getIdKey(sigla));
+    }// end of method
+
+
+    /**
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param sigla     del progetto interessato (transient, obbligatorio, un solo carattere) <br>
+     * @param newOrdine progressivo della versione (transient, obbligatorio) <br>
+     *
+     * @return true se trovata
+     */
+    public boolean isMancaByKeyUnica(String sigla, int newOrdine) {
+        return findByKeyUnica(getIdKey(sigla, newOrdine)) == null;
     }// end of method
 
 
@@ -198,8 +283,9 @@ public class VersioneService extends AService {
      */
     @Override
     public List<? extends AEntity> findAll() {
-        return findAll((Sort) null);
+        return findAll(new Sort(Sort.Direction.ASC, "id"));
     }// end of method
+
 
     /**
      * Crea una entity di Versione e la registra <br>
@@ -212,8 +298,8 @@ public class VersioneService extends AService {
      * @param value    di default della preferenza
      */
     public void creaPref(String sigla, String codePref, String descPref, EAPrefType type, Object value) {
-        pref.findOrCrea(codePref, descPref, type, value);
-        this.crea(sigla, "Preferenze", codePref + ", di default " + value);
+        pref.creaIfNotExist(codePref, descPref, type, value);
+        this.creaIfNotExist(sigla, "Preferenze", codePref + ", di default " + value);
     }// end of method
 
 
@@ -229,6 +315,7 @@ public class VersioneService extends AService {
     public void creaPrefTxt(String sigla, String codePref, String descPref, String value) {
         creaPref(sigla, codePref, descPref, EAPrefType.string, value);
     }// end of method
+
 
     /**
      * Crea una entity di Versione e la registra <br>
@@ -256,6 +343,7 @@ public class VersioneService extends AService {
         creaPref(sigla, codePref, descPref, EAPrefType.bool, value);
     }// end of method
 
+
     /**
      * Crea una entity di Versione e la registra <br>
      * Crea una nuova preferenza di tipo bool (solo se non esistente) <br>
@@ -282,6 +370,7 @@ public class VersioneService extends AService {
         creaPref(sigla, codePref, descPref, EAPrefType.integer, value);
     }// end of method
 
+
     /**
      * Crea una entity di Versione e la registra <br>
      * Crea una nuova preferenza di tipo int (solo se non esistente) <br>
@@ -307,6 +396,7 @@ public class VersioneService extends AService {
     public void creaPrefDate(String sigla, String codePref, String descPref, LocalDateTime value) {
         creaPref(sigla, codePref, descPref, EAPrefType.date, value);
     }// end of method
+
 
     /**
      * Crea una entity di Versione e la registra <br>

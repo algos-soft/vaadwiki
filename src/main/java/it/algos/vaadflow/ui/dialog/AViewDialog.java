@@ -1,20 +1,24 @@
 package it.algos.vaadflow.ui.dialog;
 
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.shared.Registration;
+import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.backend.login.ALogin;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.*;
@@ -26,6 +30,7 @@ import it.algos.vaadflow.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -47,54 +52,113 @@ import static it.algos.vaadflow.application.FlowCost.*;
 public abstract class AViewDialog<T extends Serializable> extends Dialog implements IADialog {
 
 
+    public final static int DURATA = 4000;
+
     protected final Button saveButton = new Button(REGISTRA);
+
     protected final Button cancelButton = new Button(ANNULLA);
+
     protected final Button deleteButton = new Button(DELETE);
+
     protected final FormLayout formLayout = new FormLayout();
-    protected final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
+
     private final H2 titleField = new H2();
+
     private final String confirmText = "Conferma";
-    private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
+
+    private final AConfirmDialog<T> confirmDialog = new AConfirmDialog<>();
+
     public Consumer<T> itemAnnulla;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
     public AAnnotationService annotation;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
     public ADateService date;
+
+    protected HorizontalLayout buttonBar;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
     protected AReflectionService reflection;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
     protected PreferenzaService pref;
+
     /**
-     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
+     * Flag di preferenza per usare il bottone Save. Normalmente true.
      */
-//    @Autowired
-//    public CompanyService companyService;
+    protected boolean usaSaveButton;
+
+    /**
+     * Flag di preferenza per usare il bottone Cancel. Normalmente true.
+     */
+    protected boolean usaCancelButton;
+
+    /**
+     * Flag di preferenza per usare il bottone delete. Normalmente true.
+     */
+    protected boolean usaDeleteButton;
+
+
     protected IAService service;
+
     protected IAPresenter presenter;
+
     //--collegamento tra i fields e la entityBean
     protected Binder<T> binder;
+
     protected Class binderClass;
+
     protected LinkedHashMap<String, AbstractField> fieldMap;
+
     protected AFieldService fieldService;
+
     protected T currentItem;
-    protected Operation operation;
-    protected BiConsumer<T, Operation> itemSaver;
+
+
+    protected BiConsumer<T, EAOperation> itemSaver;
+
     protected AComboBox companyField;
+
+    /**
+     * Istanza (@VaadinSessionScope) inietta da Spring ed unica nella sessione <br>
+     */
+    @Autowired
+    protected ALogin login;
+
+    /**
+     * Recuperato dalla sessione, quando la @route fa partire la UI. <br>
+     * Viene regolato nel service specifico (AVaadinService) <br>
+     */
+    protected AContext context;
+
+    protected EAOperation operation;
+
     private Consumer<T> itemDeleter;
+
     private String itemType;
+
     private Registration registrationForSave;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Unica per tutta l'applicazione. Usata come libreria. <br>
+     */
+    @Autowired
+    private AVaadinService vaadinService;
+
 
     /**
      * Constructs a new instance.
@@ -105,6 +169,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         this(presenter, null, null);
     }// end of constructor
 
+
     /**
      * Constructs a new instance.
      *
@@ -113,7 +178,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * @param itemDeleter funzione associata al bottone 'annulla'
      */
     @Deprecated
-    public AViewDialog(IAPresenter presenter, BiConsumer<T, Operation> itemSaver, Consumer<T> itemDeleter) {
+    public AViewDialog(IAPresenter presenter, BiConsumer<T, EAOperation> itemSaver, Consumer<T> itemDeleter) {
         this(presenter, itemSaver, itemDeleter, null, false);
     }// end of constructor
 
@@ -128,7 +193,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * @param confermaSenzaRegistrare cambia il testo del bottone 'Registra' in 'Conferma'
      */
     @Deprecated
-    public AViewDialog(IAPresenter presenter, BiConsumer<T, Operation> itemSaver, Consumer<T> itemDeleter, Consumer<T> itemAnnulla, boolean confermaSenzaRegistrare) {
+    public AViewDialog(IAPresenter presenter, BiConsumer<T, EAOperation> itemSaver, Consumer<T> itemDeleter, Consumer<T> itemAnnulla, boolean confermaSenzaRegistrare) {
         this.presenter = presenter;
         this.service = presenter.getService();
         this.itemSaver = itemSaver;
@@ -140,6 +205,26 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         if (confermaSenzaRegistrare) {
             this.saveButton.setText(confirmText);
         }// end of if cycle
+    }// end of constructor
+
+
+    /**
+     * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * Le preferenze vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
+     */
+    @PostConstruct
+    protected void initView() {
+
+        //--Login and context della sessione
+        context = vaadinService.fixLoginAndContext(login);
+
+        //--Le preferenze standard
+        fixPreferenze();
+
+        //--Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+        fixPreferenzeSpecifiche();
 
         initTitle();
         initFormLayout();
@@ -154,16 +239,17 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         addOpenedChangeListener(event -> {
             if (!isOpened()) {
                 getElement().removeFromParent();
-            }
-        });
-    }// end of constructor
+            }// end of if cycle
+        });//end of lambda expressions and anonymous inner class
+    }// end of method
 
 
-    public void fixFunzioni(BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
+    public void fixFunzioni(BiConsumer<T, EAOperation> itemSaver, Consumer<T> itemDeleter) {
         fixFunzioni(itemSaver, itemDeleter, null);
     }// end of method
 
-    public void fixFunzioni(BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter, Consumer<T> itemAnnulla) {
+
+    public void fixFunzioni(BiConsumer<T, EAOperation> itemSaver, Consumer<T> itemDeleter, Consumer<T> itemAnnulla) {
         this.itemSaver = itemSaver;
         this.itemDeleter = itemDeleter;
         this.itemAnnulla = itemAnnulla;
@@ -175,9 +261,34 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     }// end of method
 
 
+    /**
+     * Le preferenze vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
+     */
+    private void fixPreferenze() {
+        //--Flag di preferenza per usare il bottone Save. Normalmente true.
+        usaSaveButton = true;
+
+        //--Flag di preferenza per usare il bottone Cancel. Normalmente true.
+        usaCancelButton = true;
+
+        //--Flag di preferenza per usare il bottone Delete. Normalmente true.
+        usaDeleteButton = true;
+    }// end of method
+
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    protected void fixPreferenzeSpecifiche() {
+    }// end of method
+
+
     private void initTitle() {
         add(titleField);
-    }
+    }// end of method
+
 
     private void initFormLayout() {
         formLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
@@ -188,16 +299,38 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         add(div);
     }// end of method
 
+
     protected void initButtonBar() {
-        saveButton.getElement().setAttribute("theme", "primary");
-        cancelButton.addClickListener(e -> close());
-        deleteButton.addClickListener(e -> deleteClicked());
-        deleteButton.getElement().setAttribute("theme", "tertiary danger");
+        buttonBar = new HorizontalLayout();
         buttonBar.setClassName("buttons");
+        buttonBar.setPadding(false);
         buttonBar.setSpacing(true);
-        buttonBar.setMargin(true);
+        buttonBar.setMargin(false);
+
+        if (usaSaveButton) {
+            saveButton.getElement().setAttribute("theme", "primary");
+            saveButton.setIcon(new Icon(VaadinIcon.DATABASE));
+            buttonBar.add(saveButton);
+        }// end of if cycle
+
+        if (usaCancelButton) {
+            cancelButton.addClickListener(e -> close());
+            cancelButton.setIcon(new Icon(VaadinIcon.ARROW_LEFT));
+            buttonBar.add(cancelButton);
+        }// end of if cycle
+
+        if (usaDeleteButton) {
+            deleteButton.addClickListener(e -> deleteClicked());
+            deleteButton.setIcon(new Icon(VaadinIcon.CLOSE_CIRCLE));
+//            deleteButton.getElement().setAttribute("theme", "tertiary danger");
+            deleteButton.getElement().setAttribute("theme", "error");
+            buttonBar.add(deleteButton);
+        }// end of if cycle
+
+        add(new H3()); //--spazio per distanziare i bottoni dai campi
         add(buttonBar);
     }// end of method
+
 
     /**
      * Crea i fields (non esiste ancora la entityBean, che arriva nel metodo open())
@@ -234,7 +367,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         //--1) Cerca nell'annotation @AIForm della Entity e usa quella lista (con o senza ID)
         //--2) Utilizza tutte le properties della Entity (properties della classe e superclasse)
         //--3) Sovrascrive la lista nella sottoclasse specifica di xxxService
-        formPropertyNamesList = service != null ? service.getFormPropertyNamesList((AEntity) currentItem) : null;
+        formPropertyNamesList = service != null ? service.getFormPropertyNamesList((AEntity) currentItem, context) : null;
 
         //--Costruisce ogni singolo field
         //--Aggiunge il field al binder, nel metodo create() del fieldService
@@ -313,6 +446,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         }// end of for cycle
     }// end of method
 
+
     /**
      * Eventuali aggiustamenti finali al layout
      * Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap)
@@ -337,6 +471,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 //            companyField.setEnabled(false);
 //        }// end of if cycle
     }// end of method
+
 
     /**
      * Regola il focus iniziale
@@ -381,13 +516,25 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     /**
      * Opens the given item for editing in the dialog.
      *
-     * @param item      The item to edit; it may be an existing or a newly created
-     *                  instance
+     * @param item      The item to edit; it may be an existing or a newly created instance
      * @param operation The operation being performed on the item
      */
     @Override
-    public void open(AEntity item, AViewDialog.Operation operation) {
-        open(item, operation, "");
+    public void open(AEntity item, EAOperation operation) {
+        open(item, operation, (AContext) null);
+    }// end of method
+
+
+    /**
+     * Opens the given item for editing in the dialog.
+     *
+     * @param item      The item to edit; it may be an existing or a newly created instance
+     * @param operation The operation being performed on the item
+     * @param context   legato alla sessione
+     */
+    @Override
+    public void open(AEntity item, EAOperation operation, AContext context) {
+        open(item, operation, context, "");
     }// end of method
 
 
@@ -398,20 +545,23 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      *
      * @param item      The item to edit; it may be an existing or a newly created instance
      * @param operation The operation being performed on the item
+     * @param context   legato alla sessione
+     * @param title     of the window dialog
      */
     @Override
-    public void open(AEntity item, AViewDialog.Operation operation, String title) {
+    public void open(AEntity item, EAOperation operation, AContext context, String title) {
         if (((AService) service).mancaCompanyNecessaria()) {
-            Notification.show("Non è stata selezionata nessuna company in AViewDialog.open()", 3000, Notification.Position.BOTTOM_START);
+            Notification.show("Non è stata selezionata nessuna company in AViewDialog.open()", DURATA, Notification.Position.BOTTOM_START);
             return;
         }// end of if cycle
         if (item == null) {
-            Notification.show("Qualcosa non ha funzionato in AViewDialog.open()", 3000, Notification.Position.BOTTOM_START);
+            Notification.show("Qualcosa non ha funzionato in AViewDialog.open()", DURATA, Notification.Position.BOTTOM_START);
             return;
         }// end of if cycle
 
         this.currentItem = (T) item;
         this.operation = operation;
+        this.context = context;
         Object view = presenter.getView();
         if (view != null) {
             this.itemType = presenter.getView().getName();
@@ -430,12 +580,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         readSpecificFields();
         readCompanyField();
 
-        deleteButton.setEnabled(operation.isDeleteEnabled());
-
-        if (this.operation == Operation.SHOW) {
-            saveButton.setVisible(false);
-            deleteButton.setVisible(false);
-        }// end of if cycle
+        //--visibilità dei bottoni
+        saveButton.setVisible(operation.isSaveEnabled());
+        deleteButton.setVisible(operation.isDeleteEnabled());
 
         open();
     }// end of method
@@ -516,7 +663,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * Azione proveniente dal click sul bottone Registra
      * Inizio delle operazioni di registrazione
      */
-    protected void saveClicked(AViewDialog.Operation operation) {
+    protected void saveClicked(EAOperation operation) {
         boolean isValid = false;
         if (currentItem != null) {
             isValid = binder.writeBeanIfValid(currentItem);
@@ -539,11 +686,12 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * Azione proveniente dal click sul bottone Cancella (delete)
      */
     private void deleteClicked() {
-        if (confirmationDialog.getElement().getParent() == null) {
-            getUI().ifPresent(ui -> ui.add(confirmationDialog));
-        }
-        confirmDelete();
-    }// end of method
+//        if (confirmDialog.getElement().getParent() == null) {
+//            getUI().ifPresent(ui -> ui.add(confirmDialog));
+//        }
+        openConfirmDialog();
+    }// end of method\
+
 
     /**
      * Azione proveniente dal click sul bottone Annulla
@@ -556,43 +704,48 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         }// end of if cycle
     }// end of method
 
-//    /**
-//     * Opens the confirmation dialog before deleting the current item.
-//     * <p>
-//     * The dialog will display the given title and message(s), then call
-//     * {@link #deleteConfirmed(Serializable)} if the Delete button is clicked.
-//     *
-//     * @param title             The title text
-//     * @param message           Detail message (optional, may be empty)
-//     * @param additionalMessage Additional message (optional, may be empty)
-//     */
-//    protected final void openConfirmationDialog(String title, String message, String additionalMessage) {
-//        close();
-//        confirmationDialog.open(title, message, additionalMessage, "Elimina",
-//                true, getCurrentItem(), this::deleteConfirmed,
-//                this::open);
-//    }
 
-    protected void confirmDelete() {
-        ConfirmDialog dialog = new ConfirmDialog(
-                "Elimina",
-                "Vuoi veramente cancellare " + getCurrentItem().toString() + "? \nL'operazione non è reversibile",
-                "Elimina",
-                new ComponentEventListener<ConfirmDialog.ConfirmEvent>() {
-                    @Override
-                    public void onComponentEvent(ConfirmDialog.ConfirmEvent confirmEvent) {
-                        deleteConfirmed(getCurrentItem());
-                    }
-                },
-                "Annulla",
-                new ComponentEventListener<ConfirmDialog.CancelEvent>() {
-                    @Override
-                    public void onComponentEvent(ConfirmDialog.CancelEvent cancelEvent) {
-                        open();
-                    }
-                });
-        dialog.open();
+    /**
+     * Opens the confirmation dialog before deleting the current item.
+     * <p>
+     * The dialog will display the given title and message(s), then call
+     * {@link #deleteConfirmed(Serializable)} if the Delete button is clicked.
+     * <p>
+     * //     * @param title             The title text
+     * //     * @param message           Detail message (optional, may be empty)
+     * //     * @param additionalMessage Additional message (optional, may be empty)
+     */
+    protected final void openConfirmDialog() {
+        String title = BOT_DELETE;
+        String message = "Vuoi veramente cancellare questo elemento ?";
+        String additionalMessage = "L'operazione non è reversibile";
+        AConfirmDialog dialog = new AConfirmDialog();
+//        close();
+        confirmDialog.open(title, message, additionalMessage, BOT_DELETE,
+                true, getCurrentItem(), this::deleteConfirmed,
+                this::open);
     }// end of method
+
+//    protected void confirmDelete() {
+//        ConfirmDialog dialog = new ConfirmDialog(
+//                "Elimina",
+//                "Vuoi veramente cancellare " + getCurrentItem().toString() + "? \nL'operazione non è reversibile",
+//                "Elimina",
+//                new ComponentEventListener<ConfirmDialog.ConfirmEvent>() {
+//                    @Override
+//                    public void onComponentEvent(ConfirmDialog.ConfirmEvent confirmEvent) {
+//                        deleteConfirmed(getCurrentItem());
+//                    }
+//                },
+//                "Annulla",
+//                new ComponentEventListener<ConfirmDialog.CancelEvent>() {
+//                    @Override
+//                    public void onComponentEvent(ConfirmDialog.CancelEvent cancelEvent) {
+//                        open();
+//                    }
+//                });
+//        dialog.open();
+//    }// end of method
 
 
     private void deleteConfirmed(T item) {
@@ -609,7 +762,8 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      */
     protected final FormLayout getFormLayout() {
         return formLayout;
-    }
+    }// end of method
+
 
     /**
      * Gets the binder.
@@ -620,6 +774,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         return binder;
     }
 
+
     /**
      * Gets the item currently being edited.
      *
@@ -628,6 +783,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected final T getCurrentItem() {
         return currentItem;
     }
+
 
     /**
      * Recupera il field dal nome
@@ -642,44 +798,15 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
     }// end of method
 
+
     public IAPresenter getPresenter() {
         return presenter;
     }// end of method
+
 
     public void setPresenter(IAPresenter presenter) {
         this.presenter = presenter;
     }// end of method
 
-    /**
-     * The operations supported by this dialog.
-     * Delete is enabled when editing an already existing item.
-     */
-    public enum Operation {
-        ADD("Add New", "add", false),
-        EDIT("Edit", "edit", true),
-        SHOW("Mostra", "mostra", false);
-
-        private final String nameInTitle;
-        private final String nameInText;
-        private final boolean deleteEnabled;
-
-        Operation(String nameInTitle, String nameInText, boolean deleteEnabled) {
-            this.nameInTitle = nameInTitle;
-            this.nameInText = nameInText;
-            this.deleteEnabled = deleteEnabled;
-        }
-
-        public String getNameInTitle() {
-            return nameInTitle;
-        }// end of method
-
-        public String getNameInText() {
-            return nameInText;
-        }// end of method
-
-        public boolean isDeleteEnabled() {
-            return deleteEnabled;
-        }// end of method
-    }// end of enum
 
 }// end of class

@@ -1,24 +1,20 @@
 package it.algos.vaadwiki.modules.professione;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.service.AService;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import lombok.extern.slf4j.Slf4j;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.DURATA_DOWNLOAD_PROFESSIONE;
-import static it.algos.vaadwiki.application.VaadwikiCost.LAST_DOWNLOAD_PROFESSIONE;
-import static it.algos.vaadwiki.application.VaadwikiCost.TAG_PRO;
+import static it.algos.vaadwiki.application.WikiCost.DURATA_DOWNLOAD_PROFESSIONE;
+import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_PROFESSIONE;
+import static it.algos.vaadwiki.application.WikiCost.TAG_PRO;
 
 /**
  * Project vaadwiki <br>

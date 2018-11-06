@@ -6,19 +6,16 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.StringLengthValidator;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIField;
+import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.StaticContextAccessor;
-import it.algos.vaadflow.converter.AConverterPrefByte;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import it.algos.vaadflow.ui.fields.*;
 import it.algos.vaadflow.validator.AIntegerZeroValidator;
 import it.algos.vaadflow.validator.ALongZeroValidator;
 import it.algos.vaadflow.validator.AStringNullValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -29,40 +26,39 @@ import java.util.List;
  * User: gac
  * Date: ven, 11-mag-2018
  * Time: 17:43
- * Classe di libreria; NON deve essere astratta, altrimenti Spring non la costruisce
- * Implementa il 'pattern' SINGLETON; l'istanza può essere richiamata con:
- * 1) StaticContextAccessor.getBean(AFieldService.class);
- * 2) AFieldService.getInstance();
- * 3) @Autowired private AFieldService fieldService;
+ * <p>
+ * Gestisce la creazione dei campi nel Form nel tipo adeguato <br>
+ * <p>
+ * Classe di libreria; NON deve essere astratta, altrimenti Spring non la costruisce <br>
+ * Implementa il 'pattern' SINGLETON; l'istanza può essere richiamata con: <br>
+ * 1) StaticContextAccessor.getBean(AFieldService.class); <br>
+ * 2) AFieldService.getInstance(); <br>
+ * 3) @Autowired private AFieldService fieldService; <br>
+ * <p>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
+ * NOT annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (inutile, basta il 'pattern') <br>
+ * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
+ * <p>
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Service
 @Slf4j
-public class AFieldService {
+public class AFieldService extends AbstractService {
+
+    /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
+
 
     /**
      * Private final property
      */
     private static final AFieldService INSTANCE = new AFieldService();
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public AAnnotationService annotation = AAnnotationService.getInstance();
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public AReflectionService reflection = AReflectionService.getInstance();
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public ATextService text = ATextService.getInstance();
 
-    @Autowired
-    private AConverterPrefByte prefConverter;
 
+//    @Autowired
+//    private AConverterPrefByte prefConverter;
 
     /**
      * Private constructor to avoid client applications to use constructor
@@ -88,11 +84,11 @@ public class AFieldService {
      * @param binderClass  della Entity di riferimento
      * @param propertyName della property
      */
-    public AbstractField create(Binder binder, Class binderClass, String propertyName) {
+    public AbstractField create( Binder binder, Class binderClass, String propertyName) {
         Field reflectionJavaField = reflection.getField(binderClass, propertyName);
 
         if (reflectionJavaField != null) {
-            return create(binder, reflectionJavaField);
+            return create( binder, reflectionJavaField);
         } else {
             return null;
         }// end of if/else cycle
@@ -106,7 +102,7 @@ public class AFieldService {
      * @param binder              collegamento tra i fields e la entityBean
      * @param reflectionJavaField di riferimento per estrarre le Annotation
      */
-    public AbstractField create(Binder binder, Field reflectionJavaField) {
+    public AbstractField create( Binder binder, Field reflectionJavaField) {
         AbstractField field = null;
         String fieldName = reflectionJavaField.getName();
 //        int minDefault = 3;
@@ -249,8 +245,8 @@ public class AFieldService {
             case localdatetime:
                 //@todo andrà inserito quando ci sarà un DatePicker che accetti i LocalDateTime
 //                field = new ADatePicker(caption);
-                field = new ATextField(caption);
-                binder.forField(field).bind(fieldName);
+//                field = new ATextField(caption);
+//                binder.forField(field).bind(fieldName);
                 break;
             case link:
                 field = new ATextField(caption);

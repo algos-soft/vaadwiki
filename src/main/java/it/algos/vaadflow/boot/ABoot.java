@@ -1,16 +1,7 @@
 package it.algos.vaadflow.boot;
 
-import it.algos.vaadflow.modules.address.AddressData;
-import it.algos.vaadflow.modules.anno.AnnoData;
-import it.algos.vaadflow.modules.company.CompanyData;
-import it.algos.vaadflow.modules.giorno.GiornoData;
-import it.algos.vaadflow.modules.logtype.LogtypeData;
-import it.algos.vaadflow.modules.mese.MeseData;
-import it.algos.vaadflow.modules.person.PersonData;
+import it.algos.vaadflow.backend.data.FlowData;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
-import it.algos.vaadflow.modules.role.RoleData;
-import it.algos.vaadflow.modules.secolo.SecoloData;
-import it.algos.vaadflow.modules.utente.UtenteData;
 import it.algos.vaadflow.service.ABootService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -38,62 +29,72 @@ public abstract class ABoot implements ServletContextListener {
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
-    protected PreferenzaService pref;
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
     protected ABootService boot;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
-    private RoleData role;
+    protected PreferenzaService pref;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+
+
+    //    /**
+//     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+//     */
+//    @Autowired
+//    private UtenteService utente;
+//    /**
+//     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+//     */
+////    @Autowired
+////    private AddressService address;
+//    /**
+//     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+//     */
+////    @Autowired
+////    private PersonService person;
+//    /**
+//     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+//     */
+////    @Autowired
+////    private CompanyService company;
+//    /**
+//     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+//     */
+//    @Autowired
+//    private LogtypeService logtype;
+//    /**
+//     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+//     */
+//    @Autowired
+//    private SecoloService secolo;
+//    /**
+//     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+//     */
+//    @Autowired
+//    private MeseService mese;
+//    /**
+//     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+//     */
+//    @Autowired
+//    private AnnoService anno;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
-    private UtenteData utente;
+    private FlowData flowData;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
-    private AddressData address;
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    private PersonData person;
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    private CompanyData company;
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    private LogtypeData logtype;
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    private SecoloData secolo;
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    private MeseData mese;
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    private AnnoData anno;
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    private GiornoData giorno;
+    private PreferenzaService preferenzaService;
+
 
     /**
      * Executed on container startup
@@ -118,43 +119,31 @@ public abstract class ABoot implements ServletContextListener {
      * Deve essere sovrascritto dalla sottoclasse concreta che invocherà questo metodo()
      */
     protected void inizia() {
+        this.iniziaVersioni();
+        this.regolaPreferenze();
         this.iniziaDataStandard();
         this.iniziaDataProgettoSpecifico();
-        this.iniziaVersioni();
         this.regolaInfo();
-        this.regolaPreferenze();
         this.addRouteStandard();
         this.addRouteSpecifiche();
     }// end of method
 
-    /**
-     * Inizializzazione dei dati di alcune collections standard sul DB mongo
-     */
-    private void iniziaDataStandard() {
-        this.role.loadData();
-        this.utente.loadData();
-        this.address.loadData();
-        this.person.loadData();
-        this.company.loadData();
-        this.logtype.loadData();
-        this.secolo.loadData();
-        this.mese.loadData();
-        this.anno.loadData();
-        this.giorno.loadData();
-    }// end of method
-
 
     /**
-     * Inizializzazione dei dati di alcune collections specifiche sul DB mongo
-     */
-    protected void iniziaDataProgettoSpecifico() {
-    }// end of method
-
-
-    /**
-     * Inizializzazione delle versioni del programma specifico
+     * Inizializzazione delle versioni standard di vaadinflow <br>
+     * Inizializzazione delle versioni del programma specifico <br>
      */
     protected void iniziaVersioni() {
+    }// end of method
+
+
+    /**
+     * Regola alcune preferenze iniziali
+     * Se non esistono, le crea
+     * Se esistono, sostituisce i valori esistenti con quelli indicati qui
+     */
+    protected void regolaPreferenze() {
+//        preferenzaService.loadData();
     }// end of method
 
 
@@ -166,11 +155,17 @@ public abstract class ABoot implements ServletContextListener {
 
 
     /**
-     * Regola alcune preferenze iniziali
-     * Se non esistono, le crea
-     * Se esistono, sostituisce i valori esistenti con quelli indicati qui
+     * Inizializzazione dei dati di alcune collections standard sul DB mongo <br>
      */
-    protected void regolaPreferenze() {
+    private void iniziaDataStandard() {
+        flowData.loadAllData();
+    }// end of method
+
+
+    /**
+     * Inizializzazione dei dati di alcune collections specifiche sul DB mongo
+     */
+    protected void iniziaDataProgettoSpecifico() {
     }// end of method
 
 

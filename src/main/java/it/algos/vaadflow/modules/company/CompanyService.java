@@ -1,10 +1,16 @@
 package it.algos.vaadflow.modules.company;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.backend.login.ALogin;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.address.Address;
+import it.algos.vaadflow.modules.address.AddressService;
+import it.algos.vaadflow.modules.address.EAAddress;
+import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadflow.modules.person.EAPerson;
 import it.algos.vaadflow.modules.person.Person;
+import it.algos.vaadflow.modules.person.PersonService;
 import it.algos.vaadflow.service.AService;
 import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +21,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_COM;
@@ -23,18 +30,18 @@ import static it.algos.vaadflow.application.FlowCost.TAG_COM;
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
- * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
+ * Business class. Layer di collegamento per la Repository. <br>
  * <br>
- * Annotated with @SpringComponent (obbligatorio) <br>
- * Annotated with @Service (ridondante) <br>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * NOT annotated with @VaadinSessionScope (sbagliato, perché SpringBoot va in loop iniziale) <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
  * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_COM)
@@ -42,13 +49,30 @@ import static it.algos.vaadflow.application.FlowCost.TAG_COM;
 @AIScript(sovrascrivibile = false)
 public class CompanyService extends AService {
 
+    /**
+     * Costanti usate per identificare alcune company
+     */
     private static final String ALGOS = "algos";
+
     private static final String DEMO = "algos";
 
     /**
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
+
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected AddressService addressService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected PersonService personService;
 
 
     /**
@@ -76,57 +100,65 @@ public class CompanyService extends AService {
 
 
     /**
-     * Crea una entity <br>
-     * Se esiste già, la cancella prima di ricrearla <br>
+     * Crea una entity solo se non esisteva <br>
      *
-     * @param code        di riferimento interno (obbligatorio ed unico)
-     * @param descrizione ragione sociale o descrizione della company (visibile - obbligatoria)
-     * @param contatto    persona di riferimento (facoltativo)
-     * @param telefono    della company (facoltativo)
-     * @param mail        della company (facoltativo)
-     * @param indirizzo   della company (facoltativo)
+     * @param eaCompany: enumeration di dati iniziali di prova
      *
-     * @return la entity trovata o appena creata
+     * @return true se la entity è stata creata
      */
-    public Company crea(String code, String descrizione, Person contatto, String telefono, String mail, Address indirizzo) {
-        Company entity = findByKeyUnica(code);
+    public boolean creaIfNotExist(EACompany eaCompany) {
+        boolean creata = false;
 
-        if (entity != null) {
-            delete(entity);
+        if (isMancaByKeyUnica(eaCompany.getCode())) {
+            AEntity entity = save(newEntity(eaCompany));
+            creata = entity != null;
         }// end of if cycle
 
-        entity = newEntity(code, descrizione, contatto, telefono, mail, indirizzo);
-        save(entity);
-
-        return entity;
+        return creata;
     }// end of method
 
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Senza properties per compatibilità con la superclasse
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    @Override
     public Company newEntity() {
-        return newEntity("", "");
+        return newEntity("", "", (Person) null, "", "", (Address) null);
     }// end of method
 
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Properties obbligatorie
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Usa una enumeration di dati iniziali di prova <br>
      *
-     * @param code        di riferimento interno (obbligatorio ed unico)
-     * @param descrizione ragione sociale o descrizione della company (visibile - obbligatoria)
+     * @param eaCompany: enumeration di dati iniziali di prova
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Company newEntity(String code, String descrizione) {
-        return newEntity(code, descrizione, (Person) null, "", "", (Address) null);
+    public Company newEntity(EACompany eaCompany) {
+        String code;
+        String descrizione;
+        EAPerson eaPerson;
+        Person contatto;
+        String telefono;
+        String mail;
+        EAAddress eaAddress;
+        Address indirizzo;
+
+        code = eaCompany.getCode();
+        descrizione = eaCompany.getDescrizione();
+        eaPerson = eaCompany.getPerson();
+        contatto = personService.newEntity(eaPerson);
+        telefono = eaCompany.getTelefono();
+        mail = eaCompany.getEmail();
+        eaAddress = eaCompany.getAddress();
+        indirizzo = addressService.newEntity(eaAddress);
+
+        return newEntity(code, descrizione, contatto, telefono, mail, indirizzo);
     }// end of method
 
 
@@ -134,7 +166,6 @@ public class CompanyService extends AService {
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      * @param code        di riferimento interno (obbligatorio ed unico)
      * @param descrizione ragione sociale o descrizione della company (visibile - obbligatoria)
@@ -146,14 +177,7 @@ public class CompanyService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Company newEntity(String code, String descrizione, Person contatto, String telefono, String mail, Address indirizzo) {
-        Company entity = null;
-
-        entity = findByKeyUnica(code);
-        if (entity != null) {
-            return findByKeyUnica(code);
-        }// end of if cycle
-
-        entity = Company.builderCompany()
+        return Company.builderCompany()
                 .code(text.isValid(code) ? code : null)
                 .descrizione(text.isValid(descrizione) ? descrizione : null)
                 .contatto(contatto)
@@ -161,66 +185,48 @@ public class CompanyService extends AService {
                 .mail(text.isValid(mail) ? mail : null)
                 .indirizzo(indirizzo)
                 .build();
+    }// end of method
 
-        return (Company) creaIdKeySpecifica(entity);
+
+    /**
+     * Property unica (se esiste).
+     */
+    @Override
+    public String getPropertyUnica(AEntity entityBean) {
+        return ((Company) entityBean).getCode();
     }// end of method
 
 
     /**
      * Operazioni eseguite PRIMA del save <br>
      * Regolazioni automatiche di property <br>
+     * Controllo della validità delle properties obbligatorie <br>
      *
      * @param entityBean da regolare prima del save
-     * @param operation  del dialogo (NEW, EDIT)
+     * @param operation  del dialogo (NEW, Edit)
      *
      * @return the modified entity
      */
     @Override
-    public AEntity beforeSave(AEntity entityBean, AViewDialog.Operation operation) {
+    public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
         Company entity = (Company) super.beforeSave(entityBean, operation);
-
-        if (entity == null) {
-            log.error("entity è nullo in CompanyService.beforeSave()");
-            return null;
-        }// end of if cycle
 
         if (text.isValid(entity.descrizione)) {
             entity.descrizione = text.primaMaiuscola(entity.descrizione);
         }// end entityBean if cycle
+
+        if (text.isEmpty(entity.code)) {
+            entity = null;
+        }// end of if cycle
 
         return entity;
     }// end of method
 
 
     /**
-     * Returns all instances of the type <br>
-     * La Entity è EACompanyRequired.nonUsata. Non usa Company. <br>
-     * Lista ordinata <br>
-     *
-     * @return lista ordinata di tutte le entities
-     */
-    @Override
-    public List<Company> findAll() {
-        List<Company> lista = null;
-
-        try { // prova ad eseguire il codice
-            lista = repository.findAllByOrderByCodeAsc();
-        } catch (Exception unErrore2) { // intercetta l'errore
-            log.error(unErrore2.toString());
-            try { // prova ad eseguire il codice
-                lista = repository.findAll();
-            } catch (Exception unErrore3) { // intercetta l'errore
-                log.error(unErrore3.toString());
-            }// fine del blocco try-catch
-        }// fine del blocco try-catch
-
-        return lista;
-    }// end of method
-
-    /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
-     * @param code di riferimento (obbligatorio)
+     * @param code (obbligatorio, unico)
      *
      * @return istanza della Entity, null se non trovata
      */
@@ -228,12 +234,55 @@ public class CompanyService extends AService {
         return repository.findByCode(code);
     }// end of method
 
+    /**
+     * Returns all entities of the type <br>
+     * <p>
+     * Se esiste la property 'ordine', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'code', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'descrizione', ordinate secondo questa property <br>
+     * Altrimenti, ordinate secondo il metodo sovrascritto nella sottoclasse concreta <br>
+     * Altrimenti, ordinate in ordine di inserimento nel DB mongo <br>
+     *
+     * @return all ordered entities
+     */
+    @Override
+    public List<? extends AEntity> findAll() {
+        List<AEntity> listaCompanies = null;
+        ALogin login = getLogin();
+        Company company = null;
+
+        if (login.isDeveloper()) {
+            return super.findAll();
+        } else {
+            company = getContext().getCompany();
+            if (company != null) {
+                listaCompanies = new ArrayList<>();
+                listaCompanies.add(company);
+            }// end of if cycle
+            return listaCompanies;
+        }// end of if/else cycle
+
+    }// end of method
+
 
     /**
-     * Property unica (se esiste).
+     * Creazione di alcuni dati demo iniziali <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
+     * La collezione viene svuotata <br>
+     * I dati possono essere presi da una Enumeration o creati direttamemte <br>
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     *
+     * @return numero di elementi creato
      */
-    public String getPropertyUnica(AEntity entityBean) {
-        return text.isValid(((Company) entityBean).getCode()) ? ((Company) entityBean).getCode() : "";
+    @Override
+    public int reset() {
+        int numRec = super.reset();
+
+        for (EACompany eaCompany : EACompany.values()) {
+            numRec = creaIfNotExist(eaCompany) ? numRec + 1 : numRec;
+        }// end of for cycle
+
+        return numRec;
     }// end of method
 
 
@@ -241,14 +290,15 @@ public class CompanyService extends AService {
      * Recupera dal db mongo la company (se esiste)
      */
     public Company getAlgos() {
-        return findByKeyUnica(ALGOS);
+        return repository.findByCode(ALGOS);
     }// end of method
+
 
     /**
      * Recupera dal db mongo la company (se esiste)
      */
     public Company getDemo() {
-        return findByKeyUnica(DEMO);
+        return repository.findByCode(DEMO);
     }// end of method
 
 }// end of class

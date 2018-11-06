@@ -1,25 +1,27 @@
 package it.algos.vaadflow.modules.versione;
 
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
-import it.algos.vaadflow.enumeration.EARoleType;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.AViewList;
-import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.dialog.IADialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
 import static it.algos.vaadflow.application.FlowCost.TAG_VER;
 
 /**
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
@@ -51,10 +53,11 @@ public class VersioneViewList extends AViewList {
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+
     public static final String IRON_ICON = "drafts";
 
 
-   /**
+    /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
@@ -68,13 +71,30 @@ public class VersioneViewList extends AViewList {
         ((VersioneViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
+
     /**
      * Le preferenze sovrascritte nella sottoclasse
      */
     @Override
     protected void fixPreferenzeSpecifiche() {
         super.usaSearchTextField = false;
+        super.usaSearchBottoneNew = false;
         super.isEntityDeveloper = true;
+    }// end of method
+
+
+    /**
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected VerticalLayout creaTopAlert() {
+        super.creaTopAlert();
+        alertLayout.add(new Label("Sigla 'A' per le versioni base di vaadinflow"));
+        alertLayout.add(new Label("Sigla 'Z' per le modifiche alla descrizione di una preferenza"));
+        return alertLayout;
     }// end of method
 
 }// end of class

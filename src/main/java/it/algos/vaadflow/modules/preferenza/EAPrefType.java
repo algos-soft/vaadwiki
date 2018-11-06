@@ -1,7 +1,8 @@
-package it.algos.vaadflow.enumeration;
+package it.algos.vaadflow.modules.preferenza;
 
 
 import com.google.common.primitives.Longs;
+import it.algos.vaadflow.enumeration.EAFieldType;
 
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;

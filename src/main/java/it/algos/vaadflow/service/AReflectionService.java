@@ -1,13 +1,11 @@
 package it.algos.vaadflow.service;
 
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.ui.IAView;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -21,35 +19,33 @@ import java.util.Map;
  * User: gac
  * Date: gio, 07-dic-2017
  * Time: 22:11
- * Classe di Libreria
- * NON deve essere astratta, altrimenti Spring non la costruisce
+ * <p>
  * Utility per recuperare property e metodi da altre classi
+ * <p>
+ * Classe di libreria; NON deve essere astratta, altrimenti Spring non la costruisce <br>
+ * Implementa il 'pattern' SINGLETON; l'istanza può essere richiamata con: <br>
+ * 1) StaticContextAccessor.getBean(AReflectionService.class); <br>
+ * 2) AReflectionService.getInstance(); <br>
+ * 3) @Autowired private AReflectionService reflectionService; <br>
+ * <p>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
+ * NOT annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (inutile, basta il 'pattern') <br>
+ * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  */
+@Service
 @Slf4j
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AReflectionService {
+public class AReflectionService extends AbstractService {
 
+    /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
 
     /**
      * Private final property
      */
     private static final AReflectionService INSTANCE = new AReflectionService();
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public AArrayService array = AArrayService.getInstance();
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public AAnnotationService annotation = AAnnotationService.getInstance();
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public ATextService text = ATextService.getInstance();
 
 
     /**
@@ -57,6 +53,7 @@ public class AReflectionService {
      */
     private AReflectionService() {
     }// end of constructor
+
 
     /**
      * Gets the unique instance of this Singleton.
@@ -67,12 +64,6 @@ public class AReflectionService {
         return INSTANCE;
     }// end of static method
 
-
-//    /**
-//     * Inietta da Spring come 'session'
-//     */
-//    @Autowired
-//    public ALogin login;
 
     /**
      * Mappa di tutti i valori delle properties di una classe
@@ -99,7 +90,8 @@ public class AReflectionService {
     /**
      * Valore della property di una classe
      *
-     * @param entityBean oggetto su cui operare la riflessione
+     * @param entityBean      oggetto su cui operare la riflessione
+     * @param publicFieldName property statica e pubblica
      */
     public Object getPropertyValue(final AEntity entityBean, final String publicFieldName) {
         Object value = null;
@@ -118,6 +110,30 @@ public class AReflectionService {
         }// fine del blocco try-catch
 
         return value;
+    }// end of method
+
+
+    /**
+     * Valore della property di una classe
+     *
+     * @param entityBean      oggetto su cui operare la riflessione
+     * @param publicFieldName property statica e pubblica
+     * @param value           da inserire nella property
+     */
+    public boolean setPropertyValue(final AEntity entityBean, final String publicFieldName, Object value) {
+        boolean status = false;
+        Field field = getField(entityBean.getClass(), publicFieldName);
+
+        if (field != null) {
+            try { // prova ad eseguire il codice
+                field.set(entityBean, value);
+                status = true;
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
+        }// end of if cycle
+
+        return status;
     }// end of method
 
 
@@ -497,6 +513,19 @@ public class AReflectionService {
      */
     public boolean isEsiste(Class<? extends AEntity> entityClazz, final String publicFieldName) {
         return getField(entityClazz, publicFieldName) != null;
+    }// end of method
+
+
+    /**
+     * Se esiste il field della Entity
+     *
+     * @param entityClazz     classe su cui operare la riflessione
+     * @param publicFieldName property
+     *
+     * @return lista di fields della Entity e di tutte le supeclassi
+     */
+    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, final String publicFieldName) {
+        return getField(entityClazz, publicFieldName) == null;
     }// end of method
 
 

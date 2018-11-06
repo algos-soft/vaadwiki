@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDateTime;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.USA_DAEMON_ATTIVITA;
+import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA;
 
 
 /**

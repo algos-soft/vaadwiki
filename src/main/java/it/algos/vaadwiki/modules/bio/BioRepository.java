@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-import static it.algos.vaadwiki.application.VaadwikiCost.TAG_BIO;
+import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
 
 /**

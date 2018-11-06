@@ -1,10 +1,7 @@
 package it.algos.vaadwiki.service;
 
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
-import it.algos.vaadflow.service.AArrayService;
-import it.algos.vaadflow.service.ADateService;
-import it.algos.vaadflow.service.APreferenzaService;
-import it.algos.vaadflow.service.ATextService;
+import it.algos.vaadflow.service.*;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.categoria.CategoriaService;
@@ -128,7 +125,7 @@ public abstract class ABioService {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected MongoOperations mongo;
+    protected AMongoService mongo;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

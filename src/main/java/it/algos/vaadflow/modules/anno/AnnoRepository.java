@@ -7,13 +7,15 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.List;
+
 import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
 
 /**
- * Project vaadwiki <br>
+ * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 7-ott-2018 21.01.29 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
  * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository <br>
  * <br>
@@ -29,5 +31,6 @@ import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
 public interface AnnoRepository extends MongoRepository<Anno, String> {
 
     public Anno findByTitolo(String titolo);
+    public List<Anno> findTop100ByOrderByOrdine();
 
 }// end of class

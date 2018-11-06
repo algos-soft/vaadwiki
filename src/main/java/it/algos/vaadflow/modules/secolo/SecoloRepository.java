@@ -11,10 +11,10 @@ import static it.algos.vaadflow.application.FlowCost.TAG_SEC;
 
 
 /**
- * Project vaadwiki <br>
+ * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 8-ott-2018 14.55.17 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
  * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository <br>
  * <br>

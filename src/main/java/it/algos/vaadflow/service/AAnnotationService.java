@@ -6,7 +6,7 @@ import it.algos.vaadflow.annotation.*;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
-import it.algos.vaadflow.enumeration.EARoleType;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.IAView;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -28,15 +29,24 @@ import java.util.List;
  * User: gac
  * Date: gio, 07-dic-2017
  * Time: 21:58
- * Classe di Libreria
- * NON deve essere astratta, altrimenti Spring non la costruisce
- * Gestisce le interfacce @Annotation standard di Springs
- * Gestisce le interfacce specifiche di Springvaadin: AIColumn, AIField, AIEntity, AIForm, AIList
+ * <p>
+ * Gestisce le interfacce @Annotation standard di Springs <br>
+ * Gestisce le interfacce specifiche di VaadFlow: AIColumn, AIField, AIEntity, AIForm, AIList <br>
+ * <p>
+ * Classe di libreria; NON deve essere astratta, altrimenti Spring non la costruisce <br>
+ * Implementa il 'pattern' SINGLETON; l'istanza può essere richiamata con: <br>
+ * 1) StaticContextAccessor.getBean(AAnnotationService.class); <br>
+ * 2) AAnnotationService.getInstance(); <br>
+ * 3) @Autowired private AAnnotationService annotationService; <br>
+ * <p>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
+ * NOT annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (inutile, basta il 'pattern') <br>
+ * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Service
 @Slf4j
-public class AAnnotationService {
+public class AAnnotationService extends AbstractService {
 
     public final static String TESTO_NULL = " non può essere vuoto";
     public final static String INT_NULL = " deve contenere solo caratteri numerici";
@@ -45,25 +55,16 @@ public class AAnnotationService {
     public final static String TAG_PX = "px";
 
     /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
+
+
+    /**
      * Private final property
      */
     private static final AAnnotationService INSTANCE = new AAnnotationService();
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public AReflectionService reflection = AReflectionService.getInstance();
 
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public AArrayService array = AArrayService.getInstance();
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public ATextService text = ATextService.getInstance();
 
     /**
      * Private constructor to avoid client applications to use constructor

@@ -10,10 +10,10 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
 
 /**
- * Project vaadwiki <br>
+ * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 7-ott-2018 21.01.15 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
  * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository <br>
  * <br>

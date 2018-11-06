@@ -3,7 +3,7 @@ package it.algos.@MODULELOWER@.application;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
-import it.algos.vaadflow.boot.AVersBoot;
+import it.algos.vaadflow.boot.AVers;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.modules.versione.VersioneService;
 import lombok.extern.slf4j.Slf4j;

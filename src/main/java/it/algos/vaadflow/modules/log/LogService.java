@@ -1,14 +1,12 @@
 package it.algos.vaadflow.modules.log;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.enumeration.EALogType;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.logtype.Logtype;
 import it.algos.vaadflow.modules.logtype.LogtypeService;
-import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.AService;
+import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,18 +24,18 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 30-set-2018 16.14.56 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
- * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
+ * Business class. Layer di collegamento per la Repository. <br>
  * <br>
- * Annotated with @SpringComponent (obbligatorio) <br>
- * Annotated with @Service (ridondante) <br>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * NOT annotated with @VaadinSessionScope (sbagliato, perché SpringBoot va in loop iniziale) <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
  * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_LOG)
@@ -67,7 +65,6 @@ public class LogService extends AService {
     private LogRepository repository;
 
 
-
     /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
@@ -83,6 +80,7 @@ public class LogService extends AService {
         this.repository = (LogRepository) repository;
     }// end of Spring constructor
 
+
     /**
      * Crea una entity e la registra <br>
      *
@@ -95,6 +93,7 @@ public class LogService extends AService {
         save(entity);
         return entity;
     }// end of method
+
 
     /**
      * Crea una entity e la registra <br>
@@ -111,23 +110,23 @@ public class LogService extends AService {
         return entity;
     }// end of method
 
+
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Senza properties per compatibilità con la superclasse
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    @Override
     public Log newEntity() {
         return newEntity((Livello) null, (Logtype) null, "");
     }// end of method
+
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * Properties obbligatorie <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      * @param descrizione (obbligatoria, non unica) <br>
      *
@@ -137,11 +136,11 @@ public class LogService extends AService {
         return newEntity((Livello) null, (Logtype) null, descrizione);
     }// end of method
 
+
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      * @param livello     rilevanza del log (obbligatorio)
      * @param type        raggruppamento logico dei log per type di eventi (obbligatorio)
@@ -150,17 +149,63 @@ public class LogService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Log newEntity(Livello livello, Logtype type, String descrizione) {
-        Log entity;
-
-        entity = Log.builderLog()
+        return Log.builderLog()
                 .livello(livello != null ? livello : Livello.info)
                 .type(type != null ? type : logtype.getEdit())
                 .descrizione(text.isValid(descrizione) ? descrizione : null)
                 .evento(LocalDateTime.now())
                 .build();
-
-        return (Log) creaIdKeySpecifica(entity);
     }// end of method
+
+
+    /**
+     * Property unica (se esiste) <br>
+     */
+    @Override
+    public String getPropertyUnica(AEntity entityBean) {
+        String code = "";
+        Log log = ((Log) entityBean);
+
+        code += log.getType().code;
+        code += log.getEvento().toString();
+
+        return code;
+    }// end of method
+
+
+    /**
+     * Operazioni eseguite PRIMA del save <br>
+     * Regolazioni automatiche di property <br>
+     * Controllo della validità delle properties obbligatorie <br>
+     *
+     * @param entityBean da regolare prima del save
+     * @param operation  del dialogo (NEW, Edit)
+     *
+     * @return the modified entity
+     */
+    @Override
+    public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
+        Log entity = (Log) super.beforeSave(entityBean, operation);
+
+        if (entity.livello == null || entity.getType() == null || text.isEmpty(entity.descrizione)) {
+            entity = null;
+        }// end of if cycle
+
+        return entity;
+    }// end of method
+
+
+    /**
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param indirizzo (obbligatorio, unico)
+     *
+     * @return istanza della Entity, null se non trovata
+     */
+//    public Log findByKeyUnica(String indirizzo) {
+//        return repository.findByIndirizzo(indirizzo);
+//    }// end of method
+
 
     /**
      * Returns all entities of the type <br>
@@ -178,46 +223,35 @@ public class LogService extends AService {
         return repository.findAll();
     }// end of method
 
-    /**
-     * Property unica (se esiste) <br>
-     */
-    @Override
-    public String getPropertyUnica(AEntity entityBean) {
-        String code = "";
-        Log log = ((Log) entityBean);
-
-        code += log.getType().code;
-        code += log.getEvento().toString();
-
-        return code;
-    }// end of method
-
 
     //--registra un avviso
     public void debug(Logtype type, String descrizione) {
         crea(Livello.debug, type, descrizione);
     }// fine del metodo
 
+
     //--registra un avviso
     public void info(Logtype type, String descrizione) {
         crea(Livello.info, type, descrizione);
     }// fine del metodo
+
 
     //--registra un avviso
     public void warning(Logtype type, String descrizione) {
         crea(Livello.warn, type, descrizione);
     }// fine del metodo
 
+
     //--registra un avviso
     public void error(Logtype type, String descrizione) {
         crea(Livello.error, type, descrizione);
     }// fine del metodo
 
+
     //--registra un avviso
     public void importo(String descrizione) {
-        crea(Livello.debug, logtype.getImport(),descrizione);
+        crea(Livello.debug, logtype.getImport(), descrizione);
     }// fine del metodo
-
 
 
 }// end of class

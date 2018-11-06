@@ -5,22 +5,22 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
-import it.algos.vaadflow.enumeration.EARoleType;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.presenter.IAPresenter;
+import it.algos.vaadflow.ui.ACronoViewList;
 import it.algos.vaadflow.ui.AViewList;
-import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadflow.ui.MainLayout;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
 import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
 
 /**
- * Project vaadwiki <br>
+ * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 7-ott-2018 21.01.15 <br>
+ * Fix date: 26-ott-2018 9.59.58 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
@@ -43,8 +43,8 @@ import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
 @Qualifier(TAG_GIO)
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
-@AIScript(sovrascrivibile = true)
-public class GiornoViewList extends AViewList {
+@AIScript(sovrascrivibile = false)
+public class GiornoViewList extends ACronoViewList {
 
 
     /**

@@ -138,6 +138,7 @@ public class LibBio {
     @Autowired
     private NazionalitaService nazionalita;
 
+
     /**
      * Estrae una mappa chiave valore dal testo di un template
      * Presuppone che le righe siano separate da pipe e return
@@ -183,6 +184,7 @@ public class LibBio {
         return mappa;
     }// end of static method
 
+
     /**
      * Estrae la mappa chiave/valore di un template dal testo completo di una voce
      * Gli estremi sono ESCLUSI
@@ -206,6 +208,7 @@ public class LibBio {
 
         return mappa;
     }// end of static method
+
 
     /**
      * Estrae il testo essenziale di un template dal testo completo di una voce
@@ -240,6 +243,7 @@ public class LibBio {
 
         return testoEssenziale;
     }// end of static method
+
 
     /**
      * Estrae una mappa chiave valore dal testo del template
@@ -323,6 +327,7 @@ public class LibBio {
         return mappa;
     }// end of static method
 
+
     /**
      * Controlla le graffe interne al testo
      * <p>
@@ -380,6 +385,7 @@ public class LibBio {
 
         return mappa;
     }// fine del metodo
+
 
     /**
      * Elabora ed elimina le prime graffe del testo
@@ -443,6 +449,7 @@ public class LibBio {
 
         return testoElaborato;
     }// fine del metodo
+
 
     /**
      * Elabora il testo della singola graffa
@@ -558,6 +565,7 @@ public class LibBio {
         return testoElaborato;
     }// fine della closure
 
+
     /**
      * Estrae una mappa chiave/valore dal testo contenuto tutto in una riga
      * Presuppone che la riga sia unica ed i parametri siano separati da pipe
@@ -602,6 +610,7 @@ public class LibBio {
         return mappa;
     }// fine della closure
 
+
     /**
      * Controlla che le occorrenze dei due tag si pareggino all'interno del testo.
      *
@@ -625,6 +634,7 @@ public class LibBio {
         return pari;
     } // fine del metodo
 
+
     /**
      * Controlla se nel testo ci sono occorrenze pari delle graffe.
      * Le graffe devono anche essere nel giusto ordine
@@ -637,6 +647,7 @@ public class LibBio {
         return isPariTag(testo, GRAFFE_INI, GRAFFE_END);
     } // fine del metodo
 
+
     /**
      * Controlla se nel testo ci sono occorrenze pari delle quadre.
      * Le graffe devono anche essere nel giusto ordine
@@ -648,6 +659,7 @@ public class LibBio {
     public static boolean isPariQuadre(String testo) {
         return isPariTag(testo, QUADRE_INI, QUADRE_END);
     } // fine del metodo
+
 
     /**
      * Restituisce il valore di occorrenze del tag nel testo.
@@ -676,6 +688,7 @@ public class LibBio {
 
         return numTag;
     } // fine del metodo
+
 
     /**
      * Regola una mappa chiave
@@ -711,6 +724,7 @@ public class LibBio {
         return mappaOut;
     } // fine del metodo
 
+
     /**
      * Elimina il testo se inizia con un pipe
      */
@@ -725,6 +739,7 @@ public class LibBio {
         return valoreOut.trim();
     } // fine del metodo
 
+
     /**
      * Elimina le graffe finali
      */
@@ -738,6 +753,7 @@ public class LibBio {
 
         return valoreOut.trim();
     } // fine del metodo
+
 
     /**
      * Controlla il primo aCapo che trova:
@@ -769,6 +785,7 @@ public class LibBio {
         return valoreOut.trim();
     } // fine del metodo
 
+
     /**
      * Elimina un valore strano trovato (ed invisibile)
      * ATTENZIONE: non è uno spazio vuoto !
@@ -789,6 +806,7 @@ public class LibBio {
 
         return valoreOut.trim();
     } // fine del metodo
+
 
     /**
      * Cancella un record
@@ -832,6 +850,7 @@ public class LibBio {
         return status;
     } // fine del metodo
 
+
     /**
      * Confronta il template risultante
      * <p>
@@ -864,6 +883,7 @@ public class LibBio {
 
         return status;
     }// end of static method
+
 
     /**
      * //    //--regola la lunghezza del campo
@@ -1078,6 +1098,7 @@ public class LibBio {
 //        return testoOut;
 //    }// end of static method
 
+
     /**
      * Aggiunge una parentesi tonda in testa e coda alla stringa.
      * Elimina spazi vuoti iniziali e finali
@@ -1089,6 +1110,7 @@ public class LibBio {
     public static String setTonde(String stringaIn) {
         return TONDA_INI + stringaIn.trim() + TONDA_END;
     } // fine del metodo
+
 
     /**
      * Aggiunge un apice in testa e coda alla stringa.
@@ -1140,6 +1162,7 @@ public class LibBio {
 //        return testoOut;
 //    }// end of static method
 
+
     /**
      * Estrae una subLista parziale dalla lista.
      *
@@ -1167,6 +1190,7 @@ public class LibBio {
 
         return subLista;
     } // fine del metodo
+
 
     /**
      * Crea una lista dalle matrici
@@ -1313,6 +1337,7 @@ public class LibBio {
 //
 //        return numero;
 //    }// end of static method
+
 
     /**
      * Sostituisce tutte le occorrenze.
@@ -1538,6 +1563,7 @@ public class LibBio {
 //        return status;
 //    } // fine del metodo
 
+
     /**
      * Regola questa property <br>
      * <p>
@@ -1636,6 +1662,7 @@ public class LibBio {
 //
 //        return LibWiki.setQuadre(link);
 //    }// fine del metodo
+
 
     /**
      * Estrae una mappa chiave valore per un fix di parametri, da una biografia
@@ -1972,6 +1999,7 @@ public class LibBio {
 //        return null;
 //    }// end of method
 
+
     /**
      * Estrae una mappa chiave valore per un fix di parametri, dal testo di una biografia
      * <p>
@@ -2118,6 +2146,7 @@ public class LibBio {
         return mappa;
     } // fine del metodo
 
+
     /**
      * Regola questo campo
      * <p>
@@ -2142,11 +2171,7 @@ public class LibBio {
             testoValido = testoValido.replaceFirst(tagDoppio, SPAZIO);
         }// end of if cycle
 
-        if (giorno.isEsiste(testoValido)) {
-            return testoValido.trim();
-        } else {
-            return VUOTA;
-        }// end of if/else cycle
+        return testoValido.trim();
     } // // end of method
 
 
@@ -2159,7 +2184,7 @@ public class LibBio {
      *
      * @return testoValido regolato in uscita
      */
-    public  String fixAnnoValido(String testoGrezzo) {
+    public String fixAnnoValido(String testoGrezzo) {
         String testoValido = fixPropertyBase(testoGrezzo);
         String tagCirca = "circa";
 
@@ -2171,11 +2196,7 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
-        if (anno.isEsiste(testoValido)) {
-            return testoValido.trim();
-        } else {
-            return VUOTA;
-        }// end of if/else cycle
+        return testoValido.trim();
     } // fine del metodo
 
 
@@ -2188,7 +2209,7 @@ public class LibBio {
      *
      * @return testoValido regolato in uscita
      */
-    public  String fixAttivitaValida(String testoGrezzo) {
+    public String fixAttivitaValida(String testoGrezzo) {
         String testoValido = fixPropertyBase(testoGrezzo).toLowerCase();
 
         if (text.isEmpty(testoGrezzo)) {
@@ -2212,7 +2233,7 @@ public class LibBio {
      *
      * @return testoValido regolato in uscita
      */
-    public  String fixNazionalitaValida(String testoGrezzo) {
+    public String fixNazionalitaValida(String testoGrezzo) {
         String testoValido = fixPropertyBase(testoGrezzo).toLowerCase();
 
         if (text.isEmpty(testoGrezzo)) {
