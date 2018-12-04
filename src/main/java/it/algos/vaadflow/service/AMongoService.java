@@ -408,7 +408,7 @@ public class AMongoService extends AbstractService {
      * @param property da controllare
      * @param value    da considerare
      */
-    public DeleteResult deleteByProperty(Class<? extends AEntity> clazz, String property, String value) {
+    public DeleteResult deleteByProperty(Class<? extends AEntity> clazz, String property, Object value) {
         Query searchQuery = new Query(Criteria.where(property).is(value));
         return this.mongoOp.remove(searchQuery, clazz);
     }// end of method

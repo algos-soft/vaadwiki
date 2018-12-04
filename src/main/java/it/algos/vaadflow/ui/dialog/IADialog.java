@@ -13,14 +13,6 @@ import it.algos.vaadflow.enumeration.EAOperation;
  */
 public interface IADialog<T> {
 
-    /**
-     * Opens the given item for editing in the dialog.
-     *
-     * @param item      The item to edit; it may be an existing or a newly created instance
-     * @param operation The operation being performed on the item
-     */
-    public void open(AEntity item, EAOperation operation);
-
 
     /**
      * Opens the given item for editing in the dialog.

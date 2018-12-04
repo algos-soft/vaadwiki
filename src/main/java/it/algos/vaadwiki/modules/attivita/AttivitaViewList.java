@@ -4,16 +4,17 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
+import it.algos.vaadwiki.task.TaskAttivita;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import static it.algos.vaadwiki.application.WikiCost.DURATA_DOWNLOAD_ATTIVITA;
-import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_ATTIVITA;
-import static it.algos.vaadwiki.application.WikiCost.TAG_ATT;
+import javax.annotation.PostConstruct;
+
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki <br>
@@ -52,7 +53,14 @@ public class AttivitaViewList extends AttNazProfCatViewList {
     public static final VaadinIcon VIEW_ICON = VaadinIcon.BOAT;
 
 
-   /**
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private TaskAttivita taskAttivita;
+
+
+    /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
@@ -64,11 +72,24 @@ public class AttivitaViewList extends AttNazProfCatViewList {
     public AttivitaViewList(@Qualifier(TAG_ATT) IAPresenter presenter, @Qualifier(TAG_ATT) IADialog dialog) {
         super(presenter, dialog);
         ((AttivitaViewDialog) dialog).fixFunzioni(this::save, this::delete);
+    }// end of Spring constructor
+
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void fixPreferenzeSpecifiche() {
+        super.fixPreferenzeSpecifiche();
         super.titoloModulo = service.titoloModuloAttivita;
         super.titoloPaginaStatistiche = service.titoloPaginaStatisticheAttivita;
+        super.task = taskAttivita;
+        super.codeFlagDownload = USA_DAEMON_ATTIVITA;
         super.codeLastDownload = LAST_DOWNLOAD_ATTIVITA;
         super.durataLastDownload = DURATA_DOWNLOAD_ATTIVITA;
-    }// end of Spring constructor
+    }// end of method
 
 
 }// end of class

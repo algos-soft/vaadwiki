@@ -57,7 +57,8 @@ public class WikiVers extends AVers {
      * L'ordine di inserimento è FONDAMENTALE
      */
     public int inizia() {
-        int k =super.inizia();
+        int k = 0;
+        super.inizia();
         codeProject = CODE_PROJECT;
 
         //--creata una nuova preferenza
@@ -132,7 +133,7 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefTxt(CAT_BIO, "Categoria attiva","BioBot");
+            creaPrefTxt(CAT_BIO, "Categoria attiva", "BioBot");
         }// fine del blocco if
 
         return k;

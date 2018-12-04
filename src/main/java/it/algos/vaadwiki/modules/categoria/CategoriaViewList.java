@@ -8,6 +8,7 @@ import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
+import it.algos.vaadwiki.task.TaskCategoria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,6 +54,13 @@ public class CategoriaViewList extends AttNazProfCatViewList {
 
 
     /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private TaskCategoria taskCategoria;
+
+
+    /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
@@ -64,11 +72,6 @@ public class CategoriaViewList extends AttNazProfCatViewList {
     public CategoriaViewList(@Qualifier(TAG_CAT) IAPresenter presenter, @Qualifier(TAG_CAT) IADialog dialog) {
         super(presenter, dialog);
         ((CategoriaViewDialog) dialog).fixFunzioni(this::save, this::delete);
-        super.codeLastDownload = LAST_DOWNLOAD_CATEGORIA;
-        super.durataLastDownload = DURATA_DOWNLOAD_CATEGORIA;
-        super.usaBottoneUpload = false;
-        super.usaBottoneModulo = false;
-        super.usaBottoneStatistiche = false;
     }// end of Spring constructor
 
 
@@ -76,8 +79,15 @@ public class CategoriaViewList extends AttNazProfCatViewList {
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      */
     protected void fixPreferenzeSpecifiche() {
+        super.usaBottoneUpload = false;
+        super.usaBottoneStatistiche = false;
+        super.usaBottoneModulo = false;
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = false;
+        super.task = taskCategoria;
+        super.codeFlagDownload = USA_DAEMON_CATEGORIA;
+        super.codeLastDownload = LAST_DOWNLOAD_CATEGORIA;
+        super.durataLastDownload = DURATA_DOWNLOAD_CATEGORIA;
     }// end of method
 
 }// end of class

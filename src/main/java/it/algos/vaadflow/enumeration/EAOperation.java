@@ -18,6 +18,7 @@ public enum EAOperation {
     addNew("Add New", "add", true, false),
     edit("Edit", "edit", true, true),
     editNoDelete("Edit", "edit", true, false),
+    editDaLink("Edit", "edit", true, true),
     showOnly("Mostra", "mostra", false, false);
 
     private final String nameInTitle;

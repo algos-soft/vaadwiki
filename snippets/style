@@ -1,0 +1,14 @@
+
+==definito prima==
+button.setText("Change to blue");
+button.addEventListener("click",
+    e -> button.getClassList().add("blue"));
+
+    ==usa quelli del browser==
+    Element input = ElementFactory.createInput();
+    button.setText("Change to the entered value");
+    button.addEventListener("click",
+        e -> button.getStyle().set("background",input.getProperty("value")));
+
+
+icon.getElement().getClassList().add("rosso");

@@ -329,14 +329,14 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
     protected ATextField paginationField;
 
-    boolean isPagination;
-
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Unica per tutta l'applicazione. Usata come libreria. <br>
      */
     @Autowired
-    private AVaadinService vaadinService;
+    protected AVaadinService vaadinService;
+
+    boolean isPagination;
 
 
     /**
@@ -378,13 +378,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         //--Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
         fixPreferenzeSpecifiche();
 
-        creaTopLayout();
-        creaTopAlert();
-//        creaHeader();
-        creaGrid();
-        creaGridBottomLayout();
-        creaPaginationLayout();
-        creaFooterLayout();
+        creaLayout();
     }// end of method
 
 
@@ -452,6 +446,20 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Invocare PRIMA il metodo della superclasse
      */
     protected void fixPreferenzeSpecifiche() {
+    }// end of method
+
+
+    /**
+     * Creazione e posizionamento dei componenti UI <br>
+     * Può essere sovrascritto <br>
+     */
+    protected void creaLayout() {
+        creaTopLayout();
+        creaTopAlert();
+        creaGrid();
+        creaGridBottomLayout();
+        creaPaginationLayout();
+        creaFooterLayout();
     }// end of method
 
 
@@ -645,7 +653,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
                 break;
             default:
                 if (isPagination) {
-                    testo += "Collezione di " + limit + " elementi su " + numFormattato + " totali";
+                    testo += "Collezione di " + limit + " elementi su " + numFormattato + " totali. ";
                 } else {
                     testo += "Collezione di " + numFormattato + " elementi";
                 }// end of if/else cycle
@@ -666,7 +674,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     /**
      * Apre il dialog di detail
      */
-    private void addDetailDialog() {
+    protected void addDetailDialog() {
         //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
         if (usaBottoneEdit) {
             ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
@@ -874,6 +882,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
                 }// end of if/else cycle
                 break;
             case edit:
+            case editDaLink:
                 service.save(entityBean);
                 updateView();
                 Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);

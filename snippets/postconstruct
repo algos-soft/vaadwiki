@@ -1,0 +1,12 @@
+    /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * Performing the initialization in a constructor is not suggested
+     * as the state of the UI is not properly set up when the constructor is invoked.
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
+     * ma l'ordine con cui vengono chiamati NON è garantito
+     */
+    @PostConstruct
+    protected void inizia() {
+    }// end of method

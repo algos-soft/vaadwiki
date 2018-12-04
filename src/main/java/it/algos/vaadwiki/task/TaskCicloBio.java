@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.task;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA;
 @Slf4j
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-class TaskCicloBio extends ATask {
+class TaskCicloBio  {
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -32,19 +33,19 @@ class TaskCicloBio extends ATask {
 
 
 
-    @Override
-    public void execute(TaskExecutionContext context) throws RuntimeException {
-
-        if (pref.isBool(USA_DAEMON_ATTIVITA)) {
-            attivitaService.download();
-
-            //@TODO Prevedere un flag di preferenze per mostrare o meno la nota
-            //@TODO Prevedere un flag di preferenze per usare il log interno
-            if (true) {
-                System.out.println("Task di download attività: " + date.getTime(LocalDateTime.now()));
-            }// end of if cycle
-        }// end of if cycle
-    }// end of method
+//    @Override
+//    public void execute(TaskExecutionContext context) throws RuntimeException {
+//
+//        if (pref.isBool(USA_DAEMON_ATTIVITA)) {
+//            attivitaService.download();
+//
+//            //@TODO Prevedere un flag di preferenze per mostrare o meno la nota
+//            //@TODO Prevedere un flag di preferenze per usare il log interno
+//            if (true) {
+//                System.out.println("Task di download attività: " + date.getTime(LocalDateTime.now()));
+//            }// end of if cycle
+//        }// end of if cycle
+//    }// end of method
 
 
     public void executes(TaskExecutionContext context) throws RuntimeException {

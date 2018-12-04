@@ -1,0 +1,10 @@
+==A==
+@Autowired
+ApplicationContext appContext;
+
+Object alfa = appContext.getBean(ADialog.class);
+
+
+==B==
+solo senza parametri
+Object beta = StaticContextAccessor.getBean(ADialog.class);

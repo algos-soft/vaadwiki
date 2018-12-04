@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 
@@ -53,18 +54,31 @@ public class ADateService extends AbstractService {
 
 
     private static final String INFERIORE_SECONDO = "meno di un sec.";
+
     private static final String SECONDI = " sec.";
+
     private static final String MINUTI = " min.";
+
     private static final String ORA = " ora";
+
     private static final String ORE = " ore";
+
     private static final String GIORNO = " giorno";
+
     private static final String GIORNI = " gg.";
+
     private static final String ANNO = " anno";
+
     private static final String ANNI = " anni";
+
     private static final long MAX_MILLISEC = 1000;
+
     private static final long MAX_SECONDI = MAX_MILLISEC * 60;
+
     private static final long MAX_MINUTI = MAX_SECONDI * 60;
+
     private static final long MAX_ORE = MAX_MINUTI * 24;
+
     private static final long MAX_GIORNI = MAX_ORE * 365;
 
 
@@ -74,6 +88,7 @@ public class ADateService extends AbstractService {
     private ADateService() {
     }// end of constructor
 
+
     /**
      * Gets the unique instance of this Singleton.
      *
@@ -82,6 +97,7 @@ public class ADateService extends AbstractService {
     public static ADateService getInstance() {
         return INSTANCE;
     }// end of static method
+
 
     /**
      * Convert java.util.Date to java.time.LocalDate
@@ -196,9 +212,7 @@ public class ADateService extends AbstractService {
      * @return la data sotto forma di stringa
      */
     public String get(LocalDate localDate, EATime patternEnum) {
-        SimpleDateFormat format = new SimpleDateFormat();
-        format.applyPattern(patternEnum.getPattern());
-        return format.format(localDateToDate(localDate));
+        return get(localDate, patternEnum.getPattern());
     }// end of method
 
 
@@ -215,9 +229,7 @@ public class ADateService extends AbstractService {
      * @return la data sotto forma di stringa
      */
     public String get(LocalDate localDate, String pattern) {
-        SimpleDateFormat format = new SimpleDateFormat();
-        format.applyPattern(pattern);
-        return format.format(localDateToDate(localDate));
+        return localDate.format(DateTimeFormatter.ofPattern(pattern, LOCALE));
     }// end of method
 
 
@@ -618,6 +630,7 @@ public class ADateService extends AbstractService {
         return creaData(giorno, numMeseDellAnno, anno, 0, 0, 0);
     }// end of method
 
+
     /**
      * Crea una data.
      * <p>
@@ -655,6 +668,7 @@ public class ADateService extends AbstractService {
 
         return calendario;
     }// end of method
+
 
     /**
      * Calendario con regolata la data
@@ -757,6 +771,7 @@ public class ADateService extends AbstractService {
 
         return tempo;
     }// end of method
+
 
     /**
      * Restituisce come stringa (intelligente) un durata espressa in long

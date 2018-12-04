@@ -1,0 +1,7 @@
+        Button edit = new Button(testoBottoneEdit, event -> dialog.open(entityBean, EAOperation.edit, context));
+
+
+        Button newButton = new Button("New entity", new Icon("lumo", "plus"));
+        newButton.getElement().setAttribute("theme", "primary");
+        newButton.addClassName("view-toolbar__button");
+        newButton.addClickListener(e -> dialog.open(service.newEntity(), EAOperation.addNew, context));

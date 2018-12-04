@@ -1,7 +1,6 @@
 package it.algos.vaadwiki.task;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.enumeration.EASchedule;
 import it.sauronsoftware.cron4j.Scheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,25 +26,25 @@ public class DaemonBio extends Scheduler {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    private TaskAttività attivita;
+    private TaskAttivita taskAttivita;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    private TaskNazionalita nazionalita;
+    private TaskNazionalita taskNazionalita;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    private TaskProfessione professione;
+    private TaskProfessione taslProfessione;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    private TaskCategoria categoria;
+    private TaskCategoria taskCategoria;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -61,17 +60,24 @@ public class DaemonBio extends Scheduler {
 
             // Schedule task
             // Ogni giorno
-            schedule(EASchedule.giornoPrimoMinuto.getTag(), attivita);
-            schedule(EASchedule.giornoSecondoMinuto.getTag(), nazionalita);
-            schedule(EASchedule.giornoTerzoMinuto.getTag(), professione);
-            schedule(EASchedule.giornoQuartoMinuto.getTag(), categoria);
-            schedule(EASchedule.giornoDecimoMinuto.getTag(), cicloBio);
 
-//            if (Pref.getBool(CostBio.USA_LOG_DAEMONS, false)) {
-//                Log.debug("daemonCicloCrono", "Attivato ciclo daemonCicloCrono; flag in preferenze per confermare esecuzione alle 0:01");
-//            }// fine del blocco if
+            this.task(taskAttivita);
+            this.task(taskNazionalita);
+            this.task(taslProfessione);
+            this.task(taskCategoria);
+
+//            schedule(EASchedule.giornoDecimoMinuto.getTag(), cicloBio);
+
         }// fine del blocco if
     }// end of method
+
+
+    public void task(BioTask task) throws IllegalStateException {
+        if (task.usaDaemon()) {
+            schedule(task.getSchedule(), task);
+        }// end of if cycle
+    }// end of method
+
 
     @Override
     public void stop() throws IllegalStateException {

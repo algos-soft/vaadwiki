@@ -64,4 +64,10 @@ public @interface AIColumn {
 //     */
 //    EARoleType roleTypeVisibility() default EARoleType.guest;
 
+    /**
+     * (Optional) color of the component
+     * Defaults to "".
+     */
+    String color() default "";
+
 }// end of interface annotation

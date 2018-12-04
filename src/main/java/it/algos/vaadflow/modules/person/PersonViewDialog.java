@@ -47,12 +47,19 @@ public class PersonViewDialog extends AViewDialog<Person> {
 
 
     private final static String INDIRIZZO = "indirizzo";
+
     private AddressPresenter addressPresenter;
+
     private AddressService addressService;
+
     private AddressViewDialog addressDialog;
+
     private Address indirizzoTemporaneo;
+
     private ATextField indirizzoField;
+
     private ATextField mailField;
+
     private Consumer<Person> itemAnnulla;
 
 
@@ -87,9 +94,10 @@ public class PersonViewDialog extends AViewDialog<Person> {
 
         indirizzoField = (ATextField) getField(INDIRIZZO);
         if (indirizzoField != null) {
-            indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), EAOperation.edit));
+            indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), EAOperation.edit, context));
         }// end of if cycle
     }// end of method
+
 
     /**
      * Regola in lettura eventuali valori NON associati al binder
@@ -133,6 +141,7 @@ public class PersonViewDialog extends AViewDialog<Person> {
         cancelButton.focus();
     }// end of method
 
+
     private Address getIndirizzoCorrente() {
         Address indirizzo = null;
         Person persona = getCurrentItem();
@@ -154,6 +163,7 @@ public class PersonViewDialog extends AViewDialog<Person> {
 
         return indirizzo;
     }// end of method
+
 
     public void close() {
         super.close();

@@ -59,6 +59,22 @@ public class AVaadinService {
      * Crea il context <br>
      * Inserisce il context come attributo nella vaadSession <br>
      */
+    public AContext fixLoginAndContext() {
+        return fixLoginAndContext((ALogin) null);
+    }// end of method
+
+
+    /**
+     * Crea il login ed il context <br>
+     * Controlla che non esista già il context nella vaadSession
+     * Invocato quando la @route fa partire la AViewList. <br>
+     * (non è chiaro se passa prima da MainLayout o da AViewList o da AViewDialog) <br>
+     * <p>
+     * Recupera l'user dall'attributo della sessione HttpSession al termine della security <br>
+     * Crea il login <br>
+     * Crea il context <br>
+     * Inserisce il context come attributo nella vaadSession <br>
+     */
     public AContext fixLoginAndContext(ALogin login) {
         AContext context;
         String uniqueUserName = "";

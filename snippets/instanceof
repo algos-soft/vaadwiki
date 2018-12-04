@@ -1,0 +1,3 @@
+        if (croce.getClass().isAssignableFrom(WamEntity.class) ) {
+            codice
+        }// end of if cycle

@@ -5,16 +5,15 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
+import it.algos.vaadwiki.task.TaskNazionalita;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import static it.algos.vaadwiki.application.WikiCost.DURATA_DOWNLOAD_NAZIONALITA;
-import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_NAZIONALITA;
-import static it.algos.vaadwiki.application.WikiCost.TAG_NAZ;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki <br>
@@ -53,8 +52,14 @@ public class NazionalitaViewList extends AttNazProfCatViewList {
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private TaskNazionalita taskNazionalita;
 
-   /**
+
+    /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
@@ -66,11 +71,23 @@ public class NazionalitaViewList extends AttNazProfCatViewList {
     public NazionalitaViewList(@Qualifier(TAG_NAZ) IAPresenter presenter, @Qualifier(TAG_NAZ) IADialog dialog) {
         super(presenter, dialog);
         ((NazionalitaViewDialog) dialog).fixFunzioni(this::save, this::delete);
-        super.titoloModulo = service.titoloModuloNazionalita;
-        super.titoloPaginaStatistiche = service.titoloPaginaStatisticheNazionalita;
-        super.codeLastDownload = LAST_DOWNLOAD_NAZIONALITA;
-        super.durataLastDownload = DURATA_DOWNLOAD_NAZIONALITA;
     }// end of Spring constructor
 
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void fixPreferenzeSpecifiche() {
+        super.fixPreferenzeSpecifiche();
+        super.titoloModulo = service.titoloModuloNazionalita;
+        super.titoloPaginaStatistiche = service.titoloPaginaStatisticheNazionalita;
+        super.task = taskNazionalita;
+        super.codeFlagDownload = USA_DAEMON_NAZIONALITA;
+        super.codeLastDownload = LAST_DOWNLOAD_NAZIONALITA;
+        super.durataLastDownload = DURATA_DOWNLOAD_NAZIONALITA;
+    }// end of method
 
 }// end of class

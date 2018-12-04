@@ -34,7 +34,7 @@ import java.util.Date;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class BioVers extends AVersBoot {
+public class BioVers extends AVers {
 
 
     private final static String CODE_PROJECT = "B";

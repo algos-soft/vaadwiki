@@ -1140,6 +1140,18 @@ public abstract class AService extends AbstractService implements IAService {
 
 
     /**
+     * Delete from a collection.
+     *
+     * @param clazz    della collezione
+     * @param property da controllare
+     * @param value    da considerare
+     */
+    public DeleteResult deleteByProperty(Class<? extends AEntity> clazz, String property, Object value) {
+        return mongo.deleteByProperty(clazz, property, value);
+    }// end of method
+
+
+    /**
      * Delete a list of entities.
      *
      * @param listaEntities di elementi da cancellare

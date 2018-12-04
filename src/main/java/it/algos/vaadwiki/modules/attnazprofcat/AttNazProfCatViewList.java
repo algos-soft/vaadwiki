@@ -6,8 +6,10 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.presenter.IAPresenter;
+import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadwiki.task.BioTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -31,24 +33,38 @@ public class AttNazProfCatViewList extends AViewList {
 
 
     protected Button deleteMongoButton;
+
     protected Button donwloadMongoButton;
+
     protected Button uploadStatisticheButton;
+
     protected Button showModuloButton;
+
     protected Button showStatisticheButton;
 
     protected String titoloModulo;
+
     protected String titoloPaginaStatistiche;
+
+    protected String codeFlagDownload;
+
     protected String codeLastDownload;
+
     protected String durataLastDownload;
 
     protected boolean usaBottoneUpload = true;
+
     protected boolean usaBottoneModulo = true;
+
     protected boolean usaBottoneStatistiche = true;
+
     /**
      * Il service (singleton) viene recuperato dal presenter <br>
      * Qui si una effettua un casting per usare i metodi specifici <br>
      */
     protected AttNazProfCatService service;
+
+    protected BioTask task;
 
 
     /**
@@ -85,7 +101,10 @@ public class AttNazProfCatViewList extends AViewList {
 
     private void creaDownload() {
         donwloadMongoButton = new Button("Download");
-        donwloadMongoButton.addClickListener(e -> service.download());
+        donwloadMongoButton.addClickListener(e -> {
+            service.download();
+            updateView();
+        });//end of lambda expressions and anonymous inner class
     }// end of method
 
 
@@ -99,6 +118,7 @@ public class AttNazProfCatViewList extends AViewList {
         showModuloButton = new Button("Modulo");
         showModuloButton.addClickListener(e -> showWikiModulo());
     }// end of method
+
 
     private void creaShowStatistiche() {
         showStatisticheButton = new Button("Statistiche");
@@ -131,6 +151,7 @@ public class AttNazProfCatViewList extends AViewList {
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
+
     protected void addBottoni() {
         if (topLayout != null && deleteMongoButton != null) {
             topLayout.removeAll();
@@ -161,6 +182,7 @@ public class AttNazProfCatViewList extends AViewList {
 //            }// end of if cycle
 //        }// end of if cycle
     }// end of method
+
 
     /**
      * Le preferenze sovrascritte nella sottoclasse
@@ -193,6 +215,53 @@ public class AttNazProfCatViewList extends AViewList {
         }// end of if cycle
 
         return null;
+    }// end of method
+
+
+    /**
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected VerticalLayout creaTopAlert() {
+        alertLayout = super.creaTopAlert();
+        alertLayout.add(creaInfoImport(task, codeFlagDownload, codeLastDownload));
+        return alertLayout;
+    }// end of method
+
+
+    /**
+     * Eventuale caption sopra la grid
+     */
+    protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastDownload) {
+        Label label = null;
+        String testo = "";
+        String tag = "Import automatico: ";
+        String nota = task != null ? task.getNota() : "";
+
+        LocalDateTime lastDownload = pref.getDate(flagLastDownload);
+        testo = tag;
+
+        if (pref.isBool(flagDaemon)) {
+            testo += nota;
+        } else {
+            testo += "disattivato.";
+        }// end of if/else cycle
+
+        if (lastDownload != null) {
+            label = new Label(testo + " Ultimo import il " + date.getTime(lastDownload));
+        } else {
+            if (pref.isBool(flagDaemon)) {
+                label = new Label(tag + nota + " Non ancora effettuato.");
+            } else {
+                label = new Label(testo);
+            }// end of if/else cycle
+        }// end of if/else cycle
+
+
+        return label;
     }// end of method
 
 }// end of class

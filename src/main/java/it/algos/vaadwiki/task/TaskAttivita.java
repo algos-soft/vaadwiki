@@ -11,21 +11,23 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadwiki.application.WikiCost.TAG_PRO;
-import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_PROFESSIONE;
+import static it.algos.vaadwiki.application.WikiCost.TAG_ATT;
+import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA;
+
 
 /**
- * Project vaadbio2
+ * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: lun, 16-lug-2018
- * Time: 15:19
+ * Date: gio, 12-lug-2018
+ * Time: 12:19
  */
 @SpringComponent
-@Qualifier(TAG_PRO)
+@Qualifier(TAG_ATT)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class TaskProfessione extends BioTask {
+public class TaskAttivita extends BioTask {
+
 
     /**
      * Costruttore @Autowired <br>
@@ -36,7 +38,7 @@ public class TaskProfessione extends BioTask {
      * @param service layer di collegamento per la Repository e la Business Logic
      */
     @Autowired
-    public TaskProfessione(@Qualifier(TAG_PRO) IAService service) {
+    public TaskAttivita(@Qualifier(TAG_ATT) IAService service) {
         super(service);
     }// end of Spring constructor
 
@@ -52,8 +54,9 @@ public class TaskProfessione extends BioTask {
      */
     @PostConstruct
     protected void inizia() {
-        super.eaSchedule = EASchedule.giornoOttavoMinuto;
-        super.usaDaemon = pref.isBool(USA_DAEMON_PROFESSIONE);
+        super.eaSchedule = EASchedule.giornoQuintoMinuto;
+        super.usaDaemon = pref.isBool(USA_DAEMON_ATTIVITA);
     }// end of method
+
 
 }// end of class

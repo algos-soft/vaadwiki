@@ -1,16 +1,21 @@
 package it.algos.vaadwiki.task;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.enumeration.EASchedule;
+import it.algos.vaadflow.schedule.ATask;
+import it.algos.vaadflow.service.IAService;
 import it.algos.vaadwiki.modules.categoria.CategoriaService;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
-import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_CATEGORIA;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 
 /**
@@ -21,29 +26,38 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_CATEGORIA;
  * Time: 14:42
  */
 @SpringComponent
+@Qualifier(TAG_CAT)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class TaskCategoria extends ATask {
+public class TaskCategoria extends BioTask {
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Costruttore @Autowired <br>
+     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
+     * Regola il modello-dati specifico e lo passa al costruttore della superclasse <br>
+     *
+     * @param service layer di collegamento per la Repository e la Business Logic
      */
     @Autowired
-    private CategoriaService categoriaService;
+    public TaskCategoria(@Qualifier(TAG_CAT) IAService service) {
+        super(service);
+    }// end of Spring constructor
 
 
-    @Override
-    public void execute(TaskExecutionContext context) throws RuntimeException {
-
-        if (pref.isBool(USA_DAEMON_CATEGORIA)) {
-            categoriaService.download();
-
-            //@TODO Prevedere un flag di preferenze per mostrare o meno la nota
-            //@TODO Prevedere un flag di preferenze per usare il log interno
-            if (true) {
-                System.out.println("Task di download categoria: " + date.getTime(LocalDateTime.now()));
-            }// end of if cycle
-        }// end of if cycle
+    /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * Performing the initialization in a constructor is not suggested
+     * as the state of the UI is not properly set up when the constructor is invoked.
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
+     * ma l'ordine con cui vengono chiamati NON è garantito
+     */
+    @PostConstruct
+    protected void inizia() {
+        super.eaSchedule = EASchedule.giornoSettimoMinuto;
+        super.usaDaemon = pref.isBool(USA_DAEMON_CATEGORIA);
     }// end of method
 
 }// end of class

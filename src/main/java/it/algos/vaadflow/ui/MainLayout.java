@@ -40,6 +40,7 @@ import java.util.*;
  */
 @SuppressWarnings("serial")
 @HtmlImport(value = "styles/shared-styles.html", loadMode = LoadMode.INLINE)
+@HtmlImport(value = "styles/algos-styles.html", loadMode = LoadMode.INLINE)
 @Push
 @PageTitle(value = MainLayout.SITE_TITLE)
 @Slf4j

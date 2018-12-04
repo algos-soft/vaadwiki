@@ -184,4 +184,7 @@ public class FlowCost {
     public final static String KEY_UNIQUE_USER_NAME = "uniqueUserName";
     public final static String KEY_CONTEXT = "context";
 
+    //--date
+    public final static Locale LOCALE = Locale.ITALIAN;
+
 }// end of static class

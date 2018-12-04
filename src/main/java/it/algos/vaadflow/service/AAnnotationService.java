@@ -1,7 +1,6 @@
 package it.algos.vaadflow.service;
 
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.*;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
@@ -11,8 +10,6 @@ import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.IAView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
 
@@ -49,9 +46,13 @@ import java.util.List;
 public class AAnnotationService extends AbstractService {
 
     public final static String TESTO_NULL = " non può essere vuoto";
+
     public final static String INT_NULL = " deve contenere solo caratteri numerici";
+
     public final static String INT_ZERO = " deve essere maggiore di zero";
+
     public final static String TAG_EM = "em";
+
     public final static String TAG_PX = "px";
 
     /**
@@ -71,6 +72,7 @@ public class AAnnotationService extends AbstractService {
      */
     private AAnnotationService() {
     }// end of constructor
+
 
     /**
      * Gets the unique instance of this Singleton.
@@ -161,6 +163,7 @@ public class AAnnotationService extends AbstractService {
         return name;
     }// end of method
 
+
     /**
      * Get the specific annotation of the class.
      * Entity class
@@ -185,6 +188,7 @@ public class AAnnotationService extends AbstractService {
     public AIList getAIList(final Class<? extends AEntity> entityClazz) {
         return entityClazz.getAnnotation(AIList.class);
     }// end of method
+
 
     /**
      * Get the specific annotation of the class.
@@ -403,6 +407,7 @@ public class AAnnotationService extends AbstractService {
         return lista;
     }// end of method
 
+
     /**
      * Nomi delle properties del, estratti dalle @Annotation della Entity
      * Se la classe AEntity->@AIForm prevede una lista specifica, usa quella lista (con o senza ID)
@@ -431,6 +436,7 @@ public class AAnnotationService extends AbstractService {
 
         return lista;
     }// end of method
+
 
     /**
      * Nomi dei fields da considerare per estrarre i Java Reflected Field dalle @Annotation della Entity
@@ -795,6 +801,45 @@ public class AAnnotationService extends AbstractService {
 
 
     /**
+     * Get the color of the property.
+     *
+     * @param entityClazz the entity class
+     * @param fieldName   the property name
+     *
+     * @return the color (column) of the field
+     */
+    public String getColumnColor(Class<? extends AEntity> entityClazz, String fieldName) {
+        String color = "";
+        AIColumn annotation = this.getAIColumn(entityClazz, fieldName);
+
+        if (annotation != null) {
+            color = annotation.color();
+        }// end of if cycle
+
+        return color;
+    }// end of method
+
+
+    /**
+     * Get the color of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the color of the field
+     */
+    public String getFieldColor(final Field reflectionJavaField) {
+        String color = "";
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            color = annotation.color();
+        }// end of if cycle
+
+        return color;
+    }// end of method
+
+
+    /**
      * Get the type (field) of the property.
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
@@ -966,6 +1011,7 @@ public class AAnnotationService extends AbstractService {
         return linkClazz;
     }// end of method
 
+
     /**
      * Get the class of the property.
      *
@@ -1024,6 +1070,7 @@ public class AAnnotationService extends AbstractService {
         return width;
     }// end of method
 
+
     /**
      * Get the alert message from @NotNull
      *
@@ -1053,6 +1100,7 @@ public class AAnnotationService extends AbstractService {
 
         return message;
     }// end of method
+
 
     /**
      * Get the alert message from @Size
@@ -1086,6 +1134,7 @@ public class AAnnotationService extends AbstractService {
 
         return message;
     }// end of method
+
 
     /**
      * Get the alert message from @NotNull or from @Size
@@ -1124,6 +1173,7 @@ public class AAnnotationService extends AbstractService {
 
         return status;
     }// end of method
+
 
     /**
      * Get the status required of the property.

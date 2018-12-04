@@ -136,11 +136,11 @@ public class BioViewDialog extends AViewDialog<Bio> {
         uploadButton.getElement().setAttribute("theme", "error");
 
 
-        buttonBar.add(downloadButton);
-        buttonBar.add(elaboraOnlyButton);
-        buttonBar.add(wikiShowButton);
-        buttonBar.add(wikiEditButton);
-        buttonBar.add(uploadButton);
+        bottomLayout.add(downloadButton);
+        bottomLayout.add(elaboraOnlyButton);
+        bottomLayout.add(wikiShowButton);
+        bottomLayout.add(wikiEditButton);
+        bottomLayout.add(uploadButton);
     }// end of method
 
 

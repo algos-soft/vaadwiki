@@ -5,16 +5,15 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
+import it.algos.vaadwiki.task.TaskProfessione;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import static it.algos.vaadwiki.application.WikiCost.DURATA_DOWNLOAD_PROFESSIONE;
-import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_PROFESSIONE;
-import static it.algos.vaadwiki.application.WikiCost.TAG_PRO;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki <br>
@@ -54,7 +53,14 @@ public class ProfessioneViewList extends AttNazProfCatViewList {
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
 
-   /**
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private TaskProfessione taskProfessione;
+
+
+    /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
@@ -66,12 +72,24 @@ public class ProfessioneViewList extends AttNazProfCatViewList {
     public ProfessioneViewList(@Qualifier(TAG_PRO) IAPresenter presenter, @Qualifier(TAG_PRO) IADialog dialog) {
         super(presenter, dialog);
         ((ProfessioneViewDialog) dialog).fixFunzioni(this::save, this::delete);
-        super.titoloModulo = service.titoloModuloProfessione;
-        super.codeLastDownload = LAST_DOWNLOAD_PROFESSIONE;
-        super.durataLastDownload = DURATA_DOWNLOAD_PROFESSIONE;
-        super.usaBottoneUpload = false;
-        super.usaBottoneStatistiche = false;
     }// end of Spring constructor
 
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void fixPreferenzeSpecifiche() {
+        super.fixPreferenzeSpecifiche();
+        super.titoloModulo = service.titoloModuloProfessione;
+        super.usaBottoneUpload = false;
+        super.usaBottoneStatistiche = false;
+        super.task = taskProfessione;
+        super.codeFlagDownload = USA_DAEMON_PROFESSIONE;
+        super.codeLastDownload = LAST_DOWNLOAD_PROFESSIONE;
+        super.durataLastDownload = DURATA_DOWNLOAD_PROFESSIONE;
+    }// end of method
 
 }// end of class

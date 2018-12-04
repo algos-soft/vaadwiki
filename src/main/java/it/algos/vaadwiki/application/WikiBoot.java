@@ -133,8 +133,8 @@ public class WikiBoot extends ABoot {
     protected void addRouteSpecifiche() {
         FlowCost.MENU_CLAZZ_LIST.add(AttivitaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(NazionalitaViewList.class);
-        FlowCost.MENU_CLAZZ_LIST.add(CategoriaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(ProfessioneViewList.class);
+        FlowCost.MENU_CLAZZ_LIST.add(CategoriaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(BioViewList.class);
     }// end of method
 

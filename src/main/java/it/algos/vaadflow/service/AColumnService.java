@@ -3,6 +3,8 @@ package it.algos.vaadflow.service;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.application.StaticContextAccessor;
@@ -58,11 +60,13 @@ public class AColumnService extends AbstractService {
      */
     public PreferenzaService pref;
 
+
     /**
      * Private constructor to avoid client applications to use constructor
      */
     private AColumnService() {
     }// end of constructor
+
 
     /**
      * Gets the unique instance of this Singleton.
@@ -89,6 +93,7 @@ public class AColumnService extends AbstractService {
         String header = annotation.getColumnName(entityClazz, propertyName);
         String width = annotation.getColumnWithPX(entityClazz, propertyName);
         Class clazz = annotation.getComboClass(entityClazz, propertyName);
+        String color = annotation.getColumnColor(entityClazz, propertyName);
 
         if (type == null) {
             try { // prova ad eseguire il codice
@@ -122,13 +127,13 @@ public class AColumnService extends AbstractService {
                     }// fine del blocco try-catch
                     checkbox = new Checkbox(status);
                     return checkbox;
-                }));
+                }));//end of lambda expressions and anonymous inner class
                 break;
             case enumeration:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                     Object obj = reflection.getPropertyValue(entity, propertyName);
                     return new Label(obj.toString());
-                }));
+                }));//end of lambda expressions and anonymous inner class
                 break;
             case combo:
                 colonna = grid.addColumn(propertyName);
@@ -157,7 +162,7 @@ public class AColumnService extends AbstractService {
                         log.error(unErrore.toString());
                     }// fine del blocco try-catch
                     return new Label(testo);
-                }));
+                }));//end of lambda expressions and anonymous inner class
                 break;
             case localdate:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
@@ -171,7 +176,7 @@ public class AColumnService extends AbstractService {
                         log.error(unErrore.toString());
                     }// fine del blocco try-catch
                     return new Label(testo);
-                }));
+                }));//end of lambda expressions and anonymous inner class
                 break;
             case localdatetime:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
@@ -191,7 +196,24 @@ public class AColumnService extends AbstractService {
                         log.error(unErrore.toString());
                     }// fine del blocco try-catch
                     return new Label(testo);
-                }));
+                }));//end of lambda expressions and anonymous inner class
+                break;
+            case vaadinIcon:
+                colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    Icon icon = null;
+                    VaadinIcon vaadinIcon;
+                    Field field = reflection.getField(entityClazz, propertyName);
+                    try { // prova ad eseguire il codice
+                        vaadinIcon = (VaadinIcon) field.get(entity);
+                        icon = vaadinIcon.create();
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
+                    if (text.isValid(color)) {
+                        icon.getElement().getClassList().add(color);
+                    }// end of if cycle
+                    return icon;
+                }));//end of lambda expressions and anonymous inner class
                 break;
             case email:
                 colonna = grid.addColumn(propertyName);
@@ -206,7 +228,7 @@ public class AColumnService extends AbstractService {
                         log.error(unErrore.toString());
                     }// fine del blocco try-catch
                     return new Label(obj != null ? obj.toString() : "");
-                }));
+                }));//end of lambda expressions and anonymous inner class
                 break;
             case pref:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
@@ -225,7 +247,7 @@ public class AColumnService extends AbstractService {
                     } else {
                         return new Label(value != null ? value.toString() : "");
                     }// end of if/else cycle
-                }));
+                }));//end of lambda expressions and anonymous inner class
                 break;
             default:
                 log.warn("Switch - caso non definito");

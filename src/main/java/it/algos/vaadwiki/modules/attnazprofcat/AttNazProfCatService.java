@@ -126,7 +126,7 @@ public abstract class AttNazProfCatService extends AService {
     protected void setLastDownload(long inizio) {
         int delta = 1000;
         LocalDateTime lastDownload = LocalDateTime.now();
-        pref.setDate(codeLastDownload, lastDownload);
+        pref.saveValue(codeLastDownload, lastDownload);
 
         long fine = System.currentTimeMillis();
         long durata = fine - inizio;
@@ -136,7 +136,7 @@ public abstract class AttNazProfCatService extends AService {
         } else {
             value = 1;
         }// end of if/else cycle
-        pref.setInt(durataLastDownload, value);
+        pref.saveValue(durataLastDownload, value);
     }// end of method
 
 }// end of class

@@ -161,4 +161,10 @@ public @interface AIField {
      */
     boolean newItemsAllowed() default false;
 
+    /**
+     * (Optional) color of the component
+     * Defaults to "".
+     */
+    String color() default "";
+
 }// end of interface annotation
