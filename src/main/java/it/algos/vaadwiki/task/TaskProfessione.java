@@ -25,7 +25,7 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_PROFESSIONE;
 @Qualifier(TAG_PRO)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class TaskProfessione extends BioTask {
+public class TaskProfessione extends TaskWiki {
 
     /**
      * Costruttore @Autowired <br>

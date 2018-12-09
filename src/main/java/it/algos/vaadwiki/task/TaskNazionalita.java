@@ -24,7 +24,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_NAZ)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class TaskNazionalita extends BioTask{
+public class TaskNazionalita extends TaskWiki {
 
     /**
      * Costruttore @Autowired <br>

@@ -1,7 +1,9 @@
 package it.algos.vaadwiki.service;
 
+import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.wiki.DownloadResult;
 import it.algos.wiki.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -9,7 +11,6 @@ import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Project vaadbio2
@@ -36,8 +37,8 @@ public class PageService extends ABioService {
      *
      * @param listaVociDaScaricare elenco (pageids) delle pagine nuove, da scaricare
      */
-    public int downloadNewPagine(List<Long> listaVociDaScaricare) {
-        return downloadPagine(listaVociDaScaricare, true);
+    public DownloadResult downloadNewPagine(ArrayList<Long> listaVociDaScaricare) {
+        return downloadPagine(listaVociDaScaricare);
     }// end of method
 
 
@@ -49,8 +50,8 @@ public class PageService extends ABioService {
      *
      * @param listaVociDaScaricare elenco (pageids) delle pagine modificate, da scaricare
      */
-    public int downloadUpdatePagine(ArrayList<Long> listaVociDaScaricare) {
-        return downloadPagine(listaVociDaScaricare, false);
+    public DownloadResult downloadUpdatePagine(ArrayList<Long> listaVociDaScaricare) {
+        return downloadPagine(listaVociDaScaricare);
     }// end of method
 
 
@@ -61,12 +62,12 @@ public class PageService extends ABioService {
      * Per ogni page crea o modifica il records corrispondente con lo stesso pageid <br>
      *
      * @param listaVociDaScaricare elenco (pageids) delle pagine mancanti o modificate, da scaricare
-     * @param bulk                 flag per inserimento 'massiccio' delle nuove pagine
      */
-    private int downloadPagine(List<Long> listaVociDaScaricare, boolean bulk) {
+    private DownloadResult downloadPagine(ArrayList<Long> listaVociDaScaricare) {
+        DownloadResult result = new DownloadResult(listaVociDaScaricare);
         long inizioCiclo = System.currentTimeMillis();
         int numVociRegistrate = 0;
-        List<Long> bloccoPageids;
+        ArrayList<Long> bloccoPageids;
         int dimBloccoLettura = BLOCCO_PAGES;
         int numCicliLetturaPagine;
 
@@ -74,79 +75,52 @@ public class PageService extends ABioService {
             numCicliLetturaPagine = array.numCicli(listaVociDaScaricare.size(), dimBloccoLettura);
             for (int k = 0; k < numCicliLetturaPagine; k++) {
                 bloccoPageids = array.estraeSublistaLong(listaVociDaScaricare, dimBloccoLettura, k + 1);
-                numVociRegistrate += downloadSingoloBlocco(bloccoPageids, bulk, inizioCiclo);
+                result = downloadSingoloBlocco(result, bloccoPageids);
             }// end of for cycle
         }// end of if cycle
 
-        return numVociRegistrate;
+        return result;
     }// end of method
 
 
     /**
      * @param bloccoPageids lista (pageids) di pagine da scaricare dal server wiki
-     * @param bulk          flag per inserimento 'massiccio' delle nuove pagine
      */
-    private int downloadSingoloBlocco(List<Long> bloccoPageids, boolean bulk, long inizioCiclo) {
-        int numVociRegistrate = 0;
+    private DownloadResult downloadSingoloBlocco(DownloadResult result, ArrayList<Long> bloccoPageids) {
         ArrayList<Page> pages; // di norma 500
-        long inizio = System.currentTimeMillis();
+        Bio entity;
+        ArrayList<Long> vociRegistrateInQuestoBlocco = new ArrayList<>();
+        ArrayList<Bio> listaBio = new ArrayList<Bio>();
 
         if (bloccoPageids == null || bloccoPageids.size() > BLOCCO_PAGES) {
-            return 0;
+            return result;
         }// end of if cycle
 
         pages = api.leggePages(bloccoPageids);
-        if (pages.size() == bloccoPageids.size()) {
-            log.info("Algos - Ciclo DOWNLOAD - lette " + pages.size() + " Pages in " + date.deltaText(inizio));
-        } else {
-            log.error("Algos - PageService.downloadSingoloBlocco() - Ci sono " + pages.size() + " Pages invece delle " + bloccoPageids.size() + " previste");
-            pages = api.leggePages(bloccoPageids);
-        }// end of if/else cycle
-
-        if (bulk) {
-            numVociRegistrate = registraBulk(pages, inizioCiclo);
-        } else {
-            numVociRegistrate = registraSingoloBlocco(pages);
-        }// end of if/else cycle
-
-        return numVociRegistrate;
-    }// end of method
-
-
-    private int registraBulk(ArrayList<Page> pages, long inizioCiclo) {
-        int numVociRegistrate = 0;
-        Bio entity;
-        ArrayList<Bio> listaBio = new ArrayList<Bio>();
-        int numVociTotali = 0;
-
         for (Page page : pages) {
             entity = creaBio(page);
             if (entity != null) {
                 listaBio.add(entity);
-            }// end of if cycle
+                vociRegistrateInQuestoBlocco.add(page.getPageid());
+                result.addSi(page.getPageid());
+            } else {
+                result.addNo(page.getPageid());
+            }// end of if/else cycle
         }// end of for cycle
 
-        long inizioBlocco = System.currentTimeMillis();
+        //--cancella le voci esistenti prima di inserire le nuove versioni con update()
+        bioService.deleteBulkByPageid(vociRegistrateInQuestoBlocco);
+
         if (listaBio.size() > 0) {
             try { // prova ad eseguire il codice
                 mongo.updateBulk(listaBio, Bio.class);
-                numVociRegistrate = listaBio.size();
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
 
-        if (numVociRegistrate == pages.size()) {
-            log.info("Algos - Ciclo DOWNLOAD - aggiornate " + numVociRegistrate + " Biografie in " + date.deltaText(inizioBlocco));
-            numVociTotali = mongo.count(Bio.class);
-            log.info("Algos - DEBUG - In mongoDB ci sono " + numVociTotali + " elementi, caricati in " + date.deltaText(inizioCiclo));
-        } else {
-            log.error("Algos - PageService.registraBulk() - Ci sono " + pages.size() + " Pages e " + numVociRegistrate + " Bio");
-        }// end of if/else cycle
-
-        return numVociRegistrate;
+        return result;
     }// end of method
-
 
     public Bio creaBio(Page page) {
         Bio entity = null;
@@ -170,32 +144,6 @@ public class PageService extends ABioService {
         }// end of if/else cycle
 
         return entity;
-    }// end of method
-
-
-    private int registraSingoloBlocco(ArrayList<Page> pages) {
-        for (Page page : pages) {
-            registraPagina(page);
-
-//            pageid = page.getPageid();
-//            wikiTitle = page.getTitle();
-//            template = api.estraeTmplBio(page);
-//
-//            entity = bioService.findByKeyUnica(pageid);
-//            if (entity != null) {
-//                entity.setWikiTitle(wikiTitle);
-//                entity.setTmplBioServer(template);
-//                entity.setLastLettura(LocalDateTime.now());
-//                entity.setSporca(false);
-//                elaboraService.esegueNoSave(entity);
-//                bioService.save(entity);
-//            } else {
-//                log.warn("Algos - Ciclo UPDATE - non esiste una voce che si dovrebbe modificare: " + wikiTitle);
-//            }// end of if/else cycle
-
-        }// end of for cycle
-
-        return pages.size();
     }// end of method
 
 

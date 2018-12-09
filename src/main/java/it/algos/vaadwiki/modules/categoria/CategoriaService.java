@@ -16,7 +16,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -138,6 +137,15 @@ public class CategoriaService extends AttNazProfCatService {
 
 
     /**
+     * Property unica (se esiste).
+     */
+    @Override
+    public String getPropertyUnica(AEntity entityBean) {
+        return ((Categoria) entityBean).getPageid() + "";
+    }// end of method
+
+
+    /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
      * @param pageid della pagina wiki (obbligatorio, unico)
@@ -158,14 +166,14 @@ public class CategoriaService extends AttNazProfCatService {
      *
      * @return all ordered entities
      */
-    protected List<? extends AEntity> findAll(Sort sort) {
-        List<? extends AEntity> lista = null;
+    protected ArrayList<? extends AEntity> findAll(Sort sort) {
+        ArrayList<? extends AEntity> lista = null;
 
         try { // prova ad eseguire il codice
             if (sort != null) {
-                lista = repository.findAll(sort);
+                lista = new ArrayList(repository.findAll(sort));
             } else {
-                lista = repository.findTop100ByOrderByTitleAsc();
+                lista = new ArrayList(repository.findTop100ByOrderByTitleAsc());
             }// end of if/else cycle
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
@@ -183,13 +191,25 @@ public class CategoriaService extends AttNazProfCatService {
      */
     public ArrayList<Long> findPageids() {
         ArrayList<Long> lista = new ArrayList<>();
-        List<Categoria> listaPagine = null;
+        ArrayList<? extends AEntity> listaPagine = null;
+        int recNum = count();
+        int size = 100;
+        int giri = (recNum / size) + 1;
+        Sort sort = new Sort(Sort.Direction.ASC, "pageid");
 
-        listaPagine = repository.findAllByOrderByTitleAsc();
-
-        for (Categoria cat : listaPagine) {
-            lista.add(cat.pageid);
+        for (int k = 0; k < giri; k++) {
+            listaPagine = findAll(k, size, sort);
+            if (array.isValid(listaPagine)) {
+                for (AEntity entity : listaPagine) {
+                    lista.add(((Categoria) entity).pageid);
+                }// end of for cycle
+            }// end of if cycle
         }// end of for cycle
+
+//        listaPagine = repository.findAllByOrderByTitleAsc();
+//        for (Categoria cat : listaPagine) {
+//            lista.add(cat.pageid);
+//        }// end of for cycle
 
         return lista;
     }// end of method
@@ -216,19 +236,46 @@ public class CategoriaService extends AttNazProfCatService {
 
         inizio = System.currentTimeMillis();
         listaCat = api.leggeCatCat(nomeCategoria);
-        log.info("Algos - Lettura delle voci della categoria BioBot (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
+        log.info("Algos - Lettura delle voci di wiki.categoria." + nomeCategoria + " (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
 
         inizio = System.currentTimeMillis();
         mongo.drop(Categoria.class);
-        log.info("Algos - Drop mongoDB Categoria in " + date.deltaText(inizio));
+        log.info("Algos - Drop mongoDB.Categoria in " + date.deltaText(inizio));
 
         inizio = System.currentTimeMillis();
         mongo.insert(listaCat, Categoria.class);
         long fine = System.currentTimeMillis();
         long durata = fine - inizio;
-        log.info("Algos - Insert in mongoDB Categoria (pageid e title) (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
+        log.info("Algos - Insert in mongoDB.Categoria (pageid e title) (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
 
         setLastDownload(inizio);
+    }// end of method
+
+
+    /**
+     * Returns pageid list of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     * @param sort   ordinamento degli elementi
+     *
+     * @return all entities
+     */
+    public ArrayList<Long> findAllPageid(int offset, int size, Sort sort) {
+        ArrayList<Long> lista = null;
+        ArrayList<? extends AEntity> listaEntities = findAll(offset, size, sort);
+
+        if (array.isValid(listaEntities)) {
+            lista = new ArrayList<>();
+            for (AEntity entity : listaEntities) {
+                lista.add(((Categoria) entity).pageid);
+            }// end of for cycle
+        }// end of if cycle
+
+        return lista;
     }// end of method
 
 }// end of class

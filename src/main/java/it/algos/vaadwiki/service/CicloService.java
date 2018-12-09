@@ -16,11 +16,11 @@ import java.util.ArrayList;
  * Time: 15:44
  * Esegue un ciclo completo di sincronizzazione tra le pagine della categoria TAG_BIO e le entities della collezione Bio
  * <p>
+ * Esegue un ciclo (DELETE) di cancellazione di records esistenti nel database e mancanti nella categoria
  * Esegue un ciclo (NEW) di controllo e creazione di nuovi records esistenti nella categoria sul server e mancanti nel database
  * Esegue un ciclo (UPDATE) di controllo e aggiornamento di tutti i records esistenti nel database
- * Esegue un ciclo (DELETE) di cancellazione di records esistenti nel database e mancanti nella categoria
- * Esegue un ciclo (ELABORA) di elaborazione delle informazioni grezze
- * Esegue un ciclo (UPLOAD) di costruzione delle liste
+ * Esegue un ciclo (ELABORA) di elaborazione delle informazioni grezze (eventuale)
+ * Esegue un ciclo (UPLOAD) di costruzione delle liste (eventuale)
  * <p>
  * Il ciclo viene chiamato da DaemonBio (con frequenza giornaliera)
  * Il ciclo può essere invocato dal bottone 'Ciclo' nella tavola Bio
@@ -32,16 +32,14 @@ import java.util.ArrayList;
 public class CicloService extends ABioService {
 
 
-
-
     /**
      * Aggiorna le ATTIVITA, con un download del modulo attività
      * Aggiorna le NAZIONALITA, con un download del modulo nazionalità
      * Aggiorna le PROFESSIONI, con un download del modulo professioni
      * Aggiorna le CATEGORIE, con un download di tutte le voci della categoria BioBot
      * <p>
-     * Legge la collezione Categorie dal mongoDB
-     * Legge le voci Bio esistenti
+     * Crea una lista di pageid dalla collezione Categoria sul mongoDB
+     * Crea una lista di pageid dalla collezione Bio esistente sul mongoDB
      * <p>
      * Trova la differenza positiva (records eccedenti)
      * Esegue un ciclo (DELETE) di cancellazione di records esistenti nel database e mancanti nella categoria
@@ -51,20 +49,21 @@ public class CicloService extends ABioService {
      * Esegue un ciclo (NEW) di controllo e creazione di nuovi records esistenti sul server e mancanti nel database
      * Scarica la lista di voci mancanti dal server e crea i nuovi records di Bio
      * <p>
-     * Trova tutte le pagine modificate sul server DOPO l'ultima lettura
+     * Ricontrolla (eventualmente) le due liste di pageid che devono essere uguali
      * Esegue un ciclo (UPDATE) di controllo e aggiornamento di tutti i records esistenti nel database
-     * Aggiorna tutti i records che sono stati modificati sul servere wiki DOPO l'ultima lettura
+     * Spazzola tutte le voci a blocchi di 'pageLimit' per volta per recuperare il 'timestamp' delle pagine
+     * Trova tutte le pagine (del blocco) modificate sul server DOPO l'ultima lettura
+     * Aggiorna i records che sono stati modificati sul servere wiki DOPO l'ultima lettura
      * <p>
-     * <p>
-     * Esegue un ciclo (ELABORA) di elaborazione delle informazioni grezze
-     * Esegue un ciclo (UPLOAD) di costruzione delle liste
+     * Esegue un ciclo (ELABORA) di elaborazione delle informazioni grezze (eventuale)
+     * Esegue un ciclo (UPLOAD) di costruzione delle liste (eventuale)
      */
     @SuppressWarnings("unchecked")
     public void esegue() {
-        ArrayList<Long> listaVociCategoriaDelServer;
-        ArrayList<Long> listaEsistentiSulDataBaseLocale;
-        ArrayList<Long> listaVociMancanti;
-        ArrayList<Long> listaVociEccedenti;
+        ArrayList<Long> listaPageidsMongoCategoria;
+        ArrayList<Long> listaPageidsMongoBio;
+        ArrayList<Long> listaPageidsEccedenti;
+        ArrayList<Long> listaPageidsMancanti;
 
         //--Il ciclo necessita del login valido come bot per il funzionamento normale
         //--oppure del flag USA_CICLI_ANCHE_SENZA_BOT per un funzionamento ridotto
@@ -83,31 +82,32 @@ public class CicloService extends ABioService {
         professioneService.download();
 
         //--download del modulo categoria
+        //--crea una collezione Categoria, 'specchio' sul mongoDB di quella sul server wiki
         categoriaService.download();
 
-        //--recupera la lista delle voci dalla collezione categoria
-        listaVociCategoriaDelServer = categoriaService.findPageids();
+        //--recupera la lista dei pageids dalla collezione Categoria
+        listaPageidsMongoCategoria = categoriaService.findPageids();
 
-        //--recupera la lista delle voci dalla collezione categoria
-        listaEsistentiSulDataBaseLocale = bioService.findPageids();
-
-        //--elabora le liste delle differenze per la sincronizzazione
-        listaVociMancanti = LibWiki.delta(listaVociCategoriaDelServer, listaEsistentiSulDataBaseLocale);
+        //--recupera la lista dei pageids dalla collezione Bio
+        listaPageidsMongoBio = bioService.findPageids();
 
         //--elabora le liste delle differenze per la sincronizzazione
-        listaVociEccedenti = LibWiki.delta(listaEsistentiSulDataBaseLocale, listaVociCategoriaDelServer);
+        listaPageidsEccedenti = LibWiki.delta(listaPageidsMongoBio, listaPageidsMongoCategoria);
 
-        //--Cancella tutti i records non più presenti nella categoria
-        deleteService.esegue(listaVociEccedenti);
+        //--Cancella dal mongoDB tutte le entities non più presenti nella categoria
+        deleteService.esegue(listaPageidsEccedenti);
 
-        //--Scarica la lista di voci mancanti dal server e crea i nuovi records di Bio
-        newService.esegue(listaVociMancanti);
+        //--elabora le liste delle differenze per la sincronizzazione
+        listaPageidsMancanti = LibWiki.delta(listaPageidsMongoCategoria, listaPageidsMongoBio);
+
+        //--Scarica dal server la lista di voci mancanti e crea le nuove entities sul mongoDB Bio
+        newService.esegue(listaPageidsMancanti);
+
+        //--aggiorna tutte le entities mongoDB Bio che sono stati modificate sul server wiki DOPO l'ultima lettura
+        updateService.esegue();
 
 //        --elabora i nuovi records
 //        elaboraService.esegue(listaVociMancanti);
-
-        //--aggiorna tutti i records che sono stati modificati sul server wiki DOPO l'ultima lettura
-        updateService.esegue();
 
         //--elabora tutti i records che sono stati modificati sul server wiki DOPO l'ultima lettura
 //        elaboraService.esegueAll();

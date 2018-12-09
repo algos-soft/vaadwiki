@@ -32,7 +32,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 public interface BioRepository extends MongoRepository<Bio, String> {
 
 
-    public Bio findByPageId(long pageid);
+    public Bio findByPageid(long pageid);
 
     public List<Bio> findAllByOrderByWikiTitleAsc();
 

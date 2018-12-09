@@ -431,6 +431,12 @@ public abstract class LibWiki {
 
         // controllo di congruita
         if (testo != null && tag != null) {
+            // patch per nome template minuscolo o maiuscolo
+            // deve terminare con 'aCapo' oppure 'return' oppure 'tab' oppure '|'(pipe) oppure 'spazio'(u0020)
+            if (tag.equals("Bio")) {
+                tag="[Bb]io[\n\r\t\\|\u0020]";
+            }// end of if cycle
+
             // Create a Pattern text
             patternTxt = "\\{\\{(Template:)?" + tag;
 

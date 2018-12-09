@@ -17,7 +17,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.algos.vaadflow.service.AService.FIELD_NAME_CODE;
 import static it.algos.vaadflow.service.AService.FIELD_NAME_ORDINE;
 
 /**
@@ -68,6 +67,7 @@ public class AMongoService extends AbstractService {
     private AMongoService() {
     }// end of constructor
 
+
     /**
      * Gets the unique instance of this Singleton.
      *
@@ -114,6 +114,7 @@ public class AMongoService extends AbstractService {
 //
 //    //insert a list of user objects
 //	mongoOperation.insert(listofUser);
+
 
     /**
      * Count all
@@ -192,6 +193,7 @@ public class AMongoService extends AbstractService {
         return entity;
     }// end of method
 
+
     /**
      * Controlla l'esistenza della singola entity
      *
@@ -204,6 +206,7 @@ public class AMongoService extends AbstractService {
     public boolean isEsiste(Class<? extends AEntity> clazz, String property, Object value) {
         return findByProperty(clazz, property, value) != null;
     }// end of method
+
 
     /**
      * Controlla l'esistenza della singola entity
@@ -218,6 +221,7 @@ public class AMongoService extends AbstractService {
         return findByProperty(clazz, property, value) == null;
     }// end of method
 
+
     /**
      * Find all
      *
@@ -225,8 +229,8 @@ public class AMongoService extends AbstractService {
      *
      * @return lista
      */
-    public List findAll(Class<? extends AEntity> clazz) {
-        return mongoOp.findAll(clazz);
+    public ArrayList findAll(Class<? extends AEntity> clazz) {
+        return new ArrayList(mongoOp.findAll(clazz));
     }// end of method
 
 
@@ -348,7 +352,7 @@ public class AMongoService extends AbstractService {
      * @return lista
      */
     public DeleteResult delete(List<? extends AEntity> listaEntities, Class<? extends AEntity> clazz) {
-        List<String> listaId = new ArrayList<String>();
+        ArrayList<String> listaId = new ArrayList<String>();
 
         for (AEntity entity : listaEntities) {
             if (entity != null) {
@@ -373,6 +377,22 @@ public class AMongoService extends AbstractService {
     public DeleteResult deleteBulk(List<String> listaId, Class<? extends AEntity> clazz) {
         Bson condition = new Document("$in", listaId);
         Bson filter = new Document("_id", condition);
+        return getCollection(clazz).deleteMany(filter);
+    }// end of method
+
+
+    /**
+     * Delete a list of entities.
+     *
+     * @param lista    di valori della property da cancellare
+     * @param clazz    della collezione
+     * @param property della Entity
+     *
+     * @return lista
+     */
+    public DeleteResult deleteBulkByProperty(List lista, Class<? extends AEntity> clazz, String property) {
+        Bson condition = new Document("$in", lista);
+        Bson filter = new Document(property, condition);
         return getCollection(clazz).deleteMany(filter);
     }// end of method
 
@@ -478,7 +498,7 @@ public class AMongoService extends AbstractService {
         int ordine = 0;
         AEntity entityBean = null;
         Sort sort = new Sort(Sort.Direction.DESC, propertyName);
-        List lista;
+        ArrayList lista;
         Field field;
         Object value;
 
@@ -487,7 +507,7 @@ public class AMongoService extends AbstractService {
         }// end of if/else cycle
 
         Query query = new Query().with(sort).limit(1);
-        lista = mongoOp.find(query, clazz);
+        lista = new ArrayList(mongoOp.find(query, clazz));
 
         if (array.isValid(lista) && lista.size() == 1) {
             entityBean = (AEntity) lista.get(0);

@@ -1,15 +1,11 @@
 package it.algos.vaadwiki.modules.bio;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.*;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import lombok.*;
 import org.eclipse.persistence.annotations.Index;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,7 +15,6 @@ import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-
 
 
 /**
@@ -58,8 +53,8 @@ import java.time.LocalDateTime;
 @Builder(builderMethodName = "builderBio")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = { "wikiTitle", "lastModifica", "lastLettura", "sporca", "nome", "cognome", "sesso", "luogoNato", "giornoNato", "annoNato", "luogoMorto", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "nazionalita"})
-@AIForm(fields = {"pageId", "wikiTitle", "sporca", "tmplBioServer", "nome", "cognome", "sesso", "luogoNato", "giornoNato", "annoNato", "luogoMorto", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita"})
+@AIList(fields = {"wikiTitle", "lastModifica", "lastLettura", "sporca", "nome", "cognome", "sesso", "luogoNato", "giornoNato", "annoNato", "luogoMorto", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "nazionalita"})
+@AIForm(fields = {"pageId", "wikiTitle", "sporca", "tmplBioServer", "nome", "cognome", "sesso", "luogoNato", "giornoNato", "annoNato", "luogoMorto", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita","lastModifica", "lastLettura"})
 @AIScript(sovrascrivibile = false)
 public class Bio extends AEntity {
 
@@ -77,7 +72,7 @@ public class Bio extends AEntity {
     @Indexed()
     @AIField(type = EAFieldType.lungo, widthEM = 3)
     @AIColumn(width = 55)
-    public long pageId;
+    public long pageid;
 
     /**
      * title della pagina wiki (obbligatorio, unico) <br>
@@ -112,6 +107,7 @@ public class Bio extends AEntity {
     @AIField(type = EAFieldType.localdatetime, required = true, help = "ultima lettura/aggiornamento della voce effettuata dal programma VaadBio")
     @AIColumn(width = 210)
     public LocalDateTime lastLettura;
+
     /**
      * biografia NON allineata tra server wiki e mongoDB locale
      * viene sempre posta a FALSE alla creazione della entity
@@ -121,61 +117,76 @@ public class Bio extends AEntity {
     @AIField(type = EAFieldType.checkbox)
     @AIColumn()
     public boolean sporca;
+
     @Index
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String titolo;
+
     @Index
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String nome;
+
     @Index
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String cognome;
+
     @Index
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String sesso;
+
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String luogoNato;
-//    @AIField(type = EAFieldType.text)
+
+    //    @AIField(type = EAFieldType.text)
 //    @AIColumn(width = 210)
 //    private String luogoNascitaLink;
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String giornoNato;
+
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String annoNato;
+
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String luogoMorto;
-//    @AIField(type = EAFieldType.text)
+
+    //    @AIField(type = EAFieldType.text)
 //    @AIColumn(width = 210)
 //    private String luogoMorteLink;
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String giornoMorto;
+
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String annoMorto;
+
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String attivita;
+
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String attivita2;
+
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String attivita3;
-//    @AIField(type = EAFieldType.text)
+
+    //    @AIField(type = EAFieldType.text)
 //    @AIColumn(width = 210)
 //    private String attivitaAltre;
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String nazionalita;
+
 
     /**
      * @return a string representation of the object.

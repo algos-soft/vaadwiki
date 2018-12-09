@@ -72,7 +72,7 @@ public class DaemonBio extends Scheduler {
     }// end of method
 
 
-    public void task(BioTask task) throws IllegalStateException {
+    public void task(TaskWiki task) throws IllegalStateException {
         if (task.usaDaemon()) {
             schedule(task.getSchedule(), task);
         }// end of if cycle

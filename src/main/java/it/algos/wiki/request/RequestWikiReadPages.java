@@ -96,7 +96,7 @@ public class RequestWikiReadPages extends RequestWiki {
     /**
      * Effettua la request per voci indicate
      */
-    public void esegue(List<Long> arrayPageIds) {
+    public void esegue(ArrayList<Long> arrayPageIds) {
         esegue(array.toStringaPipe(arrayPageIds));
     } // fine del metodo
 

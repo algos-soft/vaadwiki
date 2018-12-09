@@ -88,10 +88,10 @@ public class RoleViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected VerticalLayout creaTopAlert() {
-        VerticalLayout layout = super.creaTopAlert();
-        layout.add(new Label("Serve per aggiungere altri eventuali 'authority' specifiche dell'applicazione"));
-        return layout;
+    protected void fixAlertLayout() {
+        super.fixAlertLayout();
+
+        alertPlacehorder.add(new Label("Serve per aggiungere altri eventuali 'authority' specifiche dell'applicazione"));
     }// end of method
 
 

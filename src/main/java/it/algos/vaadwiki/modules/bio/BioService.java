@@ -1,12 +1,15 @@
 package it.algos.vaadwiki.modules.bio;
 
+import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.service.AService;
+import it.algos.vaadwiki.modules.attivita.Attivita;
+import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.service.ElaboraService;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
+import it.algos.wiki.WrapTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,9 +19,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
@@ -44,7 +50,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 @Qualifier(TAG_BIO)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class BioService extends AService {
+public class BioService extends AttNazProfCatService {
 
 
     /**
@@ -88,17 +94,18 @@ public class BioService extends AService {
         this.repository = (BioRepository) repository;
     }// end of Spring constructor
 
+
     /**
      * Crea una entity e la registra <br>
      *
-     * @param pageId        della pagina wiki (obbligatorio, unico)
+     * @param pageid        della pagina wiki (obbligatorio, unico)
      * @param wikiTitle     della pagina wiki (obbligatorio, unico)
      * @param tmplBioServer template effettivamente presente sul server (obligatorio, unico)
      *
      * @return la entity appena creata
      */
-    public Bio crea(long pageId, String wikiTitle, String tmplBioServer) {
-        return (Bio) save(newEntity(pageId, wikiTitle, tmplBioServer));
+    public Bio crea(long pageid, String wikiTitle, String tmplBioServer) {
+        return (Bio) save(newEntity(pageid, wikiTitle, tmplBioServer));
     }// end of method
 
 
@@ -120,13 +127,13 @@ public class BioService extends AService {
      * Eventuali regolazioni iniziali delle property <br>
      * Properties <br>
      *
-     * @param pageId    della pagina wiki (obbligatorio, unico)
+     * @param pageid    della pagina wiki (obbligatorio, unico)
      * @param wikiTitle della pagina wiki (obbligatorio, unico)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Bio newEntity(long pageId, String wikiTitle) {
-        return newEntity(pageId, wikiTitle, "");
+    public Bio newEntity(long pageid, String wikiTitle) {
+        return newEntity(pageid, wikiTitle, "");
     }// end of method
 
 
@@ -135,14 +142,14 @@ public class BioService extends AService {
      * Eventuali regolazioni iniziali delle property <br>
      * Properties <br>
      *
-     * @param pageId        della pagina wiki (obbligatorio, unico)
+     * @param pageid        della pagina wiki (obbligatorio, unico)
      * @param wikiTitle     della pagina wiki (obbligatorio, unico)
      * @param tmplBioServer template effettivamente presente sul server (obligatorio, unico)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Bio newEntity(long pageId, String wikiTitle, String tmplBioServer) {
-        return newEntity(pageId, wikiTitle, tmplBioServer, (LocalDateTime) null);
+    public Bio newEntity(long pageid, String wikiTitle, String tmplBioServer) {
+        return newEntity(pageid, wikiTitle, tmplBioServer, (LocalDateTime) null);
     }// end of method
 
 
@@ -151,25 +158,25 @@ public class BioService extends AService {
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
      *
-     * @param pageId                    della pagina wiki (obbligatorio, unico)
+     * @param pageid                    della pagina wiki (obbligatorio, unico)
      * @param wikiTitle                 della pagina wiki (obbligatorio, unico)
      * @param tmplBioServer             template effettivamente presente sul server (obligatorio, unico)
      * @param lastLettura/aggiornamento della voce effettuata dal programma
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Bio newEntity(long pageId, String wikiTitle, String tmplBioServer, LocalDateTime lastLettura) {
+    public Bio newEntity(long pageid, String wikiTitle, String tmplBioServer, LocalDateTime lastLettura) {
         Bio entity = null;
 
         entity = Bio.builderBio()
-                .pageId(pageId)
+                .pageid(pageid)
                 .wikiTitle(wikiTitle.equals("") ? null : wikiTitle)
                 .tmplBioServer(tmplBioServer.equals("") ? null : tmplBioServer)
                 .lastModifica(LocalDateTime.of(2000, 1, 1, 0, 0))
                 .lastLettura(lastLettura != null ? lastLettura : LocalDateTime.now())
                 .sporca(false)
                 .build();
-        entity.id = entity.getPageId() + "";
+        entity.id = entity.getPageid() + "";
 
         return entity;
     }// end of method
@@ -184,14 +191,14 @@ public class BioService extends AService {
      *
      * @return all ordered entities
      */
-    protected List<? extends AEntity> findAll(Sort sort) {
-        List<? extends AEntity> lista = null;
+    protected ArrayList<? extends AEntity> findAll(Sort sort) {
+        ArrayList<? extends AEntity> lista = null;
 
         try { // prova ad eseguire il codice
             if (sort != null) {
-                lista = repository.findAll(sort);
+                lista = new ArrayList(repository.findAll(sort));
             } else {
-                lista = repository.findTop50ByOrderByWikiTitleAsc();
+                lista = new ArrayList(repository.findTop50ByOrderByWikiTitleAsc());
             }// end of if/else cycle
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
@@ -199,6 +206,7 @@ public class BioService extends AService {
 
         return lista;
     }// end of method
+
 
     /**
      * Returns all entities of the type <br>
@@ -213,29 +221,31 @@ public class BioService extends AService {
         listaBio = repository.findAllByOrderByWikiTitleAsc();
 
         for (Bio bio : listaBio) {
-            lista.add(bio.pageId);
+            lista.add(bio.pageid);
         }// end of for cycle
 
         return lista;
     }// end of method
 
+
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
-     * @param pageId di riferimento (obbligatorio)
+     * @param pageid di riferimento (obbligatorio)
      *
      * @return istanza della Entity, null se non trovata
      */
-    public Bio findByKeyUnica(long pageId) {
-        return repository.findByPageId(pageId);
+    public Bio findByKeyUnica(long pageid) {
+        return repository.findByPageid(pageid);
     }// end of method
+
 
     /**
      * Property unica (se esiste) <br>
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Bio) entityBean).getPageId() + "";
+        return ((Bio) entityBean).getPageid() + "";
     }// end of method
 
 
@@ -244,17 +254,18 @@ public class BioService extends AService {
      */
     public ArrayList<Long> findSporcaPageId() {
         ArrayList lista = null;
-        List<Bio> listaBio = repository.findAllBySporcaTrue();
+        ArrayList<Bio> listaBio = new ArrayList(repository.findAllBySporcaTrue());
 
         if (array.isValid(listaBio)) {
             lista = new ArrayList();
             for (Bio bio : listaBio) {
-                lista.add(bio.pageId);
+                lista.add(bio.pageid);
             }// end of for cycle
         }// end of if cycle
 
         return lista;
     }// end of method
+
 
     public void downloadBio(String wikiTitle) {
         Page pagina = api.leggePage(wikiTitle);
@@ -265,5 +276,139 @@ public class BioService extends AService {
             elabora.esegue(bio, true);
         }// end of if cycle
     }// end of method
+
+
+    /**
+     * Returns pageid list of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     * @param sort   ordinamento degli elementi
+     *
+     * @return all entities
+     */
+    public ArrayList<Long> findAllPageid(int offset, int size, Sort sort) {
+        ArrayList<Long> lista = null;
+        ArrayList<? extends AEntity> listaEntities = findAll(offset, size, sort);
+
+        if (array.isValid(listaEntities)) {
+            lista = new ArrayList<>();
+            for (AEntity entity : listaEntities) {
+                lista.add(((Bio) entity).pageid);
+            }// end of for cycle
+        }// end of if cycle
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Returns WrapTime list of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     * @param sort   ordinamento degli elementi
+     *
+     * @return list of WrapTime
+     */
+    public ArrayList<WrapTime> findAllWrapTime(int offset, int size, Sort sort) {
+        ArrayList<WrapTime> lista = null;
+        ArrayList<? extends AEntity> listaEntities = findAll(offset, size, sort);
+
+        if (array.isValid(listaEntities)) {
+            lista = new ArrayList<>();
+            for (AEntity entity : listaEntities) {
+                lista.add(new WrapTime(((Bio) entity).pageid, Timestamp.valueOf(((Bio) entity).lastLettura)));
+            }// end of for cycle
+        }// end of if cycle
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Returns WrapTime list of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     * @param sort   ordinamento degli elementi
+     *
+     * @return map (pageid,timestamp)
+     */
+    public LinkedHashMap<Long, Timestamp> findTimestampMap(int offset, int size, Sort sort) {
+        LinkedHashMap<Long, Timestamp> mappa = null;
+        ArrayList<? extends AEntity> listaEntities = findAll(offset, size, sort);
+
+        if (array.isValid(listaEntities)) {
+            mappa = new LinkedHashMap<>();
+            for (AEntity entity : listaEntities) {
+                mappa.put(((Bio) entity).pageid, Timestamp.valueOf(((Bio) entity).lastLettura));
+            }// end of for cycle
+        }// end of if cycle
+
+        return mappa;
+    }// end of method
+
+
+    /**
+     * Delete a list of entities.
+     *
+     * @param listaId di ObjectId da cancellare
+     *
+     * @return numero di elementi cancellati
+     */
+    public int deleteBulk(ArrayList<String> listaId) {
+        return super.deleteBulk(listaId, Bio.class);
+    }// end of method
+
+    /**
+     * Delete a list of entities.
+     *
+     * @param listaPageid di ObjectId da cancellare
+     *
+     * @return numero di elementi cancellati
+     */
+    public DeleteResult deleteBulkByPageid(ArrayList<Long> listaPageid) {
+        return super.deleteBulkByProperty(listaPageid, Bio.class,"pageid");
+    }// end of method
+
+
+//    /**
+//     * Fetches the entities whose 'main text property' matches the given filter text.
+//     * <p>
+//     * Se esiste la company, filtrate secondo la company <br>
+//     * The matching is case insensitive. When passed an empty filter text,
+//     * the method returns all categories. The returned list is ordered by name.
+//     * The 'main text property' is different in each entity class and chosen in the specific subclass
+//     *
+//     * @param filter the filter text
+//     *
+//     * @return the list of matching entities
+//     */
+//    @Override
+//    public List<? extends AEntity> findFilter(String filter) {
+//        List<? extends AEntity> lista = null;
+//        String normalizedFilter = filter.toLowerCase();
+//
+//        lista = findAll();
+//        if (lista != null) {
+//            lista = lista.stream()
+//                    .filter(entity -> {
+//                        return ((Bio)entity).getWikiTitle().toLowerCase().startsWith(normalizedFilter);
+//                    })
+//                    .collect(Collectors.toList());
+//        }// end of if cycle
+//
+//        return lista;
+//    }// end of method
 
 }// end of class

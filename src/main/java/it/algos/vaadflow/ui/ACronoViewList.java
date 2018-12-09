@@ -45,10 +45,10 @@ public abstract class ACronoViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected VerticalLayout creaTopAlert() {
-        VerticalLayout layout = super.creaTopAlert();
-        layout.add(new Label("Serve per costruire liste cronologiche"));
-        return layout;
+    protected void fixAlertLayout() {
+        super.fixAlertLayout();
+
+        alertPlacehorder.add(new Label("Serve per costruire liste cronologiche"));
     }// end of method
 
 }// end of class

@@ -1,32 +1,30 @@
 package it.algos.vaadwiki.task;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.service.IAService;
 import lombok.extern.slf4j.Slf4j;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadwiki.application.WikiCost.TAG_ATT;
-import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA;
-
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: gio, 12-lug-2018
- * Time: 12:19
+ * Date: mer, 05-dic-2018
+ * Time: 13:30
  */
 @SpringComponent
-@Qualifier(TAG_ATT)
+@Qualifier(TAG_BIO)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class TaskAttivita extends TaskWiki {
+public class TaskBio extends TaskWiki{
 
 
     /**
@@ -38,7 +36,7 @@ public class TaskAttivita extends TaskWiki {
      * @param service layer di collegamento per la Repository e la Business Logic
      */
     @Autowired
-    public TaskAttivita(@Qualifier(TAG_ATT) IAService service) {
+    public TaskBio(@Qualifier(TAG_BIO) IAService service) {
         super(service);
     }// end of Spring constructor
 
@@ -54,9 +52,8 @@ public class TaskAttivita extends TaskWiki {
      */
     @PostConstruct
     protected void inizia() {
-        super.eaSchedule = EASchedule.giornoQuintoMinuto;
-        super.usaDaemon = pref.isBool(USA_DAEMON_ATTIVITA);
+        super.eaSchedule = EASchedule.giornoDecimoMinuto;
+        super.usaDaemon = pref.isBool(USA_DAEMON_BIO);
     }// end of method
-
 
 }// end of class

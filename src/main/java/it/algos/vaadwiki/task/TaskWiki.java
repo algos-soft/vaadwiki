@@ -1,13 +1,10 @@
 package it.algos.vaadwiki.task;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +18,7 @@ import java.time.LocalDateTime;
 //@SpringComponent
 //@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public   class BioTask extends ATask {
+public class TaskWiki extends ATask {
 
 
     protected AttNazProfCatService service;
@@ -36,9 +33,9 @@ public   class BioTask extends ATask {
      *
      * @param service iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */
-    public BioTask(IAService service) {
+    public TaskWiki(IAService service) {
         super();
-        this.service = (AttNazProfCatService)service;
+        this.service = (AttNazProfCatService) service;
     }// end of Spring constructor
 
 

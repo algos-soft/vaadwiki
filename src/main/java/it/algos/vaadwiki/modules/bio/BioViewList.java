@@ -3,39 +3,39 @@ package it.algos.vaadwiki.modules.bio;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.enumeration.EASchedule;
+import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.ADateService;
-import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.dialog.ADialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.fields.ATextField;
+import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
 import it.algos.vaadwiki.modules.categoria.CategoriaService;
 import it.algos.vaadwiki.service.*;
+import it.algos.vaadwiki.task.TaskBio;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 
-import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
-import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_BIO;
-import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 
 /**
@@ -61,55 +61,76 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 @Qualifier(TAG_BIO)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class BioViewList extends AViewList {
-
+public class BioViewList extends AttNazProfCatViewList {
 
     /**
      * Icona visibile nel menu (facoltativa)
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+
     protected Button ciclodButton;
+
     protected Button deleteButton;
+
+    protected Button deleteAllButton;
+
     protected Button newButton;
+
+    protected Button searchButton;
+
     protected Button updateButton;
+
     protected Button elaboraButton;
+
     protected Button uploadButton;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     protected CategoriaService categoriaService;
+
+    @Autowired
+    ApplicationContext appContext;
+
     private ATextField input;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private ADateService date;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private CicloService cicloService;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private DeleteService deleteService;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private NewService newService;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private UpdateService updateService;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private ElaboraService elaboraService;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -128,6 +149,12 @@ public class BioViewList extends AViewList {
     @Autowired
     private Api api;
 
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private TaskBio taskBio;
+
 
     /**
      * Costruttore @Autowired <br>
@@ -141,33 +168,40 @@ public class BioViewList extends AViewList {
     public BioViewList(@Qualifier(TAG_BIO) IAPresenter presenter, @Qualifier(TAG_BIO) IADialog dialog) {
         super(presenter, dialog);
         ((BioViewDialog) dialog).fixFunzioni(this::save, this::delete);
-//        this.service = (BioService) presenter.getService();
     }// end of Spring constructor
+
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      */
     @Override
     protected void fixPreferenzeSpecifiche() {
+        super.usaSearchTextField = true;//@todo Provvisorio. Occore sviluppare un searchDialog
         super.usaSearchBottoneNew = false;
+        super.usaBottoneEdit = true;
+        super.isBottoneEditAfter = false;
+        super.task = taskBio;
+        super.codeFlagDownload = USA_DAEMON_BIO;
+        super.codeLastDownload = LAST_DOWNLOAD_BIO;
+        super.durataLastDownload = DURATA_DOWNLOAD_BIO;
     }// end of method
 
-    @PostConstruct
-    private void creaBottoni() {
+
+    protected void creaBottoni() {
         creaCiclo();
         creaDelete();
+        creaDeleteAll();
         creaNew();
+        creaSearch();
         creaUpdate();
         creaElabora();
         creaUpload();
 
         addBottoni();
-//        test();
     }// end of method
 
+
     private void test() {
-
-
         Dialog dialog = new Dialog();
         Div content = new Div();
         content.addClassName("my-style");
@@ -216,12 +250,15 @@ public class BioViewList extends AViewList {
         dialog.add(confirmButton);
     }// end of method
 
+
     private void creaCiclo() {
-        ciclodButton = new Button("Ciclo");
-        ciclodButton.setIcon(new Icon(VaadinIcon.REFRESH));
-        ciclodButton.addClickListener(e -> cicloService.esegue());//@todo definitivo
-//        ciclodButton.addClickListener(e -> cicloTest());
+        ciclodButton = new Button("Ciclo", new Icon(VaadinIcon.REFRESH));
+        ciclodButton.addClickListener(e -> {
+            cicloService.esegue();
+            updateView();
+        });//end of lambda expressions and anonymous inner class
     }// end of method
+
 
     private void creaDelete() {
         deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
@@ -229,50 +266,129 @@ public class BioViewList extends AViewList {
         deleteButton.addClickListener(e -> deleteService.esegue(null));
     }// end of method
 
+
+    private void creaDeleteAll() {
+        deleteAllButton = new Button("Delete All", new Icon(VaadinIcon.CLOSE_CIRCLE));
+        deleteAllButton.getElement().setAttribute("theme", "error");
+        deleteAllButton.addClickListener(e -> openConfirmDialog());
+    }// end of method
+
+
     private void creaNew() {
-        newButton = new Button("New");
+        newButton = new Button("New", new Icon("lumo", "plus"));
 //        newButton.addClickListener(e -> newService.esegue(null));
     }// end of method
 
+
+    private void creaSearch() {
+        searchButton = new Button("Cerca", new Icon(VaadinIcon.SEARCH));
+//        newButton.addClickListener(e -> newService.esegue(null));
+    }// end of method
+
+
     private void creaUpdate() {
-        updateButton = new Button("Update");
-        updateButton.setIcon(new Icon(VaadinIcon.ARROW_DOWN));
+        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
+        updateButton.getElement().setAttribute("theme", "primary");
+
 //        updateButton.addClickListener(e -> updateService.esegue());
     }// end of method
 
+
     private void creaElabora() {
-        elaboraButton = new Button("Elabora");
-        elaboraButton.setIcon(new Icon(VaadinIcon.ARROW_RIGHT));
+        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
         elaboraButton.addClickListener(e -> elaboraService.esegue());
     }// end of method
 
+
     private void creaUpload() {
-        uploadButton = new Button("Upload");
-        uploadButton.setIcon(new Icon(VaadinIcon.ARROW_UP));
+        uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
         uploadButton.getElement().setAttribute("theme", "error");
 //        uploadButton.addClickListener(event -> upload());
         //        uploadButton.addClickListener(e -> cicloService.esegue());
     }// end of method
 
-    private void cicloTest() {
-        ArrayList<Long> listaVociCategoriaSuServer;
-        listaVociCategoriaSuServer = categoriaService.findPageids();
-//        service.deleteAll();
-        newService.esegue(listaVociCategoriaSuServer);
-        super.updateView();
-    }// end of method
+
+//    private void cicloTest() {
+//        ArrayList<Long> listaVociCategoriaSuServer;
+//        listaVociCategoriaSuServer = categoriaService.findPageids();
+////        service.deleteAll();
+//        newService.esegue(listaVociCategoriaSuServer);
+//        super.updateView();
+//    }// end of method
 
 
     protected void addBottoni() {
-        if (topLayout != null) {
-            topLayout.removeAll();
-            topLayout.add(ciclodButton);
-            topLayout.add(deleteButton);
-            topLayout.add(newButton);
-            topLayout.add(updateButton);
-            topLayout.add(elaboraButton);
-            topLayout.add(uploadButton);
+        if (topPlaceholder != null) {
+            topPlaceholder.removeAll();
+            topPlaceholder.add(ciclodButton);
+            topPlaceholder.add(deleteButton);
+            topPlaceholder.add(deleteAllButton);
+            topPlaceholder.add(newButton);
+            topPlaceholder.add(searchButton);
+            topPlaceholder.add(updateButton);
+            topPlaceholder.add(elaboraButton);
+            topPlaceholder.add(uploadButton);
+
+            sincroBottoniMenu(null);
         }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Opens the confirmation dialog before deleting the current item.
+     * <p>
+     * The dialog will display the given title and message(s), then call
+     * <p>
+     */
+    protected final void openConfirmDialog() {
+        String message = "Vuoi veramente cancellare TUTTE le biografie ?";
+        String additionalMessage = "L'operazione non è reversibile";
+        ADialog dialog = (ADialog) appContext.getBean(ADialog.class, "Delete");
+        dialog.open(message, additionalMessage, this::openSecondConfirmDialog, null);
+    }// end of method
+
+
+    /**
+     * Opens the confirmation dialog before deleting the current item.
+     * <p>
+     * The dialog will display the given title and message(s), then call
+     * <p>
+     */
+    protected final void openSecondConfirmDialog() {
+        String message = "SEI ASSOLUTAMENTE SICURO ?";
+        ADialog dialog = (ADialog) appContext.getBean(ADialog.class, "Delete");
+        dialog.open(message, this::deleteMongo, null);
+    }// end of method
+
+
+    /**
+     * Crea il corpo centrale della view
+     * Componente grafico obbligatorio
+     * Alcune regolazioni vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
+     * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto)
+     */
+    @Override
+    protected void creaGrid() {
+        super.creaGrid();
+        grid.addSelectionListener(new SelectionListener<Grid<AEntity>, AEntity>() {
+
+            @Override
+            public void selectionChange(SelectionEvent<Grid<AEntity>, AEntity> selectionEvent) {
+                sincroBottoniMenu(selectionEvent);
+            }// end of inner method
+        });//end of lambda expressions and anonymous inner class
+    }// end of method
+
+
+    protected void sincroBottoniMenu(SelectionEvent<Grid<AEntity>, AEntity> selectionEvent) {
+        boolean enabled = selectionEvent != null && selectionEvent.getAllSelectedItems().size() > 0;
+
+        deleteButton.setEnabled(enabled);
+        deleteAllButton.setEnabled(!enabled);
+        updateButton.setEnabled(enabled);
+        elaboraButton.setEnabled(enabled);
+        uploadButton.setEnabled(enabled);
+
     }// end of method
 
 
@@ -283,7 +399,7 @@ public class BioViewList extends AViewList {
         String key = "pageid";
 
         grid.addColumn(new ComponentRenderer<>(entity -> {
-            long pageid = ((Bio) entity).getPageId();
+            long pageid = ((Bio) entity).getPageid();
 
             // button for opening the wiki page
             Button link = new Button(pageid + "", event -> {
@@ -296,31 +412,8 @@ public class BioViewList extends AViewList {
 
             return link;
         })).setHeader(key);
-
+        super.addSpecificColumnsBefore();
     }// end of method
 
-
-//    /**
-//     * Eventuale caption sopra la grid
-//     */
-//    protected VerticalLayout creaCaption() {
-//        VerticalLayout layout = super.creaCaption("");
-//        LocalDateTime lastDownload = pref.getDate(LAST_DOWNLOAD_BIO);
-//        String message = "";
-//        String time = "";
-//        int durata;
-//        String durataTxt = "";
-//
-//        layout.add(new Label("Aggiornamento automatico: " + EASchedule.giorno.getNota()));
-//        if (lastDownload != null) {
-////            message = pref.getDesc(LAST_DOWNLOAD_BIO) + ": ";@todo rimettere
-//            time = date.getTime(lastDownload);
-////            durata = pref.getInt(durataLastDownload);
-////            durataTxt = " (" + durata + " sec)";
-//            layout.add(new Label(message + time));
-//        }// end of if cycle
-//
-//        return null;
-//    }// end of method
 
 }// end of class

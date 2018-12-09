@@ -90,11 +90,11 @@ public class VersioneViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected VerticalLayout creaTopAlert() {
-        super.creaTopAlert();
-        alertLayout.add(new Label("Sigla 'A' per le versioni base di vaadinflow"));
-        alertLayout.add(new Label("Sigla 'Z' per le modifiche alla descrizione di una preferenza"));
-        return alertLayout;
+    protected void fixAlertLayout() {
+        super.fixAlertLayout();
+
+        alertPlacehorder.add(new Label("Sigla 'A' per le versioni base di vaadinflow"));
+        alertPlacehorder.add(new Label("Sigla 'Z' per le modifiche alla descrizione di una preferenza"));
     }// end of method
 
 }// end of class

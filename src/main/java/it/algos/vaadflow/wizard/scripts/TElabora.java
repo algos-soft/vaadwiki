@@ -546,7 +546,7 @@ public class TElabora {
 
 
     private boolean checkFile(String oldFileText) {
-        List<String> tags = new ArrayList<>();
+        ArrayList<String> tags = new ArrayList<>();
         tags.add("@AIScript(sovrascrivibile = false)");
         tags.add("@AIScript(sovrascrivibile=false)");
         tags.add("@AIScript(sovrascrivibile= false)");

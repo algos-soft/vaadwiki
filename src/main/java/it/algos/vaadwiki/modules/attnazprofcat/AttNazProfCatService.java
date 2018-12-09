@@ -7,9 +7,13 @@ import it.algos.vaadflow.service.AService;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -27,13 +31,19 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 public abstract class AttNazProfCatService extends AService {
 
     public String titoloModuloAttivita = PATH_MODULO_PLURALE + ATT.toLowerCase();
+
     public String titoloModuloNazionalita = PATH_MODULO_PLURALE + NAZ.toLowerCase();
+
     public String titoloModuloProfessione = PATH_MODULO_LINK + ATT.toLowerCase();
+
     public String titoloPaginaStatisticheAttivita = PATH_PROGETTO + ATT;
+
     public String titoloPaginaStatisticheNazionalita = PATH_PROGETTO + NAZ;
 
     protected String titoloModulo;
+
     protected String codeLastDownload;
+
     protected String durataLastDownload;
 
     /**
@@ -54,6 +64,7 @@ public abstract class AttNazProfCatService extends AService {
      */
     @Autowired
     protected ADateService date;
+
 
     /**
      * Costruttore <br>
@@ -101,7 +112,7 @@ public abstract class AttNazProfCatService extends AService {
             }// end of for cycle
 
             setLastDownload(inizio);
-            log.info("Algos - Download del modulo " + entityClass.getSimpleName() + " (" + text.format(righe.length) + " elementi) in " + date.deltaText(inizio));
+            log.info("Algos - Download del modulo wiki." + entityClass.getSimpleName() + " (" + text.format(righe.length) + " elementi) in " + date.deltaText(inizio));
         }// end of if cycle
     }// end of method
 
@@ -138,5 +149,75 @@ public abstract class AttNazProfCatService extends AService {
         }// end of if/else cycle
         pref.saveValue(durataLastDownload, value);
     }// end of method
+
+
+    /**
+     * Returns pageid list of all entities of the type.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @return all entities
+     */
+    public ArrayList<Long> findAllPageid() {
+        ArrayList<Long> lista = null;
+        int recNum = count();
+        int size = 100;
+        int giri = (recNum / size) + 1;
+        Sort sort = new Sort(Sort.Direction.ASC, "pageid");
+
+        for (int k = 0; k < giri; k++) {
+            lista = array.somma(lista, findAllPageid(k, size, sort));
+        }// end of for cycle
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Returns pageid list of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     * @param sort   ordinamento degli elementi
+     *
+     * @return all entities
+     */
+    public ArrayList<Long> findAllPageid(int offset, int size, Sort sort) {
+        return null;
+    }// end of method
+
+
+//    /**
+//     * Fetches the entities whose 'main text property' matches the given filter text.
+//     * <p>
+//     * Se esiste la company, filtrate secondo la company <br>
+//     * The matching is case insensitive. When passed an empty filter text,
+//     * the method returns all categories. The returned list is ordered by name.
+//     * The 'main text property' is different in each entity class and chosen in the specific subclass
+//     *
+//     * @param filter the filter text
+//     *
+//     * @return the list of matching entities
+//     */
+//    @Override
+//    public List<? extends AEntity> findFilter(String filter) {
+//        List<? extends AEntity> lista = null;
+//        String normalizedFilter = filter.toLowerCase();
+//
+//        lista = findAll();
+//        if (lista != null) {
+//            lista = lista.stream()
+//                    .filter(entity -> {
+//                        return getKeyUnica(entity).toLowerCase().startsWith(normalizedFilter);
+//                    })
+//                    .collect(Collectors.toList());
+//        }// end of if cycle
+//
+//        return lista;
+//    }// end of method
 
 }// end of class

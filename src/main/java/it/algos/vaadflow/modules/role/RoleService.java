@@ -319,8 +319,8 @@ public class RoleService extends AService {
     /**
      * GrantedAuthority
      */
-    public Collection<? extends GrantedAuthority> getAuthorities(List<Role> ruoli) {
-        List<GrantedAuthority> listAuthority = new ArrayList<>();
+    public Collection<? extends GrantedAuthority> getAuthorities(ArrayList<Role> ruoli) {
+        ArrayList<GrantedAuthority> listAuthority = new ArrayList<>();
         GrantedAuthority authority;
 
         if (array.isValid(ruoli)) {
@@ -338,7 +338,7 @@ public class RoleService extends AService {
      * GrantedAuthority
      */
     public Collection<? extends GrantedAuthority> getAuthorities(Utente utente) {
-        List<Role> ruoli = utente.ruoli;
+        ArrayList<Role> ruoli = new ArrayList<>(utente.ruoli);
 
         return getAuthorities(ruoli);
     }// end of method

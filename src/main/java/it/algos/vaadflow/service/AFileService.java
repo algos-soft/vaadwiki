@@ -439,8 +439,8 @@ public class AFileService extends AbstractService {
      *
      * @param pathDirectoryToBeScanned nome completo della directory
      */
-    public List<String> getSubdirectories(String pathDirectoryToBeScanned) {
-        List<String> subDirectory = null;
+    public ArrayList<String> getSubdirectories(String pathDirectoryToBeScanned) {
+        ArrayList<String> subDirectory = null;
         File[] allFiles = null;
         File directory = new File(pathDirectoryToBeScanned);
 

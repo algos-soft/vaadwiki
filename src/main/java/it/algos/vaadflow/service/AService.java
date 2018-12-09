@@ -272,10 +272,6 @@ public abstract class AService extends AbstractService implements IAService {
      * <p>
      * Senza filtri
      * Ordinati per sort
-     * <p>
-     * Methods of this library return Iterable<T>, while the rest of my code expects Collection<T>
-     * L'annotation standard di JPA prevede un ritorno di tipo Iterable, mentre noi usiamo List
-     * Eseguo qui la conversione, che rimane trasparente al resto del programma
      *
      * @param offset numero di pagine da saltare, parte da zero
      * @param size   numero di elementi per ogni pagina
@@ -283,9 +279,66 @@ public abstract class AService extends AbstractService implements IAService {
      *
      * @return all entities
      */
-    public List<? extends AEntity> findAll(int offset, int size, Sort sort) {
-        Pageable page = PageRequest.of(offset, size);
-        return repository.findAll(page).getContent();
+    public ArrayList<? extends AEntity> findAll(int offset, int size, Sort sort) {
+        Pageable page;
+
+        if (sort != null) {
+            page = PageRequest.of(offset, size, sort);
+        } else {
+            page = PageRequest.of(offset, size);
+        }// end of if/else cycle
+
+        return new ArrayList(repository.findAll(page).getContent());
+    }// end of method
+
+
+    /**
+     * Returns ids list of all entities of the type.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @return all entities
+     */
+    public ArrayList<String> findAllIds() {
+        ArrayList<String> lista = null;
+        int recNum = count();
+        int size = 100;
+        int giri = (recNum / size) + 1;
+        Sort sort = new Sort(Sort.Direction.ASC, "_id");
+
+        for (int k = 0; k < giri; k++) {
+            lista = array.somma(lista, findAllIds(k, size, sort));
+        }// end of for cycle
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Returns ids list of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     * @param sort   ordinamento degli elementi
+     *
+     * @return all entities
+     */
+    public ArrayList<String> findAllIds(int offset, int size, Sort sort) {
+        ArrayList<String> lista = null;
+        ArrayList<? extends AEntity> listaEntities = findAll(offset, size, sort);
+
+        if (array.isValid(listaEntities)) {
+            lista = new ArrayList<>();
+            for (AEntity entity : listaEntities) {
+                lista.add(entity.id);
+            }// end of for cycle
+        }// end of if cycle
+
+        return lista;
     }// end of method
 
 
@@ -298,14 +351,14 @@ public abstract class AService extends AbstractService implements IAService {
      *
      * @return all ordered entities
      */
-    protected List<? extends AEntity> findAll(Sort sort) {
-        List<? extends AEntity> lista = null;
+    protected ArrayList<? extends AEntity> findAll(Sort sort) {
+        ArrayList<? extends AEntity> lista = null;
 
         try { // prova ad eseguire il codice
             if (sort != null) {
-                lista = repository.findAll(sort);
+                lista = new ArrayList<>(repository.findAll(sort));
             } else {
-                lista = repository.findAll();
+                lista = new ArrayList<>(repository.findAll());
             }// end of if/else cycle
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString() + " in AService.findAll(Sort sort)");
@@ -983,9 +1036,9 @@ public abstract class AService extends AbstractService implements IAService {
      *
      * @return lista ordinata delle entities della company corrente
      */
-    private List<? extends AEntity> findAllByCompany(Sort sort) {
-        List<AEntity> listByCompany = null;
-        List<? extends AEntity> listAllEntities = null;
+    private ArrayList<? extends AEntity> findAllByCompany(Sort sort) {
+        ArrayList<AEntity> listByCompany = null;
+        ArrayList<? extends AEntity> listAllEntities = null;
         Company company = null;
         ACEntity companyEntity;
         String companyCode;
@@ -1187,6 +1240,20 @@ public abstract class AService extends AbstractService implements IAService {
         }// end of if cycle
 
         return cancellati;
+    }// end of method
+
+
+    /**
+     * Delete a list of entities.
+     *
+     * @param lista    di valori della property da cancellare
+     * @param clazz    della collezione
+     * @param property della Entity
+     *
+     * @return lista
+     */
+    public DeleteResult deleteBulkByProperty(List lista, Class<? extends AEntity> clazz, String property) {
+        return mongo.deleteBulkByProperty(lista, clazz, property);
     }// end of method
 
 

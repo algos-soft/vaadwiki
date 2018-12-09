@@ -1,8 +1,11 @@
 package it.algos.vaadwiki.service;
 
+import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -23,22 +26,23 @@ import java.util.ArrayList;
 @Slf4j
 public class DeleteService extends ABioService {
 
+
     /**
      * Cancella dal mongoDB la lista di voci non più presenti nella categoria BioBot sul server wikipedia
      *
-     * @param listaVociEccedenti elenco (pageids) delle pagine eccedenti da cancellare
+     * @param listaPageidsEccedenti elenco (ids=pageids) delle pagine eccedenti da cancellare
      */
-    public void esegue(ArrayList<Long> listaVociEccedenti) {
+    public void esegue(ArrayList<Long> listaPageidsEccedenti) {
         long inizio = System.currentTimeMillis();
-        Bio bio;
+        DeleteResult result;
 
-        if (array.isValid(listaVociEccedenti)) {
-            for (Long pageid : listaVociEccedenti) {
-                bio = bioService.findByKeyUnica(pageid);
-//                bioService.delete(bio);
-//                bioService.d
-            }// end of for cycle @todo rimettere
-            log.info("Algos - Ciclo DELETE - eliminate le voci da mongoDB Bio (" + listaVociEccedenti.size() + " elementi) in " + date.deltaText(inizio));
+        if (array.isValid(listaPageidsEccedenti)) {
+            result = mongo.deleteBulkByProperty(listaPageidsEccedenti, Bio.class, "pageid");
+            if (result.getDeletedCount() < 1) {
+                log.error("Algos - Ciclo DELETE - Non sono riuscito ad eliminare nessuna voce delle " + listaPageidsEccedenti.size() + " eccedenti");
+            } else {
+                log.info("Algos - Ciclo DELETE - eliminate le voci da mongoDB Bio (" + result.getDeletedCount() + " elementi) in " + date.deltaText(inizio));
+            }// end of if/else cycle
         } else {
             log.info("Algos - Ciclo DELETE - nessuna voce deprecata da eliminare");
         }// end of if/else cycle

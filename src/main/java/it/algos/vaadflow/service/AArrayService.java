@@ -88,7 +88,7 @@ public class AArrayService extends AbstractService {
      *
      * @return vero se l'array soddisfa le condizioni previste
      */
-    public boolean isValid(final List array) {
+    public boolean isValid(final ArrayList array) {
         boolean status = false;
 
         if (array != null && array.size() > 0) {
@@ -139,7 +139,7 @@ public class AArrayService extends AbstractService {
      *
      * @return vero se l'array soddisfa le condizioni previste
      */
-    public boolean isEmpty(final List array) {
+    public boolean isEmpty(final ArrayList array) {
         return !isValid(array);
     }// end of method
 
@@ -164,7 +164,7 @@ public class AArrayService extends AbstractService {
      *
      * @return la lista aumentata di un elemento
      */
-    public List add(final List arrayIn, Object obj) {
+    public List add(final ArrayList arrayIn, Object obj) {
         List arrayOut = null;
         ArrayList lista = null;
 
@@ -304,7 +304,7 @@ public class AArrayService extends AbstractService {
      *
      * @return stringa con i singoli valori divisi da un separatore
      */
-    public String toStringaPipe(List array) {
+    public String toStringaPipe(ArrayList array) {
         return toStringa(array, "|");
     }// end of method
 
@@ -318,7 +318,7 @@ public class AArrayService extends AbstractService {
      *
      * @return stringa con i singoli valori divisi da un separatore
      */
-    public String toStringa(List array, String sep) {
+    public String toStringa(ArrayList array, String sep) {
         String testo;
         StringBuilder textBuffer = new StringBuilder();
 
@@ -389,7 +389,7 @@ public class AArrayService extends AbstractService {
      *
      * @return sublista corrente del ciclo
      */
-    public List estraeSublista(List listaTotale, int dimBlocco, int cicloCorrente) {
+    public ArrayList estraeSublista(ArrayList listaTotale, int dimBlocco, int cicloCorrente) {
         int posIni = 0;
         int posEnd = 0;
 
@@ -408,7 +408,7 @@ public class AArrayService extends AbstractService {
         posEnd = posIni + dimBlocco;
         posEnd = Math.min(posEnd, listaTotale.size());
 
-        return listaTotale.subList(posIni, posEnd);
+        return new ArrayList(listaTotale.subList(posIni, posEnd));
     }// end of method
 
 
@@ -421,7 +421,7 @@ public class AArrayService extends AbstractService {
      *
      * @return sublista corrente del ciclo
      */
-    public List<Long> estraeSublistaLong(List<Long> listaTotale, int dimBlocco, int cicloCorrente) {
+    public ArrayList<Long> estraeSublistaLong(ArrayList<Long> listaTotale, int dimBlocco, int cicloCorrente) {
         return estraeSublista(listaTotale, dimBlocco, cicloCorrente);
     }// end of method
 
@@ -434,7 +434,7 @@ public class AArrayService extends AbstractService {
      *
      * @return posizione
      */
-    public int getPos(List lista, Object value) {
+    public int getPos(ArrayList lista, Object value) {
         int pos = 0;
 
         if (isValid(lista)) {

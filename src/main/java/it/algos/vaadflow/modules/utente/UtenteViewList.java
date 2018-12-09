@@ -2,7 +2,6 @@ package it.algos.vaadflow.modules.utente;
 
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
@@ -56,6 +55,7 @@ public class UtenteViewList extends AViewList {
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+
     public static final String IRON_ICON = "account-circle";
 
 
@@ -64,6 +64,7 @@ public class UtenteViewList extends AViewList {
      */
     @Autowired
     private PasswordEncoder passwordEncoder;
+
 
     /**
      * Costruttore @Autowired <br>
@@ -102,14 +103,12 @@ public class UtenteViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected VerticalLayout creaTopAlert() {
-        VerticalLayout layout = super.creaTopAlert();
+    protected void fixAlertLayout() {
+        super.fixAlertLayout();
 
-        layout.add(new Label("Questa lista non dovrebbe mai essere usata direttamente"));
-        layout.add(new Label("Serve per la creazione e gestione interna degli accessi della security"));
-        layout.add(new Label("La entity 'utente' fa da superclasse per le anagrafiche: Persona, Milite, ecc."));
-
-        return layout;
+        alertPlacehorder.add(new Label("Questa lista non dovrebbe mai essere usata direttamente"));
+        alertPlacehorder.add(new Label("Serve per la creazione e gestione interna degli accessi della security"));
+        alertPlacehorder.add(new Label("La entity 'utente' fa da superclasse per le anagrafiche: Persona, Milite, ecc."));
     }// end of method
 
 

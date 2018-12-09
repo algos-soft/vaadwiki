@@ -119,7 +119,10 @@ public class BioViewDialog extends AViewDialog<Bio> {
 
     @PostConstruct
     protected void addBottoniSpecifici() {
+        saveButton.getElement().setAttribute("theme", "secondary");
+
         downloadButton.addClickListener(event -> downloadOnly());
+        downloadButton.getElement().setAttribute("theme", "primary");
         downloadButton.setIcon(new Icon(VaadinIcon.ARROW_DOWN));
 
         elaboraOnlyButton.addClickListener(event -> elaboraOnly());
@@ -201,7 +204,7 @@ public class BioViewDialog extends AViewDialog<Bio> {
         long pageid = 0;
 
         if (currentItem != null) {
-            pageid = currentItem.getPageId();
+            pageid = currentItem.getPageid();
         }// end of if cycle
 
         return pageid;

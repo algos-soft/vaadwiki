@@ -57,33 +57,32 @@ public class WikiVers extends AVers {
      * L'ordine di inserimento è FONDAMENTALE
      */
     public int inizia() {
-        int k = 0;
-        super.inizia();
+        int k = super.inizia();
         codeProject = CODE_PROJECT;
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_BIO, "Crono per ciclo bio completo");
+            creaPrefBool(USA_DAEMON_BIO, "Crono per ciclo bio completo",true);
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo");
+            creaPrefBool(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo",true);
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo");
+            creaPrefBool(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo",true);
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo");
+            creaPrefBool(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo",true);
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo");
+            creaPrefBool(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo",true);
         }// fine del blocco if
 
         //--creata una nuova preferenza
@@ -133,7 +132,22 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
+            creaPrefInt(DURATA_DOWNLOAD_BIO, "Durata in secondi dell'ultimo update delle voci della categoria BioBot");
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
             creaPrefTxt(CAT_BIO, "Categoria attiva", "BioBot");
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefInt(PAGE_LIMIT, "Numero di pagine da controllare nel blocco", 500);
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_CHECK_LISTE_PAGEID, "Controllo di sicurezza delle liste di pageid tra Categoria server e mongoDB", true);
         }// fine del blocco if
 
         return k;

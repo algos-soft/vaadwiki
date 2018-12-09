@@ -42,15 +42,14 @@ import java.util.List;
  * User: gac
  * Date: sab, 05-mag-2018
  * Time: 18:49
- * Classe astratta per visualizzare la Grid e il Form/Dialog <br>
+ * Classe astratta per visualizzare la Grid <br>
  * <p>
  * <p>
  * La sottoclasse concreta viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
  * Le property di questa classe/sottoclasse vengono iniettate automaticamente da SpringBoot se: <br>
  * 1) vengono dichiarate nel costruttore @Autowired della sottoclasse concreta <br>
  * 2) usano una loro classe con @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) <br>
- * 3) vengono usate in un un metodo @PostConstruct di questa classe/sottoclasse,
- * perché SpringBoot le inietta solo DOPO init() <br>
+ * 3) vengono usate in un un metodo @PostConstruct di questa classe/sottoclasse, perché SpringBoot le inietta solo DOPO init() <br>
  * <p>
  * Le sottoclassi concrete NON hanno le annotation @SpringComponent, @SpringView e @Scope
  * NON annotated with @SpringComponent - Sbagliato perché va in conflitto con la @Route
@@ -59,16 +58,16 @@ import java.util.List;
  * Annotated with @Route (obbligatorio) per la selezione della vista.
  * <p>
  * Graficamente abbiamo:
- * un topLayout (eventuale, presente di default)
+ * 1) un topPlaceholder (eventuale, presente di default) di tipo HorizontalLayout
  * - con o senza campo edit search, regolato da preferenza o da parametro
  * - con o senza bottone New, regolato da preferenza o da parametro
- * - con eventuali altri bottoni specifici
- * un layout di avviso (eventuale) con label o altro per informazioni specifiche; di norma per il developer
- * una header della Grid (obbligatoria) con informazioni sugli elementi della lista
- * una Grid (obbligatoria); alcune regolazioni da preferenza o da parametro (bottone Edit, ad esempio)
- * una bottom della Grid (eventuale) con informazioni sugli elementi della lista; di norma delle somme
- * un bottomLayout (eventuale) con bottoni aggiuntivi
- * un footer (obbligatorio) con informazioni generali
+ * - con eventuali bottoni specifici, aggiuntivi o sostitutivi
+ * 2) un alertPlacehorder di avviso (eventuale) con label o altro per informazioni; di norma per il developer
+ * 3) un headerGridHolder della Grid (obbligatoria) con informazioni sugli elementi della lista
+ * 4) una Grid (obbligatoria); alcune regolazioni da preferenza o da parametro (bottone Edit, ad esempio)
+ * 5) un bottomLayout della Grid (eventuale) con informazioni sugli elementi della lista; di norma delle somme
+ * 6) un bottomLayout (eventuale) con bottoni aggiuntivi
+ * 7) un footer (obbligatorio) con informazioni generali
  * <p>
  * Le injections vengono fatta da SpringBoot nel metodo @PostConstruct DOPO init() automatico
  * Le preferenze vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
@@ -178,14 +177,14 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * - con o senza bottone New, regolato da preferenza o da parametro
      * - con eventuali altri bottoni specifici
      */
-    protected HorizontalLayout topLayout;
+    protected HorizontalLayout topPlaceholder = new HorizontalLayout();
 
 
     /**
      * Placeholder (eventuale) SOPRA la Grid <br>
      * Label o altro per informazioni specifiche; di norma per il developer
      */
-    protected VerticalLayout alertLayout;
+    protected VerticalLayout alertPlacehorder = new VerticalLayout();
 
 
     /**
@@ -245,6 +244,11 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente false.
      */
     protected boolean usaBottoneEdit;
+
+    /**
+     * Flag di preferenza posizionare il bottone Edit come ultima colonna. Normalmente true.
+     */
+    protected boolean isBottoneEditAfter;
 
     /**
      * Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'.
@@ -405,6 +409,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
         usaBottoneEdit = true;
 
+        //--Flag di preferenza posizionare il bottone Edit come ultima colonna. Normalmente true
+        isBottoneEditAfter = true;
+
         //--Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'.
         testoBottoneEdit = EDIT_NAME;
 
@@ -454,8 +461,12 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Può essere sovrascritto <br>
      */
     protected void creaLayout() {
-        creaTopLayout();
-        creaTopAlert();
+        this.add(topPlaceholder);
+        this.add(alertPlacehorder);
+
+        fixTopLayout();
+        fixAlertLayout();
+
         creaGrid();
         creaGridBottomLayout();
         creaPaginationLayout();
@@ -471,9 +482,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Può essere sovrascritto, per aggiungere informazioni
      * Invocare PRIMA il metodo della superclasse
      */
-    protected void creaTopLayout() {
-        topLayout = new HorizontalLayout();
-        topLayout.addClassName("view-toolbar");
+    protected void fixTopLayout() {
+        topPlaceholder.removeAll();
+        topPlaceholder.addClassName("view-toolbar");
         Button deleteAllButton;
         Button resetButton;
         Button clearFilterTextBtn;
@@ -489,7 +500,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
                 service.deleteAll();
                 updateView();
             });
-            topLayout.add(deleteAllButton);
+            topPlaceholder.add(deleteAllButton);
         }// end of if cycle
 
         if (usaBottoneReset && isDeveloper) {
@@ -500,7 +511,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
                 service.reset();
                 updateView();
             });
-            topLayout.add(resetButton);
+            topPlaceholder.add(resetButton);
         }// end of if cycle
 
         if (usaSearchTextField) {
@@ -513,7 +524,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             clearFilterTextBtn = new Button(new Icon(VaadinIcon.CLOSE_CIRCLE));
             clearFilterTextBtn.addClickListener(e -> searchField.clear());
 
-            topLayout.add(searchField, clearFilterTextBtn);
+            topPlaceholder.add(searchField, clearFilterTextBtn);
         }// end of if cycle
 
         if (usaSearchBottoneNew) {
@@ -521,10 +532,8 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             newButton.getElement().setAttribute("theme", "primary");
             newButton.addClassName("view-toolbar__button");
             newButton.addClickListener(e -> dialog.open(service.newEntity(), EAOperation.addNew, context));
-            topLayout.add(newButton);
+            topPlaceholder.add(newButton);
         }// end of if cycle
-
-        this.add(topLayout);
     }// end of method
 
 
@@ -534,12 +543,12 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Può essere sovrascritto, per aggiungere informazioni
      * Invocare PRIMA il metodo della superclasse
      */
-    protected VerticalLayout creaTopAlert() {
-        alertLayout = new VerticalLayout();
-        alertLayout.addClassName("view-toolbar");
-        alertLayout.setMargin(false);
-        alertLayout.setSpacing(false);
-        alertLayout.setPadding(false);
+    protected void fixAlertLayout() {
+        alertPlacehorder.removeAll();
+        alertPlacehorder.addClassName("view-toolbar");
+        alertPlacehorder.setMargin(false);
+        alertPlacehorder.setSpacing(false);
+        alertPlacehorder.setPadding(false);
 
         if (isEntityDeveloper || isEntityAdmin || isEntityEmbadded || isEntityUsaDatiDemo) {
             usaTopAlert = true;
@@ -547,25 +556,22 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
         if (usaTopAlert) {
             if (isEntityDeveloper) {
-                alertLayout.add(new Label("Lista visibile solo perché sei collegato come developer. Gli admin e gli utenti normali non la vedono."));
+                alertPlacehorder.add(new Label("Lista visibile solo perché sei collegato come developer. Gli admin e gli utenti normali non la vedono."));
             }// end of if cycle
 
             if (isEntityAdmin) {
-                alertLayout.add(new Label("Lista visibile solo perché sei collegato come admin. Gli utenti normali non la vedono."));
+                alertPlacehorder.add(new Label("Lista visibile solo perché sei collegato come admin. Gli utenti normali non la vedono."));
             }// end of if cycle
 
             if (isEntityEmbadded) {
-                alertLayout.add(new Label("Questa lista non dovrebbe mai essere usata direttamente (serve come test o per le sottoclassi specifiche)"));
-                alertLayout.add(new Label("L'entity è 'embedded' nelle collezioni che la usano (no @Annotation property DbRef)"));
+                alertPlacehorder.add(new Label("Questa lista non dovrebbe mai essere usata direttamente (serve come test o per le sottoclassi specifiche)"));
+                alertPlacehorder.add(new Label("L'entity è 'embedded' nelle collezioni che la usano (no @Annotation property DbRef)"));
             }// end of if cycle
 
             if (isEntityEmbadded || isEntityUsaDatiDemo) {
-                alertLayout.add(new Label("Allo startup del programma, sono stati creati alcuni elementi di prova"));
+                alertPlacehorder.add(new Label("Allo startup del programma, sono stati creati alcuni elementi di prova"));
             }// end of if cycle
         }// end of if cycle
-
-        this.add(alertLayout);
-        return alertLayout;
     }// end of method
 
 
@@ -573,6 +579,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Crea il corpo centrale della view
      * Componente grafico obbligatorio
      * Alcune regolazioni vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
+     * Costruisce la Grid con le colonne. Gli items vengono caricati in updateView()
      * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto)
      */
     protected void creaGrid() {
@@ -586,7 +593,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         List<String> gridPropertyNamesList = service != null ? service.getGridPropertyNamesList(context) : null;
         if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
             try { // prova ad eseguire il codice
-                grid = new Grid(entityClazz);
+                //--Costruisce la Grid SENZA creare automaticamente le colonne
+                //--Si possono così inserire colonne manuali prima e dopo di quelle automatiche
+                grid = new Grid(entityClazz, false);
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
                 return;
@@ -595,22 +604,23 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             grid = new Grid();
         }// end of if/else cycle
 
-        for (Grid.Column column : grid.getColumns()) {
-            grid.removeColumn(column);
-        }// end of for cycle
+        //--Eventuali colonne calcolate aggiunte PRIMA di quelle automatiche
+        this.addSpecificColumnsBefore();
 
+        //--Eventuale modifica dell'ordine di presentazione delle colonne automatiche
+        gridPropertyNamesList = this.reorderingColumns(gridPropertyNamesList);
+
+        //--Colonne normali aggiunte in automatico
         if (gridPropertyNamesList != null) {
             for (String propertyName : gridPropertyNamesList) {
                 column.create(grid, entityClazz, propertyName);
             }// end of for cycle
         }// end of if cycle
 
-        //--Aggiunge eventuali colonne calcolate
-        addSpecificColumns();
+        //--Eventuali colonne calcolate aggiunte DOPO quelle automatiche
+        this.addSpecificColumnsAfter();
 
-        //--Apre il dialog di detail
-        this.addDetailDialog();
-
+        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
         grid.setWidth("50em");
         grid.setHeightByRows(true);
         grid.addClassName("pippoz");
@@ -665,9 +675,35 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
 
     /**
-     * Aggiunge eventuali colonne calcolate
+     * Eventuali colonne calcolate aggiunte PRIMA di quelle automatiche
+     * Sovrascritto
      */
-    protected void addSpecificColumns() {
+    protected void addSpecificColumnsBefore() {
+        if (!isBottoneEditAfter) {
+            //--Apre il dialog di detail
+            this.addDetailDialog();
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Eventuale modifica dell'ordine di presentazione delle colonne
+     * Sovrascritto
+     */
+    protected List<String> reorderingColumns(List<String> gridPropertyNamesList) {
+        return gridPropertyNamesList;
+    }// end of method
+
+
+    /**
+     * Eventuali colonne calcolate aggiunte DOPO quelle automatiche
+     * Sovrascritto
+     */
+    protected void addSpecificColumnsAfter() {
+        if (isBottoneEditAfter) {
+            //--Apre il dialog di detail
+            this.addDetailDialog();
+        }// end of if cycle
     }// end of method
 
 
@@ -681,7 +717,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             grid.addColumn(renderer);
             this.setFlexGrow(0);
         } else {
-            grid.setSelectionMode(Grid.SelectionMode.SINGLE);
             EAOperation operation = isEntityModificabile ? EAOperation.edit : EAOperation.showOnly;
             grid.addSelectionListener(evento -> apreDialogo((SingleSelectionEvent) evento, operation));
         }// end of if/else cycle
@@ -697,7 +732,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     }// end of method
 
 
-    private void apreDialogo(SingleSelectionEvent evento, EAOperation operation) {
+    protected void apreDialogo(SingleSelectionEvent evento, EAOperation operation) {
         if (evento != null && evento.getOldValue() != evento.getValue()) {
             if (evento.getValue().getClass().getName().equals(entityClazz.getName())) {
                 dialog.open((AEntity) evento.getValue(), operation, context);
@@ -764,7 +799,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         paginationField = new ATextField("");
         paginationField.addValueChangeListener(e -> modificaPagination(e));
         paginationField.setValue("1");
-        paginationField.setWidth("3em");
+        paginationField.setWidth("4em");
 
         footerLayout = new HorizontalLayout();
         footerLayout.add(titleButton);
@@ -815,11 +850,8 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     public void aumentaPagination() {
         if (offset < service.count()) {
             offset++;
-//            updateView();
             paginationField.setValue("" + (offset + 1));
         }// end of if cycle
-
-//        sincroPagination();
     }// end of method
 
 
@@ -845,13 +877,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
 
     public void updateView() {
-        Collection items = null;
-
-        if (isPagination) {
-            items = service != null ? service.findAll(offset, limit) : null;
-        } else {
-            items = service != null ? service.findAll() : null;
-        }// end of if/else cycle
+        Collection items = updateItems();
 
         if (items != null) {
             try { // prova ad eseguire il codice
@@ -863,6 +889,20 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             }// fine del blocco try-catch
         }// end of if cycle
 
+        fixAlertLayout();
+    }// end of method
+
+
+    public Collection updateItems() {
+        Collection items = null;
+
+        if (isPagination) {
+            items = service != null ? service.findAll(offset, limit) : null;
+        } else {
+            items = service != null ? service.findAll() : null;
+        }// end of if/else cycle
+
+        return items;
     }// end of method
 
 

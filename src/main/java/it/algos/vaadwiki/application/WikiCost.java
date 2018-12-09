@@ -67,12 +67,15 @@ public class WikiCost {
     public final static String DURATA_DOWNLOAD_NAZIONALITA = DURATA + NAZ;
     public final static String DURATA_DOWNLOAD_PROFESSIONE = DURATA + PROF;
     public final static String DURATA_DOWNLOAD_CATEGORIA = DURATA + CAT;
+    public final static String DURATA_DOWNLOAD_BIO = DURATA + BIO;
 
     //--path di varie pagine wiki
     public final static String PATH_WIKI = "https://it.wikipedia.org/wiki/";
     public final static String PATH_WIKI_EDIT_ANTE = "https://it.wikipedia.org/w/index.php?title=";
     public final static String PATH_WIKI_EDIT_POST = "&action=edit";
     public final static String CAT_BIO = "catBio";
+    public final static String PAGE_LIMIT = "pageLimit";
+    public final static String USA_CHECK_LISTE_PAGEID= "usaCheckListe";
 
 
 }// end of static class

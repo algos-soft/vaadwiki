@@ -16,7 +16,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @SpringComponent
@@ -25,6 +24,7 @@ import java.util.Map;
 public class Api {
 
     private static String MAP_KEY_TYPE = "type";
+
     private static String MAP_KEY_NOME = "nome";
 
     // Di default suppone il template ''Bio''
@@ -61,6 +61,7 @@ public class Api {
     @Autowired
     protected ATextService text;
 
+
     /**
      * Legge il contenuto (tutto) di una pagina
      * <p>
@@ -79,6 +80,7 @@ public class Api {
             return "";
         }// fine del blocco if-else
     }// end of method
+
 
     /**
      * Legge il contenuto (tutto) di una pagina
@@ -99,6 +101,49 @@ public class Api {
         }// fine del blocco if-else
     }// end of method
 
+
+    /**
+     * Controlla l'esistenza di una pagina
+     *
+     * @param pageId della pagina
+     *
+     * @return true se non esiste
+     */
+    @SuppressWarnings("all")
+    public static boolean isManca(long pageId) {
+        ARequest request = new RequestRead(pageId);
+        return request.getRisultato() == TipoRisultato.nonTrovata;
+    }// end of method
+
+
+    /**
+     * Controlla l'esistenza di una pagina
+     *
+     * @param pageId della pagina
+     *
+     * @return true se non esiste
+     */
+    @SuppressWarnings("all")
+    public static boolean isEsiste(long pageId) {
+        ARequest request = new RequestRead(pageId);
+        return request.getRisultato() == TipoRisultato.letta;
+    }// end of method
+
+
+    /**
+     * Controlla l'esistenza di una pagina
+     *
+     * @param pageId della pagina
+     *
+     * @return true se non esiste
+     */
+    @SuppressWarnings("all")
+    public  boolean isVoceBio(long pageId) {
+        String template = leggeTmplBio(pageId);
+        return !template.equals("");
+    }// end of method
+
+
     /**
      * Legge il contenuto (testo) di una voce
      * <p>
@@ -117,6 +162,7 @@ public class Api {
 
         return testo;
     }// end of method
+
 
     /**
      * Legge una lista di pageids per costruire una lista di WrapTime
@@ -138,6 +184,7 @@ public class Api {
         return listaWrapTime;
     }// end of method
 
+
     /**
      * Estrae un template dal testo
      * <p>
@@ -150,6 +197,7 @@ public class Api {
         return LibWiki.estraeTmplCompresi(testo, tag);
     }// end of method
 
+
     /**
      * Estrae il template bio dal testo
      * <p>
@@ -161,6 +209,7 @@ public class Api {
     public static String estraeTmplBio(String testo) {
         return LibWiki.estraeTmplBioCompresi(testo);
     }// end of method
+
 
     /**
      * Controlla l'esistenza di una pagina.
@@ -200,6 +249,7 @@ public class Api {
 //        }// fine del blocco if-else
 //    }// end of method
 
+
     /**
      * Scrive una pagina
      *
@@ -209,6 +259,7 @@ public class Api {
     public static boolean scriveVoce(String wikiTitle, String newText) {
         return scriveVoce(wikiTitle, newText, "");
     }// fine del metodo costruttore completo
+
 
     /**
      * Scrive una pagina
@@ -233,6 +284,7 @@ public class Api {
         return status;
     }// fine del metodo costruttore completo
 
+
     /**
      * Legge gli elementi appartenenti ad una categoria.
      * Restituisce una lista (ArrayList) di pageid sia delle voci che delle subcategorie
@@ -254,6 +306,7 @@ public class Api {
 
         return lista;
     } // fine del metodo
+
 
     /**
      * Legge gli elementi appartenenti ad una categoria.
@@ -287,6 +340,7 @@ public class Api {
 //    public static String leggeVoce(int pageId) {
 //        return leggeVoce("" + pageId, TipoRicerca.pageid);
 //    }// end of method
+
 
     /**
      * Legge i titoli delle pagine che puntano ad una pagina.
@@ -329,6 +383,7 @@ public class Api {
 //        return testo;
 //    }// end of method
 
+
     /**
      * Legge i titoli delle voci che puntano ad una pagina.
      * Restituisce una lista (ArrayList) di titoli solo delle voci nel namespace principale
@@ -350,6 +405,7 @@ public class Api {
 
         return lista;
     } // fine del metodo
+
 
     /**
      * Sposta una pagina (sposta il titolo)
@@ -380,6 +436,7 @@ public class Api {
 //        return tmpl;
 //    }// end of method
 
+
     /**
      * Sposta una pagina (sposta il titolo)
      *
@@ -401,6 +458,7 @@ public class Api {
         return status;
     } // fine del metodo
 
+
     /**
      * Legge una pagina
      * <p>
@@ -419,6 +477,7 @@ public class Api {
 
         return page;
     }// end of method
+
 
     /**
      * Legge dal server wiki
@@ -452,6 +511,7 @@ public class Api {
 //        return testoTemplate;
 //    }// end of method
 
+
     /**
      * Legge dal server wiki
      * <p>
@@ -466,6 +526,7 @@ public class Api {
     public String legge(String title, TipoRicerca tipoRicerca) {
         return legge(title, tipoRicerca, TipoQuery.pagina);
     }// end of method
+
 
     /**
      * Legge dal server wiki
@@ -482,6 +543,7 @@ public class Api {
     public String legge(String title, TipoRicerca tipoRicerca, TipoQuery tipoQuery) {
         return legge(title, tipoRicerca, tipoQuery, TAG_BIO);
     }// end of method
+
 
     /**
      * Legge dal server wiki
@@ -516,6 +578,7 @@ public class Api {
 
         return testo;
     }// end of method
+
 
     /**
      * Legge dal server wiki
@@ -556,6 +619,7 @@ public class Api {
         return testo;
     }// end of method
 
+
     /**
      * Legge il contenuto (testo) di una voce
      * <p>
@@ -574,6 +638,7 @@ public class Api {
 
         return testo;
     }// end of method
+
 
     /**
      * Legge un template da una voce
@@ -594,6 +659,7 @@ public class Api {
         return tmpl;
     }// end of method
 
+
     /**
      * Legge un template da una voce
      * <p>
@@ -612,6 +678,7 @@ public class Api {
         }// fine del blocco if
         return tmpl;
     }// end of method
+
 
     /**
      * Legge un template di una voce
@@ -640,6 +707,7 @@ public class Api {
         return tmpl;
     }// end of method
 
+
     /**
      * Legge il template bio di una voce
      * <p>
@@ -658,6 +726,7 @@ public class Api {
 
         return testoTemplate;
     }// end of method
+
 
     /**
      * Legge il template bio di una voce
@@ -710,6 +779,7 @@ public class Api {
 //        return leggeCatTitles(titleCat);
 //    } // fine del metodo
 
+
     /**
      * Modifica il contenuto di una pagina.
      *
@@ -720,6 +790,7 @@ public class Api {
     public boolean modificaVoce(String wikiTitle, String oldText, String newText) {
         return modificaVoce(wikiTitle, oldText, newText, "", null);
     } // fine del metodo
+
 
     /**
      * Modifica il contenuto di una pagina.
@@ -732,6 +803,7 @@ public class Api {
     public boolean modificaVoce(String wikiTitle, String oldText, String newText, String summary) {
         return modificaVoce(wikiTitle, oldText, newText, summary, null);
     } // fine del metodo
+
 
     /**
      * Modifica il contenuto di una pagina.
@@ -776,6 +848,7 @@ public class Api {
 
         return status;
     } // fine del metodo
+
 
     /**
      * Legge una pagina
@@ -856,6 +929,7 @@ public class Api {
         return LibWiki.estraeTmplBioCompresi(testo);
     }// end of method
 
+
     /**
      * Legge gli elementi appartenenti ad una categoria.
      * Restituisce una lista (ArrayList) di pageid solo delle voci senza le subcategorie
@@ -890,6 +964,7 @@ public class Api {
         return lista;
     } // fine del metodo
 
+
     /**
      * Legge gli elementi appartenenti ad una categoria.
      * Restituisce una lista (ArrayList) di titoli sia delle voci che delle subcategorie
@@ -910,6 +985,7 @@ public class Api {
 
         return lista;
     } // fine del metodo
+
 
     /**
      * Legge gli elementi appartenenti ad una categoria.
@@ -952,7 +1028,7 @@ public class Api {
      *
      * @return serie di pagine (con i metadati mediawiki)
      */
-    public ArrayList<Page> leggePages(List<Long> arrayPageIds) {
+    public ArrayList<Page> leggePages(ArrayList<Long> arrayPageIds) {
         requestMultiPages.esegue(arrayPageIds);
         if (requestMultiPages.getRisultato() == TipoRisultato.letta) {
             return requestMultiPages.getListaPages();
@@ -970,7 +1046,7 @@ public class Api {
      *
      * @return pagina (con i metadati mediawiki)
      */
-    public ArrayList<WrapTime> leggeTimestamp(List<Long> arrayPageIds) {
+    public ArrayList<WrapTime> leggeTimestamp(ArrayList<Long> arrayPageIds) {
         requestTimestamp.esegue(arrayPageIds);
         if (requestTimestamp.getRisultato() == TipoRisultato.letta) {
             return requestTimestamp.getListaWrapTime();

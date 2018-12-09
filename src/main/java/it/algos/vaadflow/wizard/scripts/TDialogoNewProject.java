@@ -125,11 +125,11 @@ public class TDialogoNewProject extends TDialogo {
     }// end of method
 
 
-    protected List<String> getProgetti() {
-        List<String> progettiVuoti = null;
-        List<String> progettiEsistenti = null;
-        List<String> subMain;
-        List<String> subJava;
+    protected ArrayList<String> getProgetti() {
+        ArrayList<String> progettiVuoti = null;
+        ArrayList<String> progettiEsistenti = null;
+        ArrayList<String> subMain;
+        ArrayList<String> subJava;
 
         if (text.isValid(ideaProjectRootPath)) {
             progettiEsistenti = file.getSubdirectories(ideaProjectRootPath);

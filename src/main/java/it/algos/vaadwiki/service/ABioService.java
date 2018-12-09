@@ -11,7 +11,6 @@ import it.algos.wiki.Api;
 import it.algos.wiki.WikiLogin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
 
 /**
  * Project vaadbio2
@@ -110,6 +109,7 @@ public abstract class ABioService {
      */
     @Autowired
     protected AArrayService array;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -121,6 +121,7 @@ public abstract class ABioService {
      */
     @Autowired
     protected Api api;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -132,6 +133,13 @@ public abstract class ABioService {
      */
     @Autowired
     protected ATextService text;
+
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected AMailService mail;
 
 
 }// end of class

@@ -2,10 +2,7 @@ package it.algos.vaadwiki.task;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EASchedule;
-import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadwiki.modules.categoria.CategoriaService;
-import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,7 +10,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -29,7 +25,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_CAT)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class TaskCategoria extends BioTask {
+public class TaskCategoria extends TaskWiki {
 
     /**
      * Costruttore @Autowired <br>

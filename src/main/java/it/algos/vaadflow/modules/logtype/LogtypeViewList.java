@@ -91,10 +91,10 @@ public class LogtypeViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected VerticalLayout creaTopAlert() {
-        VerticalLayout layout = super.creaTopAlert();
-        layout.add(new Label("Serve per aggiungere altri eventuali 'type' specifici per i logs dell'applicazione"));
-        return layout;
+    protected void fixAlertLayout() {
+        super.fixAlertLayout();
+
+        alertPlacehorder.add(new Label("Serve per aggiungere altri eventuali 'type' specifici per i logs dell'applicazione"));
     }// end of method
 
 

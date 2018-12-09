@@ -3,13 +3,13 @@ package it.algos.vaadwiki.modules.attnazprofcat;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import it.algos.vaadflow.enumeration.EASchedule;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadwiki.task.BioTask;
+import it.algos.vaadwiki.task.TaskWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 
@@ -64,7 +65,7 @@ public class AttNazProfCatViewList extends AViewList {
      */
     protected AttNazProfCatService service;
 
-    protected BioTask task;
+    protected TaskWiki task;
 
 
     /**
@@ -83,7 +84,12 @@ public class AttNazProfCatViewList extends AViewList {
 
 
     @PostConstruct
-    private void creaBottoni() {
+    private void inizia() {
+        creaBottoni();
+    }// end of method
+
+
+    protected void creaBottoni() {
         creaDeleteMongo();
         creaDownload();
         creaUpload();
@@ -94,13 +100,15 @@ public class AttNazProfCatViewList extends AViewList {
 
 
     private void creaDeleteMongo() {
-        deleteMongoButton = new Button("Delete");
+        deleteMongoButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
+        deleteMongoButton.getElement().setAttribute("theme", "error");
         deleteMongoButton.addClickListener(e -> deleteMongo());
     }// end of method
 
 
     private void creaDownload() {
-        donwloadMongoButton = new Button("Download");
+        donwloadMongoButton = new Button("Download", new Icon(VaadinIcon.DOWNLOAD));
+        donwloadMongoButton.getElement().setAttribute("theme", "primary");
         donwloadMongoButton.addClickListener(e -> {
             service.download();
             updateView();
@@ -109,25 +117,26 @@ public class AttNazProfCatViewList extends AViewList {
 
 
     private void creaUpload() {
-        uploadStatisticheButton = new Button("Upload");
+        uploadStatisticheButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
         uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
     }// end of method
 
 
     private void creaShowModulo() {
-        showModuloButton = new Button("Modulo");
+        showModuloButton = new Button("Modulo", new Icon(VaadinIcon.LIST));
         showModuloButton.addClickListener(e -> showWikiModulo());
     }// end of method
 
 
     private void creaShowStatistiche() {
-        showStatisticheButton = new Button("Statistiche");
+        showStatisticheButton = new Button("Statistiche", new Icon(VaadinIcon.TABLE));
         showStatisticheButton.addClickListener(e -> showWikiStatistiche());
     }// end of method
 
 
-    private void deleteMongo() {
+    protected void deleteMongo() {
         this.service.deleteAll();
+        pref.saveValue(codeLastDownload, null);
         updateView();
     }// end of method
 
@@ -153,34 +162,20 @@ public class AttNazProfCatViewList extends AViewList {
 
 
     protected void addBottoni() {
-        if (topLayout != null && deleteMongoButton != null) {
-            topLayout.removeAll();
-            topLayout.add(deleteMongoButton);
-            topLayout.add(donwloadMongoButton);
+        if (topPlaceholder != null && deleteMongoButton != null) {
+            topPlaceholder.removeAll();
+            topPlaceholder.add(deleteMongoButton);
+            topPlaceholder.add(donwloadMongoButton);
             if (usaBottoneUpload) {
-                topLayout.add(uploadStatisticheButton);
+                topPlaceholder.add(uploadStatisticheButton);
             }// end of if cycle
             if (usaBottoneModulo) {
-                topLayout.add(showModuloButton);
+                topPlaceholder.add(showModuloButton);
             }// end of if cycle
             if (usaBottoneStatistiche) {
-                topLayout.add(showStatisticheButton);
+                topPlaceholder.add(showStatisticheButton);
             }// end of if cycle
         }// end of if cycle
-//        if (topLayout != null && deleteMongoButton != null) {
-//            topLayout.removeAll();
-//            topLayout.add(deleteMongoButton);
-//            topLayout.add(donwloadMongoButton);
-//            if (usaBottoneUpload) {
-//                topLayout.add(uploadStatisticheButton);
-//            }// end of if cycle
-//            if (usaBottoneModulo) {
-//                topLayout.add(showModuloButton);
-//            }// end of if cycle
-//            if (usaBottoneStatistiche) {
-//                topLayout.add(showStatisticheButton);
-//            }// end of if cycle
-//        }// end of if cycle
     }// end of method
 
 
@@ -189,32 +184,8 @@ public class AttNazProfCatViewList extends AViewList {
      */
     protected void fixPreferenzeSpecifiche() {
 //        super.usaBottoneNew = false; @todo rimettere
+        super.usaSearchBottoneNew = false;
         super.isEntityModificabile = false;
-    }// end of method
-
-
-    /**
-     * Eventuale caption sopra la grid
-     */
-    protected VerticalLayout creaCaption() {
-        VerticalLayout layout = null;
-//        layout = super.creaCaption(); @todo rimettere
-        LocalDateTime lastDownload = pref.getDate(codeLastDownload);
-        String message = "";
-        String time = "";
-        int durata = 0;
-        String durataTxt = "";
-
-        layout.add(new Label("Aggiornamento automatico: " + EASchedule.giorno.getNota()));
-        if (lastDownload != null) {
-//            message = pref.getDesc(codeLastDownload) + ": "; @todo rimettere
-            time = date.getTime(lastDownload);
-//            durata = pref.getInt(durataLastDownload); @todo rimettere
-            durataTxt = " (" + durata + " sec)";
-            layout.add(new Label(message + time + durataTxt));
-        }// end of if cycle
-
-        return null;
     }// end of method
 
 
@@ -225,10 +196,10 @@ public class AttNazProfCatViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected VerticalLayout creaTopAlert() {
-        alertLayout = super.creaTopAlert();
-        alertLayout.add(creaInfoImport(task, codeFlagDownload, codeLastDownload));
-        return alertLayout;
+    protected void fixAlertLayout() {
+        super.fixAlertLayout();
+
+        alertPlacehorder.add(creaInfoImport(task, codeFlagDownload, codeLastDownload));
     }// end of method
 
 
@@ -238,7 +209,7 @@ public class AttNazProfCatViewList extends AViewList {
     protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastDownload) {
         Label label = null;
         String testo = "";
-        String tag = "Import automatico: ";
+        String tag = "Aggiornamento automatico: ";
         String nota = task != null ? task.getNota() : "";
 
         LocalDateTime lastDownload = pref.getDate(flagLastDownload);
@@ -263,5 +234,15 @@ public class AttNazProfCatViewList extends AViewList {
 
         return label;
     }// end of method
+
+
+//    @Override
+//    public Collection updateItems() {
+//        Collection items = null;
+//        String filtro = searchField.getValue();
+//        items = service.findFilter(filtro);
+//
+//        return items;
+//    }// end of method
 
 }// end of class

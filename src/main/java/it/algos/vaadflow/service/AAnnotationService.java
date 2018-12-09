@@ -281,7 +281,7 @@ public class AAnnotationService extends AbstractService {
      */
     public AIColumn getAIColumn(Class<? extends AEntity> entityClazz, String fieldName) {
         AIColumn annotation = null;
-        List<Field> listaFields;
+        ArrayList<Field> listaFields;
 
         try { // prova ad eseguire il codice
             listaFields = reflection.getAllFields(entityClazz);
@@ -446,8 +446,8 @@ public class AAnnotationService extends AbstractService {
      * @return nomi dei fields, oppure null se non esiste l'Annotation specifica @AIForm() nella Entity
      */
     @SuppressWarnings("all")
-    public List<String> getFormFieldsName(final Class<? extends AEntity> clazz) {
-        List<String> lista = null;
+    public ArrayList<String> getFormFieldsName(final Class<? extends AEntity> clazz) {
+        ArrayList<String> lista = null;
         String[] fields = null;
         AIForm annotation = this.getAIForm(clazz);
 
@@ -456,7 +456,7 @@ public class AAnnotationService extends AbstractService {
         }// end of if cycle
 
         if (array.isValid(fields)) {
-            lista = Arrays.asList(fields);
+            lista = new ArrayList(Arrays.asList(fields));
         }// end of if cycle
 
         return lista;

@@ -72,7 +72,7 @@ public class AReflectionService extends AbstractService {
      */
     public Map<String, Object> getPropertyMap(final AEntity entityBean) {
         Map<String, Object> mappa = null;
-        List<String> listaNomi = getAllFieldsName(entityBean.getClass());
+        ArrayList<String> listaNomi = getAllFieldsName(entityBean.getClass());
         Object value;
 
         if (array.isValid(listaNomi)) {
@@ -279,8 +279,8 @@ public class AReflectionService extends AbstractService {
      *
      * @return lista di fields della Entity e di tutte le supeclassi
      */
-    public List<Field> getAllFields(Class<? extends AEntity> entityClazz) {
-        List<Field> listaFields = new ArrayList<>();
+    public ArrayList<Field> getAllFields(Class<? extends AEntity> entityClazz) {
+        ArrayList<Field> listaFields = new ArrayList<>();
         Class<?> clazz = entityClazz;
         Field[] fieldsArray = null;
 
@@ -311,8 +311,8 @@ public class AReflectionService extends AbstractService {
      *
      * @return lista di fields della View
      */
-    public List<Field> getAllFieldsView(Class<? extends IAView> viewClazz) {
-        List<Field> listaFields = new ArrayList<>();
+    public ArrayList<Field> getAllFieldsView(Class<? extends IAView> viewClazz) {
+        ArrayList<Field> listaFields = new ArrayList<>();
         Class<?> clazz = viewClazz;
         Field[] fieldsArray = null;
 
@@ -340,8 +340,8 @@ public class AReflectionService extends AbstractService {
      *
      * @return lista di fields della Entity e di tutte le supeclassi
      */
-    public List<Field> getAllFieldsNoCrono(Class<? extends AEntity> entityClazz) {
-        List<Field> listaFields = new ArrayList<>();
+    public ArrayList<Field> getAllFieldsNoCrono(Class<? extends AEntity> entityClazz) {
+        ArrayList<Field> listaFields = new ArrayList<>();
         Class<?> clazz = entityClazz;
         Field[] fieldsArray = null;
 
@@ -374,8 +374,8 @@ public class AReflectionService extends AbstractService {
      *
      * @return lista di fields della Entity e di tutte le supeclassi
      */
-    public List<String> getAllFieldsName(Class<? extends AEntity> entityClazz) {
-        List<String> listaNomi = new ArrayList<>();
+    public ArrayList<String> getAllFieldsName(Class<? extends AEntity> entityClazz) {
+        ArrayList<String> listaNomi = new ArrayList<>();
         Class<?> clazz = entityClazz;
         Field[] fieldsArray = null;
 
@@ -444,7 +444,7 @@ public class AReflectionService extends AbstractService {
      *
      * @return lista di fields visibili nella Grid
      */
-    public List<Field> getListFields(Class<? extends AEntity> entityClazz, List<String> listaNomi) {
+    public ArrayList<Field> getListFields(Class<? extends AEntity> entityClazz, ArrayList<String> listaNomi) {
         ArrayList<Field> fieldsList = new ArrayList<>();
         Class<?> clazz = entityClazz;
         ArrayList<Field> fieldsTmp = new ArrayList<>();

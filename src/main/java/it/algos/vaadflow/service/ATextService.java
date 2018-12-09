@@ -271,7 +271,7 @@ public class ATextService extends AbstractService {
      *
      * @return vero se ne contiene uno o più di uno
      */
-    public boolean isContiene(final String testoIn, List<String> listaTags) {
+    public boolean isContiene(final String testoIn, ArrayList<String> listaTags) {
         boolean neContieneAlmenoUno = false;
 
         if (array.isValid(listaTags)) {
@@ -293,7 +293,7 @@ public class ATextService extends AbstractService {
      *
      * @return vero se ne contiene nessuno
      */
-    public boolean nonContiene(final String testoIn, List<String> listaTags) {
+    public boolean nonContiene(final String testoIn, ArrayList<String> listaTags) {
         return !isContiene(testoIn, listaTags);
     }// end of method
 

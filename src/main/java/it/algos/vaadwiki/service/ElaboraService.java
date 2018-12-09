@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class ElaboraService extends ABioService {
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
      */
     public void esegueAll() {
-        List<Long> lista = bioService.findPageids();
+        ArrayList<Long> lista = bioService.findPageids();
 
         if (array.isValid(lista)) {
             esegue(lista);
@@ -60,7 +61,7 @@ public class ElaboraService extends ABioService {
      * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
      */
-    public void esegue(List<Long> lista) {
+    public void esegue(ArrayList<Long> lista) {
         long inizio = System.currentTimeMillis();
 
         if (array.isValid(lista)) {
