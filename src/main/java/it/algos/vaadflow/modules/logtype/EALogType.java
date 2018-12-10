@@ -13,14 +13,15 @@ import java.util.List;
  * Time: 07:39
  */
 public enum EALogType {
-    setup(FlowCost.SETUP),
-    nuovo(FlowCost.NEW),
-    edit(FlowCost.EDIT),
-    delete(FlowCost.DELETE),
-    info(FlowCost.INFO),
-    warn(FlowCost.WARN),
-    error(FlowCost.ERROR),
-    importo(FlowCost.IMPORT);
+    setup(FlowCost.LOG_SETUP),
+    nuovo(FlowCost.LOG_NEW),
+    edit(FlowCost.LOG_EDIT),
+    delete(FlowCost.LOG_DELETE),
+    debug(FlowCost.LOG_DEBUG),
+    info(FlowCost.LOG_INFO),
+    warn(FlowCost.LOG_WARN),
+    error(FlowCost.LOG_ERROR),
+    importo(FlowCost.LOG_IMPORT);
 
     private String tag;
 

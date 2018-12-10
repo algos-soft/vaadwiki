@@ -77,7 +77,7 @@ public class LogViewList extends AViewList {
         super.usaSearchBottoneNew = false;
         super.isEntityAdmin = true;
         if (login.isDeveloper()) {
-            super.usaBottoneReset = true;
+            super.usaBottoneDeleteAll = true;
         }// end of if cycle
     }// end of method
 

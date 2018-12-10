@@ -800,6 +800,7 @@ public class AAnnotationService extends AbstractService {
     }// end of method
 
 
+
     /**
      * Get the color of the property.
      *

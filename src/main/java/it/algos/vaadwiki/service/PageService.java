@@ -2,6 +2,7 @@ package it.algos.vaadwiki.service;
 
 import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadwiki.application.WikiCost;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.Page;
@@ -25,50 +26,21 @@ import java.util.ArrayList;
 public class PageService extends ABioService {
 
 
-    public final static int BLOCCO_PAGES = 200;
-
 
     /**
      * Scarica una lista di nuove pagine (long) dal server wiki e le memorizza nel mongoDB <br>
      * <p>
      * Esegue una serie di RequestWikiReadPages a blocchi di BLOCCO_PAGES (500) per volta <br>
      * Per ogni page crea la entity (Bio) corrispondente <br>
+     * Esegue una cancellazione di tipo BULK nel mongoDB Bio <br>
      * Esegue un inserimento di tipo BULK nel mongoDB Bio <br>
      *
      * @param listaVociDaScaricare elenco (pageids) delle pagine nuove, da scaricare
      */
-    public DownloadResult downloadNewPagine(ArrayList<Long> listaVociDaScaricare) {
-        return downloadPagine(listaVociDaScaricare);
-    }// end of method
-
-
-    /**
-     * Scarica una lista di pagine modificate (long) dal server wiki e memorizza le modifiche nel mongoDB <br>
-     * <p>
-     * Esegue una serie di RequestWikiReadPages a blocchi di BLOCCO_PAGES (500) per volta <br>
-     * Per ogni page modifica la entity (Bio) corrispondente <br>
-     *
-     * @param listaVociDaScaricare elenco (pageids) delle pagine modificate, da scaricare
-     */
-    public DownloadResult downloadUpdatePagine(ArrayList<Long> listaVociDaScaricare) {
-        return downloadPagine(listaVociDaScaricare);
-    }// end of method
-
-
-    /**
-     * Scarica una lista di pagine (long) dal server wiki e le memorizza nel mongoDB <br>
-     * <p>
-     * Esegue una serie di RequestWikiReadPages a blocchi di BLOCCO_PAGES (500) per volta <br>
-     * Per ogni page crea o modifica il records corrispondente con lo stesso pageid <br>
-     *
-     * @param listaVociDaScaricare elenco (pageids) delle pagine mancanti o modificate, da scaricare
-     */
-    private DownloadResult downloadPagine(ArrayList<Long> listaVociDaScaricare) {
+    public DownloadResult downloadPagine(ArrayList<Long> listaVociDaScaricare) {
         DownloadResult result = new DownloadResult(listaVociDaScaricare);
-        long inizioCiclo = System.currentTimeMillis();
-        int numVociRegistrate = 0;
         ArrayList<Long> bloccoPageids;
-        int dimBloccoLettura = BLOCCO_PAGES;
+        int dimBloccoLettura = pref.getInt(WikiCost.PAGE_LIMIT);
         int numCicliLetturaPagine;
 
         if (listaVociDaScaricare != null && listaVociDaScaricare.size() > 0) {
@@ -91,10 +63,6 @@ public class PageService extends ABioService {
         Bio entity;
         ArrayList<Long> vociRegistrateInQuestoBlocco = new ArrayList<>();
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
-
-        if (bloccoPageids == null || bloccoPageids.size() > BLOCCO_PAGES) {
-            return result;
-        }// end of if cycle
 
         pages = api.leggePages(bloccoPageids);
         for (Page page : pages) {
@@ -184,39 +152,5 @@ public class PageService extends ABioService {
         }// end of if/else cycle
 
     }// end of method
-
-
-//    /**
-//     * @param bloccoPageids lista (pageids) di pagine da scaricare dal server wiki
-//     */
-//    private void doInitSenzaCommit(ArrayList<Long> bloccoPageids) {
-//        long inizio = 0;
-//        long fine = 0;
-//        WrapBio wrap;
-//
-//        if (bloccoPageids == null) {
-//            return;
-//        }// end of if cycle
-//
-//        inizio = System.currentTimeMillis();
-//        pages = Api.leggePages(bloccoPageids);
-////        Log.setDebug("test", "lettura di " + pages.size() + " pages in " + LibTime.difText(inizio));
-//
-//        if (pages != null && pages.size() > 0) {
-//            wraps = new ArrayList<WrapBio>();
-//            inizio = System.currentTimeMillis();
-//
-//            for (Page page : pages) {
-//                wrap = new WrapBio(page, null);
-//                if (wrap.isRegistrata()) {
-//                    numVociRegistrate++;
-//                }// end of if cycle
-//                wraps.add(wrap);
-//            }// end of for cycle
-//
-//            fine = System.currentTimeMillis();
-//            Log.debug("test", "save singolarmente senza commit " + LibNum.format(numVociRegistrate) + " nuove voci in " + LibNum.format(fine - inizio));
-//        }// end of if cycle
-//    }// end of method
 
 }// end of class

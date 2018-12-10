@@ -78,7 +78,7 @@ public class Versione extends AEntity {
     @Size(min = 3)
     @Field("tit")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(widthPX = 1)
+    @AIColumn(widthEM = 8)
     public String titolo;
 
     /**
@@ -88,7 +88,7 @@ public class Versione extends AEntity {
     @Size(min = 2, max = 50)
     @Field("desc")
     @AIField(type = EAFieldType.textarea, firstCapital = true, widthEM = 24)
-    @AIColumn(widthPX = 12)
+    @AIColumn(widthEM = 40)
     public String descrizione;
 
     /**
@@ -96,10 +96,8 @@ public class Versione extends AEntity {
      * inserito automaticamente prima del persist <br>
      */
     @NotNull(message = "Il tempo è obbligatorio")
-    @Size(min = 2, max = 50)
     @Field("time")
-    @AIField(type = EAFieldType.localdate, firstCapital = true, widthEM = 24)
-    @AIColumn(widthPX = 5)
+    @AIField(type = EAFieldType.localdate, widthEM = 24)
     public LocalDate timestamp;
 
 

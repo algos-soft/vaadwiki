@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.service;
 
+import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.*;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
@@ -141,5 +142,10 @@ public abstract class ABioService {
     @Autowired
     protected AMailService mail;
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected LogService logger;
 
 }// end of class

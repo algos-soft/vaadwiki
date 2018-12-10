@@ -75,7 +75,7 @@ public class Attivita extends AEntity {
     @Indexed()
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(width = 100)
+    @AIColumn(widthEM = 20)
     public String singolare;
 
 
@@ -86,7 +86,7 @@ public class Attivita extends AEntity {
     @Indexed()
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, widthEM = 12)
-    @AIColumn(width = 100)
+    @AIColumn(width = 10)
     public String plurale;
     
     /**

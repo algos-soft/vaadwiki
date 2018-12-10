@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -108,7 +109,7 @@ public class ADialog extends Dialog implements IADialog {
      */
     protected AContext context;
 
-    protected Runnable pippo;
+//    protected Runnable pippo;
 
 
     /**
@@ -294,7 +295,13 @@ public class ADialog extends Dialog implements IADialog {
      * @param additionalMessage Additional message (optional, may be empty)
      */
     protected void fixBodyLayout(String message, String additionalMessage) {
+        bodyPlaceHolder.setPadding(false);
+        bodyPlaceHolder.setSpacing(true);
+        bodyPlaceHolder.setMargin(false);
         VerticalLayout bodyLayout = new VerticalLayout();
+        bodyLayout.setPadding(false);
+        bodyLayout.setSpacing(true);
+        bodyLayout.setMargin(false);
         bodyPlaceHolder.removeAll();
 
         if (text.isValid(message)) {
@@ -348,6 +355,7 @@ public class ADialog extends Dialog implements IADialog {
             confirmButton.setIcon(new Icon(VaadinIcon.CHECK));
             bottomLayout.add(confirmButton);
         }// end of if cycle
+        bottomLayout.setAlignItems(FlexComponent.Alignment.END);
     }// end of method
 
 

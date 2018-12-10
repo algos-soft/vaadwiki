@@ -236,17 +236,16 @@ public class CategoriaService extends AttNazProfCatService {
 
         inizio = System.currentTimeMillis();
         listaCat = api.leggeCatCat(nomeCategoria);
-        log.info("Algos - Lettura delle voci di wiki.categoria." + nomeCategoria + " (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
+        logger.info("Lettura delle voci di wiki.categoria." + nomeCategoria + " (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
 
         inizio = System.currentTimeMillis();
         mongo.drop(Categoria.class);
-        log.info("Algos - Drop mongoDB.Categoria in " + date.deltaText(inizio));
+        logger.debug("Drop mongoDB.Categoria in " + date.deltaText(inizio));
 
         inizio = System.currentTimeMillis();
         mongo.insert(listaCat, Categoria.class);
         long fine = System.currentTimeMillis();
-        long durata = fine - inizio;
-        log.info("Algos - Insert in mongoDB.Categoria (pageid e title) (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
+        logger.debug("Insert in mongoDB.Categoria (pageid e title) (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
 
         setLastDownload(inizio);
     }// end of method

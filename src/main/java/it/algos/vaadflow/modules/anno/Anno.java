@@ -80,7 +80,7 @@ public class Anno extends AEntity {
     @Size(min = 3)
     @Field("tit")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 8)
     public String titolo;
 
 
@@ -91,7 +91,7 @@ public class Anno extends AEntity {
     @Indexed()
     @Field("ord")
     @AIField(type = EAFieldType.integer, widthEM = 3)
-    @AIColumn(name = "#", width = 55)
+    @AIColumn(name = "#", widthEM = 5)
     public int ordine;
 
 
@@ -103,7 +103,7 @@ public class Anno extends AEntity {
     @DBRef
     @Field("mese")
     @AIField(type = EAFieldType.combo, clazz = SecoloService.class)
-    @AIColumn(width = 140)
+    @AIColumn(widthEM = 8)
     public Secolo secolo ;
 
 

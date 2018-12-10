@@ -3,10 +3,10 @@ package it.algos.vaadflow.modules.log;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.logtype.EALogType;
 import it.algos.vaadflow.modules.logtype.Logtype;
 import it.algos.vaadflow.modules.logtype.LogtypeService;
 import it.algos.vaadflow.service.AService;
-import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -92,6 +92,20 @@ public class LogService extends AService {
         Log entity = newEntity(descrizione);
         save(entity);
         return entity;
+    }// end of method
+
+
+    /**
+     * Crea una entity e la registra <br>
+     *
+     * @param livello     rilevanza del log (obbligatorio)
+     * @param logType     raggruppamento logico dei log per type di eventi (obbligatorio)
+     * @param descrizione (obbligatoria, non unica) <br>
+     *
+     * @return la entity appena creata
+     */
+    public Log crea(Livello livello, EALogType logType, String descrizione) {
+        return crea(livello, logtype.findByKeyUnica(logType.getTag()), descrizione);
     }// end of method
 
 
@@ -225,26 +239,30 @@ public class LogService extends AService {
 
 
     //--registra un avviso
-    public void debug(Logtype type, String descrizione) {
-        crea(Livello.debug, type, descrizione);
+    public void debug(String descrizione) {
+        crea(Livello.debug, EALogType.debug, descrizione);
+        log.debug(descrizione);
     }// fine del metodo
 
 
     //--registra un avviso
-    public void info(Logtype type, String descrizione) {
-        crea(Livello.info, type, descrizione);
+    public void info(String descrizione) {
+        crea(Livello.info, EALogType.info, descrizione);
+        log.info(descrizione);
     }// fine del metodo
 
 
     //--registra un avviso
-    public void warning(Logtype type, String descrizione) {
-        crea(Livello.warn, type, descrizione);
+    public void warning(String descrizione) {
+        crea(Livello.warn, EALogType.warn, descrizione);
+        log.warn(descrizione);
     }// fine del metodo
 
 
     //--registra un avviso
-    public void error(Logtype type, String descrizione) {
-        crea(Livello.error, type, descrizione);
+    public void error(String descrizione) {
+        crea(Livello.error, EALogType.error, descrizione);
+        log.error(descrizione);
     }// fine del metodo
 
 

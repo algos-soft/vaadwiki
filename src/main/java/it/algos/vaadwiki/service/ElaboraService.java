@@ -68,7 +68,7 @@ public class ElaboraService extends ABioService {
             for (Long pageid : lista) {
                 esegue(pageid);
             }// end of for cycle
-            log.info("Algos - Ciclo ELABORA - elaborati i parametri delle nuove voci (" + text.format(lista.size()) + " elementi) in " + date.deltaText(inizio));
+            log.info("ELABORA - elaborati i parametri delle nuove voci (" + text.format(lista.size()) + " elementi) in " + date.deltaText(inizio));
         }// end of if cycle
 
     }// end of method

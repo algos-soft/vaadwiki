@@ -84,7 +84,7 @@ public class Role extends AEntity {
     @Indexed()
     @Field("ord")
     @AIField(type = EAFieldType.integer, widthEM = 3)
-    @AIColumn(name = "#", width = 55)
+    @AIColumn(name = "#", widthEM = 4)
     public int ordine;
 
 
@@ -96,7 +96,7 @@ public class Role extends AEntity {
     @Size(min = 3)
     @Field("code")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(width = 210)
+    @AIColumn(width = 8)
     public String code;
     
 

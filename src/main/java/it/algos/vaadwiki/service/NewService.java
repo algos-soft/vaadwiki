@@ -44,18 +44,18 @@ public class NewService extends ABioService {
         DownloadResult result;
 
         if (array.isValid(listaIdsMancanti)) {
-            result = pageService.downloadNewPagine(listaIdsMancanti);
+            result = pageService.downloadPagine(listaIdsMancanti);
             pref.saveValue(LAST_DOWNLOAD_BIO, LocalDateTime.now());
 
             if (result.getNumVociRegistrate() > 0) {
-                log.info("Algos - Ciclo NEW - download di nuove voci e creazione in mongoDB Bio (" + text.format(result.getNumVociRegistrate()) + " voci) in " + date.deltaText(inizio));
+                logger.info("NEW - download di nuove voci e creazione in mongoDB Bio (" + text.format(result.getNumVociRegistrate()) + " voci) in " + date.deltaText(inizio));
             }// end of if cycle
 
             if (result.getNumVociNonRegistrate() > 0) {
                 fixError(result.vociNonRegistrate);
             }// end of if cycle
         } else {
-            log.info("Algos - Ciclo NEW - nessuna nuova voce da scaricare");
+            logger.info("NEW - nessuna nuova voce da scaricare");
         }// end of if/else cycle
 
     }// end of method
@@ -94,9 +94,9 @@ public class NewService extends ABioService {
                 categoriaService.delete(categoria);
                 page = api.leggePage(pageid);
                 title = page.getTitle();
-                log.info("Algos - Ciclo NEW - cancellata da mongoDB.Categoria la entity '" + title + "', perché la pagina sul server non contiene il tmpl Bio");
+                logger.debug("NEW - cancellata da mongoDB.Categoria la entity '" + title + "', perché la pagina sul server non contiene il tmpl Bio");
             } else {
-                log.warn("Algos - Ciclo NEW - con find() non trovo la entity '" + pageid + "' di mongoDB.Categoria che risulta invece nella lista");
+                logger.warning("NEW - con find() non trovo la entity '" + pageid + "' di mongoDB.Categoria che risulta invece nella lista");
             }// end of if/else cycle
         }// end of if cycle
     }// end of method

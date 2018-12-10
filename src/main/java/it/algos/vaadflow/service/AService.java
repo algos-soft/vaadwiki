@@ -13,6 +13,7 @@ import it.algos.vaadflow.backend.login.ALogin;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.company.Company;
+import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,8 +86,11 @@ public abstract class AService extends AbstractService implements IAService {
     protected MongoRepository repository;
 
 
-//    @Autowired
-//    private LogService logger;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected LogService logger;
 
 
     /**

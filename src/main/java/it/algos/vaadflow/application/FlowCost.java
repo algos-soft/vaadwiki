@@ -112,16 +112,18 @@ public class FlowCost {
     public final static String REGISTRA = "Save";
     public final static String ANNULLA = "Back";
     public final static String CANCELLA = "Delete";
+    public final static String DELETE = "Delete";
 
     //log type
-    public final static String SETUP = "Setup";
-    public final static String NEW = "New";
-    public final static String EDIT = "Edit";
-    public final static String DELETE = "Delete";
-    public final static String INFO = "Info";
-    public final static String WARN = "Warn";
-    public final static String ERROR = "Error";
-    public final static String IMPORT = "Import";
+    public final static String LOG_SETUP = "logSetup";
+    public final static String LOG_NEW = "logNew";
+    public final static String LOG_EDIT = "logEdit";
+    public final static String LOG_DELETE = "logDelete";
+    public final static String LOG_DEBUG = "logDebug";
+    public final static String LOG_INFO = "logInfo";
+    public final static String LOG_WARN = "logWarn";
+    public final static String LOG_ERROR = "logError";
+    public final static String LOG_IMPORT = "logImport";
 
     // generali
     public final static String USA_DEBUG = "usaDebug";

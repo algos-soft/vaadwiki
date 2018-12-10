@@ -31,6 +31,7 @@ import it.algos.vaadflow.ui.fields.ATextArea;
 import it.algos.vaadflow.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
@@ -62,6 +63,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
     protected final Button deleteButton = new Button(DELETE);
 
+
+    @Autowired
+    protected ApplicationContext appContext;
 
     /**
      * Titolo del dialogo <br>
@@ -751,40 +755,14 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         String title = BOT_DELETE;
         String message = "Vuoi veramente cancellare questo elemento ?";
         String additionalMessage = "L'operazione non è reversibile";
-        AConfirmDialog dialog = new AConfirmDialog();
-//        close();
-        confirmDialog.open(title, message, additionalMessage, BOT_DELETE,
-                true, getCurrentItem(), this::deleteConfirmed,
-                this::open);
+        ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
+        dialog.open(message, additionalMessage, this::deleteConfirmed);
     }// end of method
 
-//    protected void confirmDelete() {
-//        ConfirmDialog dialog = new ConfirmDialog(
-//                "Elimina",
-//                "Vuoi veramente cancellare " + getCurrentItem().toString() + "? \nL'operazione non è reversibile",
-//                "Elimina",
-//                new ComponentEventListener<ConfirmDialog.ConfirmEvent>() {
-//                    @Override
-//                    public void onComponentEvent(ConfirmDialog.ConfirmEvent confirmEvent) {
-//                        deleteConfirmed(getCurrentItem());
-//                    }
-//                },
-//                "Annulla",
-//                new ComponentEventListener<ConfirmDialog.CancelEvent>() {
-//                    @Override
-//                    public void onComponentEvent(ConfirmDialog.CancelEvent cancelEvent) {
-//                        open();
-//                    }
-//                });
-//        dialog.open();
-//    }// end of method
-
-
-    private void deleteConfirmed(T item) {
-        itemDeleter.accept(item);
+    private void deleteConfirmed() {
+        itemDeleter.accept(currentItem);
         close();
     }// end of method
-
 
     /**
      * Gets the form layout, where additional components can be added for

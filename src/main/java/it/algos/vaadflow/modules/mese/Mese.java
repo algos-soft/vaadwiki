@@ -77,7 +77,7 @@ public class Mese extends AEntity {
     @Size(min = 3)
     @Field("lungo")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 10)
     public String titoloLungo;
 
 
@@ -89,7 +89,7 @@ public class Mese extends AEntity {
     @Size(min = 3)
     @Field("breve")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 8)
     public String titoloBreve;
 
 
@@ -100,7 +100,7 @@ public class Mese extends AEntity {
     @Indexed()
     @Field("giorni")
     @AIField(type = EAFieldType.integer, widthEM = 3)
-    @AIColumn(name = "#", width = 55)
+    @AIColumn(name = "#", widthEM = 5)
     public int giorni;
 
 

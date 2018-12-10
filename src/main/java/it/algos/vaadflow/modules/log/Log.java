@@ -89,7 +89,8 @@ public class Log extends ACEntity {
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     @Field("liv")
-    @AIField(type = EAFieldType.enumeration, clazz = Livello.class, required = true, widthEM = 12)
+    @AIField(type = EAFieldType.enumeration, clazz = Livello.class, required = true, widthEM = 4)
+    @AIColumn(widthEM = 6)
     public Livello livello;
 
     /**
@@ -99,7 +100,7 @@ public class Log extends ACEntity {
     @Indexed()
     @Field("type")
     @AIField(type = EAFieldType.combo, clazz = LogtypeService.class, nullSelectionAllowed = false, widthEM = 10)
-    @AIColumn(width = 140)
+    @AIColumn(widthEM = 7)
     private Logtype type;
 
 
@@ -109,8 +110,8 @@ public class Log extends ACEntity {
     @NotNull(message = "La descrizione è obbligatoria")
     @Size(min = 2, max = 50)
     @Field("desc")
-    @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
-    @AIColumn(width = 370)
+    @AIField(type = EAFieldType.textarea, firstCapital = true, widthEM = 24)
+    @AIColumn(widthEM = 50)
     public String descrizione;
 
     /**
@@ -120,8 +121,7 @@ public class Log extends ACEntity {
      */
     @NotNull
     @Indexed()
-    @AIField(type = EAFieldType.localdatetime, name = "Data dell'evento di log")
-    @AIColumn(name = "eve")
+    @AIField(type = EAFieldType.localdatetime)
     public LocalDateTime evento;
 
 

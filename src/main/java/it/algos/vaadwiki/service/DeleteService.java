@@ -39,12 +39,12 @@ public class DeleteService extends ABioService {
         if (array.isValid(listaPageidsEccedenti)) {
             result = mongo.deleteBulkByProperty(listaPageidsEccedenti, Bio.class, "pageid");
             if (result.getDeletedCount() < 1) {
-                log.error("Algos - Ciclo DELETE - Non sono riuscito ad eliminare nessuna voce delle " + listaPageidsEccedenti.size() + " eccedenti");
+                logger.error("DELETE - Non sono riuscito ad eliminare nessuna voce delle " + listaPageidsEccedenti.size() + " eccedenti");
             } else {
-                log.info("Algos - Ciclo DELETE - eliminate le voci da mongoDB Bio (" + result.getDeletedCount() + " elementi) in " + date.deltaText(inizio));
+                logger.info("DELETE - eliminate le voci da mongoDB Bio (" + result.getDeletedCount() + " elementi) in " + date.deltaText(inizio));
             }// end of if/else cycle
         } else {
-            log.info("Algos - Ciclo DELETE - nessuna voce deprecata da eliminare");
+            logger.info("DELETE - nessuna voce deprecata da eliminare");
         }// end of if/else cycle
 
     }// end of method

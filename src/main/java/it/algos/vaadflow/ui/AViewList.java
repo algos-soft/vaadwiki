@@ -23,14 +23,17 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.backend.login.ALogin;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.footer.AFooter;
+import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.modules.utente.UtenteService;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.*;
+import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
@@ -131,9 +134,14 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     public ATextService text = ATextService.getInstance();
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected LogService logger;
+
     @Autowired
     protected UtenteService utenteService;
-
 
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
@@ -142,7 +150,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     @Autowired
     protected PreferenzaService pref;
-
 
     protected TextField searchField;
 
@@ -170,7 +177,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     protected Class<? extends AEntity> entityClazz;
 
-
     /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid
      * - con o senza campo edit search, regolato da preferenza o da parametro
@@ -179,13 +185,11 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     protected HorizontalLayout topPlaceholder = new HorizontalLayout();
 
-
     /**
      * Placeholder (eventuale) SOPRA la Grid <br>
      * Label o altro per informazioni specifiche; di norma per il developer
      */
     protected VerticalLayout alertPlacehorder = new VerticalLayout();
-
 
     /**
      * Label (obbligatoria)  che appare nell'header della Grid.
@@ -246,9 +250,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     protected boolean usaBottoneEdit;
 
     /**
-     * Flag di preferenza posizionare il bottone Edit come ultima colonna. Normalmente true.
+     * Flag di preferenza posizionare il bottone Edit come prima colonna. Normalmente true.
      */
-    protected boolean isBottoneEditAfter;
+    protected boolean isBottoneEditBefore;
 
     /**
      * Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'.
@@ -324,7 +328,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
     protected HorizontalLayout footerLayout;
 
-
     protected int offset;
 
     protected Button minusButton;
@@ -339,6 +342,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     @Autowired
     protected AVaadinService vaadinService;
+
+    @Autowired
+    protected ApplicationContext appContext;
 
     boolean isPagination;
 
@@ -409,8 +415,8 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
         usaBottoneEdit = true;
 
-        //--Flag di preferenza posizionare il bottone Edit come ultima colonna. Normalmente true
-        isBottoneEditAfter = true;
+        //--Flag di preferenza posizionare il bottone Edit come prima colonna. Normalmente true
+        isBottoneEditBefore = true;
 
         //--Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'.
         testoBottoneEdit = EDIT_NAME;
@@ -496,10 +502,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             deleteAllButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
             deleteAllButton.getElement().setAttribute("theme", "error");
             deleteAllButton.addClassName("view-toolbar__button");
-            deleteAllButton.addClickListener(e -> {
-                service.deleteAll();
-                updateView();
-            });
+            deleteAllButton.addClickListener(e -> openConfirmDialogDelete());
             topPlaceholder.add(deleteAllButton);
         }// end of if cycle
 
@@ -604,6 +607,11 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             grid = new Grid();
         }// end of if/else cycle
 
+        //--Apre il dialog di detail
+        if (isBottoneEditBefore) {
+            this.addDetailDialog();
+        }// end of if cycle
+
         //--Eventuali colonne calcolate aggiunte PRIMA di quelle automatiche
         this.addSpecificColumnsBefore();
 
@@ -619,6 +627,11 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
         //--Eventuali colonne calcolate aggiunte DOPO quelle automatiche
         this.addSpecificColumnsAfter();
+
+        //--Apre il dialog di detail
+        if (!isBottoneEditBefore) {
+            this.addDetailDialog();
+        }// end of if cycle
 
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
         grid.setWidth("50em");
@@ -679,10 +692,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Sovrascritto
      */
     protected void addSpecificColumnsBefore() {
-        if (!isBottoneEditAfter) {
-            //--Apre il dialog di detail
-            this.addDetailDialog();
-        }// end of if cycle
     }// end of method
 
 
@@ -700,10 +709,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Sovrascritto
      */
     protected void addSpecificColumnsAfter() {
-        if (isBottoneEditAfter) {
-            //--Apre il dialog di detail
-            this.addDetailDialog();
-        }// end of if cycle
     }// end of method
 
 
@@ -714,8 +719,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
         if (usaBottoneEdit) {
             ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
-            grid.addColumn(renderer);
-            this.setFlexGrow(0);
+            Grid.Column colonna = grid.addColumn(renderer);
+            colonna.setWidth("5em");
+            colonna.setFlexGrow(0);
         } else {
             EAOperation operation = isEntityModificabile ? EAOperation.edit : EAOperation.showOnly;
             grid.addSelectionListener(evento -> apreDialogo((SingleSelectionEvent) evento, operation));
@@ -903,6 +909,25 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         }// end of if/else cycle
 
         return items;
+    }// end of method
+
+
+    /**
+     * Opens the confirmation dialog before deleting all items.
+     * <p>
+     * The dialog will display the given title and message(s), then call
+     */
+    protected final void openConfirmDialogDelete() {
+        String message = "Vuoi veramente cancellare TUTTE le entities di questa collezione ?";
+        String additionalMessage = "L'operazione non è reversibile";
+        ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
+        dialog.open(message, additionalMessage, this::deleteCollection, null);
+    }// end of method
+
+
+    protected void deleteCollection() {
+        service.deleteAll();
+        updateView();
     }// end of method
 
 

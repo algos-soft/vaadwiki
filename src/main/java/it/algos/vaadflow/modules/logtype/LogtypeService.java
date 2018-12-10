@@ -188,7 +188,7 @@ public class LogtypeService extends AService {
      * @return la entity appena trovata
      */
     public Logtype getSetup() {
-        return repository.findByCode(SETUP);
+        return repository.findByCode(LOG_SETUP);
     }// end of method
 
 
@@ -198,7 +198,7 @@ public class LogtypeService extends AService {
      * @return la entity appena trovata
      */
     public Logtype getNew() {
-        return repository.findByCode(NEW);
+        return repository.findByCode(LOG_NEW);
     }// end of method
 
 
@@ -208,7 +208,7 @@ public class LogtypeService extends AService {
      * @return la entity appena trovata
      */
     public Logtype getEdit() {
-        return repository.findByCode(EDIT);
+        return repository.findByCode(LOG_EDIT);
     }// end of method
 
 
@@ -218,7 +218,7 @@ public class LogtypeService extends AService {
      * @return la entity appena trovata
      */
     public Logtype getDelete() {
-        return repository.findByCode(DELETE);
+        return repository.findByCode(LOG_DELETE);
     }// end of method
 
 
@@ -228,7 +228,7 @@ public class LogtypeService extends AService {
      * @return la entity appena trovata
      */
     public Logtype getImport() {
-        return repository.findByCode(IMPORT);
+        return repository.findByCode(LOG_IMPORT);
     }// end of method
 
 }// end of class

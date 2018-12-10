@@ -75,7 +75,7 @@ public class Categoria extends AEntity {
     @NotNull
     @Indexed()
     @AIField(type = EAFieldType.lungo, widthEM = 3)
-    @AIColumn(width = 55)
+    @AIColumn(widthEM = 7)
     public long pageid;
 
     /**
@@ -85,7 +85,7 @@ public class Categoria extends AEntity {
     @Indexed()
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(width = 210)
+    @AIColumn(width = 10)
     public String title;
 
 

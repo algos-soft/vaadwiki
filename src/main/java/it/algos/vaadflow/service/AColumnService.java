@@ -91,7 +91,7 @@ public class AColumnService extends AbstractService {
         Grid.Column<AEntity> colonna = null;
         EAFieldType type = annotation.getFormType(entityClazz, propertyName);
         String header = annotation.getColumnName(entityClazz, propertyName);
-        String width = annotation.getColumnWithPX(entityClazz, propertyName);
+        String width = annotation.getColumnWithEM(entityClazz, propertyName);
         Class clazz = annotation.getComboClass(entityClazz, propertyName);
         String color = annotation.getColumnColor(entityClazz, propertyName);
 
@@ -107,6 +107,7 @@ public class AColumnService extends AbstractService {
 
         switch (type) {
             case text:
+            case textarea:
                 colonna = grid.addColumn(propertyName);
                 break;
             case integer:
@@ -177,6 +178,7 @@ public class AColumnService extends AbstractService {
                     }// fine del blocco try-catch
                     return new Label(testo);
                 }));//end of lambda expressions and anonymous inner class
+                width="8em";
                 break;
             case localdatetime:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
@@ -197,6 +199,7 @@ public class AColumnService extends AbstractService {
                     }// fine del blocco try-catch
                     return new Label(testo);
                 }));//end of lambda expressions and anonymous inner class
+                width="10em";
                 break;
             case vaadinIcon:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
@@ -261,10 +264,13 @@ public class AColumnService extends AbstractService {
 //                colonna.setWidth("1px");
 //            }// end of if cycle
 
-//            if (text.isValid(width)) {
-//                colonna.setWidth(width);
-//                colonna.setFlexGrow(0);
-//            }// end of if cycle
+            if (text.isValid(width)) {
+                colonna.setWidth(width);
+                colonna.setFlexGrow(0);
+            } else {
+                colonna.setFlexGrow(1);
+            }// end of if/else cycle
+
         }// end of if cycle
 
     }// end of method

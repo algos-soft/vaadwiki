@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.modules.attnazprofcat;
 
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
@@ -12,8 +13,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -112,8 +111,12 @@ public abstract class AttNazProfCatService extends AService {
             }// end of for cycle
 
             setLastDownload(inizio);
-            log.info("Algos - Download del modulo wiki." + entityClass.getSimpleName() + " (" + text.format(righe.length) + " elementi) in " + date.deltaText(inizio));
-        }// end of if cycle
+            if (pref.isBool(FlowCost.USA_DEBUG)) {
+                logger.debug("Download del modulo wiki." + entityClass.getSimpleName() + " (" + text.format(righe.length) + " elementi) in " + date.deltaText(inizio));
+            }// end of if cycle
+        } else {
+            logger.error( entityClass.getSimpleName() + " - Qualcosa non ha funzionato");
+        }// end of if/else cycle
     }// end of method
 
 

@@ -8,16 +8,17 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.ui.AViewList;
+import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.task.TaskWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.Collection;
 
 import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 
@@ -32,6 +33,9 @@ import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 @Slf4j
 public class AttNazProfCatViewList extends AViewList {
 
+
+    @Autowired
+    protected ApplicationContext appContext;
 
     protected Button deleteMongoButton;
 
@@ -100,9 +104,9 @@ public class AttNazProfCatViewList extends AViewList {
 
 
     private void creaDeleteMongo() {
-        deleteMongoButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
+        deleteMongoButton = new Button("Delete All", new Icon(VaadinIcon.CLOSE_CIRCLE));
         deleteMongoButton.getElement().setAttribute("theme", "error");
-        deleteMongoButton.addClickListener(e -> deleteMongo());
+        deleteMongoButton.addClickListener(e -> openConfirmDialog());
     }// end of method
 
 
@@ -131,6 +135,20 @@ public class AttNazProfCatViewList extends AViewList {
     private void creaShowStatistiche() {
         showStatisticheButton = new Button("Statistiche", new Icon(VaadinIcon.TABLE));
         showStatisticheButton.addClickListener(e -> showWikiStatistiche());
+    }// end of method
+
+
+    /**
+     * Opens the confirmation dialog before deleting the current item.
+     * <p>
+     * The dialog will display the given title and message(s), then call
+     * <p>
+     */
+    protected  void openConfirmDialog() {
+        String message = "Vuoi veramente cancellare TUTTE le entities ?";
+        String additionalMessage = "L'operazione non è reversibile";
+        ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
+        dialog.open(message, additionalMessage, this::deleteMongo);
     }// end of method
 
 
