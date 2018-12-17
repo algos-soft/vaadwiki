@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -244,15 +245,11 @@ public class BioService extends AttNazProfCatService {
         ArrayList<Long> listaLong = new ArrayList<>();
         List<? extends AEntity> listaPagine = null;
         long inizio = System.currentTimeMillis();
-        int numRec = count();
-        String property = "pageid";
         int size = pref.getInt(MONGO_PAGE_LIMIT);
-        Sort sort = new Sort(Sort.Direction.ASC, property);
-        Pageable page;
+        Sort sort = new Sort(Sort.Direction.ASC, "pageid");
 
-        for (int k = 0; k < array.numCicli(numRec, size); k++) {
-            page = PageRequest.of(k, size, sort);
-            listaPagine = repository.findAll(page).getContent();
+        for (int k = 0; k < array.numCicli(count(), size); k++) {
+            listaPagine = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Bio.class);
             for (AEntity entity : listaPagine) {
                 listaLong.add(((Bio) entity).pageid);
             }// end of for cycle

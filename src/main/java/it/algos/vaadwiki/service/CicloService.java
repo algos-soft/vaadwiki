@@ -84,7 +84,7 @@ public class CicloService extends ABioService {
 
         //--download del modulo categoria
         //--crea una collezione Categoria, 'specchio' sul mongoDB di quella sul server wiki
-//        categoriaService.download();
+        categoriaService.download();
 
         //--recupera la lista dei pageids dalla collezione Categoria
         listaPageidsMongoCategoria = categoriaService.findPageids();

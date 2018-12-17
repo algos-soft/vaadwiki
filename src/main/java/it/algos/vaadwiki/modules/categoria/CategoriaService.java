@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -226,18 +225,11 @@ public class CategoriaService extends AttNazProfCatService {
         ArrayList<Long> listaLong = new ArrayList<>();
         List<? extends AEntity> listaPagine = null;
         long inizio = System.currentTimeMillis();
-        int numRec = count();
-        String property = "pageid";
         int size = pref.getInt(MONGO_PAGE_LIMIT);
-        Sort sort = new Sort(Sort.Direction.ASC, property);
+        Sort sort = new Sort(Sort.Direction.ASC, "pageid");
 
-        for (int k = 0; k < array.numCicli(numRec, size); k++) {
-            try { // prova ad eseguire il codice
-                listaPagine = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Categoria.class);
-            } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
-                logger.error("categoriaService.findPageids() size=" + size + " k=" + k + " listaPagine=" + listaPagine.size());
-            }// fine del blocco try-catch
+        for (int k = 0; k < array.numCicli(count(), size); k++) {
+            listaPagine = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Categoria.class);
             for (AEntity entity : listaPagine) {
                 listaLong.add(((Categoria) entity).pageid);
             }// end of for cycle

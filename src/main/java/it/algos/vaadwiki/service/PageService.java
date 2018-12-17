@@ -38,7 +38,6 @@ public class PageService extends ABioService {
      */
     public DownloadResult downloadPagine(ArrayList<Long> listaVociDaScaricare) {
         DownloadResult result = new DownloadResult(listaVociDaScaricare);
-        long inizio = System.currentTimeMillis();//@todo provvisorio
         ArrayList<Long> bloccoPageids;
         int dimBloccoLettura = pref.getInt(WIKI_PAGE_LIMIT);
         int numCicliLetturaPagine;
@@ -48,7 +47,6 @@ public class PageService extends ABioService {
             for (int k = 0; k < numCicliLetturaPagine; k++) {
                 bloccoPageids = array.estraeSublistaLong(listaVociDaScaricare, dimBloccoLettura, k + 1);
                 result = downloadSingoloBlocco(result, bloccoPageids);
-                logger.info("Registrato blocco n. " + k + " in " + date.deltaText(inizio) + " dall'inizio");//@todo provvisorio
             }// end of for cycle
         }// end of if cycle
 
@@ -82,7 +80,8 @@ public class PageService extends ABioService {
 
         if (listaBio.size() > 0) {
             try { // prova ad eseguire il codice
-                mongo.updateBulk(listaBio, Bio.class);
+//                mongo.updateBulk(listaBio, Bio.class);
+                mongo.insert(listaBio, Bio.class);
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
             }// fine del blocco try-catch
