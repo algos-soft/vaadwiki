@@ -602,7 +602,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             try { // prova ad eseguire il codice
                 //--Costruisce la Grid SENZA creare automaticamente le colonne
                 //--Si possono così inserire colonne manuali prima e dopo di quelle automatiche
-                grid = new Grid(entityClazz, false);
+                grid = new Grid(entityClazz);
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
                 return;
@@ -610,6 +610,12 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         } else {
             grid = new Grid();
         }// end of if/else cycle
+
+        //--@todo solo per la versione 10.0.5
+        //--@todo dalla versione 12.0.0, si può levare ed aggiungere 'false' come secondo parametro a new Grid(...,false)
+        for (Grid.Column column : grid.getColumns()) {
+            grid.removeColumn(column);
+        }// end of for cycle
 
         //--Apre il dialog di detail
         if (isBottoneEditBefore) {
