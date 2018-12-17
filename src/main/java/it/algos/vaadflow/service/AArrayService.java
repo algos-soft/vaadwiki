@@ -48,6 +48,7 @@ public class AArrayService extends AbstractService {
     private AArrayService() {
     }// end of constructor
 
+
     /**
      * Gets the unique instance of this Singleton.
      *
@@ -56,6 +57,7 @@ public class AArrayService extends AbstractService {
     public static AArrayService getInstance() {
         return INSTANCE;
     }// end of static method
+
 
     /**
      * Ordina la lista
@@ -77,6 +79,7 @@ public class AArrayService extends AbstractService {
 
         return objList;
     }// end of method
+
 
     /**
      * Controlla la validità dell'array
@@ -104,6 +107,7 @@ public class AArrayService extends AbstractService {
         return status;
     }// end of method
 
+
     /**
      * Controlla la validità dell'array
      * Deve esistere (not null)
@@ -130,6 +134,7 @@ public class AArrayService extends AbstractService {
         return status;
     }// end of method
 
+
     /**
      * Controlla che l'array sia nullo o vuoto
      * Non deve esistere (null)
@@ -143,6 +148,7 @@ public class AArrayService extends AbstractService {
         return !isValid(array);
     }// end of method
 
+
     /**
      * Controlla che l'array sia nullo o vuoto
      * Non deve esistere (null)
@@ -155,6 +161,7 @@ public class AArrayService extends AbstractService {
     public boolean isEmpty(final String[] array) {
         return !isValid(array);
     }// end of method
+
 
     /**
      * Aggiunge un elemento ad una List (di per se immutabile)
@@ -176,6 +183,7 @@ public class AArrayService extends AbstractService {
 
         return arrayOut;
     }// end of method
+
 
     /**
      * Somma due array (liste) e restituisce una lista ordinata
@@ -346,6 +354,7 @@ public class AArrayService extends AbstractService {
         return longList;
     }// end of method
 
+
     /**
      * Numero di cicli
      *
@@ -468,6 +477,7 @@ public class AArrayService extends AbstractService {
         return matrice;
     }// end of method
 
+
     /**
      * Differenza tra due array
      *
@@ -476,16 +486,34 @@ public class AArrayService extends AbstractService {
      *
      * @return differenza
      */
-    public  ArrayList differenza(List primo, List secondo) {
+    public ArrayList differenza(List primo, List secondo) {
         ArrayList differenza = null;
 
         if (primo != null && secondo != null) {
             differenza = new ArrayList();
+
             for (Object value : primo) {
                 if (!secondo.contains(value)) {
                     differenza.add(value);
                 }// fine del blocco if
             } // fine del ciclo for-each
+
+
+//            for (int k = 0; k < primo.size(); k++) {
+//                for (int j = k; j < secondo.size(); j++) {
+//                    if (test) {
+//                        differenza.add(value);
+//                    }// end of if cycle
+//                }// end of for cycle
+//            }// end of for cycle
+
+//            int max = secondo.size()-1;
+//            for (int k = 0; k < primo.size(); k++) {
+//                if (!secondo.subList(k, max).contains(primo.get(k))) {
+//                    differenza.add(k);
+//                }// fine del blocco if
+//            } // fine del ciclo for-each
+
         }// fine del blocco if
 
         return differenza;

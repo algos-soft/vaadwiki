@@ -37,7 +37,7 @@ public enum EAPreferenza {
     mailFrom(FlowCost.MAIL_FROM, "Email di default da cui partono i log", EAPrefType.string, "info@algos.it"),
     mailTo(FlowCost.MAIL_TO, "Email di default a cui spedire i log di posta", EAPrefType.string, "gac@algos.it"),
     maxRigheGrid(FlowCost.MAX_RIGHE_GRID, "Elementi da visualizzare in ogni pagina della Grid", EAPrefType.integer, 20),
-    mongoPageLimit(FlowCost.MONGO_PAGE_LIMIT, "Limite di elementi nelle query mongoDB", EAPrefType.integer, 5000),
+    mongoPageLimit(FlowCost.MONGO_PAGE_LIMIT, "Limite di elementi nelle query mongoDB", EAPrefType.integer, 50000),
     ;
 
 
