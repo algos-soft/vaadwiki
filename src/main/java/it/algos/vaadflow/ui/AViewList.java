@@ -346,7 +346,10 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     @Autowired
     protected ApplicationContext appContext;
 
-    boolean isPagination;
+
+    protected boolean isPagination;
+
+    protected Collection items;
 
 
     /**
@@ -381,6 +384,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
         //--Login and context della sessione
         context = vaadinService.fixLoginAndContext(login);
+        login = context.getLogin();
 
         //--Le preferenze standard
         fixPreferenze();
@@ -664,7 +668,8 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     protected String getGridHeaderText() {
         int numRecCollezione = service != null ? service.count() : 0;
-        String numFormattato = text.format(numRecCollezione);
+        String filtro = text.format(items.size());
+        String totale = text.format(numRecCollezione);
         String testo = entityClazz != null ? entityClazz.getSimpleName() + " - " : "";
 
         switch (numRecCollezione) {
@@ -676,9 +681,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
                 break;
             default:
                 if (isPagination) {
-                    testo += "Collezione di " + limit + " elementi su " + numFormattato + " totali. ";
+                    testo += "Collezione di " + limit + " elementi su " + totale + " totali. ";
                 } else {
-                    testo += "Collezione di " + numFormattato + " elementi";
+                    testo += "Collezione di " + totale + " elementi";
                 }// end of if/else cycle
                 break;
         } // end of switch statement
@@ -883,7 +888,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
 
     public void updateView() {
-        Collection items = updateItems();
+        updateItems();
 
         if (items != null) {
             try { // prova ad eseguire il codice
@@ -899,16 +904,12 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     }// end of method
 
 
-    public Collection updateItems() {
-        Collection items = null;
-
+    public void updateItems() {
         if (isPagination) {
             items = service != null ? service.findAll(offset, limit) : null;
         } else {
             items = service != null ? service.findAll() : null;
         }// end of if/else cycle
-
-        return items;
     }// end of method
 
 

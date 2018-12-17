@@ -16,6 +16,8 @@ import it.algos.vaadflow.modules.company.Company;
 import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -61,6 +63,8 @@ public abstract class AService extends AbstractService implements IAService {
 //    @Autowired
 //    public ALogin login2;
 
+    private final static int SIZE = 500;
+
     //--il modello-dati specifico viene regolato dalla sottoclasse nel costruttore
     public Class<? extends AEntity> entityClass;
 
@@ -84,7 +88,6 @@ public abstract class AService extends AbstractService implements IAService {
 
     //--la repository dei dati viene iniettata dal costruttore della sottoclasse concreta
     protected MongoRepository repository;
-
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -297,6 +300,19 @@ public abstract class AService extends AbstractService implements IAService {
 
 
     /**
+     * Returns only the property of the type.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @return all entities
+     */
+    public ArrayList findAllProperty(String property, Class<? extends AEntity> clazz) {
+        return mongo.findAllProperty(property, clazz);
+    }// end of method
+
+
+    /**
      * Returns ids list of all entities of the type.
      * <p>
      * Senza filtri
@@ -306,13 +322,11 @@ public abstract class AService extends AbstractService implements IAService {
      */
     public ArrayList<String> findAllIds() {
         ArrayList<String> lista = null;
-        int recNum = count();
-        int size = 100;
-        int giri = (recNum / size) + 1;
+        int cicli = array.numCicli(count(), SIZE);
         Sort sort = new Sort(Sort.Direction.ASC, "_id");
 
-        for (int k = 0; k < giri; k++) {
-            lista = array.somma(lista, findAllIds(k, size, sort));
+        for (int k = 0; k < cicli; k++) {
+            lista = array.somma(lista, findAllIds(k, SIZE, sort));
         }// end of for cycle
 
         return lista;

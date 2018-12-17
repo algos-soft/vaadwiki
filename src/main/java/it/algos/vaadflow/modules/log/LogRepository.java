@@ -1,13 +1,14 @@
 package it.algos.vaadflow.modules.log;
 
-import java.util.List;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.List;
+
 import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 
 /**
@@ -29,7 +30,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 @AIScript(sovrascrivibile = false)
 public interface LogRepository extends MongoRepository<Log, String> {
 
+    public List<Log> findByLivello(Livello livello);
 
-//	public Log findByCode(String code);
 
 }// end of class

@@ -468,4 +468,27 @@ public class AArrayService extends AbstractService {
         return matrice;
     }// end of method
 
+    /**
+     * Differenza tra due array
+     *
+     * @param primo   array
+     * @param secondo array
+     *
+     * @return differenza
+     */
+    public  ArrayList differenza(List primo, List secondo) {
+        ArrayList differenza = null;
+
+        if (primo != null && secondo != null) {
+            differenza = new ArrayList();
+            for (Object value : primo) {
+                if (!secondo.contains(value)) {
+                    differenza.add(value);
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return differenza;
+    } // fine del metodo
+
 }// end of singleton class

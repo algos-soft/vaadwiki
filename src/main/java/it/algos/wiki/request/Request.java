@@ -75,13 +75,6 @@ public abstract class Request {
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
     protected void doRequest() {
-        try { // prova ad eseguire il codice
-            urlRequest();
-        } catch (Exception unErrore) { // intercetta l'errore
-            String errore = unErrore.getClass().getSimpleName();
-            valida = false;
-        }// fine del blocco try-catch
-
         if (needContinua) {
             try { // prova ad eseguire il codice
                 urlRequest();
@@ -92,8 +85,15 @@ public abstract class Request {
                     urlRequest();
                 } catch (Exception unErrore) { // intercetta l'errore
                 }// fine del blocco try-catch
-            } // fine del blcco while
-        }// end of if cycle
+            } // fine del blocco while
+        } else {
+            try { // prova ad eseguire il codice
+                urlRequest();
+            } catch (Exception unErrore) { // intercetta l'errore
+                String errore = unErrore.getClass().getSimpleName();
+                valida = false;
+            }// fine del blocco try-catch
+        }// end of if/else cycle
     } // fine del metodo
 
     /**

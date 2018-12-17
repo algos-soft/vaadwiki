@@ -6,17 +6,23 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadwiki.application.WikiCost;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.wiki.WrapCat;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import static it.algos.vaadflow.application.FlowCost.MONGO_PAGE_LIMIT;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
@@ -137,6 +143,33 @@ public class CategoriaService extends AttNazProfCatService {
 
 
     /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
+     * Utilizza, eventualmente, la newEntity() della superclasse, per le property della superclasse <br>
+     *
+     * @param wrap wrapper con pageid e title (obbligatorio)
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Categoria newEntity(WrapCat wrap) {
+        Categoria entity = null;
+
+        entity = findByKeyUnica(wrap.getPageid());
+        if (entity != null) {
+            return findByKeyUnica(wrap.getPageid());
+        }// end of if cycle
+
+        entity = Categoria.builderCategoria()
+                .pageid(wrap.getPageid())
+                .title(wrap.getTitle())
+                .build();
+
+        return (Categoria) creaIdKeySpecifica(entity);
+    }// end of method
+
+
+    /**
      * Property unica (se esiste).
      */
     @Override
@@ -190,28 +223,28 @@ public class CategoriaService extends AttNazProfCatService {
      * @return all ordered entities
      */
     public ArrayList<Long> findPageids() {
-        ArrayList<Long> lista = new ArrayList<>();
-        ArrayList<? extends AEntity> listaPagine = null;
-        int recNum = count();
-        int size = 100;
-        int giri = (recNum / size) + 1;
-        Sort sort = new Sort(Sort.Direction.ASC, "pageid");
+        ArrayList<Long> listaLong = new ArrayList<>();
+        List<? extends AEntity> listaPagine = null;
+        long inizio = System.currentTimeMillis();
+        int numRec = count();
+        String property = "pageid";
+        int size = pref.getInt(MONGO_PAGE_LIMIT);
+        Sort sort = new Sort(Sort.Direction.ASC, property);
 
-        for (int k = 0; k < giri; k++) {
-            listaPagine = findAll(k, size, sort);
-            if (array.isValid(listaPagine)) {
-                for (AEntity entity : listaPagine) {
-                    lista.add(((Categoria) entity).pageid);
-                }// end of for cycle
-            }// end of if cycle
+        for (int k = 0; k < array.numCicli(numRec, size); k++) {
+            try { // prova ad eseguire il codice
+                listaPagine = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Categoria.class);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+                logger.error("categoriaService.findPageids() size=" + size + " k=" + k + " listaPagine=" + listaPagine.size());
+            }// fine del blocco try-catch
+            for (AEntity entity : listaPagine) {
+                listaLong.add(((Categoria) entity).pageid);
+            }// end of for cycle
         }// end of for cycle
 
-//        listaPagine = repository.findAllByOrderByTitleAsc();
-//        for (Categoria cat : listaPagine) {
-//            lista.add(cat.pageid);
-//        }// end of for cycle
-
-        return lista;
+        logger.info("Recuperate " + text.format(listaLong.size()) + " pagine da categoriaService.findPageids() in " + date.deltaText(inizio));
+        return listaLong;
     }// end of method
 
 
@@ -236,15 +269,10 @@ public class CategoriaService extends AttNazProfCatService {
 
         inizio = System.currentTimeMillis();
         listaCat = api.leggeCatCat(nomeCategoria);
-        logger.info("Lettura delle voci di wiki.categoria." + nomeCategoria + " (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
+        logger.info("CAT - Lette le pagine di wiki.categoria." + nomeCategoria + " (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
 
         inizio = System.currentTimeMillis();
-        mongo.drop(Categoria.class);
-        logger.debug("Drop mongoDB.Categoria in " + date.deltaText(inizio));
-
-        inizio = System.currentTimeMillis();
-        mongo.insert(listaCat, Categoria.class);
-        long fine = System.currentTimeMillis();
+        insert(listaCat);
         logger.debug("Insert in mongoDB.Categoria (pageid e title) (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
 
         setLastDownload(inizio);
@@ -275,6 +303,25 @@ public class CategoriaService extends AttNazProfCatService {
         }// end of if cycle
 
         return lista;
+    }// end of method
+
+
+    /**
+     * Inserts multiple documents into a collection.
+     *
+     * @param listaCat lista di elementi di categoria
+     */
+    private void insert(ArrayList<Categoria> listaCat) {
+        ArrayList<Categoria> listaBlocco;
+        int pageLimit = pref.getInt(MONGO_PAGE_LIMIT);
+        int numCicliInsert = array.numCicli(listaCat.size(), pageLimit);
+
+        mongo.drop(Categoria.class);
+        for (int k = 0; k < numCicliInsert; k++) {
+            listaBlocco = array.estraeSublista(listaCat, pageLimit, k + 1);
+            mongo.insert(listaBlocco, Categoria.class);
+        }// end of for cycle
+
     }// end of method
 
 }// end of class

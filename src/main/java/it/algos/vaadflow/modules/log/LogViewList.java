@@ -1,5 +1,6 @@
 package it.algos.vaadflow.modules.log;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
@@ -9,6 +10,7 @@ import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadflow.ui.fields.AComboBox;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -44,14 +46,16 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 @AIScript(sovrascrivibile = false)
 public class LogViewList extends AViewList {
 
-
     /**
      * Icona visibile nel menu (facoltativa)
      * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+
     public static final String IRON_ICON = "history";
+
+    private AComboBox<Livello> comboLivello;
 
 
     /**
@@ -68,6 +72,7 @@ public class LogViewList extends AViewList {
         ((LogViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
+
     /**
      * Le preferenze sovrascritte nella sottoclasse
      */
@@ -81,5 +86,35 @@ public class LogViewList extends AViewList {
         }// end of if cycle
     }// end of method
 
+
+    /**
+     * Placeholder (eventuale, presente di default) SOPRA la Grid
+     * - con o senza campo edit search, regolato da preferenza o da parametro
+     * - con o senza bottone New, regolato da preferenza o da parametro
+     * - con eventuali altri bottoni specifici
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void fixTopLayout() {
+        super.fixTopLayout();
+        topPlaceholder.add(creaPopup());
+    }// end of method
+
+
+    protected Component creaPopup() {
+        comboLivello = new AComboBox();
+        comboLivello.setWidth("8em");
+        comboLivello.setItems(Livello.values());
+        comboLivello.addValueChangeListener(e -> super.updateView());
+
+        return comboLivello;
+    }// end of method
+
+
+    public void updateItems() {
+        Livello livello = (Livello) comboLivello.getValue();
+        items = ((LogService) service).findAllByLivello(livello);
+    }// end of method
 
 }// end of class

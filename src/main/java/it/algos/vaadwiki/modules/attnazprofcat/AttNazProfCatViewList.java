@@ -43,10 +43,13 @@ public class AttNazProfCatViewList extends AViewList {
 
     protected Button uploadStatisticheButton;
 
+    protected Button showCategoriaButton;
+
     protected Button showModuloButton;
 
     protected Button showStatisticheButton;
 
+    protected String titoloCategoria;
     protected String titoloModulo;
 
     protected String titoloPaginaStatistiche;
@@ -58,6 +61,8 @@ public class AttNazProfCatViewList extends AViewList {
     protected String durataLastDownload;
 
     protected boolean usaBottoneUpload = true;
+
+    protected boolean usaBottoneCategoria = false;
 
     protected boolean usaBottoneModulo = true;
 
@@ -97,6 +102,7 @@ public class AttNazProfCatViewList extends AViewList {
         creaDeleteMongo();
         creaDownload();
         creaUpload();
+        creaShowCategoria();
         creaShowModulo();
         creaShowStatistiche();
         addBottoni();
@@ -126,6 +132,12 @@ public class AttNazProfCatViewList extends AViewList {
     }// end of method
 
 
+    private void creaShowCategoria() {
+        showCategoriaButton = new Button("Categoria", new Icon(VaadinIcon.LIST));
+        showCategoriaButton.addClickListener(e -> showWikiCategoria());
+    }// end of method
+
+
     private void creaShowModulo() {
         showModuloButton = new Button("Modulo", new Icon(VaadinIcon.LIST));
         showModuloButton.addClickListener(e -> showWikiModulo());
@@ -144,7 +156,7 @@ public class AttNazProfCatViewList extends AViewList {
      * The dialog will display the given title and message(s), then call
      * <p>
      */
-    protected  void openConfirmDialog() {
+    protected void openConfirmDialog() {
         String message = "Vuoi veramente cancellare TUTTE le entities ?";
         String additionalMessage = "L'operazione non è reversibile";
         ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
@@ -167,6 +179,12 @@ public class AttNazProfCatViewList extends AViewList {
     }// end of method
 
 
+    protected void showWikiCategoria() {
+        String link = "\"" + PATH_WIKI + titoloCategoria + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
     protected void showWikiModulo() {
         String link = "\"" + PATH_WIKI + titoloModulo + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
@@ -186,6 +204,9 @@ public class AttNazProfCatViewList extends AViewList {
             topPlaceholder.add(donwloadMongoButton);
             if (usaBottoneUpload) {
                 topPlaceholder.add(uploadStatisticheButton);
+            }// end of if cycle
+            if (usaBottoneCategoria) {
+                topPlaceholder.add(showCategoriaButton);
             }// end of if cycle
             if (usaBottoneModulo) {
                 topPlaceholder.add(showModuloButton);

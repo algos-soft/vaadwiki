@@ -74,7 +74,7 @@ public class WikiCost {
     public final static String PATH_WIKI_EDIT_ANTE = "https://it.wikipedia.org/w/index.php?title=";
     public final static String PATH_WIKI_EDIT_POST = "&action=edit";
     public final static String CAT_BIO = "catBio";
-    public final static String PAGE_LIMIT = "pageLimit";
+    public final static String WIKI_PAGE_LIMIT = "wikiPageLimit";
     public final static String USA_CHECK_LISTE_PAGEID= "usaCheckListe";
 
 

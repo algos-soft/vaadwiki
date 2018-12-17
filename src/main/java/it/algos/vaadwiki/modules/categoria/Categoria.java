@@ -73,7 +73,7 @@ public class Categoria extends AEntity {
      * il più importante per primo <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed
     @AIField(type = EAFieldType.lungo, widthEM = 3)
     @AIColumn(widthEM = 7)
     public long pageid;
@@ -82,7 +82,7 @@ public class Categoria extends AEntity {
      * title della pagina wiki (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
     @AIColumn(width = 10)

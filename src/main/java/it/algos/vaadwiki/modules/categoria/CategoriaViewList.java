@@ -7,6 +7,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadwiki.application.WikiCost;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
 import it.algos.vaadwiki.task.TaskCategoria;
 import lombok.extern.slf4j.Slf4j;
@@ -84,6 +85,8 @@ public class CategoriaViewList extends AttNazProfCatViewList {
         super.usaBottoneModulo = false;
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = false;
+        super.usaBottoneCategoria = true;
+        super.titoloCategoria = "Categoria:" + pref.getStr(WikiCost.CAT_BIO);
         super.task = taskCategoria;
         super.codeFlagDownload = USA_DAEMON_CATEGORIA;
         super.codeLastDownload = LAST_DOWNLOAD_CATEGORIA;

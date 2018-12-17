@@ -53,8 +53,8 @@ import java.time.LocalDateTime;
 @Builder(builderMethodName = "builderBio")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"wikiTitle", "lastModifica", "lastLettura", "sporca", "nome", "cognome", "sesso", "luogoNato", "giornoNato", "annoNato", "luogoMorto", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "nazionalita"})
-@AIForm(fields = {"pageId", "wikiTitle", "sporca", "tmplBioServer", "nome", "cognome", "sesso", "luogoNato", "giornoNato", "annoNato", "luogoMorto", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita","lastModifica", "lastLettura"})
+@AIList(fields = {"pageid", "wikiTitle", "sporca", "nome", "cognome", "sesso", "luogoNato", "annoNato",   "annoMorto", "attivita", "attivita2", "attivita3", "nazionalita", "luogoMorto","giornoNato","giornoMorto"})
+@AIForm(fields = {"pageid", "wikiTitle", "lastModifica", "lastLettura", "sporca", "tmplBioServer", "nome", "cognome", "sesso", "luogoNato", "giornoNato", "annoNato", "luogoMorto", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita", "lastModifica", "lastLettura"})
 @AIScript(sovrascrivibile = false)
 public class Bio extends AEntity {
 
@@ -69,25 +69,24 @@ public class Bio extends AEntity {
      * il più importante per primo <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed
     @AIField(type = EAFieldType.lungo, widthEM = 3)
-    @AIColumn(width = 55)
+    @AIColumn(widthEM = 9)
     public long pageid;
 
     /**
      * title della pagina wiki (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 18)
     public String wikiTitle;
 
 
     @Lob
     @AIField(type = EAFieldType.textarea, required = true, help = "Template effettivamente presente sul server.")
-    @AIColumn(width = 210)
     public String tmplBioServer;
 
 
@@ -96,7 +95,6 @@ public class Bio extends AEntity {
     //--molto meglio che siano esattamente dello stesso tipo
     @Index
     @AIField(type = EAFieldType.localdatetime, required = true, help = "ultima modifica della voce effettuata sul server wiki")
-    @AIColumn(width = 210)
     public LocalDateTime lastModifica;
 
 
@@ -105,7 +103,6 @@ public class Bio extends AEntity {
     //--molto meglio che siano esattamente dello stesso tipo
     @Index
     @AIField(type = EAFieldType.localdatetime, required = true, help = "ultima lettura/aggiornamento della voce effettuata dal programma VaadBio")
-    @AIColumn(width = 210)
     public LocalDateTime lastLettura;
 
     /**
@@ -115,31 +112,31 @@ public class Bio extends AEntity {
      * dopo un UPDATE ultimaLettura è sicuramente successiva a ultimaModifica ed il flag ridiventa FALSE
      */
     @AIField(type = EAFieldType.checkbox)
-    @AIColumn()
+    @AIColumn(name="H")
     public boolean sporca;
 
     @Index
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 210)
     private String titolo;
 
     @Index
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 10)
     private String nome;
 
     @Index
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 10)
     private String cognome;
 
     @Index
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
+    @AIColumn(name="X",widthEM = 2)
     private String sesso;
 
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
+    @AIColumn(name = "Città", widthEM = 8)
     private String luogoNato;
 
     //    @AIField(type = EAFieldType.text)
@@ -150,7 +147,7 @@ public class Bio extends AEntity {
     private String giornoNato;
 
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
+    @AIColumn(name = "Nato", widthEM = 4)
     private String annoNato;
 
     @AIField(type = EAFieldType.text)
@@ -165,26 +162,26 @@ public class Bio extends AEntity {
     private String giornoMorto;
 
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
+    @AIColumn(name = "Morto", widthEM = 4)
     private String annoMorto;
 
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 8)
     private String attivita;
 
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 8)
     private String attivita2;
 
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 8)
     private String attivita3;
 
     //    @AIField(type = EAFieldType.text)
 //    @AIColumn(width = 210)
 //    private String attivitaAltre;
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 8)
     private String nazionalita;
 
 

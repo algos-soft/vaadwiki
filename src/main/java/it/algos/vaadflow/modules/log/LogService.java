@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
@@ -235,6 +236,61 @@ public class LogService extends AService {
     @Override
     public List<? extends AEntity> findAll() {
         return repository.findAll();
+    }// end of method
+
+
+    public ArrayList<Log> findAllByLivello(Livello livello) {
+        ArrayList<Log> items = null;
+
+        if (livello != null) {
+            switch (livello) {
+                case debug:
+                    items = findAllDebug();
+                    break;
+                case info:
+                    items = findAllInfo();
+                    break;
+                case warn:
+                    items = findAllWarn();
+                    break;
+                case error:
+                    items = findAllError();
+                    break;
+                default:
+                    items = findAllLog();
+                    log.warn("Switch - caso non definito");
+                    break;
+            } // end of switch statement
+        } else {
+            items = findAllLog();
+        }// end of if/else cycle
+
+        return items;
+    }// end of method
+
+
+    public ArrayList<Log> findAllDebug() {
+        return new ArrayList<Log>(repository.findByLivello(Livello.debug));
+    }// end of method
+
+
+    public ArrayList<Log> findAllInfo() {
+        return new ArrayList<Log>(repository.findByLivello(Livello.info));
+    }// end of method
+
+
+    public ArrayList<Log> findAllWarn() {
+        return new ArrayList<Log>(repository.findByLivello(Livello.warn));
+    }// end of method
+
+
+    public ArrayList<Log> findAllError() {
+        return new ArrayList<Log>(repository.findByLivello(Livello.error));
+    }// end of method
+
+
+    public ArrayList<Log> findAllLog() {
+        return new ArrayList<Log>(repository.findAll());
     }// end of method
 
 

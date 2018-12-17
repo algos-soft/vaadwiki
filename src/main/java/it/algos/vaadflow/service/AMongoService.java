@@ -9,6 +9,7 @@ import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static it.algos.vaadflow.service.AService.FIELD_NAME_ORDINE;
 
@@ -191,6 +193,25 @@ public class AMongoService extends AbstractService {
         }// end of if cycle
 
         return entity;
+    }// end of method
+
+
+    /**
+     * Returns only the property of the type.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @return all entities
+     */
+    public ArrayList findAllProperty(String property, Class<? extends AEntity> clazz) {
+        ArrayList lista = null;
+
+        Document projection = new Document(property, 1);
+        Query query = new BasicQuery(new Document(), projection);
+        lista = (ArrayList) mongoOp.find(query, clazz).stream().collect(Collectors.toList());
+
+        return lista;
     }// end of method
 
 

@@ -5,6 +5,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.wiki.Api;
 import it.algos.wiki.LibWiki;
 import it.algos.wiki.TipoRisultato;
+import it.algos.wiki.WrapCat;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -18,7 +19,7 @@ import java.util.HashMap;
  * Adeguato a SprinBoot il 10 ago 2018
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RequestWikiCat extends RequestWiki {
 
 
@@ -37,9 +38,13 @@ public class RequestWikiCat extends RequestWiki {
     //--stringa per il successivo inizio della lista
     private static String CONTINUE = "&cmcontinue=";
 
+
     // liste di pagine della categoria (namespace=0)
     private ArrayList<Long> listaVociPageids;
+
     private ArrayList<String> listaVociTitles;
+
+    private ArrayList<WrapCat> listaWrapCat;
 
     private boolean debug = false;
 
@@ -131,6 +136,7 @@ public class RequestWikiCat extends RequestWiki {
         super.doRequest();
     } // fine del metodo
 
+
     /**
      * Costruisce la stringa della request
      * Domain per l'URL dal titolo della pagina o dal pageid (a seconda della sottoclasse)
@@ -158,6 +164,7 @@ public class RequestWikiCat extends RequestWiki {
         return domain;
     } // fine del metodo
 
+
     /**
      * Elabora la risposta
      * <p>
@@ -171,25 +178,26 @@ public class RequestWikiCat extends RequestWiki {
         super.elaboraRisposta(rispostaRequest);
         String warningMessage = "";
 
-        mappa = LibWiki.getMappaWrap(rispostaRequest);
-
-        if (mappa == null) {
-            if (Api.esiste("Category:" + wikiTitle)) {
-                risultato = TipoRisultato.letta;
-            } else {
-                risultato = TipoRisultato.nonTrovata;
-            }// end of if/else cycle
-            valida = false;
-            return;
-        }// fine del blocco if
-
-        if (mappa.get(LibWiki.KEY_VOCE_PAGEID) != null && mappa.get(LibWiki.KEY_VOCE_PAGEID).size() > 0) {
-            this.listaVociPageids = array.somma(this.listaVociPageids, mappa.get(LibWiki.KEY_VOCE_PAGEID));
-        }// end of if cycle
-
-        if (mappa.get(LibWiki.KEY_VOCE_TITLE) != null && mappa.get(LibWiki.KEY_VOCE_TITLE).size() > 0) {
-            this.listaVociTitles = array.somma(this.listaVociTitles, mappa.get(LibWiki.KEY_VOCE_TITLE));
-        }// end of if cycle
+        listaWrapCat = array.somma(listaWrapCat, LibWiki.getListaWrapCat(rispostaRequest));
+//        mappa = LibWiki.getMappaWrap(rispostaRequest);
+//
+//        if (mappa == null) {
+//            if (Api.esiste("Category:" + wikiTitle)) {
+//                risultato = TipoRisultato.letta;
+//            } else {
+//                risultato = TipoRisultato.nonTrovata;
+//            }// end of if/else cycle
+//            valida = false;
+//            return;
+//        }// fine del blocco if
+//
+//        if (mappa.get(LibWiki.KEY_VOCE_PAGEID) != null && mappa.get(LibWiki.KEY_VOCE_PAGEID).size() > 0) {
+//            this.listaVociPageids = array.somma(this.listaVociPageids, mappa.get(LibWiki.KEY_VOCE_PAGEID));
+//        }// end of if cycle
+//
+//        if (mappa.get(LibWiki.KEY_VOCE_TITLE) != null && mappa.get(LibWiki.KEY_VOCE_TITLE).size() > 0) {
+//            this.listaVociTitles = array.somma(this.listaVociTitles, mappa.get(LibWiki.KEY_VOCE_TITLE));
+//        }// end of if cycle
 
         risultato = TipoRisultato.letta;
         valida = true;
@@ -202,12 +210,19 @@ public class RequestWikiCat extends RequestWiki {
 
     } // fine del metodo
 
+
     public ArrayList<Long> getListaVociPageids() {
         return listaVociPageids;
     }// end of getter method
 
+
     public ArrayList<String> getListaVociTitles() {
         return listaVociTitles;
+    }// end of getter method
+
+
+    public ArrayList<WrapCat> getListaWrapCat() {
+        return listaWrapCat;
     }// end of getter method
 
 } // fine della classe

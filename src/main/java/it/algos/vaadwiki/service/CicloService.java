@@ -64,6 +64,7 @@ public class CicloService extends ABioService {
         ArrayList<Long> listaPageidsMongoBio;
         ArrayList<Long> listaPageidsEccedenti;
         ArrayList<Long> listaPageidsMancanti;
+        long inizio;
 
         //--Il ciclo necessita del login valido come bot per il funzionamento normale
         //--oppure del flag USA_CICLI_ANCHE_SENZA_BOT per un funzionamento ridotto
@@ -83,7 +84,7 @@ public class CicloService extends ABioService {
 
         //--download del modulo categoria
         //--crea una collezione Categoria, 'specchio' sul mongoDB di quella sul server wiki
-        categoriaService.download();
+//        categoriaService.download();
 
         //--recupera la lista dei pageids dalla collezione Categoria
         listaPageidsMongoCategoria = categoriaService.findPageids();
@@ -92,19 +93,24 @@ public class CicloService extends ABioService {
         listaPageidsMongoBio = bioService.findPageids();
 
         //--elabora le liste delle differenze per la sincronizzazione
-        listaPageidsEccedenti = LibWiki.delta(listaPageidsMongoBio, listaPageidsMongoCategoria);
+        inizio = System.currentTimeMillis();//@todo provvisorio
+        listaPageidsEccedenti = array.differenza(listaPageidsMongoBio, listaPageidsMongoCategoria);
+        logger.info("Calcolate " + text.format(listaPageidsEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
 
         //--Cancella dal mongoDB tutte le entities non più presenti nella categoria
         deleteService.esegue(listaPageidsEccedenti);
 
         //--elabora le liste delle differenze per la sincronizzazione
+        inizio = System.currentTimeMillis();//@todo provvisorio
         listaPageidsMancanti = LibWiki.delta(listaPageidsMongoCategoria, listaPageidsMongoBio);
+        logger.info("Calcolate " + text.format(listaPageidsMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
+
 
         //--Scarica dal server la lista di voci mancanti e crea le nuove entities sul mongoDB Bio
         newService.esegue(listaPageidsMancanti);
 
         //--aggiorna tutte le entities mongoDB Bio che sono stati modificate sul server wiki DOPO l'ultima lettura
-        updateService.esegue();
+//        updateService.esegue();
 
 //        --elabora i nuovi records
 //        elaboraService.esegue(listaVociMancanti);

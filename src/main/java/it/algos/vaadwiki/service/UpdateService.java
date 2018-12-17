@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import static it.algos.vaadwiki.application.WikiCost.PAGE_LIMIT;
+import static it.algos.vaadwiki.application.WikiCost.WIKI_PAGE_LIMIT;
 
 /**
  * Project vaadbio2
@@ -86,7 +86,7 @@ public class UpdateService extends ABioService {
         int numVociModificate = 0;
         long inizio = System.currentTimeMillis();
         int recNum = bioService.count();
-        int pageLimit = pref.getInt(PAGE_LIMIT);
+        int pageLimit = pref.getInt(WIKI_PAGE_LIMIT);
         int numCicliLetturaPagine = (recNum / pageLimit) + 1;
         Sort sort = new Sort(Sort.Direction.ASC, "pageid");
 

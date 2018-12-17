@@ -6,6 +6,7 @@ import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.company.Company;
 import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -117,6 +118,15 @@ public interface IAService {
      */
     public List<? extends AEntity> findAll(int offset, int size, Sort sort);
 
+    /**
+     * Returns only the property of the type.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @return all entities
+     */
+    public ArrayList findAllProperty(String property, Class<? extends AEntity> clazz);
 
     /**
      * Fetches the entities whose 'main text property' matches the given filter text.

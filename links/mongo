@@ -13,3 +13,9 @@ https://lishman.io/object-mapping-with-spring-data-mongodb
 https://stackoverflow.com/questions/35112165/mongodb-bulk-insert-bulk-insert-vs-insert-multiple-insert
 
 https://stackoverflow.com/questions/18566590/remove-multiple-documents-from-mongo-in-a-single-query
+
+
+==Find property==
+https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/
+http://mongodb.github.io/mongo-java-driver/3.4/driver/getting-started/quick-start/
+https://stackoverflow.com/questions/47903629/specify-single-field-projection-in-spring-mongodb-query

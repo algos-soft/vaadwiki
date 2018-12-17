@@ -1,8 +1,6 @@
 package it.algos.vaadwiki.service;
 
-import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.application.WikiCost;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.Page;
@@ -12,6 +10,8 @@ import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import static it.algos.vaadwiki.application.WikiCost.WIKI_PAGE_LIMIT;
 
 /**
  * Project vaadbio2
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 public class PageService extends ABioService {
 
 
-
     /**
      * Scarica una lista di nuove pagine (long) dal server wiki e le memorizza nel mongoDB <br>
      * <p>
@@ -39,8 +38,9 @@ public class PageService extends ABioService {
      */
     public DownloadResult downloadPagine(ArrayList<Long> listaVociDaScaricare) {
         DownloadResult result = new DownloadResult(listaVociDaScaricare);
+        long inizio = System.currentTimeMillis();//@todo provvisorio
         ArrayList<Long> bloccoPageids;
-        int dimBloccoLettura = pref.getInt(WikiCost.PAGE_LIMIT);
+        int dimBloccoLettura = pref.getInt(WIKI_PAGE_LIMIT);
         int numCicliLetturaPagine;
 
         if (listaVociDaScaricare != null && listaVociDaScaricare.size() > 0) {
@@ -48,6 +48,7 @@ public class PageService extends ABioService {
             for (int k = 0; k < numCicliLetturaPagine; k++) {
                 bloccoPageids = array.estraeSublistaLong(listaVociDaScaricare, dimBloccoLettura, k + 1);
                 result = downloadSingoloBlocco(result, bloccoPageids);
+                logger.info("Registrato blocco n. " + k + " in " + date.deltaText(inizio) + " dall'inizio");//@todo provvisorio
             }// end of for cycle
         }// end of if cycle
 
@@ -89,6 +90,7 @@ public class PageService extends ABioService {
 
         return result;
     }// end of method
+
 
     public Bio creaBio(Page page) {
         Bio entity = null;

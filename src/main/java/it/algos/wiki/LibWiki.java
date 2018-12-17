@@ -28,29 +28,53 @@ public abstract class LibWiki {
 
     //--preferenza
     public static final String DEBUG = "debug";
+
     public static final String NUM_RECORDS_INDEX_BIO = "numRecordsIndexBio";
+
     public static final String USA_FLASH_TRUE_DOWNLOAD = "usaFlashTrueDownload";
+
     public static final String SEND_MAIL_ERROR = "sendMailError";
+
     public static final String SEND_MAIL_WARN = "sendMailWarn";
+
     public static final String SEND_MAIL_INFO = "sendMailInfo";
+
     public static final String LOG_ERROR = "logError";
+
     public static final String LOG_WARN = "logWarn";
+
     public static final String LOG_INFO = "logInfo";
+
     public static final String NEW_BIO = "NewBio";
+
     public static final String REF = "<ref>";
+
     public static final String NOTE = "<!--";
+
     public static final String PARAGRAFO = "==";
+
     public static final String QUADRA_INI = "[";
+
     public static final String QUADRE_INI = QUADRA_INI + QUADRA_INI;
+
     public static final String QUADRA_END = "]";
+
     public static final String QUADRE_END = QUADRA_END + QUADRA_END;
+
     public static final String GRAFFA_INI = "{";
+
     public static final String GRAFFE_INI = GRAFFA_INI + GRAFFA_INI;
+
     public static final String GRAFFA_END = "}";
+
     public static final String GRAFFE_END = GRAFFA_END + GRAFFA_END;
+
     public static final String REF_INI = "<ref>";
+
     public static final String REF_END = "</ref>";
+
     public static final String BOLD = "'''";
+
     public static final String BIO = Cost.TAG_WIKI_BIO;
 
     // tag per la stringa vuota
@@ -62,57 +86,105 @@ public abstract class LibWiki {
 
     // key to store objects in a HashMap
     public static final String KEY_PAGINE_VALIDE = "pagineValide";
+
     public static final String KEY_PAGINE_MANCANTI = "pagineMancanti";
+
     public static final String TOKEN = "csrftoken";
+
     public static final String EDIT = "edit";
+
     public static final String RESULT = "result";
+
     public static final String SUCCESS = "Success";
+
     public static final String NOCHANGE = "nochange";
+
     public static final String OLD_REV_ID = "oldrevid";
+
     public static final String NEW_REV_ID = "newrevid";
+
     public static final String NEW_TIME_STAMP = "newtimestamp";
+
     public static final String CONTENT_MODEL = "contentmodel";
+
     public static final String NS = "ns";
+
     public static final String PAGEID = "pageid";
+
     public static final String TITLE = "title";
+
     public static final String BATCH = "batchcomplete";
+
     public static final String QUERY = "query";
+
     public static final String CODE = "code";
+
     public static final String DOCREF = "docref";
+
     public static final String INFO = "info";
+
     public static final String MUST_BE_POSTED = "mustbeposted";
 
     public static final String KEY_VOCE_PAGEID = "keyvocepageid";
+
     public static final String KEY_VOCE_TITLE = "keyvocetitle";
+
     public static final String KEY_CAT_PAGEID = "keycatpageid";
+
     public static final String KEY_CAT_TITLE = "keycattitle";
+
     public static final String WARNINGS = "warnings";
+
     public static final String ERROR = "error";
+
     public static final String CATEGORY_MEMBERS = "categorymembers";
+
     private static final String PAGES = "pages";
+
     private static final String REVISIONS = "revisions";
+
     private static final String TOKENS = "tokens";
+
     private static final String TIMESTAMP = "timestamp";
+
     private static final String BACK_LINKS = "backlinks";
+
     private static final String QUERY_CONTINUE = "query-continue"; // deprecated
+
     private static final String CONTINUE = "continue";
+
     private static final String CM_CONTINUE = "cmcontinue";
+
     private static final String LOGIN = "login";
+
     private static final String MISSING = "missing";
+
     private static final String VIR = ",";
+
     private static final String APICI = "\"";
+
     private static final String PUNTI = ":";
+
     private static final String SPAZIO = " ";
+
     private static final String PIPE = "|";
+
     private static final String A_CAPO = "\n";
+
     public static Date DATA_NULLA = new Date(70, 0, 1);
+
     /* caratteri finali per la stringa di edittoken da rinviare al server */
     public static String END_TOKEN = "%2B%5C";
+
     // patch per la key del parametro testo
     private static String PATCH_OLD = "*";
+
     private static String PATCH_NEW = "text";
+
     private static String GRIGIO_SCURO = "style=\"background-color:#EFEFEF;\"";
+
     private static String GRIGIO_MEDIO = "style=\"background-color:#CCC;\"";
+
     private static String TXT_ALIGN = "style=\"text-align: right;\"" + SPAZIO;
 
     @Autowired
@@ -158,6 +230,7 @@ public abstract class LibWiki {
 //        return valueObj
 //    } // fine del metodo
 
+
     /**
      * Restituisce il numero di occorrenze di un tag nel testo.
      * Il tag non viene trimmato ed è sensibile agli spazi prima e dopo
@@ -187,6 +260,7 @@ public abstract class LibWiki {
         return numTag;
     } // fine del metodo
 
+
     /**
      * Restituisce il numero di occorrenze di una coppia di graffe iniziali nel testo.
      *
@@ -199,6 +273,7 @@ public abstract class LibWiki {
         return getNumTag(testo, GRAFFE_INI);
     } // fine del metodo
 
+
     /**
      * Restituisce il numero di occorrenze di una coppia di graffe finali nel testo.
      *
@@ -210,6 +285,7 @@ public abstract class LibWiki {
     public static int getNumGraffeEnd(String testo) {
         return getNumTag(testo, GRAFFE_END);
     } // fine del metodo
+
 
     /**
      * Controlla che le occorrenze del tag iniziale e di quello finale si pareggino all'interno del testo.
@@ -236,6 +312,7 @@ public abstract class LibWiki {
         return pari;
     } // fine del metodo
 
+
     /**
      * Controlla che le occorrenze delle graffe iniziali e finali si pareggino all'interno del testo.
      * Ordine ed annidamento NON considerato
@@ -247,6 +324,7 @@ public abstract class LibWiki {
     public static boolean isPariGraffe(String testo) {
         return isPariTag(testo, GRAFFE_INI, GRAFFE_END);
     } // fine del metodo
+
 
     /**
      * Elimina la testa iniziale della stringa, se esiste. <br>
@@ -277,6 +355,7 @@ public abstract class LibWiki {
         return uscita;
     } // fine del metodo
 
+
     /**
      * Elimina la coda terminale della stringa, se esiste.
      * <p>
@@ -305,6 +384,7 @@ public abstract class LibWiki {
 
         return uscita;
     } // fine del metodo
+
 
     /**
      * Sostituisce tutte le occorrenze.
@@ -381,6 +461,7 @@ public abstract class LibWiki {
         return templateOut;
     } // fine del metodo
 
+
     /**
      * Estrae il testo di un template dal testo completo della voce
      * Esamina il PRIMO template che trova
@@ -409,6 +490,7 @@ public abstract class LibWiki {
         return template;
     } // fine del metodo
 
+
     /**
      * Estrae il testo di un template dal testo completo della voce
      * Esamina il PRIMO template che trova
@@ -434,7 +516,7 @@ public abstract class LibWiki {
             // patch per nome template minuscolo o maiuscolo
             // deve terminare con 'aCapo' oppure 'return' oppure 'tab' oppure '|'(pipe) oppure 'spazio'(u0020)
             if (tag.equals("Bio")) {
-                tag="[Bb]io[\n\r\t\\|\u0020]";
+                tag = "[Bb]io[\n\r\t\\|\u0020]";
             }// end of if cycle
 
             // Create a Pattern text
@@ -471,6 +553,7 @@ public abstract class LibWiki {
         return template;
     }// fine del metodo
 
+
     /**
      * Estrae il testo di un template dal testo completo della voce
      * Esamina il PRIMO template che trova
@@ -486,6 +569,7 @@ public abstract class LibWiki {
         return template.trim();
     }// fine del metodo
 
+
     /**
      * Estrae il testo di un template BIO dal testo completo della voce
      * Esamina il PRIMO template che trova (ce ne dovrebbe essere solo uno)
@@ -498,6 +582,7 @@ public abstract class LibWiki {
     public static String estraeTmplBioCompresi(String testo) {
         return estraeTmplCompresi(testo, BIO);
     }// fine del metodo
+
 
     /**
      * Estrae il testo di un template BIO dal testo completo della voce
@@ -524,6 +609,7 @@ public abstract class LibWiki {
         return creaMappaQuery(textJSON, 0);
     }// fine del metodo
 
+
     /**
      * Crea una mappa standard (valori reali) dal testo JSON di una pagina action=query
      *
@@ -533,7 +619,7 @@ public abstract class LibWiki {
      */
     public static HashMap<String, Object> creaMappaQuery(String textJSON, int pos) {
         HashMap<String, Object> mappa = null;
-        JSONObject objectAll=null;
+        JSONObject objectAll = null;
         boolean batchcomplete = false;
         JSONObject objectQuery = null;
         JSONObject objectToken = null;
@@ -543,7 +629,7 @@ public abstract class LibWiki {
         String token = "";
 
         //--recupera i due oggetti al livello root del testo (batchcomplete e query)
-        objectAll= (JSONObject)JSONValue.parse(textJSON);
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
 
         //--controllo
         if (objectAll == null) {
@@ -666,6 +752,7 @@ public abstract class LibWiki {
         return mappa;
     } // fine del metodo
 
+
     /**
      * Crea una mappa standard (valori reali) dal testo JSON di una pagina action=move
      *
@@ -757,6 +844,7 @@ public abstract class LibWiki {
         return mappa;
     } // fine del metodo
 
+
     /**
      * Crea una mappa token (valori String) dal testo JSON di una preliminary request
      *
@@ -801,6 +889,7 @@ public abstract class LibWiki {
 
         return mappa;
     } // fine del metodo
+
 
     /**
      * Crea una mappa standard (valori reali) dal testo JSON di una pagina
@@ -912,6 +1001,7 @@ public abstract class LibWiki {
         return mappa;
     } // fine del metodo
 
+
     /**
      * Correzioni/aggiunte per eventuali patch
      * Il parametro ''anon'' è presente nel ritorno della Request SOLO se l'ultimo utente è un IP
@@ -934,6 +1024,7 @@ public abstract class LibWiki {
         return mappa;
     } // fine del metodo
 
+
     /**
      * Crea una mappa standard (valori String) dalle mappe JSON parziali
      *
@@ -944,6 +1035,7 @@ public abstract class LibWiki {
     public static HashMap<String, Object> mixJSON(boolean batchcomplete, String token) {
         return mixJSON(batchcomplete, null, null, token);
     } // fine del metodo
+
 
     /**
      * Crea una mappa standard (valori String) dalle mappe JSON parziali
@@ -957,6 +1049,7 @@ public abstract class LibWiki {
     public static HashMap<String, Object> mixJSON(boolean batchcomplete, JSONArray arrayPages, JSONArray arrayRev, String token) {
         return mixJSON(batchcomplete, arrayPages, arrayRev, token, 0);
     } // fine del metodo
+
 
     /**
      * Crea una mappa standard (valori String) dalle mappe JSON parziali
@@ -1004,6 +1097,7 @@ public abstract class LibWiki {
         return mappa;
     } // fine del metodo
 
+
     /**
      * Estrae un (eventuale) messaggio di errore dal testo JSON di una pagina
      *
@@ -1037,6 +1131,7 @@ public abstract class LibWiki {
         return errore;
     } // fine del metodo
 
+
     /**
      * Estrae un (eventuale) messaggio di errore dal testo JSON di un login
      *
@@ -1064,6 +1159,7 @@ public abstract class LibWiki {
 
         return errore;
     } // fine del metodo
+
 
     /**
      * Estrae un (eventuale) token testo JSON di una preliminaryRequest
@@ -1101,6 +1197,7 @@ public abstract class LibWiki {
         return edittokenOut;
     } // fine del metodo
 
+
     /**
      * Crea una mappa standard (valori String) dal testo JSON di una pagina
      *
@@ -1127,6 +1224,7 @@ public abstract class LibWiki {
 
         return mappa;
     } // fine del metodo
+
 
     /**
      * Crea una mappa standard (valori String) da una mappa JSON di una pagina
@@ -1190,7 +1288,7 @@ public abstract class LibWiki {
         if (setJson.size() == 1) {
             for (Object obj : setJson) {
                 if (obj instanceof String) {
-                    mappaGrezza = (JSONObject) mappaJson.get((String)obj);
+                    mappaGrezza = (JSONObject) mappaJson.get((String) obj);
                 }// fine del blocco if
             } // fine del ciclo for-each
         } else {
@@ -1210,6 +1308,7 @@ public abstract class LibWiki {
         return mappaOut;
     } // fine del metodo
 
+
     /**
      * Estrae una mappa standard da un JSONArray
      * Considera SOLO i valori della Enumeration PagePar
@@ -1221,6 +1320,7 @@ public abstract class LibWiki {
     private static HashMap<String, Object> estraeMappaJsonPar(JSONArray arrayJson) {
         return estraeMappaJsonPar(arrayJson, 0);
     } // fine del metodo
+
 
     /**
      * Estrae una mappa standard da un JSONArray
@@ -1255,6 +1355,7 @@ public abstract class LibWiki {
 
         return mappaOut;
     } // fine del metodo
+
 
     /**
      * Estrae una mappa standard da un JSONArray
@@ -1305,6 +1406,7 @@ public abstract class LibWiki {
         return mappaOut;
     } // fine del metodo
 
+
     /**
      * Crea una lista di pagine (valori pageids) dal titolo di una categoria
      */
@@ -1336,6 +1438,7 @@ public abstract class LibWiki {
         return catObj;
     } // fine del metodo
 
+
     /**
      * Crea un array delle pagine back dal testo JSON di una pagina
      *
@@ -1352,6 +1455,7 @@ public abstract class LibWiki {
 
         return backObj;
     } // fine del metodo
+
 
     /**
      * Crea una lista di pagine (valori pageids) da un array di oggetti Json
@@ -1415,6 +1519,7 @@ public abstract class LibWiki {
         return lista;
     } // fine del metodo
 
+
     /**
      * Crea una lista di pagine (valori title) da un array di oggetti Json
      *
@@ -1477,6 +1582,7 @@ public abstract class LibWiki {
         return lista;
     } // fine del metodo
 
+
     /**
      * Crea una lista di pagine (valori pageids) dal testo JSON di una categoria
      *
@@ -1496,6 +1602,7 @@ public abstract class LibWiki {
 
         return lista;
     } // fine del metodo
+
 
     /**
      * Crea una lista di pagine (valori title) dal testo JSON di una categoria
@@ -1540,6 +1647,7 @@ public abstract class LibWiki {
         }// end of if/else cycle
     } // fine del metodo
 
+
     /**
      * Crea una lista di voci back (valori pageids) dal testo JSON di una pagina puntata
      *
@@ -1561,6 +1669,7 @@ public abstract class LibWiki {
             return null;
         }// end of if/else cycle
     } // fine del metodo
+
 
     /**
      * Crea una lista di pagine back (valori title) dal testo JSON di una pagina puntata
@@ -1584,6 +1693,7 @@ public abstract class LibWiki {
         }// end of if/else cycle
     } // fine del metodo
 
+
     /**
      * Crea una lista di voci back (valori title) dal testo JSON di una pagina puntata
      *
@@ -1606,6 +1716,7 @@ public abstract class LibWiki {
         }// end of if/else cycle
     } // fine del metodo
 
+
     /**
      * Crea una lista di wrapper dal testo JSON di una pagina per le categorie
      *
@@ -1621,6 +1732,7 @@ public abstract class LibWiki {
 
         return creaListaWrapJson(catObj);
     } // fine del metodo
+
 
     /**
      * Crea una lista di wrapper da un JSONArray per le categorie
@@ -1709,6 +1821,25 @@ public abstract class LibWiki {
         return mappa;
     } // fine del metodo
 
+
+    /**
+     * Crea una lista di wrapper dal testo JSON di una pagina per le categorie
+     *
+     * @param textJSON in ingresso
+     *
+     * @return lista di wrapper categorie
+     */
+    public static ArrayList<WrapCat> getListaWrapCat(String textJSON) {
+        ArrayList<WrapCat> lista = null;
+
+        if (textJSON != null && !textJSON.equals("")) {
+            lista = creaListaWrapJson(textJSON);
+        }// end of if cycle
+
+        return lista;
+    } // fine del metodo
+
+
     /**
      * Crea una lista di wrapper dal testo JSON di una pagina per le categorie
      * <p>
@@ -1721,11 +1852,7 @@ public abstract class LibWiki {
      */
     public static HashMap<String, ArrayList> getMappaWrap(String textJSON) {
         HashMap<String, ArrayList> mappa = null;
-        ArrayList<WrapCat> lista = null;
-
-        if (textJSON != null && !textJSON.equals("")) {
-            lista = creaListaWrapJson(textJSON);
-        }// end of if cycle
+        ArrayList<WrapCat> lista = getListaWrapCat(textJSON);
 
         if (lista != null && lista.size() > 0) {
             mappa = getMappaWrap(lista);
@@ -1765,6 +1892,7 @@ public abstract class LibWiki {
 
         return arrayPages;
     } // fine del metodo
+
 
     /**
      * Crea una mappa standard (valori reali) da una singola page JSON di una multi-pagina action=query
@@ -1806,6 +1934,7 @@ public abstract class LibWiki {
         return mappa;
     } // fine del metodo
 
+
     /**
      * Controlla se esiste un warnings nella risposta del server
      *
@@ -1826,6 +1955,7 @@ public abstract class LibWiki {
 
         return status;
     } // fine del metodo
+
 
     /**
      * Estrae il valore del parametro continue dal testo JSON di una pagina
@@ -1872,6 +2002,7 @@ public abstract class LibWiki {
 //        return valore;
 //    } // fine del metodo
 
+
     /**
      * Converte i typi di una mappa secondo i parametri PagePar
      * <p>
@@ -1894,6 +2025,7 @@ public abstract class LibWiki {
         return lista;
     } // fine del metodo
 
+
     /**
      * Crea una stringa di testo, con tutti i valori della lista, separati dal pipe
      *
@@ -1914,6 +2046,7 @@ public abstract class LibWiki {
         return testo;
     } // fine del metodo
 
+
     /**
      * Converte il valore stringa del timestamp in un timestamp
      * Formato: 2015-06-30T10:18:05Z
@@ -1925,6 +2058,7 @@ public abstract class LibWiki {
     public static Timestamp convertTxtTime(String timestampText) {
         return new Timestamp(convertTxtData(timestampText).getTime());
     } // fine del metodo
+
 
     /**
      * Converte il valore stringa della data in una data
@@ -2012,13 +2146,16 @@ public abstract class LibWiki {
         return new Date(anno, mese, giorno, ora, minuto, secondo);
     }// fine del metodo
 
+
     private static String apici(String entrata) {
         return APICI + entrata + APICI;
     }// fine del metodo
 
+
     private static String graffe(String entrata) {
         return GRAFFA_INI + entrata + GRAFFA_END;
     }// fine del metodo
+
 
     /**
      * Converte il valore stringa nel tipo previsto dal parametro PagePar
@@ -2087,6 +2224,7 @@ public abstract class LibWiki {
         return valueOut;
     } // fine del metodo
 
+
     /**
      * Converte il valore stringa nel tipo previsto dal parametro PagePar
      *
@@ -2098,6 +2236,7 @@ public abstract class LibWiki {
     private static Object fixValueMap(String key, Object valueIn) {
         return fixValueMap(PagePar.getPar(key), valueIn);
     } // fine del metodo
+
 
     /**
      * Differenza tra due array
@@ -2121,6 +2260,7 @@ public abstract class LibWiki {
 
         return differenza;
     } // fine del metodo
+
 
     /**
      * Regola i parametri della tavola in base alla mappa letta dal server
@@ -2173,6 +2313,7 @@ public abstract class LibWiki {
         Page pagina = Api.leggePage(title);
         download(pagina);
     }// end of method
+
 
     /**
      * Legge dal server wiki
@@ -2237,6 +2378,7 @@ public abstract class LibWiki {
         return stringaOut.trim();
     } // fine del metodo
 
+
     /**
      * Elimina (eventuali) doppie quadre in testa e coda della stringa.
      * Funziona solo se le quadre sono esattamente in TESTA ed in CODA alla stringa
@@ -2283,6 +2425,7 @@ public abstract class LibWiki {
 
         return stringaOut.trim();
     } // fine del metodo
+
 
     /**
      * Elimina (eventuali) doppi uguali (paragrafo) in testa e coda della stringa.
@@ -2358,6 +2501,7 @@ public abstract class LibWiki {
         return stringaOut.trim();
     } // fine del metodo
 
+
     /**
      * Aggiunge doppie quadre in testa e coda alla stringa.
      * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
@@ -2372,6 +2516,7 @@ public abstract class LibWiki {
     public static String setLink(String paginaWiki) {
         return setQuadre(paginaWiki);
     } // fine del metodo
+
 
     /**
      * Aggiunge doppie quadre in testa e coda alla stringa.
@@ -2415,6 +2560,7 @@ public abstract class LibWiki {
         return stringaOut.trim();
     } // fine del metodo
 
+
     /**
      * Aggiunge tripli apici (grassetto) in testa ed in coda al numero.
      *
@@ -2425,6 +2571,7 @@ public abstract class LibWiki {
     public static String setBold(Number numero) {
         return setBold(numero + "");
     } // fine del metodo
+
 
     /**
      * Aggiunge doppi uguali in testa e coda alla stringa per creare un paragrafo.
@@ -2471,6 +2618,7 @@ public abstract class LibWiki {
         return stringaOut.trim();
     } // fine del metodo
 
+
     /**
      * Aggiunge il tag ref in testa ed in coda alla stringa
      * Se arriva una stringa vuota, restituisce una stringa vuota
@@ -2489,6 +2637,7 @@ public abstract class LibWiki {
 
         return stringaOut.trim();
     } // fine del metodo
+
 
     /**
      * Crea una lista standard (valori String) dewlle chiavi del testo JSON di una pagina
@@ -2512,6 +2661,7 @@ public abstract class LibWiki {
 
         return listaKeys;
     } // fine del metodo
+
 
     /**
      * Sommario standard in funzione della versione
@@ -2539,6 +2689,7 @@ public abstract class LibWiki {
         return summary;
     } // fine del metodo
 
+
     /**
      * Sommario standard in funzione della versione
      *
@@ -2547,6 +2698,7 @@ public abstract class LibWiki {
     public static String getSummary(String dettaglio) {
         return getSummary() + " " + dettaglio;
     } // fine del metodo
+
 
     /**
      * Legge il modulo dal testo della pagina
@@ -2575,6 +2727,7 @@ public abstract class LibWiki {
         return testoModulo.trim();
     } // fine del metodo
 
+
     /**
      * Legge il modulo dalla pagina
      *
@@ -2595,6 +2748,7 @@ public abstract class LibWiki {
 
         return testoModulo.trim();
     } // fine del metodo
+
 
     /**
      * Legge la mappa del modulo della pagina
@@ -2653,6 +2807,7 @@ public abstract class LibWiki {
 
         return mappa;
     } // fine del metodo
+
 
     /**
      * Suddivide la lista in due colonne.
@@ -2825,6 +2980,7 @@ public abstract class LibWiki {
         return header;
     }// fine del metodo
 
+
     //    @SuppressWarnings("all")
     private static String creaTableTitoli(HashMap mappa) {
         String titoli = VUOTA;
@@ -2859,6 +3015,7 @@ public abstract class LibWiki {
         return titoli.trim();
     }// fine del metodo
 
+
     @SuppressWarnings("all")
     private static ArrayList<String> getTitoli(HashMap mappa) {
         ArrayList<String> listaTitoli = null;
@@ -2874,6 +3031,7 @@ public abstract class LibWiki {
 
         return listaTitoli;
     }// fine del metodo
+
 
     @SuppressWarnings("all")
     private static ArrayList<ArrayList> getRighe(HashMap mappa) {
@@ -2905,6 +3063,7 @@ public abstract class LibWiki {
         return listaRighe;
     }// fine del metodo
 
+
     @SuppressWarnings("all")
     private static boolean getNumerazioneProgressiva(HashMap mappa) {
         boolean numerazioneProgressiva = true;
@@ -2917,6 +3076,7 @@ public abstract class LibWiki {
 
         return numerazioneProgressiva;
     }// fine del metodo
+
 
     @SuppressWarnings("all")
     private static boolean getTableSortable(HashMap mappa) {
@@ -2934,6 +3094,7 @@ public abstract class LibWiki {
 
         return tableSortable;
     }// fine del metodo
+
 
     @SuppressWarnings("all")
     private static ArrayList<Boolean> getColonneSort(HashMap mappa) {
@@ -2967,6 +3128,7 @@ public abstract class LibWiki {
 
         return listaColonneDestra;
     }// fine del metodo
+
 
     private static String creaTableSingoloTitolo(HashMap mappa, String nome, boolean colonnaSortable, boolean coloriScuri) {
         String titolo = VUOTA;
@@ -3013,6 +3175,7 @@ public abstract class LibWiki {
         return titolo;
     }// fine del metodo
 
+
     private static String creaTableBody(HashMap mappa) {
         String body = VUOTA;
         ArrayList<ArrayList> listaRighe = getRighe(mappa);
@@ -3042,6 +3205,7 @@ public abstract class LibWiki {
         return body.trim();
     }// fine del metodo
 
+
     private static String rigaProg(int pos, String tagCampo) {
         String body = VUOTA;
 
@@ -3058,6 +3222,7 @@ public abstract class LibWiki {
 
         return body.trim();
     }// fine del metodo
+
 
     /**
      * I numeri sono sempre allineati a destra
@@ -3220,6 +3385,7 @@ public abstract class LibWiki {
         return cookiesTxt;
     } // fine del metodo
 
+
     /**
      * Allega i cookies alla request (upload)
      *
@@ -3233,6 +3399,7 @@ public abstract class LibWiki {
             urlConn.setRequestProperty("Cookie", cookiesTxt);
         }// fine del blocco if
     } // fine del metodo
+
 
     /**
      * Prepara una riga di una lista
@@ -3251,6 +3418,7 @@ public abstract class LibWiki {
         return rigaOut;
     } // fine del metodo
 
+
     /**
      * Prepara una riga di categoria
      * Racchiude tra parentesi quadre
@@ -3267,6 +3435,7 @@ public abstract class LibWiki {
 
         return rigaOut;
     } // fine del metodo
+
 
     /**
      * Aggiunge il tag html small in testa ed in coda alla stringa
@@ -3287,6 +3456,7 @@ public abstract class LibWiki {
         return stringaOut.trim();
     } // fine del metodo
 
+
     /**
      * Aggiunge il tag html italic in testa ed in coda alla stringa
      * Se arriva una stringa vuota, restituisce una stringa vuota
@@ -3305,6 +3475,7 @@ public abstract class LibWiki {
 
         return stringaOut.trim();
     } // fine del metodo
+
 
     /**
      * Aggiunge il tag html strong in testa ed in coda alla stringa

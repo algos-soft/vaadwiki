@@ -73,9 +73,6 @@ public class FlowCost {
     public static final String[] ORDER_SORT_FIELDS = {"dueDate", "dueTime", "id"};
     public static final Sort.Direction DEFAULT_SORT_DIRECTION = Sort.Direction.ASC;
 
-    public static final String DASHBOARD_ORDER_CARD_STYLE = "dashboard-order-card";
-    public static final String STOREFRONT_ORDER_CARD_STYLE = "storefront-order-card";
-
     public final static String BOT_ACCETTA = "Accetta";
     public final static String BOT_CONFERMA = "Conferma";
     public final static String BOT_ANNULLA = "Annulla";
@@ -135,6 +132,7 @@ public class FlowCost {
     public final static String MAIL_FROM = "mailFrom";
     public final static String MAIL_TO = "mailTo";
     public final static String MAX_RIGHE_GRID = "maxRigheGrid";
+    public final static String MONGO_PAGE_LIMIT = "mongoPageLimit";
 
     // moduli visibili
     public final static String SHOW_COMPANY = "showCompany";

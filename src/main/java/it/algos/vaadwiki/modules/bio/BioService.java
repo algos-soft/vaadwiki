@@ -6,6 +6,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.vaadwiki.modules.categoria.Categoria;
 import it.algos.vaadwiki.service.ElaboraService;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static it.algos.vaadflow.application.FlowCost.MONGO_PAGE_LIMIT;
 import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
 
@@ -208,6 +212,28 @@ public class BioService extends AttNazProfCatService {
     }// end of method
 
 
+//    /**
+//     * Returns all entities of the type <br>
+//     * <p>
+//     *
+//     * @return all ordered entities
+//     */
+//    public ArrayList<Long> findPageids() {
+//        ArrayList<Long> lista = new ArrayList<>();
+//        long inizio = System.currentTimeMillis();
+//        List<Bio> listaBio = null;
+//
+//        listaBio = repository.findAllByOrderByWikiTitleAsc();
+//
+//        for (Bio bio : listaBio) {
+//            lista.add(bio.pageid);
+//        }// end of for cycle
+//
+//        logger.info("Recuperate " + text.format(lista.size()) + " pagine da bioService.findPageids() in " + date.deltaText(inizio));
+//        return lista;
+//    }// end of method
+
+
     /**
      * Returns all entities of the type <br>
      * <p>
@@ -215,18 +241,26 @@ public class BioService extends AttNazProfCatService {
      * @return all ordered entities
      */
     public ArrayList<Long> findPageids() {
-        ArrayList<Long> lista = new ArrayList<>();
-        List<Bio> listaBio = null;
+        ArrayList<Long> listaLong = new ArrayList<>();
+        List<? extends AEntity> listaPagine = null;
+        long inizio = System.currentTimeMillis();
+        int numRec = count();
+        String property = "pageid";
+        int size = pref.getInt(MONGO_PAGE_LIMIT);
+        Sort sort = new Sort(Sort.Direction.ASC, property);
+        Pageable page;
 
-        listaBio = repository.findAllByOrderByWikiTitleAsc();
-
-        for (Bio bio : listaBio) {
-            lista.add(bio.pageid);
+        for (int k = 0; k < array.numCicli(numRec, size); k++) {
+            page = PageRequest.of(k, size, sort);
+            listaPagine = repository.findAll(page).getContent();
+            for (AEntity entity : listaPagine) {
+                listaLong.add(((Bio) entity).pageid);
+            }// end of for cycle
         }// end of for cycle
 
-        return lista;
+        logger.info("Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findPageids() in " + date.deltaText(inizio));
+        return listaLong;
     }// end of method
-
 
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>

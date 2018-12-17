@@ -36,7 +36,7 @@ public class Api {
      */
     public AArrayService array = StaticContextAccessor.getBean(AArrayService.class);
 
-    @Autowired
+    //    @Autowired
     protected RequestWikiCat requestCat;
 
     @Autowired
@@ -131,20 +131,6 @@ public class Api {
 
 
     /**
-     * Controlla l'esistenza di una pagina
-     *
-     * @param pageId della pagina
-     *
-     * @return true se non esiste
-     */
-    @SuppressWarnings("all")
-    public  boolean isVoceBio(long pageId) {
-        String template = leggeTmplBio(pageId);
-        return !template.equals("");
-    }// end of method
-
-
-    /**
      * Legge il contenuto (testo) di una voce
      * <p>
      *
@@ -223,6 +209,17 @@ public class Api {
         return request.getRisultato() == TipoRisultato.letta;
     } // fine del metodo
 
+
+    /**
+     * Scrive una pagina
+     *
+     * @param wikiTitle titolo della pagina wiki su cui scrivere
+     * @param newText   da inserire
+     */
+    public static boolean scriveVoce(String wikiTitle, String newText) {
+        return scriveVoce(wikiTitle, newText, "");
+    }// fine del metodo costruttore completo
+
 //    /**
 //     * Legge il contenuto (tutto) di una pagina
 //     * <p>
@@ -248,17 +245,6 @@ public class Api {
 //            return "";
 //        }// fine del blocco if-else
 //    }// end of method
-
-
-    /**
-     * Scrive una pagina
-     *
-     * @param wikiTitle titolo della pagina wiki su cui scrivere
-     * @param newText   da inserire
-     */
-    public static boolean scriveVoce(String wikiTitle, String newText) {
-        return scriveVoce(wikiTitle, newText, "");
-    }// fine del metodo costruttore completo
 
 
     /**
@@ -330,17 +316,6 @@ public class Api {
         return lista;
     } // fine del metodo
 
-//    /**
-//     * Legge il contenuto (testo) di una voce
-//     * <p>
-//     *
-//     * @param pageId della pagina
-//     * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
-//     */
-//    public static String leggeVoce(int pageId) {
-//        return leggeVoce("" + pageId, TipoRicerca.pageid);
-//    }// end of method
-
 
     /**
      * Legge i titoli delle pagine che puntano ad una pagina.
@@ -368,19 +343,11 @@ public class Api {
 //     * Legge il contenuto (testo) di una voce
 //     * <p>
 //     *
-//     * @param titlePageid (title oppure pageid)
-//     * @param tipoRicerca title o pageId
+//     * @param pageId della pagina
 //     * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
 //     */
-//    public static String leggeVoce(String titlePageid) {
-//        String testo = "";
-//        Page pagina = leggePage(titlePageid);
-//
-//        if (pagina != null) {
-//            testo = pagina.getText();
-//        }// fine del blocco if
-//
-//        return testo;
+//    public static String leggeVoce(int pageId) {
+//        return leggeVoce("" + pageId, TipoRicerca.pageid);
 //    }// end of method
 
 
@@ -406,6 +373,25 @@ public class Api {
         return lista;
     } // fine del metodo
 
+//    /**
+//     * Legge il contenuto (testo) di una voce
+//     * <p>
+//     *
+//     * @param titlePageid (title oppure pageid)
+//     * @param tipoRicerca title o pageId
+//     * @return contenuto (solo testo) della pagina (senza i metadati mediawiki)
+//     */
+//    public static String leggeVoce(String titlePageid) {
+//        String testo = "";
+//        Page pagina = leggePage(titlePageid);
+//
+//        if (pagina != null) {
+//            testo = pagina.getText();
+//        }// fine del blocco if
+//
+//        return testo;
+//    }// end of method
+
 
     /**
      * Sposta una pagina (sposta il titolo)
@@ -416,25 +402,6 @@ public class Api {
     public static boolean sposta(String oldTitle, String newTitle) {
         return sposta(oldTitle, newTitle, "");
     } // fine del metodo
-
-//    /**
-//     * Legge un template da una voce
-//     * <p>
-//     *
-//     * @param titlePageid (title oppure pageid)
-//     * @param tipoRicerca title o pageId
-//     * @param tag         nome del template
-//     * @return contenuto del template
-//     */
-//    public static String leggeTmpl(String titlePageid, TipoRicerca tipoRicerca, String tag) {
-//        String tmpl = "";
-//        String testo = leggeVoce(titlePageid, tipoRicerca);
-//
-//        if (!testo.equals("") && !tag.equals("")) {
-//            tmpl = LibWiki.estraeTmplCompresi(testo, tag);
-//        }// fine del blocco if
-//        return tmpl;
-//    }// end of method
 
 
     /**
@@ -458,6 +425,25 @@ public class Api {
         return status;
     } // fine del metodo
 
+//    /**
+//     * Legge un template da una voce
+//     * <p>
+//     *
+//     * @param titlePageid (title oppure pageid)
+//     * @param tipoRicerca title o pageId
+//     * @param tag         nome del template
+//     * @return contenuto del template
+//     */
+//    public static String leggeTmpl(String titlePageid, TipoRicerca tipoRicerca, String tag) {
+//        String tmpl = "";
+//        String testo = leggeVoce(titlePageid, tipoRicerca);
+//
+//        if (!testo.equals("") && !tag.equals("")) {
+//            tmpl = LibWiki.estraeTmplCompresi(testo, tag);
+//        }// fine del blocco if
+//        return tmpl;
+//    }// end of method
+
 
     /**
      * Legge una pagina
@@ -476,6 +462,20 @@ public class Api {
         }// fine del blocco if
 
         return page;
+    }// end of method
+
+
+    /**
+     * Controlla l'esistenza di una pagina
+     *
+     * @param pageId della pagina
+     *
+     * @return true se non esiste
+     */
+    @SuppressWarnings("all")
+    public boolean isVoceBio(long pageId) {
+        String template = leggeTmplBio(pageId);
+        return !template.equals("");
     }// end of method
 
 
@@ -997,22 +997,20 @@ public class Api {
      */
     public ArrayList<Categoria> leggeCatCat(String titleCat) {
         ArrayList<Categoria> lista = null;
-        ArrayList<Long> listaId = null;
-        ArrayList<String> listaTitle = null;
+        ArrayList<WrapCat> listaWrap = null;
 
         if (titleCat != null && !titleCat.equals("")) {
+            requestCat = StaticContextAccessor.getBean(RequestWikiCat.class);
             requestCat.esegue(titleCat);
             if (requestCat.isValida()) {
-                listaId = requestCat.getListaVociPageids();
-                listaTitle = requestCat.getListaVociTitles();
+                listaWrap = requestCat.getListaWrapCat();
 
-                if (listaId.size() == listaTitle.size()) {
+                if (listaWrap != null && listaWrap.size() > 0) {
                     lista = new ArrayList<>();
-                    for (int k = 0; k < listaId.size(); k++) {
-                        lista.add(categoriaService.newEntity(listaId.get(k), listaTitle.get(k)));
+                    for (WrapCat wrap : listaWrap) {
+                        lista.add(categoriaService.newEntity(wrap));
                     }// end of for cycle
                 }// end of if cycle
-
             }// end of if cycle
         }// end of if cycle
 
