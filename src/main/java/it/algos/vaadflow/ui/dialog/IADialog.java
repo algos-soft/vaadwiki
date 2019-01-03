@@ -34,4 +34,10 @@ public interface IADialog<T> {
      */
     public void open(AEntity item, EAOperation operation, AContext context, String title);
 
+    /**
+     * Close.
+     *
+     */
+    public void close();
+
 }// end of interface

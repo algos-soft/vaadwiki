@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Scope;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public interface IAView {
 
-    public String getName();
+    public String getMenuName();
     public void updateView() ;
 
 }// end of interface

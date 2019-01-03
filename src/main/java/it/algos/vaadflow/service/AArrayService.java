@@ -91,7 +91,7 @@ public class AArrayService extends AbstractService {
      *
      * @return vero se l'array soddisfa le condizioni previste
      */
-    public boolean isValid(final ArrayList array) {
+    public boolean isValid(final List array) {
         boolean status = false;
 
         if (array != null && array.size() > 0) {
@@ -144,7 +144,7 @@ public class AArrayService extends AbstractService {
      *
      * @return vero se l'array soddisfa le condizioni previste
      */
-    public boolean isEmpty(final ArrayList array) {
+    public boolean isEmpty(final List array) {
         return !isValid(array);
     }// end of method
 
@@ -443,7 +443,7 @@ public class AArrayService extends AbstractService {
      *
      * @return posizione
      */
-    public int getPos(ArrayList lista, Object value) {
+    public int getPos(List lista, Object value) {
         int pos = 0;
 
         if (isValid(lista)) {

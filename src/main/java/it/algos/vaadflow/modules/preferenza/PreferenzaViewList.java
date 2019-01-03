@@ -38,7 +38,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_PRE, layout = MainLayout.class)
+@Route(value = TAG_PRE)
 @Qualifier(TAG_PRE)
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j

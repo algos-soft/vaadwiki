@@ -3,10 +3,9 @@ package it.algos.vaadwiki.modules.bio;
 import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
-import it.algos.vaadwiki.modules.categoria.Categoria;
 import it.algos.vaadwiki.service.ElaboraService;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -26,9 +24,9 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static it.algos.vaadflow.application.FlowCost.MONGO_PAGE_LIMIT;
 import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
@@ -259,6 +257,7 @@ public class BioService extends AttNazProfCatService {
         return listaLong;
     }// end of method
 
+
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
@@ -401,6 +400,7 @@ public class BioService extends AttNazProfCatService {
         return super.deleteBulk(listaId, Bio.class);
     }// end of method
 
+
     /**
      * Delete a list of entities.
      *
@@ -409,9 +409,22 @@ public class BioService extends AttNazProfCatService {
      * @return numero di elementi cancellati
      */
     public DeleteResult deleteBulkByPageid(ArrayList<Long> listaPageid) {
-        return super.deleteBulkByProperty(listaPageid, Bio.class,"pageid");
+        return super.deleteBulkByProperty(listaPageid, Bio.class, "pageid");
     }// end of method
 
+
+    /**
+     * Costruisce una lista di nomi delle properties del Search nell'ordine:
+     * 1) Sovrascrive la lista nella sottoclasse specifica di xxxService
+     *
+     * @param context legato alla sessione
+     *
+     * @return lista di nomi di properties
+     */
+    @Override
+    public List<String> getSearchPropertyNamesList(AContext context) {
+        return Arrays.asList("wikiTitle", "nome", "cognome", "luogoNato", "attivita", "nazionalita");
+    }// end of method
 
 //    /**
 //     * Fetches the entities whose 'main text property' matches the given filter text.

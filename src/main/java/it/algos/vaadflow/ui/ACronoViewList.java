@@ -1,7 +1,6 @@
 package it.algos.vaadflow.ui;
 
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.dialog.IADialog;
 
@@ -26,6 +25,7 @@ public abstract class ACronoViewList extends AViewList {
         super(presenter, dialog);
     }// end of Spring constructor
 
+
     /**
      * Le preferenze sovrascritte nella sottoclasse
      */
@@ -38,6 +38,7 @@ public abstract class ACronoViewList extends AViewList {
         super.isEntityDeveloper = true;
     }// end of method
 
+
     /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
      * Normalmente ad uso esclusivo del developer
@@ -45,10 +46,12 @@ public abstract class ACronoViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixAlertLayout() {
-        super.fixAlertLayout();
+    protected boolean creaAlertLayout() {
+        super.creaAlertLayout();
 
         alertPlacehorder.add(new Label("Serve per costruire liste cronologiche"));
+
+        return true;
     }// end of method
 
 }// end of class

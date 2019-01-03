@@ -1,34 +1,42 @@
 package it.algos.vaadflow.ui;
 
-import com.flowingcode.addons.applayout.AppLayout;
-import com.flowingcode.addons.applayout.menu.MenuItem;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
+//import com.flowingcode.addons.applayout.AppLayout;
+//import com.flowingcode.addons.applayout.menu.MenuItem;
+
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.applayout.AppLayoutMenu;
+import com.vaadin.flow.component.applayout.AppLayoutMenuItem;
 import com.vaadin.flow.component.dependency.HtmlImport;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H5;
-import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.shared.ui.LoadMode;
 import it.algos.vaadflow.application.AContext;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.backend.login.ALogin;
+import it.algos.vaadflow.modules.log.LogViewList;
+import it.algos.vaadflow.modules.preferenza.PreferenzaViewList;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.EARoleType;
+import it.algos.vaadflow.modules.utente.UtenteViewList;
+import it.algos.vaadflow.modules.versione.VersioneViewList;
 import it.algos.vaadflow.service.AAnnotationService;
 import it.algos.vaadflow.service.AReflectionService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.service.AVaadinService;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
+
+import static it.algos.vaadflow.application.FlowCost.MENU_CLAZZ_LIST;
 
 /**
  * Gestore dei menu. Unico nell'applicazione (almeno finche non riesco a farne girare un altro)
@@ -58,7 +66,14 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
 
     private ATextService text = ATextService.getInstance();
 
+    private Map<String, List<Class>> mappaClassi;
+
     private ALogin login;
+
+    private AppLayout appLayout;
+
+    private AppLayoutMenu appMenu;
+    private Div container;
 
     /**
      * Recuperato dalla sessione, quando la @route fa partire la UI. <br>
@@ -73,10 +88,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
     private AVaadinService vaadinService = StaticContextAccessor.getBean(AVaadinService.class);
 
 
-    //    public MainLayout(UtenteService utenteService, ALogin login) {
     public MainLayout() {
-//        this.utenteService = utenteService;
-//        this.login = login;
         setMargin(false);
         setSpacing(false);
         setPadding(false);
@@ -85,44 +97,143 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
         context = vaadinService.fixLoginAndContext(null);
         login = context.getLogin();
 
-        creaAllMenu();
+        //--creazione iniziale del menu
+        creaVaadindMenu();
+
+        //--crea brand (sempre)
+        creaBrand();
+
+        //--crea menu dello sviluppatore (se loggato)
+        creaMenuDeveloper();
+
+        //--crea menu dell'admin (se loggato)
+        creaMenuAdmin();
+
+        //--crea menu utente normale (sempre)
+        creaMenuUser();
+
+        //--crea menu logout (sempre)
+        creaMenuLogout();
     }// end of method
 
 
-    protected void creaAllMenu() {
-        final AppLayout appLayout = new AppLayout(null, createAvatarComponent(), FlowCost.LAYOUT_TITLE);
-        ArrayList<MenuItem> listaMenu = null;
-        MenuItem menu = null;
-        Map<String, List<Class>> mappaClassi = creaMappa(FlowCost.MENU_CLAZZ_LIST);
+    /**
+     * Chiamato DOPO aver termionato il costruttore
+     * Registra nel context l'indirizzo a questa istanza per modifiche specifiche ai menu
+     */
+    @PostConstruct
+    private void fixContext() {
+        context.setMainLayout(this);
+        context.setAppLayout(appLayout);
+        context.setAppMenu(appMenu);
+    }// end of method
 
-        if (mappaClassi != null && mappaClassi.size() > 0) {
-            listaMenu = new ArrayList<>();
 
-            //--crea i menu del developer, inserendoli come sub-menu
-            if (login != null && login.isDeveloper()) {
-                this.addDev(listaMenu, mappaClassi);
-            }// end of if cycle
+    /**
+     * Creazione iniziale del menu
+     */
+    private void creaVaadindMenu() {
+        appLayout = new AppLayout();
+        appMenu = appLayout.createMenu();
+        mappaClassi = creaMappa(MENU_CLAZZ_LIST);
+//        this.add(appLayout);
+    }// end of method
 
-            //--crea i menu di admin, inserendoli come sub-menu
-            if (login != null && login.isAdmin()) {
-                this.addAdmin(listaMenu, mappaClassi);
-            }// end of if cycle
 
-            //--crea gli altri menu, esclusi quelli del developer e di admin che sono già inseriti
-            this.addUser(listaMenu, mappaClassi);
+    /**
+     * Eventuale brand a sinistra
+     */
+    private void creaBrand() {
+//        appLayout.setBranding(new H3("Croce Rossa Fidenza"));
+    }// end of method
 
-            //--crea il logout
-            listaMenu.add(creaMenuLogout());
 
-            //--aggiunge i menu
-            appLayout.setMenuItems(listaMenu.toArray(new MenuItem[listaMenu.size()]));
-
-            //--crea la barra di bottoni, in alto a destra
-            appLayout.setToolbarIconButtons(new MenuItem("Logout", "exit-to-app", () -> UI.getCurrent().getPage().executeJavaScript("location.assign('logout')")));
-
-            this.add(appLayout);
+    /**
+     * Eventuali menu se collegato come sviluppatore
+     */
+    private void creaMenuDeveloper() {
+        if (context.isDev()) {
+            addMenu(UtenteViewList.class);
+            addMenu(VersioneViewList.class);
+            addMenu(PreferenzaViewList.class);
         }// end of if cycle
     }// end of method
+
+
+    /**
+     * Eventuali menu se collegato come admin
+     */
+    private void creaMenuAdmin() {
+        if (context.isAdmin()) {
+            addMenu(LogViewList.class);
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Menu normali sempre presenti
+     */
+    private void creaMenuUser() {
+        List<Class> userClazzList = null;
+
+        if (mappaClassi.get(EARole.user.toString()) != null) {
+            userClazzList = mappaClassi.get(EARole.user.toString());
+        }// end of if cycle
+
+        if (userClazzList != null && userClazzList.size() > 0) {
+            for (Class viewClazz : userClazzList) {
+                addMenu(viewClazz);
+            }// end of for cycle
+        }// end of if cycle
+
+    }// end of method
+
+
+    /**
+     * Menu logout sempre presente
+     */
+    private void creaMenuLogout() {
+        appMenu.addMenuItems(new AppLayoutMenuItem(VaadinIcon.SIGN_OUT.create(), "Logout", e -> UI.getCurrent().getPage().executeJavaScript("location.assign('logout')")));
+    }// end of method
+
+
+    protected void logout() {
+    }// end of method
+
+//    protected void creaAllMenu() {
+//        final AppLayout appLayout = new AppLayout(null, createAvatarComponent(), FlowCost.LAYOUT_TITLE);
+//        ArrayList<MenuItem> listaMenu = null;
+//        MenuItem menu = null;
+//        Map<String, List<Class>> mappaClassi = creaMappa(FlowCost.MENU_CLAZZ_LIST);
+//
+//        if (mappaClassi != null && mappaClassi.size() > 0) {
+//            listaMenu = new ArrayList<>();
+//
+//            //--crea i menu del developer, inserendoli come sub-menu
+//            if (login != null && login.isDeveloper()) {
+//                this.addDev(listaMenu, mappaClassi);
+//            }// end of if cycle
+//
+//            //--crea i menu di admin, inserendoli come sub-menu
+//            if (login != null && login.isAdmin()) {
+//                this.addAdmin(listaMenu, mappaClassi);
+//            }// end of if cycle
+//
+//            //--crea gli altri menu, esclusi quelli del developer e di admin che sono già inseriti
+//            this.addUser(listaMenu, mappaClassi);
+//
+//            //--crea il logout
+//            listaMenu.add(creaMenuLogout());
+//
+//            //--aggiunge i menu
+//            appLayout.setMenuItems(listaMenu.toArray(new MenuItem[listaMenu.size()]));
+//
+//            //--crea la barra di bottoni, in alto a destra
+//            appLayout.setToolbarIconButtons(new MenuItem("Logout", "exit-to-app", () -> UI.getCurrent().getPage().executeJavaScript("location.assign('logout')")));
+//
+//            this.add(appLayout);
+//        }// end of if cycle
+//    }// end of method
 
 
     private Map<String, List<Class>> creaMappa(List<Class> listaClassiMenu) {
@@ -140,7 +251,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
 
             switch (type) {
                 case developer:
-                    menuName = annotation.getViewName(viewClazz);
+                    menuName = annotation.getMenuName(viewClazz);
                     if (cronoList.contains(menuName)) {
                         cronoDevClazzList.add(viewClazz);
                     } else {
@@ -169,113 +280,113 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
     }// end of method
 
 
-    /**
-     * Crea i menu visibili solo per il developer <br>
-     * Li incapsula come sub-menu <br>
-     */
-    private void addDev(ArrayList<MenuItem> listaMenu, Map<String, List<Class>> mappaClassi) {
-        MenuItem developerItem;
-        MenuItem[] matrice;
-        ArrayList<MenuItem> listaSubMenuDev = new ArrayList<>();
-        MenuItem menu;
-        List<Class> devClazzList = null;
-
-        if (mappaClassi.get(EARole.developer.toString()) != null) {
-            devClazzList = mappaClassi.get(EARole.developer.toString());
-        }// end of if cycle
-
-        if (devClazzList != null && devClazzList.size() > 0) {
-            for (Class viewClazz : devClazzList) {
-                menu = creaMenu(viewClazz);
-                listaSubMenuDev.add(menu);
-            }// end of for cycle
-        }// end of if cycle
-
-        //--crea i menu del developer, inserendoli come sub-menu
-        this.addCronoDev(listaSubMenuDev, mappaClassi);
-
-        matrice = listaSubMenuDev.toArray(new MenuItem[listaSubMenuDev.size()]);
-        developerItem = new MenuItem("Developer", "build", matrice);
-        listaMenu.add(developerItem);
-    }// end of method
-
-
-    /**
-     * Crea i menu crono, visibili solo per il developer <br>
-     * Li incapsula come sub-menu <br>
-     */
-    private void addCronoDev(ArrayList<MenuItem> listaMenuDev, Map<String, List<Class>> mappaClassi) {
-        MenuItem developerItem;
-        MenuItem[] matrice;
-        ArrayList<MenuItem> listaSubMenuCronoDev = new ArrayList<>();
-        MenuItem menu;
-        List<Class> devCronoClazzList = null;
-
-        if (mappaClassi.get(KEY_MAPPA_CRONO) != null) {
-            devCronoClazzList = mappaClassi.get(KEY_MAPPA_CRONO);
-        }// end of if cycle
-
-        if (devCronoClazzList != null && devCronoClazzList.size() > 0) {
-            for (Class viewClazz : devCronoClazzList) {
-                menu = creaMenu(viewClazz);
-                listaSubMenuCronoDev.add(menu);
-            }// end of for cycle
-        }// end of if cycle
-
-        if (devCronoClazzList != null && devCronoClazzList.size() > 0) {
-            matrice = listaSubMenuCronoDev.toArray(new MenuItem[listaSubMenuCronoDev.size()]);
-            developerItem = new MenuItem("Crono", "build", matrice);
-            listaMenuDev.add(developerItem);
-        }// end of if cycle
-    }// end of method
+//    /**
+//     * Crea i menu visibili solo per il developer <br>
+//     * Li incapsula come sub-menu <br>
+//     */
+//    private void addDev(ArrayList<MenuItem> listaMenu, Map<String, List<Class>> mappaClassi) {
+//        MenuItem developerItem;
+//        MenuItem[] matrice;
+//        ArrayList<MenuItem> listaSubMenuDev = new ArrayList<>();
+//        MenuItem menu;
+//        List<Class> devClazzList = null;
+//
+//        if (mappaClassi.get(EARole.developer.toString()) != null) {
+//            devClazzList = mappaClassi.get(EARole.developer.toString());
+//        }// end of if cycle
+//
+//        if (devClazzList != null && devClazzList.size() > 0) {
+//            for (Class viewClazz : devClazzList) {
+//                menu = creaMenu(viewClazz);
+//                listaSubMenuDev.add(menu);
+//            }// end of for cycle
+//        }// end of if cycle
+//
+//        //--crea i menu del developer, inserendoli come sub-menu
+//        this.addCronoDev(listaSubMenuDev, mappaClassi);
+//
+//        matrice = listaSubMenuDev.toArray(new MenuItem[listaSubMenuDev.size()]);
+//        developerItem = new MenuItem("Developer", "build", matrice);
+//        listaMenu.add(developerItem);
+//    }// end of method
 
 
-    /**
-     * Crea i menu visibili solo per l'admin ed per il developer <br>
-     * Li incapsula come sub-menu <br>
-     */
-    private void addAdmin(ArrayList<MenuItem> listaMenu, Map<String, List<Class>> mappaClassi) {
-        MenuItem adminItem;
-        MenuItem[] matrice;
-        ArrayList<MenuItem> listaSubMenuDev = new ArrayList<>();
-        MenuItem menu;
-        List<Class> adminClazzList = null;
+//    /**
+//     * Crea i menu crono, visibili solo per il developer <br>
+//     * Li incapsula come sub-menu <br>
+//     */
+//    private void addCronoDev(ArrayList<MenuItem> listaMenuDev, Map<String, List<Class>> mappaClassi) {
+//        MenuItem developerItem;
+//        MenuItem[] matrice;
+//        ArrayList<MenuItem> listaSubMenuCronoDev = new ArrayList<>();
+//        MenuItem menu;
+//        List<Class> devCronoClazzList = null;
+//
+//        if (mappaClassi.get(KEY_MAPPA_CRONO) != null) {
+//            devCronoClazzList = mappaClassi.get(KEY_MAPPA_CRONO);
+//        }// end of if cycle
+//
+//        if (devCronoClazzList != null && devCronoClazzList.size() > 0) {
+//            for (Class viewClazz : devCronoClazzList) {
+//                menu = creaMenu(viewClazz);
+//                listaSubMenuCronoDev.add(menu);
+//            }// end of for cycle
+//        }// end of if cycle
+//
+//        if (devCronoClazzList != null && devCronoClazzList.size() > 0) {
+//            matrice = listaSubMenuCronoDev.toArray(new MenuItem[listaSubMenuCronoDev.size()]);
+//            developerItem = new MenuItem("Crono", "build", matrice);
+//            listaMenuDev.add(developerItem);
+//        }// end of if cycle
+//    }// end of method
 
-        if (mappaClassi.get(EARole.admin.toString()) != null) {
-            adminClazzList = mappaClassi.get(EARole.admin.toString());
-        }// end of if cycle
 
-        if (adminClazzList != null && adminClazzList.size() > 0) {
-            for (Class viewClazz : adminClazzList) {
-                menu = creaMenu(viewClazz);
-                listaSubMenuDev.add(menu);
-            }// end of for cycle
-        }// end of if cycle
+//    /**
+//     * Crea i menu visibili solo per l'admin ed per il developer <br>
+//     * Li incapsula come sub-menu <br>
+//     */
+//    private void addAdmin(ArrayList<MenuItem> listaMenu, Map<String, List<Class>> mappaClassi) {
+//        MenuItem adminItem;
+//        MenuItem[] matrice;
+//        ArrayList<MenuItem> listaSubMenuDev = new ArrayList<>();
+//        MenuItem menu;
+//        List<Class> adminClazzList = null;
+//
+//        if (mappaClassi.get(EARole.admin.toString()) != null) {
+//            adminClazzList = mappaClassi.get(EARole.admin.toString());
+//        }// end of if cycle
+//
+//        if (adminClazzList != null && adminClazzList.size() > 0) {
+//            for (Class viewClazz : adminClazzList) {
+//                menu = creaMenu(viewClazz);
+//                listaSubMenuDev.add(menu);
+//            }// end of for cycle
+//        }// end of if cycle
+//
+//        matrice = listaSubMenuDev.toArray(new MenuItem[listaSubMenuDev.size()]);
+//        adminItem = new MenuItem("Admin", "apps", matrice);
+//        listaMenu.add(adminItem);
+//    }// end of method
 
-        matrice = listaSubMenuDev.toArray(new MenuItem[listaSubMenuDev.size()]);
-        adminItem = new MenuItem("Admin", "apps", matrice);
-        listaMenu.add(adminItem);
-    }// end of method
 
-
-    /**
-     * Crea i menu visibili a tutti <br>
-     */
-    private void addUser(ArrayList<MenuItem> listaMenu, Map<String, List<Class>> mappaClassi) {
-        MenuItem menu;
-        List<Class> userClazzList = null;
-
-        if (mappaClassi.get(EARole.user.toString()) != null) {
-            userClazzList = mappaClassi.get(EARole.user.toString());
-        }// end of if cycle
-
-        if (userClazzList != null && userClazzList.size() > 0) {
-            for (Class viewClazz : userClazzList) {
-                menu = creaMenu(viewClazz);
-                listaMenu.add(menu);
-            }// end of for cycle
-        }// end of if cycle
-    }// end of method
+//    /**
+//     * Crea i menu visibili a tutti <br>
+//     */
+//    private void addUser(ArrayList<MenuItem> listaMenu, Map<String, List<Class>> mappaClassi) {
+//        MenuItem menu;
+//        List<Class> userClazzList = null;
+//
+//        if (mappaClassi.get(EARole.user.toString()) != null) {
+//            userClazzList = mappaClassi.get(EARole.user.toString());
+//        }// end of if cycle
+//
+//        if (userClazzList != null && userClazzList.size() > 0) {
+//            for (Class viewClazz : userClazzList) {
+//                menu = creaMenu(viewClazz);
+//                listaMenu.add(menu);
+//            }// end of for cycle
+//        }// end of if cycle
+//    }// end of method
 
 
     /**
@@ -301,30 +412,45 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
     /**
      * Crea il singolo item di menu <br>
      */
-    protected MenuItem creaMenu(Class<? extends AViewList> viewClazz) {
+    public AppLayoutMenuItem addMenu(Class<? extends AViewList> viewClazz) {
         String linkRoute;
         String menuName;
-        String icon;
+        VaadinIcon icon;
 
         linkRoute = annotation.getQualifierName(viewClazz);
-        menuName = annotation.getViewName(viewClazz);
-        menuName = text.primaMaiuscola(menuName);
-        icon = reflection.getIronIcon(viewClazz);
+        menuName = annotation.getMenuName(viewClazz);
+        icon = reflection.getIconView(viewClazz);
 
-        return new MenuItem(menuName, icon, () -> UI.getCurrent().navigate(linkRoute));
+        return appMenu.addMenuItem(new AppLayoutMenuItem(icon.create(), menuName, linkRoute));
     }// end of method
 
+//    /**
+//     * Crea il singolo item di menu <br>
+//     */
+//    protected MenuItem creaMenu(Class<? extends AViewList> viewClazz) {
+//        String linkRoute;
+//        String menuName;
+//        String icon;
+//
+//        linkRoute = annotation.getQualifierName(viewClazz);
+//        menuName = annotation.getViewName(viewClazz);
+//        menuName = text.primaMaiuscola(menuName);
+//        icon = reflection.getIronIcon(viewClazz);
+//
+//        return new MenuItem(menuName, icon, () -> UI.getCurrent().navigate(linkRoute));
+//    }// end of method
 
-    /**
-     * Crea (in fondo) il menu item per il logout <br>
-     */
-    protected MenuItem creaMenuLogout() {
-        MenuItem menuItem = null;
-        String menuName = "Logout";
 
-        menuItem = new MenuItem(menuName, "exit-to-app", () -> UI.getCurrent().getPage().executeJavaScript("location.assign('logout')"));
-        return menuItem;
-    }// end of method
+//    /**
+//     * Crea (in fondo) il menu item per il logout <br>
+//     */
+//    protected MenuItem creaMenuLogout() {
+//        MenuItem menuItem = null;
+//        String menuName = "Logout";
+//
+//        menuItem = new MenuItem(menuName, "exit-to-app", () -> UI.getCurrent().getPage().executeJavaScript("location.assign('logout')"));
+//        return menuItem;
+//    }// end of method
 
 
     @Override
@@ -340,6 +466,12 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
         settings.addLink("manifest", "/manifest.json");
         settings.addFavIcon("icon", "/frontend/images/favicons/favicon-96x96.png", "96x96");
     }// end of method
+
+
+    public AppLayout getAppLayout() {
+        return appLayout;
+    }// end of method
+
 
 
 }// end of class

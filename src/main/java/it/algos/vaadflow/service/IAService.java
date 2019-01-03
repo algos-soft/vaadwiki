@@ -203,7 +203,17 @@ public interface IAService {
      *
      * @return lista di nomi di properties
      */
-    public List<String> getFormPropertyNamesList(AEntity curremtItem, AContext context);
+    public List<String> getFormPropertyNamesList(AContext context);
+
+    /**
+     * Costruisce una lista di nomi delle properties del Search nell'ordine:
+     * 1) Sovrascrive la lista nella sottoclasse specifica di xxxService
+     *
+     * @param context legato alla sessione
+     *
+     * @return lista di nomi di properties
+     */
+    public List<String> getSearchPropertyNamesList(AContext context);
 
 
 //    /**

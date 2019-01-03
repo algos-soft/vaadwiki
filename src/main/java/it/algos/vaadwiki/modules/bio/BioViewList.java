@@ -20,7 +20,6 @@ import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
-import it.algos.vaadflow.ui.dialog.ADialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
@@ -31,7 +30,6 @@ import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -190,7 +188,7 @@ public class BioViewList extends AttNazProfCatViewList {
         creaDelete();
         creaDeleteAll();
         creaNew();
-        creaSearch();
+        creaSearchBio();
         creaUpdate();
         creaElabora();
         creaUpload();
@@ -278,8 +276,9 @@ public class BioViewList extends AttNazProfCatViewList {
     }// end of method
 
 
-    private void creaSearch() {
-        searchButton = new Button("Cerca", new Icon(VaadinIcon.SEARCH));
+    private void creaSearchBio() {
+        searchButton = (Button) super.creaSearch();
+//        searchButton = new Button("Cerca", new Icon(VaadinIcon.SEARCH));
 //        newButton.addClickListener(e -> newService.esegue(null));
     }// end of method
 
@@ -338,7 +337,7 @@ public class BioViewList extends AttNazProfCatViewList {
      * The dialog will display the given title and message(s), then call
      * <p>
      */
-    protected  void openConfirmDialog() {
+    protected void openConfirmDialog() {
         String message = "Vuoi veramente cancellare TUTTE le biografie ?";
         String additionalMessage = "L'operazione non è reversibile";
         ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
@@ -352,9 +351,9 @@ public class BioViewList extends AttNazProfCatViewList {
      * The dialog will display the given title and message(s), then call
      * <p>
      */
-    protected  void openSecondConfirmDialog() {
+    protected void openSecondConfirmDialog() {
         String message = "SEI ASSOLUTAMENTE SICURO ?";
-        ADeleteDialog dialog =  appContext.getBean(ADeleteDialog.class);
+        ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
         dialog.open(message, this::deleteMongo);
     }// end of method
 

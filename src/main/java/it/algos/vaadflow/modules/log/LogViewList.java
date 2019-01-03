@@ -39,7 +39,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Route(value = TAG_LOG, layout = MainLayout.class)
+@Route(value = TAG_LOG)
 @Qualifier(TAG_LOG)
 @AIView(roleTypeVisibility = EARoleType.admin)
 @Slf4j
@@ -51,7 +51,7 @@ public class LogViewList extends AViewList {
      * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.ROAD;
 
     public static final String IRON_ICON = "history";
 
@@ -96,9 +96,10 @@ public class LogViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixTopLayout() {
-        super.fixTopLayout();
+    protected boolean creaTopLayout() {
+        super.creaTopLayout();
         topPlaceholder.add(creaPopup());
+        return topPlaceholder.getComponentCount() > 0;
     }// end of method
 
 

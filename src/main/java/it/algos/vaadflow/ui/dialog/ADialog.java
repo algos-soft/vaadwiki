@@ -1,11 +1,11 @@
 package it.algos.vaadflow.ui.dialog;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -70,6 +70,16 @@ public class ADialog extends Dialog implements IADialog {
     public boolean usaConfirmButton;
 
     /**
+     * Flag di preferenza per il testo del bottone Cancel. Normalmente 'Annulla'.
+     */
+    protected String textCancelButton = "Annulla";
+
+    /**
+     * Flag di preferenza per il testo del bottone Confirm. Normalmente 'Conferma'.
+     */
+    protected String textConfirmlButton = "Conferma";
+
+    /**
      * Corpo centrale del Dialog <br>
      * Placeholder (eventuale, presente di default) <br>
      */
@@ -90,9 +100,9 @@ public class ADialog extends Dialog implements IADialog {
      */
     protected String title;
 
-    protected Button cancelButton = new Button("Annulla");
+    protected Button cancelButton = new Button(textCancelButton);
 
-    protected Button confirmButton = new Button("Conferma");
+    protected Button confirmButton = new Button(textConfirmlButton);
 
     /**
      * Service (@Scope = 'singleton') iniettato dal costruttore @Autowired di Spring <br>
@@ -137,7 +147,7 @@ public class ADialog extends Dialog implements IADialog {
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
      * ma l'ordine con cui vengono chiamati NON è garantito
      */
-    @PostConstruct
+//    @PostConstruct
     protected void inizia() {
         this.setCloseOnEsc(false);
         this.setCloseOnOutsideClick(false);
@@ -148,8 +158,7 @@ public class ADialog extends Dialog implements IADialog {
         login = context.getLogin();
 
         //--preferenze standard. Possono essere modificate anche selezionando la firma di open(...)
-        this.usaCancelButton = true;
-        this.usaConfirmButton = true;
+        fixPreferenze();
 
         //--Titolo placeholder del dialogo
         this.add(titleField);
@@ -168,6 +177,18 @@ public class ADialog extends Dialog implements IADialog {
 
 
     /**
+     * Preferenze standard.
+     * Possono essere modificate anche selezionando la firma di open(...)
+     * Le preferenze vengono eventualmente sovrascritte nella sottoclasse
+     * Invocare PRIMA il metodo della superclasse
+     */
+    protected void fixPreferenze() {
+        this.usaCancelButton = true;
+        this.usaConfirmButton = true;
+    }// end of method
+
+
+    /**
      * Titolo del dialogo <br>
      * Placeholder (eventuale, presente di default) <br>
      */
@@ -175,6 +196,16 @@ public class ADialog extends Dialog implements IADialog {
         if (text.isValid(title)) {
             titleField.setText(title);
         }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Apre un dialogo di 'avviso' <br>
+     * Il title è già stato regolato dal costruttore <br>
+     */
+    public void open() {
+//        this.usaCancelButton = false;
+        this.open("", "", (Runnable) null, (Runnable) null);
     }// end of method
 
 
@@ -338,7 +369,12 @@ public class ADialog extends Dialog implements IADialog {
         bottomLayout.setMargin(false);
         bottomLayout.setClassName("confirm-dialog-buttons");
 
+        Label spazioVuotoEspandibile = new Label("");
+        bottomLayout.add(spazioVuotoEspandibile);
+        bottomLayout.setFlexGrow(1, spazioVuotoEspandibile);
+
         if (usaCancelButton) {
+            cancelButton.setText(textCancelButton);
             cancelButton.getElement().setAttribute("theme", "primary");
             cancelButton.addClickListener(e -> cancellaHandler());
             cancelButton.setIcon(new Icon(VaadinIcon.ARROW_LEFT));
@@ -346,6 +382,7 @@ public class ADialog extends Dialog implements IADialog {
         }// end of if cycle
 
         if (usaConfirmButton) {
+            confirmButton.setText(textConfirmlButton);
             if (usaCancelButton) {
                 confirmButton.getElement().setAttribute("theme", "secondary");
             } else {

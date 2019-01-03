@@ -560,7 +560,7 @@ public abstract class AService extends AbstractService implements IAService {
      * @return lista di nomi di properties
      */
     @Override
-    public List<String> getFormPropertyNamesList(AEntity curremtItem, AContext context) {
+    public List<String> getFormPropertyNamesList( AContext context) {
         ArrayList<String> lista = annotation.getFormPropertiesName(entityClass);
 
         if (lista.contains(FIELD_NAME_COMPANY) && !context.getLogin().isDeveloper()) {
@@ -568,6 +568,20 @@ public abstract class AService extends AbstractService implements IAService {
         }// end of if cycle
 
         return lista;
+    }// end of method
+
+
+    /**
+     * Costruisce una lista di nomi delle properties del Search nell'ordine:
+     * 1) Sovrascrive la lista nella sottoclasse specifica di xxxService
+     *
+     * @param context legato alla sessione
+     *
+     * @return lista di nomi di properties
+     */
+    @Override
+    public List<String> getSearchPropertyNamesList(AContext context) {
+        return null;
     }// end of method
 
 

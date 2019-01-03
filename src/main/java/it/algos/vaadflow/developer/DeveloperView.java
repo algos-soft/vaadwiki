@@ -22,9 +22,9 @@ import static it.algos.vaadflow.application.FlowCost.TAG_DEV;
  * Date: dom, 20-mag-2018
  * Time: 17:10
  */
-@Route(value = TAG_DEV, layout = MainLayout.class)
+@Route(value = TAG_DEV)
 @Qualifier(TAG_DEV)
-@AIView(roleTypeVisibility = EARoleType.developer)
+//@AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
 public class DeveloperView extends VerticalLayout {
 

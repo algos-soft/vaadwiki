@@ -39,7 +39,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_COM;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_COM, layout = MainLayout.class)
+@Route(value = TAG_COM)
 @Qualifier(TAG_COM)
 @AIView(roleTypeVisibility = EARoleType.admin)
 @Slf4j

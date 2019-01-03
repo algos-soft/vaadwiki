@@ -235,10 +235,10 @@ public class AttNazProfCatViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixAlertLayout() {
-        super.fixAlertLayout();
-
+    protected boolean creaAlertLayout() {
+        super.creaAlertLayout();
         alertPlacehorder.add(creaInfoImport(task, codeFlagDownload, codeLastDownload));
+        return true;
     }// end of method
 
 

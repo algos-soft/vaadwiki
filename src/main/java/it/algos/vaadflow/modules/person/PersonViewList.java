@@ -38,7 +38,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PER;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_PER, layout = MainLayout.class)
+@Route(value = TAG_PER)
 @Qualifier(TAG_PER)
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j

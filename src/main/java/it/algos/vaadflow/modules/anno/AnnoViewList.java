@@ -39,7 +39,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_ANN, layout = MainLayout.class)
+@Route(value = TAG_ANN)
 @Qualifier(TAG_ANN)
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j

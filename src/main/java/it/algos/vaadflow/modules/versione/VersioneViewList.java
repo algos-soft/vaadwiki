@@ -39,7 +39,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_VER;
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Route(value = TAG_VER, layout = MainLayout.class)
+@Route(value = TAG_VER)
 @Qualifier(TAG_VER)
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
@@ -52,7 +52,7 @@ public class VersioneViewList extends AViewList {
      * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.DROP;
 
     public static final String IRON_ICON = "drafts";
 
@@ -90,11 +90,13 @@ public class VersioneViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixAlertLayout() {
-        super.fixAlertLayout();
+    protected boolean creaAlertLayout() {
+        super.creaAlertLayout();
 
         alertPlacehorder.add(new Label("Sigla 'A' per le versioni base di vaadinflow"));
         alertPlacehorder.add(new Label("Sigla 'Z' per le modifiche alla descrizione di una preferenza"));
+
+        return true;
     }// end of method
 
 }// end of class

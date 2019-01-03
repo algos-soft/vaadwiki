@@ -19,7 +19,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.Registration;
 
@@ -37,13 +37,20 @@ import static it.algos.vaadflow.application.FlowCost.BOT_BACK;
 public class AConfirmDialog<T extends Serializable> extends Dialog {
 
     private final H2 titleField = new H2();
+
     private final Div messageLabel = new Div();
+
     private final Div extraMessageLabel = new Div();
+
     private final Button confirmButton = new Button();
-//    private final Button cancelButton = new Button("Back", new Icon("lumo", "back"));
+
+    //    private final Button cancelButton = new Button("Back", new Icon("lumo", "back"));
     private final Button cancelButton = new Button(BOT_BACK);
+
     private Registration registrationForConfirm;
+
     private Registration registrationForCancel;
+
 
     /**
      * Constructor.
@@ -59,7 +66,7 @@ public class AConfirmDialog<T extends Serializable> extends Dialog {
         cancelButton.addClickListener(e -> close());
         cancelButton.getElement().setAttribute("theme", "primary");
 
-        HorizontalLayout buttonBar = new HorizontalLayout(cancelButton, confirmButton);
+        HorizontalLayout buttonBar = new HorizontalLayout( cancelButton, confirmButton);
         buttonBar.setClassName("confirm-dialog-buttons");
 
         Div labels = new Div(messageLabel, extraMessageLabel);
@@ -75,6 +82,7 @@ public class AConfirmDialog<T extends Serializable> extends Dialog {
             }
         });
     }
+
 
     /**
      * Opens the confirmation dialog.
@@ -115,4 +123,5 @@ public class AConfirmDialog<T extends Serializable> extends Dialog {
         }
         open();
     }
+
 }

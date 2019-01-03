@@ -359,18 +359,18 @@ public class PersonService extends AService {
         return pref.isBool(FlowCost.USA_SECURITY) ? PROPERTIES_SECURED : PROPERTIES_NOT_SECURED;
     }// end of method
 
-
-    /**
-     * Costruisce una lista di nomi delle properties del Form nell'ordine:
-     * 1) Cerca nell'annotation @AIForm della Entity e usa quella lista (con o senza ID)
-     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse)
-     * 3) Sovrascrive la lista nella sottoclasse specifica di xxxService
-     *
-     * @return lista di nomi di properties
-     */
-    @Override
-    public List<String> getFormPropertyNamesList(AEntity curremtItem, AContext context) {
-        return ((Person) curremtItem).usaSuperClasse ? PROPERTIES_SECURED : PROPERTIES_NOT_SECURED;
-    }// end of method
-
+//
+//    /**
+//     * Costruisce una lista di nomi delle properties del Form nell'ordine:
+//     * 1) Cerca nell'annotation @AIForm della Entity e usa quella lista (con o senza ID)
+//     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse)
+//     * 3) Sovrascrive la lista nella sottoclasse specifica di xxxService
+//     *
+//     * @return lista di nomi di properties
+//     */
+//    @Override
+//    public List<String> getFormPropertyNamesList( AContext context) {
+//        return usaSuperClasse ? PROPERTIES_SECURED : PROPERTIES_NOT_SECURED;
+//    }// end of method
+//
 }// end of class

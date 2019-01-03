@@ -1,6 +1,7 @@
 package it.algos.vaadflow.ui.dialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -38,6 +39,10 @@ public class ADeleteDialog extends ADialog {
         bottomLayout.setSpacing(true);
         bottomLayout.setMargin(false);
         bottomLayout.setClassName("confirm-dialog-buttons");
+
+        Label spazioVuotoEspandibile = new Label("");
+        bottomLayout.add(spazioVuotoEspandibile);
+        bottomLayout.setFlexGrow(1, spazioVuotoEspandibile);
 
         cancelButton.getElement().setAttribute("theme", "primary");
         cancelButton.addClickListener(e -> cancellaHandler());

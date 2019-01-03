@@ -2,7 +2,6 @@ package it.algos.vaadflow.modules.logtype;
 
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
@@ -41,7 +40,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_TYP;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_TYP, layout = MainLayout.class)
+@Route(value = TAG_TYP)
 @Qualifier(TAG_TYP)
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
@@ -55,6 +54,7 @@ public class LogtypeViewList extends AViewList {
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+
     public static final String IRON_ICON = "menu";
 
 
@@ -71,6 +71,7 @@ public class LogtypeViewList extends AViewList {
         super(presenter, dialog);
         ((LogtypeViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
+
 
     /**
      * Le preferenze sovrascritte nella sottoclasse
@@ -91,10 +92,12 @@ public class LogtypeViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixAlertLayout() {
-        super.fixAlertLayout();
+    protected boolean creaAlertLayout() {
+        super.creaAlertLayout();
 
         alertPlacehorder.add(new Label("Serve per aggiungere altri eventuali 'type' specifici per i logs dell'applicazione"));
+
+        return true;
     }// end of method
 
 

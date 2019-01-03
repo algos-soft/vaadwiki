@@ -33,7 +33,7 @@
         <!-- Dependencies -->
         <!-- Va tenuta aggiornata la versione di VAADIN 10.0.x -->
         <!--<vaadin.version>10.0.5</vaadin.version>-->
-        <vaadin.version>12.0.0</vaadin.version>
+        <vaadin.version>12.0.3</vaadin.version>
 
         <!-- Va tenuta aggiornata la versione di spring-boot -->
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>

@@ -41,7 +41,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_UTE;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_UTE, layout = MainLayout.class)
+@Route(value = TAG_UTE)
 @Qualifier(TAG_UTE)
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
@@ -54,7 +54,7 @@ public class UtenteViewList extends AViewList {
      * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.USER;
 
     public static final String IRON_ICON = "account-circle";
 
@@ -103,12 +103,14 @@ public class UtenteViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixAlertLayout() {
-        super.fixAlertLayout();
+    protected boolean creaAlertLayout() {
+        super.creaAlertLayout();
 
         alertPlacehorder.add(new Label("Questa lista non dovrebbe mai essere usata direttamente"));
         alertPlacehorder.add(new Label("Serve per la creazione e gestione interna degli accessi della security"));
         alertPlacehorder.add(new Label("La entity 'utente' fa da superclasse per le anagrafiche: Persona, Milite, ecc."));
+
+        return true;
     }// end of method
 
 

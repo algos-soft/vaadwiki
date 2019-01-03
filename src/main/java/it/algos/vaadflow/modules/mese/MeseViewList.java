@@ -39,7 +39,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_MES;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_MES, layout = MainLayout.class)
+@Route(value = TAG_MES)
 @Qualifier(TAG_MES)
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j

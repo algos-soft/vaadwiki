@@ -2,14 +2,13 @@ package it.algos.vaadflow.modules.role;
 
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.AViewList;
-import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.dialog.IADialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,7 +37,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_ROL;
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Route(value = TAG_ROL, layout = MainLayout.class)
+@Route(value = TAG_ROL)
 @Qualifier(TAG_ROL)
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
@@ -51,11 +50,12 @@ public class RoleViewList extends AViewList {
      * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.MENU;
+
     public static final String IRON_ICON = "menu";
 
 
-   /**
+    /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
@@ -68,6 +68,7 @@ public class RoleViewList extends AViewList {
         super(presenter, dialog);
         ((RoleViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
+
 
     /**
      * Le preferenze sovrascritte nella sottoclasse
@@ -88,10 +89,12 @@ public class RoleViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixAlertLayout() {
-        super.fixAlertLayout();
+    protected boolean creaAlertLayout() {
+        super.creaAlertLayout();
 
         alertPlacehorder.add(new Label("Serve per aggiungere altri eventuali 'authority' specifiche dell'applicazione"));
+
+        return true;
     }// end of method
 
 

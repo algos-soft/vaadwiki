@@ -18,7 +18,6 @@ import javax.validation.constraints.Size;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Project springvaadin
@@ -363,20 +362,20 @@ public class AAnnotationService extends AbstractService {
      *
      * @return the name of the spring-view
      */
-    public String getViewName(final Class<? extends IAView> viewClazz) {
-        String name = reflection.getMenuName(viewClazz);
+    public String getMenuName(final Class<? extends IAView> viewClazz) {
+        String menuName = reflection.getMenuName(viewClazz);
         Route annotation = null;
 
-        if (text.isEmpty(name)) {
+        if (text.isEmpty(menuName)) {
             annotation = this.getRoute(viewClazz);
         }// end of if cycle
 
         if (annotation != null) {
-            name = annotation.value();
+            menuName = annotation.value();
         }// end of if cycle
 
-        name = text.isValid(name) ? name : "home";
-        return name;
+        menuName = text.isValid(menuName) ? text.primaMaiuscola(menuName) : "Home";
+        return menuName;
     }// end of method
 
 
@@ -798,7 +797,6 @@ public class AAnnotationService extends AbstractService {
 
         return widthTxt;
     }// end of method
-
 
 
     /**

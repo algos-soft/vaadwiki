@@ -2,6 +2,7 @@ package it.algos.vaadflow.modules.preferenza;
 
 
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.enumeration.EAMenu;
 
 /**
  * Project it.algos.vaadflow
@@ -38,6 +39,7 @@ public enum EAPreferenza {
     mailTo(FlowCost.MAIL_TO, "Email di default a cui spedire i log di posta", EAPrefType.string, "gac@algos.it"),
     maxRigheGrid(FlowCost.MAX_RIGHE_GRID, "Elementi da visualizzare in ogni pagina della Grid", EAPrefType.integer, 20),
     mongoPageLimit(FlowCost.MONGO_PAGE_LIMIT, "Limite di elementi nelle query mongoDB", EAPrefType.integer, 50000),
+    usaMenu(FlowCost.USA_MENU, "Tipo di menu in uso", EAPrefType.string, EAMenu.buttons.toString()),
     ;
 
 

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -176,20 +177,61 @@ public class AMongoService extends AbstractService {
      *
      * @return entity
      */
-    public AEntity findByProperty(Class<? extends AEntity> clazz, String property, Object value) {
-        AEntity entity = null;
-        Object lista;
+    public List<AEntity> findAllByProperty(Class<? extends AEntity> clazz, String property, Object value) {
+        List<AEntity> lista = null;
+        Query query = new Query();
 
         if (reflection.isNotEsiste(clazz, property)) {
             log.error("Algos - Manca la property " + property + " nella classe " + clazz.getSimpleName());
             return null;
         }// end of if cycle
 
-        Query searchQuery = new Query(Criteria.where(property).is(value));
-        lista = mongoOp.find(searchQuery, clazz);
+        query.addCriteria(Criteria.where(property).is(value));
+        lista = (List<AEntity>) mongoOp.find(query, clazz);
 
-        if (lista != null && ((List) lista).size() == 1) {
-            entity = (AEntity) ((List) lista).get(0);
+        return lista;
+    }// end of method
+
+
+    /**
+     * Find single entity
+     *
+     * @param clazz                   della collezione
+     * @param listaCriteriaDefinition per le selezioni di filtro
+     *
+     * @return entity
+     */
+    public List<AEntity> findAllByProperty(Class<? extends AEntity> clazz, CriteriaDefinition[] listaCriteriaDefinition) {
+        List<AEntity> lista = null;
+        Query query = new Query();
+
+        if (listaCriteriaDefinition != null && listaCriteriaDefinition.length > 0) {
+            for (CriteriaDefinition criteria : listaCriteriaDefinition) {
+                query.addCriteria(criteria);
+            }// end of for cycle
+        }// end of if cycle
+
+        lista = (List<AEntity>) mongoOp.find(query, clazz);
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Find single entity
+     *
+     * @param clazz    della collezione
+     * @param property da controllare
+     * @param value    da considerare
+     *
+     * @return entity
+     */
+    public AEntity findByProperty(Class<? extends AEntity> clazz, String property, Object value) {
+        AEntity entity = null;
+        List<AEntity> lista = findAllByProperty(clazz, property, value);
+
+        if (lista != null && lista.size() == 1) {
+            entity = lista.get(0);
         }// end of if cycle
 
         return entity;
