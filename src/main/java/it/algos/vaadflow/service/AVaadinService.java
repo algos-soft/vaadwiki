@@ -79,8 +79,10 @@ public class AVaadinService {
         AContext context;
         String uniqueUserName = "";
         Utente utente;
-        Company company;
+        Company company = null;
         VaadinSession vaadSession = UI.getCurrent().getSession();
+        User springUser;
+        boolean secured = false;
 
         context = (AContext) vaadSession.getAttribute(KEY_CONTEXT);
         if (context == null) {
@@ -91,14 +93,22 @@ public class AVaadinService {
             ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
             HttpSession httpSession = attr.getRequest().getSession(true);
             SecurityContext securityContext = (SecurityContext) httpSession.getAttribute(KEY_SECURITY_CONTEXT);
-            User springUser = (User) securityContext.getAuthentication().getPrincipal();
-            uniqueUserName = springUser.getUsername();
-            utente = utenteService.findByKeyUnica(uniqueUserName);
 
-            login.setUtente(utente);
-            company = utente.company;
+            try { // prova ad eseguire il codice
+                springUser = (User) securityContext.getAuthentication().getPrincipal();
+                uniqueUserName = springUser.getUsername();
+                utente = utenteService.findByKeyUnica(uniqueUserName);
+                login.setUtente(utente);
+                company = utente.company;
+                secured = true;
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
+
             context = new AContext(login, company);
+            context.setSecured(secured);
             vaadSession.setAttribute(KEY_CONTEXT, context);
+
         }// end of if cycle
 
         return context;

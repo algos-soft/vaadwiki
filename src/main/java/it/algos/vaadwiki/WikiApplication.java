@@ -1,15 +1,16 @@
 package it.algos.vaadwiki;
 
 import com.vaadin.flow.spring.annotation.EnableVaadin;
+import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadwiki.security.SecurityConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import it.algos.vaadflow.annotation.AIScript;
 
 /**
  * Project vaadwiki
@@ -39,8 +40,8 @@ import it.algos.vaadflow.annotation.AIScript;
  * The @SpringBootApplication annotation is equivalent to using @Configuration, @EnableAutoConfiguration and @ComponentScan with their default attributes:
  * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script di algos <br>
  */
-@SpringBootApplication(scanBasePackages = {"it.algos.vaadflow", "it.algos.vaadwiki", "it.algos.wiki"})
-@EnableVaadin({"it.algos.vaadflow.modules","it.algos.vaadflow.backend", "it.algos.vaadflow.wizard", "it.algos.vaadflow.service", "it.algos.vaadflow.developer","it.algos.vaadflow.ui", "it.algos.vaadwiki.application", "it.algos.vaadwiki.modules","it.algos.vaadwiki.service", "it.algos.wiki"})
+@SpringBootApplication(scanBasePackages = {"it.algos.vaadflow", "it.algos.vaadwiki", "it.algos.wiki"}, exclude = {SecurityAutoConfiguration.class})
+@EnableVaadin({"it.algos.vaadflow.modules", "it.algos.vaadflow.backend", "it.algos.vaadflow.wizard", "it.algos.vaadflow.service", "it.algos.vaadflow.developer", "it.algos.vaadflow.ui", "it.algos.vaadwiki.application", "it.algos.vaadwiki.modules", "it.algos.vaadwiki.service", "it.algos.wiki"})
 @EntityScan({"it.algos.vaadflow.modules", "it.algos.vaadwiki.modules"})
 @EnableMongoRepositories({"it.algos"})
 @AIScript(sovrascrivibile = false)
