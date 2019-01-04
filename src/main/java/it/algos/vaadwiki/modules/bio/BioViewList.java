@@ -2,18 +2,13 @@ package it.algos.vaadwiki.modules.bio;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamRegistration;
-import com.vaadin.flow.server.StreamResource;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.presenter.IAPresenter;
@@ -30,9 +25,6 @@ import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -173,8 +165,11 @@ public class BioViewList extends AttNazProfCatViewList {
      */
     @Override
     protected void fixPreferenzeSpecifiche() {
-        super.usaSearchTextField = true;//@todo Provvisorio. Occore sviluppare un searchDialog
+        super.fixPreferenzeSpecifiche();
+        super.usaSearchTextField = false;
         super.usaSearchBottoneNew = false;
+        super.usaBottoneStatistiche = false;
+        super.usaBottoneModulo = false;
         super.usaBottoneEdit = true;
         super.task = taskBio;
         super.codeFlagDownload = USA_DAEMON_BIO;
@@ -183,91 +178,51 @@ public class BioViewList extends AttNazProfCatViewList {
     }// end of method
 
 
-    protected void creaBottoni() {
-        creaCiclo();
-        creaDelete();
-        creaDeleteAll();
-        creaNew();
-        creaSearchBio();
-        creaUpdate();
-        creaElabora();
-        creaUpload();
+    /**
+     * Placeholder (eventuale, presente di default) SOPRA la Grid
+     * - con o senza campo edit search, regolato da preferenza o da parametro
+     * - con o senza bottone New, regolato da preferenza o da parametro
+     * - con eventuali altri bottoni specifici
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected boolean creaTopLayout() {
+        super.creaTopLayout();
 
-        addBottoni();
-    }// end of method
-
-
-    private void test() {
-        Dialog dialog = new Dialog();
-        Div content = new Div();
-        content.addClassName("my-style");
-
-        content.setText("This component is styled using global styles");
-        dialog.add(content);
-
-// @formatter:off
-        String styles = ".my-style { "
-                + "  color: red;"
-                + " }";
-// @formatter:on
-
-        /*
-         * The code below register the style file dynamically. Normally you
-         * use @StyleSheet annotation for the component class. This way is
-         * chosen just to show the style file source code.
-         */
-        StreamRegistration resource = UI.getCurrent().getSession()
-                .getResourceRegistry()
-                .registerResource(new StreamResource("styles.css", () -> {
-                    byte[] bytes = styles.getBytes(StandardCharsets.UTF_8);
-                    return new ByteArrayInputStream(bytes);
-                }));
-        UI.getCurrent().getPage().addStyleSheet(
-                "base://" + resource.getResourceUri().toString());
-
-        dialog.setWidth("400px");
-        dialog.setHeight("150px");
-
-        newButton.addClickListener(event -> {
-            dialog.open();
-            input.getElement().callFunction("focus");
-        });
-        input = new ATextField();
-
-        dialog.add(input);
-        NativeButton confirmButton = new NativeButton("Confirm", event -> {
-            service.downloadBio(input.getValue());
-            dialog.close();
-        });
-        NativeButton cancelButton = new NativeButton("Cancel", event -> {
-            dialog.close();
-        });
-        dialog.add(cancelButton);
-        dialog.add(confirmButton);
-    }// end of method
-
-
-    private void creaCiclo() {
+        //--ciclo
         ciclodButton = new Button("Ciclo", new Icon(VaadinIcon.REFRESH));
         ciclodButton.addClickListener(e -> {
             cicloService.esegue();
             updateView();
         });//end of lambda expressions and anonymous inner class
-    }// end of method
+        topPlaceholder.add(ciclodButton);
 
-
-    private void creaDelete() {
+        //--delete singola biografia
         deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
         deleteButton.getElement().setAttribute("theme", "error");
         deleteButton.addClickListener(e -> service.delete(null));
+        topPlaceholder.add(deleteButton);
+
+        //--aggiorna singola biografia
+        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
+        updateButton.getElement().setAttribute("theme", "primary");
+        topPlaceholder.add(updateButton);
+
+        //--elabora singola biografia
+        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
+        elaboraButton.addClickListener(e -> elaboraService.esegue());
+        topPlaceholder.add(elaboraButton);
+
+        //--upload singola biografia
+        uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
+        uploadButton.getElement().setAttribute("theme", "error");
+        topPlaceholder.add(uploadButton);
+
+        sincroBottoniMenu(null);
+        return topPlaceholder.getComponentCount() > 0;
     }// end of method
 
-
-    private void creaDeleteAll() {
-        deleteAllButton = new Button("Delete All", new Icon(VaadinIcon.CLOSE_CIRCLE));
-        deleteAllButton.getElement().setAttribute("theme", "error");
-        deleteAllButton.addClickListener(e -> openConfirmDialog());
-    }// end of method
 
 
     private void creaNew() {
@@ -282,53 +237,6 @@ public class BioViewList extends AttNazProfCatViewList {
 //        newButton.addClickListener(e -> newService.esegue(null));
     }// end of method
 
-
-    private void creaUpdate() {
-        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
-        updateButton.getElement().setAttribute("theme", "primary");
-
-//        updateButton.addClickListener(e -> updateService.esegue());
-    }// end of method
-
-
-    private void creaElabora() {
-        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
-        elaboraButton.addClickListener(e -> elaboraService.esegue());
-    }// end of method
-
-
-    private void creaUpload() {
-        uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
-        uploadButton.getElement().setAttribute("theme", "error");
-//        uploadButton.addClickListener(event -> upload());
-        //        uploadButton.addClickListener(e -> cicloService.esegue());
-    }// end of method
-
-
-//    private void cicloTest() {
-//        ArrayList<Long> listaVociCategoriaSuServer;
-//        listaVociCategoriaSuServer = categoriaService.findPageids();
-////        service.deleteAll();
-//        newService.esegue(listaVociCategoriaSuServer);
-//        super.updateView();
-//    }// end of method
-
-
-    protected void addBottoni() {
-        if (topPlaceholder != null) {
-            topPlaceholder.removeAll();
-            topPlaceholder.add(ciclodButton);
-            topPlaceholder.add(deleteButton);
-            topPlaceholder.add(deleteAllButton);
-            topPlaceholder.add(newButton);
-            topPlaceholder.add(searchButton);
-            topPlaceholder.add(updateButton);
-            topPlaceholder.add(elaboraButton);
-            topPlaceholder.add(uploadButton);
-
-            sincroBottoniMenu(null);
-        }// end of if cycle
-    }// end of method
 
 
     /**
@@ -380,11 +288,25 @@ public class BioViewList extends AttNazProfCatViewList {
     protected void sincroBottoniMenu(SelectionEvent<Grid<AEntity>, AEntity> selectionEvent) {
         boolean enabled = selectionEvent != null && selectionEvent.getAllSelectedItems().size() > 0;
 
-        deleteButton.setEnabled(enabled);
-        deleteAllButton.setEnabled(!enabled);
-        updateButton.setEnabled(enabled);
-        elaboraButton.setEnabled(enabled);
-        uploadButton.setEnabled(enabled);
+        if (deleteButton != null) {
+            deleteButton.setEnabled(enabled);
+        }// end of if cycle
+
+        if (deleteAllButton != null) {
+            deleteAllButton.setEnabled(!enabled);
+        }// end of if cycle
+
+        if (updateButton != null) {
+            updateButton.setEnabled(enabled);
+        }// end of if cycle
+
+        if (elaboraButton != null) {
+            elaboraButton.setEnabled(enabled);
+        }// end of if cycle
+
+        if (uploadButton != null) {
+            uploadButton.setEnabled(enabled);
+        }// end of if cycle
 
     }// end of method
 

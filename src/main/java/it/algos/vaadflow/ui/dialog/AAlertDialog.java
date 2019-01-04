@@ -6,6 +6,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Project vaadflow
  * Created by Algos
@@ -18,6 +20,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AAlertDialog extends ADialog {
 
+
+    /**
+     * Metodo invocato subito DOPO il costruttore.
+     * DEVE essere inserito nella sottoclasse e invocare (eventualmente) un metodo della superclasse.
+     * <p>
+     * Performing the initialization in a constructor is not suggested
+     * as the state of the UI is not properly set up when the constructor is invoked.
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
+     * ma l'ordine con cui vengono chiamati NON è garantito
+     */
+    @PostConstruct
+    protected void inizializzazione() {
+        super.inizia();
+    }// end of method
 
     public AAlertDialog(String title, String message) {
         VerticalLayout vertLayout = new VerticalLayout();

@@ -1212,11 +1212,13 @@ public abstract class AService extends AbstractService implements IAService {
     @Override
     public boolean delete(AEntity entityBean) {
         boolean status = false;
-        DeleteResult result;
+        DeleteResult result = null;
 
-        result = mongo.delete(entityBean);
+        if (entityBean != null) {
+            result = mongo.delete(entityBean);
+        }// end of if cycle
 
-        if (result.getDeletedCount() == 1) {
+        if (result != null && result.getDeletedCount() == 1) {
             status = true;
         }// end of if cycle
 

@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Project vaadflow
  * Created by Algos
@@ -21,14 +23,33 @@ import org.springframework.context.annotation.Scope;
 @Slf4j
 public class ADeleteDialog extends ADialog {
 
-    protected Button deleteButton = new Button("Delete");
+    //--Titolo standard, eventualmente modificabile nelle sottoclassi
+    private static String TITOLO = "Delete";
+
+    protected Button deleteButton = new Button(TITOLO);
+
 
     /**
      * Costruttore <br>
      */
     public ADeleteDialog() {
-        super("Delete");
+        super(TITOLO);
     }// end of constructor
+
+    /**
+     * Metodo invocato subito DOPO il costruttore.
+     * DEVE essere inserito nella sottoclasse e invocare (eventualmente) un metodo della superclasse.
+     * <p>
+     * Performing the initialization in a constructor is not suggested
+     * as the state of the UI is not properly set up when the constructor is invoked.
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
+     * ma l'ordine con cui vengono chiamati NON è garantito
+     */
+    @PostConstruct
+    protected void inizializzazione() {
+        super.inizia();
+    }// end of method
 
     /**
      * Barra dei bottoni

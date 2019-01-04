@@ -80,11 +80,11 @@ public class CategoriaViewList extends AttNazProfCatViewList {
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      */
     protected void fixPreferenzeSpecifiche() {
+        super.fixPreferenzeSpecifiche();
         super.usaBottoneUpload = false;
         super.usaBottoneStatistiche = false;
         super.usaBottoneModulo = false;
         super.usaSearchTextField = false;
-        super.usaSearchBottoneNew = false;
         super.usaBottoneCategoria = true;
         super.titoloCategoria = "Categoria:" + pref.getStr(WikiCost.CAT_BIO);
         super.task = taskCategoria;

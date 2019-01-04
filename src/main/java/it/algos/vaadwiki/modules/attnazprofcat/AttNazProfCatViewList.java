@@ -17,7 +17,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
 import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
@@ -50,6 +49,7 @@ public class AttNazProfCatViewList extends AViewList {
     protected Button showStatisticheButton;
 
     protected String titoloCategoria;
+
     protected String titoloModulo;
 
     protected String titoloPaginaStatistiche;
@@ -63,6 +63,10 @@ public class AttNazProfCatViewList extends AViewList {
     protected boolean usaBottoneUpload = true;
 
     protected boolean usaBottoneCategoria = false;
+
+    protected boolean usaBottoneDeleteMongo = true;
+
+    protected boolean usaBottoneDownload = true;
 
     protected boolean usaBottoneModulo = true;
 
@@ -92,62 +96,127 @@ public class AttNazProfCatViewList extends AViewList {
     }// end of Spring constructor
 
 
-    @PostConstruct
-    private void inizia() {
-        creaBottoni();
+    /**
+     * Le preferenze sovrascritte nella sottoclasse
+     */
+    protected void fixPreferenzeSpecifiche() {
+//        super.usaBottoneNew = false; @todo rimettere
+        super.usaSearchTextField = false;
+        super.usaSearchBottoneNew = false;
+        super.isEntityModificabile = false;
     }// end of method
 
 
-    protected void creaBottoni() {
-        creaDeleteMongo();
-        creaDownload();
-        creaUpload();
-        creaShowCategoria();
-        creaShowModulo();
-        creaShowStatistiche();
-        addBottoni();
+    /**
+     * Placeholder (eventuale, presente di default) SOPRA la Grid
+     * - con o senza campo edit search, regolato da preferenza o da parametro
+     * - con o senza bottone New, regolato da preferenza o da parametro
+     * - con eventuali altri bottoni specifici
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected boolean creaTopLayout() {
+        super.creaTopLayout();
+
+        if (usaBottoneDeleteMongo) {
+            deleteMongoButton = new Button("Delete All", new Icon(VaadinIcon.CLOSE_CIRCLE));
+            deleteMongoButton.getElement().setAttribute("theme", "error");
+            deleteMongoButton.addClickListener(e -> openConfirmDialog());
+            topPlaceholder.add(deleteMongoButton);
+        }// end of if cycle
+
+        if (usaBottoneDownload) {
+            donwloadMongoButton = new Button("Download", new Icon(VaadinIcon.DOWNLOAD));
+            donwloadMongoButton.getElement().setAttribute("theme", "primary");
+            donwloadMongoButton.addClickListener(e -> {
+                service.download();
+                updateView();
+            });//end of lambda expressions and anonymous inner class
+            topPlaceholder.add(donwloadMongoButton);
+        }// end of if cycle
+
+        if (usaBottoneUpload) {
+            uploadStatisticheButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
+            uploadStatisticheButton.addClassName("view-toolbar__button");
+            uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
+            topPlaceholder.add(uploadStatisticheButton);
+        }// end of if cycle
+
+        if (usaBottoneCategoria) {
+            showCategoriaButton = new Button("Categoria", new Icon(VaadinIcon.LIST));
+            showCategoriaButton.addClassName("view-toolbar__button");
+            showCategoriaButton.addClickListener(e -> showWikiCategoria());
+            topPlaceholder.add(showCategoriaButton);
+        }// end of if cycle
+
+        if (usaBottoneModulo) {
+            showModuloButton = new Button("Modulo", new Icon(VaadinIcon.LIST));
+            showModuloButton.addClassName("view-toolbar__button");
+            showModuloButton.addClickListener(e -> showWikiModulo());
+            topPlaceholder.add(showModuloButton);
+        }// end of if cycle
+
+        if (usaBottoneStatistiche) {
+            showStatisticheButton = new Button("Statistiche", new Icon(VaadinIcon.TABLE));
+            showStatisticheButton.addClassName("view-toolbar__button");
+            showStatisticheButton.addClickListener(e -> showWikiStatistiche());
+            topPlaceholder.add(showStatisticheButton);
+        }// end of if cycle
+
+        return topPlaceholder.getComponentCount() > 0;
     }// end of method
 
 
-    private void creaDeleteMongo() {
-        deleteMongoButton = new Button("Delete All", new Icon(VaadinIcon.CLOSE_CIRCLE));
-        deleteMongoButton.getElement().setAttribute("theme", "error");
-        deleteMongoButton.addClickListener(e -> openConfirmDialog());
-    }// end of method
+//    protected void creaBottoni() {
+//        creaDeleteMongo();
+//        creaDownload();
+//        creaUpload();
+//        creaShowCategoria();
+//        creaShowModulo();
+//        creaShowStatistiche();
+//    }// end of method
 
 
-    private void creaDownload() {
-        donwloadMongoButton = new Button("Download", new Icon(VaadinIcon.DOWNLOAD));
-        donwloadMongoButton.getElement().setAttribute("theme", "primary");
-        donwloadMongoButton.addClickListener(e -> {
-            service.download();
-            updateView();
-        });//end of lambda expressions and anonymous inner class
-    }// end of method
+//    private void creaDeleteMongo() {
+//        deleteMongoButton = new Button("Delete All", new Icon(VaadinIcon.CLOSE_CIRCLE));
+//        deleteMongoButton.getElement().setAttribute("theme", "error");
+//        deleteMongoButton.addClickListener(e -> openConfirmDialog());
+//    }// end of method
 
 
-    private void creaUpload() {
-        uploadStatisticheButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
-        uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
-    }// end of method
+//    private void creaDownload() {
+//        donwloadMongoButton = new Button("Download", new Icon(VaadinIcon.DOWNLOAD));
+//        donwloadMongoButton.getElement().setAttribute("theme", "primary");
+//        donwloadMongoButton.addClickListener(e -> {
+//            service.download();
+//            updateView();
+//        });//end of lambda expressions and anonymous inner class
+//    }// end of method
 
 
-    private void creaShowCategoria() {
-        showCategoriaButton = new Button("Categoria", new Icon(VaadinIcon.LIST));
-        showCategoriaButton.addClickListener(e -> showWikiCategoria());
-    }// end of method
+//    private void creaUpload() {
+//        uploadStatisticheButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
+//        uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
+//    }// end of method
 
 
-    private void creaShowModulo() {
-        showModuloButton = new Button("Modulo", new Icon(VaadinIcon.LIST));
-        showModuloButton.addClickListener(e -> showWikiModulo());
-    }// end of method
+//    private void creaShowCategoria() {
+//        showCategoriaButton = new Button("Categoria", new Icon(VaadinIcon.LIST));
+//        showCategoriaButton.addClickListener(e -> showWikiCategoria());
+//    }// end of method
 
 
-    private void creaShowStatistiche() {
-        showStatisticheButton = new Button("Statistiche", new Icon(VaadinIcon.TABLE));
-        showStatisticheButton.addClickListener(e -> showWikiStatistiche());
-    }// end of method
+//    private void creaShowModulo() {
+//        showModuloButton = new Button("Modulo", new Icon(VaadinIcon.LIST));
+//        showModuloButton.addClickListener(e -> showWikiModulo());
+//    }// end of method
+
+
+//    private void creaShowStatistiche() {
+//        showStatisticheButton = new Button("Statistiche", new Icon(VaadinIcon.TABLE));
+//        showStatisticheButton.addClickListener(e -> showWikiStatistiche());
+//    }// end of method
 
 
     /**
@@ -194,37 +263,6 @@ public class AttNazProfCatViewList extends AViewList {
     protected void showWikiStatistiche() {
         String link = "\"" + PATH_WIKI + titoloPaginaStatistiche + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
-    }// end of method
-
-
-    protected void addBottoni() {
-        if (topPlaceholder != null && deleteMongoButton != null) {
-            topPlaceholder.removeAll();
-            topPlaceholder.add(deleteMongoButton);
-            topPlaceholder.add(donwloadMongoButton);
-            if (usaBottoneUpload) {
-                topPlaceholder.add(uploadStatisticheButton);
-            }// end of if cycle
-            if (usaBottoneCategoria) {
-                topPlaceholder.add(showCategoriaButton);
-            }// end of if cycle
-            if (usaBottoneModulo) {
-                topPlaceholder.add(showModuloButton);
-            }// end of if cycle
-            if (usaBottoneStatistiche) {
-                topPlaceholder.add(showStatisticheButton);
-            }// end of if cycle
-        }// end of if cycle
-    }// end of method
-
-
-    /**
-     * Le preferenze sovrascritte nella sottoclasse
-     */
-    protected void fixPreferenzeSpecifiche() {
-//        super.usaBottoneNew = false; @todo rimettere
-        super.usaSearchBottoneNew = false;
-        super.isEntityModificabile = false;
     }// end of method
 
 
