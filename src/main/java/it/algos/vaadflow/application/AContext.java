@@ -94,12 +94,12 @@ public class AContext {
 
 
     public boolean isDev() {
-        return login.isDeveloper();
+        return login.isDeveloper() || !isSecured();
     }// end of method
 
 
     public boolean isAdmin() {
-        return login.isAdmin();
+        return login.isAdmin() || !isSecured();
     }// end of method
 
 

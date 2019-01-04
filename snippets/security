@@ -1,0 +1,5 @@
+Per usare un'applicazione SENZA login, disabilitare l'Annotation della classe SecurityConfiguration
+
+//@EnableWebSecurity
+
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
