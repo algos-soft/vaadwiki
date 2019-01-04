@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +53,7 @@ public class LogService extends AService {
      */
     private final static long serialVersionUID = 1L;
 
+    private final static String SORT_FIELD = "evento";
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -241,56 +245,32 @@ public class LogService extends AService {
 
     public ArrayList<Log> findAllByLivello(Livello livello) {
         ArrayList<Log> items = null;
+        Query query = new Query();
+        Sort sort = new Sort(Sort.Direction.DESC, SORT_FIELD);
+        query.with(sort);
+        String livelloField = "livello";
 
         if (livello != null) {
             switch (livello) {
                 case debug:
-                    items = findAllDebug();
+                    query.addCriteria(Criteria.where(livelloField).is(Livello.debug));
                     break;
                 case info:
-                    items = findAllInfo();
+                    query.addCriteria(Criteria.where(livelloField).is(Livello.info));
                     break;
                 case warn:
-                    items = findAllWarn();
+                    query.addCriteria(Criteria.where(livelloField).is(Livello.warn));
                     break;
                 case error:
-                    items = findAllError();
+                    query.addCriteria(Criteria.where(livelloField).is(Livello.error));
                     break;
                 default:
-                    items = findAllLog();
                     log.warn("Switch - caso non definito");
                     break;
             } // end of switch statement
-        } else {
-            items = findAllLog();
-        }// end of if/else cycle
+        }// end of if cycle
 
-        return items;
-    }// end of method
-
-
-    public ArrayList<Log> findAllDebug() {
-        return new ArrayList<Log>(repository.findByLivello(Livello.debug));
-    }// end of method
-
-
-    public ArrayList<Log> findAllInfo() {
-        return new ArrayList<Log>(repository.findByLivello(Livello.info));
-    }// end of method
-
-
-    public ArrayList<Log> findAllWarn() {
-        return new ArrayList<Log>(repository.findByLivello(Livello.warn));
-    }// end of method
-
-
-    public ArrayList<Log> findAllError() {
-        return new ArrayList<Log>(repository.findByLivello(Livello.error));
-    }// end of method
-
-
-    public ArrayList<Log> findAllLog() {
-        return new ArrayList<Log>(repository.findAll());
+        return (ArrayList) mongo.mongoOp.find(query, Log.class);
     }// end of method
 
 

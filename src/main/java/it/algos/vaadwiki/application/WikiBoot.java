@@ -17,8 +17,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.servlet.ServletContextEvent;
+import java.time.LocalDate;
 
-import static it.algos.vaadflow.application.FlowCost.PROJECT_NAME;
+import static it.algos.vaadflow.application.FlowCost.*;
 
 /**
  * Project vaadwiki
@@ -42,7 +43,6 @@ import static it.algos.vaadflow.application.FlowCost.PROJECT_NAME;
 @AIScript(sovrascrivibile = false)
 public class WikiBoot extends ABoot {
 
-    public final static String PROJECT_VERSION = "0.3";
     public final static String DEMO_COMPANY_CODE = "demo";
 
     @Autowired
@@ -50,10 +50,12 @@ public class WikiBoot extends ABoot {
 
     @Autowired
     private RoleService roleService;
+
     /**
      * Iniettata dal costruttore <br>
      */
     private WikiVers vaadwikiVers;
+
 
     /**
      * Costruttore @Autowired <br>
@@ -65,6 +67,7 @@ public class WikiBoot extends ABoot {
         super();
         this.vaadwikiVers = vaadwikiVers;
     }// end of Spring constructor
+
 
     /**
      * Executed on container startup <br>
@@ -107,10 +110,8 @@ public class WikiBoot extends ABoot {
      */
     protected void regolaInfo() {
         PROJECT_NAME = "vaadwiki";
-
-//        footer.project = "Vaadwam";
-//        footer.version = "0.2";
-//        footer.data = LocalDate.of(2018, 8, 1);
+        PROJECT_VERSION = "1";
+        PROJECT_DATE = LocalDate.of(2019, 1, 4);
     }// end of method
 
 

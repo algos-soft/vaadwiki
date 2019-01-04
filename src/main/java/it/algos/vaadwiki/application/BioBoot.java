@@ -33,7 +33,7 @@ import static it.algos.vaadflow.application.FlowCost.PROJECT_NAME;
 @AIScript(sovrascrivibile = false)
 public class BioBoot extends ABoot {
 
-    public final static String PROJECT_VERSION = "0.3";
+    public final static String PROJECT_VERSION = "1";
     public final static String DEMO_COMPANY_CODE = "demo";
 
     /**

@@ -290,6 +290,8 @@ public class FlowCost {
     //--date
     public final static Locale LOCALE = Locale.ITALIAN;
 
+    public final static String TAG_SEARCH = "search";
+
     private final static String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
 
     public final static List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
@@ -314,12 +316,10 @@ public class FlowCost {
 
     public static String LAYOUT_TITLE = "";
 
-    public static String PROJECT_NAME = "vaadinflow";
+    public static String PROJECT_NAME;
 
-    public static String PROJECT_VERSION = "0.1";
+    public static String PROJECT_VERSION;
 
-    public static LocalDate PROJECT_DATE = LocalDate.of(2018, 1, 1);
-
-    public final static String TAG_SEARCH = "search";
+    public static LocalDate PROJECT_DATE;
 
 }// end of static class

@@ -30,7 +30,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 @AIScript(sovrascrivibile = false)
 public interface LogRepository extends MongoRepository<Log, String> {
 
-    public List<Log> findByLivello(Livello livello);
+    public List<Log> findByLivello(Livello livello );
 
 
 }// end of class
