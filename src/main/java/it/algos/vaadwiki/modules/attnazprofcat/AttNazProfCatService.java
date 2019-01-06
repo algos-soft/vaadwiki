@@ -112,6 +112,7 @@ public abstract class AttNazProfCatService extends AService {
 
             setLastDownload(inizio);
             if (pref.isBool(FlowCost.USA_DEBUG)) {
+                log.info("Download del modulo wiki." + entityClass.getSimpleName() + " (" + text.format(righe.length) + " elementi) in " + date.deltaText(inizio));
                 logger.debug("Download del modulo wiki." + entityClass.getSimpleName() + " (" + text.format(righe.length) + " elementi) in " + date.deltaText(inizio));
             }// end of if cycle
         } else {

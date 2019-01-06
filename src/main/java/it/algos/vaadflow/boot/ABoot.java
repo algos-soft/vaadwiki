@@ -3,6 +3,9 @@ package it.algos.vaadflow.boot;
 import it.algos.vaadflow.backend.data.FlowData;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ABootService;
+import it.algos.vaadflow.service.AMongoService;
+import it.algos.vaadflow.service.ATextService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletContextEvent;
@@ -23,6 +26,7 @@ import javax.servlet.ServletContextListener;
  * Not annotated with @SpringComponent (SpringBoot crea la sottoclasse concreta) <br>
  * Not annotated with @Scope (inutile) <br>
  */
+@Slf4j
 public abstract class ABoot implements ServletContextListener {
 
     /**
@@ -37,9 +41,18 @@ public abstract class ABoot implements ServletContextListener {
     @Autowired
     protected PreferenzaService pref;
 
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
+    @Autowired
+    protected AMongoService mongo;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected ATextService text;
 
 
     //    /**
@@ -119,6 +132,7 @@ public abstract class ABoot implements ServletContextListener {
      * Deve essere sovrascritto dalla sottoclasse concreta che invocherà questo metodo()
      */
     protected void inizia() {
+        this.iniziaDBMongo();
         this.iniziaVersioni();
         this.regolaPreferenze();
         this.iniziaDataStandard();
@@ -126,6 +140,16 @@ public abstract class ABoot implements ServletContextListener {
         this.regolaInfo();
         this.addRouteStandard();
         this.addRouteSpecifiche();
+    }// end of method
+
+
+    /**
+     * Inizializzazione di alcuni parametri del database mongoDB <br>
+     */
+    protected void iniziaDBMongo() {
+        mongo.getMaxBlockingSortBytes();
+        mongo.fixMaxBytes();
+        mongo.getMaxBlockingSortBytes();
     }// end of method
 
 

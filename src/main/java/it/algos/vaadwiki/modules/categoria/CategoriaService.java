@@ -2,6 +2,7 @@ package it.algos.vaadwiki.modules.categoria;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadwiki.application.WikiCost;
@@ -229,10 +230,19 @@ public class CategoriaService extends AttNazProfCatService {
         Sort sort = new Sort(Sort.Direction.ASC, "pageid");
 
         for (int k = 0; k < array.numCicli(count(), size); k++) {
-            listaPagine = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Categoria.class);
+            try { // prova ad eseguire il codice
+                listaPagine = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Categoria.class);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
+
             for (AEntity entity : listaPagine) {
                 listaLong.add(((Categoria) entity).pageid);
             }// end of for cycle
+
+            if (pref.isBool(FlowCost.USA_DEBUG)) {
+                log.info("Recuperate " + text.format(listaLong.size()) + " pagine da categoriaService.findPageids()");
+            }// end of if cycle
         }// end of for cycle
 
         logger.info("Recuperate " + text.format(listaLong.size()) + " pagine da categoriaService.findPageids() in " + date.deltaText(inizio));
@@ -258,6 +268,9 @@ public class CategoriaService extends AttNazProfCatService {
         long inizio;
         ArrayList<Categoria> listaCat;
         String nomeCategoria = pref.getStr(WikiCost.CAT_BIO);
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            log.info("CAT - Inizio a caricare le pagine di wiki.categoria. Circa due minuti");
+        }// end of if cycle
 
         inizio = System.currentTimeMillis();
         listaCat = api.leggeCatCat(nomeCategoria);
@@ -312,6 +325,9 @@ public class CategoriaService extends AttNazProfCatService {
         for (int k = 0; k < numCicliInsert; k++) {
             listaBlocco = array.estraeSublista(listaCat, pageLimit, k + 1);
             mongo.insert(listaBlocco, Categoria.class);
+            if (pref.isBool(FlowCost.USA_DEBUG)) {
+                log.info("Inserite " + text.format(count()) + " entities nella collezione Categoria");
+            }// end of if cycle
         }// end of for cycle
 
     }// end of method

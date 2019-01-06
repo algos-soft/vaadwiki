@@ -1,6 +1,8 @@
 package it.algos.vaadflow.service;
 
+import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import it.algos.vaadflow.backend.entity.AEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static it.algos.vaadflow.service.AService.FIELD_NAME_ORDINE;
@@ -44,6 +48,10 @@ import static it.algos.vaadflow.service.AService.FIELD_NAME_ORDINE;
 @Service
 @Slf4j
 public class AMongoService extends AbstractService {
+
+    public final static int STANDARD_MONGO_MAX_BYTES = 33554432;
+
+    public final static int EXPECTED_ALGOS_MAX_BYTES = 50151432;
 
     /**
      * versione della classe per la serializzazione
@@ -540,6 +548,87 @@ public class AMongoService extends AbstractService {
 
 
     /**
+     * Recupera il valore di un parametro
+     *
+     * @param parameterName
+     *
+     * @return value of parameter
+     */
+    public Object getParameter(String parameterName) {
+        Map<String, Object> mappa;
+        MongoDatabase dbAdmin = getDBAdmin();
+        Document param;
+
+        mappa = new LinkedHashMap<>();
+        mappa.put("getParameter", 1);
+        mappa.put(parameterName, 1);
+
+        param = dbAdmin.runCommand(new Document(mappa));
+        return param.get(parameterName);
+    }// end of method
+
+
+    /**
+     * Recupera il valore del parametro internalQueryExecMaxBlockingSortBytes
+     *
+     * @return value of parameter
+     */
+    public int getMaxBlockingSortBytes() {
+        int numBytes;
+        String value = "";
+
+        numBytes = (int) getParameter("internalQueryExecMaxBlockingSortBytes");
+        value = text.format(numBytes);
+
+        if (numBytes == AMongoService.STANDARD_MONGO_MAX_BYTES) {
+            log.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore standard iniziale settato da mongoDB: " + value);
+        } else {
+            if (numBytes == AMongoService.EXPECTED_ALGOS_MAX_BYTES) {
+                log.info("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore richiesto da Algos: " + value);
+            } else {
+                log.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata a cazzo: " + value);
+            }// end of if/else cycle
+        }// end of if/else cycle
+
+        return numBytes;
+    }// end of method
+
+
+    /**
+     * Regola il valore di un parametro
+     *
+     * @param parameterName
+     * @param valueToSet    valore da regolare
+     *
+     * @return true se il valore è stato acquisito dal database
+     */
+    public boolean setParameter(String parameterName, Object valueToSet) {
+        Map<String, Object> mappa;
+        MongoDatabase dbAdmin = getDBAdmin();
+        Document param;
+
+        mappa = new LinkedHashMap<>();
+        mappa.put("setParameter", 1);
+        mappa.put(parameterName, valueToSet);
+
+        param = dbAdmin.runCommand(new Document(mappa));
+        return (double) param.get("ok") == 1;
+    }// end of method
+
+
+    /**
+     * Regola il valore del parametro internalQueryExecMaxBlockingSortBytes
+     *
+     * @param maxBytes da regolare
+     *
+     * @return true se il valore è stato acquisito dal database
+     */
+    public boolean setMaxBlockingSortBytes(int maxBytes) {
+        return setParameter("internalQueryExecMaxBlockingSortBytes", maxBytes);
+    }// end of method
+
+
+    /**
      * Recupera dal DB il valore massimo pre-esistente della property <br>
      * Incrementa di uno il risultato <br>
      *
@@ -590,5 +679,23 @@ public class AMongoService extends AbstractService {
 
         return ordine + 1;
     }// end of method
+
+
+    /**
+     * Restituisce il database 'admin' di servizio, sempre presente in MongoDB
+     */
+    public MongoDatabase getDBAdmin() {
+        MongoClient mongoClient = new MongoClient("localhost", 27017);
+        return mongoClient.getDatabase("admin");
+    }// end of method
+
+
+    /**
+     * Regola il valore iniziale del parametro internalQueryExecMaxBlockingSortBytes
+     */
+    public void fixMaxBytes() {
+        this.setMaxBlockingSortBytes(EXPECTED_ALGOS_MAX_BYTES);
+    }// end of method
+
 
 }// end of class

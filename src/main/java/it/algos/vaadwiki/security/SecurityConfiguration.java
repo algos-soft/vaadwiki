@@ -30,9 +30,8 @@ import javax.annotation.PostConstruct;
  * <li>Set up the login form,</li>
  * <li>Configures the {@link UserDetailsServiceImpl}.</li>
  */
-@EnableWebSecurity
-@Configuration
-@AIScript(sovrascrivibile = true)
+//@EnableWebSecurity
+@AIScript(sovrascrivibile = false)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_PROCESSING_URL = "/login";

@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.service;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.Page;
@@ -85,6 +86,10 @@ public class PageService extends ABioService {
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
             }// fine del blocco try-catch
+        }// end of if cycle
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            log.info("Create in totale " + text.format(bioService.count()) + " nuove voci biografiche (blocco:" + bloccoPageids.size() + ")");
         }// end of if cycle
 
         return result;
