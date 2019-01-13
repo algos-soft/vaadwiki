@@ -183,6 +183,17 @@ public class GiornoService extends AService {
 
 
     /**
+     * Controlla l'esistenza di una Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param titolo (obbligatorio, unico)
+     *
+     * @return true se trovata
+     */
+    public boolean isEsiste(String titolo) {
+        return findByKeyUnica(titolo) != null;
+    }// end of method
+
+    /**
      * Creazione di alcuni dati demo iniziali <br>
      * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
      * La collezione viene svuotata <br>

@@ -4,6 +4,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.AContext;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.service.ElaboraService;
@@ -152,7 +153,7 @@ public class BioService extends AttNazProfCatService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Bio newEntity(long pageid, String wikiTitle, String tmplBioServer) {
-        return newEntity(pageid, wikiTitle, tmplBioServer, (LocalDateTime) null);
+        return newEntity(pageid, wikiTitle, tmplBioServer, (LocalDateTime) null, (LocalDateTime) null);
     }// end of method
 
 
@@ -161,22 +162,40 @@ public class BioService extends AttNazProfCatService {
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
      *
-     * @param pageid                    della pagina wiki (obbligatorio, unico)
-     * @param wikiTitle                 della pagina wiki (obbligatorio, unico)
-     * @param tmplBioServer             template effettivamente presente sul server (obligatorio, unico)
-     * @param lastLettura/aggiornamento della voce effettuata dal programma
+     * @param pageid           della pagina wiki (obbligatorio, unico)
+     * @param wikiTitle        della pagina wiki (obbligatorio, unico)
+     * @param tmplBioServer    template effettivamente presente sul server (obligatorio, unico)
+     * @param lastWikiModifica della pagina effettuata sul servere wiki
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Bio newEntity(long pageid, String wikiTitle, String tmplBioServer, LocalDateTime lastLettura) {
+    public Bio newEntity(long pageid, String wikiTitle, String tmplBioServer, LocalDateTime lastWikiModifica) {
+        return newEntity(pageid, wikiTitle, tmplBioServer, lastWikiModifica, (LocalDateTime) null);
+    }// end of method
+
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
+     *
+     * @param pageid           della pagina wiki (obbligatorio, unico)
+     * @param wikiTitle        della pagina wiki (obbligatorio, unico)
+     * @param tmplBioServer    template effettivamente presente sul server (obligatorio, unico)
+     * @param lastWikiModifica della pagina effettuata sul servere wiki
+     * @param lastGacLettura   della voce effettuata dal programma
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Bio newEntity(long pageid, String wikiTitle, String tmplBioServer, LocalDateTime lastWikiModifica, LocalDateTime lastGacLettura) {
         Bio entity = null;
 
         entity = Bio.builderBio()
                 .pageid(pageid)
                 .wikiTitle(wikiTitle.equals("") ? null : wikiTitle)
                 .tmplBioServer(tmplBioServer.equals("") ? null : tmplBioServer)
-                .lastModifica(LocalDateTime.of(2000, 1, 1, 0, 0))
-                .lastLettura(lastLettura != null ? lastLettura : LocalDateTime.now())
+                .lastModifica(lastWikiModifica != null ? lastWikiModifica : LocalDateTime.of(2000, 1, 1, 0, 0))
+                .lastLettura(lastGacLettura != null ? lastGacLettura : LocalDateTime.now())
                 .sporca(false)
                 .build();
         entity.id = entity.getPageid() + "";
@@ -248,9 +267,16 @@ public class BioService extends AttNazProfCatService {
 
         for (int k = 0; k < array.numCicli(count(), size); k++) {
             listaPagine = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Bio.class);
-            for (AEntity entity : listaPagine) {
-                listaLong.add(((Bio) entity).pageid);
-            }// end of for cycle
+            if (array.isValid(listaPagine)) {
+                for (AEntity entity : listaPagine) {
+                    listaLong.add(((Bio) entity).pageid);
+                }// end of for cycle
+                if (pref.isBool(FlowCost.USA_DEBUG)) {
+                    log.info("Debug. Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findPageids()");
+                }// end of if cycle
+            } else {
+                log.warn("Qualcosa non ha funzionato in BioService.findPageids()");
+            }// end of if/else cycle
         }// end of for cycle
 
         logger.info("Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findPageids() in " + date.deltaText(inizio));

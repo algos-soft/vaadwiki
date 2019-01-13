@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.service;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -93,7 +94,10 @@ public class CicloService extends ABioService {
         listaPageidsMongoBio = bioService.findPageids();
 
         //--elabora le liste delle differenze per la sincronizzazione
-        inizio = System.currentTimeMillis();//@todo provvisorio
+        inizio = System.currentTimeMillis();
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa sei minuti");
+        }// end of if cycle
         listaPageidsEccedenti = array.differenza(listaPageidsMongoBio, listaPageidsMongoCategoria);
         logger.info("Calcolate " + text.format(listaPageidsEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
 
@@ -101,16 +105,18 @@ public class CicloService extends ABioService {
         deleteService.esegue(listaPageidsEccedenti);
 
         //--elabora le liste delle differenze per la sincronizzazione
-        inizio = System.currentTimeMillis();//@todo provvisorio
+        inizio = System.currentTimeMillis();
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            log.info("Debug - Inizio a calcolare le voci mancanti. Circa sette minuti");
+        }// end of if cycle
         listaPageidsMancanti = LibWiki.delta(listaPageidsMongoCategoria, listaPageidsMongoBio);
         logger.info("Calcolate " + text.format(listaPageidsMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
-
 
         //--Scarica dal server la lista di voci mancanti e crea le nuove entities sul mongoDB Bio
         newService.esegue(listaPageidsMancanti);
 
         //--aggiorna tutte le entities mongoDB Bio che sono stati modificate sul server wiki DOPO l'ultima lettura
-//        updateService.esegue();
+        updateService.esegue();
 
 //        --elabora i nuovi records
 //        elaboraService.esegue(listaVociMancanti);

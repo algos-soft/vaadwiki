@@ -1,6 +1,9 @@
-package it.algos.vaadflow.modules.role;
+package it.algos.vaadflow.modules.utente;
 
 import it.algos.vaadflow.backend.data.ADataService;
+import it.algos.vaadflow.modules.role.EARole;
+import it.algos.vaadflow.modules.role.Role;
+import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.modules.utente.EAUtente;
 import it.algos.vaadflow.modules.utente.Utente;
 import it.algos.vaadflow.service.AAnnotationService;

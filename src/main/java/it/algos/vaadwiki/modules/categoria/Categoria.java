@@ -6,6 +6,7 @@ import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -73,7 +74,7 @@ public class Categoria extends AEntity {
      * il più importante per primo <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.lungo, widthEM = 3)
     @AIColumn(widthEM = 7)
     public long pageid;
@@ -82,7 +83,7 @@ public class Categoria extends AEntity {
      * title della pagina wiki (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
     @AIColumn(width = 10)

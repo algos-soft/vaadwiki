@@ -1,7 +1,6 @@
 package it.algos.vaadwiki.service;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.Page;
@@ -88,10 +87,6 @@ public class PageService extends ABioService {
             }// fine del blocco try-catch
         }// end of if cycle
 
-        if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Create in totale " + text.format(bioService.count()) + " nuove voci biografiche (blocco:" + bloccoPageids.size() + ")");
-        }// end of if cycle
-
         return result;
     }// end of method
 
@@ -101,15 +96,22 @@ public class PageService extends ABioService {
         long pageid = 0;
         String wikiTitle = "";
         String template = "";
+        LocalDateTime lastWikiModifica = null;
 
         if (page != null) {
             pageid = page.getPageid();
             wikiTitle = page.getTitle();
             template = api.estraeTmplBio(page);
+            lastWikiModifica = page.getTimestamp().toLocalDateTime();
+        }// end of if cycle
+
+        // patch per il fuso orario del server wiki (Londra) col mio browser (Roma)
+        if (lastWikiModifica != null) {
+            lastWikiModifica = lastWikiModifica.plusHours(1);
         }// end of if cycle
 
         if (pageid > 0 && text.isValid(wikiTitle) && text.isValid(template)) {
-            entity = bioService.newEntity(pageid, wikiTitle, template, LocalDateTime.now());
+            entity = bioService.newEntity(pageid, wikiTitle, template, lastWikiModifica);
             elaboraService.esegueNoSave(entity);
         } else {
             if (text.isEmpty(template)) {

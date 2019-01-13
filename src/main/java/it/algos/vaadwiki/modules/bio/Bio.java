@@ -5,8 +5,8 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import lombok.*;
-import org.eclipse.persistence.annotations.Index;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -53,8 +53,8 @@ import java.time.LocalDateTime;
 @Builder(builderMethodName = "builderBio")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = { "wikiTitle", "sporca", "nome", "cognome", "sesso", "luogoNato", "annoNato",   "annoMorto", "attivita", "attivita2", "attivita3", "nazionalita", "luogoMorto","giornoNato","giornoMorto"})
-@AIForm(fields = {"pageid", "wikiTitle", "lastModifica", "lastLettura", "sporca", "tmplBioServer", "nome", "cognome", "sesso", "luogoNato", "giornoNato", "annoNato", "luogoMorto", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita", "lastModifica", "lastLettura"})
+@AIList(fields = {"wikiTitle", "sporca", "lastModifica", "lastLettura", "nome", "cognome", "sesso", "luogoNatoLink", "annoNato", "annoMorto", "attivita", "attivita2", "attivita3", "nazionalita", "luogoMortoLink", "giornoNato", "giornoMorto"})
+@AIForm(fields = {"pageid", "wikiTitle", "lastModifica", "lastLettura", "sporca", "tmplBioServer", "nome", "cognome", "sesso","luogoNatoLink", "giornoNato", "annoNato", "luogoMortoLink", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita", "lastModifica", "lastLettura"})
 @AIScript(sovrascrivibile = false)
 public class Bio extends AEntity {
 
@@ -69,7 +69,7 @@ public class Bio extends AEntity {
      * il più importante per primo <br>
      */
     @NotNull
-    @Indexed
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.lungo, widthEM = 3)
     @AIColumn(widthEM = 9)
     public long pageid;
@@ -78,7 +78,7 @@ public class Bio extends AEntity {
      * title della pagina wiki (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
     @AIColumn(widthEM = 18)
@@ -93,7 +93,7 @@ public class Bio extends AEntity {
     //--ultima modifica sul server wiki
     //--uso il formato Timestamp, per confrontarla col campo timestamp
     //--molto meglio che siano esattamente dello stesso tipo
-    @Index
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.localdatetime, required = true, help = "ultima modifica della voce effettuata sul server wiki")
     public LocalDateTime lastModifica;
 
@@ -101,7 +101,7 @@ public class Bio extends AEntity {
     //--ultima lettura/aggiornamento della voce, effettuata dal programma VaadBio
     //--uso il formato Timestamp, per confrontarla col campo timestamp
     //--molto meglio che siano esattamente dello stesso tipo
-    @Index
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.localdatetime, required = true, help = "ultima lettura/aggiornamento della voce effettuata dal programma VaadBio")
     public LocalDateTime lastLettura;
 
@@ -111,68 +111,82 @@ public class Bio extends AEntity {
      * diventa TRUE se ultimaModifica è successiva a ultimaLettura
      * dopo un UPDATE ultimaLettura è sicuramente successiva a ultimaModifica ed il flag ridiventa FALSE
      */
+    @Indexed
     @AIField(type = EAFieldType.checkbox)
-    @AIColumn(name="H")
+    @AIColumn(name = "H")
     public boolean sporca;
 
-    @Index
     @AIField(type = EAFieldType.text)
     @AIColumn(widthEM = 210)
     private String titolo;
 
-    @Index
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(widthEM = 10)
     private String nome;
 
-    @Index
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(widthEM = 10)
     private String cognome;
 
-    @Index
     @AIField(type = EAFieldType.text)
-    @AIColumn(name="X",widthEM = 2)
+    @AIColumn(name = "X", widthEM = 2)
     private String sesso;
 
+//    @AIField(type = EAFieldType.text)
+//    private String luogoNato;
+
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
-    @AIColumn(name = "Città", widthEM = 8)
-    private String luogoNato;
+    @AIColumn(name = "CittàNato", widthEM = 8)
+    private String luogoNatoLink;
 
     //    @AIField(type = EAFieldType.text)
 //    @AIColumn(width = 210)
 //    private String luogoNascitaLink;
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String giornoNato;
 
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(name = "Nato", widthEM = 4)
     private String annoNato;
 
+//    @AIField(type = EAFieldType.text)
+//    private String luogoMorto;
+
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 210)
-    private String luogoMorto;
+    @AIColumn(name = "CittàMorto", widthEM = 8)
+    private String luogoMortoLink;
 
     //    @AIField(type = EAFieldType.text)
 //    @AIColumn(width = 210)
 //    private String luogoMorteLink;
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
     private String giornoMorto;
 
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(name = "Morto", widthEM = 4)
     private String annoMorto;
 
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(widthEM = 8)
     private String attivita;
 
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(widthEM = 8)
     private String attivita2;
 
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(widthEM = 8)
     private String attivita3;
@@ -180,6 +194,7 @@ public class Bio extends AEntity {
     //    @AIField(type = EAFieldType.text)
 //    @AIColumn(width = 210)
 //    private String attivitaAltre;
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(widthEM = 8)
     private String nazionalita;

@@ -2,6 +2,7 @@ package it.algos.vaadwiki.modules.categoria;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.service.ADateService;
@@ -20,6 +21,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.MONGO_PAGE_LIMIT;
@@ -241,7 +243,7 @@ public class CategoriaService extends AttNazProfCatService {
             }// end of for cycle
 
             if (pref.isBool(FlowCost.USA_DEBUG)) {
-                log.info("Recuperate " + text.format(listaLong.size()) + " pagine da categoriaService.findPageids()");
+                log.info("Debug. Recuperate " + text.format(listaLong.size()) + " pagine da categoriaService.findPageids()");
             }// end of if cycle
         }// end of for cycle
 
@@ -330,6 +332,20 @@ public class CategoriaService extends AttNazProfCatService {
             }// end of if cycle
         }// end of for cycle
 
+    }// end of method
+
+
+    /**
+     * Costruisce una lista di nomi delle properties del Search nell'ordine:
+     * 1) Sovrascrive la lista nella sottoclasse specifica di xxxService
+     *
+     * @param context legato alla sessione
+     *
+     * @return lista di nomi di properties
+     */
+    @Override
+    public List<String> getSearchPropertyNamesList(AContext context) {
+        return Arrays.asList("title");
     }// end of method
 
 }// end of class

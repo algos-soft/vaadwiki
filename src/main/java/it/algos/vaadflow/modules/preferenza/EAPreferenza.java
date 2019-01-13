@@ -40,6 +40,8 @@ public enum EAPreferenza {
     maxRigheGrid(FlowCost.MAX_RIGHE_GRID, "Elementi da visualizzare in ogni pagina della Grid", EAPrefType.integer, 20),
     mongoPageLimit(FlowCost.MONGO_PAGE_LIMIT, "Limite di elementi nelle query mongoDB", EAPrefType.integer, 50000),
     usaMenu(FlowCost.USA_MENU, "Tipo di menu in uso", EAPrefType.string, EAMenu.buttons.toString()),
+    textButtonSearch(FlowCost.FLAG_TEXT_SEARCH, "Testo del bottone Search", EAPrefType.string, FlowCost.BOT_SEARCH),
+    textButtonNew(FlowCost.FLAG_TEXT_NEW, "Testo del bottone New", EAPrefType.string, FlowCost.BOT_CREATE),
     ;
 
 

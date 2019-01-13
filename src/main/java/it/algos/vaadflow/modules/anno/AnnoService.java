@@ -184,6 +184,16 @@ public class AnnoService extends AService {
         return repository.findByTitolo(titolo);
     }// end of method
 
+    /**
+     * Controlla l'esistenza di una Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param titolo (obbligatorio, unico)
+     *
+     * @return true se trovata
+     */
+    public boolean isEsiste(String titolo) {
+        return findByKeyUnica(titolo) != null;
+    }// end of method
 
     /**
      * Returns all entities of the type <br>

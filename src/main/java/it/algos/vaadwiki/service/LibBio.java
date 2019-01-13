@@ -1564,46 +1564,6 @@ public class LibBio {
 //    } // fine del metodo
 
 
-    /**
-     * Regola questa property <br>
-     * <p>
-     * Elimina spazi iniziali e finali <br>
-     * Elimina il testo successivo al ref <br>
-     * Elimina il testo successivo alle note <br>
-     * Elimina il testo successivo alle graffe <br>
-     * Elimina il testo successivo alla virgola <br>
-     * Elimina il testo successivo al punto interrogativo <br>
-     * Elimina eventuali quadre <br>
-     * Tronca comunque il testo a 255 caratteri (segnalando un warning) <br>
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return testoValido regolato in uscita
-     */
-    private String fixPropertyBase(String testoGrezzo) {
-        String testoValido;
-
-        if (text.isEmpty(testoGrezzo)) {
-            return "";
-        }// end of if cycle
-
-        testoValido = testoGrezzo.trim();
-        testoValido = text.levaDopoRef(testoValido);
-        testoValido = text.levaDopoNote(testoValido);
-        testoValido = text.levaDopoGraffe(testoValido);
-        testoValido = text.levaDopoVirgola(testoValido);
-        testoValido = text.levaDopoInterrogativo(testoValido);
-        testoValido = this.setNoQuadre(testoValido);
-        testoValido = testoValido.trim();
-
-        if (testoValido.length() > 253) {
-            testoValido = testoValido.substring(0, 252);
-            //@todo manca warning
-        }// fine del blocco if
-
-        return testoValido;
-    }// end of method
-
 //    /**
 //     * Recupera un oggetto Bio leggendolo dal server wiki.
 //     *
@@ -2148,12 +2108,77 @@ public class LibBio {
 
 
     /**
+     * Regola questa property <br>
+     * <p>
+     * Elimina spazi iniziali e finali <br>
+     * Elimina il testo successivo al ref <br>
+     * Elimina il testo successivo alle note <br>
+     * Elimina il testo successivo alle graffe <br>
+     * Elimina il testo successivo alla virgola <br>
+     * Elimina il testo successivo al punto interrogativo <br>
+     * Elimina eventuali quadre <br>
+     * Tronca comunque il testo a 255 caratteri (segnalando un warning) <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    private String fixPropertyBase(String testoGrezzo) {
+        String testoValido;
+
+        if (text.isEmpty(testoGrezzo)) {
+            return VUOTA;
+        }// end of if cycle
+
+        testoValido = testoGrezzo.trim();
+        testoValido = text.levaDopoRef(testoValido);
+        testoValido = text.levaDopoNote(testoValido);
+        testoValido = text.levaDopoGraffe(testoValido);
+        testoValido = text.levaDopoVirgola(testoValido);
+        testoValido = text.levaDopoInterrogativo(testoValido);
+        testoValido = this.setNoQuadre(testoValido);
+        testoValido = testoValido.trim();
+
+        if (testoValido.length() > 253) {
+            testoValido = testoValido.substring(0, 252);
+            //@todo manca warning
+        }// fine del blocco if
+
+        return testoValido;
+    }// end of method
+
+
+    /**
+     * Regola questo campo
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public String fixNomeValido(String testoGrezzo) {
+        return fixPropertyBase(testoGrezzo);
+    } // // end of method
+
+
+    /**
+     * Regola questo campo
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public String fixCognomeValido(String testoGrezzo) {
+        return fixPropertyBase(testoGrezzo);
+    } // // end of method
+
+
+    /**
      * Regola questo campo
      * <p>
-     * Elimina il testo successivo a varii tag
+     * Elimina il testo successivo a varii tag (fixPropertyBase)
      * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese)
      * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese)
-     * Elabora una patch specifica del Giorno
+     * Controlla che il valore esista nella collezione Giorno
      *
      * @param testoGrezzo in entrata da elaborare
      *
@@ -2163,7 +2188,7 @@ public class LibBio {
         String testoValido = fixPropertyBase(testoGrezzo);
         String tagDoppio = SPAZIO + SPAZIO;
 
-        if (text.isEmpty(testoGrezzo) || !testoGrezzo.contains(SPAZIO)) {
+        if (text.isEmpty(testoValido) || !testoGrezzo.contains(SPAZIO)) {
             return VUOTA;
         }// end of if cycle
 
@@ -2171,14 +2196,20 @@ public class LibBio {
             testoValido = testoValido.replaceFirst(tagDoppio, SPAZIO);
         }// end of if cycle
 
-        return testoValido.trim();
+        if (text.isValid(testoValido) && giorno.isEsiste(testoValido)) {
+            return testoValido.trim();
+        } else {
+            return VUOTA;
+        }// end of if/else cycle
     } // // end of method
 
 
     /**
      * Regola questo campo
      * <p>
-     * Elimina il testo successivo a varii tag
+     * Elimina il testo successivo a varii tag (fixPropertyBase)
+     * Elimina il testo se contiene la dicitura 'circa' (tipico dell'anno)
+     * Controlla che il valore esista nella collezione Anno
      *
      * @param testoGrezzo in entrata da elaborare
      *
@@ -2188,35 +2219,11 @@ public class LibBio {
         String testoValido = fixPropertyBase(testoGrezzo);
         String tagCirca = "circa";
 
-        if (text.isEmpty(testoGrezzo)) {
+        if (text.isEmpty(testoValido) || testoGrezzo.contains(tagCirca)) {
             return VUOTA;
         }// end of if cycle
 
-        if (testoGrezzo.contains(tagCirca)) {
-            return VUOTA;
-        }// end of if cycle
-
-        return testoValido.trim();
-    } // fine del metodo
-
-
-    /**
-     * Regola questo campo
-     * <p>
-     * Elimina il testo successivo a varii tag
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return testoValido regolato in uscita
-     */
-    public String fixAttivitaValida(String testoGrezzo) {
-        String testoValido = fixPropertyBase(testoGrezzo).toLowerCase();
-
-        if (text.isEmpty(testoGrezzo)) {
-            return VUOTA;
-        }// end of if cycle
-
-        if (attivita.isEsiste(testoValido)) {
+        if (text.isValid(testoValido) && anno.isEsiste(testoValido)) {
             return testoValido.trim();
         } else {
             return VUOTA;
@@ -2227,7 +2234,33 @@ public class LibBio {
     /**
      * Regola questo campo
      * <p>
-     * Elimina il testo successivo a varii tag
+     * Elimina il testo successivo a varii tag (fixPropertyBase)
+     * Controlla che il valore esista nella collezione Attività
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public String fixAttivitaValida(String testoGrezzo) {
+        String testoValido = fixPropertyBase(testoGrezzo).toLowerCase();
+
+        if (text.isEmpty(testoValido)) {
+            return VUOTA;
+        }// end of if cycle
+
+        if (text.isValid(testoValido) && attivita.isEsiste(testoValido)) {
+            return testoValido.trim();
+        } else {
+            return VUOTA;
+        }// end of if/else cycle
+    } // fine del metodo22
+
+
+    /**
+     * Regola questo campo
+     * <p>
+     * Elimina il testo successivo a varii tag (fixPropertyBase)
+     * Controlla che il valore esista nella collezione Nazionalità
      *
      * @param testoGrezzo in entrata da elaborare
      *
@@ -2236,11 +2269,11 @@ public class LibBio {
     public String fixNazionalitaValida(String testoGrezzo) {
         String testoValido = fixPropertyBase(testoGrezzo).toLowerCase();
 
-        if (text.isEmpty(testoGrezzo)) {
+        if (text.isEmpty(testoValido)) {
             return VUOTA;
         }// end of if cycle
 
-        if (nazionalita.isEsiste(testoValido)) {
+        if (text.isValid(testoValido) && nazionalita.isEsiste(testoValido)) {
             return testoValido.trim();
         } else {
             return VUOTA;

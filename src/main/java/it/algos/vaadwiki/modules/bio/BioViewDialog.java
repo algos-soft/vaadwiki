@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.modules.bio;
 
+import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
@@ -49,9 +50,13 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 public class BioViewDialog extends AViewDialog<Bio> {
 
     private final Button downloadButton = new Button("DownloadOnly");
+
     private final Button elaboraOnlyButton = new Button("ElaboraOnly");
+
     private final Button wikiShowButton = new Button("WikiShow");
+
     private final Button wikiEditButton = new Button("WikiEdit");
+
     private final Button uploadButton = new Button("Upload");
 
     /**
@@ -117,6 +122,7 @@ public class BioViewDialog extends AViewDialog<Bio> {
         super(presenter);
     }// end of constructor
 
+
     @PostConstruct
     protected void addBottoniSpecifici() {
         saveButton.getElement().setAttribute("theme", "secondary");
@@ -150,19 +156,38 @@ public class BioViewDialog extends AViewDialog<Bio> {
     protected void downloadOnly() {
         long pageId = this.getPageId();
         String wikiTitle = this.getWikiTitle();
-        Bio bio;
+        Bio bio = null;
+        AbstractField field;
+        Object obj = null;
 
         if (pageId > 0) {
             bio = api.leggeBio(pageId);
-            binder.setBean(bio);
-        } else {
+        }// end of if cycle
+
+        if (bio == null) {
             if (text.isValid(wikiTitle)) {
                 bio = api.leggeBio(wikiTitle);
-                binder.setBean(bio);
             }// end of if cycle
-        }// end of if/else cycle
+        }// end of if cycle
+
+        if (bio == null) {
+            field = this.getField("wikiTitle");
+            if (field != null) {
+                obj = field.getValue();
+            }// end of if cycle
+            if (obj != null && obj instanceof String) {
+                bio = api.leggeBio((String) obj);
+            }// end of if cycle
+        }// end of if cycle
+
+        if (bio != null) {
+            binder.setBean(bio);
+            currentItem.lastLettura = bio.lastLettura;
+            currentItem.lastModifica = bio.lastModifica;
+        }// end of if cycle
 
     }// end of method
+
 
     /**
      * Non registra <br>
@@ -180,6 +205,7 @@ public class BioViewDialog extends AViewDialog<Bio> {
         String link = "\"" + PATH_WIKI + wikiTitle + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
+
 
     protected void editWikiPage() {
         String wikiTitle = this.getWikiTitle();
@@ -209,6 +235,7 @@ public class BioViewDialog extends AViewDialog<Bio> {
 
         return pageid;
     }// end of method
+
 
     protected String getWikiTitle() {
         String title = "";

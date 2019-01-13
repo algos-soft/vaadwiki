@@ -51,15 +51,32 @@ public class AAppLayoutMenu extends AMenu {
 //        this.add(appLayout);
     }// end of method
 
+
+//    /**
+//     * Eventuali menu se collegato come sviluppatore
+//     */
+//    protected void creaMenuDeveloper() {
+//        if (context.isDev()) {
+//            addMenu(VersioneViewList.class);
+//            addMenu(PreferenzaViewList.class);
+//        }// end of if cycle
+//    }// end of method
+
+
     /**
-     * Eventuali menu se collegato come sviluppatore
+     * Aggiunge il singolo item di menu <br>
      */
-    protected void creaMenuDeveloper() {
-        if (context.isDev()) {
-            addMenu(UtenteViewList.class);
-            addMenu(VersioneViewList.class);
-            addMenu(PreferenzaViewList.class);
-        }// end of if cycle
+    public void addItem(Class<? extends AViewList> viewClazz) {
+        String linkRoute;
+        String menuName;
+        VaadinIcon icon;
+
+        linkRoute = annotation.getQualifierName(viewClazz);
+        menuName = annotation.getMenuName(viewClazz);
+        menuName = text.primaMaiuscola(menuName);
+        icon = reflection.getIconView(viewClazz);
+
+        appMenu.addMenuItem(new AppLayoutMenuItem(icon.create(), menuName, linkRoute));
     }// end of method
 
 

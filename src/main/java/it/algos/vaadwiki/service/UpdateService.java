@@ -2,6 +2,7 @@ package it.algos.vaadwiki.service;
 
 import com.google.common.collect.Lists;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.WrapTime;
 import lombok.extern.slf4j.Slf4j;
@@ -89,15 +90,19 @@ public class UpdateService extends ABioService {
         int pageLimit = pref.getInt(WIKI_PAGE_LIMIT);
         int numCicliLetturaPagine = (recNum / pageLimit) + 1;
         Sort sort = new Sort(Sort.Direction.ASC, "pageid");
+        String info = "";
 
         for (int k = 0; k < numCicliLetturaPagine; k++) {
             LinkedHashMap<Long, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
             result = esegueSingoloBlocco(mappa);
-            numVociModificate = result.getNumVociRegistrate();
+            numVociModificate += result.getNumVociRegistrate();
+            info = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " voci e modificati in mongoDB.Bio " + text.format(numVociModificate) + " elementi in " + date.deltaText(inizio);
+            if (pref.isBool(FlowCost.USA_DEBUG)) {
+                log.info(info);
+            }// end of if cycle
         }// end of for cycle
 
-//        logger.info("UPDATE - letti i timestamp della wiki.categoria.BioBot e modificati in mongoDB.Bio (" + text.format(numVociModificate) + " elementi) in " + date.deltaText(inizio));
-        logger.info("UPDATE - controllate " + text.format(recNum) + " voci e modificati in mongoDB.Bio " + text.format(numVociModificate) + " elementi in " + date.deltaText(inizio));
+        logger.info(info);
     }// end of method
 
 

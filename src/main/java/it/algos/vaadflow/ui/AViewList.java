@@ -1,7 +1,6 @@
 package it.algos.vaadflow.ui;
 
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayoutMenu;
 import com.vaadin.flow.component.applayout.AppLayoutMenuItem;
 import com.vaadin.flow.component.button.Button;
@@ -245,9 +244,16 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     protected AFooter footer;
 
     /**
-     * Flag di preferenza per usare il campo-testo di ricerca e selezione. Normalmente true.
+     * Flag di preferenza per usare il campo-testo di ricerca e selezione nella barra dei menu.
+     * Facoltativo ed alternativo a usaSearchTextDialog. Normalmente false.
      */
     protected boolean usaSearchTextField;
+
+    /**
+     * Flag di preferenza per usare il campo-testo di ricerca e selezione nella barra dei menu.
+     * Facoltativo ed alternativo a usaSearchTextField. Normalmente true.
+     */
+    protected boolean usaSearchTextDialog;
 
     /**
      * Flag di preferenza per usare il bottone new situato nella topLayout. Normalmente true.
@@ -427,8 +433,17 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     private void fixPreferenze() {
 
-        //--Flag di preferenza per usare il campo-testo di ricerca e selezione. Normalmente true.
-        usaSearchTextField = true;
+        /**
+         * Flag di preferenza per usare il campo-testo di ricerca e selezione nella barra dei menu.
+         * Facoltativo ed alternativo a usaSearchTextDialog. Normalmente false.
+         */
+        usaSearchTextField = false;
+
+        /**
+         * Flag di preferenza per usare il campo-testo di ricerca e selezione nella barra dei menu.
+         * Facoltativo ed alternativo a usaSearchTextField. Normalmente true.
+         */
+        usaSearchTextDialog = true;
 
         //--Flag di preferenza per usare il bottone new situato nella searchBar. Normalmente true.
         usaSearchBottoneNew = true;
@@ -563,9 +578,11 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     protected boolean creaTopLayout() {
         topPlaceholder.removeAll();
         topPlaceholder.addClassName("view-toolbar");
+        String buttonTitle;
         Button deleteAllButton;
         Button resetButton;
         Button clearFilterTextBtn;
+        Button searchButton;
         Button newButton;
         boolean isDeveloper = login.isDeveloper();
         boolean isAdmin = login.isAdmin();
@@ -602,11 +619,22 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             topPlaceholder.add(searchField, clearFilterTextBtn);
         }// end of if cycle
 
+        if (usaSearchTextDialog) {
+            buttonTitle = text.primaMaiuscola(pref.getStr(FlowCost.FLAG_TEXT_SEARCH));
+            searchButton = new Button(buttonTitle, new Icon("lumo", "search"));
+            searchButton.getElement().setAttribute("theme", "secondary");
+            searchButton.addClassName("view-toolbar__button");
+            searchButton.addClickListener(e -> openSearch());
+            topPlaceholder.add(searchButton);
+        }// end of if cycle
+
+
         if (usaSearchBottoneNew) {
-            newButton = new Button("New entity", new Icon("lumo", "plus"));
+            buttonTitle = text.primaMaiuscola(pref.getStr(FlowCost.FLAG_TEXT_NEW));
+            newButton = new Button(buttonTitle, new Icon("lumo", "plus"));
             newButton.getElement().setAttribute("theme", "primary");
             newButton.addClassName("view-toolbar__button");
-            newButton.addClickListener(e -> dialog.open(service.newEntity(), EAOperation.addNew, context));
+            newButton.addClickListener(e -> openNew());
             topPlaceholder.add(newButton);
         }// end of if cycle
 
@@ -1029,19 +1057,14 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     }// end of method
 
 
-    protected Component creaSearch() {
-        Button button = new Button("Search", new Icon("lumo", "search"));
-        button.getElement().setAttribute("theme", "secondary");
-        button.addClassName("view-toolbar__button");
-        button.addClickListener(e -> openSearch());
-
-        return button;
-    }// end of method
-
-
     protected void openSearch() {
         searchDialog = appContext.getBean(ASearchDialog.class, service);
         searchDialog.open("", "", this::updateViewDopoSearch, null);
+    }// end of method
+
+
+    protected void openNew() {
+        dialog.open(service.newEntity(), EAOperation.addNew, context);
     }// end of method
 
 

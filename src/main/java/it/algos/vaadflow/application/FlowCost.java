@@ -118,6 +118,10 @@ public class FlowCost {
 
     public static final Sort.Direction DEFAULT_SORT_DIRECTION = Sort.Direction.ASC;
 
+    public final static String FLAG_TEXT_SEARCH = "textSearch";
+
+    public final static String FLAG_TEXT_NEW = "textNew";
+
     public final static String BOT_ACCETTA = "Accetta";
 
     public final static String BOT_CONFERMA = "Conferma";

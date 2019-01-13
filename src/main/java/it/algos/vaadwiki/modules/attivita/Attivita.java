@@ -6,6 +6,7 @@ import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -72,7 +73,7 @@ public class Attivita extends AEntity {
      * singolare maschile e femminile (obbligatorio ed unico)
      */
     @NotNull
-    @Indexed()
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
     @AIColumn(widthEM = 20)
@@ -83,12 +84,13 @@ public class Attivita extends AEntity {
      * plurale neutro (obbligatorio NON unico)
      */
     @NotNull
-    @Indexed()
+    @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, widthEM = 12)
     @AIColumn(width = 10)
     public String plurale;
-    
+
+
     /**
      * @return a string representation of the object.
      */

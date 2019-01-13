@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Project vaadbio2
@@ -28,6 +27,7 @@ public class ElaboraService extends ABioService {
      */
     @Autowired
     protected LibBio libBio;
+
 
     /**
      * Elabora le voci biografiche <br>
@@ -54,6 +54,7 @@ public class ElaboraService extends ABioService {
         }// end of if cycle
 
     }// end of method
+
 
     /**
      * Elabora le voci biografiche indicate <br>
@@ -101,11 +102,12 @@ public class ElaboraService extends ABioService {
         //--Recupera i valori base di tutti i parametri dal tmplBioServer
         mappa = getMappaBio(bio);
 
-        //--Elabora valori validi dei parametri significativi
-        if (mappa != null) {
-            elaboraValidi(mappa);
-        }// end of if cycle
+//        //--Elabora valori validi dei parametri significativi
+//        if (mappa != null) {
+//            elaboraValidi(mappa);
+//        }// end of if cycle
 
+        //--Elabora valori validi dei parametri significativi
         //--Inserisce i valori nella entity Bio
         if (mappa != null) {
             setValue(bio, mappa, registra);
@@ -163,6 +165,7 @@ public class ElaboraService extends ABioService {
 
     }// end of method
 
+
     /**
      * Estrae dal templateServer una mappa di parametri corrispondenti ai campi della tavola Bio
      */
@@ -190,8 +193,19 @@ public class ElaboraService extends ABioService {
 
         try { // prova ad eseguire il codice
             if (bio != null) {
+
+                // patch per i luoghi di nascita e morte
+                // se è vuoto il parametro link, lo riempie
+                // se è pieno il parametro link, lo usa
+                if (text.isEmpty(mappa.get(ParBio.luogoNascitaLink.getTag()))) {
+                    mappa.put(ParBio.luogoNascitaLink.getTag(), mappa.get(ParBio.luogoNascita.getTag()));
+                }// end of if cycle
+                if (text.isEmpty(mappa.get(ParBio.luogoMorteLink.getTag()))) {
+                    mappa.put(ParBio.luogoMorteLink.getTag(), mappa.get(ParBio.luogoMorte.getTag()));
+                }// end of if cycle
+
                 for (ParBio par : ParBio.values()) {
-                    value = (String) mappa.get(par.getTag());
+                    value = mappa.get(par.getTag());
                     if (value != null) {
                         par.setValue(bio, value, libBio);
                     }// end of if cycle

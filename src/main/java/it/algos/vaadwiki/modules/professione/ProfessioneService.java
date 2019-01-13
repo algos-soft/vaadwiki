@@ -2,6 +2,7 @@ package it.algos.vaadwiki.modules.professione;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.DURATA_DOWNLOAD_PROFESSIONE;
 import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_PROFESSIONE;
@@ -161,6 +165,19 @@ public class ProfessioneService extends AttNazProfCatService {
     @Override
     public String getPropertyUnica(AEntity entityBean) {
         return ((Professione) entityBean).getSingolare();
+    }// end of method
+
+    /**
+     * Costruisce una lista di nomi delle properties del Search nell'ordine:
+     * 1) Sovrascrive la lista nella sottoclasse specifica di xxxService
+     *
+     * @param context legato alla sessione
+     *
+     * @return lista di nomi di properties
+     */
+    @Override
+    public List<String> getSearchPropertyNamesList(AContext context) {
+        return Arrays.asList("pagina");
     }// end of method
 
 }// end of class

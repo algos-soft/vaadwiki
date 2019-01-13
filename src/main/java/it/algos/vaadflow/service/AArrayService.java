@@ -488,6 +488,9 @@ public class AArrayService extends AbstractService {
      */
     public ArrayList differenza(List primo, List secondo) {
         ArrayList differenza = null;
+        int pos = 0;
+        int sec = 0;
+        long inizio = System.currentTimeMillis();
 
         if (primo != null && secondo != null) {
             differenza = new ArrayList();
@@ -496,6 +499,12 @@ public class AArrayService extends AbstractService {
                 if (!secondo.contains(value)) {
                     differenza.add(value);
                 }// fine del blocco if
+                pos++;
+                sec++;
+                if (sec == 10000) {
+                    log.info("Array. Differenza di " + text.format(pos) + " elementi in " + date.deltaText(inizio));
+                    sec = 0;
+                }// end of if cycle
             } // fine del ciclo for-each
 
 

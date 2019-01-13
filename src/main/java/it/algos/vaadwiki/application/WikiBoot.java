@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.servlet.ServletContextEvent;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 
@@ -110,8 +111,8 @@ public class WikiBoot extends ABoot {
      */
     protected void regolaInfo() {
         PROJECT_NAME = "vaadwiki";
-        PROJECT_VERSION = "1.2";
-        PROJECT_DATE = LocalDate.of(2019, 1, 5);
+        PROJECT_VERSION = "1.3";
+        PROJECT_DATE = LocalDate.of(2019, 1, 12);
     }// end of method
 
 

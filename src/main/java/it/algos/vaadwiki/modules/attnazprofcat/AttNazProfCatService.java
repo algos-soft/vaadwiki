@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.modules.attnazprofcat;
 
+import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
@@ -13,6 +14,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -192,6 +195,19 @@ public abstract class AttNazProfCatService extends AService {
      */
     public ArrayList<Long> findAllPageid(int offset, int size, Sort sort) {
         return null;
+    }// end of method
+
+    /**
+     * Costruisce una lista di nomi delle properties del Search nell'ordine:
+     * 1) Sovrascrive la lista nella sottoclasse specifica di xxxService
+     *
+     * @param context legato alla sessione
+     *
+     * @return lista di nomi di properties
+     */
+    @Override
+    public List<String> getSearchPropertyNamesList(AContext context) {
+        return Arrays.asList("plurale");
     }// end of method
 
 

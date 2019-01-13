@@ -167,7 +167,7 @@ public class BioViewList extends AttNazProfCatViewList {
     protected void fixPreferenzeSpecifiche() {
         super.fixPreferenzeSpecifiche();
         super.usaSearchTextField = false;
-        super.usaSearchBottoneNew = false;
+        super.usaSearchBottoneNew = true;
         super.usaBottoneStatistiche = false;
         super.usaBottoneModulo = false;
         super.usaBottoneEdit = true;
@@ -222,21 +222,6 @@ public class BioViewList extends AttNazProfCatViewList {
         sincroBottoniMenu(null);
         return topPlaceholder.getComponentCount() > 0;
     }// end of method
-
-
-
-    private void creaNew() {
-        newButton = new Button("New", new Icon("lumo", "plus"));
-//        newButton.addClickListener(e -> newService.esegue(null));
-    }// end of method
-
-
-    private void creaSearchBio() {
-        searchButton = (Button) super.creaSearch();
-//        searchButton = new Button("Cerca", new Icon(VaadinIcon.SEARCH));
-//        newButton.addClickListener(e -> newService.esegue(null));
-    }// end of method
-
 
 
     /**
