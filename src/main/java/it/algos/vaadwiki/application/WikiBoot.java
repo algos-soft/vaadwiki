@@ -112,7 +112,7 @@ public class WikiBoot extends ABoot {
     protected void regolaInfo() {
         PROJECT_NAME = "vaadwiki";
         PROJECT_VERSION = "1.4";
-        PROJECT_DATE = LocalDate.of(2019, 1, 15);
+        PROJECT_DATE = LocalDate.of(2019, 1, 16);
     }// end of method
 
 
