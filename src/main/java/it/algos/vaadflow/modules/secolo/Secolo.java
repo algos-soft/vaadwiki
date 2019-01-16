@@ -6,6 +6,7 @@ import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -72,7 +73,7 @@ public class Secolo extends AEntity {
      * titolo (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("tit")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
@@ -84,7 +85,7 @@ public class Secolo extends AEntity {
      * inizio (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Field("inizio")
     @AIField(type = EAFieldType.integer, widthEM = 3)
     @AIColumn(name = "#", widthEM = 5)
@@ -95,7 +96,7 @@ public class Secolo extends AEntity {
      * fine (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Field("fine")
     @AIField(type = EAFieldType.integer, widthEM = 3)
     @AIColumn(name = "#", widthEM = 5)
@@ -105,7 +106,7 @@ public class Secolo extends AEntity {
      * flag per i secoli prima di cristo (obbligatorio) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed( direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("cod")
     @AIField(type = EAFieldType.checkbox, required = true, focus = true, widthEM = 12)

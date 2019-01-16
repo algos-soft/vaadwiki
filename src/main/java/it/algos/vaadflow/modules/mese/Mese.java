@@ -6,6 +6,7 @@ import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -73,7 +74,7 @@ public class Mese extends AEntity {
      * nome completo (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("lungo")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
@@ -85,7 +86,7 @@ public class Mese extends AEntity {
      * nome abbreviato di tre cifre (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("breve")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)

@@ -53,8 +53,8 @@ import java.time.LocalDateTime;
 @Builder(builderMethodName = "builderBio")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"wikiTitle", "sporca", "lastModifica", "lastLettura", "nome", "cognome", "sesso", "luogoNatoLink", "annoNato", "annoMorto", "attivita", "attivita2", "attivita3", "nazionalita", "luogoMortoLink", "giornoNato", "giornoMorto"})
-@AIForm(fields = {"pageid", "wikiTitle", "lastModifica", "lastLettura", "sporca", "tmplBioServer", "nome", "cognome", "sesso","luogoNatoLink", "giornoNato", "annoNato", "luogoMortoLink", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita", "lastModifica", "lastLettura"})
+@AIList(fields = {"wikiTitle", "lastModifica", "lastLettura", "nome", "cognome", "sesso", "luogoNatoLink", "annoNato", "annoMorto", "attivita", "attivita2", "attivita3", "nazionalita", "luogoMortoLink", "giornoNato", "giornoMorto"})
+@AIForm(fields = {"pageid", "wikiTitle", "lastModifica", "lastLettura", "tmplBioServer", "nome", "cognome", "sesso", "luogoNatoLink", "giornoNato", "annoNato", "luogoMortoLink", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita", "lastModifica", "lastLettura"})
 @AIScript(sovrascrivibile = false)
 public class Bio extends AEntity {
 
@@ -105,20 +105,16 @@ public class Bio extends AEntity {
     @AIField(type = EAFieldType.localdatetime, required = true, help = "ultima lettura/aggiornamento della voce effettuata dal programma VaadBio")
     public LocalDateTime lastLettura;
 
-    /**
-     * biografia NON allineata tra server wiki e mongoDB locale
-     * viene sempre posta a FALSE alla creazione della entity
-     * diventa TRUE se ultimaModifica è successiva a ultimaLettura
-     * dopo un UPDATE ultimaLettura è sicuramente successiva a ultimaModifica ed il flag ridiventa FALSE
-     */
-    @Indexed
-    @AIField(type = EAFieldType.checkbox)
-    @AIColumn(name = "H")
-    public boolean sporca;
-
-    @AIField(type = EAFieldType.text)
-    @AIColumn(widthEM = 210)
-    private String titolo;
+//    /**
+//     * biografia NON allineata tra server wiki e mongoDB locale
+//     * viene sempre posta a FALSE alla creazione della entity
+//     * diventa TRUE se ultimaModifica è successiva a ultimaLettura
+//     * dopo un UPDATE ultimaLettura è sicuramente successiva a ultimaModifica ed il flag ridiventa FALSE
+//     */
+//    @Indexed
+//    @AIField(type = EAFieldType.checkbox)
+//    @AIColumn(name = "H")
+//    public boolean sporca;
 
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)

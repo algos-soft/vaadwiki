@@ -2,6 +2,7 @@ package it.algos.vaadwiki.service;
 
 import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,9 @@ public class DeleteService extends ABioService {
                 logger.info("DELETE - eliminate le voci da mongoDB Bio (" + result.getDeletedCount() + " elementi) in " + date.deltaText(inizio));
             }// end of if/else cycle
         } else {
-            logger.info("DELETE - nessuna voce deprecata da eliminare");
+            if (pref.isBool(FlowCost.USA_DEBUG)) {
+                logger.info("DELETE - nessuna voce deprecata da eliminare");
+            }// end of if cycle
         }// end of if/else cycle
 
     }// end of method

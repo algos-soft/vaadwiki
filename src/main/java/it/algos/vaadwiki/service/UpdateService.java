@@ -120,9 +120,11 @@ public class UpdateService extends ABioService {
         ArrayList<WrapTime> listaWrapTimeServer = null;
         ArrayList<Long> listaPageidAll = null;
         ArrayList<Long> listaPageidModificateDaRileggere = null;
-        Timestamp timestampLocalMongo;
-        Timestamp timestampServerWiki;
+        Timestamp timestampLocalMongoItalianTime;
         Long pageid;
+        long delta = 3600000;
+        long timeServer;
+        long timeMongo;
 
         if (mappa != null) {
             listaPageidAll = Lists.newArrayList(mappa.keySet());
@@ -135,10 +137,12 @@ public class UpdateService extends ABioService {
         if (array.isValid(listaWrapTimeServer)) {
             listaPageidModificateDaRileggere = new ArrayList<>();
             for (WrapTime wrap : listaWrapTimeServer) {
-                timestampServerWiki = wrap.getTimestamp();
                 pageid = wrap.getPageid();
-                timestampLocalMongo = mappa.get(pageid);
-                if (timestampLocalMongo.getTime() < timestampServerWiki.getTime()) {
+                timeServer = wrap.getTimestamp().getTime();
+                timeServer = timeServer + delta; //ora legale
+                timestampLocalMongoItalianTime = mappa.get(pageid);
+                timeMongo = timestampLocalMongoItalianTime.getTime();
+                if (timeMongo < timeServer) {
                     listaPageidModificateDaRileggere.add(wrap.getPageid());
                 }// end of if cycle
             }// end of for cycle

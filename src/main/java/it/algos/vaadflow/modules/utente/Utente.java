@@ -9,6 +9,8 @@ import it.algos.vaadflow.modules.role.Role;
 import it.algos.vaadflow.modules.role.RoleService;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
@@ -85,6 +87,7 @@ public class Utente extends ACEntity {
      * userName o nickName (obbligatorio, unico)
      */
     @NotNull(message = "UserName, anche detto nickName, non può essere lasciato vuoto")
+    @Indexed(unique = true, sparse = true, direction = IndexDirection.DESCENDING)
     @Field("user")
     @AIField(type = EAFieldType.text)
     @AIColumn(name = "user")
@@ -105,6 +108,7 @@ public class Utente extends ACEntity {
      * flag locked (facoltativo, di default false)
      */
     @Field("lock")
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.checkbox)
     @AIColumn(name = "lock")
     public boolean locked;

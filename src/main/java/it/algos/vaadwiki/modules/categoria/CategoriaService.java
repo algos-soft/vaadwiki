@@ -247,7 +247,9 @@ public class CategoriaService extends AttNazProfCatService {
             }// end of if cycle
         }// end of for cycle
 
-        logger.info("Recuperate " + text.format(listaLong.size()) + " pagine da categoriaService.findPageids() in " + date.deltaText(inizio));
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            logger.debug("Recuperate " + text.format(listaLong.size()) + " pagine da categoriaService.findPageids() in " + date.deltaText(inizio));
+        }// end of if cycle
         return listaLong;
     }// end of method
 
@@ -276,11 +278,15 @@ public class CategoriaService extends AttNazProfCatService {
 
         inizio = System.currentTimeMillis();
         listaCat = api.leggeCatCat(nomeCategoria);
-        logger.info("CAT - Lette le pagine di wiki.categoria." + nomeCategoria + " (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            logger.debug("CAT - Lette le pagine di wiki.categoria." + nomeCategoria + " (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
+        }// end of if cycle
 
         inizio = System.currentTimeMillis();
         insert(listaCat);
-        logger.debug("Insert in mongoDB.Categoria (pageid e title) (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            logger.debug("Insert in mongoDB.Categoria (pageid e title) (" + text.format(listaCat.size()) + " elementi) in " + date.deltaText(inizio));
+        }// end of if cycle
 
         setLastDownload(inizio);
     }// end of method

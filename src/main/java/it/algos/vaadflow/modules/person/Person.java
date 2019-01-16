@@ -13,6 +13,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -89,6 +90,7 @@ public class Person extends Utente {
      */
     @NotNull
     @Indexed()
+//    @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 4, max = 40)
     @Field("nome")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 20)
@@ -100,6 +102,7 @@ public class Person extends Utente {
      */
     @NotNull
     @Indexed()
+//    @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 4, max = 40)
     @Field("cognome")
     @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 20)

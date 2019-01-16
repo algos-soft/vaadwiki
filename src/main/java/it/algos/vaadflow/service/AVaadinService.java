@@ -105,6 +105,10 @@ public class AVaadinService {
                 log.error(unErrore.toString());
             }// fine del blocco try-catch
 
+            if (!secured) {
+                login.setAdmin(true);
+                login.setDeveloper(true);
+            }// end of if cycle
             context = new AContext(login, company);
             context.setSecured(secured);
             vaadSession.setAttribute(KEY_CONTEXT, context);

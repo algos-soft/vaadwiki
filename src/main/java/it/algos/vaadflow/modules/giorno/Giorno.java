@@ -8,6 +8,7 @@ import it.algos.vaadflow.modules.mese.Mese;
 import it.algos.vaadflow.modules.mese.MeseService;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -76,7 +77,7 @@ public class Giorno extends AEntity {
      * titolo (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed(unique = true, sparse = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("tit")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
@@ -88,7 +89,7 @@ public class Giorno extends AEntity {
      * ordinamento (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed(direction = IndexDirection.DESCENDING)
     @Field("ord")
     @AIField(type = EAFieldType.integer, widthEM = 3)
     @AIColumn(name = "#", widthEM = 5)

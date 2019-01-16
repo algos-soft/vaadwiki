@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -80,7 +81,7 @@ public class Logtype extends AEntity {
      * il più importante per primo <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed(direction = IndexDirection.DESCENDING)
     @Field("ord")
     @AIField(type = EAFieldType.integer, widthEM = 3)
     @AIColumn(name = "#", widthEM = 4)
@@ -90,7 +91,7 @@ public class Logtype extends AEntity {
      * codice di riferimento (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("cod")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)

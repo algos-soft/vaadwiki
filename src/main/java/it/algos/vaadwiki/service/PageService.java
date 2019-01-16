@@ -152,7 +152,6 @@ public class PageService extends ABioService {
             entity.setWikiTitle(wikiTitle);
             entity.setTmplBioServer(template);
             entity.setLastLettura(LocalDateTime.now());
-            entity.setSporca(false);
             elaboraService.esegueNoSave(entity);
             bioService.save(entity);
         } else {

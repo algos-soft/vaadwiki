@@ -6,6 +6,7 @@ import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -74,7 +75,7 @@ public class Versione extends AEntity {
      * titolo della versione (obbligatorio, non unico) <br>
      */
     @NotNull
-    @Indexed()
+    @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("tit")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
@@ -96,6 +97,7 @@ public class Versione extends AEntity {
      * inserito automaticamente prima del persist <br>
      */
     @NotNull(message = "Il tempo è obbligatorio")
+    @Indexed(direction = IndexDirection.DESCENDING)
     @Field("time")
     @AIField(type = EAFieldType.localdate, widthEM = 24)
     public LocalDate timestamp;

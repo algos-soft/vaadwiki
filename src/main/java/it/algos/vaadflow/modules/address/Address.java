@@ -84,6 +84,7 @@ public class Address extends AEntity {
     @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
     @AIColumn(width = 370)
     public String localita;
+
     /**
      * codice di avviamento postale (facoltativo, non unica)
      */

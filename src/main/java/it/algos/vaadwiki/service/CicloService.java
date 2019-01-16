@@ -99,7 +99,9 @@ public class CicloService extends ABioService {
             log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa sei minuti");
         }// end of if cycle
         listaPageidsEccedenti = array.differenza(listaPageidsMongoBio, listaPageidsMongoCategoria);
-        logger.info("Calcolate " + text.format(listaPageidsEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            logger.debug("Calcolate " + text.format(listaPageidsEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
+        }// end of if cycle
 
         //--Cancella dal mongoDB tutte le entities non più presenti nella categoria
         deleteService.esegue(listaPageidsEccedenti);
@@ -110,7 +112,9 @@ public class CicloService extends ABioService {
             log.info("Debug - Inizio a calcolare le voci mancanti. Circa sette minuti");
         }// end of if cycle
         listaPageidsMancanti = LibWiki.delta(listaPageidsMongoCategoria, listaPageidsMongoBio);
-        logger.info("Calcolate " + text.format(listaPageidsMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            logger.debug("Calcolate " + text.format(listaPageidsMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
+        }// end of if cycle
 
         //--Scarica dal server la lista di voci mancanti e crea le nuove entities sul mongoDB Bio
         newService.esegue(listaPageidsMancanti);

@@ -196,7 +196,6 @@ public class BioService extends AttNazProfCatService {
                 .tmplBioServer(tmplBioServer.equals("") ? null : tmplBioServer)
                 .lastModifica(lastWikiModifica != null ? lastWikiModifica : LocalDateTime.of(2000, 1, 1, 0, 0))
                 .lastLettura(lastGacLettura != null ? lastGacLettura : LocalDateTime.now())
-                .sporca(false)
                 .build();
         entity.id = entity.getPageid() + "";
 
@@ -279,7 +278,9 @@ public class BioService extends AttNazProfCatService {
             }// end of if/else cycle
         }// end of for cycle
 
-        logger.info("Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findPageids() in " + date.deltaText(inizio));
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            logger.debug("Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findPageids() in " + date.deltaText(inizio));
+        }// end of if cycle
         return listaLong;
     }// end of method
 
@@ -304,23 +305,6 @@ public class BioService extends AttNazProfCatService {
         return ((Bio) entityBean).getPageid() + "";
     }// end of method
 
-
-    /**
-     * Tutte le bio col flag 'sporca' = vero <br>
-     */
-    public ArrayList<Long> findSporcaPageId() {
-        ArrayList lista = null;
-        ArrayList<Bio> listaBio = new ArrayList(repository.findAllBySporcaTrue());
-
-        if (array.isValid(listaBio)) {
-            lista = new ArrayList();
-            for (Bio bio : listaBio) {
-                lista.add(bio.pageid);
-            }// end of for cycle
-        }// end of if cycle
-
-        return lista;
-    }// end of method
 
 
     public void downloadBio(String wikiTitle) {
