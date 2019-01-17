@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -35,7 +34,7 @@ public class Api {
      * Service (@Scope = 'singleton') iniettato da StaticContextAccessor e usato come libreria <br>
      * Unico per tutta l'applicazione. Usato come libreria.
      */
-    public AArrayService array = StaticContextAccessor.getBean(AArrayService.class);
+    public AArrayService array = AArrayService.getInstance();
 
     //    @Autowired
     protected RequestWikiCat requestCat;
@@ -61,6 +60,10 @@ public class Api {
      */
     @Autowired
     protected ATextService text;
+
+
+    public Api() {
+    }
 
 
     /**
@@ -1032,8 +1035,38 @@ public class Api {
         if (requestMultiPages.getRisultato() == TipoRisultato.letta) {
             return requestMultiPages.getListaPages();
         } else {
-            return null;
+            if (requestMultiPages.getRisultato() == TipoRisultato.tooBig) {
+                return riLeggePagesBlocchiPiùPiccoli(arrayPageIds);
+            } else {
+                return null;
+            }// end of if/else cycle
         }// fine del blocco if-else
+    }// end of method
+
+
+    /**
+     * Rilegge una serie di pagine, dividendole in request più piccole per problemi di 'banda'
+     * <p>
+     *
+     * @param arrayPageIds elenco di pageids (ArrayList)
+     *
+     * @return serie di pagine (con i metadati mediawiki)
+     */
+    public ArrayList<Page> riLeggePagesBlocchiPiùPiccoli(ArrayList<Long> arrayPageIds) {
+        ArrayList<Page> pages = new ArrayList();
+        ArrayList<Page> pagesTmp;
+        ArrayList<Long> subBloccoPageids;
+        int dimBlocco = 50;
+        int numCicli;
+
+        numCicli = array.numCicli(arrayPageIds.size(), dimBlocco);
+        for (int k = 0; k < numCicli; k++) {
+            subBloccoPageids = array.estraeSublistaLong(arrayPageIds, dimBlocco, k + 1);
+            pagesTmp = leggePages(subBloccoPageids);
+            pages = array.somma(pages, pagesTmp);
+        }// end of for cycle
+
+        return pages;
     }// end of method
 
 

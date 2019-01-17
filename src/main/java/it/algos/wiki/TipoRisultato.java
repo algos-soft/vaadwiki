@@ -38,8 +38,9 @@ public enum TipoRisultato {
 
     spostata("Pagina spostata"),
     articleexists("A page of that name already exists, or the name you have chosen is not valid. Please choose another name"),
-    protectedtitle("You cannot move a page to this location because the new title has been protected from creation");
+    protectedtitle("You cannot move a page to this location because the new title has been protected from creation"),
 
+    tooBig("This result was truncated because it would otherwise be larger than the limit of 12,582,912 bytes.");
 
     private String tag;
 
@@ -54,9 +55,11 @@ public enum TipoRisultato {
         this.setTag(tag);
     }// fine del metodo costruttore
 
+
     public String getTag() {
         return tag;
     }// end of getter method
+
 
     public void setTag(String tag) {
         this.tag = tag;

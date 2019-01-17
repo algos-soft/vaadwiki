@@ -15,7 +15,7 @@ public class DownloadResult {
 
     public ArrayList<Long> vociRegistrate = new ArrayList<>();
 
-    public ArrayList<Long> vociNonRegistrate = new ArrayList<>();
+    public ArrayList<String> vociNonRegistrate = new ArrayList<>();
 
 
     public DownloadResult(ArrayList<Long> vociDaRegistrare) {
@@ -28,8 +28,8 @@ public class DownloadResult {
     }// end of method
 
 
-    public void addNo(Long voceNonRegistrata) {
-        vociNonRegistrate.add(voceNonRegistrata);
+    public void addNo(String titoloVoceNonRegistrata) {
+        vociNonRegistrate.add(titoloVoceNonRegistrata);
     }// end of method
 
 

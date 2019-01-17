@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Scope;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by gac on 04 dic 2015.
@@ -150,10 +149,16 @@ public class RequestWikiReadPages extends RequestWiki {
         super.elaboraRisposta(rispostaRequest);
         JSONArray arrayPages = LibWiki.getArrayPagesJSON(rispostaRequest);
         Page page;
+        String tooBigText = "This result was truncated because it would otherwise be larger than the limit of 12,582,912 bytes.";
+        String resulTwarnings = LibWiki.getWarningResult(rispostaRequest);
 
         //--recupera i valori dei parametri info
-        if (arrayPages != null) {
-            risultato = TipoRisultato.letta;
+        if (arrayPages != null && arrayPages.size() > 0) {
+            if (resulTwarnings.equals(tooBigText)) {
+                risultato = TipoRisultato.tooBig;
+            } else {
+                risultato = TipoRisultato.letta;
+            }// end of if/else cycle
             listaPages = new ArrayList<Page>();
             for (int k = 0; k < arrayPages.size(); k++) {
                 page = new Page((JSONObject) arrayPages.get(k));
@@ -168,6 +173,7 @@ public class RequestWikiReadPages extends RequestWiki {
         }// end of if cycle
 
     } // fine del metodo
+
 
     public ArrayList<Page> getListaPages() {
         return listaPages;

@@ -3,7 +3,6 @@ package it.algos.vaadwiki.service;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.modules.categoria.Categoria;
 import it.algos.wiki.DownloadResult;
-import it.algos.wiki.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -66,11 +65,11 @@ public class NewService extends ABioService {
      * Probabilmente non è stata creata la entity Bio perché mancava il template nella pagina wiki
      * Primio controllo: se esiste la corrispondente entiy in Categoria, la elimino
      *
-     * @param listaIdsNonRegistrate elenco (ids=pageids) delle voci non registrate
+     * @param listaTitleNonRegistrate elenco (title) delle voci non registrate
      */
-    public void fixError(ArrayList<Long> listaIdsNonRegistrate) {
-        for (Long pageid : listaIdsNonRegistrate) {
-            checkCategoria(pageid);
+    public void fixError(ArrayList<String> listaTitleNonRegistrate) {
+        for (String wikiTitle : listaTitleNonRegistrate) {
+            checkCategoria(wikiTitle);
         }// end of for cycle
     }// end of method
 
@@ -81,24 +80,16 @@ public class NewService extends ABioService {
      * Controlla che esista la pagina su wiki. Se non esiste, cancella la entity Categoria
      * Controlla che la pagina contenga il template Bio. Se non lo contiene, cancella la entity Categoria
      *
-     * @param pageid di una entity di categoria da controllare
+     * @param wikiTitle di una entity di categoria da controllare
      */
-    public void checkCategoria(Long pageid) {
-        Categoria categoria;
-        Page page;
-        String title;
-
-        if (!api.isVoceBio(pageid)) {
-            categoria = categoriaService.findByKeyUnica(pageid);
-            if (categoria != null) {
-                categoriaService.delete(categoria);
-                page = api.leggePage(pageid);
-                title = page.getTitle();
-                logger.debug("NEW - cancellata da mongoDB.Categoria la entity '" + title + "', perché la pagina sul server non contiene il tmpl Bio");
-            } else {
-                logger.warning("NEW - con find() non trovo la entity '" + pageid + "' di mongoDB.Categoria che risulta invece nella lista");
-            }// end of if/else cycle
-        }// end of if cycle
+    public void checkCategoria(String wikiTitle) {
+        Categoria categoria = categoriaService.findByTitle(wikiTitle);
+        if (categoria != null) {
+            categoriaService.delete(categoria);
+            logger.debug("NEW - cancellata da mongoDB.Categoria la entity '" + wikiTitle + "', perché la pagina sul server non contiene il tmpl Bio");
+        } else {
+            logger.warning("NEW - con find() non trovo la entity '" + wikiTitle + "' di mongoDB.Categoria che risulta invece nella lista");
+        }// end of if/else cycle
     }// end of method
 
 }// end of class

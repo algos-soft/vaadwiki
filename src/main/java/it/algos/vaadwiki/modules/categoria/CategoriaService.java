@@ -191,6 +191,17 @@ public class CategoriaService extends AttNazProfCatService {
         return repository.findByPageid(pageid);
     }// end of method
 
+    /**
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param wikititle della pagina wiki (obbligatorio, unico)
+     *
+     * @return istanza della Entity, null se non trovata
+     */
+    public Categoria findByTitle(String wikititle) {
+        return repository.findByTitle(wikititle);
+    }// end of method
+
 
     /**
      * Returns all entities of the type <br>

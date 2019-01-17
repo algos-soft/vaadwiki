@@ -1863,6 +1863,84 @@ public abstract class LibWiki {
 
 
     /**
+     * Crea una mappa del testo JSON
+     *
+     * @param textJSON in ingresso
+     *
+     * @return mappa base JSON
+     */
+    public static HashMap getMappaJSON(String textJSON) {
+        HashMap mappaJSON = null;
+        JSONObject objectAll;
+
+        //--recupera i tre oggetti al livello root del testo (batchcomplete e warnings e query)
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        //--controllo
+        if (objectAll != null) {
+            mappaJSON = new HashMap();
+            for (Object key : objectAll.keySet()) {
+                mappaJSON.put(key, objectAll.get(key));
+            }// end of for cycle
+        }// fine del blocco if
+
+        return mappaJSON;
+    } // fine del metodo
+
+
+    /**
+     * Estrae un componente dalla mappa del testo JSON
+     *
+     * @param textJSON in ingresso
+     *
+     * @return elemento della mappa JSON
+     */
+    public static HashMap getWarnings(String textJSON) {
+        HashMap mappa = new HashMap();
+        JSONObject jsonObject = null;
+        HashMap mappaJSON = getMappaJSON(textJSON);
+        JSONObject obj;
+        Object value;
+
+        if (mappaJSON != null) {
+            if (mappaJSON.get(TipoJSON.warnings.name()) != null) {
+                jsonObject = (JSONObject) mappaJSON.get(TipoJSON.warnings.name());
+            }// end of if cycle
+        }// end of if cycle
+
+        if (jsonObject != null) {
+            for (Object key : jsonObject.keySet()) {
+                obj = (JSONObject) jsonObject.get(key);
+                value = obj.get(TipoJSON.warnings.name());
+                mappa.put(key, value);
+            }// end of for cycle
+        }// end of if cycle
+
+        return mappa;
+    } // fine del metodo
+
+
+    /**
+     * Restituisce il testo del warnings di tipo 'result' (se esiste)
+     *
+     * @param textJSON in ingresso
+     *
+     * @return testo del warnings
+     */
+    public static String getWarningResult(String textJSON) {
+        String text = "";
+        String tag = "result";
+        HashMap mappa = getWarnings(textJSON);
+
+        if (mappa != null && mappa.get(tag) != null) {
+            text = (String)mappa.get(tag);
+        }// end of if cycle
+
+        return text;
+    } // fine del metodo
+
+
+    /**
      * Crea un array delle pagine wikimedia dal testo JSON di una risposta multiPagine action=query
      *
      * @param textJSON in ingresso

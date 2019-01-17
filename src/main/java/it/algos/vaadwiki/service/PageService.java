@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.service;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.Page;
@@ -41,12 +42,25 @@ public class PageService extends ABioService {
         ArrayList<Long> bloccoPageids;
         int dimBloccoLettura = pref.getInt(WIKI_PAGE_LIMIT);
         int numCicliLetturaPagine;
+        long inizio = System.currentTimeMillis();
+        String message;
+        int teorico;
+        int effettivo;
+        int delta;
 
         if (listaVociDaScaricare != null && listaVociDaScaricare.size() > 0) {
             numCicliLetturaPagine = array.numCicli(listaVociDaScaricare.size(), dimBloccoLettura);
             for (int k = 0; k < numCicliLetturaPagine; k++) {
                 bloccoPageids = array.estraeSublistaLong(listaVociDaScaricare, dimBloccoLettura, k + 1);
                 result = downloadSingoloBlocco(result, bloccoPageids);
+                if (pref.isBool(FlowCost.USA_DEBUG)) {
+                    teorico = (k + 1) * dimBloccoLettura;
+                    effettivo = result.vociRegistrate.size();
+                    delta = teorico - effettivo;
+                    message = "New - aggiunte " + text.format(effettivo) + "/" + text.format(teorico) + " (-" + delta + ") voci totali a mongoDB.Bio in " + date.deltaText(inizio);
+                    logger.debug(message);
+                    log.info(message);
+                }// end of if cycle
             }// end of for cycle
         }// end of if cycle
 
@@ -64,6 +78,11 @@ public class PageService extends ABioService {
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
 
         pages = api.leggePages(bloccoPageids);
+
+        if (pages == null) {
+            return result;
+        }// end of if cycle
+
         for (Page page : pages) {
             entity = creaBio(page);
             if (entity != null) {
@@ -71,7 +90,7 @@ public class PageService extends ABioService {
                 vociRegistrateInQuestoBlocco.add(page.getPageid());
                 result.addSi(page.getPageid());
             } else {
-                result.addNo(page.getPageid());
+                result.addNo(page.getTitle());
             }// end of if/else cycle
         }// end of for cycle
 

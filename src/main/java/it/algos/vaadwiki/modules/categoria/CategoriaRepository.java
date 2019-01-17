@@ -31,6 +31,7 @@ public interface CategoriaRepository extends MongoRepository<Categoria, String> 
 
 
 	public Categoria findByPageid(long pageid);
+	public Categoria findByTitle(String title);
 
 	public List<Categoria> findTop100ByOrderByTitleAsc();
 	public List<Categoria> findTop1000ByOrderByTitleAsc();

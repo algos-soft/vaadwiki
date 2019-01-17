@@ -66,7 +66,9 @@ public class UpdateService extends ABioService {
      * Recupera la lista delle voci dalla categoria sul server wiki, solo se necessario
      */
     public boolean checkListePageids() {
-        return categoriaService.count() == bioService.count();
+        int catSize = categoriaService.count();
+        int bioSize = bioService.count();
+        return bioSize == catSize;
     }// end of method
 
 

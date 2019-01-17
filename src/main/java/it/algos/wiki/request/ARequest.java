@@ -137,7 +137,7 @@ public abstract class ARequest {
      * Service (@Scope = 'singleton') iniettato da StaticContextAccessor e usato come libreria <br>
      * Unico per tutta l'applicazione. Usato come libreria.
      */
-    public AArrayService array = StaticContextAccessor.getBean(AArrayService.class);
+    public AArrayService array = AArrayService.getInstance();
 
     //--url del collegamento
     private String preliminatyDomain;
