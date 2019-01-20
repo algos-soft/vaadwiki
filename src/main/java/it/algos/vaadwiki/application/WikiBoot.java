@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.boot.ABoot;
+import it.algos.vaadwiki.modules.wikigiorno.WikiGiornoViewList;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.modules.utente.UtenteService;
@@ -12,6 +13,7 @@ import it.algos.vaadwiki.modules.bio.BioViewList;
 import it.algos.vaadwiki.modules.categoria.CategoriaViewList;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaViewList;
 import it.algos.vaadwiki.modules.professione.ProfessioneViewList;
+import it.algos.wiki.WikiLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -80,6 +82,7 @@ public class WikiBoot extends ABoot {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         super.inizia();
+        WikiCost.WIKI_LOGIN = new WikiLogin("Gacbot@Gacbot", "tftgv0vhl16c0qnmfdqide3jqdp1i5m7");
     }// end of method
 
 
@@ -111,8 +114,8 @@ public class WikiBoot extends ABoot {
      */
     protected void regolaInfo() {
         PROJECT_NAME = "vaadwiki";
-        PROJECT_VERSION = "1.5";
-        PROJECT_DATE = LocalDate.of(2019, 1, 17);
+        PROJECT_VERSION = "1.6";
+        PROJECT_DATE = LocalDate.of(2019, 1, 20);
     }// end of method
 
 
@@ -138,7 +141,8 @@ public class WikiBoot extends ABoot {
         FlowCost.MENU_CLAZZ_LIST.add(ProfessioneViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(CategoriaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(BioViewList.class);
-    }// end of method
+    	FlowCost.MENU_CLAZZ_LIST.add(WikiGiornoViewList.class);
+	}// end of method
 
 
 }// end of boot class

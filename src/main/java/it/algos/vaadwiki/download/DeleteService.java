@@ -1,10 +1,11 @@
-package it.algos.vaadwiki.service;
+package it.algos.vaadwiki.download;
 
 import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.service.ABioService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

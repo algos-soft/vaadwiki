@@ -4,7 +4,7 @@ exit      -> per uscire
 show dbs  -> lista db esistenti
 use vaadwam -> seleziona il db di lavoro
 show collections -> mostra le collezioni del db
-db.dropDatabase() -> cancella il db
+db.dropDatabase(); -> cancella il db
 db.role.find() -> cerca tutte le entities della collezione
 
 

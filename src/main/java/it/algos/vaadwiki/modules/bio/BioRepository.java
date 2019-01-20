@@ -38,5 +38,6 @@ public interface BioRepository extends MongoRepository<Bio, String> {
 
     public List<Bio> findTop50ByOrderByWikiTitleAsc();
 
+    public List<Bio> findAllByGiornoNato(String giornoNato);
 
 }// end of class

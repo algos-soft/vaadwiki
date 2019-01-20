@@ -200,6 +200,36 @@ public class ADateService extends AbstractService {
 
 
     /**
+     * Restituisce la data attuale nella forma del pattern standard
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String get() {
+        return get(LocalDate.now(), EATime.standard.getPattern());
+    }// end of method
+
+
+    /**
+     * Restituisce la data nella forma del pattern standard
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDate da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String get(LocalDate localDate) {
+        return get(localDate, EATime.standard.getPattern());
+    }// end of method
+
+
+    /**
      * Restituisce la data nella forma del pattern ricevuto
      * <p>
      * Returns a string representation of the date <br>

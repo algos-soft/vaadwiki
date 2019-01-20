@@ -1,7 +1,10 @@
-package it.algos.vaadwiki.service;
+package it.algos.vaadwiki.download;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.service.ABioService;
+import it.algos.vaadwiki.service.LibBio;
+import it.algos.vaadwiki.service.ParBio;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

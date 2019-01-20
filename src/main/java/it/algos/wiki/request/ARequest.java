@@ -4,6 +4,7 @@ package it.algos.wiki.request;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.service.AArrayService;
+import it.algos.vaadwiki.application.WikiCost;
 import it.algos.wiki.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -207,7 +208,7 @@ public abstract class ARequest {
      */
     protected void doInit() {
 //        --Regola alcuni (eventuali) parametri specifici della sottoclasse
-//        elaboraParametri();
+        elaboraParametri();
 
         if (needLogin) {
             if (!checkLogin()) {
@@ -551,7 +552,7 @@ public abstract class ARequest {
         }// end of if cycle
 
         if (wikiLogin == null) {
-//            wikiLogin = VaadApp.WIKI_LOGIN;
+            wikiLogin = WikiCost.WIKI_LOGIN;
         }// end of if cycle
 
         if (needLogin) {

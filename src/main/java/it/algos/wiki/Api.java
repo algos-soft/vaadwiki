@@ -8,7 +8,7 @@ import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.categoria.Categoria;
 import it.algos.vaadwiki.modules.categoria.CategoriaService;
-import it.algos.vaadwiki.service.PageService;
+import it.algos.vaadwiki.download.PageService;
 import it.algos.wiki.request.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

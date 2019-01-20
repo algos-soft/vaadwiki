@@ -1,9 +1,12 @@
 package it.algos.vaadwiki.application;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.wiki.WikiLogin;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import it.algos.vaadflow.annotation.AIScript;
+
+import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 
 /**
  * Project vaadwiki
@@ -20,10 +23,14 @@ import it.algos.vaadflow.annotation.AIScript;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovrascrivibile = false)
 public class WikiCost {
-	public final static String TAG_SEC = "secolo";
-	public final static String TAG_MES = "mese";
-	public final static String TAG_ANN = "anno";
-	public final static String TAG_GIO = "giorno";
+
+    public static WikiLogin WIKI_LOGIN = null;
+
+    public final static String TAG_WGIO = "wikigiorno";
+//	public final static String TAG_SEC = "secolo";
+//	public final static String TAG_MES = "mese";
+//	public final static String TAG_ANN = "anno";
+//	public final static String TAG_GIO = "giorno";
 	public final static String TAG_PRO = "professione";
 	public final static String TAG_NAZ = "nazionalita";
 	public final static String TAG_ATT = "attivita";
@@ -77,5 +84,5 @@ public class WikiCost {
     public final static String WIKI_PAGE_LIMIT = "wikiPageLimit";
     public final static String USA_CHECK_LISTE_PAGEID= "usaCheckListe";
 
-
+    public final static String TAG_SEPARATORE = SPAZIO + "-" + SPAZIO;
 }// end of static class

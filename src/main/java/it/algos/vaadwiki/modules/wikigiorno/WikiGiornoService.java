@@ -1,4 +1,4 @@
-package it.algos.@MODULELOWER@.modules.@PACKAGE@;
+package it.algos.vaadwiki.modules.wikigiorno;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -15,13 +15,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
-import static it.algos.@MODULELOWER@.application.@COST@.@QUALIFIER@;
+import static it.algos.vaadwiki.application.WikiCost.TAG_WGIO;
 
 /**
- * Project @MODULELOWER@ <br>
+ * Project vaadwiki <br>
  * Created by Algos <br>
- * User: @USER@ <br>
- * Fix date: @TODAY@ <br>
+ * User: Gac <br>
+ * Fix date: 19-gen-2019 11.33.37 <br>
  * <br>
  * Business class. Layer di collegamento per la Repository. <br>
  * <br>
@@ -35,10 +35,10 @@ import static it.algos.@MODULELOWER@.application.@COST@.@QUALIFIER@;
  */
 @Service
 @VaadinSessionScope
-@Qualifier(@QUALIFIER@)
+@Qualifier(TAG_WGIO)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class @ENTITY@Service extends AService {
+public class WikiGiornoService extends AService {
 
 
     /**
@@ -52,7 +52,7 @@ public class @ENTITY@Service extends AService {
      * Spring costruisce una implementazione concreta dell'interfaccia MongoRepository (prevista dal @Qualifier) <br>
      * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
-    public @ENTITY@Repository repository;
+    public WikiGiornoRepository repository;
 
 
     /**
@@ -64,13 +64,39 @@ public class @ENTITY@Service extends AService {
      * @param repository per la persistenza dei dati
      */
     @Autowired
-    public @ENTITY@Service(@Qualifier(@QUALIFIER@) MongoRepository repository) {
+    public WikiGiornoService(@Qualifier(TAG_WGIO) MongoRepository repository) {
         super(repository);
-        super.entityClass = @ENTITY@.class;
-        this.repository = (@ENTITY@Repository) repository;
+        super.entityClass = WikiGiorno.class;
+        this.repository = (WikiGiornoRepository) repository;
    }// end of Spring constructor
 
-    @FIND@
+    /**
+     * Ricerca di una entity (la crea se non la trova) <br>
+     *
+     * @param code di riferimento (obbligatorio ed unico)
+     *
+     * @return la entity trovata o appena creata
+     */
+    public WikiGiorno findOrCrea(String code) {
+        WikiGiorno entity = findByKeyUnica(code);
+
+        if (entity == null) {
+            entity = crea(code);
+        }// end of if cycle
+
+        return entity;
+    }// end of method
+
+    /**
+     * Crea una entity e la registra <br>
+     *
+     * @param code di riferimento (obbligatorio ed unico)
+     *
+     * @return la entity appena creata
+     */
+    public WikiGiorno crea(String code) {
+         return (WikiGiorno)save(newEntity(0, code, ""));
+    }// end of method
 
      /**
       * Creazione in memoria di una nuova entity che NON viene salvata
@@ -80,8 +106,8 @@ public class @ENTITY@Service extends AService {
       * @return la nuova entity appena creata (non salvata)
       */
      @Override
-     public @ENTITY@ newEntity() {
-         return newEntity(@PARAMETERSNEWENTITY@);
+     public WikiGiorno newEntity() {
+         return newEntity(0, "", "");
      }// end of method
 
 
@@ -91,17 +117,27 @@ public class @ENTITY@Service extends AService {
       * All properties <br>
       * Utilizza, eventualmente, la newEntity() della superclasse, per le property della superclasse <br>
      *
-      @PARAMETERSDOC@
+      * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
+	* @param code        codice di riferimento (obbligatorio)
+	* @param descrizione (facoltativa, non unica)
       *
       * @return la nuova entity appena creata (non salvata)
       */
-     public @ENTITY@ newEntity(@PARAMETERS@) {
-         @ENTITY@ entity = null;
+     public WikiGiorno newEntity(int ordine, String code, String descrizione) {
+         WikiGiorno entity = null;
 
-         @KEYUNICA@
-         entity = @ENTITY@.builder@ENTITY@()@BUILDER@;
+         entity = findByKeyUnica(code);
+		if (entity != null) {
+			return findByKeyUnica(code);
+		}// end of if cycle
+		
+         entity = WikiGiorno.builderWikiGiorno()
+				.ordine(ordine != 0 ? ordine : this.getNewOrdine())
+				.code(text.isValid(code) ? code : null)
+				.descrizione(text.isValid(descrizione) ? descrizione : null)
+				.build();
 
-         return (@ENTITY@)creaIdKeySpecifica(entity);
+         return (WikiGiorno)creaIdKeySpecifica(entity);
      }// end of method
 
 
@@ -112,10 +148,16 @@ public class @ENTITY@Service extends AService {
      *
      * @return istanza della Entity, null se non trovata
      */
-    public @ENTITY@ findByKeyUnica(String code) {
+    public WikiGiorno findByKeyUnica(String code) {
         return repository.findByCode(code);
     }// end of method
 
-    @IDKEYSPECIFICA@
+    /**
+     * Property unica (se esiste) <br>
+     */
+    @Override
+    public String getPropertyUnica(AEntity entityBean) {
+        return ((WikiGiorno) entityBean).getCode();
+    }// end of method
 
 }// end of class

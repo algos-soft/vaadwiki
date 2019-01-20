@@ -6,8 +6,9 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
-import it.algos.vaadwiki.service.ElaboraService;
+import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
 import it.algos.wiki.WrapTime;
@@ -250,6 +251,14 @@ public class BioService extends AttNazProfCatService {
 //        return lista;
 //    }// end of method
 
+    /**
+     * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<Bio> findAllByGiornoNato(String giornoNato) {
+        return (ArrayList)repository.findAllByGiornoNato(giornoNato);
+    }// end of method
 
     /**
      * Returns all entities of the type <br>

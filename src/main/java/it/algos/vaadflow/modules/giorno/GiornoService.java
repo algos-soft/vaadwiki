@@ -7,7 +7,6 @@ import it.algos.vaadflow.modules.mese.Mese;
 import it.algos.vaadflow.modules.mese.MeseService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AService;
-import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +15,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -183,6 +183,16 @@ public class GiornoService extends AService {
 
 
     /**
+     * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<Giorno> findAll() {
+        return (ArrayList) repository.findAllByOrderByOrdineAsc();
+    }// end of method
+
+
+    /**
      * Controlla l'esistenza di una Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
      * @param titolo (obbligatorio, unico)
@@ -192,6 +202,7 @@ public class GiornoService extends AService {
     public boolean isEsiste(String titolo) {
         return findByKeyUnica(titolo) != null;
     }// end of method
+
 
     /**
      * Creazione di alcuni dati demo iniziali <br>

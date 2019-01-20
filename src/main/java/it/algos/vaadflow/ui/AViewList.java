@@ -16,6 +16,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -260,6 +262,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     protected boolean usaSearchBottoneNew;
 
+    protected Button newButton;
     /**
      * Flag di preferenza per usare il placeholder di informazioni specifiche sopra la Grid. Normalmente false.
      */
@@ -583,7 +586,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         Button resetButton;
         Button clearFilterTextBtn;
         Button searchButton;
-        Button newButton;
         boolean isDeveloper = login.isDeveloper();
         boolean isAdmin = login.isAdmin();
 
@@ -753,7 +755,20 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         layout.setFlexGrow(1, grid);
         this.setFlexGrow(1, layout);
 
+        grid.addSelectionListener(new SelectionListener<Grid<AEntity>, AEntity>() {
+
+            @Override
+            public void selectionChange(SelectionEvent<Grid<AEntity>, AEntity> selectionEvent) {
+                boolean enabled = selectionEvent != null && selectionEvent.getAllSelectedItems().size() > 0;
+                sincroBottoniMenu(enabled);
+            }// end of inner method
+        });//end of lambda expressions and anonymous inner class
+
         fixGridHeader();
+    }// end of method
+
+
+    protected void sincroBottoniMenu(boolean enabled) {
     }// end of method
 
 

@@ -19,6 +19,7 @@ public enum EATime {
     lunga("lunga", "d-MMMM-yyy", "5-ottobre-2014"),
     completa("completa", "EEEE, d-MMMM-yyy", "domenica, 5-ottobre-2014"),
     meseCorrente("meseCorrente", "MMMM yyy", "ottobre 2014"),
+    standard("standard", "d MMM yyyy", "20 gen 2019"),
     ;
 
     private String tag;

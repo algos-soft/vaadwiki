@@ -1,21 +1,20 @@
-package it.algos.vaadflow.modules.giorno;
+package it.algos.vaadwiki.modules.wikigiorno;
 
+import java.util.List;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
-
-import java.util.List;
-
-import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
+import static it.algos.vaadwiki.application.WikiCost.TAG_WGIO;
 
 /**
- * Project vaadflow <br>
+ * Project vaadwiki <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 26-ott-2018 9.59.58 <br>
+ * Fix date: 19-gen-2019 11.33.37 <br>
  * <br>
  * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository <br>
  * <br>
@@ -26,11 +25,12 @@ import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(TAG_GIO)
+@Qualifier(TAG_WGIO)
 @AIScript(sovrascrivibile = false)
-public interface GiornoRepository extends MongoRepository<Giorno, String> {
+public interface WikiGiornoRepository extends MongoRepository<WikiGiorno, String> {
 
-    public Giorno findByTitolo(String titolo);
-    public List<Giorno> findAllByOrderByOrdineAsc();
+    public WikiGiorno findByCode(String code);
+
+	public List<WikiGiorno> findAllByOrderByOrdineAsc();
 
 }// end of class

@@ -36,6 +36,10 @@ public class FlowCost {
 
     public static final String SPAZIO = " ";
 
+    public final static String A_CAPO = "\n";
+
+    public final static String ASTERISCO = "*";
+
     public final static Class<? extends RouterLayout> LAYOUT = MainLayout.class;
 
     public final static String LAYOUT_NAME = "MainLayout";

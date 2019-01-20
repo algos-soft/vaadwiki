@@ -1,127 +1,82 @@
-/*
- * Copyright 2000-2017 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package it.algos.vaadflow.ui.dialog;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
-import java.io.Serializable;
-import java.util.function.Consumer;
-
-import static it.algos.vaadflow.application.FlowCost.BOT_BACK;
-
+import javax.annotation.PostConstruct;
 
 /**
- * A generic dialog for confirming or cancelling an action.
- *
- * @param <T> The type of the action's subject
+ * Project vaadflow
+ * Created by Algos
+ * User: gac
+ * Date: gio, 17-gen-2019
+ * Time: 22:33
  */
-public class AConfirmDialog<T extends Serializable> extends Dialog {
+@SpringComponent
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
+public class AConfirmDialog extends ADialog {
 
-    private final H2 titleField = new H2();
+    //--Titolo standard, eventualmente modificabile nelle sottoclassi
+    private static String TITOLO = "Conferma";
 
-    private final Div messageLabel = new Div();
-
-    private final Div extraMessageLabel = new Div();
-
-    private final Button confirmButton = new Button();
-
-    //    private final Button cancelButton = new Button("Back", new Icon("lumo", "back"));
-    private final Button cancelButton = new Button(BOT_BACK);
-
-    private Registration registrationForConfirm;
-
-    private Registration registrationForCancel;
+    protected Button deleteButton = new Button(TITOLO);
 
 
     /**
-     * Constructor.
+     * Costruttore <br>
      */
     public AConfirmDialog() {
-        setCloseOnEsc(false);
-        setCloseOnOutsideClick(false);
-
-        getElement().getClassList().add("confirm-dialog");
-        confirmButton.addClickListener(e -> close());
-        confirmButton.getElement().setAttribute("theme", "primary");
-        confirmButton.setAutofocus(true);
-        cancelButton.addClickListener(e -> close());
-        cancelButton.getElement().setAttribute("theme", "primary");
-
-        HorizontalLayout buttonBar = new HorizontalLayout( cancelButton, confirmButton);
-        buttonBar.setClassName("confirm-dialog-buttons");
-
-        Div labels = new Div(messageLabel, extraMessageLabel);
-        labels.setClassName("confirm-text");
-
-        titleField.setClassName("confirm-dialog-heading");
-
-        add(titleField, labels, buttonBar);
-
-        this.addOpenedChangeListener(event -> {
-            if (!this.isOpened()) {
-                this.getElement().removeFromParent();
-            }
-        });
-    }
+        super(TITOLO);
+    }// end of constructor
 
 
     /**
-     * Opens the confirmation dialog.
+     * Metodo invocato subito DOPO il costruttore.
+     * DEVE essere inserito nella sottoclasse e invocare (eventualmente) un metodo della superclasse.
      * <p>
-     * The dialog will display the given title and message(s), then call
-     * <code>confirmHandler</code> if the Confirm button is clicked, or
-     * <code>cancelHandler</code> if the Cancel button is clicked.
-     *
-     * @param title             The title text
-     * @param message           Detail message (optional, may be empty)
-     * @param additionalMessage Additional message (optional, may be empty)
-     * @param actionName        The action name to be shown on the Confirm button
-     * @param isDisruptive      True if the action is disruptive, such as deleting an item
-     * @param item              The subject of the action
-     * @param confirmHandler    The confirmation handler function
-     * @param cancelHandler     The cancellation handler function
+     * Performing the initialization in a constructor is not suggested
+     * as the state of the UI is not properly set up when the constructor is invoked.
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
+     * ma l'ordine con cui vengono chiamati NON è garantito
      */
-    public void open(String title, String message, String additionalMessage,
-                     String actionName, boolean isDisruptive, T item, Consumer<T> confirmHandler,
-                     Runnable cancelHandler) {
-        titleField.setText(title);
-        messageLabel.setText(message);
-        extraMessageLabel.setText(additionalMessage);
-        confirmButton.setText(actionName);
+    @PostConstruct
+    protected void inizializzazione() {
+        super.inizia();
+    }// end of method
 
-        if (registrationForConfirm != null) {
-            registrationForConfirm.remove();
-        }
-        registrationForConfirm = confirmButton
-                .addClickListener(e -> confirmHandler.accept(item));
-        if (registrationForCancel != null) {
-            registrationForCancel.remove();
-        }
-        registrationForCancel = cancelButton
-                .addClickListener(e -> cancelHandler.run());
-        if (isDisruptive) {
-            confirmButton.getElement().setAttribute("theme", "error");
-        }
-        open();
-    }
 
-}
+    /**
+     * Barra dei bottoni
+     */
+    protected void fixBottomLayout() {
+        bottomLayout.setClassName("buttons");
+        bottomLayout.setPadding(false);
+        bottomLayout.setSpacing(true);
+        bottomLayout.setMargin(false);
+        bottomLayout.setClassName("confirm-dialog-buttons");
+
+        Label spazioVuotoEspandibile = new Label("");
+        bottomLayout.add(spazioVuotoEspandibile);
+        bottomLayout.setFlexGrow(1, spazioVuotoEspandibile);
+
+        cancelButton.getElement().setAttribute("theme", "secondary");
+        cancelButton.addClickListener(e -> cancellaHandler());
+        cancelButton.setIcon(new Icon(VaadinIcon.ARROW_LEFT));
+        bottomLayout.add(cancelButton);
+
+        confirmButton.setText(textConfirmlButton);
+        confirmButton.getElement().setAttribute("theme", "primary");
+        confirmButton.addClickListener(e -> confermaHandler());
+        confirmButton.setIcon(new Icon(VaadinIcon.CHECK));
+        bottomLayout.add(confirmButton);
+    }// end of method
+
+}// end of class

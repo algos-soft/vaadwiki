@@ -1,8 +1,9 @@
-package it.algos.vaadwiki.service;
+package it.algos.vaadwiki.download;
 
 import com.google.common.collect.Lists;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.WrapTime;
 import lombok.extern.slf4j.Slf4j;

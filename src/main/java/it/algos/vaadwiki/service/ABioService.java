@@ -3,6 +3,7 @@ package it.algos.vaadwiki.service;
 import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.*;
+import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.categoria.CategoriaService;

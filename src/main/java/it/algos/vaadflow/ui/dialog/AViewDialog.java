@@ -90,7 +90,6 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
     private final String confirmText = "Conferma";
 
-    private final AConfirmDialog<T> confirmDialog = new AConfirmDialog<>();
 
     public Consumer<T> itemAnnulla;
 

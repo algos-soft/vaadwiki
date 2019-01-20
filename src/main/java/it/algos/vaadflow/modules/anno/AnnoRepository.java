@@ -2,6 +2,7 @@ package it.algos.vaadflow.modules.anno;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -32,5 +33,6 @@ public interface AnnoRepository extends MongoRepository<Anno, String> {
 
     public Anno findByTitolo(String titolo);
     public List<Anno> findTop100ByOrderByOrdine();
+    public List<Anno> findAllByOrderByOrdineAsc();
 
 }// end of class

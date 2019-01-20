@@ -1,7 +1,8 @@
-package it.algos.vaadwiki.service;
+package it.algos.vaadwiki.download;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.modules.categoria.Categoria;
+import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

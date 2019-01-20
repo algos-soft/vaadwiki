@@ -1,10 +1,13 @@
 package it.algos.vaadwiki.modules.bio;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
@@ -14,17 +17,24 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.dialog.AConfirmDialog;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.fields.ATextField;
+import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
 import it.algos.vaadwiki.modules.categoria.CategoriaService;
-import it.algos.vaadwiki.service.*;
 import it.algos.vaadwiki.task.TaskBio;
+import it.algos.vaadwiki.upload.Upload;
+import it.algos.vaadwiki.upload.UploadAnni;
+import it.algos.vaadwiki.upload.UploadGiorni;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.util.ArrayList;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -64,8 +74,6 @@ public class BioViewList extends AttNazProfCatViewList {
     protected Button deleteButton;
 
     protected Button deleteAllButton;
-
-    protected Button newButton;
 
     protected Button searchButton;
 
@@ -144,6 +152,17 @@ public class BioViewList extends AttNazProfCatViewList {
     @Autowired
     private TaskBio taskBio;
 
+//    @Autowired
+//    private Upload upload;
+
+    @Autowired
+    private UploadGiorni giorni;
+
+    @Autowired
+    private UploadAnni anni;
+
+    private AComboBox<Upload> comboUpload;
+
 
     /**
      * Costruttore @Autowired <br>
@@ -168,6 +187,8 @@ public class BioViewList extends AttNazProfCatViewList {
         super.fixPreferenzeSpecifiche();
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = true;
+        super.usaBottoneDownload = false;
+        super.usaBottoneUpload = false;
         super.usaBottoneStatistiche = false;
         super.usaBottoneModulo = false;
         super.usaBottoneEdit = true;
@@ -189,39 +210,82 @@ public class BioViewList extends AttNazProfCatViewList {
     @Override
     protected boolean creaTopLayout() {
         super.creaTopLayout();
+        newButton.getElement().setAttribute("theme", "secondary");
 
         //--ciclo
         ciclodButton = new Button("Ciclo", new Icon(VaadinIcon.REFRESH));
+        ciclodButton.getElement().setAttribute("theme", "primary");
         ciclodButton.addClickListener(e -> {
             cicloService.esegue();
             updateView();
         });//end of lambda expressions and anonymous inner class
         topPlaceholder.add(ciclodButton);
 
-        //--delete singola biografia
-        deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
-        deleteButton.getElement().setAttribute("theme", "error");
-        deleteButton.addClickListener(e -> service.delete(null));
-        topPlaceholder.add(deleteButton);
+//        //--delete singola biografia
+//        deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
+//        deleteButton.getElement().setAttribute("theme", "error");
+//        deleteButton.addClickListener(e -> service.delete(null));
+//        topPlaceholder.add(deleteButton);
+//
+//        //--aggiorna singola biografia
+//        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
+//        updateButton.getElement().setAttribute("theme", "primary");
+//        topPlaceholder.add(updateButton);
+//
+//        //--elabora singola biografia
+//        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
+//        elaboraButton.addClickListener(e -> elaboraService.esegue());
+//        topPlaceholder.add(elaboraButton);
+//
+//        //--upload singola biografia
+//        uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
+//        uploadButton.getElement().setAttribute("theme", "error");
+//        topPlaceholder.add(uploadButton);
 
-        //--aggiorna singola biografia
-        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
-        updateButton.getElement().setAttribute("theme", "primary");
-        topPlaceholder.add(updateButton);
+//        topPlaceholder.add(creaPopup());
 
-        //--elabora singola biografia
-        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
-        elaboraButton.addClickListener(e -> elaboraService.esegue());
-        topPlaceholder.add(elaboraButton);
-
-        //--upload singola biografia
-        uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
-        uploadButton.getElement().setAttribute("theme", "error");
-        topPlaceholder.add(uploadButton);
-
-        sincroBottoniMenu(null);
+        sincroBottoniMenu(false);
         return topPlaceholder.getComponentCount() > 0;
     }// end of method
+
+
+//    protected Component creaPopup() {
+//        ArrayList<Upload> items = new ArrayList<>();
+////        items.add(null);
+//        items.add(giorni);
+//        items.add(anni);
+//        comboUpload = new AComboBox();
+//        comboUpload.setWidth("8em");
+//        comboUpload.setItems(items);
+////        comboUpload.setValue(null);
+//        comboUpload.addValueChangeListener(event -> openUploadDialog(event));
+//
+//        return comboUpload;
+//    }// end of method
+
+
+//    /**
+//     * Opens the confirmation dialog before uploadin.
+//     * <p>
+//     * The dialog will display the given title and message(s), then call
+//     */
+//    protected void openUploadDialog(HasValue.ValueChangeEvent event) {
+//        Upload value = (Upload) event.getValue();
+//
+//        if (value!=null) {
+//            String message = "Vuoi eseguire un UPLOAD di tutte le biografie divise per " + value + " ?";
+//            String additionalMessage = "L'operazione non si può interrompere";
+//            AConfirmDialog dialog = appContext.getBean(AConfirmDialog.class);
+//            dialog.open(message, additionalMessage, new RunnableUploadDialogo(value), null);
+//        }// end of if cycle
+//
+//    }// end of method
+
+
+//    protected void esegueUploadDialogo(Upload upload) {
+//        Notification.show("Iniziato l'upload di " + upload + " - Durerà circa 30 minuti", 2000, Notification.Position.MIDDLE);
+//        upload.esegue();
+//    }// end of method
 
 
     /**
@@ -251,28 +315,26 @@ public class BioViewList extends AttNazProfCatViewList {
     }// end of method
 
 
-    /**
-     * Crea il corpo centrale della view
-     * Componente grafico obbligatorio
-     * Alcune regolazioni vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
-     * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto)
-     */
-    @Override
-    protected void creaGrid() {
-        super.creaGrid();
-        grid.addSelectionListener(new SelectionListener<Grid<AEntity>, AEntity>() {
+//    /**
+//     * Crea il corpo centrale della view
+//     * Componente grafico obbligatorio
+//     * Alcune regolazioni vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
+//     * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto)
+//     */
+//    @Override
+//    protected void creaGrid() {
+//        super.creaGrid();
+//        grid.addSelectionListener(new SelectionListener<Grid<AEntity>, AEntity>() {
+//
+//            @Override
+//            public void selectionChange(SelectionEvent<Grid<AEntity>, AEntity> selectionEvent) {
+//                sincroBottoniMenu(selectionEvent);
+//            }// end of inner method
+//        });//end of lambda expressions and anonymous inner class
+//    }// end of method
 
-            @Override
-            public void selectionChange(SelectionEvent<Grid<AEntity>, AEntity> selectionEvent) {
-                sincroBottoniMenu(selectionEvent);
-            }// end of inner method
-        });//end of lambda expressions and anonymous inner class
-    }// end of method
 
-
-    protected void sincroBottoniMenu(SelectionEvent<Grid<AEntity>, AEntity> selectionEvent) {
-        boolean enabled = selectionEvent != null && selectionEvent.getAllSelectedItems().size() > 0;
-
+    protected void sincroBottoniMenu(boolean enabled) {
         if (deleteButton != null) {
             deleteButton.setEnabled(enabled);
         }// end of if cycle
@@ -292,7 +354,6 @@ public class BioViewList extends AttNazProfCatViewList {
         if (uploadButton != null) {
             uploadButton.setEnabled(enabled);
         }// end of if cycle
-
     }// end of method
 
 
@@ -319,5 +380,33 @@ public class BioViewList extends AttNazProfCatViewList {
         super.addSpecificColumnsBefore();
     }// end of method
 
+
+//    private class RunnableUploadDialogo implements Runnable {
+//
+//        private Upload upload;
+//
+//
+//        public RunnableUploadDialogo(Upload upload) {
+//            this.upload = upload;
+//        }// end of constructor
+//
+//
+//        /**
+//         * When an object implementing interface <code>Runnable</code> is used
+//         * to create a thread, starting the thread causes the object's
+//         * <code>run</code> method to be called in that separately executing
+//         * thread.
+//         * <p>
+//         * The general contract of the method <code>run</code> is that it may
+//         * take any action whatsoever.
+//         *
+//         * @see Thread#run()
+//         */
+//        @Override
+//        public void run() {
+//            esegueUploadDialogo(upload);
+//        }// end of method
+//
+//    }// end of inner class
 
 }// end of class
