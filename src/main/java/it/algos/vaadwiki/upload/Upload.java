@@ -202,6 +202,8 @@ public abstract class Upload {
 
     protected boolean usaBodyDoppiaColonna;
 
+    protected boolean usaBodyTemplate;
+
     protected boolean usaSuddivisioneParagrafi;
 
     protected boolean usaOrdineAlfabeticoParagrafi;
@@ -210,7 +212,7 @@ public abstract class Upload {
 
     protected boolean usaBodyRigheMultiple;
 
-    protected String titoloPaginaMadre = "";
+//    protected String titoloPaginaMadre = "";
 
 
     /**
@@ -255,9 +257,15 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected void elaboraMappaListaDidascalieBio() {
+        int num = 0;
+
         if (mappaListaOrdinataDidascalie != null) {
-            numPersone = mappaListaOrdinataDidascalie.size();
+            for (Map.Entry<Integer, ArrayList<String>> entry : mappaListaOrdinataDidascalie.entrySet()) {
+                num += entry.getValue().size();
+            }// end of for cycle
         }// end of if cycle
+
+        numPersone = num;
     }// fine del metodo
 
 
@@ -294,14 +302,11 @@ public abstract class Upload {
             testo = testo.trim();
 
             if (pref.isBool(FlowCost.USA_DEBUG)) {
-                titolo = PAGINA_PROVA;
-                testo = titoloPagina + A_CAPO + testo;
-            } else {
-                titolo = titoloPagina;
-            }// fine del blocco if-else
+                titoloPagina = PAGINA_PROVA;
+            }// fine del blocco if
 
-            if (checkPossoRegistrare(titolo, testo)) {
-                api.scriveVoce(titolo, testo, summary);
+            if (checkPossoRegistrare(titoloPagina, testo)) {
+                api.scriveVoce(titoloPagina, testo, summary);
             }// end of if cycle
         }// fine del blocco if
     }// fine del metodo
@@ -412,7 +417,7 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected String getTitoloPaginaMadre() {
-        return titoloPaginaMadre;
+        return VUOTA;
     }// fine del metodo
 
 
@@ -513,20 +518,33 @@ public abstract class Upload {
 //            text = LibWiki.listaDueColonne(text.trim());
 //        }// fine del blocco if
 //
-//        if (usaBodyTemplate) {
-////            if (Pref.getBool(CostBio.USA_DEBUG, false)) {
-////                text = elaboraTemplate("") + text;
-////            } else {
-////                text = elaboraTemplate(text);
-////            }// end of if/else cycle
-//            text = elaboraTemplate(text);
-//        }// end of if cycle
 
         //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
         testo = LibWiki.setColonne(testo);
 
+        if (usaBodyTemplate) {
+//            if (Pref.getBool(CostBio.USA_DEBUG, false)) {
+//                text = elaboraTemplate("") + text;
+//            } else {
+//                text = elaboraTemplate(text);
+//            }// end of if/else cycle
+            testo = elaboraTemplate(testo);
+        }// end of if cycle
+
         return testo;
     }// fine del metodo
+
+
+    /**
+     * Incapsula il testo come parametro di un (eventuale) template
+     * Se non viene incapsulato, restituisce il testo in ingresso
+     * Sovrascritto
+     */
+    protected String elaboraTemplate(String testoIn) {
+        return testoIn;
+    }// fine del metodo
+
+
 
 
     /**
@@ -625,23 +643,6 @@ public abstract class Upload {
                         }// end of for cycle
                     }// end of if/else cycle
                 }// end of if cycle
-
-
-//                if (listaDidascalie != null) {
-//                    if (listaDidascalie.size() == 1) {
-//                        testo += ASTERISCO + listaDidascalie.get(0) + A_CAPO;
-//                    } else {
-//                        if (text.isValid(keyTxt)) {
-//                            testo += LibWiki.setQuadre(keyTxt);
-//                            testo += A_CAPO;
-//                            for (String didascalia : listaDidascalie) {
-//                                testo += ASTERISCO + ASTERISCO + listaDidascalie.get(0) + A_CAPO;
-//                            }// end of for cycle
-//                        } else {
-//                            testo += ASTERISCO + listaDidascalie.get(0) + A_CAPO;
-//                        }// end of if/else cycle
-//                    }// end of if/else cycle
-//                }// end of if cycle
             }// end of for cycle
         }// end of if cycle
 

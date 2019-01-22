@@ -2,9 +2,12 @@ package it.algos.vaadwiki.upload;
 
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadwiki.liste.ListaGiornoNato;
+import it.algos.vaadwiki.service.LibBio;
+import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -12,8 +15,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 
-import static it.algos.vaadflow.application.FlowCost.SPAZIO;
-import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import static it.algos.vaadflow.application.FlowCost.*;
 
 /**
  * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
@@ -95,11 +97,11 @@ public class UploadGiorni extends Upload {
      */
     protected void elaboraParametri() {
         // head
-//        usaHeadNonScrivere = pref.isBool(CostBio.USA_HEAD_NON_SCRIVERE, true);
+        usaHeadNonScrivere = true; //pref.isBool(CostBio.USA_HEAD_NON_SCRIVERE, true);
         usaHeadInclude = true; //--tipicamente sempre true. Si attiva solo se c'è del testo (iniziale) da includere
         usaHeadToc = true; //--tipicamente sempre true.
         usaHeadTocIndice = true; //--normalmente true. Sovrascrivibile da preferenze
-        usaHeadRitorno = false; //--normalmente false. Sovrascrivibile da preferenze
+        usaHeadRitorno = true; //--normalmente false. Sovrascrivibile da preferenze
         usaHeadTemplateAvviso = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         tagHeadTemplateAvviso = "ListaBio"; //--Sovrascrivibile da preferenze
         tagHeadTemplateProgetto = "biografie"; //--Sovrascrivibile da preferenze
@@ -112,7 +114,7 @@ public class UploadGiorni extends Upload {
         usaBodySottopagine = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         usaBodyRigheMultiple = true; //--normalmente false. Sovrascrivibile da preferenze
         usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
-//        usaBodyTemplate = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
+        usaBodyTemplate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
 //        usaSottopagine = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
 //        maxVociParagrafo = Pref.getInt(CostBio.MAX_VOCI_PARAGRAFO, 50);//--tipicamente 50. Sovrascrivibile nelle sottoclassi
 //        tagParagrafoNullo = ALTRE;
@@ -146,6 +148,23 @@ public class UploadGiorni extends Upload {
 
 
     /**
+     * Titolo della pagina 'madre'
+     * <p>
+     * Sovrascritto
+     */
+    @Override
+    protected String getTitoloPaginaMadre() {
+        String titolo = VUOTA;
+
+        if (giorno != null) {
+            titolo += giorno.getTitolo();
+        }// fine del blocco if
+
+        return titolo;
+    }// fine del metodo
+
+
+    /**
      * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
      */
     public String getTitoloPagina(Giorno giorno, String tag) {
@@ -175,6 +194,54 @@ public class UploadGiorni extends Upload {
     protected void elaboraMappaListaDidascalieBio() {
         mappaListaOrdinataDidascalie = listaGiornoNato.esegue(giorno);
         super.elaboraMappaListaDidascalieBio();
+    }// fine del metodo
+
+
+    /**
+     * Incapsula il testo come parametro di un (eventuale) template
+     * Se non viene incapsulato, restituisce il testo in ingresso
+     * Sovrascritto
+     *
+     * @param testoBody
+     */
+    @Override
+    protected String elaboraTemplate(String testoBody) {
+        String testoOut = testoBody;
+        String titoloTemplate = "Lista persone per giorno";
+        String testoIni = VUOTA;
+        String testoEnd = "}}";
+
+        testoIni += "{{" + titoloTemplate;
+        testoIni += A_CAPO;
+        testoIni += "|titolo=" + titoloPagina;
+        testoIni += A_CAPO;
+        testoIni += "|voci=" + numPersone;
+        testoIni += A_CAPO;
+        testoIni += "|testo=";
+        testoIni += A_CAPO;
+
+        if (!testoBody.equals(VUOTA)) {
+            testoOut = testoIni + testoBody + testoEnd;
+        }// fine del blocco if
+
+        return testoOut;
+    }// fine del metodo
+
+
+    /**
+     * Piede della pagina
+     * Sovrascritto
+     */
+    protected String elaboraFooter() {
+        String testo = VUOTA;
+        boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
+
+        testo += LibWiki.setPortale(tagHeadTemplateProgetto);
+        testo += LibWiki.setCat("Liste di nati per giorno", VUOTA + giorno.ordine, nascosta);
+        testo += LibWiki.setCat("Nati il " + giorno.titolo, SPAZIO, nascosta);
+        testo = LibBio.setNoIncludeMultiRiga(testo);
+
+        return testo;
     }// fine del metodo
 
 

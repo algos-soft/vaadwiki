@@ -2589,6 +2589,28 @@ public abstract class LibWiki {
 
 
     /**
+     * Aggiunge doppie quadre in testa e coda alla stringa.
+     * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con doppie quadre aggiunte
+     */
+    public static String setQuadreSpazio(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            if (!stringaOut.equals("")) {
+                stringaOut = QUADRE_INI + stringaOut + QUADRE_END;
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return stringaOut;
+    } // fine del metodo
+
+
+    /**
      * Aggiunge singola parentesi tonda in testa e coda alla stringa.
      *
      * @param stringaIn in ingresso
@@ -2760,6 +2782,78 @@ public abstract class LibWiki {
         }// fine del blocco if
 
         return stringaOut.trim();
+    } // fine del metodo
+
+
+    /**
+     * Costruisce il tag del portale
+     *
+     * @param nomePortale in ingresso
+     *
+     * @return stringa con la categoria
+     */
+    public static String setPortale(String nomePortale) {
+        String testo = VUOTA;
+        String tag = "Portale";
+
+        testo += tag;
+        testo += PIPE;
+        testo += nomePortale;
+        testo = setGraffe(testo);
+        testo += A_CAPO;
+
+        return testo;
+    } // fine del metodo
+
+
+    /**
+     * Costruisce il tag della categoria
+     *
+     * @param nomeCategoria in ingresso
+     *
+     * @return stringa con la categoria
+     */
+    public static String setCat(String nomeCategoria) {
+        return setCat(nomeCategoria, "");
+    } // fine del metodo
+
+
+    /**
+     * Costruisce il tag della categoria
+     *
+     * @param nomeCategoria in ingresso
+     *
+     * @return stringa con la categoria
+     */
+    public static String setCat(String nomeCategoria, String ordine) {
+        return setCat(nomeCategoria, ordine, false);
+    } // fine del metodo
+
+
+    /**
+     * Costruisce il tag della categoria
+     *
+     * @param nomeCategoria in ingresso
+     * @param ordine        di presentazione della categoria
+     * @param nascosta
+     *
+     * @return stringa con la categoria
+     */
+    public static String setCat(String nomeCategoria, String ordine, boolean nascosta) {
+        String testo = VUOTA;
+        String tagNascosta = nascosta ? ":" : "";
+        String tag = tagNascosta + "Categoria:";
+
+        testo += tag;
+        testo += nomeCategoria;
+        if (ordine != null && ordine.length() > 0) {
+            testo += PIPE;
+            testo += ordine;
+        }// end of if cycle
+        testo = setQuadreSpazio(testo);
+        testo += A_CAPO;
+
+        return testo;
     } // fine del metodo
 
 
