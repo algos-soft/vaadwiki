@@ -36,6 +36,7 @@ public class WikiCost {
 	public final static String TAG_ATT = "attivita";
     public final static String TAG_CAT = "categoria";
     public final static String TAG_BIO = "bio";
+    public final static String TAG_UTI = "utility";
 
     // daemons
     public final static String BIO = "Bio";

@@ -97,10 +97,11 @@ public class CicloService extends ABioService {
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa sei minuti");
+            log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa dieci minuti");
         }// end of if cycle
         listaPageidsEccedenti = array.differenza(listaPageidsMongoBio, listaPageidsMongoCategoria);
         if (pref.isBool(FlowCost.USA_DEBUG)) {
+            log.info("Calcolate " + text.format(listaPageidsEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
             logger.debug("Calcolate " + text.format(listaPageidsEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
         }// end of if cycle
 
@@ -112,8 +113,9 @@ public class CicloService extends ABioService {
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             log.info("Debug - Inizio a calcolare le voci mancanti. Circa sette minuti");
         }// end of if cycle
-        listaPageidsMancanti = LibWiki.delta(listaPageidsMongoCategoria, listaPageidsMongoBio);
+        listaPageidsMancanti = array.differenza(listaPageidsMongoCategoria,listaPageidsMongoBio);
         if (pref.isBool(FlowCost.USA_DEBUG)) {
+            log.info("Calcolate " + text.format(listaPageidsMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
             logger.debug("Calcolate " + text.format(listaPageidsMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
         }// end of if cycle
 

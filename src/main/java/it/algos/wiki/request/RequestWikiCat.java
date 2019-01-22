@@ -58,8 +58,8 @@ public class RequestWikiCat extends RequestWiki {
      *
      * @deprecated
      */
-//    public RequestWikiCat() {
-//    }// fine del metodo costruttore
+    public RequestWikiCat() {
+    }// fine del metodo costruttore
 
 //    /**
 //     * Costruttore completo
@@ -119,7 +119,7 @@ public class RequestWikiCat extends RequestWiki {
      * Regola alcuni parametri specifici della sottoclasse
      */
     @PostConstruct
-    protected void inizia() {
+    public void inizia() {
         super.needPost = false;
         super.needLogin = true;
         super.needToken = false;

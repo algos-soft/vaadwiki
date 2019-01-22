@@ -73,14 +73,14 @@ public abstract class RequestWiki extends Request {
      * Istanza inietta da Spring come 'singleton'
      */
     @Autowired
-    protected WikiLogin wikiLogin;
+    public WikiLogin wikiLogin;
 
 
     /**
      * Service (@Scope = 'singleton') iniettato da StaticContextAccessor e usato come libreria <br>
      * Unico per tutta l'applicazione. Usato come libreria.
      */
-    public ATextService text = StaticContextAccessor.getBean(ATextService.class);
+    public ATextService text = ATextService.getInstance();
 
     //--tipo di ricerca della pagina
     //--di default il titolo

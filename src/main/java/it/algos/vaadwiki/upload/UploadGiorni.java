@@ -110,7 +110,7 @@ public class UploadGiorni extends Upload {
         usaSuddivisioneParagrafi = false;
         usaOrdineAlfabeticoParagrafi = false;
         usaBodySottopagine = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
-        usaBodyRigheMultiple = false; //--normalmente false. Sovrascrivibile da preferenze
+        usaBodyRigheMultiple = true; //--normalmente false. Sovrascrivibile da preferenze
         usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
 //        usaBodyTemplate = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
 //        usaSottopagine = false; //--normalmente false. Sovrascrivibile nelle sottoclassi

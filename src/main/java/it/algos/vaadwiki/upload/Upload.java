@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 
 import static it.algos.vaadflow.application.FlowCost.*;
-import static it.algos.vaadwiki.application.WikiCost.TAG_SEPARATORE;
+import static it.algos.vaadwiki.didascalia.Didascalia.TAG_SEP;
 
 /**
  * Project vaadwiki
@@ -522,6 +522,9 @@ public abstract class Upload {
 //            text = elaboraTemplate(text);
 //        }// end of if cycle
 
+        //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
+        testo = LibWiki.setColonne(testo);
+
         return testo;
     }// fine del metodo
 
@@ -587,38 +590,58 @@ public abstract class Upload {
      */
     protected String righeRaggruppate() {
         String testo = VUOTA;
-        ArrayList<String> lista;
-        int key;
+        ArrayList<String> listaDidascalie;
+        int keyNum;
         String keyTxt;
+        String key;
+        String keySep;
 
         if (mappaListaOrdinataDidascalie != null) {
             for (Map.Entry<Integer, ArrayList<String>> entry : mappaListaOrdinataDidascalie.entrySet()) {
-                key = entry.getKey();
-                keyTxt = key + "";
-                lista = entry.getValue();
+                keyNum = entry.getKey();
+                keyTxt = keyNum > 0 ? keyNum + "" : "";
+                listaDidascalie = entry.getValue();
 
-//                if (lista.size() == 1) {
-//                    testo += ASTERISCO;
-//                    didascalia = getDidascalia(lista.get(0));
-//                    testo += didascalia;
-//                    testo += A_CAPO;
-//                } else {
-//                    if (!key.equals(CostBio.VUOTO)) {
-//                        testo += ASTERISCO;
-//                        testo += LibWiki.setQuadre(keyTxt);
-//                        testo += A_CAPO;
-//                    }// end of if cycle
-//                    for (Bio bio : lista) {
-//                        if (!key.equals(CostBio.VUOTO)) {
-//                            testo += ASTERISCO;
-//                        }// end of if cycle
-//                        testo += ASTERISCO;
-//                        didascalia = getDidascalia(bio);
-//                        didascalia = LibBio.troncaDidascalia(didascalia);
-//                        testo += didascalia;
-//                        testo += A_CAPO;
-//                    }// end of for cycle
-//                }// end of if/else cycle
+                if (listaDidascalie != null) {
+                    if (text.isValid(keyTxt)) {
+                        key = LibWiki.setQuadre(keyTxt);
+                        keySep = key + TAG_SEP;
+                        if (listaDidascalie.size() == 1) {
+                            testo += ASTERISCO + listaDidascalie.get(0) + A_CAPO;
+                        } else {
+                            testo += ASTERISCO + key + A_CAPO;
+                            for (String didascalia : listaDidascalie) {
+                                if (didascalia.startsWith(keySep)) {
+                                    didascalia = text.levaTesta(didascalia, keySep);
+                                } else {
+                                    logger.error("Algos - La didascalia " + didascalia + " non ha la chiave corretta");
+                                }// end of if/else cycle
+                                testo += ASTERISCO + ASTERISCO + didascalia + A_CAPO;
+                            }// end of for cycle
+                        }// end of if/else cycle
+                    } else {
+                        for (String didascalia : listaDidascalie) {
+                            testo += ASTERISCO + didascalia + A_CAPO;
+                        }// end of for cycle
+                    }// end of if/else cycle
+                }// end of if cycle
+
+
+//                if (listaDidascalie != null) {
+//                    if (listaDidascalie.size() == 1) {
+//                        testo += ASTERISCO + listaDidascalie.get(0) + A_CAPO;
+//                    } else {
+//                        if (text.isValid(keyTxt)) {
+//                            testo += LibWiki.setQuadre(keyTxt);
+//                            testo += A_CAPO;
+//                            for (String didascalia : listaDidascalie) {
+//                                testo += ASTERISCO + ASTERISCO + listaDidascalie.get(0) + A_CAPO;
+//                            }// end of for cycle
+//                        } else {
+//                            testo += ASTERISCO + listaDidascalie.get(0) + A_CAPO;
+//                        }// end of if/else cycle
+//                    }// end of if/else cycle
+//                }// end of if cycle
             }// end of for cycle
         }// end of if cycle
 
@@ -631,34 +654,14 @@ public abstract class Upload {
      */
     protected String righeSemplici() {
         String testo = VUOTA;
-        ArrayList<String> listaDidascalie;
-        int key;
-        String keyTxt;
 
         if (mappaListaOrdinataDidascalie != null) {
             for (Map.Entry<Integer, ArrayList<String>> entry : mappaListaOrdinataDidascalie.entrySet()) {
-                key = entry.getKey();
-                keyTxt = key + "";
-                listaDidascalie = entry.getValue();
-
-                if (listaDidascalie.size() == 1) {
-                    testo += ASTERISCO;
-                    testo += LibWiki.setQuadre(keyTxt);
-                    testo += TAG_SEPARATORE;
-                    testo += listaDidascalie.get(0);
-                    testo += A_CAPO;
-                } else {
-                    try { // prova ad eseguire il codice
-                        for (String didascalia : listaDidascalie) {
-                            testo += ASTERISCO;
-                            testo += LibWiki.setQuadre(keyTxt);
-                            testo += TAG_SEPARATORE;
-                            testo += didascalia;
-                            testo += A_CAPO;
-                        }// end of for cycle
-                    } catch (Exception unErrore) { // intercetta l'errore
-                    }// fine del blocco try-catch
-                }// end of if/else cycle
+                if (entry.getValue() != null) {
+                    for (String didascalia : entry.getValue()) {
+                        testo += ASTERISCO + didascalia + A_CAPO;
+                    }// end of for cycle
+                }// end of if cycle
             }// end of for cycle
         }// end of if cycle
 

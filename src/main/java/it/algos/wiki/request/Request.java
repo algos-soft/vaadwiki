@@ -30,7 +30,7 @@ public abstract class Request {
      * Service (@Scope = 'singleton') iniettato da StaticContextAccessor e usato come libreria <br>
      * Unico per tutta l'applicazione. Usato come libreria.
      */
-    public AArrayService array = StaticContextAccessor.getBean(AArrayService.class);
+    public AArrayService array = AArrayService.getInstance();
 
     //--validità specifica della request
     protected TipoRisultato risultato = TipoRisultato.erroreGenerico;

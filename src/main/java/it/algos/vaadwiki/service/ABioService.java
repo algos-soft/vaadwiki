@@ -65,7 +65,7 @@ public abstract class ABioService {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected BioService bioService;
+    public BioService bioService;
 
 
     /**
@@ -98,7 +98,7 @@ public abstract class ABioService {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected ElaboraService elaboraService;
+    public ElaboraService elaboraService;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -122,7 +122,7 @@ public abstract class ABioService {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected Api api;
+    public Api api;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -134,7 +134,7 @@ public abstract class ABioService {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected ATextService text;
+    public ATextService text;
 
 
     /**

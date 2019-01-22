@@ -5,7 +5,7 @@ import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ATextService;
-import it.algos.vaadwiki.didascalia.DidascaliaNatiGiorno;
+import it.algos.vaadwiki.didascalia.DidascaliaGiornoNato;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,7 @@ public class ListaGiornoNato {
     protected PreferenzaService pref;
 
     @Autowired
-    protected DidascaliaNatiGiorno didascaliaNatiGiorno;
+    protected DidascaliaGiornoNato didascaliaGiornoNato;
 
     protected ArrayList<Bio> listaGrezzaBio;
 
@@ -198,14 +198,14 @@ public class ListaGiornoNato {
             mappa = entry.getValue();
             for (Map.Entry<String, Bio> entry2 : mappa.entrySet()) {
                 bio = entry2.getValue();
-                didascalia = didascaliaNatiGiorno.esegue(bio);
+                didascalia = didascaliaGiornoNato.esegue(bio);
                 listaDida.add(didascalia);
             }// end of for cycle
             mappaListaDidascalie.put(anno, listaDida);
         }// end of for cycle
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            testDidascalie(mappaListaDidascalie);
+//            testDidascalie(mappaListaDidascalie);
         }// end of if cycle
 
         return mappaListaDidascalie;

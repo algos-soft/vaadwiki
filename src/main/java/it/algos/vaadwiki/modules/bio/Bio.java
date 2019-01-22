@@ -53,8 +53,8 @@ import java.time.LocalDateTime;
 @Builder(builderMethodName = "builderBio")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"wikiTitle", "lastModifica", "lastLettura", "nome", "cognome", "sesso", "luogoNatoLink", "annoNato", "annoMorto", "attivita", "attivita2", "attivita3", "nazionalita", "luogoMortoLink", "giornoNato", "giornoMorto"})
-@AIForm(fields = {"pageid", "wikiTitle", "lastModifica", "lastLettura", "tmplBioServer", "nome", "cognome", "sesso", "luogoNatoLink", "giornoNato", "annoNato", "luogoMortoLink", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita", "lastModifica", "lastLettura"})
+@AIList(fields = {"wikiTitle", "lastModifica", "lastLettura", "nome", "cognome", "sesso", "luogoNato", "annoNato", "annoMorto", "attivita", "attivita2", "attivita3", "nazionalita", "luogoMorto", "giornoNato", "giornoMorto"})
+@AIForm(fields = {"pageid", "wikiTitle", "lastModifica", "lastLettura", "tmplBioServer", "nome", "cognome", "sesso", "luogoNato", "giornoNato", "annoNato", "luogoMorto", "giornoMorto", "annoMorto", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita", "lastModifica", "lastLettura"})
 @AIScript(sovrascrivibile = false)
 public class Bio extends AEntity {
 
@@ -135,8 +135,8 @@ public class Bio extends AEntity {
 
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
-    @AIColumn(name = "CittàNato", widthEM = 8)
-    private String luogoNatoLink;
+    @AIColumn(name = "LuogoNato", widthEM = 8)
+    private String luogoNato;
 
     //    @AIField(type = EAFieldType.text)
 //    @AIColumn(width = 210)
@@ -156,8 +156,8 @@ public class Bio extends AEntity {
 
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
-    @AIColumn(name = "CittàMorto", widthEM = 8)
-    private String luogoMortoLink;
+    @AIColumn(name = "LuogoMorto", widthEM = 8)
+    private String luogoMorto;
 
     //    @AIField(type = EAFieldType.text)
 //    @AIColumn(width = 210)

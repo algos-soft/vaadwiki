@@ -284,7 +284,7 @@ public class CategoriaService extends AttNazProfCatService {
         ArrayList<Categoria> listaCat;
         String nomeCategoria = pref.getStr(WikiCost.CAT_BIO);
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("CAT - Inizio a caricare le pagine di wiki.categoria. Circa due minuti");
+            log.info("CAT - Inizio a caricare le pagine di wiki.categoria. Circa quattro minuti");
         }// end of if cycle
 
         inizio = System.currentTimeMillis();

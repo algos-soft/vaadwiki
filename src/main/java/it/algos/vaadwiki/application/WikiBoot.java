@@ -13,6 +13,7 @@ import it.algos.vaadwiki.modules.bio.BioViewList;
 import it.algos.vaadwiki.modules.categoria.CategoriaViewList;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaViewList;
 import it.algos.vaadwiki.modules.professione.ProfessioneViewList;
+import it.algos.vaadwiki.views.UtilityView;
 import it.algos.wiki.WikiLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -136,6 +137,7 @@ public class WikiBoot extends ABoot {
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
     protected void addRouteSpecifiche() {
+        FlowCost.MENU_CLAZZ_LIST.add(UtilityView.class);
         FlowCost.MENU_CLAZZ_LIST.add(AttivitaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(NazionalitaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(ProfessioneViewList.class);

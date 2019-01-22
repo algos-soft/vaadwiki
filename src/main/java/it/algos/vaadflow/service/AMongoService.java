@@ -153,6 +153,19 @@ public class AMongoService extends AbstractService {
 
 
     /**
+     * Check the existence of a single entity
+     *
+     * @param clazz      della collezione
+     * @param entityBean da cercare
+     *
+     * @return true if exist
+     */
+    public boolean isEsiste(Class<? extends AEntity> clazz, AEntity entityBean) {
+        return findByEntity(clazz, entityBean) != null;
+    }// end of method
+
+
+    /**
      * Find single entity
      *
      * @param clazz della collezione
@@ -243,6 +256,20 @@ public class AMongoService extends AbstractService {
         }// end of if cycle
 
         return entity;
+    }// end of method
+
+
+    /**
+     * Check the existence of a single entity
+     *
+     * @param clazz    della collezione
+     * @param property da controllare
+     * @param value    da considerare
+     *
+     * @return true if exist
+     */
+    public boolean isEsisteByProperty(Class<? extends AEntity> clazz, String property, Object value) {
+        return findByProperty(clazz,property,value)!=null;
     }// end of method
 
 

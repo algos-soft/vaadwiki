@@ -2,12 +2,16 @@ package it.algos.vaadwiki.service;
 
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.StaticContextAccessor;
+import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
+import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.ATextService;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,19 +109,30 @@ public class LibBio {
      */
     public static final String APICE = "'";
 
+    /**
+     * tag di apertura e chiusura di un paragrafo
+     */
+    public static final String PARAGRAFO = "==";
+
 
     /**
      * Service (@Scope = 'singleton') iniettato da StaticContextAccessor e usato come libreria <br>
      * Unico per tutta l'applicazione. Usato come libreria.
      */
-    public ATextService text = StaticContextAccessor.getBean(ATextService.class);
+    public ATextService text = ATextService.getInstance();
 
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
-    private GiornoService giorno;
+    public GiornoService giorno;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    public AMongoService mongo;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -1124,6 +1139,19 @@ public class LibBio {
     } // fine del metodo
 
 
+    /**
+     * Costruisce il titolo del paragrafo.
+     * Aggiunge un ritorno a capo
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con la formattazione del paragrafo
+     */
+    public static String setParagrafo(String stringaIn) {
+        return PARAGRAFO + stringaIn.trim() + PARAGRAFO + A_CAPO;
+    } // fine del metodo
+
+
 //    /**
 //     * Elimina il testo successivo alla virgola
 //     *
@@ -1376,6 +1404,77 @@ public class LibBio {
 
 
     /**
+     * Aggiunge tag 'NoInclude' in testa e coda alla stringa.
+     * <p>
+     * Aggiunge SOLO se già non esiste TODO Non ancora
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Inserisce i tag (iniziale e finale) su due nuove righe
+     * Elimina eventuali 'NoInclude' già presenti, per evitare di metterli doppi TODO Non ancora
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa coi tag aggiunti
+     */
+    public static String setNoIncludeMultiRiga(String stringaIn) {
+        return setNoIncludeBase(stringaIn, true);
+    } // fine del metodo
+
+
+    /**
+     * Aggiunge tag 'NoInclude' in testa e coda alla stringa.
+     * <p>
+     * Aggiunge SOLO se già non esiste TODO Non ancora
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Inserisce i tag (iniziale e finale) sulla stessa riga di testo
+     * Elimina eventuali 'NoInclude' già presenti, per evitare di metterli doppi TODO Non ancora
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa coi tag aggiunti
+     */
+    public static String setNoIncludeRiga(String stringaIn) {
+        return setNoIncludeBase(stringaIn, false);
+    } // fine del metodo
+
+
+    /**
+     * Aggiunge tag 'NoInclude' in testa e coda alla stringa.
+     * <p>
+     * Aggiunge SOLO se già non esiste TODO Non ancora
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     * Inserisce i tag (iniziale e finale) sulla stessa riga di testo
+     * Elimina eventuali 'NoInclude' già presenti, per evitare di metterli doppi TODO Non ancora
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa coi tag aggiunti
+     */
+    private static String setNoIncludeBase(String stringaIn, boolean righeDiverse) {
+        String stringaOut = stringaIn.trim();
+        String tagIni = "<noinclude>";
+        String tagEnd = "</noinclude>";
+
+        if (!stringaIn.equals("")) {
+            stringaOut = tagIni;
+            if (righeDiverse) {
+                stringaOut += A_CAPO;
+            }// end of if cycle
+            stringaOut += stringaIn.trim();
+            if (righeDiverse) {
+                stringaOut += A_CAPO;
+            }// end of if cycle
+            stringaOut += tagEnd;
+            stringaOut = stringaOut.trim();
+        }// fine del blocco if
+
+        return stringaOut;
+    } // fine del metodo
+
+
+    /**
      * Elimina (eventuali) doppie quadre in testa e coda della stringa.
      * <p>
      * Funziona solo se le quadre sono esattamente in TESTA ed in CODA alla stringa
@@ -1401,73 +1500,6 @@ public class LibBio {
 
         return testoOut;
     }// end of method
-
-    /**
-     * Aggiunge tag 'NoInclude' in testa e coda alla stringa.
-     * <p>
-     * Aggiunge SOLO se già non esiste TODO Non ancora
-     * Se arriva una stringa vuota, restituisce una stringa vuota
-     * Elimina spazi vuoti iniziali e finali
-     * Inserisce i tag (iniziale e finale) su due nuove righe
-     * Elimina eventuali 'NoInclude' già presenti, per evitare di metterli doppi TODO Non ancora
-     *
-     * @param stringaIn in ingresso
-     *
-     * @return stringa coi tag aggiunti
-     */
-    public static String setNoIncludeMultiRiga(String stringaIn) {
-        return setNoIncludeBase(stringaIn, true);
-    } // fine del metodo
-
-    /**
-     * Aggiunge tag 'NoInclude' in testa e coda alla stringa.
-     * <p>
-     * Aggiunge SOLO se già non esiste TODO Non ancora
-     * Se arriva una stringa vuota, restituisce una stringa vuota
-     * Elimina spazi vuoti iniziali e finali
-     * Inserisce i tag (iniziale e finale) sulla stessa riga di testo
-     * Elimina eventuali 'NoInclude' già presenti, per evitare di metterli doppi TODO Non ancora
-     *
-     * @param stringaIn in ingresso
-     *
-     * @return stringa coi tag aggiunti
-     */
-    public static String setNoIncludeRiga(String stringaIn) {
-        return setNoIncludeBase(stringaIn, false);
-    } // fine del metodo
-
-    /**
-     * Aggiunge tag 'NoInclude' in testa e coda alla stringa.
-     * <p>
-     * Aggiunge SOLO se già non esiste TODO Non ancora
-     * Se arriva una stringa vuota, restituisce una stringa vuota
-     * Elimina spazi vuoti iniziali e finali
-     * Inserisce i tag (iniziale e finale) sulla stessa riga di testo
-     * Elimina eventuali 'NoInclude' già presenti, per evitare di metterli doppi TODO Non ancora
-     *
-     * @param stringaIn in ingresso
-     * @return stringa coi tag aggiunti
-     */
-    private  static String setNoIncludeBase(String stringaIn, boolean righeDiverse) {
-        String stringaOut = stringaIn.trim();
-        String tagIni = "<noinclude>";
-        String tagEnd = "</noinclude>";
-
-        if (!stringaIn.equals("")) {
-            stringaOut = tagIni;
-            if (righeDiverse) {
-                stringaOut += A_CAPO;
-            }// end of if cycle
-            stringaOut += stringaIn.trim();
-            if (righeDiverse) {
-                stringaOut += A_CAPO;
-            }// end of if cycle
-            stringaOut += tagEnd;
-            stringaOut = stringaOut.trim();
-        }// fine del blocco if
-
-        return stringaOut;
-    } // fine del metodo
 
 
 //    /**
@@ -2195,7 +2227,7 @@ public class LibBio {
             testoValido = testoValido.replaceFirst(tagDoppio, SPAZIO);
         }// end of if cycle
 
-        if (text.isValid(testoValido) && giorno.isEsiste(testoValido)) {
+        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Giorno.class, "titolo", testoValido)) {
             return testoValido.trim();
         } else {
             return VUOTA;
@@ -2222,7 +2254,7 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
-        if (text.isValid(testoValido) && anno.isEsiste(testoValido)) {
+        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Anno.class, "titolo", testoValido)) {
             return testoValido.trim();
         } else {
             return VUOTA;
@@ -2247,7 +2279,7 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
-        if (text.isValid(testoValido) && attivita.isEsiste(testoValido)) {
+        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
             return testoValido.trim();
         } else {
             return VUOTA;
@@ -2272,7 +2304,7 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
-        if (text.isValid(testoValido) && nazionalita.isEsiste(testoValido)) {
+        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Nazionalita.class, "singolare", testoValido)) {
             return testoValido.trim();
         } else {
             return VUOTA;

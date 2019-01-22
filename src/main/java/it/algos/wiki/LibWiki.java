@@ -53,6 +53,10 @@ public abstract class LibWiki {
 
     public static final String PARAGRAFO = "==";
 
+    public static final String TONDA_INI = "(";
+
+    public static final String TONDA_END = ")";
+
     public static final String QUADRA_INI = "[";
 
     public static final String QUADRE_INI = QUADRA_INI + QUADRA_INI;
@@ -72,6 +76,10 @@ public abstract class LibWiki {
     public static final String REF_INI = "<ref>";
 
     public static final String REF_END = "</ref>";
+
+    public static final String COL_INI = "Div col";
+
+    public static final String COL_END = "Div col end";
 
     public static final String BOLD = "'''";
 
@@ -1933,7 +1941,7 @@ public abstract class LibWiki {
         HashMap mappa = getWarnings(textJSON);
 
         if (mappa != null && mappa.get(tag) != null) {
-            text = (String)mappa.get(tag);
+            text = (String) mappa.get(tag);
         }// end of if cycle
 
         return text;
@@ -2581,6 +2589,24 @@ public abstract class LibWiki {
 
 
     /**
+     * Aggiunge singola parentesi tonda in testa e coda alla stringa.
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con parentesi tonde aggiunte
+     */
+    public static String setTonde(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = TONDA_INI + stringaIn + TONDA_END;
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+
+    /**
      * Aggiunge doppie quadre in testa e coda alla stringa.
      * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
      * Se arriva una stringa vuota, restituisce una stringa vuota
@@ -2711,6 +2737,26 @@ public abstract class LibWiki {
 
         if (stringaIn != null && stringaIn.length() > 0) {
             stringaOut = REF_INI + stringaOut + REF_END;
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+
+    /**
+     * Aggiunge il 'col' in testa ed in coda alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con i tag col iniziale e finale
+     */
+    public static String setColonne(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = setGraffe(COL_INI) + A_CAPO + stringaOut + setGraffe(COL_END);
         }// fine del blocco if
 
         return stringaOut.trim();

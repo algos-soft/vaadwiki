@@ -52,14 +52,14 @@ public class Api {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected PageService pageService;
+    public PageService pageService;
 
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected ATextService text;
+    public ATextService text;
 
 
     public Api() {
