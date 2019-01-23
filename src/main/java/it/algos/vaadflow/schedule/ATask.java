@@ -48,6 +48,7 @@ public class ATask extends Task {
      */
     protected EASchedule eaSchedule;
 
+    protected boolean usaDaemon;
 
     /**
      * Costruttore <br>
@@ -68,7 +69,7 @@ public class ATask extends Task {
 
 
     public boolean usaDaemon() {
-        return false;
+        return usaDaemon;
     }// end of method
 
 
