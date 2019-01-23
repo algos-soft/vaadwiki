@@ -107,14 +107,15 @@ public class ListaGiornoNato {
         Map<String, Bio> mappa2;
         Integer key;
         String annoText = "";
-        String titleText = "";
+        String cognome = "";
+        String wikiTitle = "";
+        String keyCognomeTitle = "";
 
         for (Bio bio : listaDisordinata) {
             annoText = bio.getAnnoNato();
-            titleText = bio.getCognome();
-            if (text.isEmpty(titleText)) {
-                titleText = bio.getWikiTitle();
-            }// end of if cycle
+            wikiTitle = bio.getWikiTitle();
+            cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+            keyCognomeTitle = cognome + wikiTitle;
 
             if (text.isValid(annoText)) {
                 try { // prova ad eseguire il codice
@@ -126,13 +127,17 @@ public class ListaGiornoNato {
                 key = 0;
             }// end of if/else cycle
 
-            if (mappa.get(key) != null) {
-                mappa2 = (Map<String, Bio>) mappa.get(key);
-            } else {
+            if (mappa.get(key) == null) {
                 mappa2 = new TreeMap<String, Bio>();
                 mappa.put(key, mappa2);
+            } else {
+                mappa2 = (Map<String, Bio>) mappa.get(key);
             }// end of if/else cycle
-            mappa2.put(titleText, bio);
+            if (mappa2.containsKey(keyCognomeTitle)) {
+                log.info("Algos - ListaGiornoNato.ordina() - qualcosa non ha funzionato nel giorno " + key + " per la bio " + keyCognomeTitle);
+            } else {
+                mappa2.put(keyCognomeTitle, bio);
+            }// end of if/else cycle
         }// end of for cycle
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
