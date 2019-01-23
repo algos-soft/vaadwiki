@@ -237,7 +237,7 @@ public class UploadGiorni extends Upload {
         boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
 
         testo += LibWiki.setPortale(tagHeadTemplateProgetto);
-        testo += LibWiki.setCat("Liste di nati per giorno", VUOTA + giorno.ordine, nascosta);
+        testo += LibWiki.setCat("Liste di nati per giorno", SPAZIO + giorno.ordine, nascosta);
         testo += LibWiki.setCat("Nati il " + giorno.titolo, SPAZIO, nascosta);
         testo = LibBio.setNoIncludeMultiRiga(testo);
 
