@@ -84,6 +84,11 @@ public class CicloService extends ABioService {
         //--download del modulo professione
         professioneService.download();
 
+
+        if (true) {
+            return;
+        }// end of if cycle
+
         //--download del modulo categoria
         //--crea una collezione Categoria, 'specchio' sul mongoDB di quella sul server wiki
         categoriaService.download();

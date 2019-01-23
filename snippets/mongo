@@ -25,5 +25,5 @@ mongorestore -d test /Users/gac/Desktop/backup/test
 
 ==dal mio server al mio computer==
 (terminale sul server) mongodump -d vaadwiki -o /Users/admin/Desktop/backup
-trasferire la cartella vaadwiki che si trova dentro Desktop/backup
+trasferire la cartella
 (terminale sul computer) mongorestore -d vaadwiki /Users/gac/Desktop/backup/vaadwiki

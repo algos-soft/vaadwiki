@@ -370,11 +370,22 @@ public class ADateService extends AbstractService {
      * @return la data sotto forma di stringa
      */
     public String getTime(LocalDateTime localDateTime) {
-        String testo = getDate(localDateTime);
+        return getDate(localDateTime) + SPAZIO + getOrario(localDateTime);
+    }// end of method
+
+
+    /**
+     * Restituisce ora e minuti
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return l'orario sotto forma di stringa
+     */
+    public String getOrario(LocalDateTime localDateTime) {
+        String testo = "";
         int minuti;
         String tag = "0";
 
-        testo += " ";
         testo += localDateTime.getHour();
         testo += ":";
         minuti = localDateTime.getMinute();
@@ -871,10 +882,10 @@ public class ADateService extends AbstractService {
         String tag;
         String tagUno;
 
-        //--patch per febbraio
-        if (numMese == 2) {
-            giorniDelMese++;
-        }// fine del blocco if
+//        //--patch per febbraio
+//        if (numMese == 2) {
+//            giorniDelMese++;
+//        }// fine del blocco if
 
         for (int k = 1; k <= giorniDelMese; k++) {
             progAnno++;

@@ -24,13 +24,13 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Created by Algos
  * User: gac
  * Date: mer, 23-gen-2019
- * Time: 07:11
+ * Time: 15:25
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TASK_DOW)
 @Slf4j
-public class TaskDownload extends ATask {
+public class TaskUpdate extends ATask {
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -39,12 +39,12 @@ public class TaskDownload extends ATask {
     protected CicloService cicloService;
 
 
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     protected BioService bio;
+
 
 
     /**
@@ -61,7 +61,7 @@ public class TaskDownload extends ATask {
      */
     @PostConstruct
     protected void inizia() {
-        super.eaSchedule = EASchedule.biMensile;
+        super.eaSchedule = EASchedule.oreQuattro;
         super.usaDaemon = pref.isBool(USA_DAEMON_BIO);
     }// end of method
 
@@ -75,7 +75,7 @@ public class TaskDownload extends ATask {
         testo += EASchedule.biMensile.getNota();
         testo += A_CAPO;
         testo += A_CAPO;
-        testo += "Cancella tutte le voci biografiche e ricarica completamente il db";
+        testo += "Carica le nuove voci biografiche e aggiorna tutte quelle esistenti";
         testo += A_CAPO;
         testo += "Ciclo del " + date.get();
         testo += A_CAPO;

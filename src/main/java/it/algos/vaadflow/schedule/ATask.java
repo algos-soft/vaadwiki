@@ -5,6 +5,7 @@ import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMailService;
+import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.service.IAService;
 import it.sauronsoftware.cron4j.Task;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
@@ -35,6 +36,12 @@ public class ATask extends Task {
     @Autowired
     protected ADateService date;
 
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected ATextService text;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

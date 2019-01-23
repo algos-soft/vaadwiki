@@ -88,11 +88,14 @@ public class WikiCost {
     public final static String TAG_SEPARATORE = SPAZIO + "-" + SPAZIO;
 
 
-    public final static String TASK_ATT = "taskAttivita";
-    public final static String TASK_COG = "taskCognomi";
-    public final static String TASK_CRO = "taskCrono";
     public final static String TASK_DOW = "taskDownload";
+    public final static String TASK_UPD = "taskUpdate";
+    public final static String TASK_CRO = "taskCrono";
+    public final static String TASK_ATT = "taskAttivita";
     public final static String TASK_NAZ = "taskNazionalita";
+    public final static String TASK_COG = "taskCognomi";
     public final static String TASK_NOM = "taskNomi";
+
+    public final static String SEND_MAIL_CICLO =   "sendMailCiclo";
 
 }// end of static class
