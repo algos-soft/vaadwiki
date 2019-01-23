@@ -81,7 +81,6 @@ public abstract class AVers {
             preferenzaCreata = preferenzaService.creaIfNotExist(eaPref);
             if (preferenzaCreata) {
                 versioneService.creaIfNotExist(codeProject, "Preferenze", eaPref.getDesc() + ", di default " + eaPref.getValue());
-                k++;
             } else {
                 prefNew = (Preferenza) preferenzaService.findById(eaPref.getCode());
                 descOld = eaPref.getDesc();
@@ -92,6 +91,7 @@ public abstract class AVers {
                     preferenzaService.save(prefNew);
                 }// end of if cycle
             }// end of if/else cycle
+            k++;
         }// end of for cycle
 
         return k;

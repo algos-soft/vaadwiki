@@ -46,11 +46,6 @@ public class DaemonBio extends Scheduler {
     @Autowired
     private TaskCategoria taskCategoria;
 
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    private TaskCicloBio cicloBio;
 
 
     @PostConstruct
