@@ -65,5 +65,4 @@ public class DidascaliaGiornoNato extends Didascalia {
 
     }// end of method
 
-
 }// end of class

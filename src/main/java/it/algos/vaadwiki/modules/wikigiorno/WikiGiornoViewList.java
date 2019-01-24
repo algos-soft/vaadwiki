@@ -14,6 +14,8 @@ import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.upload.UploadGiorni;
+import it.algos.vaadwiki.upload.UploadGiornoMorto;
+import it.algos.vaadwiki.upload.UploadGiornoNato;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -67,6 +69,12 @@ public class WikiGiornoViewList extends GiornoViewList {
     @Autowired
     private UploadGiorni uploadGiorni;
 
+    @Autowired
+    private UploadGiornoNato uploadGiornoNato;
+
+    @Autowired
+    private UploadGiornoMorto uploadGiornoMorto;
+
     private Giorno giornoCorrente;
 
 
@@ -109,7 +117,7 @@ public class WikiGiornoViewList extends GiornoViewList {
         uploadOneNatoButton.addClickListener(selectionEvent -> {
             if (grid.getSelectedItems().size() == 1) {
                 giornoCorrente = (Giorno) grid.getSelectedItems().toArray()[0];
-                uploadGiorni.esegueNati(giornoCorrente);
+                uploadGiornoNato.esegue(giornoCorrente);
             }// end of if cycle
         });//end of lambda expressions and anonymous inner class
         topPlaceholder.add(uploadOneNatoButton);
@@ -120,7 +128,7 @@ public class WikiGiornoViewList extends GiornoViewList {
         uploadOneMortoButton.addClickListener(selectionEvent -> {
             if (grid.getSelectedItems().size() == 1) {
                 giornoCorrente = (Giorno) grid.getSelectedItems().toArray()[0];
-                uploadGiorni.esegueMorti(giornoCorrente);
+                uploadGiornoMorto.esegue(giornoCorrente);
             }// end of if cycle
         });//end of lambda expressions and anonymous inner class
         topPlaceholder.add(uploadOneMortoButton);

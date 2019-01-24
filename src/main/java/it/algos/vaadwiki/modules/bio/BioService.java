@@ -260,6 +260,16 @@ public class BioService extends AttNazProfCatService {
         return (ArrayList)repository.findAllByGiornoNato(giornoNato);
     }// end of method
 
+
+    /**
+     * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<Bio> findAllByGiornoMorto(String giornoMorto) {
+        return (ArrayList)repository.findAllByGiornoMorto(giornoMorto);
+    }// end of method
+
     /**
      * Returns all entities of the type <br>
      * <p>

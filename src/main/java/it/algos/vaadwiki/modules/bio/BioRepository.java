@@ -40,4 +40,6 @@ public interface BioRepository extends MongoRepository<Bio, String> {
 
     public List<Bio> findAllByGiornoNato(String giornoNato);
 
+    public List<Bio> findAllByGiornoMorto(String giornoMorto);
+
 }// end of class

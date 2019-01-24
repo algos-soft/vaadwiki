@@ -72,7 +72,7 @@ public class TaskUpdate extends ATask {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end;
         String testo = "";
-        testo += EASchedule.biMensile.getNota();
+        testo += EASchedule.oreQuattro.getNota();
         testo += A_CAPO;
         testo += A_CAPO;
         testo += "Carica le nuove voci biografiche e aggiorna tutte quelle esistenti";
@@ -94,7 +94,7 @@ public class TaskUpdate extends ATask {
                 testo += "Durata totale: " + date.deltaText(inizio);
                 testo += A_CAPO;
                 testo += "Nel db ci sono " + text.format(bio.count()) + " voci biografiche";
-                mailService.send("Ciclo download", testo);
+                mailService.send("Ciclo update", testo);
             }// end of if cycle
             System.out.println("Fine task di download: " + date.getTime(LocalDateTime.now()));
         }// end of if cycle

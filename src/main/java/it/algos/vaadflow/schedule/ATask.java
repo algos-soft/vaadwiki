@@ -36,7 +36,6 @@ public class ATask extends Task {
     @Autowired
     protected ADateService date;
 
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */

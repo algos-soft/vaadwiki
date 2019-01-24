@@ -5,7 +5,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
-import it.algos.vaadwiki.liste.ListaGiornoNato;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
@@ -32,14 +31,16 @@ public class UploadGiorni extends Upload {
 
     protected String titoloGiorno;
 
+    @Autowired
+    protected GiornoService giornoService;
+
+    protected Giorno giorno;
 
     @Autowired
-    private ListaGiornoNato listaGiornoNato;
+    private UploadGiornoNato uploadGiornoNato;
 
     @Autowired
-    private GiornoService giornoService;
-
-    private Giorno giorno;
+    private UploadGiornoMorto uploadGiornoMorto;
 
 
     /**
@@ -53,10 +54,10 @@ public class UploadGiorni extends Upload {
         String modTxt;
 
         for (Giorno giorno : listaGiorni) {
-            esegueNati(giorno);
+            uploadGiornoNato.esegue(giorno);
             modNati++;
 
-            esegueMorti(giorno);
+            uploadGiornoMorto.esegue(giorno);
             modMorti++;
         }// end of for cycle
 
@@ -74,19 +75,11 @@ public class UploadGiorni extends Upload {
     /**
      * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
      */
-    public void esegueNati(Giorno giorno) {
+    public void esegue(Giorno giorno) {
         this.giorno = giorno;
         esegue();
     }// fine del metodo
 
-
-    /**
-     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
-     */
-    public void esegueMorti(Giorno giorno) {
-        this.giorno = giorno;
-        esegue();
-    }// fine del metodo
 
 
     /**
@@ -108,31 +101,13 @@ public class UploadGiorni extends Upload {
         usaHeadIncipit = false; //--normalmente false. Sovrascrivibile da preferenze
 
         // body
-//        usaSortCronologico = false;
         usaSuddivisioneParagrafi = false;
         usaOrdineAlfabeticoParagrafi = false;
         usaBodySottopagine = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         usaBodyRigheMultiple = true; //--normalmente false. Sovrascrivibile da preferenze
         usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         usaBodyTemplate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
-//        usaSottopagine = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
-//        maxVociParagrafo = Pref.getInt(CostBio.MAX_VOCI_PARAGRAFO, 50);//--tipicamente 50. Sovrascrivibile nelle sottoclassi
-//        tagParagrafoNullo = ALTRE;
-//        usaTitoloParagrafoConLink = false;
-//        usaTaglioVociPagina = false;
-//        maxVociPagina = 0;
 
-        // footer
-//        usaFooterPortale = false;
-//        usaFooterCategorie = false;
-
-//        usaSuddivisioneUomoDonna = false
-//        usaAttivitaMultiple = false
-//        usaTitoloParagrafoConLink = true
-//        usaTitoloSingoloParagrafo = false
-//        tagLivelloParagrafo = '=='
-//        tagParagrafoNullo = 'Altre...'
-//        usaSottopaginaAltri == Pref.getBool(LibBio.USA_SOTTOPAGINA_ALTRI, false)
     }// fine del metodo
 
 
@@ -141,9 +116,6 @@ public class UploadGiorni extends Upload {
      * Sovrascritto
      */
     protected void elaboraTitolo() {
-        if (giorno != null) {
-            titoloPagina = getTitoloPagina(giorno, "Nati");
-        }// fine del blocco if
     }// fine del metodo
 
 
@@ -183,17 +155,6 @@ public class UploadGiorni extends Upload {
         }// fine del blocco if
 
         return titoloLista;
-    }// fine del metodo
-
-
-    /**
-     * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica
-     * Esegue una query
-     * Sovrascritto
-     */
-    protected void elaboraMappaListaDidascalieBio() {
-        mappaListaOrdinataDidascalie = listaGiornoNato.esegue(giorno);
-        super.elaboraMappaListaDidascalieBio();
     }// fine del metodo
 
 

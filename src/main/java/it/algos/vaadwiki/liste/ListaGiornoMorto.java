@@ -12,16 +12,13 @@ import java.util.ArrayList;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: ven, 18-gen-2019
- * Time: 07:56
- * <p>
- * Crea la lista dei nati nel giorno e la carica sul server wiki
+ * Date: gio, 24-gen-2019
+ * Time: 08:37
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class ListaGiornoNato extends ListaGiorni {
-
+public class ListaGiornoMorto extends ListaGiorni {
 
     /**
      * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoNato
@@ -31,7 +28,7 @@ public class ListaGiornoNato extends ListaGiorni {
      * @return lista delle istanze di Bio che usano questo istanza
      */
     public ArrayList<Bio> listaBio() {
-        return bioService.findAllByGiornoNato(giorno.titolo);
+        return bioService.findAllByGiornoMorto(giorno.titolo);
     }// fine del metodo
 
 
@@ -45,7 +42,7 @@ public class ListaGiornoNato extends ListaGiorni {
      * @return property Bio richiesta
      */
     public String getKeyText(Bio bio) {
-        return bio.getAnnoNato();
+        return bio.getAnnoMorto();
     }// fine del metodo
 
 
@@ -59,7 +56,7 @@ public class ListaGiornoNato extends ListaGiorni {
      * @return didascalia Bio richiesta
      */
     public String getDidascalia(Bio bio) {
-        return didascaliaGiornoNato.esegue(bio);
+        return didascaliaGiornoMorto.esegue(bio);
     }// fine del metodo
 
 
