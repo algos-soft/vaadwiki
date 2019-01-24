@@ -47,5 +47,19 @@ public class GiornoViewDialog extends AViewDialog<Giorno> {
         super(presenter);
     }// end of Spring constructor
 
-    
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void fixPreferenzeSpecifiche() {
+        super.fixPreferenzeSpecifiche();
+        //--Flag di preferenza per usare il bottone Save. Normalmente true.
+        usaSaveButton = false;
+
+        //--Flag di preferenza per usare il bottone Delete. Normalmente true.
+        usaDeleteButton = false;
+    }// end of method
+
 }// end of class

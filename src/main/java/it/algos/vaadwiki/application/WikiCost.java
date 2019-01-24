@@ -26,7 +26,6 @@ public class WikiCost {
 
     public static WikiLogin WIKI_LOGIN = null;
 
-    public final static String TAG_WGIO = "wikigiorno";
 //	public final static String TAG_SEC = "secolo";
 //	public final static String TAG_MES = "mese";
 //	public final static String TAG_ANN = "anno";
@@ -37,6 +36,8 @@ public class WikiCost {
     public final static String TAG_CAT = "categoria";
     public final static String TAG_BIO = "bio";
     public final static String TAG_UTI = "utility";
+    public final static String TAG_WGIO = "wikigiorno";
+    public final static String TAG_WANN = "wikianno";
 
     // daemons
     public final static String BIO = "Bio";

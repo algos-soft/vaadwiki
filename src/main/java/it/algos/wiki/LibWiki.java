@@ -57,6 +57,10 @@ public abstract class LibWiki {
 
     public static final String TONDA_END = ")";
 
+    public static final String NO_WIKI_INI = "<nowiki>";
+
+    public static final String NO_WIKI_END = "</nowiki>";
+
     public static final String QUADRA_INI = "[";
 
     public static final String QUADRE_INI = QUADRA_INI + QUADRA_INI;
@@ -2622,6 +2626,24 @@ public abstract class LibWiki {
 
         if (stringaIn != null && stringaIn.length() > 0) {
             stringaOut = TONDA_INI + stringaIn + TONDA_END;
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+
+    /**
+     * Aggiunge tag 'nowiki' in testa e coda alla stringa.
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa coi tag aggiunti
+     */
+    public static String setNowiki(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = NO_WIKI_INI + stringaIn + NO_WIKI_END;
         }// fine del blocco if
 
         return stringaOut.trim();

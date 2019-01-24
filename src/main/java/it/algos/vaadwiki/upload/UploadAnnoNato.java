@@ -1,10 +1,10 @@
 package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.liste.ListaGiornoMorto;
+import it.algos.vaadwiki.liste.ListaAnnoNato;
+import it.algos.vaadwiki.liste.ListaGiornoNato;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -13,16 +13,15 @@ import org.springframework.context.annotation.Scope;
  * Created by Algos
  * User: gac
  * Date: gio, 24-gen-2019
- * Time: 08:21
+ * Time: 17:22
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier("xxx")
 @Slf4j
-public class UploadGiornoMorto extends UploadGiorni {
+public class UploadAnnoNato extends UploadAnni {
 
     @Autowired
-    protected ListaGiornoMorto listaGiornoMorto;
+    protected ListaAnnoNato listaAnnoNato;
 
 
     /**
@@ -30,8 +29,8 @@ public class UploadGiornoMorto extends UploadGiorni {
      * Sovrascritto
      */
     protected void elaboraTitolo() {
-        if (giorno != null) {
-            titoloPagina = getTitoloPagina(giorno, "Morti");
+        if (anno != null) {
+            titoloPagina = getTitoloPagina(anno, "Nati");
         }// fine del blocco if
     }// fine del metodo
 
@@ -42,7 +41,7 @@ public class UploadGiornoMorto extends UploadGiorni {
      * Sovrascritto
      */
     protected void elaboraMappaListaDidascalieBio() {
-        mappaListaOrdinataDidascalie = listaGiornoMorto.esegue(giorno);
+        mappaListaOrdinataDidascalie = listaAnnoNato.esegue(anno);
         super.elaboraMappaListaDidascalieBio();
     }// fine del metodo
 

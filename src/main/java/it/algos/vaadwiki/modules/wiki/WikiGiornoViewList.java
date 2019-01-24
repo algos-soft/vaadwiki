@@ -1,17 +1,13 @@
-package it.algos.vaadwiki.modules.wikigiorno;
+package it.algos.vaadwiki.modules.wiki;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoViewDialog;
-import it.algos.vaadflow.modules.giorno.GiornoViewList;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
-import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.upload.UploadGiorni;
 import it.algos.vaadwiki.upload.UploadGiornoMorto;
@@ -49,9 +45,8 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_WGIO;
 @Route(value = TAG_WGIO, layout = MainLayout.class)
 @Qualifier(TAG_WGIO)
 @Slf4j
-@AIScript(sovrascrivibile = true)
-public class WikiGiornoViewList extends GiornoViewList {
-
+@AIScript(sovrascrivibile = false)
+public class WikiGiornoViewList extends WikiViewList {
 
     /**
      * Icona visibile nel menu (facoltativa)
@@ -60,11 +55,6 @@ public class WikiGiornoViewList extends GiornoViewList {
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
-    protected Button uploadAllButton;
-
-    protected Button uploadOneNatoButton;
-
-    protected Button uploadOneMortoButton;
 
     @Autowired
     private UploadGiorni uploadGiorni;
@@ -105,49 +95,24 @@ public class WikiGiornoViewList extends GiornoViewList {
     protected boolean creaTopLayout() {
         super.creaTopLayout();
 
-        //--upload della lista completa di 365 + 365 giorni
-        uploadAllButton = new Button("Upload all", new Icon(VaadinIcon.UPLOAD));
-        uploadAllButton.getElement().setAttribute("theme", "error");
-        uploadAllButton.addClickListener(e -> openUploadDialog());
-        topPlaceholder.add(uploadAllButton);
+        uploadAllButton.addClickListener(e -> openUploadDialog("dei giorni"));
 
-        //--upload singola lista di un giorno per i nati
-        uploadOneNatoButton = new Button("Upload nati", new Icon(VaadinIcon.UPLOAD));
-        uploadOneNatoButton.getElement().setAttribute("theme", "error");
         uploadOneNatoButton.addClickListener(selectionEvent -> {
             if (grid.getSelectedItems().size() == 1) {
                 giornoCorrente = (Giorno) grid.getSelectedItems().toArray()[0];
                 uploadGiornoNato.esegue(giornoCorrente);
             }// end of if cycle
         });//end of lambda expressions and anonymous inner class
-        topPlaceholder.add(uploadOneNatoButton);
 
-        //--upload singola lista di un giorno per i nati
-        uploadOneMortoButton = new Button("Upload morti", new Icon(VaadinIcon.UPLOAD));
-        uploadOneMortoButton.getElement().setAttribute("theme", "error");
         uploadOneMortoButton.addClickListener(selectionEvent -> {
             if (grid.getSelectedItems().size() == 1) {
                 giornoCorrente = (Giorno) grid.getSelectedItems().toArray()[0];
                 uploadGiornoMorto.esegue(giornoCorrente);
             }// end of if cycle
         });//end of lambda expressions and anonymous inner class
-        topPlaceholder.add(uploadOneMortoButton);
 
         sincroBottoniMenu(false);
         return topPlaceholder.getComponentCount() > 0;
-    }// end of method
-
-
-    /**
-     * Opens the confirmation dialog before deleting the current item.
-     * <p>
-     * The dialog will display the given title and message(s), then call
-     * <p>
-     */
-    protected void openUploadDialog() {
-        String message = "Sei sicuro di voler aggiornare su wikipedia tutte le pagine dei Giorni ?";
-        ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
-        dialog.open(message, this::uploadEffettivo);
     }// end of method
 
 
@@ -161,14 +126,5 @@ public class WikiGiornoViewList extends GiornoViewList {
         uploadGiorni.esegueAll();
     }// end of method
 
-
-    protected void sincroBottoniMenu(boolean enabled) {
-        if (uploadOneNatoButton != null) {
-            uploadOneNatoButton.setEnabled(enabled);
-        }// end of if cycle
-        if (uploadOneMortoButton != null) {
-            uploadOneMortoButton.setEnabled(enabled);
-        }// end of if cycle
-    }// end of method
 
 }// end of class

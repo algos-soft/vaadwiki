@@ -4,7 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.boot.ABoot;
-import it.algos.vaadwiki.modules.wikigiorno.WikiGiornoViewList;
+import it.algos.vaadwiki.modules.wiki.WikiGiornoViewList;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.modules.utente.UtenteService;
@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Scope;
 
 import javax.servlet.ServletContextEvent;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 

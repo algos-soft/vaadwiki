@@ -9,6 +9,7 @@ import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -25,6 +26,7 @@ import static it.algos.vaadflow.application.FlowCost.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Qualifier("ccc")
 @Slf4j
 public class UploadGiorni extends Upload {
 
@@ -78,44 +80,6 @@ public class UploadGiorni extends Upload {
     public void esegue(Giorno giorno) {
         this.giorno = giorno;
         esegue();
-    }// fine del metodo
-
-
-
-    /**
-     * Regola alcuni (eventuali) parametri specifici della sottoclasse
-     * <p>
-     * Nelle sottoclassi va SEMPRE richiamata la superclasse PRIMA di regolare localmente le variabili <br>
-     * Sovrascritto
-     */
-    protected void elaboraParametri() {
-        // head
-        usaHeadNonScrivere = true; //pref.isBool(CostBio.USA_HEAD_NON_SCRIVERE, true);
-        usaHeadInclude = true; //--tipicamente sempre true. Si attiva solo se c'è del testo (iniziale) da includere
-        usaHeadToc = true; //--tipicamente sempre true.
-        usaHeadTocIndice = true; //--normalmente true. Sovrascrivibile da preferenze
-        usaHeadRitorno = true; //--normalmente false. Sovrascrivibile da preferenze
-        usaHeadTemplateAvviso = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
-        tagHeadTemplateAvviso = "ListaBio"; //--Sovrascrivibile da preferenze
-        tagHeadTemplateProgetto = "biografie"; //--Sovrascrivibile da preferenze
-        usaHeadIncipit = false; //--normalmente false. Sovrascrivibile da preferenze
-
-        // body
-        usaSuddivisioneParagrafi = false;
-        usaOrdineAlfabeticoParagrafi = false;
-        usaBodySottopagine = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
-        usaBodyRigheMultiple = true; //--normalmente false. Sovrascrivibile da preferenze
-        usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
-        usaBodyTemplate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
-
-    }// fine del metodo
-
-
-    /**
-     * Titolo della pagina da creare/caricare su wikipedia
-     * Sovrascritto
-     */
-    protected void elaboraTitolo() {
     }// fine del metodo
 
 
@@ -196,10 +160,15 @@ public class UploadGiorni extends Upload {
     protected String elaboraFooter() {
         String testo = VUOTA;
         boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
+        String cat;
 
         testo += LibWiki.setPortale(tagHeadTemplateProgetto);
-        testo += LibWiki.setCat("Liste di nati per giorno", SPAZIO + giorno.ordine, nascosta);
-        testo += LibWiki.setCat("Nati il " + giorno.titolo, SPAZIO, nascosta);
+        cat = LibWiki.setCat("Liste di nati per giorno", SPAZIO + giorno.ordine);
+        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
+        testo += cat;
+        cat = LibWiki.setCat("Nati il " + giorno.titolo, SPAZIO);
+        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
+        testo += cat;
         testo = LibBio.setNoIncludeMultiRiga(testo);
 
         return testo;

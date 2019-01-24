@@ -272,6 +272,25 @@ public class BioService extends AttNazProfCatService {
 
     /**
      * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<Bio> findAllByAnnoNato(String annoNato) {
+        return (ArrayList)repository.findAllByAnnoNato(annoNato);
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<Bio> findAllByAnnoMorto(String annoMorto) {
+        return (ArrayList)repository.findAllByAnnoMorto(annoMorto);
+    }// end of method
+
+    /**
+     * Returns all entities of the type <br>
      * <p>
      *
      * @return all ordered entities

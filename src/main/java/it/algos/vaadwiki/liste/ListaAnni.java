@@ -2,6 +2,7 @@ package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.modules.bio.Bio;
 import lombok.extern.slf4j.Slf4j;
@@ -17,45 +18,45 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
 /**
  * Project vaadwiki
- * <p>
  * Created by Algos
  * User: gac
  * Date: gio, 24-gen-2019
- * Time: 08:43
- * <p>
- * Crea le liste dei nati o dei morti nel giorno
+ * Time: 10:33
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public abstract class ListaGiorni extends Lista {
+public class ListaAnni extends Lista {
 
 
-    protected Giorno giorno;
+    protected Anno anno;
 
 
     /**
-     * Costruisce una lista di biografie che hanno una valore valido per questa pagina specifica (Giorno o Anno)
+     * Esegue
      *
-     * @param giorno di cui creare la lista
+     * @param anno di cui creare la lista
      */
-    public LinkedHashMap<Integer, ArrayList<String>> esegue(Giorno giorno) {
-        this.giorno = giorno;
+    public LinkedHashMap<Integer, ArrayList<String>> esegue(Anno anno) {
+        this.anno = anno;
         elaboraListaBiografie();
         return mappaListaDidascalie;
     }// fine del metodo
 
 
-//    /**
-//     * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica
-//     * Esegue una query
-//     * Sovrascritto
-//     */
-//    protected void elaboraListaBiografie() {
-//        listaGrezzaBio = listaBio();
-//        mappaOrdinataBio = ordina(listaGrezzaBio);
-//        mappaListaDidascalie = elaboraDidascalie(mappaOrdinataBio);
-//    }// fine del metodo
+    /**
+     * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica
+     * Esegue una query
+     * Sovrascritto
+     */
+    protected void elaboraListaBiografie() {
+
+        if (anno != null) {
+            listaGrezzaBio = listaBio();
+            mappaOrdinataBio = ordina(listaGrezzaBio);
+            mappaListaDidascalie = elaboraDidascalie(mappaOrdinataBio);
+        }// end of if cycle
+    }// fine del metodo
 
 
 //    /**
@@ -67,7 +68,7 @@ public abstract class ListaGiorni extends Lista {
 //     */
 //    @SuppressWarnings("all")
 //    public ArrayList<Bio> listaBio() {
-//        return bioService.findAllByGiornoNato(giorno.titolo);
+//        return bioService.findAllByAnnoNato(anno.titolo);
 //    }// fine del metodo
 
 
@@ -130,68 +131,69 @@ public abstract class ListaGiorni extends Lista {
 //    }// fine del metodo
 
 
-//    /**
-//     * Recupera dalla entity Bio, la property annoNato
-//     * oppure
-//     * Recupera dalla entity Bio, la property annoMorto
-//     *
-//     * @param bio entity
-//     *
-//     * @return property Bio richiesta
-//     */
-//    public String getKeyText(Bio bio) {
-//        return VUOTA;
-//    }// fine del metodo
+
+    /**
+     * Recupera dalla entity Bio, la property giornoNato
+     * oppure
+     * Recupera dalla entity Bio, la property giornoMorto
+     *
+     * @param bio entity
+     *
+     * @return property Bio richiesta
+     */
+    public String getKeyText(Bio bio) {
+        return VUOTA;
+    }// fine del metodo
 
 
-//    /**
-//     * Elabora le didascalie
-//     *
-//     * @param mappaOrdinataBio
-//     *
-//     * @return mappaListaDidascalie
-//     */
-//    @SuppressWarnings("all")
-//    public LinkedHashMap<Integer, ArrayList<String>> elaboraDidascalie(TreeMap<Integer, Map> mappaBioOrdinata) {
-//        LinkedHashMap<Integer, ArrayList<String>> mappaListaDidascalie = new LinkedHashMap<>();
-//        Map<String, Bio> mappa;
-//        ArrayList<String> listaDida;
-//        Integer anno;
-//        String didascalia;
-//        Bio bio;
-//
-//        for (Map.Entry<Integer, Map> entry : mappaBioOrdinata.entrySet()) {
-//            listaDida = new ArrayList<>();
-//            anno = entry.getKey();
-//            mappa = entry.getValue();
-//            for (Map.Entry<String, Bio> entry2 : mappa.entrySet()) {
-//                bio = entry2.getValue();
-//                didascalia = getDidascalia(bio);
-//                listaDida.add(didascalia);
-//            }// end of for cycle
-//            mappaListaDidascalie.put(anno, listaDida);
-//        }// end of for cycle
-//
-//        if (pref.isBool(FlowCost.USA_DEBUG)) {
-////            testDidascalie(mappaListaDidascalie);
-//        }// end of if cycle
-//
-//        return mappaListaDidascalie;
-//    }// fine del metodo
+    /**
+     * Elabora le didascalie
+     *
+     * @param mappaOrdinataBio
+     *
+     * @return mappaListaDidascalie
+     */
+    @SuppressWarnings("all")
+    public LinkedHashMap<Integer, ArrayList<String>> elaboraDidascalie(TreeMap<Integer, Map> mappaBioOrdinata) {
+        LinkedHashMap<Integer, ArrayList<String>> mappaListaDidascalie = new LinkedHashMap<>();
+        Map<String, Bio> mappa;
+        ArrayList<String> listaDida;
+        Integer anno;
+        String didascalia;
+        Bio bio;
+
+        for (Map.Entry<Integer, Map> entry : mappaBioOrdinata.entrySet()) {
+            listaDida = new ArrayList<>();
+            anno = entry.getKey();
+            mappa = entry.getValue();
+            for (Map.Entry<String, Bio> entry2 : mappa.entrySet()) {
+                bio = entry2.getValue();
+                didascalia = getDidascalia(bio);
+                listaDida.add(didascalia);
+            }// end of for cycle
+            mappaListaDidascalie.put(anno, listaDida);
+        }// end of for cycle
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+//            testDidascalie(mappaListaDidascalie);
+        }// end of if cycle
+
+        return mappaListaDidascalie;
+    }// fine del metodo
 
 
-//    /**
-//     * Recupera dalla entity Bio, la didascalia giornoNato
-//     * oppure
-//     * Recupera dalla entity Bio, la didascalia giornoMorto
-//     *
-//     * @param bio entity
-//     *
-//     * @return didascalia Bio richiesta
-//     */
-//    public String getDidascalia(Bio bio) {
-//        return VUOTA;
-//    }// fine del metodo
+    /**
+     * Recupera dalla entity Bio, la didascalia giornoNato
+     * oppure
+     * Recupera dalla entity Bio, la didascalia giornoMorto
+     *
+     * @param bio entity
+     *
+     * @return didascalia Bio richiesta
+     */
+    public String getDidascalia(Bio bio) {
+        return VUOTA;
+    }// fine del metodo
 
 
 //    public void testBio(Map<Integer, Map> mappa) {
@@ -200,7 +202,7 @@ public abstract class ListaGiorni extends Lista {
 //        int k = 0;
 //
 //        System.out.println("");
-//        System.out.println("Giorno: " + giorno.titolo);
+//        System.out.println("Giorno: " + anno.titolo);
 //        System.out.println("");
 //        for (Map.Entry<Integer, Map> entry : mappa.entrySet()) {
 //            mappa2 = (Map) entry.getValue();
@@ -225,8 +227,8 @@ public abstract class ListaGiorni extends Lista {
 //            }// end of for cycle
 //        }// end of for cycle
 //    }// fine del metodo
-//
-//
+
+
 //    public void testDidascalie(Map<Integer, ArrayList<String>> mappaLista) {
 //        System.out.println("");
 //        System.out.println("Giorno: " + giorno.titolo);

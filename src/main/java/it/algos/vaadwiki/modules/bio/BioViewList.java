@@ -154,12 +154,12 @@ public class BioViewList extends AttNazProfCatViewList {
 
 //    @Autowired
 //    private Upload upload;
-
-    @Autowired
-    private UploadGiorni giorni;
-
-    @Autowired
-    private UploadAnni anni;
+//
+//    @Autowired
+//    private UploadGiorni giorni;
+//
+//    @Autowired
+//    private UploadAnni anni;
 
     private AComboBox<Upload> comboUpload;
 

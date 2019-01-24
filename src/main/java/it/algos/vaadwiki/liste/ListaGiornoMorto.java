@@ -1,8 +1,10 @@
 package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadwiki.didascalia.DidascaliaGiornoMorto;
 import it.algos.vaadwiki.modules.bio.Bio;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -14,11 +16,17 @@ import java.util.ArrayList;
  * User: gac
  * Date: gio, 24-gen-2019
  * Time: 08:37
+ * <p>
+ * Crea la lista dei morti nel giorno
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public class ListaGiornoMorto extends ListaGiorni {
+
+    @Autowired
+    protected DidascaliaGiornoMorto didascaliaGiornoMorto;
+
 
     /**
      * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoNato
@@ -33,9 +41,9 @@ public class ListaGiornoMorto extends ListaGiorni {
 
 
     /**
-     * Recupera dalla entity Bio, la property giornoNato
+     * Recupera dalla entity Bio, la property annoNato
      * oppure
-     * Recupera dalla entity Bio, la property giornoMorto
+     * Recupera dalla entity Bio, la property annoMorto
      *
      * @param bio entity
      *

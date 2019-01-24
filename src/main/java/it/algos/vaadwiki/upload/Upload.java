@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.upload;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.log.LogService;
@@ -19,6 +20,9 @@ import it.algos.wiki.Api;
 import it.algos.wiki.LibWiki;
 import it.algos.wiki.WikiLogin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import java.util.*;
 
@@ -32,9 +36,10 @@ import static it.algos.vaadwiki.didascalia.Didascalia.TAG_SEP;
  * Date: gio, 17-gen-2019
  * Time: 17:45
  */
-//@SpringComponent
-//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public abstract class Upload {
+@SpringComponent
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Qualifier("aaa")
+public class Upload {
 
     public final static String PAGINA_PROVA = "Utente:Biobot/2";
 
@@ -240,7 +245,25 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected void elaboraParametri() {
-    }// end of method
+        // head
+        usaHeadNonScrivere = true; //pref.isBool(CostBio.USA_HEAD_NON_SCRIVERE, true);
+        usaHeadInclude = true; //--tipicamente sempre true. Si attiva solo se c'è del testo (iniziale) da includere
+        usaHeadToc = true; //--tipicamente sempre true.
+        usaHeadTocIndice = true; //--normalmente true. Sovrascrivibile da preferenze
+        usaHeadRitorno = true; //--normalmente false. Sovrascrivibile da preferenze
+        usaHeadTemplateAvviso = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
+        tagHeadTemplateAvviso = "ListaBio"; //--Sovrascrivibile da preferenze
+        tagHeadTemplateProgetto = "biografie"; //--Sovrascrivibile da preferenze
+        usaHeadIncipit = false; //--normalmente false. Sovrascrivibile da preferenze
+
+        // body
+        usaSuddivisioneParagrafi = false;
+        usaOrdineAlfabeticoParagrafi = false;
+        usaBodySottopagine = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
+        usaBodyRigheMultiple = true; //--normalmente false. Sovrascrivibile da preferenze
+        usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
+        usaBodyTemplate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
+    }// fine del metodo
 
 
     /**
@@ -528,7 +551,9 @@ public abstract class Upload {
 //            } else {
 //                text = elaboraTemplate(text);
 //            }// end of if/else cycle
-            testo = elaboraTemplate(testo);
+            if (!pref.isBool(USA_DEBUG)) {
+                testo = elaboraTemplate(testo);
+            }// end of if cycle
         }// end of if cycle
 
         return testo;
@@ -543,8 +568,6 @@ public abstract class Upload {
     protected String elaboraTemplate(String testoIn) {
         return testoIn;
     }// fine del metodo
-
-
 
 
     /**
