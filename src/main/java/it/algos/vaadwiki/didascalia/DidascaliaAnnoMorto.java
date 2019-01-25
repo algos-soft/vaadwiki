@@ -1,11 +1,11 @@
 package it.algos.vaadwiki.didascalia;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
@@ -20,7 +20,7 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class DidascaliaAnnoMorto extends Didascalia{
+public class DidascaliaAnnoMorto extends Didascalia {
 
 
     public String esegue(Bio bio) {
@@ -32,7 +32,7 @@ public class DidascaliaAnnoMorto extends Didascalia{
      * Costruisce il testo della didascalia
      * Sovrascritto
      */
-    protected void regolaDidascalia() {
+    protected void regolaDidascalia(boolean usaChiave) {
         testo = VUOTA;
         String natoTxt;
 
@@ -42,7 +42,7 @@ public class DidascaliaAnnoMorto extends Didascalia{
         }// end of if cycle
 
         // giorno di morte (potrebbe non esserci)
-        if (text.isValid(giornoMorto)) {
+        if (text.isValid(giornoMorto) && usaChiave) {
             testo += LibWiki.setQuadre(giornoMorto);
             testo += TAG_SEP;
         }// end of if cycle

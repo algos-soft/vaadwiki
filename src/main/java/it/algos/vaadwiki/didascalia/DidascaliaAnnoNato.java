@@ -32,7 +32,7 @@ public class DidascaliaAnnoNato extends Didascalia {
      * Costruisce il testo della didascalia
      * Sovrascritto
      */
-    protected void regolaDidascalia() {
+    protected void regolaDidascalia(boolean usaChiave) {
         testo = VUOTA;
         String mortoTxt;
 

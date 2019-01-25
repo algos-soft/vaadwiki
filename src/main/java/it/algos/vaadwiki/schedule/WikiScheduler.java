@@ -36,6 +36,11 @@ public class WikiScheduler extends Scheduler {
      */
     @Autowired
     protected TaskDownload download;
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected TaskUpdate update;
 
 
     @PostConstruct
@@ -43,7 +48,8 @@ public class WikiScheduler extends Scheduler {
         if (!isStarted()) {
             super.start();
 
-            this.task(download);
+//            this.task(download);
+            this.task(update);
 
         }// fine del blocco if
     }// end of method

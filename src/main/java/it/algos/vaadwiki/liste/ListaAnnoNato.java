@@ -23,9 +23,9 @@ import java.util.ArrayList;
 @Slf4j
 public class ListaAnnoNato extends ListaAnni {
 
+
     @Autowired
     protected DidascaliaAnnoNato didascaliaAnnoNato;
-
 
     /**
      * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoNato
@@ -40,36 +40,11 @@ public class ListaAnnoNato extends ListaAnni {
      *
      * @return lista delle istanze di Bio che usano questo istanza nella property appropriata
      */
+    @Override
     public ArrayList<Bio> listaBio() {
         return bioService.findAllByAnnoNato(anno.titolo);
     }// fine del metodo
 
 
-    /**
-     * Recupera dalla entity Bio, la property giornoNato
-     * oppure
-     * Recupera dalla entity Bio, la property giornoMorto
-     *
-     * @param bio entity
-     *
-     * @return property Bio richiesta
-     */
-    public String getKeyText(Bio bio) {
-        return bio.getGiornoNato();
-    }// fine del metodo
-
-
-    /**
-     * Recupera dalla entity Bio, la didascalia giornoNato
-     * oppure
-     * Recupera dalla entity Bio, la didascalia giornoMorto
-     *
-     * @param bio entity
-     *
-     * @return didascalia Bio richiesta
-     */
-    public String getDidascalia(Bio bio) {
-        return didascaliaAnnoNato.esegue(bio);
-    }// fine del metodo
 
 }// end of class

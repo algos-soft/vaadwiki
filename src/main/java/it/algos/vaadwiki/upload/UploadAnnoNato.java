@@ -28,6 +28,7 @@ public class UploadAnnoNato extends UploadAnni {
      * Titolo della pagina da creare/caricare su wikipedia
      * Sovrascritto
      */
+    @Override
     protected void elaboraTitolo() {
         if (anno != null) {
             titoloPagina = getTitoloPagina(anno, "Nati");
@@ -36,13 +37,14 @@ public class UploadAnnoNato extends UploadAnni {
 
 
     /**
-     * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica
-     * Esegue una query
-     * Sovrascritto
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Sovrascritto nella sottoclasse concreta <br>
+     * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
      */
-    protected void elaboraMappaListaDidascalieBio() {
-        mappaListaOrdinataDidascalie = listaAnnoNato.esegue(anno);
-        super.elaboraMappaListaDidascalieBio();
+    @Override
+    protected void creaMappaDidascalie() {
+//        mappaDidascalie = listaAnnoNato.esegue(anno);
+//        super.creaMappaDidascalie();
     }// fine del metodo
-
 }// end of class

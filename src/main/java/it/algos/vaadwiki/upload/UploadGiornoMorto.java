@@ -29,6 +29,7 @@ public class UploadGiornoMorto extends UploadGiorni {
      * Titolo della pagina da creare/caricare su wikipedia
      * Sovrascritto
      */
+    @Override
     protected void elaboraTitolo() {
         if (giorno != null) {
             titoloPagina = getTitoloPagina(giorno, "Morti");
@@ -37,13 +38,15 @@ public class UploadGiornoMorto extends UploadGiorni {
 
 
     /**
-     * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica
-     * Esegue una query
-     * Sovrascritto
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Sovrascritto nella sottoclasse concreta <br>
+     * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
      */
-    protected void elaboraMappaListaDidascalieBio() {
-        mappaListaOrdinataDidascalie = listaGiornoMorto.esegue(giorno);
-        super.elaboraMappaListaDidascalieBio();
+    @Override
+    protected void creaMappaDidascalie() {
+        mappaDidascalie = listaGiornoMorto.esegue(giorno);
+        super.creaMappaDidascalie();
     }// fine del metodo
 
 }// end of class

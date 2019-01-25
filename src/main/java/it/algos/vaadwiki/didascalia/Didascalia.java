@@ -1,6 +1,8 @@
 package it.algos.vaadwiki.didascalia;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.modules.anno.AnnoService;
+import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.wiki.LibWiki;
@@ -38,6 +40,33 @@ public class Didascalia {
 
     protected static String TAG_MORTO = "†";
 
+    @Autowired
+    public ATextService text;
+
+    @Autowired
+    public GiornoService giornoService;
+
+    @Autowired
+    public AnnoService annoService;
+
+    @Autowired
+    public DidascaliaCompleta didascaliaCompleta;
+
+    @Autowired
+    public DidascaliaGiornoNato didascaliaGiornoNato;
+
+    @Autowired
+    public DidascaliaAnnoNato didascaliaAnnoNato;
+
+    @Autowired
+    public DidascaliaGiornoMorto didascaliaGiornoMorto;
+
+    @Autowired
+    public DidascaliaAnnoMorto didascaliaAnnoMorto;
+
+    @Autowired
+    public DidascaliaStandard didascaliaStandard;
+
     protected String wikiTitle = VUOTA;
 
     protected String nome = VUOTA;
@@ -64,53 +93,35 @@ public class Didascalia {
 
     protected String nazionalita = VUOTA;
 
-    @Autowired
-    public ATextService text;
-
-    @Autowired
-    public DidascaliaCompleta didascaliaCompleta;
-
-    @Autowired
-    public DidascaliaGiornoNato didascaliaGiornoNato;
-
-    @Autowired
-    public DidascaliaAnnoNato didascaliaAnnoNato;
-
-
-    @Autowired
-    public DidascaliaGiornoMorto didascaliaGiornoMorto;
-
-
-    @Autowired
-    public DidascaliaAnnoMorto didascaliaAnnoMorto;
-
-    @Autowired
-    public DidascaliaStandard didascaliaStandard;
-
     protected String testo = VUOTA;
 
 
     public String esegue(Bio bio, EADidascalia type) {
+        return esegue(bio, type, true);
+    }// end of method
+
+
+    public String esegue(Bio bio, EADidascalia type, boolean usaChiave) {
         String testo = VUOTA;
 
         switch (type) {
             case completa:
-                testo = didascaliaCompleta.esegue(bio);
+                testo = didascaliaCompleta.esegue(bio, usaChiave);
                 break;
             case giornoNato:
-                testo = didascaliaGiornoNato.esegue(bio);
+                testo = didascaliaGiornoNato.esegue(bio, usaChiave);
                 break;
             case annoNato:
-                testo = didascaliaAnnoNato.esegue(bio);
+                testo = didascaliaAnnoNato.esegue(bio, usaChiave);
                 break;
             case giornoMorto:
-                testo = didascaliaGiornoMorto.esegue(bio);
+                testo = didascaliaGiornoMorto.esegue(bio, usaChiave);
                 break;
             case annoMorto:
-                testo = didascaliaAnnoMorto.esegue(bio);
+                testo = didascaliaAnnoMorto.esegue(bio, usaChiave);
                 break;
             case standard:
-                testo = didascaliaStandard.esegue(bio);
+                testo = didascaliaStandard.esegue(bio, usaChiave);
                 break;
             default:
                 log.warn("Switch - caso non definito");
@@ -122,12 +133,17 @@ public class Didascalia {
 
 
     public String esegue(Bio bio) {
+        return esegue(bio, true);
+    }// end of method
+
+
+    public String esegue(Bio bio, boolean usaChiave) {
         this.reset();
         this.recuperaDatiAnagrafici(bio);
         this.recuperaDatiCrono(bio);
         this.recuperaDatiLocalita(bio);
         this.recuperaDatiAttNaz(bio);
-        this.regolaDidascalia();
+        this.regolaDidascalia(usaChiave);
 
         return testo;
     }// end of method
@@ -231,7 +247,7 @@ public class Didascalia {
      * Costruisce il testo della didascalia
      * Sovrascritto
      */
-    protected void regolaDidascalia() {
+    protected void regolaDidascalia(boolean usaChiave) {
         testo = VUOTA;
 
         // blocco iniziale (potrebbe non esserci)
@@ -492,5 +508,6 @@ public class Didascalia {
 
         return testo;
     }// end of method
+
 
 }// end of class

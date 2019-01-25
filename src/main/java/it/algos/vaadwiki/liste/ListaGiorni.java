@@ -1,19 +1,20 @@
 package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadwiki.didascalia.EADidascalia;
+import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
-import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
 /**
  * Project vaadwiki
@@ -33,213 +34,141 @@ public abstract class ListaGiorni extends Lista {
 
     protected Giorno giorno;
 
+    @Autowired
+    ApplicationContext appContext;
+
 
     /**
-     * Costruisce una lista di biografie che hanno una valore valido per questa pagina specifica (Giorno o Anno)
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
      *
-     * @param giorno di cui creare la lista
+     * @param giorno di riferimento per la lista
+     *
+     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
      */
-    public LinkedHashMap<Integer, ArrayList<String>> esegue(Giorno giorno) {
+    public LinkedHashMap<String, ArrayList<String>> esegue(Giorno giorno) {
         this.giorno = giorno;
-        elaboraListaBiografie();
-        return mappaListaDidascalie;
+        return super.esegue();
     }// fine del metodo
 
 
-//    /**
-//     * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica
-//     * Esegue una query
-//     * Sovrascritto
-//     */
-//    protected void elaboraListaBiografie() {
-//        listaGrezzaBio = listaBio();
-//        mappaOrdinataBio = ordina(listaGrezzaBio);
-//        mappaListaDidascalie = elaboraDidascalie(mappaOrdinataBio);
-//    }// fine del metodo
+    /**
+     * Costruisce una lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+     * La lista NON è ordinata <br>
+     * Sovrascritto nella sottoclasse concreta <br>
+     *
+     * @param listaGrezzaBio di persone che hanno una valore valido per la pagina specifica
+     *
+     * @return lista NON ORDINATA di didascalie (Wrap)
+     */
+    @Override
+    public ArrayList<WrapDidascalia> creaListaDidascalie(ArrayList<Bio> listaGrezzaBio) {
+        return null;
+    }// fine del metodo
 
 
-//    /**
-//     * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoNato
-//     * oppure
-//     * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoMorto
-//     *
-//     * @return lista delle istanze di Bio che usano questo istanza
-//     */
-//    @SuppressWarnings("all")
-//    public ArrayList<Bio> listaBio() {
-//        return bioService.findAllByGiornoNato(giorno.titolo);
-//    }// fine del metodo
+    /**
+     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+     * Sovrascritto nella sottoclasse concreta <br>
+     *
+     * @param listaDisordinata di didascalie
+     *
+     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    @Override
+    public void ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
 
 
-//    /**
-//     * Riordina la lista delle istanze di Bio per anno di nascita
-//     * oppure
-//     * Riordina la lista delle istanze di Bio per giorno di nascita
-//     * <p>
-//     * Sovrascritto nella sottoclasse concreta
-//     *
-//     * @param listaGrezzaBio delle biografie che hanno una valore valido per questa pagina specifica (Giorno o Anno)
-//     *
-//     * @return lista ordinata delle istanze di Bio
-//     */
-//    @SuppressWarnings("all")
-//    public TreeMap<Integer, Map> ordina(ArrayList<Bio> listaDisordinata) {
-//        TreeMap<Integer, Map> mappa = new TreeMap<Integer, Map>();
-//        ArrayList<Bio> listaOrdinata = null;
-//        Map<String, Bio> mappa2;
-//        Integer key;
-//        String keyText = "";
-//        String cognome = "";
-//        String wikiTitle = "";
-//        String keyCognomeTitle = "";
-//
-//        for (Bio bio : listaDisordinata) {
-//            keyText = getKeyText(bio);
-//            wikiTitle = bio.getWikiTitle();
-//            cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-//            keyCognomeTitle = cognome + wikiTitle;
-//
-//            if (text.isValid(keyText)) {
-//                try { // prova ad eseguire il codice
-//                    key = Integer.decode(keyText);
-//                } catch (Exception unErrore) { // intercetta l'errore
-//                    key = 0;
-//                }// fine del blocco try-catch
-//            } else {
-//                key = 0;
-//            }// end of if/else cycle
-//
-//            if (mappa.get(key) == null) {
-//                mappa2 = new TreeMap<String, Bio>();
-//                mappa.put(key, mappa2);
-//            } else {
-//                mappa2 = (Map<String, Bio>) mappa.get(key);
-//            }// end of if/else cycle
-//            if (mappa2.containsKey(keyCognomeTitle)) {
-//                log.info("Algos - ListaGiornoMorto.ordina() - qualcosa non ha funzionato nel giorno " + key + " per la bio " + keyCognomeTitle);
-//            } else {
-//                mappa2.put(keyCognomeTitle, bio);
-//            }// end of if/else cycle
-//        }// end of for cycle
-//
-//        if (pref.isBool(FlowCost.USA_DEBUG)) {
-////            testBio(mappa);
-//        }// end of if cycle
-//
-//        return mappa;
-//    }// fine del metodo
+        if (listaDisordinata != null) {
+
+            listaDisordinata.sort(new Comparator<WrapDidascalia>() {
+
+                int w1Ord;
+
+                int w2Ord;
 
 
-//    /**
-//     * Recupera dalla entity Bio, la property annoNato
-//     * oppure
-//     * Recupera dalla entity Bio, la property annoMorto
-//     *
-//     * @param bio entity
-//     *
-//     * @return property Bio richiesta
-//     */
-//    public String getKeyText(Bio bio) {
-//        return VUOTA;
-//    }// fine del metodo
+                @Override
+                public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
+                    w1Ord = dida1.getOrdine();
+                    w2Ord = dida2.getOrdine();
+
+                    return text.compareInt(w1Ord, w2Ord);
+                }// end of method
+            });//end of lambda expressions and anonymous inner class
 
 
-//    /**
-//     * Elabora le didascalie
-//     *
-//     * @param mappaOrdinataBio
-//     *
-//     * @return mappaListaDidascalie
-//     */
-//    @SuppressWarnings("all")
-//    public LinkedHashMap<Integer, ArrayList<String>> elaboraDidascalie(TreeMap<Integer, Map> mappaBioOrdinata) {
-//        LinkedHashMap<Integer, ArrayList<String>> mappaListaDidascalie = new LinkedHashMap<>();
-//        Map<String, Bio> mappa;
-//        ArrayList<String> listaDida;
-//        Integer anno;
-//        String didascalia;
-//        Bio bio;
-//
-//        for (Map.Entry<Integer, Map> entry : mappaBioOrdinata.entrySet()) {
-//            listaDida = new ArrayList<>();
-//            anno = entry.getKey();
-//            mappa = entry.getValue();
-//            for (Map.Entry<String, Bio> entry2 : mappa.entrySet()) {
-//                bio = entry2.getValue();
-//                didascalia = getDidascalia(bio);
-//                listaDida.add(didascalia);
-//            }// end of for cycle
-//            mappaListaDidascalie.put(anno, listaDida);
-//        }// end of for cycle
-//
-//        if (pref.isBool(FlowCost.USA_DEBUG)) {
-////            testDidascalie(mappaListaDidascalie);
-//        }// end of if cycle
-//
-//        return mappaListaDidascalie;
-//    }// fine del metodo
+            listaDisordinata.sort(new Comparator<WrapDidascalia>() {
+
+                int w1Ord;
+
+                int w2Ord;
+
+                String w1Cog;
+
+                String w2Cog;
+
+                int resultOrdine;
+
+                int resultCognomi;
 
 
-//    /**
-//     * Recupera dalla entity Bio, la didascalia giornoNato
-//     * oppure
-//     * Recupera dalla entity Bio, la didascalia giornoMorto
-//     *
-//     * @param bio entity
-//     *
-//     * @return didascalia Bio richiesta
-//     */
-//    public String getDidascalia(Bio bio) {
-//        return VUOTA;
-//    }// fine del metodo
+                @Override
+                public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
+                    w1Ord = dida1.getOrdine();
+                    w2Ord = dida2.getOrdine();
+                    w1Cog = dida1.getSottoChiave();
+                    w2Cog = dida2.getSottoChiave();
+
+                    resultOrdine = text.compareInt(w1Ord, w2Ord);
+
+                    if (resultOrdine == 0) {
+                        return text.compareStr(w1Cog, w2Cog);
+                    } else {
+                        return resultOrdine;
+                    }// end of if/else cycle
+
+                }// end of method
+            });//end of lambda expressions and anonymous inner class
+        }// end of if cycle
+    }// fine del metodo
 
 
-//    public void testBio(Map<Integer, Map> mappa) {
-//        Map<String, Bio> mappa2;
-//        Bio bioPrint;
-//        int k = 0;
-//
-//        System.out.println("");
-//        System.out.println("Giorno: " + giorno.titolo);
-//        System.out.println("");
-//        for (Map.Entry<Integer, Map> entry : mappa.entrySet()) {
-//            mappa2 = (Map) entry.getValue();
-//            for (Map.Entry<String, Bio> entry2 : mappa2.entrySet()) {
-//                entry2.getKey();
-//                bioPrint = entry2.getValue();
-//                k++;
-//                if (text.isValid(bioPrint.getAnnoNato()) && text.isValid(bioPrint.getCognome())) {
-//                    System.out.println(k + ": " + bioPrint.getAnnoNato() + " - " + bioPrint.getCognome());
-//                } else {
-//                    if (text.isEmpty(bioPrint.getAnnoNato()) && text.isEmpty(bioPrint.getCognome())) {
-//                        System.out.println(k + ": ? - " + bioPrint.getWikiTitle());
-//                    } else {
-//                        if (text.isValid(bioPrint.getAnnoNato())) {
-//                            System.out.println(k + ": " + bioPrint.getAnnoNato() + " - " + bioPrint.getWikiTitle());
-//                        }// end of if cycle
-//                        if (text.isValid(bioPrint.getCognome())) {
-//                            System.out.println(k + ": ? - " + bioPrint.getCognome());
-//                        }// end of if cycle
-//                    }// end of if/else cycle
-//                }// end of if/else cycle
-//            }// end of for cycle
-//        }// end of for cycle
-//    }// fine del metodo
-//
-//
-//    public void testDidascalie(Map<Integer, ArrayList<String>> mappaLista) {
-//        System.out.println("");
-//        System.out.println("Giorno: " + giorno.titolo);
-//        System.out.println("");
-//
-//        if (mappaLista != null) {
-//            for (Map.Entry<Integer, ArrayList<String>> entry : mappaLista.entrySet()) {
-//                for (String dida : entry.getValue()) {
-//                    System.out.println(entry.getKey() + " - " + dida);
-//                }// end of for cycle
-//            }// end of for cycle
-//        }// end of if cycle
-//
-//    }// fine del metodo
+    /**
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+     * Sovrascritto nella sottoclasse concreta <br>
+     *
+     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+     *
+     * @listaOrdinata di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    public LinkedHashMap<String, ArrayList<String>> creaMappa(ArrayList<WrapDidascalia> listaDisordinata) {
+        LinkedHashMap<String, ArrayList<String>> mappa = new LinkedHashMap<>();
+        ArrayList<String> lista = null;
+        String chiave;
+
+        for (WrapDidascalia wrap : listaDisordinata) {
+            chiave = wrap.getChiave();
+            chiave = text.isValid(chiave) ? LibWiki.setQuadre(chiave) : "";
+
+            if (mappa.get(chiave) == null) {
+                lista = new ArrayList<String>();
+                mappa.put(chiave, lista);
+            } else {
+                lista = (ArrayList<String>) mappa.get(chiave);
+            }// end of if/else cycle
+            lista.add(wrap.getTestoSenza());
+
+        }// end of for cycle
+
+        return mappa;
+    }// fine del metodo
+
+
 
 }// end of class

@@ -1,5 +1,6 @@
 package it.algos.vaadwiki;
 
+import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.AReflectionService;
@@ -69,6 +70,9 @@ public class DidascaliaTest extends ATest {
     public DidascaliaCompleta completa;
 
     @InjectMocks
+    public AnnoService annoService;
+
+    @InjectMocks
     public LibBio libBio;
 
     @InjectMocks
@@ -106,6 +110,7 @@ public class DidascaliaTest extends ATest {
         MockitoAnnotations.initMocks(pageService);
         MockitoAnnotations.initMocks(bioService);
         MockitoAnnotations.initMocks(elaboraService);
+        MockitoAnnotations.initMocks(annoService);
         MockitoAnnotations.initMocks(libBio);
         MockitoAnnotations.initMocks(giorno);
         MockitoAnnotations.initMocks(reflection);
@@ -133,6 +138,7 @@ public class DidascaliaTest extends ATest {
         mongoService.reflection = reflection;
         mongoService.text = text;
         didascalia.text = text;
+        giornoNato.annoService = annoService;
         giornoNato.text = text;
         annoNato.text = text;
         giornoMorto.text = text;
@@ -153,6 +159,14 @@ public class DidascaliaTest extends ATest {
     public void download() {
         System.out.println("*************");
         System.out.println("Tipi possibili di didascalie per " + wikiTitle);
+        System.out.println("Senza chiave");
+        System.out.println("*************");
+        for (EADidascalia dida : EADidascalia.values()) {
+            ottenuto = didascalia.esegue(bio, dida, false);
+            System.out.println(dida.name() + ": " + ottenuto);
+        }// end of for cycle
+        System.out.println("*************");
+        System.out.println("Con chiave");
         System.out.println("*************");
         for (EADidascalia dida : EADidascalia.values()) {
             ottenuto = didascalia.esegue(bio, dida);

@@ -39,7 +39,7 @@ import static it.algos.vaadwiki.didascalia.Didascalia.TAG_SEP;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier("aaa")
-public class Upload {
+public abstract class Upload {
 
     public final static String PAGINA_PROVA = "Utente:Biobot/2";
 
@@ -187,7 +187,7 @@ public class Upload {
 
     protected String tagHeadTemplateProgetto;
 
-    protected LinkedHashMap<Integer, ArrayList<String>> mappaListaOrdinataDidascalie;
+    protected LinkedHashMap<String, ArrayList<String>> mappaDidascalie;
 
     protected int numPersone = 0;
 
@@ -233,7 +233,7 @@ public class Upload {
     public void esegue() {
         elaboraParametri();
         elaboraTitolo();
-        elaboraMappaListaDidascalieBio();
+        creaMappaDidascalie();
         elaboraPagina();
     }// end of method
 
@@ -275,15 +275,16 @@ public class Upload {
 
 
     /**
-     * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica
-     * Esegue una query
-     * Sovrascritto
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Sovrascritto nella sottoclasse concreta <br>
+     * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
      */
-    protected void elaboraMappaListaDidascalieBio() {
+    protected void creaMappaDidascalie() {
         int num = 0;
 
-        if (mappaListaOrdinataDidascalie != null) {
-            for (Map.Entry<Integer, ArrayList<String>> entry : mappaListaOrdinataDidascalie.entrySet()) {
+        if (mappaDidascalie != null) {
+            for (Map.Entry<String, ArrayList<String>> entry : mappaDidascalie.entrySet()) {
                 num += entry.getValue().size();
             }// end of for cycle
         }// end of if cycle
@@ -328,7 +329,7 @@ public class Upload {
                 titoloPagina = PAGINA_PROVA;
             }// fine del blocco if
 
-            if (checkPossoRegistrare(titoloPagina, testo)) {
+            if (pref.isBool(FlowCost.USA_DEBUG)||checkPossoRegistrare(titoloPagina, testo)) {
                 api.scriveVoce(titoloPagina, testo, summary);
             }// end of if cycle
         }// fine del blocco if
@@ -525,7 +526,7 @@ public class Upload {
         boolean usaColonne = this.usaBodyDoppiaColonna;
         int maxRigheColonne = 10;//@todo mettere la preferenza
 
-        if (mappaListaOrdinataDidascalie != null && mappaListaOrdinataDidascalie.size() > 0) {
+        if (mappaDidascalie != null && mappaDidascalie.size() > 0) {
             if (usaSuddivisioneParagrafi) {
                 testo = righeParagrafo();
             } else {
@@ -632,40 +633,25 @@ public class Upload {
     protected String righeRaggruppate() {
         String testo = VUOTA;
         ArrayList<String> listaDidascalie;
-        int keyNum;
-        String keyTxt;
-        String key;
-        String keySep;
 
-        if (mappaListaOrdinataDidascalie != null) {
-            for (Map.Entry<Integer, ArrayList<String>> entry : mappaListaOrdinataDidascalie.entrySet()) {
-                keyNum = entry.getKey();
-                keyTxt = keyNum > 0 ? keyNum + "" : "";
-                listaDidascalie = entry.getValue();
+        if (mappaDidascalie != null) {
+            for (String key : mappaDidascalie.keySet()) {
+                listaDidascalie = mappaDidascalie.get(key);
 
-                if (listaDidascalie != null) {
-                    if (text.isValid(keyTxt)) {
-                        key = LibWiki.setQuadre(keyTxt);
-                        keySep = key + TAG_SEP;
-                        if (listaDidascalie.size() == 1) {
-                            testo += ASTERISCO + listaDidascalie.get(0) + A_CAPO;
-                        } else {
-                            testo += ASTERISCO + key + A_CAPO;
-                            for (String didascalia : listaDidascalie) {
-                                if (didascalia.startsWith(keySep)) {
-                                    didascalia = text.levaTesta(didascalia, keySep);
-                                } else {
-                                    logger.error("Algos - La didascalia " + didascalia + " non ha la chiave corretta");
-                                }// end of if/else cycle
-                                testo += ASTERISCO + ASTERISCO + didascalia + A_CAPO;
-                            }// end of for cycle
+                if (listaDidascalie.size() == 1) {
+                    testo += ASTERISCO + key + TAG_SEP + listaDidascalie.get(0) + A_CAPO;
+                } else {
+                    if (text.isValid(key)) {
+                        testo += ASTERISCO + key + A_CAPO;
+                        for (String didascalia : listaDidascalie) {
+                            testo += ASTERISCO + ASTERISCO + didascalia + A_CAPO;
                         }// end of if/else cycle
                     } else {
                         for (String didascalia : listaDidascalie) {
                             testo += ASTERISCO + didascalia + A_CAPO;
-                        }// end of for cycle
+                        }// end of if/else cycle
                     }// end of if/else cycle
-                }// end of if cycle
+                }// end of for cycle
             }// end of for cycle
         }// end of if cycle
 
@@ -678,14 +664,22 @@ public class Upload {
      */
     protected String righeSemplici() {
         String testo = VUOTA;
+        ArrayList<String> listaDidascalie;
 
-        if (mappaListaOrdinataDidascalie != null) {
-            for (Map.Entry<Integer, ArrayList<String>> entry : mappaListaOrdinataDidascalie.entrySet()) {
-                if (entry.getValue() != null) {
-                    for (String didascalia : entry.getValue()) {
-                        testo += ASTERISCO + didascalia + A_CAPO;
+        if (mappaDidascalie != null) {
+            for (String key : mappaDidascalie.keySet()) {
+                listaDidascalie = mappaDidascalie.get(key);
+
+                if (text.isValid(key)) {
+                    for (String didascalia : listaDidascalie) {
+                        testo += ASTERISCO + key + TAG_SEP + didascalia + A_CAPO;
                     }// end of for cycle
-                }// end of if cycle
+                } else {
+                    for (String didascalia : listaDidascalie) {
+                        testo += ASTERISCO  + didascalia + A_CAPO;
+                    }// end of for cycle
+                }// end of if/else cycle
+
             }// end of for cycle
         }// end of if cycle
 

@@ -2,6 +2,8 @@ package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.didascalia.DidascaliaGiornoNato;
+import it.algos.vaadwiki.didascalia.EADidascalia;
+import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 @Slf4j
 public class ListaGiornoNato extends ListaGiorni {
 
+
     @Autowired
     protected DidascaliaGiornoNato didascaliaGiornoNato;
 
@@ -32,40 +35,41 @@ public class ListaGiornoNato extends ListaGiorni {
      * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoNato
      * oppure
      * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoMorto
+     * oppure
+     * Recupera una lista (array) di records Bio che usano questa istanza di Anno nella property annoNato
+     * oppure
+     * Recupera una lista (array) di records Bio che usano questa istanza di Anno nella property annoMorto
+     * <p>
+     * Sovrascritto nella sottoclasse concreta
      *
-     * @return lista delle istanze di Bio che usano questo istanza
+     * @return lista delle istanze di Bio che usano questo istanza nella property appropriata
      */
+    @Override
     public ArrayList<Bio> listaBio() {
         return bioService.findAllByGiornoNato(giorno.titolo);
     }// fine del metodo
 
 
     /**
-     * Recupera dalla entity Bio, la property annoNato
-     * oppure
-     * Recupera dalla entity Bio, la property annoMorto
+     * Costruisce una lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+     * La lista NON è ordinata <br>
+     * Sovrascritto nella sottoclasse concreta <br>
      *
-     * @param bio entity
+     * @param listaGrezzaBio di persone che hanno una valore valido per la pagina specifica
      *
-     * @return property Bio richiesta
+     * @return lista NON ORDINATA di didascalie (Wrap)
      */
-    public String getKeyText(Bio bio) {
-        return bio.getAnnoNato();
+    @Override
+    public ArrayList<WrapDidascalia> creaListaDidascalie(ArrayList<Bio> listaGrezzaBio) {
+        ArrayList<WrapDidascalia> lista = new ArrayList<WrapDidascalia>();
+        WrapDidascalia wrap;
+
+        for (Bio bio : listaGrezzaBio) {
+            wrap = appContext.getBean(WrapDidascalia.class, bio, EADidascalia.giornoNato);
+            lista.add(wrap);
+        }// end of for cycle
+
+        return lista;
     }// fine del metodo
-
-
-    /**
-     * Recupera dalla entity Bio, la didascalia giornoNato
-     * oppure
-     * Recupera dalla entity Bio, la didascalia giornoMorto
-     *
-     * @param bio entity
-     *
-     * @return didascalia Bio richiesta
-     */
-    public String getDidascalia(Bio bio) {
-        return didascaliaGiornoNato.esegue(bio);
-    }// fine del metodo
-
 
 }// end of class

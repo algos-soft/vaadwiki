@@ -1,11 +1,8 @@
 package it.algos.vaadflow.service;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EAFirstChar;
 import it.algos.vaadflow.modules.preferenza.EAPrefType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,25 +35,33 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 public class ATextService extends AbstractService {
 
     /**
-     * versione della classe per la serializzazione
-     */
-    private final static long serialVersionUID = 1L;
-
-    /**
      * tag per il carattere punto
      */
     public static final String PUNTO = ".";
+
     /**
      * tag per il carattere barra
      */
     public static final String BARRA = "/";
+
     public static final String VIRGOLA = ",";
+
     public static final String REF = "<ref";
+
     public static final String NOTE = "<!--";
+
     public static final String GRAFFE = "{{";
+
     public static final int INT_NULLO = -1;
+
     public static final String PARENTESI = "(";
+
     public static final String INTERROGATIVO = "?";
+
+    /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
 
     /**
      * Private final property
@@ -69,6 +74,7 @@ public class ATextService extends AbstractService {
      */
     private ATextService() {
     }// end of constructor
+
 
     /**
      * Gets the unique instance of this Singleton.
@@ -84,6 +90,7 @@ public class ATextService extends AbstractService {
         return ch >= '0' && ch <= '9';
     }// end of method
 
+
     /**
      * Null-safe, short-circuit evaluation.
      *
@@ -95,6 +102,7 @@ public class ATextService extends AbstractService {
         return stringa == null || stringa.trim().isEmpty();
     }// end of method
 
+
     /**
      * Null-safe, short-circuit evaluation.
      *
@@ -105,6 +113,7 @@ public class ATextService extends AbstractService {
     public boolean isValid(final String stringa) {
         return !isEmpty(stringa);
     }// end of method
+
 
     /**
      * Controlla che sia una stringa e che sia valida.
@@ -120,6 +129,7 @@ public class ATextService extends AbstractService {
             return false;
         }// end of if/else cycle
     }// end of method
+
 
     /**
      * Forza il primo carattere della stringa secondo il flag
@@ -158,6 +168,7 @@ public class ATextService extends AbstractService {
         return testoOut.trim();
     }// end of method
 
+
     /**
      * Forza il primo carattere della stringa al carattere maiuscolo
      * <p>
@@ -173,6 +184,7 @@ public class ATextService extends AbstractService {
         return primoCarattere(testoIn, EAFirstChar.maiuscolo);
     }// end of method
 
+
     /**
      * Forza il primo carattere della stringa al carattere minuscolo
      * <p>
@@ -187,6 +199,7 @@ public class ATextService extends AbstractService {
     public String primaMinuscola(String testoIn) {
         return primoCarattere(testoIn, EAFirstChar.minuscolo);
     }// end of method
+
 
     /**
      * Elimina dal testo il tagIniziale, se esiste
@@ -213,6 +226,7 @@ public class ATextService extends AbstractService {
         return testoOut.trim();
     }// end of method
 
+
     /**
      * Elimina dal testo il tagFinale, se esiste
      * <p>
@@ -237,6 +251,7 @@ public class ATextService extends AbstractService {
 
         return testoOut.trim();
     }// end of method
+
 
     /**
      * Elimina il testo da tagFinale in poi
@@ -263,6 +278,7 @@ public class ATextService extends AbstractService {
         return testoOut.trim();
     }// end of method
 
+
     /**
      * Controlla se il testo contiene uno elemento di una lista di tag
      *
@@ -284,6 +300,7 @@ public class ATextService extends AbstractService {
 
         return neContieneAlmenoUno;
     }// end of method
+
 
     /**
      * Controlla che il testo non contenga nessun elemento di una lista di tag
@@ -342,6 +359,7 @@ public class ATextService extends AbstractService {
         return testoOut.trim();
     }// end of  method
 
+
     /**
      * Inserisce nel testo alla posizione indicata
      * Esegue solo se il testo è valido
@@ -369,6 +387,7 @@ public class ATextService extends AbstractService {
         return testoOut.trim();
     }// end of  method
 
+
     public boolean isNumber(String value) {
         boolean status = true;
         char[] caratteri = value.toCharArray();
@@ -382,9 +401,11 @@ public class ATextService extends AbstractService {
         return status;
     }// end of method
 
+
     private boolean isNotNumber(char ch) {
         return !isNumber(ch);
     }// end of method
+
 
     public String getModifiche(Object oldValue, Object newValue) {
         return getModifiche(oldValue, newValue, EAPrefType.string);
@@ -453,9 +474,11 @@ public class ATextService extends AbstractService {
         return "";
     }// end of method
 
+
     public String estrae(String valueIn, String tagIni) {
         return estrae(valueIn, tagIni, tagIni);
     }// end of method
+
 
     public String estrae(String valueIn, String tagIni, String tagEnd) {
         String valueOut = valueIn;
@@ -549,7 +572,7 @@ public class ATextService extends AbstractService {
         String num9;
         String num12;
 
-        if (numObj instanceof String || numObj instanceof Integer || numObj instanceof Long || numObj instanceof Double || numObj instanceof List||numObj instanceof Object[]) {
+        if (numObj instanceof String || numObj instanceof Integer || numObj instanceof Long || numObj instanceof Double || numObj instanceof List || numObj instanceof Object[]) {
             if (numObj instanceof String) {
                 numText = (String) numObj;
                 numText = levaVirgole(numText);
@@ -729,6 +752,7 @@ public class ATextService extends AbstractService {
         return numText;
     }// end of method
 
+
     /**
      * Restituisce la posizione di un tag in un testo
      * Riceve una lista di tag da provare
@@ -798,6 +822,7 @@ public class ATextService extends AbstractService {
         return uscita;
     }// end of method
 
+
     /**
      * Elimina la parte di stringa successiva al tag <ref>, se esiste.
      * <p>
@@ -812,6 +837,7 @@ public class ATextService extends AbstractService {
     public String levaDopoRef(String entrata) {
         return levaDopo(entrata, REF);
     }// end of method
+
 
     /**
      * Elimina la parte di stringa successiva al tag <!--, se esiste.
@@ -828,6 +854,7 @@ public class ATextService extends AbstractService {
         return levaDopo(entrata, NOTE);
     }// end of method
 
+
     /**
      * Elimina la parte di stringa successiva al tag {{, se esiste.
      * <p>
@@ -842,6 +869,7 @@ public class ATextService extends AbstractService {
     public String levaDopoGraffe(String entrata) {
         return levaDopo(entrata, GRAFFE);
     }// end of method
+
 
     /**
      * Elimina la parte di stringa successiva al tag -virgola-, se esiste.
@@ -858,6 +886,7 @@ public class ATextService extends AbstractService {
         return levaDopo(entrata, VIRGOLA);
     }// end of method
 
+
     /**
      * Elimina la parte di stringa successiva al tag -aperta parentesi-, se esiste.
      * <p>
@@ -873,6 +902,7 @@ public class ATextService extends AbstractService {
         return levaDopo(entrata, PARENTESI);
     }// end of method
 
+
     /**
      * Elimina la parte di stringa successiva al tag -punto interrogativo-, se esiste.
      * <p>
@@ -886,6 +916,46 @@ public class ATextService extends AbstractService {
      */
     public String levaDopoInterrogativo(String entrata) {
         return levaDopo(entrata, INTERROGATIVO);
+    }// end of method
+
+
+    /**
+     * Confronta due numeri.
+     *
+     * @param primo   numero
+     * @param secondo numero
+     *
+     * @return :
+     * 1 if secondo should be before primo
+     * -1 if primo should be before secondo
+     * 0 otherwise
+     */
+    public int compareInt(int primo, int secondo) {
+        return (primo < secondo) ? -1 : (primo == secondo) ? 0 : 1;
+    }// end of method
+
+
+    /**
+     * Confronta due stringhe.
+     *
+     * @param prima   stringa
+     * @param seconda stringa
+     *
+     * @return :
+     * 1 if seconda should be before prima
+     * -1 if prima should be before seconda
+     * 0 otherwise
+     */
+    public int compareStr(String prima, String seconda) {
+        int test;
+
+        if (isValid(prima) && isValid(seconda)) {
+            test = prima.compareTo(seconda);
+            return (prima.compareTo(seconda) < 0) ? -1 : (prima.compareTo(seconda) == 0) ? 0 : 1;
+        } else {
+            log.warn("Algos - ATextService.compareStr(): valori nulli");
+            return 0;
+        }// end of if/else cycle
     }// end of method
 
 }// end of class

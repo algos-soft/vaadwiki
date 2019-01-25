@@ -28,11 +28,16 @@ public class DidascaliaGiornoMorto extends Didascalia {
     }// end of method
 
 
+    public String esegueSenza(Bio bio) {
+        return super.esegue(bio, false);
+    }// end of method
+
+
     /**
      * Costruisce il testo della didascalia
      * Sovrascritto
      */
-    protected void regolaDidascalia() {
+    protected void regolaDidascalia(boolean usaChiave) {
         testo = VUOTA;
         String natoTxt;
 
@@ -42,7 +47,7 @@ public class DidascaliaGiornoMorto extends Didascalia {
         }// end of if cycle
 
         // anno di morte (potrebbe non esserci)
-        if (text.isValid(annoMorto)) {
+        if (text.isValid(annoMorto) && usaChiave) {
             testo += LibWiki.setQuadre(annoMorto);
             testo += TAG_SEP;
         }// end of if cycle
