@@ -150,24 +150,6 @@ public class UploadAnni extends Upload {
         return testoOut;
     }// fine del metodo
 
-
-    /**
-     * Piede della pagina
-     * Sovrascritto
-     */
-    protected String elaboraFooter() {
-        String testo = VUOTA;
-        boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
-
-        testo += LibWiki.setPortale(tagHeadTemplateProgetto);
-        testo += LibWiki.setCat("Liste di nati nell'anno", SPAZIO + anno.ordine, nascosta);
-        testo += LibWiki.setCat("Nati nel " + anno.titolo, SPAZIO, nascosta);
-        testo = LibBio.setNoIncludeMultiRiga(testo);
-
-        return testo;
-    }// fine del metodo
-
-
     /**
      * Returns a string representation of the object. In general, the
      * {@code toString} method returns a string that

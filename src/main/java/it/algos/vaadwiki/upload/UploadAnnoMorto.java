@@ -43,8 +43,8 @@ public class UploadAnnoMorto extends UploadAnni {
      */
     @Override
     protected void creaMappaDidascalie() {
-//        mappaDidascalie = listaAnnoMorto.esegue(anno);
-//        super.creaMappaDidascalie();
+        mappaDidascalie = listaAnnoMorto.esegue(anno);
+        super.creaMappaDidascalie();
     }// fine del metodo
 
 }// end of class

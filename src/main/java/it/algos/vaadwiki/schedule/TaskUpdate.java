@@ -3,9 +3,9 @@ package it.algos.vaadwiki.schedule;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.schedule.ATask;
-import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.download.CicloService;
 import it.algos.vaadwiki.modules.bio.BioService;
+import it.algos.wiki.DownloadResult;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,6 @@ public class TaskUpdate extends ATask {
     protected BioService bio;
 
 
-
     /**
      * Metodo invocato subito DOPO il costruttore
      * <p>
@@ -71,6 +70,7 @@ public class TaskUpdate extends ATask {
         long inizio = System.currentTimeMillis();
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end;
+        DownloadResult result;
         String testo = "";
         testo += EASchedule.oreQuattro.getNota();
         testo += A_CAPO;
@@ -85,7 +85,7 @@ public class TaskUpdate extends ATask {
         if (pref.isBool(USA_DAEMON_BIO)) {
             System.out.println("Inizio task di download: " + date.getTime(LocalDateTime.now()));
 
-            cicloService.esegue();
+            result = cicloService.esegue();
 
             if (pref.isBool(SEND_MAIL_CICLO)) {
                 end = LocalDateTime.now();
@@ -94,6 +94,8 @@ public class TaskUpdate extends ATask {
                 testo += "Durata totale: " + date.deltaText(inizio);
                 testo += A_CAPO;
                 testo += "Nel db ci sono " + text.format(bio.count()) + " voci biografiche";
+                testo += A_CAPO;
+                testo +=  "Sono state aggiornate " + text.format(result.getNumVociRegistrate()) + " voci" ;
                 mailService.send("Ciclo update", testo);
             }// end of if cycle
             System.out.println("Fine task di download: " + date.getTime(LocalDateTime.now()));

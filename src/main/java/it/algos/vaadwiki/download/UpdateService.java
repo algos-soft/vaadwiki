@@ -48,12 +48,13 @@ public class UpdateService extends ABioService {
      * Esegue un ciclo (UPDATE) di controllo e aggiornamento di tutte le entities esistenti nel mongoDB Bio
      * Aggiorna tutte le entities mongoDB Bio, che sono stati modificate sul server wiki DOPO l'ultima lettura
      */
-    public void esegue() {
+    public DownloadResult esegue() {
         if (checkListePageids()) {
-            esegueCiclo();
+            return esegueCiclo();
         } else {
             mail.send("UpdateService", "Le liste di pageid tra Categoria server e mongoDB, sono diverse");
             logger.error("UPDATE -  Le liste di pageid tra Categoria server e mongoDB, sono diverse");
+            return null;
         }// end of if/else cycle
     }// end of method
 
@@ -85,7 +86,7 @@ public class UpdateService extends ABioService {
      * 5) cancella le entities di mongoDB Bio che sono state modificate
      * 6) inserisce (bulk) le voci modifcate nella collazione Bio
      */
-    public void esegueCiclo() {
+    public DownloadResult esegueCiclo() {
         DownloadResult result = null;
         int numVociModificate = 0;
         long inizio = System.currentTimeMillis();
@@ -106,6 +107,7 @@ public class UpdateService extends ABioService {
         }// end of for cycle
 
         logger.info(info);
+        return result;
     }// end of method
 
 

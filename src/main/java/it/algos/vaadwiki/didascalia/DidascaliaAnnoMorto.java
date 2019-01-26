@@ -28,6 +28,11 @@ public class DidascaliaAnnoMorto extends Didascalia {
     }// end of method
 
 
+    public String esegueSenza(Bio bio) {
+        return super.esegue(bio, false);
+    }// end of method
+
+
     /**
      * Costruisce il testo della didascalia
      * Sovrascritto

@@ -3,7 +3,7 @@ package it.algos.vaadwiki.download;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.service.ABioService;
-import it.algos.wiki.LibWiki;
+import it.algos.wiki.DownloadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -61,7 +61,8 @@ public class CicloService extends ABioService {
      * Esegue un ciclo (UPLOAD) di costruzione delle liste (eventuale)
      */
     @SuppressWarnings("unchecked")
-    public void esegue() {
+    public DownloadResult esegue() {
+        DownloadResult result;
         ArrayList<Long> listaPageidsMongoCategoria;
         ArrayList<Long> listaPageidsMongoBio;
         ArrayList<Long> listaPageidsEccedenti;
@@ -72,7 +73,7 @@ public class CicloService extends ABioService {
         //--oppure del flag USA_CICLI_ANCHE_SENZA_BOT per un funzionamento ridotto
         if (wikiLogin != null && wikiLogin.isValido() && wikiLogin.isBot()) {
         } else {
-            return;
+            return null;
         }// end of if/else cycle
 
         //--download del modulo attività
@@ -83,11 +84,6 @@ public class CicloService extends ABioService {
 
         //--download del modulo professione
         professioneService.download();
-
-
-        if (true) {
-            return;
-        }// end of if cycle
 
         //--download del modulo categoria
         //--crea una collezione Categoria, 'specchio' sul mongoDB di quella sul server wiki
@@ -118,7 +114,7 @@ public class CicloService extends ABioService {
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             log.info("Debug - Inizio a calcolare le voci mancanti. Circa sette minuti");
         }// end of if cycle
-        listaPageidsMancanti = array.differenza(listaPageidsMongoCategoria,listaPageidsMongoBio);
+        listaPageidsMancanti = array.differenza(listaPageidsMongoCategoria, listaPageidsMongoBio);
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             log.info("Calcolate " + text.format(listaPageidsMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
             logger.debug("Calcolate " + text.format(listaPageidsMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
@@ -128,13 +124,15 @@ public class CicloService extends ABioService {
         newService.esegue(listaPageidsMancanti);
 
         //--aggiorna tutte le entities mongoDB Bio che sono stati modificate sul server wiki DOPO l'ultima lettura
-        updateService.esegue();
+        result = updateService.esegue();
 
 //        --elabora i nuovi records
 //        elaboraService.esegue(listaVociMancanti);
 
         //--elabora tutti i records che sono stati modificati sul server wiki DOPO l'ultima lettura
 //        elaboraService.esegueAll();
+
+        return result;
     }// end of method
 
 

@@ -1,23 +1,16 @@
 package it.algos.vaadwiki.modules.bio;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.selection.SelectionEvent;
-import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.ADateService;
+import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadflow.ui.MainLayout;
-import it.algos.vaadflow.ui.dialog.AConfirmDialog;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.fields.AComboBox;
@@ -27,15 +20,16 @@ import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
 import it.algos.vaadwiki.modules.categoria.CategoriaService;
 import it.algos.vaadwiki.task.TaskBio;
 import it.algos.vaadwiki.upload.Upload;
-import it.algos.vaadwiki.upload.UploadAnni;
-import it.algos.vaadwiki.upload.UploadGiorni;
 import it.algos.wiki.Api;
+import it.algos.wiki.DownloadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.Date;
 
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 
@@ -82,6 +76,12 @@ public class BioViewList extends AttNazProfCatViewList {
     protected Button elaboraButton;
 
     protected Button uploadButton;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected AMailService mailService;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -213,10 +213,14 @@ public class BioViewList extends AttNazProfCatViewList {
         newButton.getElement().setAttribute("theme", "secondary");
 
         //--ciclo
-        ciclodButton = new Button("Ciclo", new Icon(VaadinIcon.REFRESH));
+        ciclodButton = new Button("Update", new Icon(VaadinIcon.REFRESH));
         ciclodButton.getElement().setAttribute("theme", "primary");
         ciclodButton.addClickListener(e -> {
-            cicloService.esegue();
+            DownloadResult result;
+            System.out.println("Inizio task di download: " + date.getTime(LocalDateTime.now()));
+            long inizio = System.currentTimeMillis();
+            result = cicloService.esegue();
+            sendMail(inizio, result);
             updateView();
         });//end of lambda expressions and anonymous inner class
         topPlaceholder.add(ciclodButton);
@@ -408,5 +412,35 @@ public class BioViewList extends AttNazProfCatViewList {
 //        }// end of method
 //
 //    }// end of inner class
+
+
+    private void sendMail(long inizio, DownloadResult result) {
+        Date startDate = new Date(inizio);
+        LocalDateTime start = date.dateToLocalDateTime(startDate);
+        LocalDateTime end;
+        String testo = "";
+        testo += A_CAPO;
+        testo += "Carica le nuove voci biografiche e aggiorna tutte quelle esistenti";
+        testo += A_CAPO;
+        testo += A_CAPO;
+        testo += "Ciclo del " + date.get();
+        testo += A_CAPO;
+        testo += "Iniziato alle " + date.getOrario(start);
+        testo += A_CAPO;
+
+        if (pref.isBool(SEND_MAIL_CICLO)) {
+            end = LocalDateTime.now();
+            testo += "Terminato alle " + date.getOrario(end);
+            testo += A_CAPO;
+            testo += "Durata totale: " + date.deltaText(inizio);
+            testo += A_CAPO;
+            testo += "Nel db ci sono " + text.format(service.count()) + " voci biografiche";
+            testo += A_CAPO;
+            testo += "Sono state aggiornate " + text.format(result.getNumVociRegistrate()) + " voci";
+            mailService.send("Ciclo update", testo);
+        }// end of if cycle
+        System.out.println("Fine task di download: " + date.getTime(LocalDateTime.now()));
+    }// end of method
+
 
 }// end of class

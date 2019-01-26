@@ -1,12 +1,18 @@
 package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.liste.ListaGiornoNato;
+import it.algos.vaadwiki.service.LibBio;
+import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import static it.algos.vaadflow.application.FlowCost.SPAZIO;
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
 /**
  * Project vaadwiki
@@ -50,5 +56,25 @@ public class UploadGiornoNato extends UploadGiorni {
         super.creaMappaDidascalie();
     }// fine del metodo
 
+    /**
+     * Piede della pagina
+     * Sovrascritto
+     */
+    protected String elaboraFooter() {
+        String testo = VUOTA;
+        boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
+        String cat;
+
+        testo += LibWiki.setPortale(tagHeadTemplateProgetto);
+        cat = LibWiki.setCat("Liste di nati per giorno", SPAZIO + giorno.ordine);
+        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
+        testo += cat;
+        cat = LibWiki.setCat("Nati il " + giorno.titolo, SPAZIO);
+        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
+        testo += cat;
+        testo = LibBio.setNoIncludeMultiRiga(testo);
+
+        return testo;
+    }// fine del metodo
 
 }// end of class

@@ -28,6 +28,11 @@ public class DidascaliaAnnoNato extends Didascalia {
     }// end of method
 
 
+    public String esegueSenza(Bio bio) {
+        return super.esegue(bio, false);
+    }// end of method
+
+
     /**
      * Costruisce il testo della didascalia
      * Sovrascritto
@@ -42,7 +47,7 @@ public class DidascaliaAnnoNato extends Didascalia {
         }// end of if cycle
 
         // giorno di nascita (potrebbe non esserci)
-        if (text.isValid(giornoNato)) {
+        if (text.isValid(giornoNato) && usaChiave) {
             testo += LibWiki.setQuadre(giornoNato);
             testo += TAG_SEP;
         }// end of if cycle

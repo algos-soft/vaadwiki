@@ -8,15 +8,14 @@ import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
+import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
@@ -33,6 +32,9 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public abstract class Lista {
+
+    @Autowired
+    protected ApplicationContext appContext;
 
     @Autowired
     public GiornoService giornoService;
@@ -140,6 +142,58 @@ public abstract class Lista {
      * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
      */
     public void ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
+        if (listaDisordinata != null) {
+
+            listaDisordinata.sort(new Comparator<WrapDidascalia>() {
+
+                int w1Ord;
+
+                int w2Ord;
+
+
+                @Override
+                public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
+                    w1Ord = dida1.getOrdine();
+                    w2Ord = dida2.getOrdine();
+
+                    return text.compareInt(w1Ord, w2Ord);
+                }// end of method
+            });//end of lambda expressions and anonymous inner class
+
+
+            listaDisordinata.sort(new Comparator<WrapDidascalia>() {
+
+                int w1Ord;
+
+                int w2Ord;
+
+                String w1Cog;
+
+                String w2Cog;
+
+                int resultOrdine;
+
+                int resultCognomi;
+
+
+                @Override
+                public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
+                    w1Ord = dida1.getOrdine();
+                    w2Ord = dida2.getOrdine();
+                    w1Cog = dida1.getSottoChiave();
+                    w2Cog = dida2.getSottoChiave();
+
+                    resultOrdine = text.compareInt(w1Ord, w2Ord);
+
+                    if (resultOrdine == 0) {
+                        return text.compareStr(w1Cog, w2Cog);
+                    } else {
+                        return resultOrdine;
+                    }// end of if/else cycle
+
+                }// end of method
+            });//end of lambda expressions and anonymous inner class
+        }// end of if cycle
     }// fine del metodo
 
 
@@ -154,8 +208,26 @@ public abstract class Lista {
      *
      * @listaOrdinata di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
      */
-    public LinkedHashMap<String, ArrayList<String>> creaMappa(ArrayList<WrapDidascalia> listaOrdinata) {
-        return null;
+    public LinkedHashMap<String, ArrayList<String>> creaMappa(ArrayList<WrapDidascalia> listaDisordinata) {
+        LinkedHashMap<String, ArrayList<String>> mappa = new LinkedHashMap<>();
+        ArrayList<String> lista = null;
+        String chiave;
+
+        for (WrapDidascalia wrap : listaDisordinata) {
+            chiave = wrap.getChiave();
+            chiave = text.isValid(chiave) ? LibWiki.setQuadre(chiave) : "";
+
+            if (mappa.get(chiave) == null) {
+                lista = new ArrayList<String>();
+                mappa.put(chiave, lista);
+            } else {
+                lista = (ArrayList<String>) mappa.get(chiave);
+            }// end of if/else cycle
+            lista.add(wrap.getTestoSenza());
+
+        }// end of for cycle
+
+        return mappa;
     }// fine del metodo
 
 

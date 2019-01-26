@@ -55,6 +55,16 @@ public class WrapDidascalia {
      */
     @Autowired
     protected DidascaliaGiornoMorto didascaliaGiornoMorto;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected DidascaliaAnnoNato didascaliaAnnoNato;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected DidascaliaAnnoMorto didascaliaAnnoMorto;
 
 
     /**
@@ -171,10 +181,14 @@ public class WrapDidascalia {
 
 
     public void annoNato() {
-        riferimento = "pippoz";
-        ordine = 5;
-        chiave = "forse";
-        testo = "ancora per sempre";
+        this.riferimento = bio.getAnnoNato();
+        this.chiave = bio.getGiornoNato();
+        this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
+        String wikiTitle = bio.getWikiTitle();
+        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+        this.sottoChiave = cognome + wikiTitle;
+        this.testo = didascaliaAnnoNato.esegue(bio);
+        this.testoSenza = didascaliaAnnoNato.esegueSenza(bio);
     }// end of method
 
 
@@ -191,10 +205,14 @@ public class WrapDidascalia {
 
 
     public void annoMorto() {
-        riferimento = "pippoz";
-        ordine = 5;
-        chiave = "forse";
-        testo = "ancora per sempre";
+        this.riferimento = bio.getAnnoMorto();
+        this.chiave = bio.getGiornoMorto();
+        this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
+        String wikiTitle = bio.getWikiTitle();
+        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+        this.sottoChiave = cognome + wikiTitle;
+        this.testo = didascaliaAnnoMorto.esegue(bio);
+        this.testoSenza = didascaliaAnnoMorto.esegueSenza(bio);
     }// end of method
 
 
