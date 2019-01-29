@@ -1,4 +1,32 @@
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring in automatico <br>
+     * Metodo più semplice. Non si possono passare parametri <br>
+     * Viene iniettata nel ciclo di 'init()' di questa classe ed è quindi disponibile solo DOPO il ciclo <br>
+     * <p>
+     * Se serve prima, sempre senza possibilità di passare parametri, occorre: <br>
+     * 1) dichiararla nel costruttore  <br>
+     * 2) spostare il suo uso in un metodo @PostConstruct  <br>
+     * 3) dichiararla con Xxx.getInstance(), ma la classe Xxx DEVE essere un istanza esplicita di Singleton Class <br>
+     * 4) dichiararla (sconsigliato per l'uso dei Test) con StaticContextAccessor.getBean(Xxx.class) <br>
+     */
+    @Autowired
+    private ATextService text;
+
+
+    /**
+     * Istanza (@Scope = 'prototype') inietta da Spring in automatico <br>
+     * Si possono passare parametri <br>
+     * Dichiararla con appContext.getBean(Xxx.class, ....);
+     */
+
+    /**
+     * Service (@Scope = 'singleton') recuperato come istanza dalla classe e usato come libreria <br>
+     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+     */
+    public ATextService text = ATextService.getInstance();
+
+
     DEPRECATO
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.

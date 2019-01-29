@@ -64,7 +64,9 @@ public class CicloService extends ABioService {
     public DownloadResult esegue() {
         DownloadResult result;
         ArrayList<Long> listaPageidsMongoCategoria;
+        ArrayList<String> listaTitlesMongoCategoria;
         ArrayList<Long> listaPageidsMongoBio;
+        ArrayList<String> listaTitlesMongoBio;
         ArrayList<Long> listaPageidsEccedenti;
         ArrayList<Long> listaPageidsMancanti;
         long inizio;
@@ -87,18 +89,20 @@ public class CicloService extends ABioService {
 
         //--download del modulo categoria
         //--crea una collezione Categoria, 'specchio' sul mongoDB di quella sul server wiki
-        categoriaService.download();
+//       categoriaService.download();
 
         //--recupera la lista dei pageids dalla collezione Categoria
-        listaPageidsMongoCategoria = categoriaService.findPageids();
+        listaPageidsMongoCategoria = categoriaService.findAllPageids();
+        listaTitlesMongoCategoria= categoriaService.findAllTitles();
 
         //--recupera la lista dei pageids dalla collezione Bio
-        listaPageidsMongoBio = bioService.findPageids();
+        listaPageidsMongoBio = bioService.findAllPageids();
+        listaTitlesMongoBio = bioService.findAllTitles();
 
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa dieci minuti");
+            log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa sette minuti");
         }// end of if cycle
         listaPageidsEccedenti = array.differenza(listaPageidsMongoBio, listaPageidsMongoCategoria);
         if (pref.isBool(FlowCost.USA_DEBUG)) {

@@ -99,6 +99,7 @@ public class RequestWikiLogin extends RequestWiki {
         super.needContinua = false;
         super.needCookies = true;
         super.needBot = false;
+
         super.doInit();
     } // fine del metodo
 

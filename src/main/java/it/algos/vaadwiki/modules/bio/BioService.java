@@ -295,7 +295,7 @@ public class BioService extends AttNazProfCatService {
      *
      * @return all ordered entities
      */
-    public ArrayList<Long> findPageids() {
+    public ArrayList<Long> findAllPageids() {
         ArrayList<Long> listaLong = new ArrayList<>();
         List<? extends AEntity> listaPagine = null;
         long inizio = System.currentTimeMillis();
@@ -309,17 +309,55 @@ public class BioService extends AttNazProfCatService {
                     listaLong.add(((Bio) entity).pageid);
                 }// end of for cycle
                 if (pref.isBool(FlowCost.USA_DEBUG)) {
-                    log.info("Debug. Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findPageids()");
+                    log.info("Debug. Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findAllPageids()");
                 }// end of if cycle
             } else {
-                log.warn("Qualcosa non ha funzionato in BioService.findPageids()");
+                log.warn("Qualcosa non ha funzionato in BioService.findAllPageids()");
             }// end of if/else cycle
         }// end of for cycle
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            logger.debug("Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findPageids() in " + date.deltaText(inizio));
+            logger.debug("Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findAllPageids() in " + date.deltaText(inizio));
+            log.info("Recuperata una lista di " + text.format(listaLong.size()) + " pageid da bioService.findAllPageids() in " + date.deltaText(inizio));
         }// end of if cycle
+
         return listaLong;
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
+     * <p>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<String> findAllTitles() {
+        ArrayList<String> listaString = new ArrayList<>();
+        List<? extends AEntity> listaPagine = null;
+        long inizio = System.currentTimeMillis();
+        int size = pref.getInt(MONGO_PAGE_LIMIT);
+        Sort sort = new Sort(Sort.Direction.ASC, "pageid");
+
+        for (int k = 0; k < array.numCicli(count(), size); k++) {
+            listaPagine = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Bio.class);
+            if (array.isValid(listaPagine)) {
+                for (AEntity entity : listaPagine) {
+                    listaString.add(((Bio) entity).wikiTitle);
+                }// end of for cycle
+                if (pref.isBool(FlowCost.USA_DEBUG)) {
+                    log.info("Debug. Recuperate " + text.format(listaString.size()) + " pagine da bioService.findAllTitles()");
+                }// end of if cycle
+            } else {
+                log.warn("Qualcosa non ha funzionato in BioService.findAllTitles()");
+            }// end of if/else cycle
+        }// end of for cycle
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            logger.debug("Recuperate " + text.format(listaString.size()) + " pagine da bioService.findAllTitles() in " + date.deltaText(inizio));
+            log.info("Recuperata una lista di " + text.format(listaString.size()) + " pageid da bioService.findAllTitles() in " + date.deltaText(inizio));
+        }// end of if cycle
+
+        return listaString;
     }// end of method
 
 

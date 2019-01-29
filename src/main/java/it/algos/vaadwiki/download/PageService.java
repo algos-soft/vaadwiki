@@ -75,7 +75,7 @@ public class PageService extends ABioService {
     private DownloadResult downloadSingoloBlocco(DownloadResult result, ArrayList<Long> bloccoPageids) {
         ArrayList<Page> pages; // di norma 500
         Bio entity;
-        ArrayList<Long> vociRegistrateInQuestoBlocco = new ArrayList<>();
+        ArrayList<Long> vociDaRegistrareInQuestoBlocco = new ArrayList<>();
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
 
         pages = api.leggePages(bloccoPageids);
@@ -88,7 +88,7 @@ public class PageService extends ABioService {
             entity = creaBio(page);
             if (entity != null) {
                 listaBio.add(entity);
-                vociRegistrateInQuestoBlocco.add(page.getPageid());
+                vociDaRegistrareInQuestoBlocco.add(page.getPageid());
                 result.addSi(page.getPageid());
             } else {
                 result.addNo(page.getTitle());
@@ -96,14 +96,28 @@ public class PageService extends ABioService {
         }// end of for cycle
 
         //--cancella le voci esistenti prima di inserire le nuove versioni con update()
-        bioService.deleteBulkByPageid(vociRegistrateInQuestoBlocco);
+
+        try { // prova ad eseguire il codice
+            bioService.deleteBulkByPageid(vociDaRegistrareInQuestoBlocco);
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
 
         if (listaBio.size() > 0) {
             try { // prova ad eseguire il codice
 //                mongo.updateBulk(listaBio, Bio.class);
                 mongo.insert(listaBio, Bio.class);
             } catch (Exception unErrore) { // intercetta l'errore
+                log.error(" " );
                 log.error(unErrore.toString());
+                log.error("Numero voci (bio) da registrare: " + listaBio.size());
+                log.error(listaBio.toString());
+                for (int k = 0; k < 10; k++) {
+                    log.error(" " );
+                    log.error(listaBio.get(k).wikiTitle + " "+listaBio.get(k).pageid);
+                }// end of for cycle
+                log.error(" " );
+
             }// fine del blocco try-catch
         }// end of if cycle
 

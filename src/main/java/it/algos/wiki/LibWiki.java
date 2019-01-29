@@ -19,6 +19,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static it.algos.wiki.mediawiki.ReadLogin.FIRST_NEW_TOKEN;
+import static it.algos.wiki.mediawiki.ReadLogin.LOGIN_TOKEN;
+
 /**
  * Libreria
  */
@@ -854,6 +857,28 @@ public abstract class LibWiki {
         }// end of if cycle
 
         return mappa;
+    } // fine del metodo
+
+
+    /**
+     * Restituisce il logintoken dalla mappa (se esiste)
+     *
+     * @param mappa standard (valori String)
+     *
+     * @return logintoken
+     */
+    public static String getLoginToken(HashMap<String, Object> mappa) {
+        String logintoken = "";
+        JSONObject obj;
+
+        if (mappa.get(FIRST_NEW_TOKEN) != null && mappa.get(FIRST_NEW_TOKEN) instanceof JSONObject) {
+            obj = (JSONObject) mappa.get(FIRST_NEW_TOKEN);
+            if (obj.get(LOGIN_TOKEN) != null && obj.get(LOGIN_TOKEN) instanceof String) {
+                logintoken = (String) obj.get(LOGIN_TOKEN);
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return logintoken;
     } // fine del metodo
 
 

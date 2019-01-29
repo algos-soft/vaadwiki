@@ -29,7 +29,6 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_CAT;
 public interface CategoriaRepository extends MongoRepository<Categoria, String> {
 
 
-
 	public Categoria findByPageid(long pageid);
 	public Categoria findByTitle(String title);
 

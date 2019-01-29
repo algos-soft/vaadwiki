@@ -22,10 +22,12 @@ import it.algos.vaadwiki.task.TaskBio;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;
 import it.algos.wiki.DownloadResult;
+import it.algos.wiki.web.AQueryBio;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -178,6 +180,14 @@ public class BioViewList extends AttNazProfCatViewList {
         ((BioViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
+    @PostConstruct
+    protected void pippo() {
+        String contenuto3 = appContext.getBean(AQueryBio.class).urlRequest("Neal Ascherson");
+        int a=87;
+
+        String contenuto4 = appContext.getBean(AQueryBio.class,"Neal Ascherson").response();
+        int aww=87;
+    }// end of Spring constructor
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse

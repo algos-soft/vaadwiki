@@ -106,7 +106,6 @@ public abstract class RequestWiki extends Request {
 
     // ci metto tutti i cookies restituiti da URLConnection.responses
     protected HashMap cookies;
-
     // token ottenuto dalla preliminaryRequest ed usato per Edit e Move
     protected String csrfToken;
 

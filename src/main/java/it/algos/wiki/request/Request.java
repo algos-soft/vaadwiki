@@ -1,11 +1,8 @@
 package it.algos.wiki.request;
 
 
-import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.service.AArrayService;
-import it.algos.vaadflow.service.ATextService;
 import it.algos.wiki.TipoRisultato;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -40,8 +37,11 @@ public abstract class Request {
 
     //--indirizzo internet da leggere
     protected String webUrl;
+
     protected boolean needContinua;
+
     protected boolean needPost;
+
     protected boolean needCookies;
 
     //--token per la continuazione della query
@@ -70,6 +70,7 @@ public abstract class Request {
         doRequest();
     } // fine del metodo
 
+
     /**
      * Metodo iniziale
      * PUO essere sovrascritto nelle sottoclassi specifiche
@@ -95,6 +96,7 @@ public abstract class Request {
             }// fine del blocco try-catch
         }// end of if/else cycle
     } // fine del metodo
+
 
     /**
      * Request
@@ -153,6 +155,7 @@ public abstract class Request {
         return getWebUrl();
     } // end of getter method
 
+
     /**
      * Crea la connessione
      * <p>
@@ -162,6 +165,7 @@ public abstract class Request {
     protected URLConnection creaConnessione() throws Exception {
         URLConnection urlConn = null;
         String domain = this.getDomain();
+
 
         if (domain != null && !domain.equals("")) {
             urlConn = new URL(domain).openConnection();
@@ -175,6 +179,7 @@ public abstract class Request {
         return urlConn;
     } // fine del metodo
 
+
     /**
      * Allega i cookies alla request (upload)
      * Serve solo la sessione
@@ -183,6 +188,7 @@ public abstract class Request {
      */
     protected void uploadCookies(URLConnection urlConn) {
     } // fine del metodo
+
 
     /**
      * Crea il POST della request
@@ -216,13 +222,16 @@ public abstract class Request {
         return webUrl;
     }// end of getter method
 
+
     public boolean isValida() {
         return valida;
     }// end of getter method
 
+
     public TipoRisultato getRisultato() {
         return risultato;
     }// end of getter method
+
 
     public String getTestoResponse() {
         return testoResponse;

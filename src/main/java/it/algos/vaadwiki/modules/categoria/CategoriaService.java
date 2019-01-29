@@ -235,7 +235,7 @@ public class CategoriaService extends AttNazProfCatService {
      *
      * @return all ordered entities
      */
-    public ArrayList<Long> findPageids() {
+    public ArrayList<Long> findAllPageids() {
         ArrayList<Long> listaLong = new ArrayList<>();
         List<? extends AEntity> listaPagine = null;
         long inizio = System.currentTimeMillis();
@@ -254,14 +254,54 @@ public class CategoriaService extends AttNazProfCatService {
             }// end of for cycle
 
             if (pref.isBool(FlowCost.USA_DEBUG)) {
-                log.info("Debug. Recuperate " + text.format(listaLong.size()) + " pagine da categoriaService.findPageids()");
+                log.info("Debug. Recuperate " + text.format(listaLong.size()) + " pagine da categoriaService.findAllPageids()");
             }// end of if cycle
         }// end of for cycle
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            logger.debug("Recuperate " + text.format(listaLong.size()) + " pagine da categoriaService.findPageids() in " + date.deltaText(inizio));
+            log.info("Recuperata una lista di " + text.format(listaLong.size()) + " pageid da categoriaService.findAllPageids() in " + date.deltaText(inizio));
+            logger.debug("Recuperate " + text.format(listaLong.size()) + " pagine da categoriaService.findAllPageids() in " + date.deltaText(inizio));
         }// end of if cycle
+
         return listaLong;
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
+     * <p>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<String> findAllTitles() {
+        ArrayList<String> listaString = new ArrayList<>();
+        List<? extends AEntity> listaPagine = null;
+        long inizio = System.currentTimeMillis();
+        int size = pref.getInt(MONGO_PAGE_LIMIT);
+        Sort sort = new Sort(Sort.Direction.ASC, "pageid");
+
+        for (int k = 0; k < array.numCicli(count(), size); k++) {
+            try { // prova ad eseguire il codice
+                listaPagine = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Categoria.class);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
+
+            for (AEntity entity : listaPagine) {
+                listaString.add(((Categoria) entity).title);
+            }// end of for cycle
+
+            if (pref.isBool(FlowCost.USA_DEBUG)) {
+                log.info("Debug. Recuperate " + text.format(listaString.size()) + " pagine da categoriaService.findAllTitles()");
+            }// end of if cycle
+        }// end of for cycle
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            log.info("Recuperata una lista di " + text.format(listaString.size()) + " title da categoriaService.findAllTitles() in " + date.deltaText(inizio));
+            logger.debug("Recuperate " + text.format(listaString.size()) + " pagine da categoriaService.findAllTitles() in " + date.deltaText(inizio));
+        }// end of if cycle
+
+        return listaString;
     }// end of method
 
 

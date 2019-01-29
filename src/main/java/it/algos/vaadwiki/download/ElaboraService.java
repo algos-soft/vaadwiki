@@ -50,7 +50,7 @@ public class ElaboraService extends ABioService {
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
      */
     public void esegueAll() {
-        ArrayList<Long> lista = bioService.findPageids();
+        ArrayList<Long> lista = bioService.findAllPageids();
 
         if (array.isValid(lista)) {
             esegue(lista);

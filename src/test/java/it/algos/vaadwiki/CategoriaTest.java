@@ -1,7 +1,6 @@
 package it.algos.vaadwiki;
 
-import it.algos.vaadflow.application.StaticContextAccessor;
-import it.algos.vaadwiki.application.WikiCost;
+import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadwiki.modules.categoria.Categoria;
 import it.algos.vaadwiki.modules.categoria.CategoriaService;
 import it.algos.wiki.Api;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
@@ -40,6 +38,9 @@ public class CategoriaTest extends ATest {
     @InjectMocks
     public CategoriaService categoriaService;
 
+    @InjectMocks
+    public ADateService dateService;
+
 //    @InjectMocks
 //    protected WikiLogin wikiLogin;
 
@@ -47,7 +48,7 @@ public class CategoriaTest extends ATest {
     public RequestWikiCat requestCat;
 
 
-//    private String titleCategoria = "Attori statunitensi";
+    //    private String titleCategoria = "Attori statunitensi";
 //private String titleCategoria = "Nati nel 1985";
 //private String titleCategoria = "Nati nel 1942";
 //private String titleCategoria = "Nati nel 1435";
@@ -57,7 +58,7 @@ public class CategoriaTest extends ATest {
 //private String titleCategoria = "Nati nel 1885";
     private String titleCategoria = "Nati nel 1895";
 
-//    private int previstoSizeAttoriStatunitensi = 7843;
+    //    private int previstoSizeAttoriStatunitensi = 7843;
 //private int previstoSizeAttoriStatunitensi = 4616;
 //private int previstoSizeAttoriStatunitensi = 2175;
 //private int previstoSizeAttoriStatunitensi = 27;
@@ -75,13 +76,14 @@ public class CategoriaTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(api);
         MockitoAnnotations.initMocks(categoriaService);
+        MockitoAnnotations.initMocks(dateService);
         MockitoAnnotations.initMocks(requestCat);
-        requestCat.wikiLogin=new WikiLogin("Gacbot@Gacbot", "tftgv0vhl16c0qnmfdqide3jqdp1i5m7");
+        requestCat.wikiLogin = new WikiLogin("Gacbot@Gacbot", "tftgv0vhl16c0qnmfdqide3jqdp1i5m7");
         requestCat.inizia();
     }// end of method
 
 
-    @Test
+        @Test
     public void download() {
         ArrayList<WrapCat> listaWrap = null;
         previstoIntero = previstoSizeAttoriStatunitensi;
@@ -93,5 +95,7 @@ public class CategoriaTest extends ATest {
         ottenutoIntero = listaWrap.size();
         assertEquals(previstoIntero, ottenutoIntero);
     }// end of single test
+
+
 
 }// end of class
