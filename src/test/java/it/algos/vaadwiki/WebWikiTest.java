@@ -1,15 +1,12 @@
 package it.algos.vaadwiki;
 
-import it.algos.wiki.Page;
 import it.algos.wiki.web.*;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.context.support.StaticApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,7 +31,7 @@ public class WebWikiTest extends ATest {
     protected AQueryHTTPS aQueryHTTPS;
 
     @InjectMocks
-    protected AQueryGet aQueryGet;
+    protected AQueryRaw aQueryRaw;
 
     @InjectMocks
     protected AQueryPage aQueryPage;
@@ -58,7 +55,7 @@ public class WebWikiTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(aQueryHTTP);
         MockitoAnnotations.initMocks(aQueryHTTPS);
-        MockitoAnnotations.initMocks(aQueryGet);
+        MockitoAnnotations.initMocks(aQueryRaw);
         MockitoAnnotations.initMocks(aQueryPage);
         MockitoAnnotations.initMocks(aQueryVoce);
         MockitoAnnotations.initMocks(aQueryBio);
@@ -108,7 +105,7 @@ public class WebWikiTest extends ATest {
     public void provaWiki() {
         String titoloWiki = "Sarmato";
 
-        ottenuto = aQueryGet.urlRequest(titoloWiki);
+        ottenuto = aQueryRaw.urlRequest(titoloWiki);
         assertTrue(ottenuto.length() > 0);
     }// end of single test
 
@@ -117,54 +114,54 @@ public class WebWikiTest extends ATest {
     public void provaWiki2() {
         String titoloWiki = "Neal Ascherson";
 
-        ottenuto = aQueryGet.urlRequest(titoloWiki);
+        ottenuto = aQueryRaw.urlRequest(titoloWiki);
         assertTrue(ottenuto.length() > 0);
     }// end of single test
 
 
-    @Test
-    public void provaWikiPage() {
-        String titoloWiki = "Sarmato";
-
-        Page page = aQueryPage.crea(titoloWiki);
-        assertTrue(page.isValida());
-    }// end of single test
-
-
-    @Test
-    public void provaWikiVoce() {
-        String titoloWiki = "Billund";
-        String previsto = "{{Divisione amministrativa\n|Nome = Billund";
-
-        contenuto = aQueryVoce.urlRequest(titoloWiki);
-        assertTrue(contenuto.length() > 0);
-        assertTrue(contenuto.startsWith(previsto));
-    }// end of single test
-
-
-    @Test
-    public void provaWikiTemplateBio() {
-        String titoloWiki = "Neal Ascherson";
-        String previsto = "{{Bio\n|Nome = Neal\n";
-
-        String contenuto = aQueryBio.urlRequest(titoloWiki);
-        assertTrue(contenuto.length() > 0);
-        assertTrue(contenuto.startsWith(previsto));
-
-
-        String contenuto2 = new AQueryBio().urlRequest(titoloWiki);
-        assertTrue(contenuto2.length() > 0);
-        assertTrue(contenuto2.startsWith(previsto));
-
-
-        String contenuto3 = appContext.getBean(AQueryBio.class).urlRequest(titoloWiki);
-        assertTrue(contenuto3.length() > 0);
-    }// end of single test
-
-
-    @Test
-    public void provaLogin() {
-        aQueryLogin.urlRequest();
-    }// end of single test
+//    @Test
+//    public void provaWikiPage() {
+//        String titoloWiki = "Sarmato";
+//
+//        Page page = aQueryPage.crea(titoloWiki);
+//        assertTrue(page.isValida());
+//    }// end of single test
+//
+//
+//    @Test
+//    public void provaWikiVoce() {
+//        String titoloWiki = "Billund";
+//        String previsto = "{{Divisione amministrativa\n|Nome = Billund";
+//
+//        contenuto = aQueryVoce.urlRequest(titoloWiki);
+//        assertTrue(contenuto.length() > 0);
+//        assertTrue(contenuto.startsWith(previsto));
+//    }// end of single test
+//
+//
+//    @Test
+//    public void provaWikiTemplateBio() {
+//        String titoloWiki = "Neal Ascherson";
+//        String previsto = "{{Bio\n|Nome = Neal\n";
+//
+//        String contenuto = aQueryBio.urlRequest(titoloWiki);
+//        assertTrue(contenuto.length() > 0);
+//        assertTrue(contenuto.startsWith(previsto));
+//
+//
+//        String contenuto2 = new AQueryBio().urlRequest(titoloWiki);
+//        assertTrue(contenuto2.length() > 0);
+//        assertTrue(contenuto2.startsWith(previsto));
+//
+//
+//        String contenuto3 = appContext.getBean(AQueryBio.class).urlRequest(titoloWiki);
+//        assertTrue(contenuto3.length() > 0);
+//    }// end of single test
+//
+//
+//    @Test
+//    public void provaLogin() {
+//        aQueryLogin.urlRequest();
+//    }// end of single test
 
 }// end of class

@@ -180,14 +180,6 @@ public class BioViewList extends AttNazProfCatViewList {
         ((BioViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
-    @PostConstruct
-    protected void pippo() {
-        String contenuto3 = appContext.getBean(AQueryBio.class).urlRequest("Neal Ascherson");
-        int a=87;
-
-        String contenuto4 = appContext.getBean(AQueryBio.class,"Neal Ascherson").response();
-        int aww=87;
-    }// end of Spring constructor
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse

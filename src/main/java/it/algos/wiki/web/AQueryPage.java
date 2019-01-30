@@ -5,8 +5,7 @@ import it.algos.wiki.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import java.net.URLEncoder;
+import org.springframework.stereotype.Component;
 
 /**
  * Project vaadwiki
@@ -16,7 +15,8 @@ import java.net.URLEncoder;
  * Time: 14:36
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Component("AQueryPage")
 @Slf4j
 public class AQueryPage extends AQueryGet {
 
@@ -27,20 +27,52 @@ public class AQueryPage extends AQueryGet {
 
 
     /**
-     * Request di tipo GET
-     * Accetta SOLO un titoloWiki (indirizzo) di pagine wiki
+     * Costruttore base senza parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Può essere usato anche per creare l'istanza come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(AQueryxxx.class) <br>
+     */
+    public AQueryPage() {
+        super();
+    }// end of constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(AQueryxxx.class, urlRequest) <br>
+     * Usa: appContext.getBean(AQueryxxx.class, urlRequest).urlResponse() <br>
      *
-     * @param titoloWiki della pagina
+     * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
+     */
+    public AQueryPage(String titoloWiki) {
+        super(titoloWiki);
+    }// end of constructor
+
+
+    /**
+     * Page della response
      *
      * @return contenuto completo (json) della pagina (con i metadati mediawiki)
      */
-    public Page crea(String titoloWiki) {
+    public Page pageResponse() {
+        return pageResponse(urlDomain);
+    }// end of method
+
+
+    /**
+     * Page della response
+     *
+     * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
+     *
+     * @return contenuto completo (json) della pagina (con i metadati mediawiki)
+     */
+    public Page pageResponse(String titoloWiki) {
         Page page = null;
         String contenutoCompletoPaginaWebInFormatoJSON = "";
 
         if (text.isValid(titoloWiki)) {
             try { // prova ad eseguire il codice
-                titoloWiki = URLEncoder.encode(titoloWiki, "UTF-8");
                 contenutoCompletoPaginaWebInFormatoJSON = super.urlRequest(titoloWiki);
                 page = new Page(contenutoCompletoPaginaWebInFormatoJSON);
             } catch (Exception unErrore) { // intercetta l'errore
@@ -54,16 +86,19 @@ public class AQueryPage extends AQueryGet {
 
     /**
      * Controlla la stringa della request
-     * Inserisce un tag specifico
-     * Codifica i caratteri
+     * <p>
+     * Controlla che sia valida <br>
+     * Inserisce un tag specifico iniziale <br>
+     * In alcune query (AQueryWiki e sottoclassi) codifica i caratteri del wikiTitle <br>
      *
-     * @param titoloWiki della pagina
+     * @param titoloWikiGrezzo della pagina (necessita di codifica per eliminare gli spazi vuoti) usato nella urlRequest
      *
-     * @return stringa della request modificata
+     * @return stringa del titolo completo da inviare con la request
      */
     @Override
-    public String fixUrlDomain(String titoloWiki) {
-        return titoloWiki.startsWith(TAG_PAGE) ? titoloWiki : TAG_PAGE + titoloWiki;
+    public String fixUrlDomain(String titoloWikiGrezzo) {
+        String titoloWikiCodificato = super.fixUrlDomain(titoloWikiGrezzo);
+        return titoloWikiCodificato.startsWith(TAG_PAGE) ? titoloWikiCodificato : TAG_PAGE + titoloWikiCodificato;
     } // fine del metodo
 
 }// end of class

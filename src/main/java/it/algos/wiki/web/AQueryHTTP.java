@@ -2,6 +2,7 @@ package it.algos.wiki.web;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -13,7 +14,7 @@ import org.springframework.context.annotation.Scope;
  * Time: 14:39
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class AQueryHTTP extends AQueryWeb {
 
@@ -25,9 +26,35 @@ public class AQueryHTTP extends AQueryWeb {
 
 
     /**
+     * Costruttore base senza parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Può essere usato anche per creare l'istanza come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(AQueryxxx.class) <br>
+     */
+    public AQueryHTTP() {
+        super();
+    }// end of constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(AQueryxxx.class, urlRequest) <br>
+     * Usa: appContext.getBean(AQueryxxx.class, urlRequest).urlResponse() <br>
+     *
+     * @param urlDomain indirizzo web usato nella urlRequest
+     */
+    public AQueryHTTP(String urlDomain) {
+        super(urlDomain);
+    }// end of constructor
+
+
+    /**
      * Controlla la stringa della request
-     * Inserisce un tag specifico
-     * Codifica i caratteri
+     * <p>
+     * Controlla che sia valida <br>
+     * Inserisce un tag specifico iniziale <br>
+     * In alcune query (AQueryWiki e sottoclassi) codifica i caratteri del wikiTitle <br>
      *
      * @param urlDomain stringa della request originale
      *
@@ -35,7 +62,7 @@ public class AQueryHTTP extends AQueryWeb {
      */
     @Override
     public String fixUrlDomain(String urlDomain) {
-        return urlDomain.startsWith(TAG_INIZIALE) ? urlDomain : TAG_INIZIALE + urlDomain;
+        return text.isValid(urlDomain) ? urlDomain.startsWith(TAG_INIZIALE) ? urlDomain : TAG_INIZIALE + urlDomain : "";
     } // fine del metodo
 
 }// end of class

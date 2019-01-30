@@ -11,17 +11,29 @@ import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
+import it.algos.wiki.web.AQueryBio;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
+import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Project vaadwiki
@@ -36,12 +48,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = WikiApplication.class)
 
-
 //@ExtendWith(MockitoExtension.class)
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 //@Tag("didascalia")
 //@DisplayName("Test per le didascalie")
-public class DidascaliaTest extends ATest {
+public class DidascaliaTest extends ATest  {
+
 
 
     @InjectMocks
@@ -173,6 +185,8 @@ public class DidascaliaTest extends ATest {
             System.out.println(dida.name() + ": " + ottenuto);
         }// end of for cycle
         System.out.println("*************");
+
     }// end of single test
+
 
 }// end of class

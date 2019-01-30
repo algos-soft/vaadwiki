@@ -20,9 +20,12 @@ import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
+import it.algos.wiki.Page;
+import it.algos.wiki.web.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
@@ -56,6 +59,9 @@ public class UtilityView extends VerticalLayout {
     public static final String wikiPagineDidascalie = "Progetto:Biografie/Didascalie";
 
     @Autowired
+    protected ApplicationContext appContext;
+
+    @Autowired
     private Api api;
 
     @Autowired
@@ -82,6 +88,7 @@ public class UtilityView extends VerticalLayout {
 
         this.add(creaTitolo());
         this.add(creaDidascalie());
+        this.add(creaTestQuery());
     }// end of method
 
 
@@ -93,14 +100,14 @@ public class UtilityView extends VerticalLayout {
 
     public Component creaDidascalie() {
         HorizontalLayout layout = new HorizontalLayout();
-        layout.setMargin(true);
+        layout.setMargin(false);
         layout.setSpacing(true);
 
-        Label label = new Label("creaDidascalie");
+        Label label = new Label("Didascalie");
 
         Button buttonTest = new Button("Test", new Icon(VaadinIcon.REFRESH));
         buttonTest.getElement().setAttribute("theme", "secondary");
-        buttonTest.addClickListener(e -> esegueTest());
+        buttonTest.addClickListener(e -> esegueTestDidascalie());
 
         Button buttonUploadTest = new Button("WikiTest", new Icon(VaadinIcon.REFRESH));
         buttonUploadTest.getElement().setAttribute("theme", "secondary");
@@ -119,10 +126,26 @@ public class UtilityView extends VerticalLayout {
     }// end of method
 
 
+    public Component creaTestQuery() {
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.setMargin(false);
+        layout.setSpacing(true);
+
+        Label label = new Label("Query");
+
+        Button buttonTest = new Button("Test", new Icon(VaadinIcon.REFRESH));
+        buttonTest.getElement().setAttribute("theme", "secondary");
+        buttonTest.addClickListener(e -> esegueTestQuery());
+
+        layout.add(label, buttonTest);
+        return layout;
+    }// end of method
+
+
     /**
      * Test con uscita sul terminale di Idea
      */
-    public void esegueTest() {
+    public void esegueTestDidascalie() {
         log.info("");
         log.info("Algos");
         log.info("");
@@ -165,6 +188,96 @@ public class UtilityView extends VerticalLayout {
     public void esegueView() {
         String link = "\"" + PATH_WIKI + wikiPagineDidascalie + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
+    /**
+     * Test con uscita sul terminale di Idea
+     */
+    public void esegueTestQuery() {
+        String urlDomain = "";
+        String wikiTitle = "";
+        String urlResponse = "";
+        AQueryPage queryPage;
+        Page page;
+
+        log.info("");
+        log.info("Algos");
+        log.info("Integration test per alcune query");
+        log.info("");
+
+        urlResponse = appContext.getBean(AQueryHTTP.class).urlRequest(urlDomain);
+        log.info("AQueryHTTP: " + urlDomain + " - Response: " + (text.isEmpty(urlResponse) ? "OK, response nulla" : "Qualcosa non ha funzionato"));
+
+        urlDomain = "quattroprovince.it";
+        urlResponse = appContext.getBean(AQueryHTTP.class).urlRequest(urlDomain);
+        log.info("AQueryHTTP: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri" : "No buono"));
+
+        urlDomain = "quattroprovince.it";
+        urlResponse = appContext.getBean(AQueryHTTP.class, urlDomain).urlResponse();
+        log.info("AQueryHTTP: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con urlDomain" : "No buono"));
+
+        urlDomain = "eff.org/https-everywhere";
+        urlResponse = appContext.getBean(AQueryHTTPS.class).urlRequest(urlDomain);
+        log.info("AQueryHTTPS: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri" : "No buono"));
+
+        urlDomain = "eff.org/https-everywhere";
+        urlResponse = appContext.getBean(AQueryHTTPS.class, urlDomain).urlResponse();
+        log.info("AQueryHTTPS: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con urlDomain" : "No buono"));
+
+        wikiTitle = "Sarmato";
+        urlResponse = appContext.getBean(AQueryRaw.class).urlRequest(wikiTitle);
+        log.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
+
+        wikiTitle = "Sarmato";
+        urlResponse = appContext.getBean(AQueryRaw.class, wikiTitle).urlResponse();
+        log.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
+
+        wikiTitle = "Neal Ascherson";
+        urlResponse = appContext.getBean(AQueryRaw.class).urlRequest(wikiTitle);
+        log.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
+
+        wikiTitle = "Neal Ascherson";
+        urlResponse = appContext.getBean(AQueryRaw.class, wikiTitle).urlResponse();
+        log.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
+
+        wikiTitle = "Neal Ascherson";
+        queryPage = (AQueryPage) appContext.getBean("AQueryPage");
+        if (queryPage != null) {
+            page = queryPage.pageResponse(wikiTitle);
+            if (page != null) {
+                log.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore senza parametri - Costruita l'istanza AQueryPage con la Page");
+            } else {
+                log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
+            }// end of if/else cycle
+        } else {
+            log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la entity AQueryPage");
+        }// end of if/else cycle
+
+        wikiTitle = "Neal Ascherson";
+        queryPage = (AQueryPage) appContext.getBean("AQueryPage", wikiTitle);
+        if (queryPage != null) {
+            page = queryPage.pageResponse();
+            if (page != null) {
+                log.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore con wikiTitle - Costruita l'istanza AQueryPage con la Page");
+            } else {
+                log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
+            }// end of if/else cycle
+        } else {
+            log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la entity AQueryPage");
+        }// end of if/else cycle
+
+        wikiTitle = "Neal Ascherson";
+        page = ((AQueryPage) appContext.getBean("AQueryPage", wikiTitle)).pageResponse();
+        if (page != null) {
+            log.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore con wikiTitle - Costruita l'istanza AQueryPage con la Page");
+        } else {
+            log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
+        }// end of if/else cycle
+
+        wikiTitle = "Neal Ascherson";
+        urlResponse = appContext.getBean(AQueryVoce.class, wikiTitle).urlResponse();
+        log.info("AQueryVoce: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
     }// end of method
 
 

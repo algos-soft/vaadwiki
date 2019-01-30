@@ -4,10 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import java.net.URLEncoder;
-
-import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import org.springframework.stereotype.Component;
 
 /**
  * Project vaadwiki
@@ -18,29 +15,9 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Component("AQueryRaw")
 @Slf4j
-public abstract class AQueryWiki extends AQuery {
-
-    /**
-     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'urlDomain' completo
-     */
-    protected final static String TAG_WIKI = "https://it.wikipedia.org/wiki/";
-
-    /**
-     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'urlDomain' completo
-     */
-    protected final static String TAG_API = "https://it.wikipedia.org/w/api.php?";
-
-    /**
-     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'urlDomain' completo
-     */
-    protected final static String TAG_BASE = TAG_API + "format=json&formatversion=2&";
-
-    /**
-     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'urlDomain' completo
-     */
-    protected final static String TAG_QUERY = TAG_BASE + "action=query&";
-
+public class AQueryRaw extends AQueryGet {
 
 
     /**
@@ -49,7 +26,7 @@ public abstract class AQueryWiki extends AQuery {
      * Può essere usato anche per creare l'istanza come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(AQueryxxx.class) <br>
      */
-    public AQueryWiki() {
+    public AQueryRaw() {
         super();
     }// end of constructor
 
@@ -62,7 +39,7 @@ public abstract class AQueryWiki extends AQuery {
      *
      * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
      */
-    public AQueryWiki(String titoloWiki) {
+    public AQueryRaw(String titoloWiki) {
         super(titoloWiki);
     }// end of constructor
 
@@ -80,13 +57,8 @@ public abstract class AQueryWiki extends AQuery {
      */
     @Override
     public String fixUrlDomain(String titoloWiki) {
-        try { // prova ad eseguire il codice
-            return text.isValid(titoloWiki) ? URLEncoder.encode(titoloWiki, ENCODE) : VUOTA;
-        } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
-        }// fine del blocco try-catch
-
-        return titoloWiki;
+        return titoloWiki.startsWith(TAG_WIKI) ? titoloWiki : TAG_WIKI + titoloWiki;
     } // fine del metodo
+
 
 }// end of class

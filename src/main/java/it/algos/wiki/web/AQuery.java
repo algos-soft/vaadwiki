@@ -3,6 +3,7 @@ package it.algos.wiki.web;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.service.ATextService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -12,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
@@ -24,11 +26,14 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * Legge (scrive) una pagina internet di tipo HTTP oppure di tipo HTTPS.
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public abstract class AQuery {
 
-    protected static String ENCODE = "UTF-8";
+    /**
+     * Costante di codifica testo. Sia per il titolo del urlDomain sia per il testo del POST <br>
+     */
+    protected final static String ENCODE = "UTF-8";
 
     /**
      * Service (@Scope = 'singleton') recuperato come istanza dalla classe e usato come libreria <br>
@@ -36,52 +41,74 @@ public abstract class AQuery {
      */
     public ATextService text = ATextService.getInstance();
 
-//    /**
-//     * Istanza (@Scope = 'singleton') inietta da Spring in automatico <br>
-//     * Metodo più semplice. Non si possono passare parametri <br>
-//     * Viene iniettata nel ciclo di 'init()' di questa classe ed è quindi disponibile solo DOPO il ciclo <br>
-//     * <p>
-//     * Se serve prima, sempre senza possibilità di passare parametri, occorre: <br>
-//     * 1) dichiararla nel costruttore  <br>
-//     * 2) spostare il suo uso in un metodo @PostConstruct  <br>
-//     * 3) dichiararla con Xxx.getInstance(), ma la classe Xxx DEVE essere un istanza esplicita di Singleton Class <br>
-//     * 4) dichiararla (sconsigliato per l'uso dei Test) con StaticContextAccessor.getBean(Xxx.class) <br>
-//     * <p>
-//     * Property pubblic per poterla usare nei Test <br>
-//     */
-//    @Autowired
-//    public UrlGetConnection urlGetConnection;
-//
-//    /**
-//     * Istanza (@Scope = 'singleton') inietta da Spring in automatico <br>
-//     * Metodo più semplice. Non si possono passare parametri <br>
-//     * Viene iniettata nel ciclo di 'init()' di questa classe ed è quindi disponibile solo DOPO il ciclo <br>
-//     * <p>
-//     * Se serve prima, sempre senza possibilità di passare parametri, occorre: <br>
-//     * 1) dichiararla nel costruttore  <br>
-//     * 2) spostare il suo uso in un metodo @PostConstruct  <br>
-//     * 3) dichiararla con Xxx.getInstance(), ma la classe Xxx DEVE essere un istanza esplicita di Singleton Class <br>
-//     * 4) dichiararla (sconsigliato per l'uso dei Test) con StaticContextAccessor.getBean(Xxx.class) <br>
-//     * <p>
-//     * Property pubblic per poterla usare nei Test <br>
-//     */
-//    @Autowired
-//    public UrlRequest urlRequest;
-
-
+    /**
+     * Flag per le request che usano il POST <br>
+     */
     protected boolean isUsaPost = false;
 
+    /**
+     * Flag per le request che scaricano e memorizzano i cookies ricevuti nella connessione <br>
+     */
     protected boolean isDownloadCookies = false;
 
+    /**
+     * Flag per le request che hanno bisogno di inviare i cookies nella request <br>
+     */
     protected boolean isUploadCookies = false;
+
+    /**
+     * Indirizzo web usato nella urlRequest <br>
+     */
+    protected String urlDomain;
 
 
     /**
-     * Request principale
-     * Quella base usa solo il GET
-     * In alcune request (non tutte) si aggiunge anche il POST
+     * Costruttore base senza parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Può essere usato anche per creare l'istanza come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(AQueryxxx.class) <br>
+     */
+    public AQuery() {
+    }// end of constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(AQueryxxx.class, urlRequest) <br>
+     * Usa: appContext.getBean(AQueryxxx.class, urlRequest).urlResponse() <br>
      *
-     * @param urlDomain stringa della request
+     * @param urlDomain indirizzo web usato nella urlRequest
+     */
+    public AQuery(String urlDomain) {
+        this.urlDomain = urlDomain;
+    }// end of constructor
+
+
+    /**
+     * Contenuto della response
+     * La response viene sempre elaborata per estrarre le informazioni richieste <br>
+     *
+     * @return response
+     */
+    public String urlResponse() {
+        return urlRequest(urlDomain);
+    }// end of method
+
+
+    /**
+     * Request principale <br>
+     * <p>
+     * La stringa del urlDomain per la request viene elaborata <br>
+     * Si crea la connessione <br>
+     * La request base usa solo il GET <br>
+     * In alcune request (non tutte) si aggiunge anche il POST <br>
+     * Alcune request (non tutte) scaricano e memorizzano i cookies ricevuti nella connessione <br>
+     * Alcune request (non tutte) hanno bisogno di inviare i cookies nella request <br>
+     * Si invia la connessione <br>
+     * La response viene sempre elaborata per estrarre le informazioni richieste <br>
+     *
+     * @param urlDomain indirizzo web usato nella urlRequest
      */
     public String urlRequest(String urlDomain) {
         String risposta = "";
@@ -95,7 +122,7 @@ public abstract class AQuery {
             urlConn = this.creaGetConnection(urlDomain);
 
 
-            if (isUploadCookies) {
+            if (urlConn != null && isUploadCookies) {
                 this.uploadCookies(urlConn);
             }// end of if cycle
 
@@ -115,10 +142,14 @@ public abstract class AQuery {
 
 
             //--crea una connessione di tipo POST, se richiesta
-            this.creaPostConnection(urlConn);
+            if (urlConn != null) {
+                this.creaPostConnection(urlConn);
+            }// end of if cycle
 
             //--Invia la request (GET oppure anche POST)
-            risposta = sendRequest(urlConn);
+            if (urlConn != null) {
+                risposta = sendRequest(urlConn);
+            }// end of if cycle
 
 //            urlConn = urlGetConnection.esegue(urlDomain);
 //            risposta = urlRequest.esegue(urlConn);
@@ -135,12 +166,14 @@ public abstract class AQuery {
 
     /**
      * Controlla la stringa della request
-     * Inserisce un tag specifico
-     * Codifica i caratteri
+     * <p>
+     * Controlla che sia valida <br>
+     * Inserisce un tag specifico iniziale <br>
+     * In alcune query (AQueryWiki e sottoclassi) codifica i caratteri del wikiTitle <br>
      *
      * @param urlDomain stringa della request originale
      *
-     * @return stringa della request modificata0
+     * @return stringa della request modificata
      */
     public String fixUrlDomain(String urlDomain) {
         return urlDomain;
@@ -177,7 +210,7 @@ public abstract class AQuery {
      * @param urlConn connessione con la request
      */
     private void creaPostConnection(URLConnection urlConn) throws Exception {
-        if (isUsaPost) {
+        if (urlConn != null && isUsaPost) {
             PrintWriter out = new PrintWriter(urlConn.getOutputStream());
             out.print(elaboraPost());
             out.close();
@@ -210,6 +243,10 @@ public abstract class AQuery {
         BufferedReader readBuffer;
         StringBuilder textBuffer = new StringBuilder();
         String stringa;
+
+        if (urlConn == null) {
+            return VUOTA;
+        }// end of if cycle
 
         input = urlConn.getInputStream();
         inputReader = new InputStreamReader(input, "UTF8");

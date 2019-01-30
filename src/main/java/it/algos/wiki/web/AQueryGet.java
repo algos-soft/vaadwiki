@@ -4,33 +4,43 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: lun, 28-gen-2019
- * Time: 14:36
+ * Date: mer, 30-gen-2019
+ * Time: 12:01
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Component("AQueryGet")
 @Slf4j
-public class AQueryGet extends AQueryWiki {
+public abstract class AQueryGet extends AQueryWiki {
+
+    /**
+     * Costruttore base senza parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Può essere usato anche per creare l'istanza come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(AQueryxxx.class) <br>
+     */
+    public AQueryGet() {
+        super();
+    }// end of constructor
 
 
     /**
-     * Controlla la stringa della request
-     * Inserisce un tag specifico
-     * Codifica i caratteri
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(AQueryxxx.class, urlRequest) <br>
+     * Usa: appContext.getBean(AQueryxxx.class, urlRequest).urlResponse() <br>
      *
-     * @param titoloWiki della pagina
-     *
-     * @return stringa della request modificata
+     * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
      */
-    @Override
-    public String fixUrlDomain(String titoloWiki) {
-        return titoloWiki.startsWith(TAG_WIKI) ? titoloWiki : TAG_WIKI + titoloWiki;
-    } // fine del metodo
+    public AQueryGet(String titoloWiki) {
+        super(titoloWiki);
+    }// end of constructor
 
 
 }// end of class
