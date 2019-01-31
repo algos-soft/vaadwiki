@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import static it.algos.wiki.mediawiki.ReadLogin.FIRST_NEW_TOKEN;
 import static it.algos.wiki.mediawiki.ReadLogin.LOGIN_TOKEN;
+import static it.algos.wiki.mediawiki.ReadWiki.SESSION_TOKEN;
 
 /**
  * Libreria
@@ -868,17 +869,48 @@ public abstract class LibWiki {
      * @return logintoken
      */
     public static String getLoginToken(HashMap<String, Object> mappa) {
-        String logintoken = "";
+        String loginToken = "";
         JSONObject obj;
 
         if (mappa.get(FIRST_NEW_TOKEN) != null && mappa.get(FIRST_NEW_TOKEN) instanceof JSONObject) {
             obj = (JSONObject) mappa.get(FIRST_NEW_TOKEN);
             if (obj.get(LOGIN_TOKEN) != null && obj.get(LOGIN_TOKEN) instanceof String) {
-                logintoken = (String) obj.get(LOGIN_TOKEN);
+                loginToken = (String) obj.get(LOGIN_TOKEN);
             }// fine del blocco if
         }// fine del blocco if
 
-        return logintoken;
+        return loginToken;
+    } // fine del metodo
+
+
+    /**
+     * Restituisce il itWikiSession dalla mappa (se esiste)
+     *
+     * @param mappa standard (valori String)
+     *
+     * @return sessionToken
+     */
+    public static String getSessionToken(LinkedHashMap<String, Object> mappa) {
+        return getToken(mappa,SESSION_TOKEN);
+    } // fine del metodo
+
+
+    /**
+     * Restituisce un valore dalla mappa per la chiave indicata (se esiste)
+     *
+     * @param mappa standard (valori String)
+     * @param keyTag per individuare il valore della mappa
+     *
+     * @return sessionToken
+     */
+    public static String getToken(LinkedHashMap<String, Object> mappa,String keyTag) {
+        String sessionToken = "";
+
+        if (mappa.get(keyTag) != null && mappa.get(keyTag) instanceof String) {
+            sessionToken = (String) mappa.get(keyTag);
+        }// fine del blocco if
+
+        return sessionToken;
     } // fine del metodo
 
 
@@ -3759,6 +3791,97 @@ public abstract class LibWiki {
         }// fine del blocco if
 
         return stringaOut.trim();
+    } // fine del metodo
+
+
+    /**
+     * Estrae un valore da una mappa se esiste la chiave
+     *
+     * @param mappa in ingresso
+     * @param key   richiesta
+     *
+     * @return valore della singola chiave
+     */
+    public static Object getValue(HashMap<String, Object> mappa, String key) {
+        Object value = null;
+
+        if (mappa != null && key != null && key.length() > 0) {
+            if (mappa.containsKey(key)) {
+                if (mappa.get(key) != null) {
+                    value = mappa.get(key);
+                }// end of if cycle
+            }// end of if cycle
+        }// fine del blocco if
+
+        return value;
+    } // fine del metodo
+
+
+    /**
+     * Estrae un valore da una mappa se esiste la chiave
+     *
+     * @param mappa in ingresso
+     * @param key   richiesta
+     *
+     * @return valore stringa della singola chiave
+     */
+    public static String getValueStr(HashMap<String, Object> mappa, String key) {
+        String value = "";
+
+        if (mappa != null && key != null && key.length() > 0) {
+            if (mappa.containsKey(key)) {
+                if (mappa.get(key) != null && mappa.get(key) instanceof String) {
+                    value = (String) mappa.get(key);
+                }// end of if cycle
+            }// end of if cycle
+        }// fine del blocco if
+
+        return value;
+    } // fine del metodo
+
+
+    /**
+     * Estrae un valore da una mappa se esiste la chiave
+     *
+     * @param mappa in ingresso
+     * @param key   richiesta
+     *
+     * @return valore long della singola chiave
+     */
+    public static long getValueLong(HashMap<String, Object> mappa, String key) {
+        long value = 0L;
+
+        if (mappa != null && key != null && key.length() > 0) {
+            if (mappa.containsKey(key)) {
+                if (mappa.get(key) != null && mappa.get(key) instanceof Long) {
+                    value = (long) mappa.get(key);
+                }// end of if cycle
+            }// end of if cycle
+        }// fine del blocco if
+
+        return value;
+    } // fine del metodo
+
+
+    /**
+     * Controlla se la responde di un login contiene la conferma
+     *
+     * @param urlResponse in ingresso
+     *
+     * @return true se il login è confermato
+     */
+    public static boolean isLoginValid(String urlResponse) {
+        boolean loginValido = false;
+        String key = "result";
+        String previsto = "Success";
+        HashMap<String, Object> mappa = creaMappaLogin(urlResponse);
+        String ottenuto = getValueStr(mappa, key);
+
+        if (ottenuto.equals(previsto)) {
+            loginValido = true;
+        }// end of if cycle
+
+        return loginValido;
     } // fine del metodo
 
 

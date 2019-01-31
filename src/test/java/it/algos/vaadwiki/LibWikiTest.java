@@ -3,15 +3,14 @@ package it.algos.vaadwiki;
 
 import it.algos.wiki.Api;
 import it.algos.wiki.LibWiki;
-import it.algos.wiki.request.RequestWikiReadPages;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -146,6 +145,27 @@ public class LibWikiTest extends ATest {
         assertEquals(previsto, ottenuto);
     }// end of single test
 
+
+    @Test
+    public void jSonArray() {
+        JSONObject objectAll;
+        JSONArray arrayPages;
+        HashMap<String, Object> mappa = null;
+
+        sorgente = "<?xml version=\"1.0\"?><api><login result=\"Success\" lguserid=\"124123\" lgusername=\"Biobot\" /></api>";
+        sorgente = "{\"login\":{\"result\":\"Success\",\"lguserid\":124123,\"lgusername\":\"Biobot\"}}";
+
+//        objectAll = (JSONObject) JSONValue.parse(sorgente);
+
+        mappa = LibWiki.creaMappaLogin(sorgente);
+//        arrayPages = LibWiki.getArrayPagesJSON(sorgente);
+
+        ottenuto = LibWiki.getValueStr(mappa, "result");
+        Long ottenutoLong = LibWiki.getValueLong(mappa, "lguserid");
+        ottenuto = LibWiki.getValueStr(mappa, "lgusername");
+
+        ottenutoBooleano=LibWiki.isLoginValid(sorgente);
+    }// end of single test
 
 
 }// end of class

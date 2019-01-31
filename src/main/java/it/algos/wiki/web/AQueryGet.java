@@ -13,16 +13,13 @@ import org.springframework.stereotype.Component;
  * Date: mer, 30-gen-2019
  * Time: 12:01
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Component("AQueryGet")
-@Slf4j
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class AQueryGet extends AQueryWiki {
 
     /**
      * Costruttore base senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Può essere usato anche per creare l'istanza come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(AQueryxxx.class) <br>
      */
     public AQueryGet() {

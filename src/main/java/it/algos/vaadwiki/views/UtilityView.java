@@ -21,6 +21,7 @@ import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
+import it.algos.wiki.WikiLogin;
 import it.algos.wiki.web.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,8 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_UTI;
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
 public class UtilityView extends VerticalLayout {
+    @Autowired
+    private WikiLogin wikiLogin;
 
     /**
      * Icona visibile nel menu (facoltativa)
@@ -201,6 +204,11 @@ public class UtilityView extends VerticalLayout {
         AQueryPage queryPage;
         Page page;
 
+        if (wikiLogin!=null) {
+            appContext.getBean(AQueryLogin.class,wikiLogin);
+        }// end of if cycle
+
+
         log.info("");
         log.info("Algos");
         log.info("Integration test per alcune query");
@@ -275,9 +283,22 @@ public class UtilityView extends VerticalLayout {
             log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
         }// end of if/else cycle
 
-        wikiTitle = "Neal Ascherson";
-        urlResponse = appContext.getBean(AQueryVoce.class, wikiTitle).urlResponse();
+        wikiTitle = "Riley Cooper";
+        urlResponse = ((AQueryVoce) appContext.getBean("AQueryVoce")).urlRequest(wikiTitle);
+        log.info("AQueryVoce: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
+
+        wikiTitle = "Riley Cooper";
+        urlResponse = ((AQueryVoce) appContext.getBean("AQueryVoce",wikiTitle)).urlRequest();
         log.info("AQueryVoce: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
+
+        wikiTitle = "Riley Cooper";
+        urlResponse = ((AQueryBio) appContext.getBean("AQueryBio")).urlRequest(wikiTitle);
+        log.info("AQueryBio: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
+
+        wikiTitle = "Riley Cooper";
+        urlResponse = ((AQueryBio) appContext.getBean("AQueryBio",wikiTitle)).urlRequest();
+        log.info("AQueryBio: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
+
     }// end of method
 
 

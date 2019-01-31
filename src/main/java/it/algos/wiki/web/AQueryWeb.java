@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * Project vaadwiki
@@ -13,15 +14,13 @@ import org.springframework.context.annotation.Scope;
  * Date: lun, 28-gen-2019
  * Time: 14:35
  */
-@SpringComponent
+@Component("AQueryWeb")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Slf4j
 public abstract class AQueryWeb extends AQuery {
 
     /**
      * Costruttore base senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Può essere usato anche per creare l'istanza come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(AQueryxxx.class) <br>
      */
     public AQueryWeb() {

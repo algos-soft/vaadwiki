@@ -1,17 +1,13 @@
 package it.algos.vaadwiki;
 
-import it.algos.wiki.request.RequestWikiLogin;
-import it.algos.wiki.request.RequestWikiReadPages;
+import it.algos.wiki.LibWiki;
 import it.algos.wiki.web.AQueryLogin;
-import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
+import org.json.simple.JSONArray;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import java.util.ArrayList;
 
@@ -43,10 +39,7 @@ public class WikiLoginTest extends ATest {
 
 
     @Test
-    public void prova() {
-//        domain = "https://it.wikipedia.org/w/api.php?action=query&format=json&meta=tokens&type=login";
-//        domain = "https://it.wikipedia.org/w/api.php?format=json&formatversion=2&action=login";
-
+    public void jSon() {
 
         ArrayList<Long> lista = new ArrayList<>();
         lista.add(77500987L);

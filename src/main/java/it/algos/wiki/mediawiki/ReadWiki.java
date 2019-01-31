@@ -23,6 +23,8 @@ import java.net.URLEncoder;
 @Slf4j
 public class ReadWiki extends Read {
 
+    public static final String FIRST_NEW_TOKEN = "tokens";
+    public static final String SESSION_TOKEN = "itwikiSession";
 
     /**
      * Request di tipo GET

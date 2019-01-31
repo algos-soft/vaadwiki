@@ -1,11 +1,10 @@
 package it.algos.wiki.web;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.service.ATextService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -13,7 +12,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
@@ -25,7 +25,7 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * Time: 14:35
  * Legge (scrive) una pagina internet di tipo HTTP oppure di tipo HTTPS.
  */
-@SpringComponent
+@Component("AQuery")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public abstract class AQuery {
@@ -61,11 +61,13 @@ public abstract class AQuery {
      */
     protected String urlDomain;
 
+    // ci metto tutti i cookies restituiti da URLConnection.responses
+    protected LinkedHashMap cookies;
+
 
     /**
      * Costruttore base senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Può essere usato anche per creare l'istanza come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(AQueryxxx.class) <br>
      */
     public AQuery() {
@@ -86,81 +88,84 @@ public abstract class AQuery {
 
 
     /**
-     * Contenuto della response
-     * La response viene sempre elaborata per estrarre le informazioni richieste <br>
+     * Request preliminare. Facoltativa. Può esserci in alcune sottoclassi (AQueryLogin, ...) <br>
+     * <p>
+     * La stringa urlDomain per la request viene controllata ed elaborata <br>
+     * Crea la connessione base di tipo GET <br>
+     * Invia la request senza testo POST e senza invio di cookies <br>
+     * <p>
+     * Risposta in formato testo JSON <br>
+     * Recupera i cookies allegati alla risposta e li memorizza nei parametri per poterli usare nella urlRequest <br>
+     * Dalla urlResponse recupera le info necessarie per la urlRequest successiva <br>
      *
-     * @return response
+     * @param urlDomain indirizzo web usato nella urlRequest
      */
-    public String urlResponse() {
-        return urlRequest(urlDomain);
-    }// end of method
+    public void preliminaryRequest(String urlDomain) {
+        String urlResponse = "";
+        URLConnection urlConn;
+        isDownloadCookies = true;
+
+        try { // prova ad eseguire il codice
+            urlDomain = fixUrlPreliminaryDomain(urlDomain);
+            urlConn = this.creaGetConnection(urlDomain);
+            urlResponse = sendRequest(urlConn);
+            downlodPreliminaryCookies(urlConn);
+            elaboraPreliminayResponse(urlResponse);
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
+    } // fine del metodo
 
 
     /**
      * Request principale <br>
      * <p>
-     * La stringa del urlDomain per la request viene elaborata <br>
-     * Si crea la connessione <br>
-     * La request base usa solo il GET <br>
+     * La stringa urlDomain per la request viene controllata ed elaborata <br>
+     * Crea la connessione base di tipo GET
+     * Alcune request (non tutte) hanno bisogno di inviare i cookies nella request <br>
      * In alcune request (non tutte) si aggiunge anche il POST <br>
      * Alcune request (non tutte) scaricano e memorizzano i cookies ricevuti nella connessione <br>
-     * Alcune request (non tutte) hanno bisogno di inviare i cookies nella request <br>
-     * Si invia la connessione <br>
+     * Invia la request con (eventuale) testo POST e con i cookies <br>
+     * <p>
+     * Risposta in formato testo JSON <br>
+     * Recupera i cookies allegati alla risposta e li memorizza in WikiLogin per poterli usare in query successive <br>
      * La response viene sempre elaborata per estrarre le informazioni richieste <br>
      *
      * @param urlDomain indirizzo web usato nella urlRequest
      */
     public String urlRequest(String urlDomain) {
-        String risposta = "";
+        String urlResponse = "";
         URLConnection urlConn;
 
-        //--Controlla la stringa della request
-        urlDomain = fixUrlDomain(urlDomain);
-
         try { // prova ad eseguire il codice
-            //--crea la connessione base (GET)
-            urlConn = this.creaGetConnection(urlDomain);
-
-
-            if (urlConn != null && isUploadCookies) {
-                this.uploadCookies(urlConn);
-            }// end of if cycle
-
-//            //--POST
-//            this.creaPostPreliminary(urlConn);
-//
-//            //--GET
-//            input = urlConn.getInputStream();
-//            inputReader = new InputStreamReader(input, INPUT);
-//
-//            //--cookies
-//            //--recupera i cookies ritornati e li memorizza nei parametri
-//            //--in modo da poterli rinviare nella seconda richiesta
-//            if (needCookies) {
-////            this.downlodCookies(urlConn);
-//            }// end of if cycle
-
-
-            //--crea una connessione di tipo POST, se richiesta
-            if (urlConn != null) {
-                this.creaPostConnection(urlConn);
-            }// end of if cycle
-
-            //--Invia la request (GET oppure anche POST)
-            if (urlConn != null) {
-                risposta = sendRequest(urlConn);
-            }// end of if cycle
-
-//            urlConn = urlGetConnection.esegue(urlDomain);
-//            risposta = urlRequest.esegue(urlConn);
+            urlDomain = fixUrlDomain(urlDomain);
+            urlConn = creaGetConnection(urlDomain);
+            uploadCookies(urlConn);
+            addPostConnection(urlConn);
+            urlResponse = sendRequest(urlConn);
+            downlodSecondaryCookies(urlConn);
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
         }// fine del blocco try-catch
 
-        // controlla il valore di ritorno della request e regola il/i risultato/i
-        elaboraRisposta(risposta);
+        return elaboraResponse(urlResponse);
+    } // fine del metodo
 
-        return risposta;
+
+    /**
+     * Controlla la stringa della preliminary request
+     * <p>
+     * Controlla che sia valida <br>
+     * Inserisce un tag specifico iniziale <br>
+     * In alcune query (AQueryWiki e sottoclassi) codifica i caratteri del wikiTitle <br>
+     * Sovrascritto nelle sottoclassi specifiche <br>
+     *
+     * @param urlDomain stringa della request originale
+     *
+     * @return stringa della request modificata
+     */
+    public String fixUrlPreliminaryDomain(String urlDomain) {
+        return urlDomain;
     } // fine del metodo
 
 
@@ -170,6 +175,7 @@ public abstract class AQuery {
      * Controlla che sia valida <br>
      * Inserisce un tag specifico iniziale <br>
      * In alcune query (AQueryWiki e sottoclassi) codifica i caratteri del wikiTitle <br>
+     * Sovrascritto nelle sottoclassi specifiche <br>
      *
      * @param urlDomain stringa della request originale
      *
@@ -189,7 +195,7 @@ public abstract class AQuery {
      *
      * @return connessione con la request
      */
-    private URLConnection creaGetConnection(String urlDomain) throws Exception {
+    protected URLConnection creaGetConnection(String urlDomain) throws Exception {
         URLConnection urlConn = null;
 
         if (text.isValid(urlDomain)) {
@@ -209,7 +215,7 @@ public abstract class AQuery {
      *
      * @param urlConn connessione con la request
      */
-    private void creaPostConnection(URLConnection urlConn) throws Exception {
+    protected void addPostConnection(URLConnection urlConn) throws Exception {
         if (urlConn != null && isUsaPost) {
             PrintWriter out = new PrintWriter(urlConn.getOutputStream());
             out.print(elaboraPost());
@@ -230,6 +236,52 @@ public abstract class AQuery {
 
 
     /**
+     * Allega i cookies alla request (upload)
+     * Serve solo la sessione
+     *
+     * @param urlConn connessione
+     */
+    protected void uploadCookies(URLConnection urlConn) {
+        HashMap cookies = this.cookies;
+        Object[] keyArray;
+        Object[] valArray;
+        Object sessionObj = null;
+        String sesionTxt = "";
+        String sep = "=";
+        Object valObj = null;
+        String valTxt = "";
+
+        // controllo di congruità
+        if (urlConn != null && isUploadCookies) {
+            if (cookies != null && cookies.size() > 0) {
+
+                keyArray = cookies.keySet().toArray();
+                if (keyArray.length > 0) {
+                    sessionObj = keyArray[0];
+                }// fine del blocco if
+                if (sessionObj != null && sessionObj instanceof String) {
+                    sesionTxt = (String) sessionObj;
+                }// fine del blocco if
+
+                valArray = cookies.values().toArray();
+                if (valArray.length > 0) {
+                    valObj = valArray[0];
+                }// fine del blocco if
+                if (valObj != null && valObj instanceof String) {
+                    valTxt = (String) valObj;
+                }// fine del blocco if
+
+//               String  txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
+//                urlConn.setRequestProperty("Cookie", txtCookies);
+
+                urlConn.setRequestProperty("Cookie", sesionTxt + sep + valTxt);
+
+            }// fine del blocco if
+        }// fine del blocco if
+    } // fine del metodo
+
+
+    /**
      * Invia la request (GET oppure POST)
      * Testo della risposta
      *
@@ -237,7 +289,7 @@ public abstract class AQuery {
      *
      * @return valore di ritorno della request
      */
-    private String sendRequest(URLConnection urlConn) throws Exception {
+    protected String sendRequest(URLConnection urlConn) throws Exception {
         InputStream input;
         InputStreamReader inputReader;
         BufferedReader readBuffer;
@@ -250,13 +302,6 @@ public abstract class AQuery {
 
         input = urlConn.getInputStream();
         inputReader = new InputStreamReader(input, "UTF8");
-
-        //--cookies
-        //--recupera i cookies ritornati e li memorizza nei parametri
-        //--in modo da poterli rinviare nella seconda richiesta
-        if (isDownloadCookies) {
-            this.downlodCookies(urlConn);
-        }// end of if cycle
 
         // read the response
         readBuffer = new BufferedReader(inputReader);
@@ -274,14 +319,15 @@ public abstract class AQuery {
 
 
     /**
-     * Allega i cookies alla request (upload)
-     * Serve solo la sessione
+     * Grabs cookies from the URL connection provided.
+     * Cattura i cookies ritornati e li memorizza nei parametri
+     * Sovrascritto nelle sottoclassi specifiche
      *
      * @param urlConn connessione
      */
-    protected void uploadCookies(URLConnection urlConn) {
+    protected LinkedHashMap downlodPreliminaryCookies(URLConnection urlConn) {
+        return downlodCookies(urlConn);
     } // fine del metodo
-
 
     /**
      * Grabs cookies from the URL connection provided.
@@ -290,7 +336,37 @@ public abstract class AQuery {
      *
      * @param urlConn connessione
      */
-    protected void downlodCookies(URLConnection urlConn) {
+    protected LinkedHashMap downlodSecondaryCookies(URLConnection urlConn) {
+        return downlodCookies(urlConn);
+    } // fine del metodo
+
+    /**
+     * Grabs cookies from the URL connection provided.
+     * Cattura i cookies ritornati e li memorizza nei parametri
+     * Sovrascritto nelle sottoclassi specifiche
+     *
+     * @param urlConn connessione
+     */
+    protected LinkedHashMap downlodCookies(URLConnection urlConn) {
+        LinkedHashMap mappa = new LinkedHashMap();
+        String headerName;
+        String cookie;
+        String name;
+        String value;
+
+        if (urlConn != null && isDownloadCookies) {
+            for (int i = 1; (headerName = urlConn.getHeaderFieldKey(i)) != null; i++) {
+                if (headerName.equals("Set-Cookie")) {
+                    cookie = urlConn.getHeaderField(i);
+                    cookie = cookie.substring(0, cookie.indexOf(";"));
+                    name = cookie.substring(0, cookie.indexOf("="));
+                    value = cookie.substring(cookie.indexOf("=") + 1, cookie.length());
+                    mappa.put(name, value);
+                }// fine del blocco if
+            } // fine del ciclo for-each
+        }// fine del blocco if
+
+        return mappa;
     } // fine del metodo
 
 
@@ -301,7 +377,30 @@ public abstract class AQuery {
      * Controllo del contenuto (testo) ricevuto
      * DEVE essere sovrascritto nelle sottoclassi specifiche
      */
-    protected void elaboraRisposta(String rispostaRequest) {
+    protected void elaboraPreliminayResponse(String urlResponse) {
     } // fine del metodo
+
+
+    /**
+     * Elabora la risposta
+     * <p>
+     * Informazioni, contenuto e validità della risposta
+     * Controllo del contenuto (testo) ricevuto
+     * DEVE essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected String elaboraResponse(String urlResponse) {
+        return urlResponse;
+    } // fine del metodo
+
+
+    /**
+     * Contenuto della response
+     * La response viene sempre elaborata per estrarre le informazioni richieste <br>
+     *
+     * @return response
+     */
+    public String urlResponse() {
+        return urlRequest(urlDomain);
+    }// end of method
 
 }// end of class

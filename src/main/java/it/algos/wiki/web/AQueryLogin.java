@@ -1,13 +1,16 @@
 package it.algos.wiki.web;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.component.notification.Notification;
 import it.algos.wiki.LibWiki;
 import it.algos.wiki.WikiLogin;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -20,122 +23,136 @@ import java.util.LinkedHashMap;
  *
  * @see https://www.mediawiki.org/wiki/OAuth/Owner-only_consumers
  * @see https://en.wikipedia.org/wiki/Help:Creating_a_bot
- *
- *
+ * <p>
+ * <p>
  * Request 1
- *
- *     URL: https://it.wikipedia.org/w/api.php?action=login&format=xml
- *     POST parameters:
- *         lgname=BOTUSERNAME
- *         lgpassword=BOTPASSWORD
- *
+ * <p>
+ * URL: https://it.wikipedia.org/w/api.php?action=login&format=xml
+ * POST parameters:
+ * lgname=BOTUSERNAME
+ * lgpassword=BOTPASSWORD
+ * <p>
  * If the password is correct, this will return a "NeedToken" result and a "token" parameter in XML form, as documented at mw:API:Login. Other output formats are available. It will also return HTTP cookies as described below.
- *
+ * <p>
  * Request 2
- *
- *     URL: https://it.wikipedia.org/w/api.php?action=login&format=xml
- *     POST parameters:
- *         lgname=BOTUSERNAME
- *         lgpassword=BOTPASSWORD
- *         lgtoken=TOKEN
- *
- *
- *
- *
- *
+ * <p>
+ * URL: https://it.wikipedia.org/w/api.php?action=login&format=xml
+ * POST parameters:
+ * lgname=BOTUSERNAME
+ * lgpassword=BOTPASSWORD
+ * lgtoken=TOKEN
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Component("AQueryLogin")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class AQueryLogin extends AQueryWiki {
 
-    public static final String FIRST_NEW_TOKEN = "tokens";
-
     public static final String LOGIN_TOKEN = "logintoken";
+
+    public static final String LOGIN_USER_ID = "lguserid";
+
+    public static final String LOGIN_USER_NAME = "lgusername";
+
+    public static final String SESSION_TOKEN = "itwiki_BPsession";
+
+    public static final String LG_NAME = "Biobot";
+
+    public static final String LG_PASSWORD = "fulvia68@lhgfmeb8ckefkniq85qmhul18r689nbq";
 
     private final static String FIRST_REQUEST_GET = TAG_QUERY + "meta=tokens&type=login";
 
-    private final static String SECOND_REQUEST_POST = "https://it.wikipedia.org/w/api.php?action=login&format=xml";
+    private final static String SECOND_REQUEST_POST = TAG_BASE + "action=login";
+
+
+    private String itwiki_BPsession;
+
+    private String loginnotify_prevlogins;
+
+    private long lguserid;
 
     private String logintoken;
 
-    private String lgname = "Biobot";
+    private String lgname;
 
-    private String lgpassword = "fulvia68@lhgfmeb8ckefkniq85qmhul18r689nbq";
+    private String lgusername;
+
+    private String lgpassword;
 
     private String lgtoken;
 
-    // ci metto tutti i cookies restituiti da URLConnection.responses
-    protected LinkedHashMap cookies;
-
-    /**
-     * Request principale
-     * Quella base usa solo il GET
-     * In alcune request (non tutte) si aggiunge anche il POST
-     */
-    public WikiLogin urlRequest() {
-        WikiLogin login = null;
-
-        //--recupera il logintoken necessario per la seconda request
-        primaRequest();
-
-        secondaRequest();
-
-        return login;
-    } // fine del metodo
+    @Autowired
+    private WikiLogin wikiLogin;
 
 
     /**
-     * Prima request.
-     * Richiede un token, specializzato per il login
-     * Request di tipo GET
-     * Risposta in formato testo JSON
-     * Recupera i cookies passati nella risposta
-     * Recupera il logintoken necessario per la seconda request
+     * Costruttore base senza parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(AQueryxxx.class) <br>
      */
-    public void primaRequest() {
-        //--la prima request non ha bisogno del POST
-        super.isUsaPost = false;
-        super.isUploadCookies = false;
-        super.isDownloadCookies = true;
-
-        String textJSON = super.urlRequest(FIRST_REQUEST_GET);
-
-        HashMap<String, Object> mappa = LibWiki.creaMappaLogin(textJSON);
-        logintoken = LibWiki.getLoginToken(mappa);
-    } // fine del metodo
+    public AQueryLogin(WikiLogin wikiLogin) {
+        this(wikiLogin, LG_NAME, LG_PASSWORD);
+    }// end of constructor
 
 
     /**
-     * Seconda request.
-     * Request di tipo POST
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(AQueryxxx.class, lgname, lgpassword) <br>
+     *
+     * @param lgname     del bot da utilizzare
+     * @param lgpassword del bot da utilizzare
      */
-    public void secondaRequest() {
-        String risposta;
-//        URLConnection urlConn;
-//        String tag = getTagIniziale();
-//        String indirizzoWebCompleto = "";
-        //--la seconda request ha bisogno del POST
-        super.isUsaPost = true;
+    public AQueryLogin(WikiLogin wikiLogin, String lgname, String lgpassword) {
+        this.wikiLogin = wikiLogin;
+        this.lgname = lgname;
+        this.lgpassword = lgpassword;
+        urlRequest();
+    }// end of constructor
+
+
+    /**
+     * Request al software mediawiki composta di due request <br>
+     * <p>
+     * La prima request preliminare è di tipo GET con action=login e senza ulteriori parametri
+     * Crea la connessione base di tipo GET <br>
+     * Invia la request senza testo POST e senza invio di cookies <br>
+     * Nella preliminay scarica i cookies passati nella risposta, tra cui session
+     * Nella preliminay recupera il logintoken necessario per la urlRequest successiva
+     * <p>
+     * La seconda request è di tipo POST
+     * Nella seconda rinvia i cookies ricevuti (forse solo la session) <br>
+     * Nella seconda invia un post con lgname, lgpassword e lgtoken <br>
+     * <p>
+     * La response viene elaborata per confermare il login andato a buon fine <br>
+     */
+    public void urlRequest() {
+
+        //--La prima request è di tipo GET
+        super.preliminaryRequest(FIRST_REQUEST_GET);
+
+        //--La seconda request è di tipo POST ed usa i cookies
         super.isUploadCookies = true;
-        super.isDownloadCookies = true;
+        super.isUsaPost = true;
+        super.urlRequest(SECOND_REQUEST_POST);
 
-        if (text.isValid(logintoken)) {
-            lgtoken = logintoken;
-//            super.urlRequest(SECOND_REQUEST_POST);
-            risposta = super.urlRequest(TAG_API );
-//            risposta = super.urlRequest(FIRST_REQUEST_GET);
-            int a = 87;
+    } // fine del metodo
 
-        }// end of if cycle
 
-        try { // prova ad eseguire il codice
-//            urlLoginConnection=
-//            urlConn = urlLoginConnection.esegue();
-//            risposta = urlRequest.esegue(urlConn);
-        } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
-        }// fine del blocco try-catch
+    /**
+     * Controlla la stringa della request
+     * <p>
+     * Controlla che sia valida <br>
+     * Inserisce un tag specifico iniziale <br>
+     * In alcune query (AQueryWiki e sottoclassi) codifica i caratteri del wikiTitle <br>
+     * Sovrascritto nelle sottoclassi specifiche <br>
+     *
+     * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
+     *
+     * @return stringa del titolo completo da inviare con la request
+     */
+    @Override
+    public String fixUrlDomain(String titoloWiki) {
+        return titoloWiki;
     } // fine del metodo
 
 
@@ -159,80 +176,96 @@ public class AQueryLogin extends AQueryWiki {
 
 
     /**
-     * Allega i cookies alla request (upload)
-     * Serve solo la sessione
-     *
-     * @param urlConn connessione
-     */
-    protected void uploadCookies(URLConnection urlConn) {
-        HashMap cookies = this.cookies;
-        Object[] keyArray;
-        Object[] valArray;
-        Object sessionObj = null;
-        String sesionTxt = "";
-        String sep = "=";
-        Object valObj = null;
-        String valTxt = "";
-
-        // controllo di congruità
-        if (urlConn != null) {
-            if (cookies != null && cookies.size() > 0) {
-
-                keyArray = cookies.keySet().toArray();
-                if (keyArray.length > 0) {
-                    sessionObj = keyArray[0];
-                }// fine del blocco if
-                if (sessionObj != null && sessionObj instanceof String) {
-                    sesionTxt = (String) sessionObj;
-                }// fine del blocco if
-
-                valArray = cookies.values().toArray();
-                if (valArray.length > 0) {
-                    valObj = valArray[0];
-                }// fine del blocco if
-                if (valObj != null && valObj instanceof String) {
-                    valTxt = (String) valObj;
-                }// fine del blocco if
-
-//               String  txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
-//                urlConn.setRequestProperty("Cookie", txtCookies);
-
-                urlConn.setRequestProperty("Cookie", sesionTxt + sep + valTxt);
-
-            }// fine del blocco if
-        }// fine del blocco if
-    } // fine del metodo
-
-
-
-    /**
      * Grabs cookies from the URL connection provided.
-     * Cattura i cookies ritornati e li memorizza nei parametri
+     * Cattura i cookies ritornati e li memorizza nei parametrix
      * Sovrascritto nelle sottoclassi specifiche
      *
      * @param urlConn connessione
      */
     @Override
-    protected void downlodCookies(URLConnection urlConn) {
-        LinkedHashMap mappa = new LinkedHashMap();
-        String headerName;
-        String cookie;
-        String name;
-        String value;
+    protected LinkedHashMap downlodPreliminaryCookies(URLConnection urlConn) {
+        LinkedHashMap mappa = super.downlodCookies(urlConn);
 
-        if (urlConn != null) {
-            for (int i = 1; (headerName = urlConn.getHeaderFieldKey(i)) != null; i++) {
-                if (headerName.equals("Set-Cookie")) {
-                    cookie = urlConn.getHeaderField(i);
-                    cookie = cookie.substring(0, cookie.indexOf(";"));
-                    name = cookie.substring(0, cookie.indexOf("="));
-                    value = cookie.substring(cookie.indexOf("=") + 1, cookie.length());
-                    mappa.put(name, value);
-                }// fine del blocco if
-            } // fine del ciclo for-each
-        }// fine del blocco if
-
+        itwikiSession = LibWiki.getSessionToken(mappa);
         this.cookies = mappa;
+
+        return mappa;
+    } // fine del metodo
+
+
+    /**
+     * Elabora la risposta
+     * <p>
+     * Informazioni, contenuto e validità della risposta
+     * Controllo del contenuto (testo) ricevuto
+     * DEVE essere sovrascritto nelle sottoclassi specifiche
+     */
+    @Override
+    protected void elaboraPreliminayResponse(String textJSON) {
+        HashMap<String, Object> mappa = LibWiki.creaMappaLogin(textJSON);
+        logintoken = LibWiki.getLoginToken(mappa);
+
+        try { // prova ad eseguire il codice
+            lgtoken = URLEncoder.encode(logintoken, ENCODE);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+    } // fine del metodo
+
+
+    /**
+     * Grabs cookies from the URL connection provided.
+     * Cattura i cookies ritornati e li memorizza nei parametrix
+     * Sovrascritto nelle sottoclassi specifiche
+     *
+     * @param urlConn connessione
+     */
+    @Override
+    protected LinkedHashMap downlodSecondaryCookies(URLConnection urlConn) {
+        LinkedHashMap mappa = super.downlodCookies(urlConn);
+
+        itwiki_BPsession = LibWiki.getToken(mappa, SESSION_TOKEN);
+        this.cookies = mappa;
+
+        return mappa;
+    } // fine del metodo
+
+
+    /**
+     * Elabora la risposta
+     * <p>
+     * Informazioni, contenuto e validità della risposta
+     * Controllo del contenuto (testo) ricevuto
+     * DEVE essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected String elaboraResponse(String urlResponse) {
+        HashMap<String, Object> mappa = LibWiki.creaMappaLogin(urlResponse);
+
+        if (LibWiki.isLoginValid(urlResponse)) {
+            lguserid = LibWiki.getValueLong(mappa, LOGIN_USER_ID);
+            lgusername = LibWiki.getValueStr(mappa, LOGIN_USER_NAME);
+            regolaWikiLoginSingleton();
+            Notification.show("Loggato come " + lgusername, 3000, Notification.Position.BOTTOM_START);
+        } else {
+            Notification.show("Non sono riuscito a loggarmi ", 4000, Notification.Position.BOTTOM_START);
+        }// end of if/else cycle
+
+        return urlResponse;
+    } // fine del metodo
+
+
+    /**
+     * Regola i parametri di wikiLogin
+     */
+    protected void regolaWikiLoginSingleton() {
+        if (wikiLogin != null) {
+            wikiLogin.setValido(true);
+            wikiLogin.setLguserid(lguserid);
+            wikiLogin.setLgname(lgusername);
+            wikiLogin.setSessionId(itwiki_BPsession);
+        } else {
+            Notification.show("Non trovo wikiLogin", 4000, Notification.Position.BOTTOM_START);
+            log.warn("Non trovo wikiLogin");
+        }// end of if/else cycle
     } // fine del metodo
 
 }// end of class

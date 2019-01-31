@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * Project vaadwiki
@@ -12,9 +13,8 @@ import org.springframework.context.annotation.Scope;
  * Date: lun, 28-gen-2019
  * Time: 14:39
  */
-@SpringComponent
+@Component("AQueryHTTPS")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Slf4j
 public class AQueryHTTPS extends AQueryWeb {
 
     /**
@@ -26,7 +26,6 @@ public class AQueryHTTPS extends AQueryWeb {
     /**
      * Costruttore base senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Può essere usato anche per creare l'istanza come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(AQueryxxx.class) <br>
      */
     public AQueryHTTPS() {
@@ -53,6 +52,7 @@ public class AQueryHTTPS extends AQueryWeb {
      * Controlla che sia valida <br>
      * Inserisce un tag specifico iniziale <br>
      * In alcune query (AQueryWiki e sottoclassi) codifica i caratteri del wikiTitle <br>
+     * Sovrascritto nelle sottoclassi specifiche <br>
      *
      * @param urlDomain stringa della request originale
      *

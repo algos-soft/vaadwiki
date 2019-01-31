@@ -30,7 +30,6 @@ import java.util.HashMap;
 @Slf4j
 public class ReadLogin extends ReadWiki {
 
-    public static final String FIRST_NEW_TOKEN = "tokens";
 
     public static final String LOGIN_TOKEN = "logintoken";
 

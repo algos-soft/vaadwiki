@@ -1,9 +1,9 @@
 package it.algos.wiki.web;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.net.URLEncoder;
 
@@ -16,7 +16,7 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * Date: lun, 28-gen-2019
  * Time: 14:36
  */
-@SpringComponent
+@Component("AQueryWiki")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public abstract class AQueryWiki extends AQuery {
@@ -41,7 +41,7 @@ public abstract class AQueryWiki extends AQuery {
      */
     protected final static String TAG_QUERY = TAG_BASE + "action=query&";
 
-
+    protected String itwikiSession;
 
     /**
      * Costruttore base senza parametri <br>
@@ -57,7 +57,6 @@ public abstract class AQueryWiki extends AQuery {
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(AQueryxxx.class, urlRequest) <br>
      * Usa: appContext.getBean(AQueryxxx.class, urlRequest).urlResponse() <br>
      *
      * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
@@ -73,6 +72,7 @@ public abstract class AQueryWiki extends AQuery {
      * Controlla che sia valida <br>
      * Inserisce un tag specifico iniziale <br>
      * In alcune query (AQueryWiki e sottoclassi) codifica i caratteri del wikiTitle <br>
+     * Sovrascritto nelle sottoclassi specifiche <br>
      *
      * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
      *
