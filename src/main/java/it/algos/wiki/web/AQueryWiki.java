@@ -1,5 +1,6 @@
 package it.algos.wiki.web;
 
+import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -32,16 +33,26 @@ public abstract class AQueryWiki extends AQuery {
     protected final static String TAG_API = "https://it.wikipedia.org/w/api.php?";
 
     /**
-     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'urlDomain' completo
+     * Tag aggiunto per costruire un 'urlDomain' completo
+     * Viene usato in tutte le urlRequest delle sottoclassi di AQueryWiki
+     * La urlRequest funzionerebbe anche senza questo tag, ma la urlResponse sarebbe meno 'leggibile'
      */
-    protected final static String TAG_BASE = TAG_API + "format=json&formatversion=2&";
+    protected final static String TAG_BASE = TAG_API + "&format=json&formatversion=2";
 
     /**
-     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'urlDomain' completo
+     * Tag aggiunto per costruire un 'urlDomain' completo
+     * Viene usato in molte (non tutte) urlRequest delle sottoclassi di AQueryWiki
      */
-    protected final static String TAG_QUERY = TAG_BASE + "action=query&";
+    protected final static String TAG_QUERY = TAG_BASE + "&action=query";
+
+
+    /**
+     * Property per controllare se nella urlresponse esiste il tag 'batchcomplete=true'
+     */
+    protected boolean isUrlResponseValida = false;
 
     protected String itwikiSession;
+
 
     /**
      * Costruttore base senza parametri <br>
@@ -87,6 +98,19 @@ public abstract class AQueryWiki extends AQuery {
         }// fine del blocco try-catch
 
         return titoloWiki;
+    } // fine del metodo
+
+
+    /**
+     * Elabora la risposta
+     * <p>
+     * Informazioni, contenuto e validità della risposta
+     * Controllo del contenuto (testo) ricevuto
+     * DEVE essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected String elaboraResponse(String urlResponse) {
+        isUrlResponseValida = LibWiki.isResponseValid(urlResponse);
+        return urlResponse;
     } // fine del metodo
 
 }// end of class

@@ -49,29 +49,30 @@ public class UpdateService extends ABioService {
      * Aggiorna tutte le entities mongoDB Bio, che sono stati modificate sul server wiki DOPO l'ultima lettura
      */
     public DownloadResult esegue() {
-        if (checkListePageids()) {
-            return esegueCiclo();
-        } else {
-            mail.send("UpdateService", "Le liste di pageid tra Categoria server e mongoDB, sono diverse");
-            logger.error("UPDATE -  Le liste di pageid tra Categoria server e mongoDB, sono diverse");
-            return null;
-        }// end of if/else cycle
+        return esegueCiclo();
+//        if (checkListePageids()) {
+//            return esegueCiclo();
+//        } else {
+//            mail.send("UpdateService", "Le liste di pageid tra Categoria server e mongoDB, sono diverse");
+//            logger.error("UPDATE -  Le liste di pageid tra Categoria server e mongoDB, sono diverse");
+//            return null;
+//        }// end of if/else cycle
     }// end of method
 
 
-    /**
-     * Ricontrolla (eventualmente) le due liste di pageid che devono essere uguali
-     * oppure
-     * Controlla che il numero di entities della due collezioni (Categoria e Bio) sia lo stesso
-     * <p>
-     * Recupera comunque la lista dei records della collezione categoria, perché serve sempre
-     * Recupera la lista delle voci dalla categoria sul server wiki, solo se necessario
-     */
-    public boolean checkListePageids() {
-        int catSize = categoriaService.count();
-        int bioSize = bioService.count();
-        return bioSize == catSize;
-    }// end of method
+//    /**
+//     * Ricontrolla (eventualmente) le due liste di pageid che devono essere uguali
+//     * oppure
+//     * Controlla che il numero di entities della due collezioni (Categoria e Bio) sia lo stesso
+//     * <p>
+//     * Recupera comunque la lista dei records della collezione categoria, perché serve sempre
+//     * Recupera la lista delle voci dalla categoria sul server wiki, solo se necessario
+//     */
+//    public boolean checkListePageids() {
+//        int catSize = categoriaService.count();
+//        int bioSize = bioService.count();
+//        return bioSize == catSize;
+//    }// end of method
 
 
     /**

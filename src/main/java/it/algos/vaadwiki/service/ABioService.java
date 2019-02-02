@@ -6,7 +6,6 @@ import it.algos.vaadflow.service.*;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.BioService;
-import it.algos.vaadwiki.modules.categoria.CategoriaService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.wiki.Api;
@@ -54,11 +53,11 @@ public abstract class ABioService {
     protected ProfessioneService professioneService;
 
 
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected CategoriaService categoriaService;
+//    /**
+//     * La injection viene fatta da SpringBoot in automatico <br>
+//     */
+//    @Autowired
+//    protected CategoriaService categoriaService;
 
 
     /**

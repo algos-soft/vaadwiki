@@ -40,12 +40,6 @@ public class DaemonBio extends Scheduler {
     @Autowired
     private TaskProfessione taslProfessione;
 
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    private TaskCategoria taskCategoria;
-
 
 
     @PostConstruct
@@ -59,7 +53,6 @@ public class DaemonBio extends Scheduler {
             this.task(taskAttivita);
             this.task(taskNazionalita);
             this.task(taslProfessione);
-            this.task(taskCategoria);
 
 //            schedule(EASchedule.giornoDecimoMinuto.getTag(), cicloBio);
 

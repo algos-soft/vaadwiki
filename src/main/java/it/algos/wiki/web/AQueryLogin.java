@@ -80,9 +80,11 @@ public class AQueryLogin extends AQueryWiki {
 
     private String lgtoken;
 
-    @Autowired
+//    @Autowired
     private WikiLogin wikiLogin;
 
+    public AQueryLogin() {
+    }// end of constructor
 
     /**
      * Costruttore base senza parametri <br>

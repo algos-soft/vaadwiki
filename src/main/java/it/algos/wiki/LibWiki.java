@@ -167,11 +167,15 @@ public abstract class LibWiki {
 
     private static final String QUERY_CONTINUE = "query-continue"; // deprecated
 
-    private static final String CONTINUE = "continue";
+    public static final String CONTINUE = "continue";
 
-    private static final String CM_CONTINUE = "cmcontinue";
+    public static final String CMCONTINUE = "cmcontinue";
+
+    public static final String CM_CONTINUE = "cmcontinue";
 
     private static final String LOGIN = "login";
+
+    private static final String BATCHCOMPLETE = "batchcomplete";
 
     private static final String MISSING = "missing";
 
@@ -676,7 +680,6 @@ public abstract class LibWiki {
             objectRev = (JSONObject) arrayPages.get(pos);
             if (objectRev != null) {
                 arrayRev = (JSONArray) objectRev.get(REVISIONS);
-                int ua = 87;
             }// fine del blocco if
         }// fine del blocco if
 
@@ -764,6 +767,56 @@ public abstract class LibWiki {
                 }// end of if cycle
             }// end of if cycle
         }// fine del blocco if
+
+        return mappa;
+    } // fine del metodo
+
+
+    /**
+     * Crea una mappa categoria (valori String) dal testo JSON di una pagina di login
+     *
+     * @param textJSON in ingresso
+     *
+     * @return mappa categoria (valori String)
+     */
+    public static HashMap<String, Object> creaMappaCat(String textJSON) {
+        HashMap<String, Object> mappa = null;
+        JSONObject objectAll;
+        boolean batchcomplete = false;
+        JSONObject objContinue = null;
+        String cmContinue = null;
+        JSONObject objQuery = null;
+        JSONArray listaCat;
+
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        // controllo
+        if (objectAll == null) {
+            return null;
+        }// fine del blocco if
+        mappa = new HashMap<String, Object>();
+
+        if (objectAll.get(BATCHCOMPLETE) != null && objectAll.get(BATCHCOMPLETE) instanceof Boolean) {
+            batchcomplete = (boolean) objectAll.get(BATCHCOMPLETE);
+            mappa.put(BATCHCOMPLETE, batchcomplete);
+        }// fine del blocco if
+
+        if (objectAll.get(CONTINUE) != null && objectAll.get(CONTINUE) instanceof JSONObject) {
+            objContinue = (JSONObject) objectAll.get(CONTINUE);
+            if (objContinue.get(CMCONTINUE) != null && objContinue.get(CMCONTINUE) instanceof String) {
+                cmContinue = (String) objContinue.get(CMCONTINUE);
+                mappa.put(CMCONTINUE, cmContinue);
+            }// fine del blocco if
+        }// fine del blocco if
+
+        if (objectAll.get(QUERY) != null && objectAll.get(QUERY) instanceof JSONObject) {
+            objQuery = (JSONObject) objectAll.get(QUERY);
+            if (objQuery.get(CATEGORY_MEMBERS) != null && objQuery.get(CATEGORY_MEMBERS) instanceof JSONArray) {
+                listaCat = (JSONArray) objQuery.get(CATEGORY_MEMBERS);
+                mappa.put(CATEGORY_MEMBERS, listaCat);
+            }// fine del blocco if
+        }// fine del blocco if
+
 
         return mappa;
     } // fine del metodo
@@ -891,19 +944,19 @@ public abstract class LibWiki {
      * @return sessionToken
      */
     public static String getSessionToken(LinkedHashMap<String, Object> mappa) {
-        return getToken(mappa,SESSION_TOKEN);
+        return getToken(mappa, SESSION_TOKEN);
     } // fine del metodo
 
 
     /**
      * Restituisce un valore dalla mappa per la chiave indicata (se esiste)
      *
-     * @param mappa standard (valori String)
+     * @param mappa  standard (valori String)
      * @param keyTag per individuare il valore della mappa
      *
      * @return sessionToken
      */
-    public static String getToken(LinkedHashMap<String, Object> mappa,String keyTag) {
+    public static String getToken(LinkedHashMap<String, Object> mappa, String keyTag) {
         String sessionToken = "";
 
         if (mappa.get(keyTag) != null && mappa.get(keyTag) instanceof String) {
@@ -961,6 +1014,27 @@ public abstract class LibWiki {
 
 
     /**
+     * Recupera una lista delle chiavi di una mappa
+     *
+     * @param mappa in ingresso
+     *
+     * @return lista delle chiavi
+     */
+    public static ArrayList getKeyFromMap(HashMap mappa) {
+        ArrayList listaKeys = null;
+
+        if (mappa != null) {
+            listaKeys = new ArrayList();
+            for (Object obj : mappa.keySet()) {
+                listaKeys.add(obj);
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaKeys;
+    }// end of static method
+
+
+    /**
      * Crea una mappa standard (valori reali) dal testo JSON di una pagina
      *
      * @param textJSON in ingresso
@@ -980,7 +1054,7 @@ public abstract class LibWiki {
             return null;
         }// fine del blocco if
 
-//        listaKeys = LibArray.getKeyFromMap(objectAll);
+        listaKeys = getKeyFromMap(objectAll);
 
         if (listaKeys != null) {
             mappa = new HashMap<String, Object>();
@@ -3864,7 +3938,7 @@ public abstract class LibWiki {
 
 
     /**
-     * Controlla se la responde di un login contiene la conferma
+     * Controlla se la response di un login contiene la conferma
      *
      * @param urlResponse in ingresso
      *
@@ -3882,6 +3956,28 @@ public abstract class LibWiki {
         }// end of if cycle
 
         return loginValido;
+    } // fine del metodo
+
+
+    /**
+     * Controlla se la urlResponse di una query generica contiene la conferma
+     *
+     * @param textJSON in ingresso
+     *
+     * @return true se la urlResponse è valida
+     */
+    public static boolean isResponseValid(String textJSON) {
+        boolean responseValida = false;
+        String tag = BATCHCOMPLETE;
+        HashMap<String, Object> mappa = getMappaJSON(textJSON);
+
+        if (textJSON != null && textJSON.length() > 0) {
+            if (mappa != null && mappa.get(tag) != null && mappa.get(tag) instanceof Boolean) {
+                responseValida = (boolean) mappa.get(tag);
+            }// fine del blocco if
+        }// end of if cycle
+
+        return responseValida;
     } // fine del metodo
 
 

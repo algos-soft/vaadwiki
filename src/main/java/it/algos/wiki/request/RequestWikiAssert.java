@@ -20,7 +20,7 @@ import java.util.HashMap;
  * This will return a simple blank response ({} in the JSON format) if you are indeed logged in, or the assertuserfailed error if not.
  * Normally, you will not need to do this. Instead, add the assert=user parameter to all requests that should be made by a logged-in user.
  * <p>
- * Link: https://www.mediawiki.org/wiki/API:Assert
+ * @see https://www.mediawiki.org/wiki/API:Assert
  * <p>
  * Se si è loggati come bot, si è automaticamente loggati anche come user
  */

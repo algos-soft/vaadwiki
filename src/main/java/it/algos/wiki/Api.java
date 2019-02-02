@@ -6,8 +6,6 @@ import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.vaadwiki.modules.categoria.Categoria;
-import it.algos.vaadwiki.modules.categoria.CategoriaService;
 import it.algos.vaadwiki.download.PageService;
 import it.algos.wiki.request.*;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +43,8 @@ public class Api {
     @Autowired
     protected RequestWikiTimestamp requestTimestamp;
 
-    @Autowired
-    protected CategoriaService categoriaService;
+//    @Autowired
+//    protected CategoriaService categoriaService;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -991,35 +989,35 @@ public class Api {
     } // fine del metodo
 
 
-    /**
-     * Legge gli elementi appartenenti ad una categoria.
-     * Restituisce una lista (ArrayList) di pageid/and/title solo delle voci senza le subcategorie
-     *
-     * @param titleCat della categoria da ricercare
-     *
-     * @return lista pageid and title delle voci
-     */
-    public ArrayList<Categoria> leggeCatCat(String titleCat) {
-        ArrayList<Categoria> lista = null;
-        ArrayList<WrapCat> listaWrap = null;
-
-        if (titleCat != null && !titleCat.equals("")) {
-            requestCat = StaticContextAccessor.getBean(RequestWikiCat.class);
-            requestCat.esegue(titleCat);
-            if (requestCat.isValida()) {
-                listaWrap = requestCat.getListaWrapCat();
-
-                if (listaWrap != null && listaWrap.size() > 0) {
-                    lista = new ArrayList<>();
-                    for (WrapCat wrap : listaWrap) {
-                        lista.add(categoriaService.newEntity(wrap));
-                    }// end of for cycle
-                }// end of if cycle
-            }// end of if cycle
-        }// end of if cycle
-
-        return lista;
-    } // fine del metodo
+//    /**
+//     * Legge gli elementi appartenenti ad una categoria.
+//     * Restituisce una lista (ArrayList) di pageid/and/title solo delle voci senza le subcategorie
+//     *
+//     * @param titleCat della categoria da ricercare
+//     *
+//     * @return lista pageid and title delle voci
+//     */
+//    public ArrayList<Categoria> leggeCatCat(String titleCat) {
+//        ArrayList<Categoria> lista = null;
+//        ArrayList<WrapCat> listaWrap = null;
+//
+//        if (titleCat != null && !titleCat.equals("")) {
+//            requestCat = StaticContextAccessor.getBean(RequestWikiCat.class);
+//            requestCat.esegue(titleCat);
+//            if (requestCat.isValida()) {
+//                listaWrap = requestCat.getListaWrapCat();
+//
+//                if (listaWrap != null && listaWrap.size() > 0) {
+//                    lista = new ArrayList<>();
+//                    for (WrapCat wrap : listaWrap) {
+//                        lista.add(categoriaService.newEntity(wrap));
+//                    }// end of for cycle
+//                }// end of if cycle
+//            }// end of if cycle
+//        }// end of if cycle
+//
+//        return lista;
+//    } // fine del metodo
 
 
     /**

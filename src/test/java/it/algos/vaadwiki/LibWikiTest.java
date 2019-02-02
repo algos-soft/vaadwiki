@@ -15,8 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Project springvaadin
@@ -155,16 +154,23 @@ public class LibWikiTest extends ATest {
         sorgente = "<?xml version=\"1.0\"?><api><login result=\"Success\" lguserid=\"124123\" lgusername=\"Biobot\" /></api>";
         sorgente = "{\"login\":{\"result\":\"Success\",\"lguserid\":124123,\"lgusername\":\"Biobot\"}}";
 
-//        objectAll = (JSONObject) JSONValue.parse(sorgente);
 
         mappa = LibWiki.creaMappaLogin(sorgente);
-//        arrayPages = LibWiki.getArrayPagesJSON(sorgente);
 
         ottenuto = LibWiki.getValueStr(mappa, "result");
         Long ottenutoLong = LibWiki.getValueLong(mappa, "lguserid");
         ottenuto = LibWiki.getValueStr(mappa, "lgusername");
+        ottenutoBooleano = LibWiki.isLoginValid(sorgente);
 
-        ottenutoBooleano=LibWiki.isLoginValid(sorgente);
+        sorgente = "{\"batchcomplete\":true,\"continue\":{\"cmcontinue\":\"page|2f31353f390429432f293f4504062f3929432903062f39294329042f31353f390429432f293f450125418a01c0dcbfdcc1dcbbdc0a|3878354\",\"continue\":\"-||\"},\"query\":{\"categorymembers\":[{\"pageid\":1302888,\"ns\":0,\"title\":\"Nati nel 1201\"},{\"pageid\":775573,\"ns\":0,\"title\":\"Nasir al-Din al-Tusi\"},{\"pageid\":2114785,\"ns\":0,\"title\":\"Richard de Fournival\"}]}}";
+        boolean responseValida = LibWiki.isResponseValid(sorgente);
+        assertTrue(responseValida);
+
+        sorgente = "{\"batchcomplete\":true,\"continue\":{\"cmcontinue\":\"page|2f31353f390429432f293f4504062f3929432903062f39294329042f31353f390429432f293f450125418a01c0dcbfdcc1dcbbdc0a|3878354\",\"continue\":\"-||\"},\"query\":{\"categorymembers\":[{\"pageid\":1302888,\"ns\":0,\"title\":\"Nati nel 1201\"},{\"pageid\":775573,\"ns\":0,\"title\":\"Nasir al-Din al-Tusi\"},{\"pageid\":2114785,\"ns\":0,\"title\":\"Richard de Fournival\"}]}}";
+        mappa = LibWiki.creaMappaCat(sorgente);
+        ottenuto = LibWiki.getValueStr(mappa, "query");
+        int a = 87;
+
     }// end of single test
 
 

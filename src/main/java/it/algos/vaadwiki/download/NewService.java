@@ -1,7 +1,6 @@
 package it.algos.vaadwiki.download;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.modules.categoria.Categoria;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
 import lombok.extern.slf4j.Slf4j;
@@ -69,28 +68,28 @@ public class NewService extends ABioService {
      * @param listaTitleNonRegistrate elenco (title) delle voci non registrate
      */
     public void fixError(ArrayList<String> listaTitleNonRegistrate) {
-        for (String wikiTitle : listaTitleNonRegistrate) {
-            checkCategoria(wikiTitle);
-        }// end of for cycle
+//        for (String wikiTitle : listaTitleNonRegistrate) {
+//            checkCategoria(wikiTitle);
+//        }// end of for cycle
     }// end of method
 
 
-    /**
-     * Controlla una singola entity di Categoria.
-     * <p>
-     * Controlla che esista la pagina su wiki. Se non esiste, cancella la entity Categoria
-     * Controlla che la pagina contenga il template Bio. Se non lo contiene, cancella la entity Categoria
-     *
-     * @param wikiTitle di una entity di categoria da controllare
-     */
-    public void checkCategoria(String wikiTitle) {
-        Categoria categoria = categoriaService.findByTitle(wikiTitle);
-        if (categoria != null) {
-            categoriaService.delete(categoria);
-            logger.debug("NEW - cancellata da mongoDB.Categoria la entity '" + wikiTitle + "', perché la pagina sul server non contiene il tmpl Bio");
-        } else {
-            logger.warning("NEW - con find() non trovo la entity '" + wikiTitle + "' di mongoDB.Categoria che risulta invece nella lista");
-        }// end of if/else cycle
-    }// end of method
+//    /**
+//     * Controlla una singola entity di Categoria.
+//     * <p>
+//     * Controlla che esista la pagina su wiki. Se non esiste, cancella la entity Categoria
+//     * Controlla che la pagina contenga il template Bio. Se non lo contiene, cancella la entity Categoria
+//     *
+//     * @param wikiTitle di una entity di categoria da controllare
+//     */
+//    public void checkCategoria(String wikiTitle) {
+//        Categoria categoria = categoriaService.findByTitle(wikiTitle);
+//        if (categoria != null) {
+//            categoriaService.delete(categoria);
+//            logger.debug("NEW - cancellata da mongoDB.Categoria la entity '" + wikiTitle + "', perché la pagina sul server non contiene il tmpl Bio");
+//        } else {
+//            logger.warning("NEW - con find() non trovo la entity '" + wikiTitle + "' di mongoDB.Categoria che risulta invece nella lista");
+//        }// end of if/else cycle
+//    }// end of method
 
 }// end of class

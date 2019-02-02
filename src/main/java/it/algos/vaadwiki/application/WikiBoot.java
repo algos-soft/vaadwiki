@@ -11,7 +11,6 @@ import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.modules.utente.UtenteService;
 import it.algos.vaadwiki.modules.attivita.AttivitaViewList;
 import it.algos.vaadwiki.modules.bio.BioViewList;
-import it.algos.vaadwiki.modules.categoria.CategoriaViewList;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaViewList;
 import it.algos.vaadwiki.modules.professione.ProfessioneViewList;
 import it.algos.vaadwiki.views.UtilityView;
@@ -141,7 +140,7 @@ public class WikiBoot extends ABoot {
         FlowCost.MENU_CLAZZ_LIST.add(AttivitaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(NazionalitaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(ProfessioneViewList.class);
-        FlowCost.MENU_CLAZZ_LIST.add(CategoriaViewList.class);
+//        FlowCost.MENU_CLAZZ_LIST.add(CategoriaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(BioViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(WikiGiornoViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(WikiAnnoViewList.class);

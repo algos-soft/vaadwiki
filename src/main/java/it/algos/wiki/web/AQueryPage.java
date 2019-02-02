@@ -21,7 +21,7 @@ public class AQueryPage extends AQueryGet {
     /**
      * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
      */
-    private final static String TAG_PAGE = TAG_QUERY + "prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
+    private final static String TAG_PAGE = TAG_QUERY + "&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
 
 
     /**

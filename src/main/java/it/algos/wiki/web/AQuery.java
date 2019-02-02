@@ -6,6 +6,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -42,19 +43,20 @@ public abstract class AQuery {
     public ATextService text = ATextService.getInstance();
 
     /**
-     * Flag per le request che usano il POST <br>
+     * Flag di preferenza per le request che hanno bisogno di inviare i cookies nella request <br>
      */
-    protected boolean isUsaPost = false;
+    protected boolean isUploadCookies;
 
     /**
-     * Flag per le request che scaricano e memorizzano i cookies ricevuti nella connessione <br>
+     * Flag di preferenza per le request che usano il POST <br>
      */
-    protected boolean isDownloadCookies = false;
+    protected boolean isUsaPost;
 
     /**
-     * Flag per le request che hanno bisogno di inviare i cookies nella request <br>
+     * Flag di preferenza per le request che scaricano e memorizzano i cookies ricevuti nella connessione <br>
      */
-    protected boolean isUploadCookies = false;
+    protected boolean isDownloadCookies;
+
 
     /**
      * Indirizzo web usato nella urlRequest <br>
@@ -85,6 +87,28 @@ public abstract class AQuery {
     public AQuery(String urlDomain) {
         this.urlDomain = urlDomain;
     }// end of constructor
+
+
+    /**
+     * Questa classe viene tipicamente costruita con appContext.getBean(AQueryxxx.class, urlRequest) <br>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired di questa classe <br>
+     */
+    @PostConstruct
+    protected void initIstanzaDopoInitDiSpringBoot() {
+        fixPreferenze();
+    }// end of method
+
+
+    /**
+     * Le preferenze vengono (eventualmente) sovrascritte nella sottoclasse <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        isUploadCookies = false;
+        isUsaPost = false;
+        isDownloadCookies = false;
+    }// end of method
 
 
     /**
@@ -210,32 +234,6 @@ public abstract class AQuery {
 
 
     /**
-     * Aggiunge il POST della request
-     * In alcune request (non tutte) è obbligatorio anche il POST
-     *
-     * @param urlConn connessione con la request
-     */
-    protected void addPostConnection(URLConnection urlConn) throws Exception {
-        if (urlConn != null && isUsaPost) {
-            PrintWriter out = new PrintWriter(urlConn.getOutputStream());
-            out.print(elaboraPost());
-            out.close();
-        }// end of if cycle
-    } // fine del metodo
-
-
-    /**
-     * Crea il testo del POST della request
-     * <p>
-     * In alcune request (non tutte) è obbligatorio anche il POST
-     * DEVE essere sovrascritto nelle sottoclassi specifiche
-     */
-    protected String elaboraPost() {
-        return VUOTA;
-    } // fine del metodo
-
-
-    /**
      * Allega i cookies alla request (upload)
      * Serve solo la sessione
      *
@@ -279,6 +277,33 @@ public abstract class AQuery {
             }// fine del blocco if
         }// fine del blocco if
     } // fine del metodo
+
+    /**
+     * Aggiunge il POST della request
+     * In alcune request (non tutte) è obbligatorio anche il POST
+     *
+     * @param urlConn connessione con la request
+     */
+    protected void addPostConnection(URLConnection urlConn) throws Exception {
+        if (urlConn != null && isUsaPost) {
+            PrintWriter out = new PrintWriter(urlConn.getOutputStream());
+            out.print(elaboraPost());
+            out.close();
+        }// end of if cycle
+    } // fine del metodo
+
+
+    /**
+     * Crea il testo del POST della request
+     * <p>
+     * In alcune request (non tutte) è obbligatorio anche il POST
+     * DEVE essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected String elaboraPost() {
+        return VUOTA;
+    } // fine del metodo
+
+
 
 
     /**
@@ -329,6 +354,7 @@ public abstract class AQuery {
         return downlodCookies(urlConn);
     } // fine del metodo
 
+
     /**
      * Grabs cookies from the URL connection provided.
      * Cattura i cookies ritornati e li memorizza nei parametri
@@ -339,6 +365,7 @@ public abstract class AQuery {
     protected LinkedHashMap downlodSecondaryCookies(URLConnection urlConn) {
         return downlodCookies(urlConn);
     } // fine del metodo
+
 
     /**
      * Grabs cookies from the URL connection provided.

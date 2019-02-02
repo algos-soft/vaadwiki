@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 
+import java.util.ArrayList;
+
 import static it.algos.vaadflow.application.FlowCost.*;
 import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 import static it.algos.vaadwiki.application.WikiCost.TAG_UTI;
@@ -45,8 +47,6 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_UTI;
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
 public class UtilityView extends VerticalLayout {
-    @Autowired
-    private WikiLogin wikiLogin;
 
     /**
      * Icona visibile nel menu (facoltativa)
@@ -63,6 +63,9 @@ public class UtilityView extends VerticalLayout {
 
     @Autowired
     protected ApplicationContext appContext;
+
+    @Autowired
+    private WikiLogin wikiLogin;
 
     @Autowired
     private Api api;
@@ -200,19 +203,21 @@ public class UtilityView extends VerticalLayout {
     public void esegueTestQuery() {
         String urlDomain = "";
         String wikiTitle = "";
+        String wikiCat = "";
         String urlResponse = "";
         AQueryPage queryPage;
         Page page;
+        ArrayList<String> titoliVociCategoria;
 
-        if (wikiLogin!=null) {
-            appContext.getBean(AQueryLogin.class,wikiLogin);
-        }// end of if cycle
-
+//        if (wikiLogin != null) {
+//            appContext.getBean(AQueryLogin.class, wikiLogin);
+//        }// end of if cycle
 
         log.info("");
         log.info("Algos");
         log.info("Integration test per alcune query");
         log.info("");
+
 
         urlResponse = appContext.getBean(AQueryHTTP.class).urlRequest(urlDomain);
         log.info("AQueryHTTP: " + urlDomain + " - Response: " + (text.isEmpty(urlResponse) ? "OK, response nulla" : "Qualcosa non ha funzionato"));
@@ -288,7 +293,7 @@ public class UtilityView extends VerticalLayout {
         log.info("AQueryVoce: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiTitle = "Riley Cooper";
-        urlResponse = ((AQueryVoce) appContext.getBean("AQueryVoce",wikiTitle)).urlRequest();
+        urlResponse = ((AQueryVoce) appContext.getBean("AQueryVoce", wikiTitle)).urlRequest();
         log.info("AQueryVoce: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiTitle = "Riley Cooper";
@@ -296,8 +301,34 @@ public class UtilityView extends VerticalLayout {
         log.info("AQueryBio: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiTitle = "Riley Cooper";
-        urlResponse = ((AQueryBio) appContext.getBean("AQueryBio",wikiTitle)).urlRequest();
+        urlResponse = ((AQueryBio) appContext.getBean("AQueryBio", wikiTitle)).urlRequest();
         log.info("AQueryBio: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
+
+        wikiCat = "Nati nel 1225";
+        titoliVociCategoria = appContext.getBean(AQueryCat.class).urlRequestTitle(wikiCat);
+        log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore senza parametri - " + titoliVociCategoria.size() + " voci" : "No buono"));
+
+        wikiCat = "BioBot";
+        long inizio = System.currentTimeMillis();
+        titoliVociCategoria = appContext.getBean(AQueryCat.class, wikiCat).urlRequestTitle();
+        log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore con wikiCat - " + titoliVociCategoria.size() + " voci" : "No buono"));
+        log.info("AQueryCat: " + wikiCat + " - Response: ci sono " + titoliVociCategoria.size() + " voci e sono state caricate in " + date.deltaText(inizio));
+//        for (String titolo : titoliVociCategoria) {
+//            log.info(titolo);
+//        }// end of for cycle
+        log.info("");
+        log.info("Prime 200");
+        for (int k = 0; k < 200; k++) {
+            log.info((k+1)+" - "+titoliVociCategoria.get(k));
+        }// end of for cycle
+        log.info("Pagina prima del passaggio dei 5.000");
+        for (int k = 4799; k < 5000; k++) {
+            log.info((k+1)+" - "+titoliVociCategoria.get(k));
+        }// end of for cycle
+        log.info("Pagina dopo il passaggio dei 5.000");
+        for (int k = 5000; k < 5200; k++) {
+            log.info((k+1)+" - "+titoliVociCategoria.get(k));
+        }// end of for cycle
 
     }// end of method
 

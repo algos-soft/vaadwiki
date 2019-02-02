@@ -17,7 +17,6 @@ import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
-import it.algos.vaadwiki.modules.categoria.CategoriaService;
 import it.algos.vaadwiki.task.TaskBio;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;
@@ -85,11 +84,11 @@ public class BioViewList extends AttNazProfCatViewList {
     @Autowired
     protected AMailService mailService;
 
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected CategoriaService categoriaService;
+//    /**
+//     * La injection viene fatta da SpringBoot in automatico <br>
+//     */
+//    @Autowired
+//    protected CategoriaService categoriaService;
 
 
     private ATextField input;

@@ -4,11 +4,16 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
+import it.algos.wiki.web.AQueryCat;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
+
+import static it.algos.vaadwiki.application.WikiCost.CAT_BIO;
 
 /**
  * Project vaadbio2
@@ -33,6 +38,8 @@ import java.util.ArrayList;
 @Slf4j
 public class CicloService extends ABioService {
 
+    @Autowired
+    protected ApplicationContext appContext;
 
     /**
      * Aggiorna le ATTIVITA, con un download del modulo attività
@@ -63,12 +70,10 @@ public class CicloService extends ABioService {
     @SuppressWarnings("unchecked")
     public DownloadResult esegue() {
         DownloadResult result;
-        ArrayList<Long> listaPageidsMongoCategoria;
-        ArrayList<String> listaTitlesMongoCategoria;
-        ArrayList<Long> listaPageidsMongoBio;
+        ArrayList<String> listaTitlesCategoria;
         ArrayList<String> listaTitlesMongoBio;
-        ArrayList<Long> listaPageidsEccedenti;
-        ArrayList<Long> listaPageidsMancanti;
+        ArrayList<Long> listaTitlesEccedenti;
+        ArrayList<Long> listaTitlesMancanti;
         long inizio;
 
         //--Il ciclo necessita del login valido come bot per il funzionamento normale
@@ -87,16 +92,10 @@ public class CicloService extends ABioService {
         //--download del modulo professione
         professioneService.download();
 
-        //--download del modulo categoria
-        //--crea una collezione Categoria, 'specchio' sul mongoDB di quella sul server wiki
-//       categoriaService.download();
-
         //--recupera la lista dei pageids dalla collezione Categoria
-        listaPageidsMongoCategoria = categoriaService.findAllPageids();
-        listaTitlesMongoCategoria= categoriaService.findAllTitles();
+        listaTitlesCategoria  = appContext.getBean(AQueryCat.class, pref.getStr(CAT_BIO)).urlRequestTitle();
 
         //--recupera la lista dei pageids dalla collezione Bio
-        listaPageidsMongoBio = bioService.findAllPageids();
         listaTitlesMongoBio = bioService.findAllTitles();
 
         //--elabora le liste delle differenze per la sincronizzazione
@@ -104,28 +103,28 @@ public class CicloService extends ABioService {
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa sette minuti");
         }// end of if cycle
-        listaPageidsEccedenti = array.differenza(listaPageidsMongoBio, listaPageidsMongoCategoria);
+        listaTitlesEccedenti = array.differenza(listaTitlesMongoBio, listaTitlesCategoria);
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Calcolate " + text.format(listaPageidsEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
-            logger.debug("Calcolate " + text.format(listaPageidsEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
+            log.info("Calcolate " + text.format(listaTitlesEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
+            logger.debug("Calcolate " + text.format(listaTitlesEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
         }// end of if cycle
 
         //--Cancella dal mongoDB tutte le entities non più presenti nella categoria
-        deleteService.esegue(listaPageidsEccedenti);
+        deleteService.esegue(listaTitlesEccedenti);
 
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             log.info("Debug - Inizio a calcolare le voci mancanti. Circa sette minuti");
         }// end of if cycle
-        listaPageidsMancanti = array.differenza(listaPageidsMongoCategoria, listaPageidsMongoBio);
+        listaTitlesMancanti = array.differenza(listaTitlesCategoria, listaTitlesMongoBio);
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Calcolate " + text.format(listaPageidsMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
-            logger.debug("Calcolate " + text.format(listaPageidsMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
+            log.info("Calcolate " + text.format(listaTitlesMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
+            logger.debug("Calcolate " + text.format(listaTitlesMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
         }// end of if cycle
 
         //--Scarica dal server la lista di voci mancanti e crea le nuove entities sul mongoDB Bio
-        newService.esegue(listaPageidsMancanti);
+        newService.esegue(listaTitlesMancanti);
 
         //--aggiorna tutte le entities mongoDB Bio che sono stati modificate sul server wiki DOPO l'ultima lettura
         result = updateService.esegue();
