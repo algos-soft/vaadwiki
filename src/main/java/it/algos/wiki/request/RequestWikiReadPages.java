@@ -6,12 +6,14 @@ import it.algos.wiki.LibWiki;
 import it.algos.wiki.Page;
 import it.algos.wiki.TipoRisultato;
 import it.algos.wiki.WrapTime;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,11 +23,13 @@ import java.util.HashMap;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Slf4j
 public class RequestWikiReadPages extends RequestWiki {
 
 
     //--tag per la costruzione della stringa della request
-    private static String TAG_MULTIPAGES = TAG_PROP + "&pageids=";
+//    private static String TAG_MULTIPAGES = TAG_PROP + "&pageids=";
+    private static String TAG_MULTIPAGES = TAG_PROP + "&titles=";
 
 
     //--lista delle pagine costruite con la risposta
@@ -104,6 +108,11 @@ public class RequestWikiReadPages extends RequestWiki {
      * Effettua la request per voci indicate
      */
     public void esegue(String stringaPageIds) {
+        try { // prova ad eseguire il codice
+            stringaPageIds= URLEncoder.encode(stringaPageIds, "UTF-8");;
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
         super.stringaPageIds = stringaPageIds;
         super.doRequest();
     } // fine del metodo

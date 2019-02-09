@@ -220,7 +220,7 @@ public class AttNazProfCatViewList extends AViewList {
 
 
     /**
-     * Opens the confirmation dialog before deleting the current item.
+     * Opens the confirmation dialog before deleting all items.
      * <p>
      * The dialog will display the given title and message(s), then call
      * <p>
@@ -235,7 +235,6 @@ public class AttNazProfCatViewList extends AViewList {
 
     protected void deleteMongo() {
         this.service.deleteAll();
-        pref.saveValue(codeLastDownload, null);
         updateView();
     }// end of method
 

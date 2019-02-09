@@ -3,7 +3,7 @@ package it.algos.wiki.request;
 
 import it.algos.wiki.LibWiki;
 import it.algos.wiki.TipoRisultato;
-import it.algos.wiki.WikiLogin;
+import it.algos.wiki.WikiLoginOld;
 
 import java.io.PrintWriter;
 import java.net.URLConnection;
@@ -117,7 +117,7 @@ public class RequestWikiWrite extends RequestWiki {
      * @param loginTest del collegamento
      * @deprecated
      */
-    public RequestWikiWrite(String wikiTitle, String newText, String summary, WikiLogin loginTest) {
+    public RequestWikiWrite(String wikiTitle, String newText, String summary, WikiLoginOld loginTest) {
         this.doInit(wikiTitle, newText, summary, loginTest);
     }// fine del metodo costruttore completo
 
@@ -125,7 +125,7 @@ public class RequestWikiWrite extends RequestWiki {
      * Metodo iniziale invocato DOPO che la sottoclasse ha regolato alcuni parametri specifici
      * PUO essere sovrascritto nelle sottoclassi specifiche
      */
-    protected void doInit(String wikiTitle, String newText, String summary, WikiLogin loginTest) {
+    protected void doInit(String wikiTitle, String newText, String summary, WikiLoginOld loginTest) {
         super.wikiTitle = wikiTitle;
         this.newText = newText;
         super.summary = summary;
@@ -137,17 +137,17 @@ public class RequestWikiWrite extends RequestWiki {
         super.needContinua = false;
 
         if (loginTest != null) {
-            wikiLogin = loginTest;
+            wikiLoginOld = loginTest;
         } else {
 //            wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
         }// end of if/else cycle
 
-        if (wikiLogin == null) {
+        if (wikiLoginOld == null) {
 //            wikiLogin = VaadApp.WIKI_LOGIN;
         }// end of if cycle
 
 
-        if (needLogin && wikiLogin == null) {
+        if (needLogin && wikiLoginOld == null) {
             risultato = TipoRisultato.noLogin;
             valida = false;
             return;

@@ -1,11 +1,13 @@
 package it.algos.wiki.web;
 
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.wiki.LibWiki;
-import it.algos.wiki.WikiLogin;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,7 @@ import java.util.HashMap;
  */
 @Component("AQueryCat")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class AQueryCat extends AQueryGet {
 
 
@@ -61,10 +64,13 @@ public class AQueryCat extends AQueryGet {
     /**
      * Tag completo 'urlDomain' per la richiesta di una lista di categoria
      */
-    private static String TAG_CAT = TAG_LIST + TAG_LIMIT + TAG_INFO + TAG_TITLE;
+    private static String TAG_CAT = TAG_LIST + TAG_INFO + TAG_TITLE;
 
     @Autowired
-    private WikiLogin wikiLoginCat;
+    protected ApplicationContext appContext;
+
+//    @Autowired
+//    private WikiLoginOld wikiLoginOldCat;
 
     private String textContinue;
 
@@ -103,7 +109,7 @@ public class AQueryCat extends AQueryGet {
         super.fixPreferenze();
         super.isUploadCookies = true;
         super.isUsaPost = false;
-        super.isDownloadCookies = false;
+        super.isUsaBot = true;
     }// end of method
 
 
@@ -139,12 +145,23 @@ public class AQueryCat extends AQueryGet {
      * @param titoloCat della categoria (necessita di codifica) usato nella urlRequest
      */
     public ArrayList<String> urlRequestTitle(String titoloCat) {
+        long inizio = System.currentTimeMillis();
+        String message = "";
         listaTitles = new ArrayList<>();
-        super.urlRequest(titoloCat);
 
+        super.urlRequest(titoloCat);
         while (text.isValid(textContinue)) {
             super.urlRequest(titoloCat);
         } // fine del blocco while
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            message += "Download categoria ";
+            message += titoloCat;
+            message += " (" + text.format(listaTitles.size()) + " voci in ";
+            message += date.deltaText(inizio);
+            message += "), con AQueryCat, loggato come " + wLogin.getLgusername() + ", upload cookies, urlRequest di tipo GET";
+            log.info(message);
+        }// end of if cycle
 
         return listaTitles != null && listaTitles.size() > 0 ? listaTitles : null;
     }// end of method
@@ -166,6 +183,11 @@ public class AQueryCat extends AQueryGet {
     public String fixUrlDomain(String titoloWikiGrezzo) {
         String urlDomain = super.fixUrlDomain(titoloWikiGrezzo);
         urlDomain = urlDomain.startsWith(TAG_CAT) ? urlDomain : TAG_CAT + urlDomain;
+
+        if (isUsaBot) {
+            urlDomain += TAG_BOT + TAG_LIMIT;
+        }// end of if cycle
+
         if (text.isValid(textContinue)) {
             urlDomain = urlDomain + TAG_CONTINUE + textContinue;
         }// end of if cycle
@@ -184,8 +206,8 @@ public class AQueryCat extends AQueryGet {
         HashMap<String, Object> mappa = null;
         String txtCookies = "";
 
-        if (isUploadCookies && wikiLoginCat != null) {
-            mappa = wikiLoginCat.getCookies();
+        if (isUploadCookies && wLogin != null) {
+            mappa = wLogin.getCookies();
             txtCookies = LibWiki.creaCookiesText(mappa);
             urlConn.setRequestProperty("Cookie", txtCookies);
         }// end of if cycle
@@ -219,15 +241,11 @@ public class AQueryCat extends AQueryGet {
 
 
     protected void elaboraListaResponse(JSONArray listaCat) {
-
         if (listaTitles != null) {
             for (Object jsonObj : listaCat) {
                 listaTitles.add((String) ((JSONObject) jsonObj).get("title"));
             }// end of for cycle
         }// end of if cycle
-
-        int a = 87;
-
     } // fine del metodo
 
 }// end of class

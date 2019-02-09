@@ -109,8 +109,8 @@ public abstract class QueryWiki extends Query {
         String txtCookies;
 
         // regolo i cookies
-        if (wikiLogin != null && wikiLogin.isValido()) {
-            txtCookies = wikiLogin.getStringCookies();
+        if (wikiLoginOld != null && wikiLoginOld.isValido()) {
+            txtCookies = wikiLoginOld.getStringCookies();
             urlConn.setRequestProperty("Cookie", txtCookies);
         }// fine del blocco if
 

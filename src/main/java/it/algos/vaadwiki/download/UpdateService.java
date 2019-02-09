@@ -98,8 +98,8 @@ public class UpdateService extends ABioService {
         String info = "";
 
         for (int k = 0; k < numCicliLetturaPagine; k++) {
-            LinkedHashMap<Long, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
-            result = esegueSingoloBlocco(mappa);
+//            LinkedHashMap<String, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
+//            result = esegueSingoloBlocco(mappa);
             numVociModificate += result.getNumVociRegistrate();
             info = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " voci e modificati in mongoDB.Bio " + text.format(numVociModificate) + " elementi in " + date.deltaText(inizio);
             if (pref.isBool(FlowCost.USA_DEBUG)) {
@@ -121,11 +121,11 @@ public class UpdateService extends ABioService {
      * 5) cancella le entities di mongoDB Bio che sono state modificate
      * 6) inserisce (bulk) le voci modifcate nella collazione Bio
      */
-    public DownloadResult esegueSingoloBlocco(LinkedHashMap<Long, Timestamp> mappa) {
+    public DownloadResult esegueSingoloBlocco(LinkedHashMap<String, Timestamp> mappa) {
         DownloadResult result = null;
         ArrayList<WrapTime> listaWrapTimeServer = null;
-        ArrayList<Long> listaPageidAll = null;
-        ArrayList<Long> listaPageidModificateDaRileggere = null;
+        ArrayList<String> listaPageidAll = null;
+        ArrayList<String> listaPageidModificateDaRileggere = null;
         Timestamp timestampLocalMongoItalianTime;
         Long pageid;
         long delta = 3600000;
@@ -137,7 +137,7 @@ public class UpdateService extends ABioService {
         }// end of if cycle
 
         if (listaPageidAll != null) {
-            listaWrapTimeServer = api.leggeTimestamp(listaPageidAll);
+//            listaWrapTimeServer = api.leggeTimestamp(listaPageidAll);
         }// end of if cycle
 
         if (array.isValid(listaWrapTimeServer)) {
@@ -149,7 +149,7 @@ public class UpdateService extends ABioService {
                 timestampLocalMongoItalianTime = mappa.get(pageid);
                 timeMongo = timestampLocalMongoItalianTime.getTime();
                 if (timeMongo < timeServer) {
-                    listaPageidModificateDaRileggere.add(wrap.getPageid());
+//                    listaPageidModificateDaRileggere.add(wrap.get());
                 }// end of if cycle
             }// end of for cycle
         }// end of if cycle

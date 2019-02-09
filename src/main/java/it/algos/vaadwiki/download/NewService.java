@@ -36,14 +36,14 @@ public class NewService extends ABioService {
      * Esegue una serie di RequestWikiReadMultiPages a blocchi di PAGES_PER_REQUEST per volta
      * Per ogni page crea un record bio
      *
-     * @param listaIdsMancanti elenco (ids=pageids) delle pagine mancanti da scaricare e registrare
+     * @param listaVoci elenco (title) delle pagine mancanti da scaricare e registrare
      */
-    public void esegue(ArrayList<Long> listaIdsMancanti) {
+    public void esegue(ArrayList<String> listaVoci) {
         long inizio = System.currentTimeMillis();
         DownloadResult result;
 
-        if (array.isValid(listaIdsMancanti)) {
-            result = pageService.downloadPagine(listaIdsMancanti);
+        if (array.isValid(listaVoci)) {
+            result = pageService.downloadPagine(listaVoci);
             pref.saveValue(LAST_DOWNLOAD_BIO, LocalDateTime.now());
 
             if (result.getNumVociRegistrate() > 0) {

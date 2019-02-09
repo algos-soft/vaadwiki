@@ -2,7 +2,7 @@ package it.algos.wiki.request;
 
 import it.algos.wiki.TipoRequest;
 import it.algos.wiki.TipoRisultato;
-import it.algos.wiki.WikiLogin;
+import it.algos.wiki.WikiLoginOld;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -35,7 +35,7 @@ public abstract class Query {
     //--tipo di request - solo una per leggere - due per scrivere
     //--di default solo lettura (per la scrittura serve il login)
     protected TipoRequest tipoRequest = TipoRequest.read;
-    protected WikiLogin wikiLogin;
+    protected WikiLoginOld wikiLoginOld;
     // contenuto della pagina in scrittura
     protected String testoNew;
     // oggetto della modifica in scrittura
@@ -194,10 +194,10 @@ public abstract class Query {
     protected URLConnection creaConnessione(String domain) throws Exception {
         URLConnection urlConn = null;
         String txtCookies = "";
-        WikiLogin login = null;
+        WikiLoginOld login = null;
 
         if (isServeLogin()) {
-            login = this.wikiLogin;
+            login = this.wikiLoginOld;
             if (login == null) {
                 return null;
             }// end of if cycle
@@ -299,12 +299,12 @@ public abstract class Query {
         this.serveLogin = serveLogin;
     }//end of setter method
 
-    public WikiLogin getWikiLogin() {
-        return wikiLogin;
+    public WikiLoginOld getWikiLoginOld() {
+        return wikiLoginOld;
     }// end of getter method
 
-    public void setWikiLogin(WikiLogin wikiLogin) {
-        this.wikiLogin = wikiLogin;
+    public void setWikiLoginOld(WikiLoginOld wikiLoginOld) {
+        this.wikiLoginOld = wikiLoginOld;
     }//end of setter method
 
     public String getTestoNew() {

@@ -395,6 +395,26 @@ public class BioService extends AttNazProfCatService {
 
 
     /**
+     * Returns only entities of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     * <p>
+     * Methods of this library return Iterable<T>, while the rest of my code expects Collection<T>
+     * L'annotation standard di JPA prevede un ritorno di tipo Iterable, mentre noi usiamo List
+     * Eseguo qui la conversione, che rimane trasparente al resto del programma
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     *
+     * @return all entities
+     */
+    public List<? extends AEntity> findAll(int offset, int size) {
+        Sort sort = new Sort(Sort.Direction.ASC, "cognome");
+        return findAll(offset, size, sort);
+    }// end of method
+
+    /**
      * Returns pageid list of the requested page.
      * <p>
      * Senza filtri

@@ -1,7 +1,6 @@
 package it.algos.vaadwiki.application;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.wiki.WikiLogin;
+import it.algos.wiki.WikiLoginOld;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import it.algos.vaadflow.annotation.AIScript;
@@ -24,7 +23,7 @@ import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 @AIScript(sovrascrivibile = false)
 public class WikiCost {
 
-    public static WikiLogin WIKI_LOGIN = null;
+    public static WikiLoginOld WIKI_LOGIN = null;
 
 //	public final static String TAG_SEC = "secolo";
 //	public final static String TAG_MES = "mese";

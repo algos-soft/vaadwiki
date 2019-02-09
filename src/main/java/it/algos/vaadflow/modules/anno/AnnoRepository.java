@@ -34,5 +34,6 @@ public interface AnnoRepository extends MongoRepository<Anno, String> {
     public Anno findByTitolo(String titolo);
     public List<Anno> findTop100ByOrderByOrdine();
     public List<Anno> findAllByOrderByOrdineAsc();
+    public List<Anno> findAllByOrderByOrdineDesc();
 
 }// end of class

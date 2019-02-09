@@ -9,12 +9,6 @@ package it.algos.vaadflow.enumeration;
  * <p>
  * Template di schedule preconfigurati, con nota esplicativa utilizzabile nelle info
  *
- * Sotto-pattern per i minuti.
- * Sotto-pattern per le ore.
- * Sotto-pattern per il giorno del mese.
- * Sotto-pattern per il mese.
- * Sotto-pattern per il giorno della settimana.
- *
  * @see http://www.sauronsoftware.it/projects/cron4j/manual.php
  */
 public enum EASchedule {
@@ -40,9 +34,8 @@ public enum EASchedule {
     minutoTre("3/3 * * * *", "ogni minuto"),
     settimanaLunedi("0 0 * * 1", "ogni settimana nella notte tra domenica e lunedi."),
     biMensile("0 4 1,15 * *", "il primo ed il 15 di ogni mese alle ore 4 di notte."),
-    oreQuattro("1 4 2-14,16-31 * *", "ogni giorno alle ore 4 di notte, escluso l'1 ed il 15"),
+    oreQuattro("0 4 2-14,16-31 * *", "ogni giorno alle ore 4 di notte, escluso l'1 ed il 15"),
     oreOtto("0 8 * * *", "ogni giorno alle ore 8 del mattino."),
-    test("17 8 2-14,16-31 * *", "ogni giorno alle ore 8 del mattino."),
     ;
 
     private String tag;

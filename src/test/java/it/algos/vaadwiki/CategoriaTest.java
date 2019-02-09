@@ -3,17 +3,15 @@ package it.algos.vaadwiki;
 import it.algos.vaadflow.service.ADateService;
 //import it.algos.vaadwiki.modules.categoria.Categoria;
 //import it.algos.vaadwiki.modules.categoria.CategoriaService;
+import it.algos.vaadwiki.didascalia.Didascalia;
 import it.algos.wiki.Api;
-import it.algos.wiki.WikiLogin;
-import it.algos.wiki.WrapCat;
 import it.algos.wiki.request.RequestWikiCat;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-
-import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -46,7 +44,10 @@ public class CategoriaTest extends ATest {
 
     @InjectMocks
     public RequestWikiCat requestCat;
+    @Autowired
+    private Didascalia didascalia;
 
+    private String wikiTitle = "Ron Clarke";
 
     //    private String titleCategoria = "Attori statunitensi";
 //private String titleCategoria = "Nati nel 1985";
@@ -75,11 +76,11 @@ public class CategoriaTest extends ATest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(api);
-//        MockitoAnnotations.initMocks(categoriaService);
+        MockitoAnnotations.initMocks(didascalia);
         MockitoAnnotations.initMocks(dateService);
         MockitoAnnotations.initMocks(requestCat);
-        requestCat.wikiLogin = new WikiLogin("Gacbot@Gacbot", "tftgv0vhl16c0qnmfdqide3jqdp1i5m7");
-        requestCat.inizia();
+//        requestCat.wikiLogin = new WikiLogin("Gacbot@Gacbot", "tftgv0vhl16c0qnmfdqide3jqdp1i5m7");
+//        requestCat.inizia();
     }// end of method
 
 

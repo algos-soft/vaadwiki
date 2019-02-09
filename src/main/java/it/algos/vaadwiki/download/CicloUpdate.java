@@ -6,9 +6,7 @@ import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.web.AQueryCat;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
@@ -26,26 +24,23 @@ import static it.algos.vaadwiki.application.WikiCost.CAT_BIO;
  * Esegue un ciclo (DELETE) di cancellazione di records esistenti nel database e mancanti nella categoria
  * Esegue un ciclo (NEW) di controllo e creazione di nuovi records esistenti nella categoria sul server e mancanti nel database
  * Esegue un ciclo (UPDATE) di controllo e aggiornamento di tutti i records esistenti nel database
- * Esegue un ciclo (ELABORA) di elaborazione delle informazioni grezze (eventuale)
- * Esegue un ciclo (UPLOAD) di costruzione delle liste (eventuale)
+ * Esegue un ciclo (ELABORA) di elaborazione delle informazioni grezze (eventuale - not for now)
+ * Esegue un ciclo (UPLOAD) di costruzione delle liste (eventuale - not for now)
  * <p>
  * Il ciclo viene chiamato da DaemonBio (con frequenza giornaliera)
  * Il ciclo può essere invocato dal bottone 'Ciclo' nella tavola Bio
- * Il ciclo necessita del login come bot per il funzionamento normale
+ * Il ciclo necessita del login come bot per il funzionamento
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class CicloService extends ABioService {
+public class CicloUpdate extends ABioService {
 
-    @Autowired
-    protected ApplicationContext appContext;
 
     /**
      * Aggiorna le ATTIVITA, con un download del modulo attività
      * Aggiorna le NAZIONALITA, con un download del modulo nazionalità
      * Aggiorna le PROFESSIONI, con un download del modulo professioni
-     * Aggiorna le CATEGORIE, con un download di tutte le voci della categoria BioBot
      * <p>
      * Crea una lista di pageid dalla collezione Categoria sul mongoDB
      * Crea una lista di pageid dalla collezione Bio esistente sul mongoDB
@@ -72,13 +67,13 @@ public class CicloService extends ABioService {
         DownloadResult result;
         ArrayList<String> listaTitlesCategoria;
         ArrayList<String> listaTitlesMongoBio;
-        ArrayList<Long> listaTitlesEccedenti;
-        ArrayList<Long> listaTitlesMancanti;
+        ArrayList<String> listaTitlesEccedenti;
+        ArrayList<String> listaTitlesMancanti;
         long inizio;
 
         //--Il ciclo necessita del login valido come bot per il funzionamento normale
         //--oppure del flag USA_CICLI_ANCHE_SENZA_BOT per un funzionamento ridotto
-        if (wikiLogin != null && wikiLogin.isValido() && wikiLogin.isBot()) {
+        if (wikiLoginOld != null && wikiLoginOld.isValido() && wikiLoginOld.isBot()) {
         } else {
             return null;
         }// end of if/else cycle
@@ -101,7 +96,7 @@ public class CicloService extends ABioService {
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa sette minuti");
+            log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa dodici minuti");
         }// end of if cycle
         listaTitlesEccedenti = array.differenza(listaTitlesMongoBio, listaTitlesCategoria);
         if (pref.isBool(FlowCost.USA_DEBUG)) {
@@ -110,12 +105,12 @@ public class CicloService extends ABioService {
         }// end of if cycle
 
         //--Cancella dal mongoDB tutte le entities non più presenti nella categoria
-        deleteService.esegue(listaTitlesEccedenti);
+//        deleteService.esegue(listaTitlesEccedenti);
 
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Debug - Inizio a calcolare le voci mancanti. Circa sette minuti");
+            log.info("Debug - Inizio a calcolare le voci mancanti. Circa dodici minuti");
         }// end of if cycle
         listaTitlesMancanti = array.differenza(listaTitlesCategoria, listaTitlesMongoBio);
         if (pref.isBool(FlowCost.USA_DEBUG)) {

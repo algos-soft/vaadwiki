@@ -915,6 +915,41 @@ public abstract class LibWiki {
 
 
     /**
+     * Crea una mappa errrori (valori String) dal testo JSON di una response
+     *
+     * @param textJSON in ingresso
+     *
+     * @return mappa standard (valori String)
+     */
+    public static HashMap<String, Object> creaMappaError(String textJSON) {
+        HashMap<String, Object> mappa = null;
+        JSONObject objectAll;
+        JSONObject objectError = null;
+
+        // recupera i due oggetti al livello root del testo (error e servedby)
+        objectAll = (JSONObject) JSONValue.parse(textJSON);
+
+        // controllo
+        if (objectAll == null) {
+            return null;
+        }// fine del blocco if
+
+        //recupera i valori dei parametri di error
+        if (objectAll.get(ERROR) != null && objectAll.get(ERROR) instanceof JSONObject) {
+            objectError = (JSONObject) objectAll.get(ERROR);
+        }// fine del blocco if
+
+        if (objectError != null && objectError.size() > 0) {
+            mappa = new HashMap<String, Object>();
+
+            for (Object key : objectError.keySet()) {
+                mappa.put((String) key, objectError.get((String) key));
+            } // fine del ciclo for-each
+        }// end of if cycle
+
+        return mappa;
+    } // fine del metodo
+    /**
      * Restituisce il logintoken dalla mappa (se esiste)
      *
      * @param mappa standard (valori String)

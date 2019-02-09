@@ -18,6 +18,12 @@ import org.springframework.stereotype.Component;
 public abstract class AQueryGet extends AQueryWiki {
 
     /**
+     * Tag completo 'urlDomain' per il controllo
+     */
+    protected static String TAG_BOT =  "&assert=bot";
+
+
+    /**
      * Costruttore base senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(AQueryxxx.class) <br>
@@ -30,8 +36,7 @@ public abstract class AQueryGet extends AQueryWiki {
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(AQueryxxx.class, urlRequest) <br>
-     * Usa: appContext.getBean(AQueryxxx.class, urlRequest).urlResponse() <br>
+     * Usa: appContext.getBean(AQueryxxx.class, titoloWiki).urlResponse() <br>
      *
      * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
      */

@@ -2,7 +2,6 @@ package it.algos.wiki.request;
 
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadwiki.application.WikiCost;
 import it.algos.wiki.*;
@@ -34,7 +33,7 @@ public abstract class ARequest {
      * Istanza inietta da Spring come 'singleton'
      */
     @Autowired
-    private WikiLogin wikiLogin;
+    private WikiLoginOld wikiLoginOld;
 
     //--richiesta preliminary per ottenere il token per Edit e Move
     protected static final boolean USA_NEW_META_TOKEN = true; //il vecchio intoken=edit è deprecato
@@ -369,8 +368,8 @@ public abstract class ARequest {
 
         //--invia i cookies di supporto, se richiesti
         if (needLogin) {
-            if (wikiLogin != null && urlConn != null) {
-                urlConn.setRequestProperty("Cookie", wikiLogin.getCookiesText());
+            if (wikiLoginOld != null && urlConn != null) {
+                urlConn.setRequestProperty("Cookie", wikiLoginOld.getCookiesText());
             }// end of if cycle
         }// end of if cycle
 
@@ -547,16 +546,16 @@ public abstract class ARequest {
     private boolean checkLogin() {
         boolean status = true;
 
-        if (wikiLogin == null) {
+        if (wikiLoginOld == null) {
 //            wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
         }// end of if cycle
 
-        if (wikiLogin == null) {
-            wikiLogin = WikiCost.WIKI_LOGIN;
+        if (wikiLoginOld == null) {
+            wikiLoginOld = WikiCost.WIKI_LOGIN;
         }// end of if cycle
 
         if (needLogin) {
-            if (wikiLogin == null) {
+            if (wikiLoginOld == null) {
                 risultato = TipoRisultato.noLogin;
                 return false;
             }// end of if cycle

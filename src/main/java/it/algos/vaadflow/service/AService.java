@@ -17,6 +17,7 @@ import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -44,6 +45,9 @@ import static it.algos.vaadflow.ui.dialog.AViewDialog.DURATA;
 @Slf4j
 public abstract class AService extends AbstractService implements IAService {
 
+
+    @Autowired
+    protected ApplicationContext appContext;
 
     public final static String FIELD_NAME_ID = "id";
 

@@ -116,8 +116,8 @@ public class RequestWikiLogin extends RequestWiki {
         String txtCookies = "";
 
         // regola le property
-        if (wikiLogin != null) {
-            txtCookies = wikiLogin.getStringCookies();
+        if (wikiLoginOld != null) {
+            txtCookies = wikiLoginOld.getStringCookies();
             urlConn.setRequestProperty("Cookie", txtCookies);
         }// end of if cycle
 

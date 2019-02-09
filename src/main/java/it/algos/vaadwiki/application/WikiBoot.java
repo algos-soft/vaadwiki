@@ -14,11 +14,13 @@ import it.algos.vaadwiki.modules.bio.BioViewList;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaViewList;
 import it.algos.vaadwiki.modules.professione.ProfessioneViewList;
 import it.algos.vaadwiki.views.UtilityView;
-import it.algos.wiki.WikiLogin;
+import it.algos.wiki.web.AQueryLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletContextEvent;
 import java.time.LocalDate;
 
@@ -48,6 +50,9 @@ public class WikiBoot extends ABoot {
 
     public final static String DEMO_COMPANY_CODE = "demo";
 
+
+    @Autowired
+    protected ApplicationContext appContext;
     @Autowired
     private UtenteService utenteService;
 
@@ -82,9 +87,22 @@ public class WikiBoot extends ABoot {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         super.inizia();
-        WikiCost.WIKI_LOGIN = new WikiLogin("Gacbot@Gacbot", "tftgv0vhl16c0qnmfdqide3jqdp1i5m7");
+//        WikiCost.WIKI_LOGIN = new WikiLogin("Gacbot@Gacbot", "tftgv0vhl16c0qnmfdqide3jqdp1i5m7");
     }// end of method
 
+    /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * Performing the initialization in a constructor is not suggested
+     * as the state of the UI is not properly set up when the constructor is invoked.
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
+     * ma l'ordine con cui vengono chiamati NON è garantito
+     */
+    @PostConstruct
+    protected void inizia() {
+        appContext.getBean(AQueryLogin.class);
+    }// end of method
 
     /**
      * Inizializzazione dei dati di alcune collections specifiche sul DB Mongo
@@ -140,7 +158,6 @@ public class WikiBoot extends ABoot {
         FlowCost.MENU_CLAZZ_LIST.add(AttivitaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(NazionalitaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(ProfessioneViewList.class);
-//        FlowCost.MENU_CLAZZ_LIST.add(CategoriaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(BioViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(WikiGiornoViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(WikiAnnoViewList.class);

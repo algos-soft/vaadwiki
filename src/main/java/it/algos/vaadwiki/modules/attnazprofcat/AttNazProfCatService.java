@@ -7,6 +7,7 @@ import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AService;
 import it.algos.wiki.Api;
+import it.algos.wiki.web.AQueryVoce;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -92,12 +93,17 @@ public abstract class AttNazProfCatService extends AService {
         String tagUgu = "=";
         String tagApi = "\"";
         long inizio = System.currentTimeMillis();
-        String testo = api.leggeVoce(titoloModulo);
+        String testo = "";
         testo = text.estrae(testo, tagIni, tagEnd);
-        String[] righe = testo.split("\n");
+        String[] righe = null;
         String[] parti;
         String singolare;
         String plurale;
+        String message = "";
+
+        //--legge la pagina wiki
+        testo = ((AQueryVoce) appContext.getBean("AQueryVoce", titoloModulo)).urlRequest();
+        righe = testo.split("\n");
 
         if (array.isValid(righe)) {
             this.deleteAll();
@@ -115,11 +121,18 @@ public abstract class AttNazProfCatService extends AService {
 
             setLastDownload(inizio);
             if (pref.isBool(FlowCost.USA_DEBUG)) {
-                log.info("Download del modulo wiki." + entityClass.getSimpleName() + " (" + text.format(righe.length) + " elementi) in " + date.deltaText(inizio));
-                logger.debug("Download del modulo wiki." + entityClass.getSimpleName() + " (" + text.format(righe.length) + " elementi) in " + date.deltaText(inizio));
+                message += "Download modulo ";
+                message += entityClass.getSimpleName();
+                message += " (";
+                message += text.format(righe.length);
+                message += " elementi in ";
+                message += date.deltaText(inizio);
+                message += "), con AQueryVoce, senza login, senza cookies, urlRequest di tipo GET";
+
+                log.info(message);
             }// end of if cycle
         } else {
-            logger.error( entityClass.getSimpleName() + " - Qualcosa non ha funzionato");
+            logger.error(entityClass.getSimpleName() + " - Qualcosa non ha funzionato");
         }// end of if/else cycle
     }// end of method
 
@@ -196,6 +209,7 @@ public abstract class AttNazProfCatService extends AService {
     public ArrayList<Long> findAllPageid(int offset, int size, Sort sort) {
         return null;
     }// end of method
+
 
     /**
      * Costruisce una lista di nomi delle properties del Search nell'ordine:

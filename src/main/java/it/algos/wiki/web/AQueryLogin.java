@@ -2,13 +2,13 @@ package it.algos.wiki.web;
 
 import com.vaadin.flow.component.notification.Notification;
 import it.algos.wiki.LibWiki;
-import it.algos.wiki.WikiLogin;
+import it.algos.wiki.WikiLoginOld;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -20,10 +20,25 @@ import java.util.LinkedHashMap;
  * User: gac
  * Date: lun, 28-gen-2019
  * Time: 14:36
+ * <p>
+ * Collegamento al server wiki <ul>
+ * <li> Ogni utilizzo del bot deve essere preceduto da un login </li>
+ * <li> Il login deve essere effettuato tramite le API </li>
+ * <li> Il login deve essere effettuato con nickname e password </li>
+ * <li> Il server wiki rimanda indietro la conferma IN DUE posti: i cookies ed il testo </li>
+ * <li> Controlla che l'accesso abbia un risultato positivo </li>
+ * <li> Due modalità di controllo:</li>
+ * <li> a) semplice legge SOLO i cookies e non il testo</li>
+ * <li> b) completa legge anche il testo e LO CONFRONTA con i cookies per ulteriore controllo </li>
+ * <li> Mantiene il lguserid </li>
+ * <li> Mantiene il lgusername </li>
+ * <li> Mantiene il lgtoken </li>
+ * <li> Mantiene il sessionid </li>
+ * </ul>
+ * <p>
  *
  * @see https://www.mediawiki.org/wiki/OAuth/Owner-only_consumers
  * @see https://en.wikipedia.org/wiki/Help:Creating_a_bot
- * <p>
  * <p>
  * Request 1
  * <p>
@@ -32,7 +47,8 @@ import java.util.LinkedHashMap;
  * lgname=BOTUSERNAME
  * lgpassword=BOTPASSWORD
  * <p>
- * If the password is correct, this will return a "NeedToken" result and a "token" parameter in XML form, as documented at mw:API:Login. Other output formats are available. It will also return HTTP cookies as described below.
+ * If the password is correct, this will return a "NeedToken" result and a "token" parameter in XML form, as documented at mw:API:Login.
+ * Other output formats are available. It will also return HTTP cookies as described below.
  * <p>
  * Request 2
  * <p>
@@ -41,6 +57,24 @@ import java.util.LinkedHashMap;
  * lgname=BOTUSERNAME
  * lgpassword=BOTPASSWORD
  * lgtoken=TOKEN
+ * <p>
+ * Indipendentemente da quanto scritto sopra (preso dal sito mediawiki API):
+ * PreliminaryRequest:
+ * urlDomain = "&action=query&meta=tokens&type=login"
+ * GET
+ * no testoPOST
+ * no upload cookies
+ * nella response -> logintoken
+ * nei cookies -> itwikisession
+ * elabora logintoken -> lgtoken
+ * <p>
+ * UrlRequest:
+ * urlDomain = "&action=login"
+ * POST -> lgname, lgpassword, lgtoken
+ * upload cookies -> itwikisession
+ * nella response -> lguserid, lgusername, success
+ * nei cookies -> itwiki_BPsession
+ * elabora -> memorizza in WLogin: itwiki_BPsession, lguserid, lgusername, success
  */
 @Component("AQueryLogin")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -59,9 +93,9 @@ public class AQueryLogin extends AQueryWiki {
 
     public static final String LG_PASSWORD = "fulvia68@lhgfmeb8ckefkniq85qmhul18r689nbq";
 
-    private final static String FIRST_REQUEST_GET = TAG_QUERY + "meta=tokens&type=login";
+    private final static String TAG_FIRST_REQUEST_GET = TAG_QUERY + "&meta=tokens&type=login";
 
-    private final static String SECOND_REQUEST_POST = TAG_BASE + "action=login";
+    private final static String TAG_SECOND_REQUEST_POST = TAG_BASE + "&action=login";
 
 
     private String itwiki_BPsession;
@@ -80,19 +114,17 @@ public class AQueryLogin extends AQueryWiki {
 
     private String lgtoken;
 
-//    @Autowired
-    private WikiLogin wikiLogin;
+    //    @Autowired
+    private WikiLoginOld wikiLoginOld;
 
-    public AQueryLogin() {
-    }// end of constructor
 
     /**
      * Costruttore base senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(AQueryxxx.class) <br>
      */
-    public AQueryLogin(WikiLogin wikiLogin) {
-        this(wikiLogin, LG_NAME, LG_PASSWORD);
+    public AQueryLogin() {
+        this(LG_NAME, LG_PASSWORD);
     }// end of constructor
 
 
@@ -104,12 +136,25 @@ public class AQueryLogin extends AQueryWiki {
      * @param lgname     del bot da utilizzare
      * @param lgpassword del bot da utilizzare
      */
-    public AQueryLogin(WikiLogin wikiLogin, String lgname, String lgpassword) {
-        this.wikiLogin = wikiLogin;
+    public AQueryLogin(String lgname, String lgpassword) {
         this.lgname = lgname;
         this.lgpassword = lgpassword;
-        urlRequest();
     }// end of constructor
+
+
+    /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * Performing the initialization in a constructor is not suggested
+     * as the state of the UI is not properly set up when the constructor is invoked.
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
+     * ma l'ordine con cui vengono chiamati NON è garantito
+     */
+    @PostConstruct
+    protected void inizia() {
+        urlRequest();
+    }// end of method
 
 
     /**
@@ -127,16 +172,25 @@ public class AQueryLogin extends AQueryWiki {
      * <p>
      * La response viene elaborata per confermare il login andato a buon fine <br>
      */
-    public void urlRequest() {
+    public String urlRequest() {
 
         //--La prima request è di tipo GET
-        super.preliminaryRequest(FIRST_REQUEST_GET);
+        //--regole qui le preferenze perché sono diverse tra la preliminaryRequest e la urlRequest
+        super.isUploadCookies = false;
+        super.isUsaPost = false;
+        super.isUsaBot = false;
+        super.isDownloadCookies = true;
+        super.preliminaryRequest(TAG_FIRST_REQUEST_GET);
 
         //--La seconda request è di tipo POST ed usa i cookies
+        //--regole qui le preferenze perché sono diverse tra la preliminaryRequest e la urlRequest
         super.isUploadCookies = true;
         super.isUsaPost = true;
-        super.urlRequest(SECOND_REQUEST_POST);
+        super.isUsaBot = false;
+        super.isDownloadCookies = true;
+        super.urlRequest(TAG_SECOND_REQUEST_POST);
 
+        return "";
     } // fine del metodo
 
 
@@ -245,10 +299,34 @@ public class AQueryLogin extends AQueryWiki {
         if (LibWiki.isLoginValid(urlResponse)) {
             lguserid = LibWiki.getValueLong(mappa, LOGIN_USER_ID);
             lgusername = LibWiki.getValueStr(mappa, LOGIN_USER_NAME);
-            regolaWikiLoginSingleton();
-            Notification.show("Loggato come " + lgusername, 3000, Notification.Position.BOTTOM_START);
+
+            if (regolaWikiLoginSingleton()) {
+                if (checkCollegamentoComeBot()) {
+                    try { // prova ad eseguire il codice
+                        Notification.show("Bot loggato come " + lgusername, 3000, Notification.Position.BOTTOM_START);
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
+                } else {
+                    try { // prova ad eseguire il codice
+                        Notification.show("Non sono riuscito a loggarmi come bot", 4000, Notification.Position.BOTTOM_START);
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
+                }// end of if/else cycle
+            } else {
+                try { // prova ad eseguire il codice
+                    Notification.show("Non sono riuscito a loggarmi", 4000, Notification.Position.BOTTOM_START);
+                } catch (Exception unErrore) { // intercetta l'errore
+                    log.error(unErrore.toString());
+                }// fine del blocco try-catch
+            }// end of if/else cycle
         } else {
-            Notification.show("Non sono riuscito a loggarmi ", 4000, Notification.Position.BOTTOM_START);
+            try { // prova ad eseguire il codice
+                Notification.show("Non sono riuscito a loggarmi", 4000, Notification.Position.BOTTOM_START);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
         }// end of if/else cycle
 
         return urlResponse;
@@ -258,16 +336,27 @@ public class AQueryLogin extends AQueryWiki {
     /**
      * Regola i parametri di wikiLogin
      */
-    protected void regolaWikiLoginSingleton() {
-        if (wikiLogin != null) {
-            wikiLogin.setValido(true);
-            wikiLogin.setLguserid(lguserid);
-            wikiLogin.setLgname(lgusername);
-            wikiLogin.setSessionId(itwiki_BPsession);
+    protected boolean regolaWikiLoginSingleton() {
+        boolean status = false;
+
+        if (wLogin != null) {
+            wLogin.regola(lguserid, lgusername, itwiki_BPsession);
+            wLogin.setCookies(cookies);
+            status = true;
         } else {
-            Notification.show("Non trovo wikiLogin", 4000, Notification.Position.BOTTOM_START);
-            log.warn("Non trovo wikiLogin");
+            Notification.show("Non trovo wLogin", 4000, Notification.Position.BOTTOM_START);
+            log.warn("Non trovo wLogin");
         }// end of if/else cycle
+
+        return status;
+    } // fine del metodo
+
+
+    /**
+     * Controlla di essere loggato come bot
+     */
+    protected boolean checkCollegamentoComeBot() {
+        return appContext.getBean(AQueryBot.class).isBot();
     } // fine del metodo
 
 }// end of class

@@ -20,11 +20,6 @@
      * Dichiararla con appContext.getBean(Xxx.class, ....);
      */
 
-    /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe e usato come libreria <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
-     */
-    public ATextService text = ATextService.getInstance();
 
 
     DEPRECATO
@@ -39,19 +34,6 @@
      */
 
 
-    /**
-     * Costruttore @Autowired <br>
-     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-     */
-
-
-    /**
-     * Costruttore @Autowired <br>
-     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-     * Regola il modello-dati specifico e lo passa al costruttore della superclasse <br>
-     */
 
     /**
      * Service (@Scope = 'singleton') iniettato dal costruttore @Autowired di Spring <br>

@@ -19,6 +19,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -79,7 +80,7 @@ import java.util.HashMap;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class WikiLogin {
+public class WikiLoginOld {
 
 
     // key to store the Login object in the session
@@ -167,7 +168,7 @@ public class WikiLogin {
 
     // mappa dei cookies
     // ci metto tutti i cookies restituiti da URLConnection.responses
-    private HashMap<String, Object> cookies;
+    private LinkedHashMap<String, Object> cookies;
 
     // flag di controllo per il collegamento come user (equivale al flag valido)
     private boolean user = false;
@@ -179,7 +180,7 @@ public class WikiLogin {
     /**
      *
      */
-    public WikiLogin() {
+    public WikiLoginOld() {
     }// fine del metodo costruttore
 
     /**
@@ -189,7 +190,7 @@ public class WikiLogin {
      * @param lgpassword password in entrata per il collegamento
      */
     @Deprecated
-    public WikiLogin(String lgname, String lgpassword) {
+    public WikiLoginOld(String lgname, String lgpassword) {
         this(LINGUA_DEFAULT, PROGETTO_DEFAULT, lgname, lgpassword);
     }// fine del metodo costruttore
 
@@ -202,7 +203,7 @@ public class WikiLogin {
      * @param lgpassword password in entrata per il collegamento
      */
     @Deprecated
-    public WikiLogin(String lingua, Progetto progetto, String lgname, String lgpassword) {
+    public WikiLoginOld(String lingua, Progetto progetto, String lgname, String lgpassword) {
         this.setLingua(lingua);
         this.setProgetto(progetto);
         this.setLgname(lgname);
@@ -377,7 +378,7 @@ public class WikiLogin {
         String cookie;
         String name;
         String value;
-        HashMap<String, Object> mappa = new HashMap<String, Object>();
+        LinkedHashMap<String, Object> mappa = new LinkedHashMap<String, Object>();
 
         // controllo di congruità
         if (urlConn != null) {
@@ -842,11 +843,11 @@ public class WikiLogin {
         this.par = par;
     }//end of setter method
 
-    public HashMap<String, Object> getCookies() {
+    public LinkedHashMap<String, Object> getCookies() {
         return cookies;
     }// end of getter method
 
-    public void setCookies(HashMap<String, Object> cookies) {
+    public void setCookies(LinkedHashMap<String, Object> cookies) {
         this.cookies = cookies;
     }//end of setter method
 

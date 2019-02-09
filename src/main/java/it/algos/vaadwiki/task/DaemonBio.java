@@ -49,10 +49,11 @@ public class DaemonBio extends Scheduler {
 
             // Schedule task
             // Ogni giorno
+//            this.task(update);
 
-            this.task(taskAttivita);
-            this.task(taskNazionalita);
-            this.task(taslProfessione);
+//            this.task(taskAttivita);
+//            this.task(taskNazionalita);
+//            this.task(taslProfessione);
 
 //            schedule(EASchedule.giornoDecimoMinuto.getTag(), cicloBio);
 

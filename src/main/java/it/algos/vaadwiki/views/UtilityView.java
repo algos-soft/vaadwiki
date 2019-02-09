@@ -18,10 +18,11 @@ import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadwiki.didascalia.Didascalia;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.service.DidascaliaService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
-import it.algos.wiki.WikiLogin;
+import it.algos.wiki.WikiLoginOld;
 import it.algos.wiki.web.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,13 +66,19 @@ public class UtilityView extends VerticalLayout {
     protected ApplicationContext appContext;
 
     @Autowired
-    private WikiLogin wikiLogin;
+    private WikiLoginOld wikiLoginOld;
+
+    @Autowired
+    private WLogin wLogin;
 
     @Autowired
     private Api api;
 
     @Autowired
     private Didascalia didascalia;
+
+    @Autowired
+    private DidascaliaService didascaliaService;
 
     @Autowired
     private ADateService date;
@@ -94,6 +101,7 @@ public class UtilityView extends VerticalLayout {
 
         this.add(creaTitolo());
         this.add(creaDidascalie());
+        this.add(creaTestLogin());
         this.add(creaTestQuery());
     }// end of method
 
@@ -128,6 +136,22 @@ public class UtilityView extends VerticalLayout {
         buttonView.addClickListener(e -> esegueView());
 
         layout.add(label, buttonTest, buttonUploadTest, buttonUpload, buttonView);
+        return layout;
+    }// end of method
+
+
+    public Component creaTestLogin() {
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.setMargin(false);
+        layout.setSpacing(true);
+
+        Label label = new Label("Login");
+
+        Button buttonLogin = new Button("Test", new Icon(VaadinIcon.REFRESH));
+        buttonLogin.getElement().setAttribute("theme", "secondary");
+        buttonLogin.addClickListener(e -> esegueTestLogin());
+
+        layout.add(label, buttonLogin);
         return layout;
     }// end of method
 
@@ -170,13 +194,14 @@ public class UtilityView extends VerticalLayout {
      * Test con uscita sulla pagina wiki di Utente:Gacbot
      */
     public void esegueUploadTest() {
-        String testo = VUOTA;
-
-        testo += topLayout();
-        testo += bodyLayout(wikiTitle);
-        testo += bottomLayout();
-
-        Api.scriveVoce(wikiTitleDebug, testo);
+        didascaliaService.esegueTest();
+//        String testo = VUOTA;
+//
+//        testo += topLayout();
+//        testo += bodyLayout(wikiTitle);
+//        testo += bottomLayout();
+//
+//        Api.scriveVoce(wikiTitleDebug, testo);
     }// end of method
 
 
@@ -200,6 +225,19 @@ public class UtilityView extends VerticalLayout {
     /**
      * Test con uscita sul terminale di Idea
      */
+    public void esegueTestLogin() {
+        boolean isBot = false;
+        isBot = appContext.getBean(AQueryBot.class).isBot();
+
+        if (wLogin != null) {
+            appContext.getBean(AQueryLogin.class);
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Test con uscita sul terminale di Idea
+     */
     public void esegueTestQuery() {
         String urlDomain = "";
         String wikiTitle = "";
@@ -209,15 +247,11 @@ public class UtilityView extends VerticalLayout {
         Page page;
         ArrayList<String> titoliVociCategoria;
 
-//        if (wikiLogin != null) {
-//            appContext.getBean(AQueryLogin.class, wikiLogin);
-//        }// end of if cycle
 
         log.info("");
         log.info("Algos");
         log.info("Integration test per alcune query");
         log.info("");
-
 
         urlResponse = appContext.getBean(AQueryHTTP.class).urlRequest(urlDomain);
         log.info("AQueryHTTP: " + urlDomain + " - Response: " + (text.isEmpty(urlResponse) ? "OK, response nulla" : "Qualcosa non ha funzionato"));
@@ -319,15 +353,15 @@ public class UtilityView extends VerticalLayout {
         log.info("");
         log.info("Prime 200");
         for (int k = 0; k < 200; k++) {
-            log.info((k+1)+" - "+titoliVociCategoria.get(k));
+            log.info((k + 1) + " - " + titoliVociCategoria.get(k));
         }// end of for cycle
         log.info("Pagina prima del passaggio dei 5.000");
         for (int k = 4799; k < 5000; k++) {
-            log.info((k+1)+" - "+titoliVociCategoria.get(k));
+            log.info((k + 1) + " - " + titoliVociCategoria.get(k));
         }// end of for cycle
         log.info("Pagina dopo il passaggio dei 5.000");
         for (int k = 5000; k < 5200; k++) {
-            log.info((k+1)+" - "+titoliVociCategoria.get(k));
+            log.info((k + 1) + " - " + titoliVociCategoria.get(k));
         }// end of for cycle
 
     }// end of method
@@ -396,7 +430,6 @@ public class UtilityView extends VerticalLayout {
             testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.completa) + "'''";
             testo += A_CAPO;
         }// end of if cycle
-
 
         return testo;
     }// end of method

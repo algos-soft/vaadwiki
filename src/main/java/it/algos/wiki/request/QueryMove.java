@@ -58,11 +58,11 @@ public class QueryMove extends QueryWiki {
      * Costruttore completo
      * Rinvia al medodo iniziale della superclasse
      */
-    public QueryMove(String oldTitle, String newTitle, String summary, WikiLogin login) {
+    public QueryMove(String oldTitle, String newTitle, String summary, WikiLoginOld login) {
         this.doInit(oldTitle, newTitle, summary, login);
     }// fine del metodo costruttore
 
-    protected void doInit(String oldTitle, String newTitle, String summary, WikiLogin login) {
+    protected void doInit(String oldTitle, String newTitle, String summary, WikiLoginOld login) {
         super.tipoRicerca = TipoRicerca.title;
         super.tipoRequest = TipoRequest.write;
         this.oldTitle = oldTitle;
@@ -79,10 +79,10 @@ public class QueryMove extends QueryWiki {
         if (login == null) {
 //            wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
         } else {
-            wikiLogin = login;
+            wikiLoginOld = login;
         }// end of if/else cycle
 
-        if (serveLogin && wikiLogin == null) {
+        if (serveLogin && wikiLoginOld == null) {
             risultato = TipoRisultato.noLogin;
             valida = false;
             return;

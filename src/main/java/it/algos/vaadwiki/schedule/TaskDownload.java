@@ -3,8 +3,7 @@ package it.algos.vaadwiki.schedule;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.schedule.ATask;
-import it.algos.vaadflow.service.ATextService;
-import it.algos.vaadwiki.download.CicloService;
+import it.algos.vaadwiki.download.CicloUpdate;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,7 @@ public class TaskDownload extends ATask {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected CicloService cicloService;
+    protected CicloUpdate cicloUpdate;
 
 
 
@@ -85,7 +84,7 @@ public class TaskDownload extends ATask {
         if (pref.isBool(USA_DAEMON_BIO)) {
             System.out.println("Inizio task di download: " + date.getTime(LocalDateTime.now()));
 
-            cicloService.esegue();
+            cicloUpdate.esegue();
 
             if (pref.isBool(SEND_MAIL_CICLO)) {
                 end = LocalDateTime.now();

@@ -3,6 +3,7 @@ package it.algos.vaadwiki;
 import com.vaadin.flow.spring.annotation.EnableVaadin;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadwiki.security.SecurityConfiguration;
+import it.algos.wiki.web.AQueryLogin;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -54,6 +55,7 @@ public class WikiApplication extends SpringBootServletInitializer {
      */
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(WikiApplication.class, args);
+//        context.getBean(AQueryLogin.class);
     }// end of constructor
 
 

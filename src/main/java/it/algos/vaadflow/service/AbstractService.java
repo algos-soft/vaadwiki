@@ -69,7 +69,7 @@ public abstract class AbstractService {
      * Service (pattern SINGLETON) recuperato come istanza dalla classe <br>
      * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
      */
-    public ATextService text=ATextService.getInstance();
+    public ATextService text;
 
 
     @PostConstruct
@@ -82,7 +82,7 @@ public abstract class AbstractService {
         this.field = AFieldService.getInstance();
         this.mongo = AMongoService.getInstance();
         this.reflection = AReflectionService.getInstance();
-//        this.text = ATextService.getInstance();
+        this.text = ATextService.getInstance();
 
         fixIncrociati();
     }// end of constructor

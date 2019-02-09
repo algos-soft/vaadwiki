@@ -9,9 +9,10 @@ import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.wiki.Api;
-import it.algos.wiki.WikiLogin;
+import it.algos.wiki.WikiLoginOld;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Project vaadbio2
@@ -25,11 +26,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public abstract class ABioService {
 
+
+    @Autowired
+    protected ApplicationContext appContext;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected WikiLogin wikiLogin;
+    protected WikiLoginOld wikiLoginOld;
 
 
     /**
@@ -91,7 +96,7 @@ public abstract class ABioService {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected PreferenzaService pref;
+    public PreferenzaService pref;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -115,7 +120,7 @@ public abstract class ABioService {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected ADateService date;
+    public ADateService date;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

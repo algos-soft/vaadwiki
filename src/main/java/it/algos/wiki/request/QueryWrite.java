@@ -46,7 +46,7 @@ public abstract class QueryWrite extends QueryWiki {
      * Costruttore completo
      * Rinvia al costruttore della superclasse, specificando i flag
      */
-    public QueryWrite(String titlepageid, String testoNew, String summary, WikiLogin login) {
+    public QueryWrite(String titlepageid, String testoNew, String summary, WikiLoginOld login) {
         super.tipoRicerca = TipoRicerca.title;
         this.doInit(titlepageid, testoNew, summary, login);
     }// fine del metodo costruttore
@@ -61,7 +61,7 @@ public abstract class QueryWrite extends QueryWiki {
         this.doInit("" + pageid, testoNew, summary, null);
     }// fine del metodo costruttore
 
-    protected void doInit(String titlepageid, String testoNew, String summary, WikiLogin login) {
+    protected void doInit(String titlepageid, String testoNew, String summary, WikiLoginOld login) {
         super.testoNew = testoNew;
         super.summary = summary;
         super.tipoRequest = TipoRequest.write;
@@ -76,10 +76,10 @@ public abstract class QueryWrite extends QueryWiki {
         if (login == null) {
 //            wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
         } else {
-            wikiLogin = login;
+            wikiLoginOld = login;
         }// end of if/else cycle
 
-        if (serveLogin && wikiLogin == null) {
+        if (serveLogin && wikiLoginOld == null) {
             risultato = TipoRisultato.noLogin;
             valida = false;
             return;

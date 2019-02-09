@@ -2,7 +2,6 @@ package it.algos.wiki.request;
 
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.wiki.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +72,7 @@ public abstract class RequestWiki extends Request {
      * Istanza inietta da Spring come 'singleton'
      */
     @Autowired
-    public WikiLogin wikiLogin;
+    public WikiLoginOld wikiLoginOld;
 
 
     /**
@@ -133,16 +132,16 @@ public abstract class RequestWiki extends Request {
     @Override
     protected void doRequest() {
 
-        if (wikiLogin == null) {
+        if (wikiLoginOld == null) {
 //            wikiLogin = (WikiLogin) LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
         }// end of if cycle
 
-        if (wikiLogin == null) {
+        if (wikiLoginOld == null) {
 //            wikiLogin = VaadApp.WIKI_LOGIN;
         }// end of if cycle
 
         if (needLogin) {
-            if (wikiLogin == null) {
+            if (wikiLoginOld == null) {
                 return;
             }// end of if cycle
         }// end of if cycle
@@ -237,8 +236,8 @@ public abstract class RequestWiki extends Request {
 
 
         // regola le property
-        if (wikiLogin != null) {
-            cookiesMap = wikiLogin.getCookies();
+        if (wikiLoginOld != null) {
+            cookiesMap = wikiLoginOld.getCookies();
             txtCookies = LibWiki.creaCookiesText(cookiesMap);
 //            txtCookies=" itwikiUserName=Gac; itwikiSession=qm3mhhgg3i7qnbopdl0lrvtjddtpuac1; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
 //            txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
@@ -303,9 +302,9 @@ public abstract class RequestWiki extends Request {
         String txtCookies = "";
 
         // regola le property
-        if (wikiLogin != null) {
+        if (wikiLoginOld != null) {
 //            txtCookies = wikiLogin.getStringCookies();
-            mappa = wikiLogin.getCookies();
+            mappa = wikiLoginOld.getCookies();
 //            txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
             txtCookies = LibWiki.creaCookiesText(mappa);
             urlConn.setRequestProperty("Cookie", txtCookies);

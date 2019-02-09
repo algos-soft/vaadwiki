@@ -11,19 +11,34 @@ import java.util.ArrayList;
  */
 public class DownloadResult {
 
-    public ArrayList<Long> vociDaRegistrare;
+    public ArrayList<String> vociDaRegistrare;
 
-    public ArrayList<Long> vociRegistrate = new ArrayList<>();
+    public ArrayList<String> vociRegistrate = new ArrayList<>();
 
     public ArrayList<String> vociNonRegistrate = new ArrayList<>();
 
 
-    public DownloadResult(ArrayList<Long> vociDaRegistrare) {
+    /**
+     * Eventuale nome della categoria utilizzata
+     */
+    private String nomeCategoria;
+
+    /**
+     * inizio delle operazioni
+     */
+    private long inizio ;
+
+
+    public DownloadResult() {
+    }// end of constructor
+
+
+    public DownloadResult(ArrayList<String> vociDaRegistrare) {
         this.vociDaRegistrare = vociDaRegistrare;
     }// end of constructor
 
 
-    public void addSi(Long voceRegistrata) {
+    public void addSi(String voceRegistrata) {
         vociRegistrate.add(voceRegistrata);
     }// end of method
 
@@ -50,6 +65,26 @@ public class DownloadResult {
 
     public boolean isValid() {
         return vociDaRegistrare.size() == vociRegistrate.size();
+    }// end of method
+
+
+    public String getNomeCategoria() {
+        return nomeCategoria;
+    }// end of method
+
+
+    public void setNomeCategoria(String nomeCategoria) {
+        this.nomeCategoria = nomeCategoria;
+    }// end of method
+
+
+    public long getInizio() {
+        return inizio;
+    }// end of method
+
+
+    public void setInizio(long inizio) {
+        this.inizio = inizio;
     }// end of method
 
 }// end of class

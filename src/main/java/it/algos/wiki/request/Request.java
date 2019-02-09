@@ -3,6 +3,7 @@ package it.algos.wiki.request;
 
 import it.algos.vaadflow.service.AArrayService;
 import it.algos.wiki.TipoRisultato;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -18,6 +19,7 @@ import java.net.URLConnection;
  * In alcune request (non tutte) è obbligatorio anche il POST
  * Alcune request (su mediawiki) richiedono anche una tokenRequestOnly preliminare
  */
+@Slf4j
 public abstract class Request {
 
     //--codifica dei caratteri
@@ -80,6 +82,8 @@ public abstract class Request {
             try { // prova ad eseguire il codice
                 urlRequest();
             } catch (Exception unErrore) { // intercetta l'errore
+                log.info(unErrore.toString());
+                int a=87;
             }// fine del blocco try-catch
             while (!tokenContinua.equals("")) {
                 try { // prova ad eseguire il codice

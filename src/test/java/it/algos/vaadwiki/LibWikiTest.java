@@ -171,6 +171,10 @@ public class LibWikiTest extends ATest {
         ottenuto = LibWiki.getValueStr(mappa, "query");
         int a = 87;
 
+
+        sorgente="{\"error\":{\"code\":\"assertbotfailed\",\"info\":\"Assertion that the user has the \\\"bot\\\" right failed.\",\"docref\":\"See https://it.wikipedia.org/w/api.php for API usage. Subscribe to the mediawiki-api-announce mailing list at &lt;https://lists.wikimedia.org/mailman/listinfo/mediawiki-api-announce&gt; for notice of API deprecations and breaking changes.\"},\"servedby\":\"mw1233\"}";
+        mappa = LibWiki.creaMappaError(sorgente);
+        ottenuto = LibWiki.getValueStr(mappa, "query");
     }// end of single test
 
 

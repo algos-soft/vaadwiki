@@ -1,18 +1,13 @@
 package it.algos.vaadflow.modules.log;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.*;
 import it.algos.vaadflow.backend.entity.ACEntity;
-import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import it.algos.vaadflow.modules.logtype.Logtype;
 import it.algos.vaadflow.modules.logtype.LogtypeService;
 import lombok.*;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,10 +18,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import java.time.LocalDateTime;
-
-import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 
 /**
  * Project vaadflow <br>
@@ -71,7 +63,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 @Builder(builderMethodName = "builderLog")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.obbligatoria)
-@AIList(fields = {"livello", "type", "descrizione", "evento"})
+@AIList(fields = {"livello", "type", "evento", "descrizione"})
 @AIForm(fields = {"livello", "type", "descrizione", "evento"})
 @AIScript(sovrascrivibile = false)
 public class Log extends ACEntity {
@@ -94,17 +86,6 @@ public class Log extends ACEntity {
     public Livello livello;
 
     /**
-     * raggruppamento logico dei log per type di eventi (obbligatorio)
-     */
-    @NotEmpty(message = "La tipologia del log è obbligatoria")
-    @Indexed()
-    @Field("type")
-    @AIField(type = EAFieldType.combo, clazz = LogtypeService.class, nullSelectionAllowed = false, widthEM = 10)
-    @AIColumn(widthEM = 7)
-    private Logtype type;
-
-
-    /**
      * descrizione (obbligatoria, non unica) <br>
      */
     @NotNull(message = "La descrizione è obbligatoria")
@@ -123,6 +104,16 @@ public class Log extends ACEntity {
     @Indexed()
     @AIField(type = EAFieldType.localdatetime)
     public LocalDateTime evento;
+
+    /**
+     * raggruppamento logico dei log per type di eventi (obbligatorio)
+     */
+    @NotEmpty(message = "La tipologia del log è obbligatoria")
+    @Indexed()
+    @Field("type")
+    @AIField(type = EAFieldType.combo, clazz = LogtypeService.class, nullSelectionAllowed = false, widthEM = 10)
+    @AIColumn(widthEM = 7)
+    private Logtype type;
 
 
     /**

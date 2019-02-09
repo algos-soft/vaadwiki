@@ -1,6 +1,6 @@
 package it.algos.wiki.request;
 
-import it.algos.wiki.WikiLogin;
+import it.algos.wiki.WikiLoginOld;
 
 import java.net.URLEncoder;
 
@@ -31,7 +31,7 @@ public class QueryWriteTitle extends QueryWrite {
      * Costruttore completo
      * Rinvia al costruttore della superclasse
      */
-    public QueryWriteTitle(String title, String testoNew, String summary, WikiLogin login) {
+    public QueryWriteTitle(String title, String testoNew, String summary, WikiLoginOld login) {
         super(title, testoNew, summary, login);
     }// fine del metodo costruttore
 

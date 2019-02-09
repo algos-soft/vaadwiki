@@ -1,8 +1,12 @@
 package it.algos.wiki.web;
 
+import it.algos.vaadflow.modules.preferenza.PreferenzaService;
+import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -37,10 +41,25 @@ public abstract class AQuery {
     protected final static String ENCODE = "UTF-8";
 
     /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    public PreferenzaService pref;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    public ADateService date;
+
+    /**
      * Service (@Scope = 'singleton') recuperato come istanza dalla classe e usato come libreria <br>
      * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
      */
     public ATextService text = ATextService.getInstance();
+
+    @Autowired
+    protected ApplicationContext appContext;
 
     /**
      * Flag di preferenza per le request che hanno bisogno di inviare i cookies nella request <br>
@@ -53,10 +72,14 @@ public abstract class AQuery {
     protected boolean isUsaPost;
 
     /**
+     * Flag di preferenza per le request che hanno bisogno dei cookies recuperati dal login <br>
+     */
+    protected boolean isUsaBot;
+
+    /**
      * Flag di preferenza per le request che scaricano e memorizzano i cookies ricevuti nella connessione <br>
      */
     protected boolean isDownloadCookies;
-
 
     /**
      * Indirizzo web usato nella urlRequest <br>
@@ -64,7 +87,7 @@ public abstract class AQuery {
     protected String urlDomain;
 
     // ci metto tutti i cookies restituiti da URLConnection.responses
-    protected LinkedHashMap cookies;
+    protected HashMap cookies;
 
 
     /**
@@ -105,9 +128,10 @@ public abstract class AQuery {
      * Invocare PRIMA il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
-        isUploadCookies = false;
-        isUsaPost = false;
-        isDownloadCookies = false;
+        this.isUploadCookies = false;
+        this.isUsaPost = false;
+        this.isUsaBot = false;
+        this.isDownloadCookies = false;
     }// end of method
 
 
@@ -127,7 +151,6 @@ public abstract class AQuery {
     public void preliminaryRequest(String urlDomain) {
         String urlResponse = "";
         URLConnection urlConn;
-        isDownloadCookies = true;
 
         try { // prova ad eseguire il codice
             urlDomain = fixUrlPreliminaryDomain(urlDomain);
@@ -138,6 +161,25 @@ public abstract class AQuery {
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
         }// fine del blocco try-catch
+    } // fine del metodo
+
+
+    /**
+     * Request principale <br>
+     * <p>
+     * La stringa urlDomain per la request viene controllata ed elaborata <br>
+     * Crea la connessione base di tipo GET
+     * Alcune request (non tutte) hanno bisogno di inviare i cookies nella request <br>
+     * In alcune request (non tutte) si aggiunge anche il POST <br>
+     * Alcune request (non tutte) scaricano e memorizzano i cookies ricevuti nella connessione <br>
+     * Invia la request con (eventuale) testo POST e con i cookies <br>
+     * <p>
+     * Risposta in formato testo JSON <br>
+     * Recupera i cookies allegati alla risposta e li memorizza in WikiLogin per poterli usare in query successive <br>
+     * La response viene sempre elaborata per estrarre le informazioni richieste <br>
+     */
+    public String urlRequest() {
+        return urlRequest("");
     } // fine del metodo
 
 
@@ -278,6 +320,7 @@ public abstract class AQuery {
         }// fine del blocco if
     } // fine del metodo
 
+
     /**
      * Aggiunge il POST della request
      * In alcune request (non tutte) è obbligatorio anche il POST
@@ -302,8 +345,6 @@ public abstract class AQuery {
     protected String elaboraPost() {
         return VUOTA;
     } // fine del metodo
-
-
 
 
     /**

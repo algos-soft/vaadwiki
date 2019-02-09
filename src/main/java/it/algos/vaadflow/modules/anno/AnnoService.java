@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
@@ -190,7 +192,28 @@ public class AnnoService extends AService {
      * @return all ordered entities
      */
     public ArrayList<Anno> findAll() {
-        return (ArrayList) repository.findAllByOrderByOrdineAsc();
+        return (ArrayList) repository.findAllByOrderByOrdineDesc();
+    }// end of method
+
+
+    /**
+     * Returns only entities of the requested page.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     * <p>
+     * Methods of this library return Iterable<T>, while the rest of my code expects Collection<T>
+     * L'annotation standard di JPA prevede un ritorno di tipo Iterable, mentre noi usiamo List
+     * Eseguo qui la conversione, che rimane trasparente al resto del programma
+     *
+     * @param offset numero di pagine da saltare, parte da zero
+     * @param size   numero di elementi per ogni pagina
+     *
+     * @return all entities
+     */
+    public List<? extends AEntity> findAll(int offset, int size) {
+        Sort sort = new Sort(Sort.Direction.DESC, "ordine");
+        return findAll(offset, size, sort);
     }// end of method
 
 

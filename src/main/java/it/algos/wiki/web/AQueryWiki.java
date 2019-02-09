@@ -2,6 +2,7 @@ package it.algos.wiki.web;
 
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -45,6 +46,8 @@ public abstract class AQueryWiki extends AQuery {
      */
     protected final static String TAG_QUERY = TAG_BASE + "&action=query";
 
+    @Autowired
+    protected WLogin wLogin;
 
     /**
      * Property per controllare se nella urlresponse esiste il tag 'batchcomplete=true'
@@ -68,13 +71,26 @@ public abstract class AQueryWiki extends AQuery {
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(AQueryxxx.class, urlRequest).urlResponse() <br>
+     * Usa: appContext.getBean(AQueryxxx.class, titoloWiki).urlResponse() <br>
      *
      * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
      */
     public AQueryWiki(String titoloWiki) {
         super(titoloWiki);
     }// end of constructor
+
+
+    /**
+     * Le preferenze vengono (eventualmente) sovrascritte nella sottoclasse <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
+        if (wLogin != null) {
+            cookies = wLogin.getCookies();
+        }// end of if cycle
+    }// end of method
 
 
     /**

@@ -209,7 +209,7 @@ public class BioViewDialog extends AViewDialog<Bio> {
 
     protected void editWikiPage() {
         String wikiTitle = this.getWikiTitle();
-        String link = "\"" + PATH_WIKI_EDIT_ANTE + wikiTitle + PATH_WIKI_EDIT_POST + "\"";
+        String link = "\"" + PATH_WIKI_EDIT_ANTE + wikiTitle + PATH_WIKI_EDIT_POST + "&section=0\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 

@@ -36,11 +36,11 @@ public class PageService extends ABioService {
      * Esegue una cancellazione di tipo BULK nel mongoDB Bio <br>
      * Esegue un inserimento di tipo BULK nel mongoDB Bio <br>
      *
-     * @param listaVociDaScaricare elenco (pageids) delle pagine nuove, da scaricare
+     * @param listaVociDaScaricare elenco (title) delle pagine mancanti da scaricare e registrare
      */
-    public DownloadResult downloadPagine(ArrayList<Long> listaVociDaScaricare) {
+    public DownloadResult downloadPagine(ArrayList<String> listaVociDaScaricare) {
         DownloadResult result = new DownloadResult(listaVociDaScaricare);
-        ArrayList<Long> bloccoPageids;
+        ArrayList<String> bloccoPage;
         int dimBloccoLettura = pref.getInt(WIKI_PAGE_LIMIT);
         int numCicliLetturaPagine;
         long inizio = System.currentTimeMillis();
@@ -52,14 +52,14 @@ public class PageService extends ABioService {
         if (listaVociDaScaricare != null && listaVociDaScaricare.size() > 0) {
             numCicliLetturaPagine = array.numCicli(listaVociDaScaricare.size(), dimBloccoLettura);
             for (int k = 0; k < numCicliLetturaPagine; k++) {
-                bloccoPageids = array.estraeSublistaLong(listaVociDaScaricare, dimBloccoLettura, k + 1);
-                result = downloadSingoloBlocco(result, bloccoPageids);
+                bloccoPage = array.estraeSublista(listaVociDaScaricare, dimBloccoLettura, k + 1);
+                result = downloadSingoloBlocco(result, bloccoPage);
                 if (pref.isBool(FlowCost.USA_DEBUG)) {
                     teorico = (k + 1) * dimBloccoLettura;
                     effettivo = result.vociRegistrate.size();
                     delta = teorico - effettivo;
                     message = "New - aggiunte " + text.format(effettivo) + "/" + text.format(teorico) + " (-" + delta + ") voci totali a mongoDB.Bio in " + date.deltaText(inizio);
-                    logger.debug(message);
+//                    logger.debug(message);
                     log.info(message);
                 }// end of if cycle
             }// end of for cycle
@@ -70,15 +70,15 @@ public class PageService extends ABioService {
 
 
     /**
-     * @param bloccoPageids lista (pageids) di pagine da scaricare dal server wiki
+     * @param bloccoTitles lista (titles) di pagine da scaricare dal server wiki
      */
-    private DownloadResult downloadSingoloBlocco(DownloadResult result, ArrayList<Long> bloccoPageids) {
+    private DownloadResult downloadSingoloBlocco(DownloadResult result, ArrayList<String> bloccoTitles) {
         ArrayList<Page> pages; // di norma 500
         Bio entity;
         ArrayList<Long> vociDaRegistrareInQuestoBlocco = new ArrayList<>();
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
 
-        pages = api.leggePages(bloccoPageids);
+        pages = api.leggePages(bloccoTitles);
 
         if (pages == null) {
             return result;
@@ -89,7 +89,7 @@ public class PageService extends ABioService {
             if (entity != null) {
                 listaBio.add(entity);
                 vociDaRegistrareInQuestoBlocco.add(page.getPageid());
-                result.addSi(page.getPageid());
+                result.addSi(page.getTitle());
             } else {
                 result.addNo(page.getTitle());
             }// end of if/else cycle

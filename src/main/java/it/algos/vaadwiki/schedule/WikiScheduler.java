@@ -45,13 +45,13 @@ public class WikiScheduler extends Scheduler {
 
     @PostConstruct
     public void startBio() throws IllegalStateException {
-        if (!isStarted()) {
-            super.start();
-
-//            this.task(download);
-            this.task(update);
-
-        }// fine del blocco if
+//        if (!isStarted()) {
+//            super.start();
+//
+////            this.task(download);
+////            this.task(update);
+//
+//        }// fine del blocco if
     }// end of method
 
 

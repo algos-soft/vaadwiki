@@ -7,6 +7,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMailService;
@@ -21,12 +22,10 @@ import it.algos.vaadwiki.task.TaskBio;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;
 import it.algos.wiki.DownloadResult;
-import it.algos.wiki.web.AQueryBio;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -64,7 +63,7 @@ public class BioViewList extends AttNazProfCatViewList {
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
-    protected Button ciclodButton;
+    protected Button downloadButton;
 
     protected Button deleteButton;
 
@@ -103,7 +102,13 @@ public class BioViewList extends AttNazProfCatViewList {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    private CicloService cicloService;
+    private CicloDownload cicloDownload;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private CicloUpdate cicloUpdate;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -213,18 +218,17 @@ public class BioViewList extends AttNazProfCatViewList {
         super.creaTopLayout();
         newButton.getElement().setAttribute("theme", "secondary");
 
-        //--ciclo
-        ciclodButton = new Button("Update", new Icon(VaadinIcon.REFRESH));
-        ciclodButton.getElement().setAttribute("theme", "primary");
-        ciclodButton.addClickListener(e -> {
-            DownloadResult result;
-            System.out.println("Inizio task di download: " + date.getTime(LocalDateTime.now()));
-            long inizio = System.currentTimeMillis();
-            result = cicloService.esegue();
-            sendMail(inizio, result);
-            updateView();
-        });//end of lambda expressions and anonymous inner class
-        topPlaceholder.add(ciclodButton);
+        //--ciclo download iniziale
+        downloadButton = new Button("Download", new Icon(VaadinIcon.REFRESH));
+        downloadButton.getElement().setAttribute("theme", "error");
+        downloadButton.addClickListener(e -> openConfirmDownloadDialog());
+        topPlaceholder.add(downloadButton);
+
+        //--ciclo upodate corrente
+        updateButton = new Button("Update", new Icon(VaadinIcon.REFRESH));
+        updateButton.getElement().setAttribute("theme", "primary");
+        updateButton.addClickListener(e -> esegueUpdate());
+        topPlaceholder.add(updateButton);
 
 //        //--delete singola biografia
 //        deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
@@ -287,14 +291,24 @@ public class BioViewList extends AttNazProfCatViewList {
 //    }// end of method
 
 
-//    protected void esegueUploadDialogo(Upload upload) {
-//        Notification.show("Iniziato l'upload di " + upload + " - Durerà circa 30 minuti", 2000, Notification.Position.MIDDLE);
-//        upload.esegue();
-//    }// end of method
+    protected void esegueUpdate() {
+        DownloadResult result;
+        int numRec = service.count();
+        long inizio = System.currentTimeMillis();
+
+        if (numRec == 0) {
+            result = cicloDownload.esegue();
+        } else {
+            result = cicloUpdate.esegue();
+        }// end of if/else cycle
+
+        sendMail(result);
+        updateView();
+    }// end of method
 
 
     /**
-     * Opens the confirmation dialog before deleting the current item.
+     * Opens the confirmation dialog before deleting all items.
      * <p>
      * The dialog will display the given title and message(s), then call
      * <p>
@@ -317,6 +331,29 @@ public class BioViewList extends AttNazProfCatViewList {
         String message = "SEI ASSOLUTAMENTE SICURO ?";
         ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
         dialog.open(message, this::deleteMongo);
+    }// end of method
+
+
+    /**
+     * Opens the confirmation dialog before deleting the current item.
+     * <p>
+     * The dialog will display the given title and message(s), then call
+     * <p>
+     */
+    protected void openConfirmDownloadDialog() {
+        String message = "Questa operazione di download cancella TUTTE le biografie";
+        String additionalMessage = "L'operazione non è reversibile";
+        ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
+        dialog.open(message, this::esegueDownload);
+    }// end of method
+
+
+    protected void esegueDownload() {
+        DownloadResult result;
+        deleteMongo();
+        result = cicloDownload.esegue();
+        sendMail(result);
+        updateView();
     }// end of method
 
 
@@ -346,10 +383,6 @@ public class BioViewList extends AttNazProfCatViewList {
 
         if (deleteAllButton != null) {
             deleteAllButton.setEnabled(!enabled);
-        }// end of if cycle
-
-        if (updateButton != null) {
-            updateButton.setEnabled(enabled);
         }// end of if cycle
 
         if (elaboraButton != null) {
@@ -415,7 +448,8 @@ public class BioViewList extends AttNazProfCatViewList {
 //    }// end of inner class
 
 
-    private void sendMail(long inizio, DownloadResult result) {
+    private void sendMail(DownloadResult result) {
+        long inizio = result.getInizio();
         Date startDate = new Date(inizio);
         LocalDateTime start = date.dateToLocalDateTime(startDate);
         LocalDateTime end;
@@ -440,7 +474,6 @@ public class BioViewList extends AttNazProfCatViewList {
             testo += "Sono state aggiornate " + text.format(result.getNumVociRegistrate()) + " voci";
             mailService.send("Ciclo update", testo);
         }// end of if cycle
-        System.out.println("Fine task di download: " + date.getTime(LocalDateTime.now()));
     }// end of method
 
 

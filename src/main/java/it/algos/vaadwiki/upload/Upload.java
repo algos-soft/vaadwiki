@@ -17,7 +17,7 @@ import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
 import it.algos.wiki.LibWiki;
-import it.algos.wiki.WikiLogin;
+import it.algos.wiki.WikiLoginOld;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -52,7 +52,7 @@ public abstract class Upload {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected WikiLogin wikiLogin;
+    protected WikiLoginOld wikiLoginOld;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

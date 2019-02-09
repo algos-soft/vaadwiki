@@ -2,7 +2,6 @@ package it.algos.wiki;
 
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.modules.bio.Bio;
@@ -816,7 +815,7 @@ public class Api {
      * @param summary   oggetto della modifica
      * @param login     for testing purpose only
      */
-    public boolean modificaVoce(String wikiTitle, String oldText, String newText, String summary, WikiLogin login) {
+    public boolean modificaVoce(String wikiTitle, String oldText, String newText, String summary, WikiLoginOld login) {
         boolean status = false;
         String oldContenuto;
         String testoTmp;
@@ -1028,17 +1027,41 @@ public class Api {
      *
      * @return serie di pagine (con i metadati mediawiki)
      */
-    public ArrayList<Page> leggePages(ArrayList<Long> arrayPageIds) {
-        requestMultiPages.esegue(arrayPageIds);
-        if (requestMultiPages.getRisultato() == TipoRisultato.letta) {
-            return requestMultiPages.getListaPages();
-        } else {
-            if (requestMultiPages.getRisultato() == TipoRisultato.tooBig) {
-                return riLeggePagesBlocchiPiùPiccoli(arrayPageIds);
-            } else {
-                return null;
-            }// end of if/else cycle
-        }// fine del blocco if-else
+    public ArrayList<Page> leggePagesIds(ArrayList<Long> arrayPageIds) {
+        return null;
+//        requestMultiPages.esegue(arrayPageIds);
+//        if (requestMultiPages.getRisultato() == TipoRisultato.letta) {
+//            return requestMultiPages.getListaPages();
+//        } else {
+//            if (requestMultiPages.getRisultato() == TipoRisultato.tooBig) {
+//                return riLeggePagesBlocchiPiùPiccoli(arrayPageIds);
+//            } else {
+//                return null;
+//            }// end of if/else cycle
+//        }// fine del blocco if-else
+    }// end of method
+
+
+    /**
+     * Legge una serie di pagine
+     * <p>
+     *
+     * @param arrayTitles elenco di titles (ArrayList)
+     *
+     * @return serie di pagine (con i metadati mediawiki)
+     */
+    public ArrayList<Page> leggePages(ArrayList<String> arrayTitles) {
+        return null;
+//        requestMultiPages.esegue(arrayTitles);
+//        if (requestMultiPages.getRisultato() == TipoRisultato.letta) {
+//            return requestMultiPages.getListaPages();
+//        } else {
+//            if (requestMultiPages.getRisultato() == TipoRisultato.tooBig) {
+//                return riLeggePagesBlocchiPiùPiccoli(arrayTitles);
+//            } else {
+//                return null;
+//            }// end of if/else cycle
+//        }// fine del blocco if-else
     }// end of method
 
 
@@ -1046,21 +1069,21 @@ public class Api {
      * Rilegge una serie di pagine, dividendole in request più piccole per problemi di 'banda'
      * <p>
      *
-     * @param arrayPageIds elenco di pageids (ArrayList)
+     * @param arrayTitles elenco di titles (ArrayList)
      *
      * @return serie di pagine (con i metadati mediawiki)
      */
-    public ArrayList<Page> riLeggePagesBlocchiPiùPiccoli(ArrayList<Long> arrayPageIds) {
+    public ArrayList<Page> riLeggePagesBlocchiPiùPiccoli(ArrayList<String> arrayTitles) {
         ArrayList<Page> pages = new ArrayList();
         ArrayList<Page> pagesTmp;
-        ArrayList<Long> subBloccoPageids;
+        ArrayList<String> subBloccoTitles;
         int dimBlocco = 50;
         int numCicli;
 
-        numCicli = array.numCicli(arrayPageIds.size(), dimBlocco);
+        numCicli = array.numCicli(arrayTitles.size(), dimBlocco);
         for (int k = 0; k < numCicli; k++) {
-            subBloccoPageids = array.estraeSublistaLong(arrayPageIds, dimBlocco, k + 1);
-            pagesTmp = leggePages(subBloccoPageids);
+            subBloccoTitles = array.estraeSublista(arrayTitles, dimBlocco, k + 1);
+            pagesTmp = leggePages(subBloccoTitles);
             pages = array.somma(pages, pagesTmp);
         }// end of for cycle
 

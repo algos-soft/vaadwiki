@@ -2,7 +2,7 @@ package it.algos.wiki.mediawiki;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.wiki.LibWiki;
-import it.algos.wiki.WikiLogin;
+import it.algos.wiki.WikiLoginOld;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -45,8 +45,8 @@ public class ReadLogin extends ReadWiki {
      *
      * @return istanza WikiLogin
      */
-    public WikiLogin esegue() {
-        WikiLogin login = null;
+    public WikiLoginOld esegue() {
+        WikiLoginOld login = null;
 
         //--recupera il logintoken necessario per la seconda request
         primaRequest();

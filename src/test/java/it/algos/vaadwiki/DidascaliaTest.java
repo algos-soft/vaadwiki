@@ -2,38 +2,29 @@ package it.algos.vaadwiki;
 
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.GiornoService;
-import it.algos.vaadflow.service.AMongoService;
+import it.algos.vaadflow.modules.preferenza.PreferenzaService;
+import it.algos.vaadflow.service.AArrayService;
+import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AReflectionService;
 import it.algos.vaadwiki.didascalia.*;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.download.PageService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
+import it.algos.vaadwiki.service.DidascaliaService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
-import it.algos.wiki.web.AQueryBio;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
-import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Project vaadwiki
@@ -52,8 +43,8 @@ import javax.annotation.PostConstruct;
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 //@Tag("didascalia")
 //@DisplayName("Test per le didascalie")
-public class DidascaliaTest extends ATest  {
-
+@Slf4j
+public class DidascaliaTest extends ATest {
 
 
     @InjectMocks
@@ -62,6 +53,9 @@ public class DidascaliaTest extends ATest  {
 
     @InjectMocks
     public Didascalia didascalia;
+
+    @InjectMocks
+    public DidascaliaService didascaliaService;
 
     @InjectMocks
     public DidascaliaGiornoNato giornoNato;
@@ -90,9 +84,6 @@ public class DidascaliaTest extends ATest  {
     @InjectMocks
     public GiornoService giorno;
 
-    @Autowired
-    public MongoOperations mongoOperations;
-
     @InjectMocks
     protected PageService pageService;
 
@@ -106,7 +97,10 @@ public class DidascaliaTest extends ATest  {
     protected AReflectionService reflection;
 
     @InjectMocks
-    private AMongoService mongoService;
+    protected PreferenzaService pref;
+
+    @InjectMocks
+    protected ADateService date;
 
     private String wikiTitle = "Adone Asinari";
 
@@ -126,8 +120,8 @@ public class DidascaliaTest extends ATest  {
         MockitoAnnotations.initMocks(libBio);
         MockitoAnnotations.initMocks(giorno);
         MockitoAnnotations.initMocks(reflection);
-        MockitoAnnotations.initMocks(mongoOperations);
-        MockitoAnnotations.initMocks(mongoService);
+//        MockitoAnnotations.initMocks(mongoOperations);
+//        MockitoAnnotations.initMocks(mongoService);
         MockitoAnnotations.initMocks(text);
         MockitoAnnotations.initMocks(didascalia);
         MockitoAnnotations.initMocks(giornoNato);
@@ -136,6 +130,9 @@ public class DidascaliaTest extends ATest  {
         MockitoAnnotations.initMocks(annoMorto);
         MockitoAnnotations.initMocks(standard);
         MockitoAnnotations.initMocks(completa);
+        MockitoAnnotations.initMocks(didascaliaService);
+        MockitoAnnotations.initMocks(pref);
+        MockitoAnnotations.initMocks(date);
         api.pageService = pageService;
         api.text = text;
         pageService.api = api;
@@ -145,10 +142,10 @@ public class DidascaliaTest extends ATest  {
         elaboraService.text = text;
         elaboraService.libBio = libBio;
         libBio.giorno = giorno;
-        libBio.mongo = mongoService;
-        mongoService.mongoOp = mongoOperations;
-        mongoService.reflection = reflection;
-        mongoService.text = text;
+//        libBio.mongo = mongoService;
+//        mongoService.mongoOp = mongoOperations;
+//        mongoService.reflection = reflection;
+//        mongoService.text = text;
         didascalia.text = text;
         giornoNato.annoService = annoService;
         giornoNato.text = text;
@@ -164,6 +161,11 @@ public class DidascaliaTest extends ATest  {
         didascalia.didascaliaAnnoMorto = annoMorto;
         didascalia.didascaliaStandard = standard;
         bio = api.leggeBio(wikiTitle);
+        didascaliaService.wikiTitle = wikiTitle;
+        didascaliaService.pref = pref;
+        didascaliaService.date = date;
+        didascaliaService.api = api;
+        didascaliaService.text = text;
     }// end of method
 
 
@@ -188,5 +190,32 @@ public class DidascaliaTest extends ATest  {
 
     }// end of single test
 
+
+    /**
+     * Test con uscita sul terminale di Idea
+     */
+    @Test
+    public void esegueTestDidascalie() {
+        System.out.println("");
+        System.out.println("Algos");
+        System.out.println("");
+        System.out.println("Tipi possibili di discalie");
+        System.out.println("Esempio '" + wikiTitle + "'");
+        System.out.println("");
+        Bio bio = api.leggeBio(wikiTitle);
+        for (EADidascalia dida : EADidascalia.values()) {
+            System.out.println(dida.name() + ": " + didascalia.esegue(bio, dida));
+        }// end of for cycle
+        System.out.println("");
+    }// end of single test
+
+
+    /**
+     * Pagina completa con uscita su pagina utente
+     */
+    @Test
+    public void esegueTestUplod() {
+        didascaliaService.esegue();
+    }// end of single test
 
 }// end of class

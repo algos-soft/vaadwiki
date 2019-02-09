@@ -22,7 +22,7 @@ import java.util.ArrayList;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("wikilogin")
 @DisplayName("Test per il login al server wiki")
-public class WikiLoginTest extends ATest {
+public class WikiLoginOldTest extends ATest {
 
 
     @InjectMocks
