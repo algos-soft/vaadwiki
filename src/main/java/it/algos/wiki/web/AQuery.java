@@ -1,9 +1,11 @@
 package it.algos.wiki.web;
 
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
+import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -45,6 +47,13 @@ public abstract class AQuery {
      */
     @Autowired
     public PreferenzaService pref;
+
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    public AArrayService array;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -470,5 +479,10 @@ public abstract class AQuery {
     public String urlResponse() {
         return urlRequest(urlDomain);
     }// end of method
+
+
+    protected Object pippo(String pluto) {
+        return null;
+    } // fine del metodo
 
 }// end of class

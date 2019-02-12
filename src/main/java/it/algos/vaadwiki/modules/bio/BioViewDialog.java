@@ -215,11 +215,11 @@ public class BioViewDialog extends AViewDialog<Bio> {
 
 
     protected void upload() {
-        long pageid = this.getPageId();
+        String wikiTitle = this.getWikiTitle();
 
-        if (pageid > 0) {
+        if (text.isValid(wikiTitle)) {
             bioService.save(currentItem);
-            uploadService.esegue(pageid);
+            uploadService.esegue(wikiTitle);
         }// end of if cycle
 
         super.close();

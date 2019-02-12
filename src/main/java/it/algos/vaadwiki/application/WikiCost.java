@@ -98,4 +98,9 @@ public class WikiCost {
 
     public final static String SEND_MAIL_CICLO =   "sendMailCiclo";
 
+    public static final String PAGES = "pages";
+    public static final String REVISIONS = "revisions";
+    public static final String SLOTS = "slots";
+    public static final String MAIN = "main";
+
 }// end of static class

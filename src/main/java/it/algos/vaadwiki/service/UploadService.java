@@ -20,17 +20,20 @@ public class UploadService extends ABioService {
 
     /**
      * Carica sul servere wiki la entity indicata
+     *
+     * @param wikiTitle della pagina wiki (obbligatorio, unico)
      */
-    public void esegue(long pageid) {
-        Bio entity = bioService.findByKeyUnica(pageid);
+    public void esegue(String wikiTitle) {
+        Bio entity = bioService.findByKeyUnica(wikiTitle);
     }// end of method
+
 
     /**
      * Legg
      * Crea un nuovo template dai dati dellla entity
      */
     public String creaTemplate(Bio entity) {
-        String newTemplate="";
+        String newTemplate = "";
 //        Bio entity = bioService.findByKeyUnica(pageid);
 
         return newTemplate;

@@ -34,6 +34,8 @@ public interface BioRepository extends MongoRepository<Bio, String> {
 
     public Bio findByPageid(long pageid);
 
+    public Bio findByWikiTitle(String wikiTitle);
+
     public List<Bio> findAllByOrderByWikiTitleAsc();
 
     public List<Bio> findTop50ByOrderByWikiTitleAsc();

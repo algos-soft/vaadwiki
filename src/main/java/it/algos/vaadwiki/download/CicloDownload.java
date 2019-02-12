@@ -45,27 +45,27 @@ public class CicloDownload extends ABioService {
     public DownloadResult esegue() {
         DownloadResult result = new DownloadResult();
         String nomeCategoria = pref.getStr(CAT_BIO);
-        ArrayList<String> vociCategoria;
+        ArrayList<String> listaVociCategoria;
         long inizio = System.currentTimeMillis();
         result.setInizio(inizio);
         result.setNomeCategoria(nomeCategoria);
         log.info("" );
         log.info("Inizio task di download: " + date.getTime(LocalDateTime.now()));
 
-        //--download del modulo attività
+        //--Download del modulo attività
         attivitaService.download();
 
-        //--download del modulo nazionalità
+        //--Download del modulo nazionalità
         nazionalitaService.download();
 
-        //--download del modulo professione
+        //--Download del modulo professione
         professioneService.download();
 
         //--Recupera la lista delle voci della categoria dal server wiki
-        vociCategoria = appContext.getBean(AQueryCat.class, nomeCategoria).urlRequestTitle();
+        listaVociCategoria = appContext.getBean(AQueryCat.class, nomeCategoria).urlRequestTitle();
 
         //--Scarica dal server tutte le voci mancanti e crea le nuove entities sul mongoDB Bio
-        newService.esegue(vociCategoria);
+        newService.esegue(listaVociCategoria);
 
         log.info("Download - Ciclo totale attività, nazionalità, professione, categoria, nuove voci in " + date.deltaText(result.getInizio()));
         log.info("Fine task di download: " + date.getTime(LocalDateTime.now()));

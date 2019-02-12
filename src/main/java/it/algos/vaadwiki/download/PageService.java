@@ -6,6 +6,8 @@ import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.Page;
+import it.algos.wiki.web.AQueryPage;
+import it.algos.wiki.web.AQueryPages;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -29,7 +31,7 @@ public class PageService extends ABioService {
 
 
     /**
-     * Scarica una lista di nuove pagine (long) dal server wiki e le memorizza nel mongoDB <br>
+     * Scarica dal server la lista di pagine (title) indicate e crea le nuove entities sul mongoDB Bio
      * <p>
      * Esegue una serie di RequestWikiReadPages a blocchi di BLOCCO_PAGES (500) per volta <br>
      * Per ogni page crea la entity (Bio) corrispondente <br>
@@ -48,6 +50,8 @@ public class PageService extends ABioService {
         int teorico;
         int effettivo;
         int delta;
+
+        dimBloccoLettura=3;
 
         if (listaVociDaScaricare != null && listaVociDaScaricare.size() > 0) {
             numCicliLetturaPagine = array.numCicli(listaVociDaScaricare.size(), dimBloccoLettura);
@@ -70,15 +74,15 @@ public class PageService extends ABioService {
 
 
     /**
-     * @param bloccoTitles lista (titles) di pagine da scaricare dal server wiki
+     * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
      */
-    private DownloadResult downloadSingoloBlocco(DownloadResult result, ArrayList<String> bloccoTitles) {
-        ArrayList<Page> pages; // di norma 500
+    private DownloadResult downloadSingoloBlocco(DownloadResult result, ArrayList<String> arrayTitles) {
+        ArrayList<Page> pages=null; // di norma 500
         Bio entity;
         ArrayList<Long> vociDaRegistrareInQuestoBlocco = new ArrayList<>();
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
 
-        pages = api.leggePages(bloccoTitles);
+        pages = ((AQueryPages) appContext.getBean("AQueryPages", arrayTitles)).pagesResponse();
 
         if (pages == null) {
             return result;
@@ -181,7 +185,7 @@ public class PageService extends ABioService {
         wikiTitle = page.getTitle();
         template = api.estraeTmplBio(page);
 
-        entity = bioService.findByKeyUnica(pageid);
+        entity = bioService.findByKeyUnica(wikiTitle);
         if (entity != null) {
             entity.setWikiTitle(wikiTitle);
             entity.setTmplBioServer(template);

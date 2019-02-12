@@ -292,7 +292,7 @@ public class UtilityView extends VerticalLayout {
         queryPage = (AQueryPage) appContext.getBean("AQueryPage");
         if (queryPage != null) {
             page = queryPage.pageResponse(wikiTitle);
-            if (page != null) {
+            if (page != null && page.isValida() && text.isValid(page.getText())) {
                 log.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore senza parametri - Costruita l'istanza AQueryPage con la Page");
             } else {
                 log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
@@ -305,8 +305,8 @@ public class UtilityView extends VerticalLayout {
         queryPage = (AQueryPage) appContext.getBean("AQueryPage", wikiTitle);
         if (queryPage != null) {
             page = queryPage.pageResponse();
-            if (page != null) {
-                log.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore con wikiTitle - Costruita l'istanza AQueryPage con la Page");
+            if (page != null && page.isValida() && text.isValid(page.getText())) {
+                log.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore con wikiTitle - Contenuto: " + page.getText().substring(0, 30));
             } else {
                 log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
             }// end of if/else cycle
@@ -316,8 +316,8 @@ public class UtilityView extends VerticalLayout {
 
         wikiTitle = "Neal Ascherson";
         page = ((AQueryPage) appContext.getBean("AQueryPage", wikiTitle)).pageResponse();
-        if (page != null) {
-            log.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore con wikiTitle - Costruita l'istanza AQueryPage con la Page");
+        if (page != null && page.isValida() && text.isValid(page.getText())) {
+            log.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore con wikiTitle - Contenuto: " + page.getText().substring(0, 30));
         } else {
             log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
         }// end of if/else cycle
@@ -342,27 +342,27 @@ public class UtilityView extends VerticalLayout {
         titoliVociCategoria = appContext.getBean(AQueryCat.class).urlRequestTitle(wikiCat);
         log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore senza parametri - " + titoliVociCategoria.size() + " voci" : "No buono"));
 
-        wikiCat = "BioBot";
-        long inizio = System.currentTimeMillis();
-        titoliVociCategoria = appContext.getBean(AQueryCat.class, wikiCat).urlRequestTitle();
-        log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore con wikiCat - " + titoliVociCategoria.size() + " voci" : "No buono"));
-        log.info("AQueryCat: " + wikiCat + " - Response: ci sono " + titoliVociCategoria.size() + " voci e sono state caricate in " + date.deltaText(inizio));
-//        for (String titolo : titoliVociCategoria) {
-//            log.info(titolo);
+//        wikiCat = "BioBot";
+//        long inizio = System.currentTimeMillis();
+//        titoliVociCategoria = appContext.getBean(AQueryCat.class, wikiCat).urlRequestTitle();
+//        log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore con wikiCat - " + titoliVociCategoria.size() + " voci" : "No buono"));
+//        log.info("AQueryCat: " + wikiCat + " - Response: ci sono " + titoliVociCategoria.size() + " voci e sono state caricate in " + date.deltaText(inizio));
+////        for (String titolo : titoliVociCategoria) {
+////            log.info(titolo);
+////        }// end of for cycle
+//        log.info("");
+//        log.info("Prime 200");
+//        for (int k = 0; k < 200; k++) {
+//            log.info((k + 1) + " - " + titoliVociCategoria.get(k));
 //        }// end of for cycle
-        log.info("");
-        log.info("Prime 200");
-        for (int k = 0; k < 200; k++) {
-            log.info((k + 1) + " - " + titoliVociCategoria.get(k));
-        }// end of for cycle
-        log.info("Pagina prima del passaggio dei 5.000");
-        for (int k = 4799; k < 5000; k++) {
-            log.info((k + 1) + " - " + titoliVociCategoria.get(k));
-        }// end of for cycle
-        log.info("Pagina dopo il passaggio dei 5.000");
-        for (int k = 5000; k < 5200; k++) {
-            log.info((k + 1) + " - " + titoliVociCategoria.get(k));
-        }// end of for cycle
+//        log.info("Pagina prima del passaggio dei 5.000");
+//        for (int k = 4799; k < 5000; k++) {
+//            log.info((k + 1) + " - " + titoliVociCategoria.get(k));
+//        }// end of for cycle
+//        log.info("Pagina dopo il passaggio dei 5.000");
+//        for (int k = 5000; k < 5200; k++) {
+//            log.info((k + 1) + " - " + titoliVociCategoria.get(k));
+//        }// end of for cycle
 
     }// end of method
 

@@ -1,11 +1,14 @@
 package it.algos.wiki.web;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.wiki.Page;
-import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
 
 /**
  * Project vaadwiki
@@ -13,15 +16,17 @@ import org.springframework.stereotype.Component;
  * User: gac
  * Date: lun, 28-gen-2019
  * Time: 14:36
+ * <p>
+ * UrlRequest:
+ * urlDomain = "&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles="
+ * GET request
+ * No POST text
+ * No upload cookies
+ * No bot needed
  */
 @Component("AQueryPage")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AQueryPage extends AQueryGet {
-
-    /**
-     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
-     */
-    private final static String TAG_PAGE = TAG_QUERY + "&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
 
 
     /**
@@ -48,6 +53,17 @@ public class AQueryPage extends AQueryGet {
 
 
     /**
+     * Le preferenze vengono (eventualmente) sovrascritte nella sottoclasse <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+        this.isUsaBot = false;
+        this.isUploadCookies = false;
+    }// end of method
+
+
+    /**
      * Page della response
      *
      * @return contenuto completo (json) della pagina (con i metadati mediawiki)
@@ -66,16 +82,12 @@ public class AQueryPage extends AQueryGet {
      */
     public Page pageResponse(String titoloWiki) {
         Page page = null;
-        String contenutoCompletoPaginaWebInFormatoJSON = "";
+        String contenutoCompletoPaginaWebInFormatoJSON;
+        HashMap<String, Object> mappa;
 
-        if (text.isValid(titoloWiki)) {
-            try { // prova ad eseguire il codice
-                contenutoCompletoPaginaWebInFormatoJSON = super.urlRequest(titoloWiki);
-                page = new Page(contenutoCompletoPaginaWebInFormatoJSON);
-            } catch (Exception unErrore) { // intercetta l'errore
-                String errore = unErrore.getMessage();
-            }// fine del blocco try-catch
-        }// end of if cycle
+        contenutoCompletoPaginaWebInFormatoJSON = super.urlRequest(titoloWiki);
+        mappa = wikiService.getMappaPagina(contenutoCompletoPaginaWebInFormatoJSON);
+        page = new Page(mappa);
 
         return page;
     }// end of method

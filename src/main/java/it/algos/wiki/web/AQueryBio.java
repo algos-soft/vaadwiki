@@ -11,6 +11,13 @@ import org.springframework.stereotype.Component;
  * User: gac
  * Date: lun, 28-gen-2019
  * Time: 14:37
+ * <p>
+ * UrlRequest:
+ * urlDomain = "&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles="
+ * GET request
+ * No POST text
+ * No upload cookies
+ * No bot needed
  */
 @Component("AQueryBio")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -37,6 +44,19 @@ public class AQueryBio extends AQueryVoce {
     public AQueryBio(String titoloWiki) {
         super(titoloWiki);
     }// end of constructor
+
+
+    /**
+     * Le preferenze vengono (eventualmente) sovrascritte nella sottoclasse <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+        this.isUploadCookies = false;
+        this.isUsaPost = false;
+        this.isUsaBot = false;
+        this.isDownloadCookies = false;
+    }// end of method
 
 
     /**

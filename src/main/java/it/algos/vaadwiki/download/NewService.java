@@ -29,21 +29,21 @@ public class NewService extends ABioService {
 
 
     /**
-     * Scarica dal server tutte le voci indicate e crea i nuovi records di Bio
+     * Scarica dal server tutte le voci indicate e crea le nuove entities sul mongoDB Bio
      * <p>
      * Controlla il flag USA_LIMITE_DOWNLOAD
      * Usa il numero massimo (MAX_DOWNLOAD) di voci da scaricare in totale (se USA_LIMITE_DOWNLOAD=true)
      * Esegue una serie di RequestWikiReadMultiPages a blocchi di PAGES_PER_REQUEST per volta
      * Per ogni page crea un record bio
      *
-     * @param listaVoci elenco (title) delle pagine mancanti da scaricare e registrare
+     * @param listaVociCategoria elenco (title) delle pagine mancanti da scaricare e registrare
      */
-    public void esegue(ArrayList<String> listaVoci) {
+    public void esegue(ArrayList<String> listaVociCategoria) {
         long inizio = System.currentTimeMillis();
         DownloadResult result;
 
-        if (array.isValid(listaVoci)) {
-            result = pageService.downloadPagine(listaVoci);
+        if (array.isValid(listaVociCategoria)) {
+            result = pageService.downloadPagine(listaVociCategoria);
             pref.saveValue(LAST_DOWNLOAD_BIO, LocalDateTime.now());
 
             if (result.getNumVociRegistrate() > 0) {

@@ -1,5 +1,6 @@
 package it.algos.wiki.web;
 
+import it.algos.vaadwiki.service.AWikiService;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,9 @@ public abstract class AQueryWiki extends AQuery {
 
     @Autowired
     protected WLogin wLogin;
+
+    @Autowired
+    protected AWikiService wikiService;
 
     /**
      * Property per controllare se nella urlresponse esiste il tag 'batchcomplete=true'

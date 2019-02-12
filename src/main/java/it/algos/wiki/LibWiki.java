@@ -139,6 +139,10 @@ public abstract class LibWiki {
 
     public static final String INFO = "info";
 
+    public static final String MAIN = "main";
+
+    public static final String CONTENT = "content";
+
     public static final String MUST_BE_POSTED = "mustbeposted";
 
     public static final String KEY_VOCE_PAGEID = "keyvocepageid";
@@ -155,9 +159,15 @@ public abstract class LibWiki {
 
     public static final String CATEGORY_MEMBERS = "categorymembers";
 
-    private static final String PAGES = "pages";
+    public static final String CONTINUE = "continue";
 
-    private static final String REVISIONS = "revisions";
+    public static final String CMCONTINUE = "cmcontinue";
+
+    public static final String CM_CONTINUE = "cmcontinue";
+
+    public static final String PAGES = "pages";
+
+    public static final String REVISIONS = "revisions";
 
     private static final String TOKENS = "tokens";
 
@@ -166,12 +176,6 @@ public abstract class LibWiki {
     private static final String BACK_LINKS = "backlinks";
 
     private static final String QUERY_CONTINUE = "query-continue"; // deprecated
-
-    public static final String CONTINUE = "continue";
-
-    public static final String CMCONTINUE = "cmcontinue";
-
-    public static final String CM_CONTINUE = "cmcontinue";
 
     private static final String LOGIN = "login";
 
@@ -949,6 +953,8 @@ public abstract class LibWiki {
 
         return mappa;
     } // fine del metodo
+
+
     /**
      * Restituisce il logintoken dalla mappa (se esiste)
      *
@@ -1242,7 +1248,10 @@ public abstract class LibWiki {
         HashMap<String, Object> mappa = new HashMap<String, Object>();
         HashMap<String, Object> mappaPages = null;
         HashMap<String, Object> mappaRev = null;
+        JSONObject slots;
+        JSONObject main;
         Object value;
+        String contenuto;
 
         //--recupera il valore del parametro di controllo per la gestione dell'ultima versione di mediawiki
         mappa.put(BATCH, batchcomplete);
@@ -1255,7 +1264,6 @@ public abstract class LibWiki {
                 mappa.put(key, value);
             } // fine del ciclo for-each
         }// end of if cycle
-
 
         //--recupera i valori dei parametri revisions
         if (arrayRev != null) {
@@ -1271,6 +1279,21 @@ public abstract class LibWiki {
             token = fixToken(token);
             mappa.put(TOKEN, token);
         }// end of if cycle
+
+//        //--patch per una nuova gestione da parete di mediawiki API
+//        if (mappa.get(PagePar.slots.name()) != null && mappa.get(PagePar.slots.name()) instanceof JSONObject) {
+//            slots = (JSONObject) mappa.get(PagePar.slots.name());
+//            if (slots != null && slots.get(MAIN) != null && slots.get(MAIN) instanceof JSONObject) {
+//                main = (JSONObject) slots.get(MAIN);
+//                if (main != null && main.get(CONTENT) != null && main.get(CONTENT) instanceof String) {
+//                    contenuto = (String) main.get(CONTENT);
+//                    if (!contenuto.equals("")) {
+//                        mappa.put(CONTENT, contenuto);
+//                        mappa.remove(PagePar.slots.name());
+//                    }// end of if cycle
+//                }// end of if cycle
+//            }// end of if cycle
+//        }// end of if cycle
 
         return mappa;
     } // fine del metodo

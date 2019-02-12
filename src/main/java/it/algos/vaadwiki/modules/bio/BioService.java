@@ -6,9 +6,8 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.modules.giorno.Giorno;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.download.ElaboraService;
+import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
 import it.algos.wiki.WrapTime;
@@ -251,13 +250,14 @@ public class BioService extends AttNazProfCatService {
 //        return lista;
 //    }// end of method
 
+
     /**
      * Returns all entities of the type <br>
      *
      * @return all ordered entities
      */
     public ArrayList<Bio> findAllByGiornoNato(String giornoNato) {
-        return (ArrayList)repository.findAllByGiornoNato(giornoNato);
+        return (ArrayList) repository.findAllByGiornoNato(giornoNato);
     }// end of method
 
 
@@ -267,8 +267,9 @@ public class BioService extends AttNazProfCatService {
      * @return all ordered entities
      */
     public ArrayList<Bio> findAllByGiornoMorto(String giornoMorto) {
-        return (ArrayList)repository.findAllByGiornoMorto(giornoMorto);
+        return (ArrayList) repository.findAllByGiornoMorto(giornoMorto);
     }// end of method
+
 
     /**
      * Returns all entities of the type <br>
@@ -276,7 +277,7 @@ public class BioService extends AttNazProfCatService {
      * @return all ordered entities
      */
     public ArrayList<Bio> findAllByAnnoNato(String annoNato) {
-        return (ArrayList)repository.findAllByAnnoNato(annoNato);
+        return (ArrayList) repository.findAllByAnnoNato(annoNato);
     }// end of method
 
 
@@ -286,8 +287,9 @@ public class BioService extends AttNazProfCatService {
      * @return all ordered entities
      */
     public ArrayList<Bio> findAllByAnnoMorto(String annoMorto) {
-        return (ArrayList)repository.findAllByAnnoMorto(annoMorto);
+        return (ArrayList) repository.findAllByAnnoMorto(annoMorto);
     }// end of method
+
 
     /**
      * Returns all entities of the type <br>
@@ -364,12 +366,12 @@ public class BioService extends AttNazProfCatService {
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
-     * @param pageid di riferimento (obbligatorio)
+     * @param wikiTitle della pagina wiki (obbligatorio, unico)
      *
      * @return istanza della Entity, null se non trovata
      */
-    public Bio findByKeyUnica(long pageid) {
-        return repository.findByPageid(pageid);
+    public Bio findByKeyUnica(String wikiTitle) {
+        return repository.findByWikiTitle(wikiTitle);
     }// end of method
 
 
@@ -378,9 +380,8 @@ public class BioService extends AttNazProfCatService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Bio) entityBean).getPageid() + "";
+        return ((Bio) entityBean).getWikiTitle() + "";
     }// end of method
-
 
 
     public void downloadBio(String wikiTitle) {
@@ -413,6 +414,7 @@ public class BioService extends AttNazProfCatService {
         Sort sort = new Sort(Sort.Direction.ASC, "cognome");
         return findAll(offset, size, sort);
     }// end of method
+
 
     /**
      * Returns pageid list of the requested page.

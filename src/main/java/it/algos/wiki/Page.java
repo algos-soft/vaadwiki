@@ -1,9 +1,10 @@
 package it.algos.wiki;
 
 
-
+import it.algos.vaadwiki.service.AWikiService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -23,17 +24,21 @@ import java.util.HashMap;
 @Slf4j
 public class Page implements Serializable {
 
-//    /**
+    private static String APICI = "\"";
+
+    private static String PUNTI = ":";
+
+    private static String GRAFFA_INI = "{";
+
+    private static String GRAFFA_END = "}";
+
+    private static String VIR = ",";
+
+    //    /**
 //     * La injection viene fatta da SpringBoot in automatico <br>
 //     */
 //    @Autowired
-public Api api;
-
-    private static String APICI = "\"";
-    private static String PUNTI = ":";
-    private static String GRAFFA_INI = "{";
-    private static String GRAFFA_END = "}";
-    private static String VIR = ",";
+    public Api api;
 
     private boolean valida = false;
 //    private boolean paginaScrittura = false
@@ -45,8 +50,11 @@ public Api api;
 //    private String text //risultato completo della pagina
 
     private HashMap<String, Object> mappaReadTxt = new HashMap<String, Object>();
+
     private HashMap<String, Object> mappaReadObj = new HashMap<String, Object>();
+
     private HashMap<String, Object> mappaDB = new HashMap<String, Object>();
+
 
     public Page() {
     }// fine del metodo costruttore
@@ -56,12 +64,33 @@ public Api api;
         this(testoPagina, TipoRequest.read);
     }// fine del metodo costruttore
 
-    public Page(JSONObject paginaJSON) {
+
+    /**
+     * Costruisce la Page dal testo JSON di una singola pagina
+     * 21 parametri
+     * 10 generali
+     * 8 revisions
+     * 3 slots/main
+     *
+     * @param singolaPaginaTextJSON in ingresso
+     *
+     * @return Page con la mappa dei parametri della pagina wiki
+     */
+    public Page(JSONObject singolaPaginaTextJSON) {
         this.tipoRequest = TipoRequest.read;
-        mappaReadTxt = LibWiki.creaMappaJSON(paginaJSON);
+        mappaReadTxt = LibWiki.creaMappaJSON(singolaPaginaTextJSON);
         mappaReadObj = LibWiki.converteMappa(mappaReadTxt);
         mappaDB = creaMappaDB(mappaReadObj);
-        valida = PagePar.isParValidiRead(mappaReadObj);
+//        valida = (boolean) mappaReadTxt.get(PagePar.batchcomplete.name());
+    }// fine del metodo costruttore
+
+
+    public Page(HashMap<String, Object> mappaReadTxt) {
+        this.tipoRequest = TipoRequest.read;
+        this.mappaReadTxt = mappaReadTxt;
+        mappaReadObj = LibWiki.converteMappa(mappaReadTxt);
+        mappaDB = creaMappaDB(mappaReadObj);
+//        valida = (boolean) mappaReadTxt.get(PagePar.batchcomplete.name());
     }// fine del metodo costruttore
 
 
@@ -70,8 +99,9 @@ public Api api;
         mappaReadTxt = LibWiki.creaMappaQuery(testoPagina);
         mappaReadObj = LibWiki.converteMappa(mappaReadTxt);
         mappaDB = creaMappaDB(mappaReadObj);
-        valida = PagePar.isParValidiRead(mappaReadObj);
+//        valida = (boolean) mappaReadTxt.get(PagePar.batchcomplete.name());
     }// fine del metodo costruttore
+
 
     /**
      * Crea la mappa per il Database
@@ -79,6 +109,7 @@ public Api api;
      * In particolare la data di questa lettura
      *
      * @param mappaRead in ingresso
+     *
      * @return mappa modificata
      */
     private static HashMap<String, Object> creaMappaDB(HashMap<String, Object> mappaRead) {
@@ -95,9 +126,11 @@ public Api api;
         return mappaDatabase;
     }// fine del metodo
 
+
     private static String apici(String entrata) {
         return APICI + entrata + APICI;
     }// fine del metodo
+
 
     private static String graffe(String entrata) {
         return GRAFFA_INI + entrata + GRAFFA_END;
@@ -108,25 +141,31 @@ public Api api;
         return mappaReadTxt;
     }// fine del metodo
 
+
     public HashMap getMappaReadObj() {
         return mappaReadObj;
     }// fine del metodo
+
 
     public HashMap getMappaDB() {
         return mappaDB;
     }// fine del metodo
 
+
     public long getPageid() {
         return (long) mappaReadObj.get(PagePar.pageid.toString());
     }// fine del metodo
+
 
     public String getTitle() {
         return (String) mappaReadObj.get(PagePar.title.toString());
     }// fine del metodo
 
+
     public String getText() {
         return (String) mappaReadObj.get(PagePar.content.toString());
     }// fine del metodo
+
 
     public Timestamp getTimestamp() {
         return (Timestamp) mappaReadObj.get(PagePar.timestamp.toString());
@@ -141,4 +180,5 @@ public Api api;
     public void setValida(boolean valida) {
         this.valida = valida;
     }// fine del metodo
+
 } //fine della classe

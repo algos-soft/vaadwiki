@@ -21,6 +21,12 @@ import java.util.HashMap;
  * User: gac
  * Date: ven, 01-feb-2019
  * Time: 06:40
+ * UrlRequest:
+ * urlDomain = "&list=categorymembers&cmprop=title&cmtitle=Category:"
+ * GET request
+ * No POST text
+ * Upload cookies
+ * Bot needed
  */
 @Component("AQueryCat")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -33,10 +39,10 @@ public class AQueryCat extends AQueryGet {
      */
     private static String TAG_LIST = TAG_QUERY + "&list=categorymembers";
 
-    /**
-     * Tag aggiunto nel 'urlDomain', specificando namespace ed il tipo di categoria
-     */
-    private static String TYPE_VOCI = "&cmnamespace=0&cmtype=page";
+//    /**
+//     * Tag aggiunto nel 'urlDomain', specificando namespace ed il tipo di categoria
+//     */
+//    private static String TYPE_VOCI = "&cmnamespace=0&cmtype=page";
 
     /**
      * Tag aggiunto nel 'urlDomain', specificando il numero di valori in risposta
@@ -54,7 +60,7 @@ public class AQueryCat extends AQueryGet {
      * Tag aggiunto nel 'urlDomain', specificando le informazioni da includere nella urlResponse
      * Tipicamente solo 'title' oppure anche 'ids'
      */
-    private static String TAG_INFO = "&cmprop=title";
+    private static String TAG_PROP = "&cmprop=title";
 
     /**
      * Tag aggiunto nel 'urlDomain', specificando il successivo inizio della lista
@@ -64,7 +70,7 @@ public class AQueryCat extends AQueryGet {
     /**
      * Tag completo 'urlDomain' per la richiesta di una lista di categoria
      */
-    private static String TAG_CAT = TAG_LIST + TAG_INFO + TAG_TITLE;
+    private static String TAG_CAT = TAG_LIST + TAG_PROP + TAG_TITLE;
 
     @Autowired
     protected ApplicationContext appContext;
@@ -107,9 +113,8 @@ public class AQueryCat extends AQueryGet {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-        super.isUploadCookies = true;
-        super.isUsaPost = false;
         super.isUsaBot = true;
+        super.isUploadCookies = true;
     }// end of method
 
 

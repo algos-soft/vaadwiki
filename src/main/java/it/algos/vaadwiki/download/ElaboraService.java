@@ -50,7 +50,7 @@ public class ElaboraService extends ABioService {
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
      */
     public void esegueAll() {
-        ArrayList<Long> lista = bioService.findAllPageids();
+        ArrayList<String> lista = bioService.findAllTitles();
 
         if (array.isValid(lista)) {
             esegue(lista);
@@ -65,12 +65,12 @@ public class ElaboraService extends ABioService {
      * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
      */
-    public void esegue(ArrayList<Long> lista) {
+    public void esegue(ArrayList<String> lista) {
         long inizio = System.currentTimeMillis();
 
         if (array.isValid(lista)) {
-            for (Long pageid : lista) {
-                esegue(pageid);
+            for (String title : lista) {
+                esegue(title);
             }// end of for cycle
             log.info("ELABORA - elaborati i parametri delle nuove voci (" + text.format(lista.size()) + " elementi) in " + date.deltaText(inizio));
         }// end of if cycle
@@ -83,9 +83,11 @@ public class ElaboraService extends ABioService {
      * Parte dal tmplBioServer e costruisce tutti parametri significativi <br>
      * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
+     *
+     * @param wikiTitle della pagina wiki (obbligatorio, unico)
      */
-    public void esegue(long pageid) {
-        Bio entity = bioService.findByKeyUnica(pageid);
+    public void esegue(String wikiTitle) {
+        Bio entity = bioService.findByKeyUnica(wikiTitle);
 
         if (entity != null) {
             esegueSave(entity);
@@ -143,9 +145,11 @@ public class ElaboraService extends ABioService {
      * Estrae dal tmplBioServer i singoli parametri previsti nella enumeration ParBio <br>
      * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
+     *
+     * @param wikiTitle della pagina wiki (obbligatorio, unico)
      */
-    public Bio esegueSave(long pageid) {
-        return esegue(bioService.findByKeyUnica(pageid), true);
+    public Bio esegueSave(String wikiTitle) {
+        return esegue(bioService.findByKeyUnica(wikiTitle), true);
     }// end of method
 
 

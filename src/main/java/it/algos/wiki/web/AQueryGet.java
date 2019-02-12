@@ -1,7 +1,5 @@
 package it.algos.wiki.web;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,9 +16,24 @@ import org.springframework.stereotype.Component;
 public abstract class AQueryGet extends AQueryWiki {
 
     /**
+     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
+     */
+    protected final static String TAG_INFO = "&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
+
+    /**
+     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
+     */
+    protected final static String TAG_SLOTS = "&rvslots=main";
+
+    /**
+     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
+     */
+    protected final static String TAG_PAGE = TAG_QUERY + TAG_SLOTS + TAG_INFO;
+
+    /**
      * Tag completo 'urlDomain' per il controllo
      */
-    protected static String TAG_BOT =  "&assert=bot";
+    protected static String TAG_BOT = "&assert=bot";
 
 
     /**

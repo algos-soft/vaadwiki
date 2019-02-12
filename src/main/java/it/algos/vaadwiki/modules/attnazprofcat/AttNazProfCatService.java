@@ -103,7 +103,9 @@ public abstract class AttNazProfCatService extends AService {
 
         //--legge la pagina wiki
         testo = ((AQueryVoce) appContext.getBean("AQueryVoce", titoloModulo)).urlRequest();
-        righe = testo.split("\n");
+        if (text.isValid(testo)) {
+            righe = testo.split("\n");
+        }// end of if cycle
 
         if (array.isValid(righe)) {
             this.deleteAll();
