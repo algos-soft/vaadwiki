@@ -169,16 +169,10 @@ public class RequestWikiReadPages extends RequestWiki {
                 risultato = TipoRisultato.letta;
             }// end of if/else cycle
             listaPages = new ArrayList<Page>();
-            for (int k = 0; k < arrayPages.size(); k++) {
-                page = new Page((JSONObject) arrayPages.get(k));
-
-                //test@todo provvisorio
-                if (page.getText().equals("")) {
-                    page = new Page((JSONObject) arrayPages.get(k));
-                }// end of if cycle
-
-                listaPages.add(page);
-            }// end of for cycle
+//            for (int k = 0; k < arrayPages.size(); k++) {
+//                page = new Page((JSONObject) arrayPages.get(k));
+//                listaPages.add(page);
+//            }// end of for cycle
         }// end of if cycle
 
     } // fine del metodo
