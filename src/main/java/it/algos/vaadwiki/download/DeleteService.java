@@ -32,16 +32,16 @@ public class DeleteService extends ABioService {
     /**
      * Cancella dal mongoDB la lista di voci non più presenti nella categoria BioBot sul server wikipedia
      *
-     * @param listaPageidsEccedenti elenco (ids=pageids) delle pagine eccedenti da cancellare
+     * @param vociEccedenti elenco (title) delle voci eccedenti da cancellare
      */
-    public void esegue(ArrayList<Long> listaPageidsEccedenti) {
+    public void esegue(ArrayList<String> vociEccedenti) {
         long inizio = System.currentTimeMillis();
         DeleteResult result;
 
-        if (array.isValid(listaPageidsEccedenti)) {
-            result = mongo.deleteBulkByProperty(listaPageidsEccedenti, Bio.class, "pageid");
+        if (array.isValid(vociEccedenti)) {
+            result = mongo.deleteBulkByProperty(vociEccedenti, Bio.class, "wikiTitle");
             if (result.getDeletedCount() < 1) {
-                logger.error("DELETE - Non sono riuscito ad eliminare nessuna voce delle " + listaPageidsEccedenti.size() + " eccedenti");
+                logger.error("DELETE - Non sono riuscito ad eliminare nessuna voce delle " + vociEccedenti.size() + " eccedenti");
             } else {
                 logger.info("DELETE - eliminate le voci da mongoDB Bio (" + result.getDeletedCount() + " elementi) in " + date.deltaText(inizio));
             }// end of if/else cycle

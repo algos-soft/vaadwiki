@@ -6,7 +6,6 @@ import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.Page;
-import it.algos.wiki.web.AQueryPage;
 import it.algos.wiki.web.AQueryPages;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -51,8 +50,6 @@ public class PageService extends ABioService {
         int effettivo;
         int delta;
 
-        dimBloccoLettura=3;
-
         if (listaVociDaScaricare != null && listaVociDaScaricare.size() > 0) {
             numCicliLetturaPagine = array.numCicli(listaVociDaScaricare.size(), dimBloccoLettura);
             for (int k = 0; k < numCicliLetturaPagine; k++) {
@@ -60,10 +57,10 @@ public class PageService extends ABioService {
                 result = downloadSingoloBlocco(result, bloccoPage);
                 if (pref.isBool(FlowCost.USA_DEBUG)) {
                     teorico = (k + 1) * dimBloccoLettura;
+                    teorico = Math.min(teorico, listaVociDaScaricare.size());
                     effettivo = result.vociRegistrate.size();
                     delta = teorico - effettivo;
                     message = "New - aggiunte " + text.format(effettivo) + "/" + text.format(teorico) + " (-" + delta + ") voci totali a mongoDB.Bio in " + date.deltaText(inizio);
-//                    logger.debug(message);
                     log.info(message);
                 }// end of if cycle
             }// end of for cycle
@@ -77,7 +74,7 @@ public class PageService extends ABioService {
      * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
      */
     private DownloadResult downloadSingoloBlocco(DownloadResult result, ArrayList<String> arrayTitles) {
-        ArrayList<Page> pages=null; // di norma 500
+        ArrayList<Page> pages = null; // di norma 500
         Bio entity;
         ArrayList<Long> vociDaRegistrareInQuestoBlocco = new ArrayList<>();
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
@@ -112,15 +109,15 @@ public class PageService extends ABioService {
 //                mongo.updateBulk(listaBio, Bio.class);
                 mongo.insert(listaBio, Bio.class);
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(" " );
+                log.error(" ");
                 log.error(unErrore.toString());
                 log.error("Numero voci (bio) da registrare: " + listaBio.size());
                 log.error(listaBio.toString());
                 for (int k = 0; k < 10; k++) {
-                    log.error(" " );
-                    log.error(listaBio.get(k).wikiTitle + " "+listaBio.get(k).pageid);
+                    log.error(" ");
+                    log.error(listaBio.get(k).wikiTitle + " " + listaBio.get(k).pageid);
                 }// end of for cycle
-                log.error(" " );
+                log.error(" ");
 
             }// fine del blocco try-catch
         }// end of if cycle

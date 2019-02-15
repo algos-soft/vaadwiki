@@ -2,15 +2,13 @@ package it.algos.vaadwiki.application;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.boot.ABoot;
-import it.algos.vaadflow.application.FlowCost;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.context.annotation.Scope;
+
 import javax.servlet.ServletContextEvent;
+
 import static it.algos.vaadflow.application.FlowCost.PROJECT_NAME;
 
 /**
@@ -34,12 +32,14 @@ import static it.algos.vaadflow.application.FlowCost.PROJECT_NAME;
 public class BioBoot extends ABoot {
 
     public final static String PROJECT_VERSION = "1";
+
     public final static String DEMO_COMPANY_CODE = "demo";
 
     /**
      * Iniettata dal costruttore <br>
      */
     private BioVers vaadwikiVers;
+
 
     /**
      * Costruttore @Autowired <br>
@@ -51,6 +51,7 @@ public class BioBoot extends ABoot {
         super();
         this.vaadwikiVers = vaadwikiVers;
     }// end of Spring constructor
+
 
     /**
      * Executed on container startup <br>
@@ -84,7 +85,7 @@ public class BioBoot extends ABoot {
      * Regola alcune informazioni dell'applicazione
      */
     protected void regolaInfo() {
-            PROJECT_NAME = "vaadwiki";
+        PROJECT_NAME = "vaadwiki";
 
 //        footer.project = "Vaadwam";
 //        footer.version = "0.2";

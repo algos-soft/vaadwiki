@@ -197,7 +197,7 @@ public class BioService extends AttNazProfCatService {
                 .lastModifica(lastWikiModifica != null ? lastWikiModifica : LocalDateTime.of(2000, 1, 1, 0, 0))
                 .lastLettura(lastGacLettura != null ? lastGacLettura : LocalDateTime.now())
                 .build();
-        entity.id = entity.getPageid() + "";
+        entity.id = entity.getWikiTitle() + "";
 
         return entity;
     }// end of method
@@ -482,14 +482,14 @@ public class BioService extends AttNazProfCatService {
      *
      * @return map (pageid,timestamp)
      */
-    public LinkedHashMap<Long, Timestamp> findTimestampMap(int offset, int size, Sort sort) {
-        LinkedHashMap<Long, Timestamp> mappa = null;
+    public LinkedHashMap<String, Timestamp> findTimestampMap(int offset, int size, Sort sort) {
+        LinkedHashMap<String, Timestamp> mappa = null;
         ArrayList<? extends AEntity> listaEntities = findAll(offset, size, sort);
 
         if (array.isValid(listaEntities)) {
             mappa = new LinkedHashMap<>();
             for (AEntity entity : listaEntities) {
-                mappa.put(((Bio) entity).pageid, Timestamp.valueOf(((Bio) entity).lastLettura));
+                mappa.put(((Bio) entity).wikiTitle, Timestamp.valueOf(((Bio) entity).lastLettura));
             }// end of for cycle
         }// end of if cycle
 

@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.web.AQueryCat;
+import it.algos.wiki.web.AQueryCatInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -45,12 +46,20 @@ public class CicloDownload extends ABioService {
     public DownloadResult esegue() {
         DownloadResult result = new DownloadResult();
         String nomeCategoria = pref.getStr(CAT_BIO);
-        ArrayList<String> listaVociCategoria;
+        int numVociCategoria;
+        ArrayList<String> vociCategoria;
         long inizio = System.currentTimeMillis();
         result.setInizio(inizio);
         result.setNomeCategoria(nomeCategoria);
-        log.info("" );
+        log.info("");
         log.info("Inizio task di download: " + date.getTime(LocalDateTime.now()));
+
+        //--Il ciclo necessita del login valido come bot per il funzionamento normale
+        //--oppure del flag USA_CICLI_ANCHE_SENZA_BOT per un funzionamento ridotto
+        if (wikiLoginOld != null && wikiLoginOld.isValido() && wikiLoginOld.isBot()) {
+        } else {
+            return null;
+        }// end of if/else cycle
 
         //--Download del modulo attività
         attivitaService.download();
@@ -62,14 +71,18 @@ public class CicloDownload extends ABioService {
         professioneService.download();
 
         //--Recupera la lista delle voci della categoria dal server wiki
-        listaVociCategoria = appContext.getBean(AQueryCat.class, nomeCategoria).urlRequestTitle();
+        numVociCategoria = appContext.getBean(AQueryCatInfo.class, nomeCategoria).numVoci();
+        vociCategoria = appContext.getBean(AQueryCat.class, nomeCategoria).urlRequestTitle();
+        if (numVociCategoria != vociCategoria.size()) {
+            log.warn("Le voci della categoria non coincidono: sul server ce ne sono " + text.format(vociCategoria) + " e ne ha recuperate " + text.format(vociCategoria.size()));
+        }// end of if cycle
 
         //--Scarica dal server tutte le voci mancanti e crea le nuove entities sul mongoDB Bio
-        newService.esegue(listaVociCategoria);
+        newService.esegue(vociCategoria);
 
         log.info("Download - Ciclo totale attività, nazionalità, professione, categoria, nuove voci in " + date.deltaText(result.getInizio()));
         log.info("Fine task di download: " + date.getTime(LocalDateTime.now()));
-        log.info("" );
+        log.info("");
 
         return result;
     }// end of method

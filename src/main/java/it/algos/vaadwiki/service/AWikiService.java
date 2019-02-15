@@ -6,6 +6,7 @@ import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.application.WikiCost;
 import it.algos.wiki.Page;
 import it.algos.wiki.PagePar;
+import it.algos.wiki.web.AQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -14,11 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static it.algos.vaadwiki.application.WikiCost.CATEGORY_INFO;
+import static it.algos.vaadwiki.application.WikiCost.ENCODE;
 import static it.algos.wiki.Cost.QUERY;
 import static it.algos.wiki.LibWiki.PAGES;
+import static it.algos.wiki.web.AQuery.CSRF_TOKEN;
 
 /**
  * Project vaadwiki
@@ -37,6 +42,49 @@ public class AWikiService {
 
     @Autowired
     private AArrayService array;
+
+
+    /**
+     * Crea una mappa per il token (valori String) dal testo JSON di una pagina di GET preliminary
+     *
+     * @param textJSON in ingresso
+     *
+     * @return mappa standard (valori String)
+     */
+    public HashMap<String, Object> getMappaToken(String textJSON) {
+        HashMap<String, Object> mappa = null;
+        JSONObject query = getObjectQuery(textJSON);
+        JSONObject tokens = getObjectQuery(textJSON);
+
+        if (query.get(AQuery.TOKENS) != null && query.get(AQuery.TOKENS) instanceof JSONObject) {
+            tokens = (JSONObject) query.get(AQuery.TOKENS);
+            if (tokens.get(CSRF_TOKEN) != null && tokens.get(CSRF_TOKEN) instanceof String) {
+                mappa = new HashMap();
+                mappa.put(CSRF_TOKEN, tokens.get(CSRF_TOKEN));
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return mappa;
+    }// end of method
+
+
+    /**
+     * Restituisce il token dal testo JSON di una pagina di GET preliminary
+     *
+     * @param textJSON in ingresso
+     *
+     * @return logintoken
+     */
+    public String getToken(String textJSON) {
+        String csrfToken = "";
+        HashMap<String, Object> mappa = getMappaToken(textJSON);
+
+        if (mappa != null && mappa.get(CSRF_TOKEN) != null && mappa.get(CSRF_TOKEN) instanceof String) {
+            csrfToken = (String) mappa.get(CSRF_TOKEN);
+        }// fine del blocco if
+
+        return csrfToken;
+    } // fine del metodo
 
 
     /**
@@ -198,5 +246,89 @@ public class AWikiService {
 
         return mappa;
     } // fine del metodo
+
+
+    /**
+     * Recupera la mappa di informazioni su una categoria.
+     * <p>
+     * Dovrebbero essere:
+     * pages (long)
+     * size (long)
+     * hidden (boolean)
+     * files (long)
+     * subcats (long)
+     *
+     * @param contenutoCompletoPaginaWebInFormatoJSON in ingresso
+     *
+     * @return mappa parametri delle informazioni su una categoria
+     */
+    public HashMap<String, Object> getMappaCategoryInfo(String contenutoCompletoPaginaWebInFormatoJSON) {
+        HashMap<String, Object> mappa = null;
+        JSONArray arrayPagine = this.getArrayPagine(contenutoCompletoPaginaWebInFormatoJSON);
+        JSONObject object;
+
+        if (arrayPagine != null) {
+            if (arrayPagine != null && arrayPagine.size() == 1 && arrayPagine.get(0) != null && arrayPagine.get(0) instanceof JSONObject) {
+                object = (JSONObject) arrayPagine.get(0);
+                mappa = (HashMap<String, Object>) object.get(CATEGORY_INFO);
+            }// fine del blocco if
+        }// end of if cycle
+
+        return mappa;
+    } // fine del metodo
+
+
+    /**
+     * Numero di voci della categoria.
+     *
+     * @param contenutoCompletoPaginaWebInFormatoJSON in ingresso
+     *
+     * @return dimensioni della categoria
+     */
+    public int getNumVociCategory(String contenutoCompletoPaginaWebInFormatoJSON) {
+        int numVoci = 0;
+        Long numVociLong = 0L;
+        HashMap<String, Object> mappa = getMappaCategoryInfo(contenutoCompletoPaginaWebInFormatoJSON);
+
+        if (mappa != null) {
+            if (mappa != null && mappa.get(WikiCost.PAGES) != null) {
+                numVociLong = (Long) mappa.get(WikiCost.PAGES);
+                numVoci = numVociLong.intValue();
+            }// fine del blocco if
+        }// end of if cycle
+
+        return numVoci;
+    } // fine del metodo
+
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un pipe
+     * Ogni singolo valore viene 'encode' come UTF-8, PRIMA di applicare il separatore
+     * <p>
+     *
+     * @param array lista di valori
+     *
+     * @return stringa con i singoli valori divisi dal separatore pipe e codificati UTF-8
+     */
+    public String multiPages(ArrayList<String> array) {
+        String urlDomain;
+        String sep = "|";
+        StringBuilder textBuffer = new StringBuilder();
+
+        for (String titolo : array) {
+            try { // prova ad eseguire il codice
+                titolo = URLEncoder.encode(titolo, ENCODE);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
+            textBuffer.append(titolo);
+            textBuffer.append(sep);
+        } // fine del ciclo for-each
+        urlDomain = textBuffer.toString();
+        urlDomain = text.levaCoda(urlDomain, sep);
+
+        return urlDomain;
+    }// end of method
+
 
 }// end of class

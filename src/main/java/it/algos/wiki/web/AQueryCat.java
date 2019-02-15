@@ -44,13 +44,13 @@ public class AQueryCat extends AQueryGet {
 //     */
 //    private static String TYPE_VOCI = "&cmnamespace=0&cmtype=page";
 
-    /**
-     * Tag aggiunto nel 'urlDomain', specificando il numero di valori in risposta
-     * Fino a 500 può essere usato anche senza cookies
-     * Con i cookies (di admin o di bot) arriva a 5000
-     */
-    private static String TAG_LIMIT = "&cmlimit=5000";
-
+//    /**
+//     * Tag aggiunto nel 'urlDomain', specificando il numero di valori in risposta
+//     * Fino a 500 può essere usato anche senza cookies
+//     * Con i cookies (di admin o di bot) arriva a 5000
+//     */
+//    private static String TAG_LIMIT = "&cmlimit=5000";
+//
     /**
      * Tag aggiunto nel 'urlDomain', specificando il titolo della categoria
      */

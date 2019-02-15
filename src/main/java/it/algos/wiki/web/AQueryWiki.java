@@ -8,7 +8,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.HashMap;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
@@ -33,6 +35,14 @@ public abstract class AQueryWiki extends AQuery {
      * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'urlDomain' completo
      */
     protected final static String TAG_API = "https://it.wikipedia.org/w/api.php?";
+
+    /**
+     * Tag aggiunto nel 'urlDomain', specificando il numero di valori in risposta
+     * Fino a 500 può essere usato anche senza cookies
+     * Con i cookies (di admin o di bot) arriva a 5000
+     */
+    protected final static String TAG_LIMIT = "&cmlimit=5000";
+
 
     /**
      * Tag aggiunto per costruire un 'urlDomain' completo
@@ -120,6 +130,23 @@ public abstract class AQueryWiki extends AQuery {
         return titoloWiki;
     } // fine del metodo
 
+
+    /**
+     * Allega i cookies alla request (upload)
+     * Serve solo la sessione
+     *
+     * @param urlConn connessione
+     */
+    protected void uploadCookies(URLConnection urlConn) {
+        HashMap<String, Object> mappa = null;
+        String txtCookies = "";
+
+        if (isUploadCookies) {
+            mappa = wLogin.getCookies();
+            txtCookies = LibWiki.creaCookiesText(mappa);
+            urlConn.setRequestProperty("Cookie", txtCookies);
+        }// end of if cycle
+    } // fine del metodo
 
     /**
      * Elabora la risposta

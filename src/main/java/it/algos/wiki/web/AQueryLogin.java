@@ -213,6 +213,24 @@ public class AQueryLogin extends AQueryWiki {
 
 
     /**
+     * Allega i cookies alla request (upload)
+     * Serve solo la sessione
+     *
+     * @param urlConn connessione
+     */
+    protected void uploadCookies(URLConnection urlConn) {
+        HashMap<String, Object> mappa = null;
+        String txtCookies = "";
+
+        if (isUploadCookies) {
+            mappa = cookies;
+            txtCookies = LibWiki.creaCookiesText(mappa);
+            urlConn.setRequestProperty("Cookie", txtCookies);
+        }// end of if cycle
+    } // fine del metodo
+
+
+    /**
      * Crea il testo del POST della request
      * DEVE essere sovrascritto nelle sottoclassi specifiche
      */

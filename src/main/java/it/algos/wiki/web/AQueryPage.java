@@ -1,9 +1,6 @@
 package it.algos.wiki.web;
 
 import it.algos.wiki.Page;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -88,6 +85,7 @@ public class AQueryPage extends AQueryGet {
         contenutoCompletoPaginaWebInFormatoJSON = super.urlRequest(titoloWiki);
         mappa = wikiService.getMappaPagina(contenutoCompletoPaginaWebInFormatoJSON);
         page = new Page(mappa);
+        page.setValida(true); //@todo si potrebbe migliorare il controllo
 
         return page;
     }// end of method

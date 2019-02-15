@@ -142,7 +142,7 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefInt(WIKI_PAGE_LIMIT, "Numero di pagine wiki da controllare nel blocco", 100);
+            creaPrefInt(WIKI_PAGE_LIMIT, "Numero di pagine wiki da controllare nel blocco", 250);
         }// fine del blocco if
 
         //--creata una nuova preferenza

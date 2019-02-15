@@ -20,6 +20,7 @@ import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.DidascaliaService;
 import it.algos.vaadwiki.service.LibBio;
+import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
 import it.algos.wiki.WikiLoginOld;
@@ -341,6 +342,9 @@ public class UtilityView extends VerticalLayout {
         wikiCat = "Nati nel 1225";
         titoliVociCategoria = appContext.getBean(AQueryCat.class).urlRequestTitle(wikiCat);
         log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore senza parametri - " + titoliVociCategoria.size() + " voci" : "No buono"));
+
+        wikiTitle = Upload.PAGINA_PROVA;
+        appContext.getBean(AQueryWrite.class, wikiTitle, "Seconda prova di scrittura del bot: " + "Biobot").urlRequest();
 
 //        wikiCat = "BioBot";
 //        long inizio = System.currentTimeMillis();

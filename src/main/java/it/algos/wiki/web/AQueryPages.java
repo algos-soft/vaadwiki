@@ -6,6 +6,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,6 +28,16 @@ import java.util.HashMap;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AQueryPages extends AQueryGet {
 
+
+    /**
+     * Tag completo 'urlDomain' per il controllo
+     */
+    protected final static String TAG_BOT = "&assert=bot";
+
+    /**
+     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
+     */
+    protected final static String TAG_PAGES = TAG_QUERY  + TAG_BOT + TAG_SLOTS + TAG_INFO;
 
     //--stringa (separata da pipe oppure da virgola) dei titles
     private String stringaTitles;
@@ -64,6 +75,7 @@ public class AQueryPages extends AQueryGet {
     protected void fixPreferenze() {
         super.fixPreferenze();
         this.isUsaBot = true;
+        this.isUsaPost = false;
         this.isUploadCookies = true;
     }// end of method
 
@@ -82,10 +94,28 @@ public class AQueryPages extends AQueryGet {
      */
     @Override
     public String fixUrlDomain(String titoloWikiGrezzo) {
-        String titoloWikiCodificato = super.fixUrlDomain(titoloWikiGrezzo);
-        return titoloWikiCodificato.startsWith(TAG_PAGE) ? titoloWikiCodificato : TAG_PAGE + titoloWikiCodificato;
+//        String titoloWikiCodificato = super.fixUrlDomain(titoloWikiGrezzo);
+        return titoloWikiGrezzo.startsWith(TAG_PAGES) ? titoloWikiGrezzo : TAG_PAGES + titoloWikiGrezzo;
     } // fine del metodo
 
+
+    /**
+     * Allega i cookies alla request (upload)
+     * Serve solo la sessione
+     *
+     * @param urlConn connessione
+     */
+    @Override
+    protected void uploadCookies(URLConnection urlConn) {
+        HashMap<String, Object> mappa = null;
+        String txtCookies = "";
+
+        if (isUploadCookies && wLogin != null) {
+            mappa = wLogin.getCookies();
+            txtCookies = LibWiki.creaCookiesText(mappa);
+            urlConn.setRequestProperty("Cookie", txtCookies);
+        }// end of if cycle
+    } // fine del metodo
 
     /**
      * Pages della response
@@ -106,7 +136,8 @@ public class AQueryPages extends AQueryGet {
      */
     public ArrayList<Page> pagesResponse(ArrayList<String> arrayTitles) {
         this.arrayTitles = arrayTitles;
-        return pagesResponse(array.toStringaPipe(arrayTitles));
+        return pagesResponse(wikiService.multiPages(arrayTitles));
+//        return pagesResponse(array.toStringaPipe(arrayTitles));
     }// end of method
 
 

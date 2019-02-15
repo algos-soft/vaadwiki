@@ -98,8 +98,8 @@ public class UpdateService extends ABioService {
         String info = "";
 
         for (int k = 0; k < numCicliLetturaPagine; k++) {
-//            LinkedHashMap<String, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
-//            result = esegueSingoloBlocco(mappa);
+            LinkedHashMap<String, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
+            result = esegueSingoloBlocco(mappa);
             numVociModificate += result.getNumVociRegistrate();
             info = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " voci e modificati in mongoDB.Bio " + text.format(numVociModificate) + " elementi in " + date.deltaText(inizio);
             if (pref.isBool(FlowCost.USA_DEBUG)) {

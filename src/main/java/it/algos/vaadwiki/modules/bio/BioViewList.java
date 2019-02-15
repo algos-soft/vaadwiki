@@ -302,7 +302,10 @@ public class BioViewList extends AttNazProfCatViewList {
             result = cicloUpdate.esegue();
         }// end of if/else cycle
 
-        sendMail(result);
+        if (result!=null) {
+            sendMail(result);
+        }// end of if cycle
+
         updateView();
     }// end of method
 

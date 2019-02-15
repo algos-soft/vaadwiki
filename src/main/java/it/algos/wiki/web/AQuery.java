@@ -5,7 +5,6 @@ import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -36,6 +35,9 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public abstract class AQuery {
+
+    public static final String CSRF_TOKEN = "csrftoken";
+    public static final String TOKENS = "tokens";
 
     /**
      * Costante di codifica testo. Sia per il titolo del urlDomain sia per il testo del POST <br>
@@ -164,6 +166,8 @@ public abstract class AQuery {
         try { // prova ad eseguire il codice
             urlDomain = fixUrlPreliminaryDomain(urlDomain);
             urlConn = this.creaGetConnection(urlDomain);
+            uploadCookies(urlConn);
+            addPostConnection(urlConn);
             urlResponse = sendRequest(urlConn);
             downlodPreliminaryCookies(urlConn);
             elaboraPreliminayResponse(urlResponse);
@@ -291,43 +295,52 @@ public abstract class AQuery {
      * @param urlConn connessione
      */
     protected void uploadCookies(URLConnection urlConn) {
-        HashMap cookies = this.cookies;
-        Object[] keyArray;
-        Object[] valArray;
-        Object sessionObj = null;
-        String sesionTxt = "";
-        String sep = "=";
-        Object valObj = null;
-        String valTxt = "";
-
-        // controllo di congruità
-        if (urlConn != null && isUploadCookies) {
-            if (cookies != null && cookies.size() > 0) {
-
-                keyArray = cookies.keySet().toArray();
-                if (keyArray.length > 0) {
-                    sessionObj = keyArray[0];
-                }// fine del blocco if
-                if (sessionObj != null && sessionObj instanceof String) {
-                    sesionTxt = (String) sessionObj;
-                }// fine del blocco if
-
-                valArray = cookies.values().toArray();
-                if (valArray.length > 0) {
-                    valObj = valArray[0];
-                }// fine del blocco if
-                if (valObj != null && valObj instanceof String) {
-                    valTxt = (String) valObj;
-                }// fine del blocco if
-
-//               String  txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
-//                urlConn.setRequestProperty("Cookie", txtCookies);
-
-                urlConn.setRequestProperty("Cookie", sesionTxt + sep + valTxt);
-
-            }// fine del blocco if
-        }// fine del blocco if
     } // fine del metodo
+
+    /**
+     * Allega i cookies alla request (upload)
+     * Serve solo la sessione
+     *
+     * @param urlConn connessione
+     */
+//    protected void uploadCookies(URLConnection urlConn) {
+//        HashMap cookies = this.cookies;
+//        Object[] keyArray;
+//        Object[] valArray;
+//        Object sessionObj = null;
+//        String sesionTxt = "";
+//        String sep = "=";
+//        Object valObj = null;
+//        String valTxt = "";
+//
+//        // controllo di congruità
+//        if (urlConn != null && isUploadCookies) {
+//            if (cookies != null && cookies.size() > 0) {
+//
+//                keyArray = cookies.keySet().toArray();
+//                if (keyArray.length > 0) {
+//                    sessionObj = keyArray[0];
+//                }// fine del blocco if
+//                if (sessionObj != null && sessionObj instanceof String) {
+//                    sesionTxt = (String) sessionObj;
+//                }// fine del blocco if
+//
+//                valArray = cookies.values().toArray();
+//                if (valArray.length > 0) {
+//                    valObj = valArray[0];
+//                }// fine del blocco if
+//                if (valObj != null && valObj instanceof String) {
+//                    valTxt = (String) valObj;
+//                }// fine del blocco if
+//
+////               String  txtCookies=" itwikiUserName=Gac; itwikiUserID=399; centralauth_User=Gac; centralauth_Session=aa5f3ad00ae724ef5c6ba7096732f950";
+////                urlConn.setRequestProperty("Cookie", txtCookies);
+//
+//                urlConn.setRequestProperty("Cookie", sesionTxt + sep + valTxt);
+//
+//            }// fine del blocco if
+//        }// fine del blocco if
+//    } // fine del metodo
 
 
     /**
@@ -481,8 +494,5 @@ public abstract class AQuery {
     }// end of method
 
 
-    protected Object pippo(String pluto) {
-        return null;
-    } // fine del metodo
 
 }// end of class

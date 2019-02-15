@@ -33,7 +33,7 @@ public abstract class AQueryGet extends AQueryWiki {
     /**
      * Tag completo 'urlDomain' per il controllo
      */
-    protected static String TAG_BOT = "&assert=bot";
+    protected final static String TAG_BOT = "&assert=bot";
 
 
     /**

@@ -984,7 +984,7 @@ public abstract class LibWiki {
      *
      * @return sessionToken
      */
-    public static String getSessionToken(LinkedHashMap<String, Object> mappa) {
+    public static String getSessionToken(HashMap<String, Object> mappa) {
         return getToken(mappa, SESSION_TOKEN);
     } // fine del metodo
 
@@ -997,7 +997,7 @@ public abstract class LibWiki {
      *
      * @return sessionToken
      */
-    public static String getToken(LinkedHashMap<String, Object> mappa, String keyTag) {
+    public static String getToken(HashMap<String, Object> mappa, String keyTag) {
         String sessionToken = "";
 
         if (mappa.get(keyTag) != null && mappa.get(keyTag) instanceof String) {

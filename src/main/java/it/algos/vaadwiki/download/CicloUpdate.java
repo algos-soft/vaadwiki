@@ -5,10 +5,12 @@ import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.web.AQueryCat;
+import it.algos.wiki.web.AQueryCatInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static it.algos.vaadwiki.application.WikiCost.CAT_BIO;
@@ -65,10 +67,12 @@ public class CicloUpdate extends ABioService {
     @SuppressWarnings("unchecked")
     public DownloadResult esegue() {
         DownloadResult result;
-        ArrayList<String> listaTitlesCategoria;
-        ArrayList<String> listaTitlesMongoBio;
-        ArrayList<String> listaTitlesEccedenti;
-        ArrayList<String> listaTitlesMancanti;
+        String nomeCategoria = pref.getStr(CAT_BIO);
+        int numVociCategoria;
+        ArrayList<String> vociCategoria;
+        ArrayList<String> vociBio;
+        ArrayList<String> vociEccedenti;
+        ArrayList<String> vociMancanti;
         long inizio;
 
         //--Il ciclo necessita del login valido come bot per il funzionamento normale
@@ -87,48 +91,50 @@ public class CicloUpdate extends ABioService {
         //--download del modulo professione
         professioneService.download();
 
-        //--recupera la lista dei pageids dalla collezione Categoria
-        listaTitlesCategoria  = appContext.getBean(AQueryCat.class, pref.getStr(CAT_BIO)).urlRequestTitle();
+        //--Recupera la lista delle voci della categoria dal server wiki
+        numVociCategoria = appContext.getBean(AQueryCatInfo.class, nomeCategoria).numVoci();
+        vociCategoria = appContext.getBean(AQueryCat.class, nomeCategoria).urlRequestTitle();
+        if (numVociCategoria != vociCategoria.size()) {
+            log.warn("Le voci della categoria non coincidono: sul server ce ne sono " + text.format(vociCategoria) + " e ne ha recuperate " + text.format(vociCategoria.size()));
+        }// end of if cycle
 
         //--recupera la lista dei pageids dalla collezione Bio
-        listaTitlesMongoBio = bioService.findAllTitles();
+        vociBio = bioService.findAllTitles();
 
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa dodici minuti");
         }// end of if cycle
-        listaTitlesEccedenti = array.differenza(listaTitlesMongoBio, listaTitlesCategoria);
+        vociEccedenti = array.differenza(vociBio, vociCategoria);
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Calcolate " + text.format(listaTitlesEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
-            logger.debug("Calcolate " + text.format(listaTitlesEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
+            log.info("Calcolate " + text.format(vociEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
+            logger.debug("Calcolate " + text.format(vociEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
         }// end of if cycle
 
         //--Cancella dal mongoDB tutte le entities non più presenti nella categoria
-//        deleteService.esegue(listaTitlesEccedenti);
+        deleteService.esegue(vociEccedenti);
 
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             log.info("Debug - Inizio a calcolare le voci mancanti. Circa dodici minuti");
         }// end of if cycle
-        listaTitlesMancanti = array.differenza(listaTitlesCategoria, listaTitlesMongoBio);
+        vociMancanti = array.differenza(vociCategoria, vociBio);
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Calcolate " + text.format(listaTitlesMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
-            logger.debug("Calcolate " + text.format(listaTitlesMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
+            log.info("Calcolate " + text.format(vociMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
+            logger.debug("Calcolate " + text.format(vociMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
         }// end of if cycle
 
         //--Scarica dal server la lista di voci mancanti e crea le nuove entities sul mongoDB Bio
-        newService.esegue(listaTitlesMancanti);
+        newService.esegue(vociMancanti);
 
         //--aggiorna tutte le entities mongoDB Bio che sono stati modificate sul server wiki DOPO l'ultima lettura
         result = updateService.esegue();
 
-//        --elabora i nuovi records
-//        elaboraService.esegue(listaVociMancanti);
-
-        //--elabora tutti i records che sono stati modificati sul server wiki DOPO l'ultima lettura
-//        elaboraService.esegueAll();
+        log.info("Update - Ciclo totale attività, nazionalità, professione, categoria, nuove voci in " + date.deltaText(result.getInizio()));
+        log.info("Fine task di update: " + date.getTime(LocalDateTime.now()));
+        log.info("");
 
         return result;
     }// end of method

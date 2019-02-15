@@ -102,5 +102,7 @@ public class WikiCost {
     public static final String REVISIONS = "revisions";
     public static final String SLOTS = "slots";
     public static final String MAIN = "main";
+    public static final String CATEGORY_INFO = "categoryinfo";
+    public final static String ENCODE = "UTF-8";
 
 }// end of static class

@@ -18,9 +18,11 @@ import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
 import it.algos.wiki.LibWiki;
 import it.algos.wiki.WikiLoginOld;
+import it.algos.wiki.web.AQueryWrite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
 import java.util.*;
@@ -47,6 +49,9 @@ public abstract class Upload {
     protected final static String TAG_INDICE = "__FORCETOC__";
 
     protected final static String TAG_NO_INDICE = "__NOTOC__";
+
+    @Autowired
+    protected ApplicationContext appContext;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -328,8 +333,8 @@ public abstract class Upload {
                 titoloPagina = PAGINA_PROVA;
             }// fine del blocco if
 
-            if (pref.isBool(FlowCost.USA_DEBUG)||checkPossoRegistrare(titoloPagina, testo)) {
-                api.scriveVoce(titoloPagina, testo, summary);
+            if (pref.isBool(FlowCost.USA_DEBUG) || checkPossoRegistrare(titoloPagina, testo)) {
+                appContext.getBean(AQueryWrite.class, titoloPagina, testo).urlRequest();
             }// end of if cycle
         }// fine del blocco if
     }// fine del metodo
@@ -675,7 +680,7 @@ public abstract class Upload {
                     }// end of for cycle
                 } else {
                     for (String didascalia : listaDidascalie) {
-                        testo += ASTERISCO  + didascalia + A_CAPO;
+                        testo += ASTERISCO + didascalia + A_CAPO;
                     }// end of for cycle
                 }// end of if/else cycle
 
