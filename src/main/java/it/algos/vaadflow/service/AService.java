@@ -46,9 +46,6 @@ import static it.algos.vaadflow.ui.dialog.AViewDialog.DURATA;
 public abstract class AService extends AbstractService implements IAService {
 
 
-    @Autowired
-    protected ApplicationContext appContext;
-
     public final static String FIELD_NAME_ID = "id";
 
     public final static String FIELD_NAME_ORDINE = "ordine";
@@ -59,13 +56,13 @@ public abstract class AService extends AbstractService implements IAService {
 
     public final static String FIELD_NAME_COMPANY = "company";
 
+    private final static int SIZE = 500;
+
 //    /**
 //     * Inietta da Spring come 'session'
 //     */
 //    @Autowired
 //    public ALogin login2;
-
-    private final static int SIZE = 500;
 
     //--il modello-dati specifico viene regolato dalla sottoclasse nel costruttore
     public Class<? extends AEntity> entityClass;
@@ -75,6 +72,9 @@ public abstract class AService extends AbstractService implements IAService {
      */
     @Autowired
     public AMongoService mongo;
+
+    @Autowired
+    protected ApplicationContext appContext;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -583,7 +583,7 @@ public abstract class AService extends AbstractService implements IAService {
      */
     @Override
     public List<String> getSearchPropertyNamesList(AContext context) {
-        return null;
+        return getFormPropertyNamesList(context);
     }// end of method
 
 

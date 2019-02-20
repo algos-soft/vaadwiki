@@ -116,6 +116,7 @@ public class WikiBoot extends ABoot {
 
         //--patch di accesso
         utenteService.creaIfNotExist(null, "gac", "fulvia", roleService.getRoles(EARole.developer), "gac@algos.it");
+        utenteService.creaIfNotExist(null, "biobot", "", roleService.getRoles(EARole.developer), "gac@algos.it");
     }// end of method
 
 

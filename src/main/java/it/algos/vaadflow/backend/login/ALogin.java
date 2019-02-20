@@ -4,9 +4,13 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow.modules.company.Company;
 import it.algos.vaadflow.modules.utente.Utente;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
+import static it.algos.vaadflow.application.FlowCost.TAG_LOGIN;
 
 /**
  * Project vaadwam
@@ -17,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 @SpringComponent
 //@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Qualifier(TAG_LOGIN)
 @VaadinSessionScope
 public class ALogin {
 

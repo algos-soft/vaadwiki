@@ -1,23 +1,18 @@
 package it.algos.vaadflow.ui.dialog;
 
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.service.AFieldService;
 import it.algos.vaadflow.service.AService;
 import it.algos.vaadflow.service.IAService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import static it.algos.vaadflow.application.FlowCost.TAG_SEARCH;
 
 /**
  * Project vaadflow
@@ -65,6 +60,7 @@ public class ASearchDialog extends ADialog {
         this.service = service;
     }// end of constructor
 
+
     /**
      * Metodo invocato subito DOPO il costruttore
      * <p>
@@ -78,6 +74,7 @@ public class ASearchDialog extends ADialog {
     protected void inizializzazione() {
         super.inizia();
     }// end of method
+
 
     /**
      * Preferenze standard.
@@ -135,12 +132,14 @@ public class ASearchDialog extends ADialog {
         //--Costruisce ogni singolo field
         //--Aggiunge il field al binder, nel metodo create() del fieldService
         //--Aggiunge il field ad una fieldMap, per recuperare i fields dal nome
-        for (String propertyName : propertyNamesList) {
-            propertyField = fieldService.create(null, ((AService) service).entityClass, propertyName);
-            if (propertyField != null) {
-                fieldMap.put(propertyName, propertyField);
-            }// end of if cycle
-        }// end of for cycle
+        if (propertyNamesList != null) {
+            for (String propertyName : propertyNamesList) {
+                propertyField = fieldService.create(null, ((AService) service).entityClass, propertyName);
+                if (propertyField != null) {
+                    fieldMap.put(propertyName, propertyField);
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
 
         addFieldsToLayout();
     }// end of method

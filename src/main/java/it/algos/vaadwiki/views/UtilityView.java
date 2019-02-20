@@ -344,7 +344,7 @@ public class UtilityView extends VerticalLayout {
         log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore senza parametri - " + titoliVociCategoria.size() + " voci" : "No buono"));
 
         wikiTitle = Upload.PAGINA_PROVA;
-        appContext.getBean(AQueryWrite.class, wikiTitle, "Seconda prova di scrittura del bot: " + "Biobot").urlRequest();
+        appContext.getBean(AQueryWrite.class, wikiTitle, "Quarta prova di scrittura del bot: " + "Biobot").urlRequest();
 
 //        wikiCat = "BioBot";
 //        long inizio = System.currentTimeMillis();

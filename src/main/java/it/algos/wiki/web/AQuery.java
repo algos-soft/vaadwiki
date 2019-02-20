@@ -36,8 +36,11 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 @Slf4j
 public abstract class AQuery {
 
-    public static final String CSRF_TOKEN = "csrftoken";
-    public static final String TOKENS = "tokens";
+    public final static String CSRF_TOKEN = "csrftoken";
+
+    public final static String TOKENS = "tokens";
+
+    public final static String TAG_BOT = "&assert=bot";
 
     /**
      * Costante di codifica testo. Sia per il titolo del urlDomain sia per il testo del POST <br>
@@ -492,7 +495,6 @@ public abstract class AQuery {
     public String urlResponse() {
         return urlRequest(urlDomain);
     }// end of method
-
 
 
 }// end of class

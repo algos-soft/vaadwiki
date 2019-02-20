@@ -1,9 +1,10 @@
 package it.algos.wiki.web;
 
 import com.vaadin.flow.component.notification.Notification;
+import it.algos.vaadflow.modules.utente.UtenteService;
 import it.algos.wiki.LibWiki;
-import it.algos.wiki.WikiLoginOld;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -97,6 +98,8 @@ public class AQueryLogin extends AQueryWiki {
 
     private final static String TAG_SECOND_REQUEST_POST = TAG_BASE + "&action=login";
 
+    @Autowired
+    private UtenteService utenteService;
 
     private String itwiki_BPsession;
 
@@ -114,8 +117,9 @@ public class AQueryLogin extends AQueryWiki {
 
     private String lgtoken;
 
-    //    @Autowired
-    private WikiLoginOld wikiLoginOld;
+//    @Autowired
+//    @Qualifier(TAG_LOGIN)
+//    private ALogin aLogin;
 
 
     /**
@@ -320,31 +324,15 @@ public class AQueryLogin extends AQueryWiki {
 
             if (regolaWikiLoginSingleton()) {
                 if (checkCollegamentoComeBot()) {
-                    try { // prova ad eseguire il codice
-                        Notification.show("Bot loggato come " + lgusername, 3000, Notification.Position.BOTTOM_START);
-                    } catch (Exception unErrore) { // intercetta l'errore
-                        log.error(unErrore.toString());
-                    }// fine del blocco try-catch
+                    log.info("Algos - Bot loggato come " + lgusername);
                 } else {
-                    try { // prova ad eseguire il codice
-                        Notification.show("Non sono riuscito a loggarmi come bot", 4000, Notification.Position.BOTTOM_START);
-                    } catch (Exception unErrore) { // intercetta l'errore
-                        log.error(unErrore.toString());
-                    }// fine del blocco try-catch
+                    log.warn("Algos - Non sono riuscito a loggarmi come bot");
                 }// end of if/else cycle
             } else {
-                try { // prova ad eseguire il codice
-                    Notification.show("Non sono riuscito a loggarmi", 4000, Notification.Position.BOTTOM_START);
-                } catch (Exception unErrore) { // intercetta l'errore
-                    log.error(unErrore.toString());
-                }// fine del blocco try-catch
+                log.warn("Algos - Non sono riuscito a loggarmi come bot");
             }// end of if/else cycle
         } else {
-            try { // prova ad eseguire il codice
-                Notification.show("Non sono riuscito a loggarmi", 4000, Notification.Position.BOTTOM_START);
-            } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
-            }// fine del blocco try-catch
+            log.warn("Algos - Non sono riuscito a loggarmi");
         }// end of if/else cycle
 
         return urlResponse;
@@ -360,9 +348,10 @@ public class AQueryLogin extends AQueryWiki {
         if (wLogin != null) {
             wLogin.regola(lguserid, lgusername, itwiki_BPsession);
             wLogin.setCookies(cookies);
+//            aLogin.setUtente(utenteService.findByKeyUnica("biobot"));
             status = true;
         } else {
-            Notification.show("Non trovo wLogin", 4000, Notification.Position.BOTTOM_START);
+            Notification.show("Loggato come ", 4000, Notification.Position.BOTTOM_START);
             log.warn("Non trovo wLogin");
         }// end of if/else cycle
 

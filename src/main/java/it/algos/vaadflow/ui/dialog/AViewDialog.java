@@ -32,6 +32,7 @@ import it.algos.vaadflow.ui.fields.ATextArea;
 import it.algos.vaadflow.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
@@ -166,6 +167,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * Istanza (@VaadinSessionScope) inietta da Spring ed unica nella sessione <br>
      */
     @Autowired
+    @Qualifier(TAG_LOGIN)
     protected ALogin login;
 
     /**

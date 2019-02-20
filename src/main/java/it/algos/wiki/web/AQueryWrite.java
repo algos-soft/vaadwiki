@@ -30,7 +30,7 @@ public class AQueryWrite extends AQueryPost {
      */
     private final static String FIRST_REQUEST_GET = TAG_QUERY + "&meta=tokens";
 
-    private final static String TAG_SECOND_REQUEST_POST = TAG_BASE + "&action=edit&title=";
+    private final static String TAG_SECOND_REQUEST_POST = TAG_BASE + TAG_BOT + "&action=edit&title=";
 
     // contenuto della pagina in scrittura
     private String newText;

@@ -45,6 +45,7 @@ import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadflow.ui.menu.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
@@ -55,6 +56,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static it.algos.vaadflow.application.FlowCost.TAG_LOGIN;
 import static it.algos.vaadflow.application.FlowCost.USA_MENU;
 
 /**
@@ -353,6 +355,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Istanza (@VaadinSessionScope) inietta da Spring ed unica nella sessione <br>
      */
     @Autowired
+    @Qualifier(TAG_LOGIN)
     protected ALogin login;
 
     /**

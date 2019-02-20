@@ -1,12 +1,13 @@
 package it.algos.wiki.web;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.backend.login.ALogin;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
@@ -30,9 +31,10 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * <p>
  */
 @SpringComponent
+@Qualifier("wikilogin")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class WLogin {
+public class WLogin  {
 
     private boolean isValido;
 
@@ -48,6 +50,7 @@ public class WLogin {
 
     // ci metto tutti i cookies restituiti da URLConnection.responses
     private HashMap cookies;
+
 
     /**
      * Regolazione dei valori dell'ultimo collegamento di login effettuato
