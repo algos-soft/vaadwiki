@@ -102,7 +102,7 @@ public class CicloUpdate extends ABioService {
                 log.warn("Non riesco a leggere le voci dal server. Forse non sono loggato come bot");
             }// end of if cycle
             if (numVociCategoria != vociCategoria.size()) {
-                log.warn("Le voci della categoria non coincidono: sul server ce ne sono " + text.format(vociCategoria) + " e ne ha recuperate " + text.format(vociCategoria.size()));
+                log.warn("Le voci della categoria non coincidono: sul server ce ne sono " + text.format(numVociCategoria) + " e ne ha recuperate " + text.format(vociCategoria.size()));
             }// end of if cycle
         }// end of if cycle
 
