@@ -94,8 +94,16 @@ public class CicloUpdate extends ABioService {
         //--Recupera la lista delle voci della categoria dal server wiki
         numVociCategoria = appContext.getBean(AQueryCatInfo.class, nomeCategoria).numVoci();
         vociCategoria = appContext.getBean(AQueryCat.class, nomeCategoria).urlRequestTitle();
-        if (numVociCategoria != vociCategoria.size()) {
-            log.warn("Le voci della categoria non coincidono: sul server ce ne sono " + text.format(vociCategoria) + " e ne ha recuperate " + text.format(vociCategoria.size()));
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            if (numVociCategoria == 0) {
+                log.warn("Numero errato di voci sul server");
+            }// end of if cycle
+            if (vociCategoria == null) {
+                log.warn("Non riesco a leggere le voci dal server. Forse non sono loggato come bot");
+            }// end of if cycle
+            if (numVociCategoria != vociCategoria.size()) {
+                log.warn("Le voci della categoria non coincidono: sul server ce ne sono " + text.format(vociCategoria) + " e ne ha recuperate " + text.format(vociCategoria.size()));
+            }// end of if cycle
         }// end of if cycle
 
         //--recupera la lista dei pageids dalla collezione Bio
