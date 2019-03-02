@@ -8,7 +8,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_BIO;
 
@@ -29,67 +28,33 @@ public class NewService extends ABioService {
 
 
     /**
+     * Esegue un ciclo (NEW) di creazione di nuovi records esistenti sul server e mancanti nel database
      * Scarica dal server tutte le voci indicate e crea le nuove entities sul mongoDB Bio
      * <p>
-     * Controlla il flag USA_LIMITE_DOWNLOAD
-     * Usa il numero massimo (MAX_DOWNLOAD) di voci da scaricare in totale (se USA_LIMITE_DOWNLOAD=true)
-     * Esegue una serie di RequestWikiReadMultiPages a blocchi di PAGES_PER_REQUEST per volta
-     * Per ogni page crea un record bio
+     * Esegue una serie di AQueryPages a blocchi di WIKI_PAGE_LIMIT (250) per volta <br>
+     * Per ogni page crea la entity (Bio) corrispondente <br>
      *
-     * @param vociMancanti elenco (title) delle voci mancanti da scaricare e registrare
+     * @param result wrapper di dati risultanti
+     *
+     * @return wrapper di dati risultanti
      */
-    public void esegue(ArrayList<String> vociMancanti) {
+    public DownloadResult esegue(DownloadResult result) {
         long inizio = System.currentTimeMillis();
-        DownloadResult result;
 
-        if (array.isValid(vociMancanti)) {
-            result = pageService.downloadPagine(vociMancanti);
+        if (array.isValid(result.getVociDaCreare())) {
+            result = pageService.downloadPagine(result);
             pref.saveValue(LAST_DOWNLOAD_BIO, LocalDateTime.now());
 
-            if (result.getNumVociRegistrate() > 0) {
-                logger.info("NEW - download di nuove voci e creazione in mongoDB Bio (" + text.format(result.getNumVociRegistrate()) + " voci) in " + date.deltaText(inizio));
-            }// end of if cycle
-
-            if (result.getNumVociNonRegistrate() > 0) {
-                fixError(result.vociNonRegistrate);
+            if (result.getNumVociCreate() > 0) {
+                logger.info("NEW - download di nuove voci e creazione in mongoDB Bio (" + text.format(result.getNumVociCreate()) + " voci) in " + date.deltaText(inizio));
             }// end of if cycle
         } else {
             logger.info("NEW - nessuna nuova voce da scaricare");
         }// end of if/else cycle
 
+        return result;
     }// end of method
 
 
-    /**
-     * Alcune voci non sono state registrate.
-     * Probabilmente non è stata creata la entity Bio perché mancava il template nella pagina wiki
-     * Primio controllo: se esiste la corrispondente entiy in Categoria, la elimino
-     *
-     * @param listaTitleNonRegistrate elenco (title) delle voci non registrate
-     */
-    public void fixError(ArrayList<String> listaTitleNonRegistrate) {
-//        for (String wikiTitle : listaTitleNonRegistrate) {
-//            checkCategoria(wikiTitle);
-//        }// end of for cycle
-    }// end of method
-
-
-//    /**
-//     * Controlla una singola entity di Categoria.
-//     * <p>
-//     * Controlla che esista la pagina su wiki. Se non esiste, cancella la entity Categoria
-//     * Controlla che la pagina contenga il template Bio. Se non lo contiene, cancella la entity Categoria
-//     *
-//     * @param wikiTitle di una entity di categoria da controllare
-//     */
-//    public void checkCategoria(String wikiTitle) {
-//        Categoria categoria = categoriaService.findByTitle(wikiTitle);
-//        if (categoria != null) {
-//            categoriaService.delete(categoria);
-//            logger.debug("NEW - cancellata da mongoDB.Categoria la entity '" + wikiTitle + "', perché la pagina sul server non contiene il tmpl Bio");
-//        } else {
-//            logger.warning("NEW - con find() non trovo la entity '" + wikiTitle + "' di mongoDB.Categoria che risulta invece nella lista");
-//        }// end of if/else cycle
-//    }// end of method
 
 }// end of class

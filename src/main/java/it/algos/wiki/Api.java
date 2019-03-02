@@ -1099,8 +1099,26 @@ public class Api {
      *
      * @return pagina (con i metadati mediawiki)
      */
-    public ArrayList<WrapTime> leggeTimestamp(ArrayList<Long> arrayPageIds) {
+    public ArrayList<WrapTime> leggeTimestampIds(ArrayList<Long> arrayPageIds) {
         requestTimestamp.esegue(arrayPageIds);
+        if (requestTimestamp.getRisultato() == TipoRisultato.letta) {
+            return requestTimestamp.getListaWrapTime();
+        } else {
+            return null;
+        }// fine del blocco if-else
+    }// end of method
+
+
+    /**
+     * Legge una serie di timestamp (ultima modifica della pagina)
+     * <p>
+     *
+     * @param arrayTitles elenco di wikititle (ArrayList)
+     *
+     * @return pagina (con i metadati mediawiki)
+     */
+    public ArrayList<WrapTime> leggeTimestampTitles(ArrayList<String> arrayTitles) {
+//        requestTimestamp.esegue(arrayTitles);
         if (requestTimestamp.getRisultato() == TipoRisultato.letta) {
             return requestTimestamp.getListaWrapTime();
         } else {

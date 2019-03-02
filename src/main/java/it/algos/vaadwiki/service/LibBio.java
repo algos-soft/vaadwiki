@@ -2,25 +2,36 @@ package it.algos.vaadwiki.service;
 
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
+import it.algos.vaadflow.modules.log.LogService;
+import it.algos.vaadflow.modules.preferenza.PreferenzaService;
+import it.algos.vaadflow.service.ADateService;
+import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.ATextService;
+import it.algos.vaadwiki.enumeration.EACicloType;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
+import it.algos.wiki.DownloadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadwiki.application.WikiCost.SEND_MAIL_CICLO;
 
 
 /**
@@ -133,6 +144,36 @@ public class LibBio {
      */
     @Autowired
     public AMongoService mongo;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    public ADateService date;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    public PreferenzaService pref;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected BioService bio;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected AMailService mailService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected LogService logger;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -2312,4 +2353,151 @@ public class LibBio {
     } // fine del metodo
 
 
-}// end of abstract static class
+    public void sendDownload(DownloadResult result) {
+        sendMailCiclo(result, EACicloType.download);
+    } // fine del metodo
+
+
+    public void sendUpdate(DownloadResult result) {
+        sendMailCiclo(result, EACicloType.update);
+    } // fine del metodo
+
+
+    public void sendMailCiclo(DownloadResult result, EACicloType type) {
+        LocalDateTime end;
+        String tag = type.name();
+        String testo = "";
+        testo += "Eseguito in automatico ";
+        testo += type.getSchedule();
+        testo += type.getEsegue();
+        testo += A_CAPO;
+        testo += "Ciclo del " + date.get();
+        testo += A_CAPO;
+        testo += "Iniziato alle " + date.getOrario(result.getInizio());
+        testo += A_CAPO;
+
+        end = LocalDateTime.now();
+        testo += "Terminato alle " + date.getOrario(end);
+        testo += A_CAPO;
+        testo += "Durata totale: " + date.deltaText(result.getInizioLong());
+
+        testo += A_CAPO;
+        testo += "Nella categoria " + result.getNomeCategoria() + " sono presenti al momento " + text.format(result.getNumVociCategoria()) + " voci biografiche";
+
+        if (result.getNumVociCancellate() > 0) {
+            testo += A_CAPO;
+            testo += "Sono state cancellate ";
+            testo += text.format(result.getNumVociCancellate());
+            testo += " voci eccedenti (non più utilizzate nella categoria)";
+        }// end of if cycle
+        if (result.getNumVociCreate() > 0) {
+            testo += A_CAPO;
+            testo += "Sono state create ";
+            testo += text.format(result.getNumVociCreate());
+            testo += " nuove voci";
+        }// end of if cycle
+
+        testo += A_CAPO;
+        testo += "Nel mongoDB ci sono adesso " + text.format(bio.count()) + " voci biografiche";
+
+        if (result.getVociNonCreate().size() > 0) {
+            testo += A_CAPO;
+            testo += "Non sono state registrate le seguenti voci:";
+            for (int k = 0; k < result.getVociNonCreate().size(); k++) {
+                testo += A_CAPO;
+                testo += (k + 1) + ") " + result.getVociNonCreate().get(k);
+            }// end of for cycle
+        }// end of if cycle
+
+        if (type == EACicloType.update) {
+            testo += A_CAPO;
+            testo += "Sono state aggiornate " + text.format(result.getNumVociAggiornate() + " voci su un totale di " + text.format(result.getNumVociDaAggiornare()));
+        }// end of if cycle
+
+        if (pref.isBool(SEND_MAIL_CICLO)) {
+            mailService.send("Ciclo " + tag, testo);
+        }// end of if cycle
+
+    } // fine del metodo
+
+
+//    public void sendUpdate(DownloadResult result) {
+//        LocalDateTime end;
+//        String tag = "update";
+//        String testo = "";
+//        testo += "Eseguito in automatico ";
+//        testo += EASchedule.oreQuattro.getNota();
+//        testo += A_CAPO;
+//        testo += A_CAPO;
+//        testo += "Aggiunge le voci biografiche mancanti,";
+//        testo += A_CAPO;
+//        testo += " cancella quelle eccedenti ";
+//        testo += A_CAPO;
+//        testo += " e ricarica tutte quelle esistenti che sono state modificate dall'ultima lettura";
+//        testo += A_CAPO;
+//        testo += A_CAPO;
+//        testo += "Ciclo del " + date.get();
+//        testo += A_CAPO;
+//        testo += "Iniziato alle " + date.getOrario(result.inizio);
+//        testo += A_CAPO;
+//
+//
+//        if (pref.isBool(SEND_MAIL_CICLO)) {
+//            end = LocalDateTime.now();
+//            testo += "Terminato alle " + date.getOrario(end);
+//            testo += A_CAPO;
+//            testo += "Durata totale: " + date.deltaText(result.getInizio());
+//            testo += A_CAPO;
+//            testo += "Nella categoria " + result.nomeCategoria + " ci sono " + text.format(result.numVociCategoria) + " voci biografiche";
+//            testo += A_CAPO;
+//            testo += "Nel mongoDB ci sono " + text.format(bio.count()) + " voci biografiche";
+//
+//            if (result.vociEccedenti.size() > 0) {
+//                testo += A_CAPO;
+//                testo += "Sono state eliminate ";
+//                testo += text.format(result.vociEccedenti.size());
+//                testo += " voci non più presenti nella categoria ";
+//                testo += result.nomeCategoria;
+//            }// end of if cycle
+//
+//            if (result.vociMancanti.size() > 0) {
+//                testo += A_CAPO;
+//                testo += "Sono state aggiunte ";
+//                testo += text.format(result.vociMancanti.size());
+//                testo += " nuove voci della categoria ";
+//                testo += result.nomeCategoria;
+//            }// end of if cycle
+//
+//            mailService.send("Ciclo " + tag, testo);
+//        }// end of if cycle
+//    } // fine del metodo
+
+
+    public void sendMail(LocalDateTime start, String tag) {
+        long inizio = Timestamp.valueOf(start).getTime();
+        LocalDateTime end;
+        String testo = "";
+        testo += "Eseguito in automatico ";
+        testo += EASchedule.biMensile.getNota();
+        testo += A_CAPO;
+        testo += A_CAPO;
+        testo += "Cancella tutte le voci biografiche e ricarica completamente il db";
+        testo += A_CAPO;
+        testo += "Ciclo del " + date.get();
+        testo += A_CAPO;
+        testo += "Iniziato alle " + date.getOrario(start);
+        testo += A_CAPO;
+
+
+        if (pref.isBool(SEND_MAIL_CICLO)) {
+            end = LocalDateTime.now();
+            testo += "Terminato alle " + date.getOrario(end);
+            testo += A_CAPO;
+            testo += "Durata totale: " + date.deltaText(inizio);
+            testo += A_CAPO;
+            testo += "Nel db ci sono " + text.format(bio.count()) + " voci biografiche";
+            mailService.send("Ciclo " + tag, testo);
+        }// end of if cycle
+    } // fine del metodo
+
+}// end of class

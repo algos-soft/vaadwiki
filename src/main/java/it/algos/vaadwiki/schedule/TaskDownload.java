@@ -1,10 +1,12 @@
 package it.algos.vaadwiki.schedule;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.schedule.ATask;
-import it.algos.vaadwiki.download.CicloUpdate;
+import it.algos.vaadwiki.download.CicloDownload;
 import it.algos.vaadwiki.modules.bio.BioService;
+import it.algos.vaadwiki.service.LibBio;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,6 @@ import org.springframework.context.annotation.Scope;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
-import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
@@ -35,15 +36,7 @@ public class TaskDownload extends ATask {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    protected CicloUpdate cicloUpdate;
-
-
-
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected BioService bio;
+    protected CicloDownload cicloDownload;
 
 
     /**
@@ -67,35 +60,8 @@ public class TaskDownload extends ATask {
 
     @Override
     public void execute(TaskExecutionContext context) throws RuntimeException {
-        long inizio = System.currentTimeMillis();
-        LocalDateTime start = LocalDateTime.now();
-        LocalDateTime end;
-        String testo = "";
-        testo += EASchedule.biMensile.getNota();
-        testo += A_CAPO;
-        testo += A_CAPO;
-        testo += "Cancella tutte le voci biografiche e ricarica completamente il db";
-        testo += A_CAPO;
-        testo += "Ciclo del " + date.get();
-        testo += A_CAPO;
-        testo += "Iniziato alle " + date.getOrario(start);
-        testo += A_CAPO;
-
         if (pref.isBool(USA_DAEMON_BIO)) {
-            System.out.println("Inizio task di download: " + date.getTime(LocalDateTime.now()));
-
-            cicloUpdate.esegue();
-
-            if (pref.isBool(SEND_MAIL_CICLO)) {
-                end = LocalDateTime.now();
-                testo += "Terminato alle " + date.getOrario(end);
-                testo += A_CAPO;
-                testo += "Durata totale: " + date.deltaText(inizio);
-                testo += A_CAPO;
-                testo += "Nel db ci sono " + text.format(bio.count()) + " voci biografiche";
-                mailService.send("Ciclo download", testo);
-            }// end of if cycle
-            System.out.println("Fine task di download: " + date.getTime(LocalDateTime.now()));
+            cicloDownload.esegue();
         }// end of if cycle
     }// end of method
 

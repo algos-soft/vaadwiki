@@ -1,5 +1,7 @@
 package it.algos.wiki;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -11,60 +13,134 @@ import java.util.ArrayList;
  */
 public class DownloadResult {
 
-    public ArrayList<String> vociDaRegistrare;
-
-    public ArrayList<String> vociRegistrate = new ArrayList<>();
-
-    public ArrayList<String> vociNonRegistrate = new ArrayList<>();
-
-
     /**
-     * Eventuale nome della categoria utilizzata
+     * Nome della categoria utilizzata
      */
     private String nomeCategoria;
 
-    /**
-     * inizio delle operazioni
-     */
-    private long inizio ;
+    private int numVociCategoria;
+
+    private LocalDateTime inizio;
+
+    private ArrayList<String> vociDaCancellare;
+
+    private ArrayList<String> vociDaCreare;
+
+    private ArrayList<String> vociNonCreate;
+
+    private int numVociCancellate;
+
+    private int numVociCreate;
+
+    private int numVociDaAggiornare;
+
+    private int numVociAggiornate;
 
 
-    public DownloadResult() {
+    public DownloadResult(String nomeCategoria) {
+        this.inizio = LocalDateTime.now();
+        this.nomeCategoria = nomeCategoria;
+        this.vociNonCreate = new ArrayList<>();
     }// end of constructor
 
 
-    public DownloadResult(ArrayList<String> vociDaRegistrare) {
-        this.vociDaRegistrare = vociDaRegistrare;
+    public DownloadResult(ArrayList<String> vociDaCreare) {
+        this.vociDaCreare = vociDaCreare;
     }// end of constructor
 
 
-    public void addSi(String voceRegistrata) {
-        vociRegistrate.add(voceRegistrata);
+    public ArrayList<String> getVociNonCreate() {
+        return vociNonCreate;
+    }// end of method
+
+
+    public void setVociNonCreate(ArrayList<String> vociNonCreate) {
+        this.vociNonCreate = vociNonCreate;
     }// end of method
 
 
     public void addNo(String titoloVoceNonRegistrata) {
-        vociNonRegistrate.add(titoloVoceNonRegistrata);
-    }// end of method
-
-
-    public int getNumVociDaRegistrare() {
-        return vociDaRegistrare.size();
-    }// end of method
-
-
-    public int getNumVociRegistrate() {
-        return vociRegistrate.size();
-    }// end of method
-
-
-    public int getNumVociNonRegistrate() {
-        return vociNonRegistrate.size();
+        vociNonCreate.add(titoloVoceNonRegistrata);
     }// end of method
 
 
     public boolean isValid() {
-        return vociDaRegistrare.size() == vociRegistrate.size();
+        return numVociCreate == vociDaCreare.size();
+    }// end of method
+
+
+    public LocalDateTime getInizio() {
+        return inizio;
+    }// end of method
+
+
+    public void setInizio(LocalDateTime inizio) {
+        this.inizio = inizio;
+    }// end of method
+
+
+    public long getInizioLong() {
+        return Timestamp.valueOf(inizio).getTime();
+    }// end of method
+
+
+    public int getNumVociCreate() {
+        return numVociCreate;
+    }// end of method
+
+
+    public void setNumVociCreate(int numVociCreate) {
+        this.numVociCreate = numVociCreate;
+    }// end of method
+
+
+    public ArrayList<String> getVociDaCreare() {
+        return vociDaCreare;
+    }// end of method
+
+
+    public void setVociDaCreare(ArrayList<String> vociDaCreare) {
+        this.vociDaCreare = vociDaCreare;
+    }// end of method
+
+
+    public int getNumVociCategoria() {
+        return numVociCategoria;
+    }// end of method
+
+
+    public void setNumVociCategoria(int numVociCategoria) {
+        this.numVociCategoria = numVociCategoria;
+    }// end of method
+
+
+    public ArrayList<String> getVociDaCancellare() {
+        return vociDaCancellare;
+    }// end of method
+
+
+    public void setVociDaCancellare(ArrayList<String> vociDaCancellare) {
+        this.vociDaCancellare = vociDaCancellare;
+    }// end of method
+
+
+    public int getNumVociDaAggiornare() {
+        return numVociDaAggiornare;
+    }// end of method
+
+
+    public void setNumVociDaAggiornare(int numVociDaAggiornare) {
+        this.numVociDaAggiornare = numVociDaAggiornare;
+    }// end of method
+
+
+    public int getNumVociAggiornate() {
+        return numVociAggiornate;
+    }// end of method
+
+
+    public void setNumVociAggiornate(int numVociAggiornate) {
+        this.numVociAggiornate = numVociAggiornate;
     }// end of method
 
 
@@ -73,18 +149,28 @@ public class DownloadResult {
     }// end of method
 
 
-    public void setNomeCategoria(String nomeCategoria) {
-        this.nomeCategoria = nomeCategoria;
+    public int getNumVociCancellate() {
+        return numVociCancellate;
     }// end of method
 
 
-    public long getInizio() {
-        return inizio;
+    public void setNumVociCancellate(int numVociCancellate) {
+        this.numVociCancellate = numVociCancellate;
     }// end of method
 
 
-    public void setInizio(long inizio) {
-        this.inizio = inizio;
+    public void addVoceCreata() {
+        this.setNumVociCreate(this.getNumVociCreate() + 1);
+    }// end of method
+
+
+    public void addVoceDaAggiornare() {
+        this.setNumVociDaAggiornare(this.getNumVociDaAggiornare() + 1);
+    }// end of method
+
+
+    public void addVoceAggiornata() {
+        this.setNumVociAggiornate(this.getNumVociAggiornate() + 1);
     }// end of method
 
 }// end of class

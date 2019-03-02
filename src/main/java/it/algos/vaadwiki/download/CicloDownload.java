@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.download;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.web.AQueryCat;
@@ -10,9 +11,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import static it.algos.vaadwiki.application.WikiCost.CAT_BIO;
+import static it.algos.vaadwiki.application.WikiCost.SEND_MAIL_CICLO;
 
 /**
  * Project vaadwiki
@@ -37,29 +38,24 @@ public class CicloDownload extends ABioService {
      * Aggiorna le ATTIVITA, con un download del modulo attività
      * Aggiorna le NAZIONALITA, con un download del modulo nazionalità
      * Aggiorna le PROFESSIONI, con un download del modulo professioni
-     * Recupera la lista delle voci della categoria dal server wiki
      * <p>
-     * Esegue un ciclo (NEW) di controllo e creazione di nuovi records esistenti sul server e mancanti nel database
-     * Scarica la lista di voci mancanti dal server e crea i nuovi records di Bio
+     * Recupera dal server wiki la lista delle voci della categoria
+     * Recupera dal server wiki il totale delle voci della categoria per un controllo
+     * <p>
+     * Esegue un ciclo (NEW) di creazione di nuovi records esistenti sul server e mancanti nel database
+     * <p>
+     * Manda una mail di conferma (se previsto)
+     *
+     * @return wrapper di dati risultanti
      */
     @SuppressWarnings("unchecked")
     public DownloadResult esegue() {
-        DownloadResult result = new DownloadResult();
-        String nomeCategoria = pref.getStr(CAT_BIO);
-        int numVociCategoria;
-        ArrayList<String> vociCategoria;
-        long inizio = System.currentTimeMillis();
-        result.setInizio(inizio);
-        result.setNomeCategoria(nomeCategoria);
-        log.info("");
-        log.info("Inizio task di download: " + date.getTime(LocalDateTime.now()));
+        DownloadResult result = new DownloadResult(pref.getStr(CAT_BIO));
 
-        //--Il ciclo necessita del login valido come bot per il funzionamento normale
-        //--oppure del flag USA_CICLI_ANCHE_SENZA_BOT per un funzionamento ridotto
-        if (wikiLoginOld != null && wikiLoginOld.isValido() && wikiLoginOld.isBot()) {
-        } else {
-            return null;
-        }// end of if/else cycle
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            log.info("");
+            log.info("Inizio task di download: " + date.getTime(result.getInizio()));
+        }// end of if cycle
 
         //--Download del modulo attività
         attivitaService.download();
@@ -71,18 +67,32 @@ public class CicloDownload extends ABioService {
         professioneService.download();
 
         //--Recupera la lista delle voci della categoria dal server wiki
-        numVociCategoria = appContext.getBean(AQueryCatInfo.class, nomeCategoria).numVoci();
-        vociCategoria = appContext.getBean(AQueryCat.class, nomeCategoria).urlRequestTitle();
-        if (numVociCategoria != vociCategoria.size()) {
-            log.warn("Le voci della categoria non coincidono: sul server ce ne sono " + text.format(vociCategoria) + " e ne ha recuperate " + text.format(vociCategoria.size()));
+        result.setNumVociCategoria( appContext.getBean(AQueryCatInfo.class, result.getNomeCategoria()).numVoci());
+        result.setVociDaCreare(appContext.getBean(AQueryCat.class, result.getNomeCategoria()).urlRequestTitle());
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            if (result.getNumVociCategoria() == 0) {
+                log.warn("Numero errato di voci sul server");
+            }// end of if cycle
+            if (result.getVociDaCreare() == null) {
+                log.warn("Non riesco a leggere le voci dal server. Forse non sono loggato come bot");
+            }// end of if cycle
+            if (result.getNumVociCategoria() != result.getVociDaCreare().size()) {
+                log.warn("Le voci della categoria non coincidono: sul server ce ne sono " + text.format(result.getNomeCategoria()) + " e ne ha recuperate " + text.format(result.getVociDaCreare().size()));
+            }// end of if cycle
         }// end of if cycle
 
         //--Scarica dal server tutte le voci mancanti e crea le nuove entities sul mongoDB Bio
-        newService.esegue(vociCategoria);
+        result = newService.esegue(result);
 
-        log.info("Download - Ciclo totale attività, nazionalità, professione, categoria, nuove voci in " + date.deltaText(result.getInizio()));
-        log.info("Fine task di download: " + date.getTime(LocalDateTime.now()));
-        log.info("");
+        if (pref.isBool(SEND_MAIL_CICLO)) {
+            libBio.sendDownload(result);
+        }// end of if cycle
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            log.info("Download - Ciclo totale attività, nazionalità, professione, categoria, nuove voci in " + date.deltaText(result.getInizioLong()));
+            log.info("Fine task di download: " + date.getTime(LocalDateTime.now()));
+            log.info("");
+        }// end of if cycle
 
         return result;
     }// end of method

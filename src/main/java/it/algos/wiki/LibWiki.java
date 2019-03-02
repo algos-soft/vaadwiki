@@ -1126,6 +1126,7 @@ public abstract class LibWiki {
         JSONArray arrayPages = null;
         JSONObject singlePage;
         long pageid;
+        String wikiTitle;
         JSONArray singleRev;
         JSONObject timeObj;
         String timeStr;
@@ -1159,15 +1160,16 @@ public abstract class LibWiki {
                 if (obj instanceof JSONObject) {
                     singlePage = (JSONObject) obj;
                     pageid = (long) singlePage.get(PAGEID);
+                    wikiTitle = (String) singlePage.get(TITLE);
 
                     if (singlePage.get(MISSING) == null) {
                         singleRev = (JSONArray) singlePage.get(REVISIONS);
                         timeObj = (JSONObject) singleRev.get(0);
                         timeStr = (String) timeObj.get(TIMESTAMP);
-                        wrap = new WrapTime(pageid, timeStr, true);
+                        wrap = new WrapTime(pageid, wikiTitle, timeStr, true);
                         listaPagineValide.add(wrap);
                     } else {
-                        wrap = new WrapTime(pageid, null, false);
+                        wrap = new WrapTime(pageid, wikiTitle, null, false);
                         listaPagineMancanti.add(wrap);
                     }// end of if/else cycle
 

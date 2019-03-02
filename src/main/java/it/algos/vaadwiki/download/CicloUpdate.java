@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static it.algos.vaadwiki.application.WikiCost.CAT_BIO;
+import static it.algos.vaadwiki.application.WikiCost.SEND_MAIL_CICLO;
 
 /**
  * Project vaadbio2
@@ -44,43 +45,37 @@ public class CicloUpdate extends ABioService {
      * Aggiorna le NAZIONALITA, con un download del modulo nazionalità
      * Aggiorna le PROFESSIONI, con un download del modulo professioni
      * <p>
-     * Crea una lista di pageid dalla collezione Categoria sul mongoDB
-     * Crea una lista di pageid dalla collezione Bio esistente sul mongoDB
+     * Recupera dal server wiki la lista delle voci della categoria
+     * Recupera dal server wiki il totale delle voci della categoria per un controllo
+     * <p>
+     * Crea una lista di titles dalla collezione Bio esistente sul mongoDB
      * <p>
      * Trova la differenza positiva (records eccedenti)
      * Esegue un ciclo (DELETE) di cancellazione di records esistenti nel database e mancanti nella categoria
      * Cancella tutti i records non più presenti nella categoria
      * <p>
      * Trova la differenza negativa (records mancanti)
-     * Esegue un ciclo (NEW) di controllo e creazione di nuovi records esistenti sul server e mancanti nel database
+     * Esegue un ciclo (NEW) di creazione di nuovi records esistenti sul server e mancanti nel database
      * Scarica la lista di voci mancanti dal server e crea i nuovi records di Bio
      * <p>
-     * Ricontrolla (eventualmente) le due liste di pageid che devono essere uguali
      * Esegue un ciclo (UPDATE) di controllo e aggiornamento di tutti i records esistenti nel database
      * Spazzola tutte le voci a blocchi di 'pageLimit' per volta per recuperare il 'timestamp' delle pagine
      * Trova tutte le pagine (del blocco) modificate sul server DOPO l'ultima lettura
      * Aggiorna i records che sono stati modificati sul servere wiki DOPO l'ultima lettura
      * <p>
-     * Esegue un ciclo (ELABORA) di elaborazione delle informazioni grezze (eventuale)
-     * Esegue un ciclo (UPLOAD) di costruzione delle liste (eventuale)
+     * Manda una mail di conferma (se previsto)
      */
     @SuppressWarnings("unchecked")
     public DownloadResult esegue() {
-        DownloadResult result;
-        String nomeCategoria = pref.getStr(CAT_BIO);
-        int numVociCategoria;
-        ArrayList<String> vociCategoria;
-        ArrayList<String> vociBio;
-        ArrayList<String> vociEccedenti;
-        ArrayList<String> vociMancanti;
+        DownloadResult result = new DownloadResult(pref.getStr(CAT_BIO));
         long inizio;
+        String nomeCategoria = pref.getStr(CAT_BIO);
+        ArrayList<String> vociBio;
 
-        //--Il ciclo necessita del login valido come bot per il funzionamento normale
-        //--oppure del flag USA_CICLI_ANCHE_SENZA_BOT per un funzionamento ridotto
-        if (wikiLoginOld != null && wikiLoginOld.isValido() && wikiLoginOld.isBot()) {
-        } else {
-            return null;
-        }// end of if/else cycle
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            log.info("");
+            log.info("Inizio task di update: " + date.getTime(result.getInizio()));
+        }// end of if cycle
 
         //--download del modulo attività
         attivitaService.download();
@@ -92,21 +87,21 @@ public class CicloUpdate extends ABioService {
         professioneService.download();
 
         //--Recupera la lista delle voci della categoria dal server wiki
-        numVociCategoria = appContext.getBean(AQueryCatInfo.class, nomeCategoria).numVoci();
-        vociCategoria = appContext.getBean(AQueryCat.class, nomeCategoria).urlRequestTitle();
+        result.setNumVociCategoria(appContext.getBean(AQueryCatInfo.class, result.getNomeCategoria()).numVoci());
+        result.setVociDaCreare(appContext.getBean(AQueryCat.class, result.getNomeCategoria()).urlRequestTitle());
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            if (numVociCategoria == 0) {
+            if (result.getNumVociCategoria() == 0) {
                 log.warn("Numero errato di voci sul server");
             }// end of if cycle
-            if (vociCategoria == null) {
+            if (result.getVociDaCreare() == null) {
                 log.warn("Non riesco a leggere le voci dal server. Forse non sono loggato come bot");
             }// end of if cycle
-            if (numVociCategoria != vociCategoria.size()) {
-                log.warn("Le voci della categoria non coincidono: sul server ce ne sono " + text.format(numVociCategoria) + " e ne ha recuperate " + text.format(vociCategoria.size()));
+            if (result.getNumVociCategoria() != result.getVociDaCreare().size()) {
+                log.warn("Le voci della categoria non coincidono: sul server ce ne sono " + text.format(result.getNomeCategoria()) + " e ne ha recuperate " + text.format(result.getVociDaCreare().size()));
             }// end of if cycle
         }// end of if cycle
 
-        //--recupera la lista dei pageids dalla collezione Bio
+        //--recupera la lista dei titles dalla collezione Bio
         vociBio = bioService.findAllTitles();
 
         //--elabora le liste delle differenze per la sincronizzazione
@@ -114,35 +109,41 @@ public class CicloUpdate extends ABioService {
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa dodici minuti");
         }// end of if cycle
-        vociEccedenti = array.differenza(vociBio, vociCategoria);
+        result.setVociDaCancellare(array.differenza(vociBio, result.getVociDaCreare()));
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Calcolate " + text.format(vociEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
-            logger.debug("Calcolate " + text.format(vociEccedenti.size()) + " listaPageidsEccedenti in " + date.deltaText(inizio));
+            log.info("Calcolate " + text.format(result.getVociDaCancellare().size()) + " vociDaCancellare in " + date.deltaText(inizio));
+            logger.debug("Calcolate " + text.format(result.getVociDaCancellare().size()) + " vociDaCancellare in " + date.deltaText(inizio));
         }// end of if cycle
 
         //--Cancella dal mongoDB tutte le entities non più presenti nella categoria
-        deleteService.esegue(vociEccedenti);
+        deleteService.esegue(result.getVociDaCancellare());
 
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             log.info("Debug - Inizio a calcolare le voci mancanti. Circa dodici minuti");
         }// end of if cycle
-        vociMancanti = array.differenza(vociCategoria, vociBio);
+        result.setVociDaCreare(array.differenza(result.getVociDaCreare(), vociBio));
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Calcolate " + text.format(vociMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
-            logger.debug("Calcolate " + text.format(vociMancanti.size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
+            log.info("Calcolate " + text.format(result.getVociDaCreare().size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
+            logger.debug("Calcolate " + text.format(result.getVociDaCreare().size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
         }// end of if cycle
 
         //--Scarica dal server la lista di voci mancanti e crea le nuove entities sul mongoDB Bio
-        newService.esegue(vociMancanti);
+        result = newService.esegue(result);
 
         //--aggiorna tutte le entities mongoDB Bio che sono stati modificate sul server wiki DOPO l'ultima lettura
-        result = updateService.esegue();
+        result = updateService.esegue(result);
 
-        log.info("Update - Ciclo totale attività, nazionalità, professione, categoria, nuove voci in " + date.deltaText(result.getInizio()));
-        log.info("Fine task di update: " + date.getTime(LocalDateTime.now()));
-        log.info("");
+        if (pref.isBool(SEND_MAIL_CICLO)) {
+            libBio.sendUpdate(result);
+        }// end of if cycle
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            log.info("Update - Ciclo totale attività, nazionalità, professione, categoria, nuove voci in " + date.deltaText(result.getInizioLong()));
+            log.info("Fine task di update: " + date.getTime(LocalDateTime.now()));
+            log.info("");
+        }// end of if cycle
 
         return result;
     }// end of method

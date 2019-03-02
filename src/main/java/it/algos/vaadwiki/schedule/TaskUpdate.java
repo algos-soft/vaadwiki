@@ -40,13 +40,6 @@ public class TaskUpdate extends ATask {
 
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected BioService bio;
-
-
-    /**
      * Metodo invocato subito DOPO il costruttore
      * <p>
      * Performing the initialization in a constructor is not suggested
@@ -67,38 +60,8 @@ public class TaskUpdate extends ATask {
 
     @Override
     public void execute(TaskExecutionContext context) throws RuntimeException {
-        long inizio = System.currentTimeMillis();
-        LocalDateTime start = LocalDateTime.now();
-        LocalDateTime end;
-        DownloadResult result;
-        String testo = "";
-        testo += EASchedule.oreQuattro.getNota();
-        testo += A_CAPO;
-        testo += A_CAPO;
-        testo += "Carica le nuove voci biografiche e aggiorna tutte quelle esistenti";
-        testo += A_CAPO;
-        testo += "Ciclo del " + date.get();
-        testo += A_CAPO;
-        testo += "Iniziato alle " + date.getOrario(start);
-        testo += A_CAPO;
-
         if (pref.isBool(USA_DAEMON_BIO)) {
-            System.out.println("Inizio task di download: " + date.getTime(LocalDateTime.now()));
-
-            result = cicloUpdate.esegue();
-
-            if (pref.isBool(SEND_MAIL_CICLO)) {
-                end = LocalDateTime.now();
-                testo += "Terminato alle " + date.getOrario(end);
-                testo += A_CAPO;
-                testo += "Durata totale: " + date.deltaText(inizio);
-                testo += A_CAPO;
-                testo += "Nel db ci sono " + text.format(bio.count()) + " voci biografiche";
-                testo += A_CAPO;
-                testo +=  "Sono state aggiornate " + text.format(result.getNumVociRegistrate()) + " voci" ;
-                mailService.send("Ciclo update", testo);
-            }// end of if cycle
-            System.out.println("Fine task di download: " + date.getTime(LocalDateTime.now()));
+            cicloUpdate.esegue();
         }// end of if cycle
     }// end of method
 

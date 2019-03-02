@@ -153,4 +153,11 @@ public abstract class ABioService {
     @Autowired
     protected LogService logger;
 
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected LibBio libBio;
+
 }// end of class

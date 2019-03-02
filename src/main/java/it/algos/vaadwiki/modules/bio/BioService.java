@@ -462,7 +462,7 @@ public class BioService extends AttNazProfCatService {
         if (array.isValid(listaEntities)) {
             lista = new ArrayList<>();
             for (AEntity entity : listaEntities) {
-                lista.add(new WrapTime(((Bio) entity).pageid, Timestamp.valueOf(((Bio) entity).lastLettura)));
+                lista.add(new WrapTime(((Bio) entity).pageid, ((Bio) entity).wikiTitle, Timestamp.valueOf(((Bio) entity).lastLettura)));
             }// end of for cycle
         }// end of if cycle
 
@@ -471,7 +471,7 @@ public class BioService extends AttNazProfCatService {
 
 
     /**
-     * Returns WrapTime list of the requested page.
+     * Returns map of the requested page.
      * <p>
      * Senza filtri
      * Ordinati per sort
@@ -480,7 +480,7 @@ public class BioService extends AttNazProfCatService {
      * @param size   numero di elementi per ogni pagina
      * @param sort   ordinamento degli elementi
      *
-     * @return map (pageid,timestamp)
+     * @return map (wikititle,timestamp)
      */
     public LinkedHashMap<String, Timestamp> findTimestampMap(int offset, int size, Sort sort) {
         LinkedHashMap<String, Timestamp> mappa = null;

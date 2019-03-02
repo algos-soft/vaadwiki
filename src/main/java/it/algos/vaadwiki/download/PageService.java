@@ -2,6 +2,7 @@ package it.algos.vaadwiki.download;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadwiki.enumeration.EACicloType;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
@@ -32,15 +33,16 @@ public class PageService extends ABioService {
     /**
      * Scarica dal server la lista di pagine (title) indicate e crea le nuove entities sul mongoDB Bio
      * <p>
-     * Esegue una serie di RequestWikiReadPages a blocchi di BLOCCO_PAGES (500) per volta <br>
+     * Esegue una serie di AQueryPages a blocchi di WIKI_PAGE_LIMIT (250) per volta <br>
      * Per ogni page crea la entity (Bio) corrispondente <br>
      * Esegue una cancellazione di tipo BULK nel mongoDB Bio <br>
      * Esegue un inserimento di tipo BULK nel mongoDB Bio <br>
      *
-     * @param listaVociDaScaricare elenco (title) delle pagine mancanti da scaricare e registrare
+     * @param result wrapper di dati risultanti
+     *
+     * @return wrapper di dati risultanti
      */
-    public DownloadResult downloadPagine(ArrayList<String> listaVociDaScaricare) {
-        DownloadResult result = new DownloadResult(listaVociDaScaricare);
+    public DownloadResult downloadPagine(DownloadResult result) {
         ArrayList<String> bloccoPage;
         int dimBloccoLettura = pref.getInt(WIKI_PAGE_LIMIT);
         int numCicliLetturaPagine;
@@ -50,15 +52,15 @@ public class PageService extends ABioService {
         int effettivo;
         int delta;
 
-        if (listaVociDaScaricare != null && listaVociDaScaricare.size() > 0) {
-            numCicliLetturaPagine = array.numCicli(listaVociDaScaricare.size(), dimBloccoLettura);
+        if (result.getVociDaCreare().size() > 0) {
+            numCicliLetturaPagine = array.numCicli(result.getVociDaCreare().size(), dimBloccoLettura);
             for (int k = 0; k < numCicliLetturaPagine; k++) {
-                bloccoPage = array.estraeSublista(listaVociDaScaricare, dimBloccoLettura, k + 1);
+                bloccoPage = array.estraeSublista(result.getVociDaCreare(), dimBloccoLettura, k + 1);
                 result = downloadSingoloBlocco(result, bloccoPage);
                 if (pref.isBool(FlowCost.USA_DEBUG)) {
                     teorico = (k + 1) * dimBloccoLettura;
-                    teorico = Math.min(teorico, listaVociDaScaricare.size());
-                    effettivo = result.vociRegistrate.size();
+                    teorico = Math.min(teorico, result.getVociDaCreare().size());
+                    effettivo = result.getNumVociCreate();
                     delta = teorico - effettivo;
                     message = "New - aggiunte " + text.format(effettivo) + "/" + text.format(teorico) + " (-" + delta + ") voci totali a mongoDB.Bio in " + date.deltaText(inizio);
                     log.info(message);
@@ -71,9 +73,55 @@ public class PageService extends ABioService {
 
 
     /**
+     * Scarica dal server la lista di pagine (title) indicate e crea le nuove entities sul mongoDB Bio
+     * <p>
+     * Esegue una serie di AQueryPages a blocchi di WIKI_PAGE_LIMIT (250) per volta <br>
+     * Per ogni page crea la entity (Bio) corrispondente <br>
+     * Esegue una cancellazione di tipo BULK nel mongoDB Bio <br>
+     * Esegue un inserimento di tipo BULK nel mongoDB Bio <br>
+     *
+     * @param result      wrapper di dati risultanti
      * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
+     *
+     * @return wrapper di dati risultanti
      */
-    private DownloadResult downloadSingoloBlocco(DownloadResult result, ArrayList<String> arrayTitles) {
+    public DownloadResult downloadSingoloBlocco(DownloadResult result, ArrayList<String> arrayTitles) {
+        return singoloBlocco(result, arrayTitles, EACicloType.download);
+    }// end of method
+
+
+    /**
+     * Scarica dal server la lista di pagine (title) indicate e crea le nuove entities sul mongoDB Bio
+     * <p>
+     * Esegue una serie di AQueryPages a blocchi di WIKI_PAGE_LIMIT (250) per volta <br>
+     * Per ogni page crea la entity (Bio) corrispondente <br>
+     * Esegue una cancellazione di tipo BULK nel mongoDB Bio <br>
+     * Esegue un inserimento di tipo BULK nel mongoDB Bio <br>
+     *
+     * @param result      wrapper di dati risultanti
+     * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
+     *
+     * @return wrapper di dati risultanti
+     */
+    public DownloadResult updateSingoloBlocco(DownloadResult result, ArrayList<String> arrayTitles) {
+        return singoloBlocco(result, arrayTitles, EACicloType.update);
+    }// end of method
+
+
+    /**
+     * Scarica dal server la lista di pagine (title) indicate e crea le nuove entities sul mongoDB Bio
+     * <p>
+     * Esegue una serie di AQueryPages a blocchi di WIKI_PAGE_LIMIT (250) per volta <br>
+     * Per ogni page crea la entity (Bio) corrispondente <br>
+     * Esegue una cancellazione di tipo BULK nel mongoDB Bio <br>
+     * Esegue un inserimento di tipo BULK nel mongoDB Bio <br>
+     *
+     * @param result      wrapper di dati risultanti
+     * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
+     *
+     * @return wrapper di dati risultanti
+     */
+    private DownloadResult singoloBlocco(DownloadResult result, ArrayList<String> arrayTitles, EACicloType type) {
         ArrayList<Page> pages = null; // di norma 500
         Bio entity;
         ArrayList<Long> vociDaRegistrareInQuestoBlocco = new ArrayList<>();
@@ -90,14 +138,23 @@ public class PageService extends ABioService {
             if (entity != null) {
                 listaBio.add(entity);
                 vociDaRegistrareInQuestoBlocco.add(page.getPageid());
-                result.addSi(page.getTitle());
+                switch (type) {
+                    case download:
+                        result.addVoceCreata();
+                        break;
+                    case update:
+                        result.addVoceAggiornata();
+                        break;
+                    default:
+                        log.warn("Switch - caso non definito");
+                        break;
+                } // end of switch statement
             } else {
                 result.addNo(page.getTitle());
             }// end of if/else cycle
         }// end of for cycle
 
         //--cancella le voci esistenti prima di inserire le nuove versioni con update()
-
         try { // prova ad eseguire il codice
             bioService.deleteBulkByPageid(vociDaRegistrareInQuestoBlocco);
         } catch (Exception unErrore) { // intercetta l'errore
@@ -106,7 +163,6 @@ public class PageService extends ABioService {
 
         if (listaBio.size() > 0) {
             try { // prova ad eseguire il codice
-//                mongo.updateBulk(listaBio, Bio.class);
                 mongo.insert(listaBio, Bio.class);
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(" ");

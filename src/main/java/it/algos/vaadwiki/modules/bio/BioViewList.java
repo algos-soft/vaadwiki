@@ -7,7 +7,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMailService;
@@ -26,10 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
-import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 
@@ -302,8 +297,8 @@ public class BioViewList extends AttNazProfCatViewList {
             result = cicloUpdate.esegue();
         }// end of if/else cycle
 
-        if (result!=null) {
-            sendMail(result);
+        if (result != null) {
+//            sendMail(result);
         }// end of if cycle
 
         updateView();
@@ -355,7 +350,6 @@ public class BioViewList extends AttNazProfCatViewList {
         DownloadResult result;
         deleteMongo();
         result = cicloDownload.esegue();
-        sendMail(result);
         updateView();
     }// end of method
 
@@ -451,33 +445,33 @@ public class BioViewList extends AttNazProfCatViewList {
 //    }// end of inner class
 
 
-    private void sendMail(DownloadResult result) {
-        long inizio = result.getInizio();
-        Date startDate = new Date(inizio);
-        LocalDateTime start = date.dateToLocalDateTime(startDate);
-        LocalDateTime end;
-        String testo = "";
-        testo += A_CAPO;
-        testo += "Carica le nuove voci biografiche e aggiorna tutte quelle esistenti";
-        testo += A_CAPO;
-        testo += A_CAPO;
-        testo += "Ciclo del " + date.get();
-        testo += A_CAPO;
-        testo += "Iniziato alle " + date.getOrario(start);
-        testo += A_CAPO;
-
-        if (pref.isBool(SEND_MAIL_CICLO)) {
-            end = LocalDateTime.now();
-            testo += "Terminato alle " + date.getOrario(end);
-            testo += A_CAPO;
-            testo += "Durata totale: " + date.deltaText(inizio);
-            testo += A_CAPO;
-            testo += "Nel db ci sono " + text.format(service.count()) + " voci biografiche";
-            testo += A_CAPO;
-            testo += "Sono state aggiornate " + text.format(result.getNumVociRegistrate()) + " voci";
-            mailService.send("Ciclo update", testo);
-        }// end of if cycle
-    }// end of method
+//    private void sendMail(DownloadResult result) {
+//        long inizio = result.getInizio();
+//        Date startDate = new Date(inizio);
+//        LocalDateTime start = date.dateToLocalDateTime(startDate);
+//        LocalDateTime end;
+//        String testo = "";
+//        testo += A_CAPO;
+//        testo += "Carica le nuove voci biografiche e aggiorna tutte quelle esistenti";
+//        testo += A_CAPO;
+//        testo += A_CAPO;
+//        testo += "Ciclo del " + date.get();
+//        testo += A_CAPO;
+//        testo += "Iniziato alle " + date.getOrario(start);
+//        testo += A_CAPO;
+//
+//        if (pref.isBool(SEND_MAIL_CICLO)) {
+//            end = LocalDateTime.now();
+//            testo += "Terminato alle " + date.getOrario(end);
+//            testo += A_CAPO;
+//            testo += "Durata totale: " + date.deltaText(inizio);
+//            testo += A_CAPO;
+//            testo += "Nel db ci sono " + text.format(service.count()) + " voci biografiche";
+//            testo += A_CAPO;
+//            testo += "Sono state aggiornate " + text.format(result.getNumVociRegistrate()) + " voci";
+//            mailService.send("Ciclo update", testo);
+//        }// end of if cycle
+//    }// end of method
 
 
 }// end of class

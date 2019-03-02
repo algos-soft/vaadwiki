@@ -18,24 +18,28 @@ public class WrapTime {
 
     private long pageid;
 
+    private String wikiTitle;
+
     private Timestamp timestamp;
 
     private boolean trovata;
 
 
-    public WrapTime(long pageid, Timestamp timestamp) {
+    public WrapTime(long pageid, String wikiTitle, Timestamp timestamp) {
         this.setPageid(pageid);
+        this.setWikiTitle(wikiTitle);
         this.setTimestamp(timestamp);
     }// fine del metodo costruttore
 
 
-    public WrapTime(long pageid, String timestampStr) {
-        this(pageid, timestampStr, true);
+    public WrapTime(long pageid, String wikiTitle, String timestampStr) {
+        this(pageid, wikiTitle, timestampStr, true);
     }// fine del metodo costruttore
 
 
-    public WrapTime(long pageid, String timestampStr, boolean trovata) {
+    public WrapTime(long pageid, String wikiTitle, String timestampStr, boolean trovata) {
         this.setPageid(pageid);
+        this.setWikiTitle(wikiTitle);
 
         if (timestampStr == null || timestampStr.equals("")) {
             this.setTimestamp(null);
@@ -52,6 +56,19 @@ public class WrapTime {
 
         for (WrapTime wrapTmp : lista) {
             if (wrapTmp.pageid == pageid) {
+                wrap = wrapTmp;
+                return wrap;
+            }// end of if cycle
+        }// end of for cycle
+
+        return wrap;
+    }//end of setter method
+
+    public static WrapTime get(ArrayList<WrapTime> lista, String wikiTitle) {
+        WrapTime wrap = null;
+
+        for (WrapTime wrapTmp : lista) {
+            if (wrapTmp.wikiTitle == wikiTitle) {
                 wrap = wrapTmp;
                 return wrap;
             }// end of if cycle
@@ -80,6 +97,16 @@ public class WrapTime {
 
     public void setPageid(long pageid) {
         this.pageid = pageid;
+    }//end of setter method
+
+
+    public String getWikiTitle() {
+        return wikiTitle;
+    }// end of getter method
+
+
+    public void setWikiTitle(String wikiTitle) {
+        this.wikiTitle = wikiTitle;
     }//end of setter method
 
 

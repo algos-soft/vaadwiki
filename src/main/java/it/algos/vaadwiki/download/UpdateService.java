@@ -6,6 +6,7 @@ import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.WrapTime;
+import it.algos.wiki.web.AQueryTimestamp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -49,14 +50,16 @@ public class UpdateService extends ABioService {
      * Aggiorna tutte le entities mongoDB Bio, che sono stati modificate sul server wiki DOPO l'ultima lettura
      */
     public DownloadResult esegue() {
-        return esegueCiclo();
-//        if (checkListePageids()) {
-//            return esegueCiclo();
-//        } else {
-//            mail.send("UpdateService", "Le liste di pageid tra Categoria server e mongoDB, sono diverse");
-//            logger.error("UPDATE -  Le liste di pageid tra Categoria server e mongoDB, sono diverse");
-//            return null;
-//        }// end of if/else cycle
+        return esegue(new DownloadResult(""));
+    }// end of method
+
+
+    /**
+     * Esegue un ciclo (UPDATE) di controllo e aggiornamento di tutte le entities esistenti nel mongoDB Bio
+     * Aggiorna tutte le entities mongoDB Bio, che sono stati modificate sul server wiki DOPO l'ultima lettura
+     */
+    public DownloadResult esegue(DownloadResult result) {
+        return esegueCiclo(result);
     }// end of method
 
 
@@ -87,8 +90,7 @@ public class UpdateService extends ABioService {
      * 5) cancella le entities di mongoDB Bio che sono state modificate
      * 6) inserisce (bulk) le voci modifcate nella collazione Bio
      */
-    public DownloadResult esegueCiclo() {
-        DownloadResult result = null;
+    public DownloadResult esegueCiclo(DownloadResult result) {
         int numVociModificate = 0;
         long inizio = System.currentTimeMillis();
         int recNum = bioService.count();
@@ -99,9 +101,8 @@ public class UpdateService extends ABioService {
 
         for (int k = 0; k < numCicliLetturaPagine; k++) {
             LinkedHashMap<String, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
-            result = esegueSingoloBlocco(mappa);
-            numVociModificate += result.getNumVociRegistrate();
-            info = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " voci e modificati in mongoDB.Bio " + text.format(numVociModificate) + " elementi in " + date.deltaText(inizio);
+            esegueSingoloBlocco(mappa, result);
+            info = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " voci e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
             if (pref.isBool(FlowCost.USA_DEBUG)) {
                 log.info(info);
             }// end of if cycle
@@ -121,40 +122,45 @@ public class UpdateService extends ABioService {
      * 5) cancella le entities di mongoDB Bio che sono state modificate
      * 6) inserisce (bulk) le voci modifcate nella collazione Bio
      */
-    public DownloadResult esegueSingoloBlocco(LinkedHashMap<String, Timestamp> mappa) {
-        DownloadResult result = null;
+    public DownloadResult esegueSingoloBlocco(LinkedHashMap<String, Timestamp> mappa, DownloadResult result) {
         ArrayList<WrapTime> listaWrapTimeServer = null;
-        ArrayList<String> listaPageidAll = null;
-        ArrayList<String> listaPageidModificateDaRileggere = null;
+        ArrayList<String> listaVoci = null;
+        ArrayList<String> vociModificateDaRileggere = null;
         Timestamp timestampLocalMongoItalianTime;
         Long pageid;
+        String wikiTitle;
         long delta = 3600000;
         long timeServer;
         long timeMongo;
 
         if (mappa != null) {
-            listaPageidAll = Lists.newArrayList(mappa.keySet());
+            listaVoci = Lists.newArrayList(mappa.keySet());
         }// end of if cycle
 
-        if (listaPageidAll != null) {
-//            listaWrapTimeServer = api.leggeTimestamp(listaPageidAll);
+        if (listaVoci != null) {
+            listaWrapTimeServer = ((AQueryTimestamp) appContext.getBean("AQueryTimestamp", listaVoci)).timestampResponse();
+        }// end of if cycle
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            delta = delta * 200;
         }// end of if cycle
 
         if (array.isValid(listaWrapTimeServer)) {
-            listaPageidModificateDaRileggere = new ArrayList<>();
+            vociModificateDaRileggere = new ArrayList<>();
             for (WrapTime wrap : listaWrapTimeServer) {
-                pageid = wrap.getPageid();
+                wikiTitle = wrap.getWikiTitle();
                 timeServer = wrap.getTimestamp().getTime();
                 timeServer = timeServer + delta; //ora legale
-                timestampLocalMongoItalianTime = mappa.get(pageid);
+                timestampLocalMongoItalianTime = mappa.get(wikiTitle);
                 timeMongo = timestampLocalMongoItalianTime.getTime();
                 if (timeMongo < timeServer) {
-//                    listaPageidModificateDaRileggere.add(wrap.get());
+                    vociModificateDaRileggere.add(wrap.getWikiTitle());
+                    result.addVoceDaAggiornare();
                 }// end of if cycle
             }// end of for cycle
         }// end of if cycle
 
-        return pageService.downloadPagine(listaPageidModificateDaRileggere);
+        return pageService.updateSingoloBlocco(result, vociModificateDaRileggere);
     }// end of method
 
 

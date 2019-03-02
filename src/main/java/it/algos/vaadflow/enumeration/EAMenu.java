@@ -23,4 +23,4 @@ public enum EAMenu {
         return menu;
     }// end of static method
 
-}// end of class
+}// end of enum
