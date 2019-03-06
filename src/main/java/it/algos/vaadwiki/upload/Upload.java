@@ -53,11 +53,11 @@ public abstract class Upload {
     @Autowired
     protected ApplicationContext appContext;
 
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected WikiLoginOld wikiLoginOld;
+//    /**
+//     * La injection viene fatta da SpringBoot in automatico <br>
+//     */
+//    @Autowired
+//    protected WikiLoginOld wikiLoginOld;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

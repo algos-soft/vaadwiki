@@ -1,7 +1,9 @@
 package it.algos.wiki.web;
 
 import com.vaadin.flow.component.notification.Notification;
+import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.utente.UtenteService;
+import it.algos.vaadflow.service.AMailService;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +102,18 @@ public class AQueryLogin extends AQueryWiki {
 
     @Autowired
     private UtenteService utenteService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected AMailService mailService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected LogService logger;
 
     private String itwiki_BPsession;
 
@@ -325,14 +339,18 @@ public class AQueryLogin extends AQueryWiki {
             if (regolaWikiLoginSingleton()) {
                 if (checkCollegamentoComeBot()) {
                     log.info("Algos - Bot loggato come " + lgusername);
+                    logger.debug("Bot loggato come " + lgusername);
                 } else {
                     log.warn("Algos - Non sono riuscito a loggarmi come bot");
+                    mailService.send("Login","Non sono riuscito a loggarmi come bot");
                 }// end of if/else cycle
             } else {
                 log.warn("Algos - Non sono riuscito a loggarmi come bot");
+                mailService.send("Login","Non sono riuscito a loggarmi come bot");
             }// end of if/else cycle
         } else {
             log.warn("Algos - Non sono riuscito a loggarmi");
+            mailService.send("Login","Non sono riuscito a loggarmi");
         }// end of if/else cycle
 
         return urlResponse;

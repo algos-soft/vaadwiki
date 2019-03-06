@@ -68,10 +68,10 @@ public abstract class RequestWiki extends Request {
 
 
 
-    /**
-     * Istanza inietta da Spring come 'singleton'
-     */
-    @Autowired
+//    /**
+//     * Istanza inietta da Spring come 'singleton'
+//     */
+//    @Autowired
     public WikiLoginOld wikiLoginOld;
 
 

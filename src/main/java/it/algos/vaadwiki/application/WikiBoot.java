@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.boot.ABoot;
+import it.algos.vaadwiki.modules.Pippoz;
 import it.algos.vaadwiki.modules.wiki.WikiAnnoViewList;
 import it.algos.vaadwiki.modules.wiki.WikiGiornoViewList;
 import it.algos.vaadflow.modules.role.EARole;
@@ -133,8 +134,8 @@ public class WikiBoot extends ABoot {
      */
     protected void regolaInfo() {
         PROJECT_NAME = "vaadwiki";
-        PROJECT_VERSION = "2.3";
-        PROJECT_DATE = LocalDate.of(2019, 3, 2);
+        PROJECT_VERSION = "2.4";
+        PROJECT_DATE = LocalDate.of(2019, 3, 6);
     }// end of method
 
 

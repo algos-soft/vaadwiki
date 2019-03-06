@@ -30,11 +30,11 @@ public abstract class ABioService {
     @Autowired
     protected ApplicationContext appContext;
 
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected WikiLoginOld wikiLoginOld;
+//    /**
+//     * La injection viene fatta da SpringBoot in automatico <br>
+//     */
+//    @Autowired
+//    protected WikiLoginOld wikiLoginOld;
 
 
     /**

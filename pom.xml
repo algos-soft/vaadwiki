@@ -121,7 +121,7 @@
         <dependency>
             <groupId>com.flowingcode.addons.applayout</groupId>
             <artifactId>app-layout-addon</artifactId>
-            <version>1.0.4</version>
+            <version>1.0.5</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>

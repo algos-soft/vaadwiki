@@ -77,8 +77,8 @@ import java.util.LinkedHashMap;
  * @author gac
  * @see //www.mediawiki.org/wiki/API:Login
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+//@SpringComponent
+//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public class WikiLoginOld {
 

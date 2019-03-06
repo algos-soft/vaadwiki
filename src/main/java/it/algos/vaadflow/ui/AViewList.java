@@ -265,6 +265,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     protected boolean usaSearchBottoneNew;
 
     protected Button newButton;
+
     /**
      * Flag di preferenza per usare il placeholder di informazioni specifiche sopra la Grid. Normalmente false.
      */
@@ -779,11 +780,15 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Eventuale header text
      */
     protected void fixGridHeader() {
-        HeaderRow topRow = grid.prependHeaderRow();
-        Grid.Column[] matrix = array.getColumnArray(grid);
-        HeaderRow.HeaderCell informationCell = topRow.join(matrix);
-        headerGridHolder = new Label("x");
-        informationCell.setComponent(headerGridHolder);
+        try { // prova ad eseguire il codice
+            HeaderRow topRow = grid.prependHeaderRow();
+            Grid.Column[] matrix = array.getColumnArray(grid);
+            HeaderRow.HeaderCell informationCell = topRow.join(matrix);
+            headerGridHolder = new Label("x");
+            informationCell.setComponent(headerGridHolder);
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
     }// end of method
 
 
@@ -906,6 +911,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     protected void creaPaginationLayout() {
         if (!usaPagination) {
+            return;
+        }// end of if cycle
+        if (service == null) {
             return;
         }// end of if cycle
 

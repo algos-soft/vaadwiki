@@ -3,16 +3,19 @@ package it.algos.vaadflow.ui;
 //import com.flowingcode.addons.applayout.AppLayout;
 //import com.flowingcode.addons.applayout.menu.MenuItem;
 
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.AppLayoutMenu;
 import com.vaadin.flow.component.applayout.AppLayoutMenuItem;
 import com.vaadin.flow.component.dependency.HtmlImport;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H5;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
-import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.server.InitialPageSettings;
@@ -59,6 +62,11 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
 
     public final static String KEY_MAPPA_CRONO = "crono";
 
+    protected Map<String, List<Class>> mappaClassi;
+
+    protected AppLayout appLayout;
+
+    protected AppLayoutMenu appMenu;
 
     private AAnnotationService annotation = AAnnotationService.getInstance();
 
@@ -66,13 +74,8 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
 
     private ATextService text = ATextService.getInstance();
 
-    private Map<String, List<Class>> mappaClassi;
-
     private ALogin login;
 
-    private AppLayout appLayout;
-
-    private AppLayoutMenu appMenu;
     private Div container;
 
     /**
@@ -132,7 +135,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
     /**
      * Creazione iniziale del menu
      */
-    private void creaVaadindMenu() {
+    protected void creaVaadindMenu() {
         appLayout = new AppLayout();
         appMenu = appLayout.createMenu();
         mappaClassi = creaMappa(MENU_CLAZZ_LIST);
@@ -192,7 +195,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
     /**
      * Menu logout sempre presente
      */
-    private void creaMenuLogout() {
+    protected void creaMenuLogout() {
         appMenu.addMenuItems(new AppLayoutMenuItem(VaadinIcon.SIGN_OUT.create(), "Logout", e -> UI.getCurrent().getPage().executeJavaScript("location.assign('logout')")));
     }// end of method
 
@@ -236,7 +239,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
 //    }// end of method
 
 
-    private Map<String, List<Class>> creaMappa(List<Class> listaClassiMenu) {
+    protected Map<String, List<Class>> creaMappa(List<Class> listaClassiMenu) {
         Map<String, List<Class>> mappa = new HashMap<>();
         ArrayList<Class> devClazzList = new ArrayList<>();
         ArrayList<Class> cronoDevClazzList = new ArrayList<>();
@@ -471,7 +474,6 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
     public AppLayout getAppLayout() {
         return appLayout;
     }// end of method
-
 
 
 }// end of class
