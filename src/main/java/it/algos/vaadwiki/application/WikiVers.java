@@ -155,6 +155,11 @@ public class WikiVers extends AVers {
             creaPrefBool(SEND_MAIL_CICLO, "Mail di conferma e controllo del ciclo giornaliero", true);
         }// fine del blocco if
 
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_UPLOAD_DURANTE_DOWNLOAD, "Corregge sul wiki la voce durante il download", false);
+        }// fine del blocco if
+
         return k;
     }// end of method
 

@@ -2264,6 +2264,10 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
+        if (testoValido.equals("1 gennaio")) {
+            testoValido = "1º gennaio";
+        }// end of if cycle
+
         if (testoValido.contains(tagDoppio)) {
             testoValido = testoValido.replaceFirst(tagDoppio, SPAZIO);
         }// end of if cycle
