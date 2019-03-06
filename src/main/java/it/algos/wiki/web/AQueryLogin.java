@@ -339,7 +339,11 @@ public class AQueryLogin extends AQueryWiki {
             if (regolaWikiLoginSingleton()) {
                 if (checkCollegamentoComeBot()) {
                     log.info("Algos - Bot loggato come " + lgusername);
-                    logger.debug("Bot loggato come " + lgusername);
+                    try { // prova ad eseguire il codice
+                        logger.debug("Bot loggato come " + lgusername);
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
                 } else {
                     log.warn("Algos - Non sono riuscito a loggarmi come bot");
                     mailService.send("Login","Non sono riuscito a loggarmi come bot");
