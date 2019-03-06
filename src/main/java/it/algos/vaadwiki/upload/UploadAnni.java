@@ -1,11 +1,8 @@
 package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
-import it.algos.vaadwiki.service.LibBio;
-import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -82,6 +79,18 @@ public class UploadAnni extends Upload {
 
 
     /**
+     * Regola alcuni (eventuali) parametri specifici della sottoclasse
+     * <p>
+     * Nelle sottoclassi va SEMPRE richiamata la superclasse PRIMA di regolare localmente le variabili <br>
+     * Sovrascritto
+     */
+    protected void elaboraParametri() {
+        super.elaboraParametri();
+        usaHeadTocIndice = false;
+    }// fine del metodo
+
+
+    /**
      * Titolo della pagina 'madre'
      * <p>
      * Sovrascritto
@@ -149,6 +158,7 @@ public class UploadAnni extends Upload {
 
         return testoOut;
     }// fine del metodo
+
 
     /**
      * Returns a string representation of the object. In general, the

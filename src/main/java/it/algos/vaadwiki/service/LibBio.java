@@ -2264,7 +2264,7 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
-        if (testoValido.equals("1 gennaio")) {
+        if (testoValido.equals("1 gennaio") || testoValido.equals("1° gennaio")) {
             testoValido = "1º gennaio";
         }// end of if cycle
 
