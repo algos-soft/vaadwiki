@@ -3,7 +3,6 @@ package it.algos.vaadwiki.schedule;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.schedule.ATask;
-import it.algos.vaadwiki.task.TaskWiki;
 import it.sauronsoftware.cron4j.Scheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +35,7 @@ public class WikiScheduler extends Scheduler {
      */
     @Autowired
     protected TaskDownload download;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
