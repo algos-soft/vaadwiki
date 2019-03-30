@@ -32,7 +32,7 @@
 
         <!-- Dependencies -->
         <!-- Va tenuta aggiornata la versione di VAADIN 10.0.x -->
-        <vaadin.version>12.0.3</vaadin.version>
+        <vaadin.version>13.0.2</vaadin.version>
         <!--<vaadin.version>10.0.5</vaadin.version>-->
 
         <!-- Va tenuta aggiornata la versione di spring-boot -->
@@ -75,7 +75,7 @@
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-bom</artifactId>
-                <version>${vaadin.version}</version>
+                <version>13.0.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

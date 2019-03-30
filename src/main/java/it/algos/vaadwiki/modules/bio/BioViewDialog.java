@@ -14,7 +14,7 @@ import it.algos.vaadflow.ui.dialog.AViewDialog;
 import it.algos.vaadwiki.download.DeleteService;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.download.PageService;
-import it.algos.vaadwiki.service.UploadService;
+import it.algos.vaadwiki.upload.UploadService;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -42,11 +42,33 @@ public class WikiScheduler extends Scheduler {
     @Autowired
     protected TaskUpdate update;
 
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected TaskAttivita attivita;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected TaskNazionalita nazionalita;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected TaskProfessione professione;
+
 
     @PostConstruct
     public void startBio() throws IllegalStateException {
         if (!isStarted()) {
             super.start();
+
+            this.task(attivita);
+            this.task(nazionalita);
+            this.task(professione);
 
             this.task(download);
             this.task(update);

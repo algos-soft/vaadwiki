@@ -10,7 +10,6 @@ import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadwiki.task.TaskWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -78,7 +77,7 @@ public class AttNazProfCatViewList extends AViewList {
      */
     protected AttNazProfCatService service;
 
-    protected TaskWiki task;
+    protected ATask task;
 
 
     /**

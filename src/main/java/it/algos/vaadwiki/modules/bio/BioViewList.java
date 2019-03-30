@@ -17,7 +17,7 @@ import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
-import it.algos.vaadwiki.task.TaskBio;
+import it.algos.vaadwiki.schedule.TaskUpdate;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;
 import it.algos.wiki.DownloadResult;
@@ -151,7 +151,7 @@ public class BioViewList extends AttNazProfCatViewList {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    private TaskBio taskBio;
+    private TaskUpdate taskUpdate;
 
 //    @Autowired
 //    private Upload upload;
@@ -193,7 +193,7 @@ public class BioViewList extends AttNazProfCatViewList {
         super.usaBottoneStatistiche = false;
         super.usaBottoneModulo = false;
         super.usaBottoneEdit = true;
-        super.task = taskBio;
+        super.task = taskUpdate;
         super.codeFlagDownload = USA_DAEMON_BIO;
         super.codeLastDownload = LAST_DOWNLOAD_BIO;
         super.durataLastDownload = DURATA_DOWNLOAD_BIO;

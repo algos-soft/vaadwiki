@@ -58,6 +58,9 @@ public class TaskUpdate extends ATask {
     }// end of method
 
 
+    /**
+     * Ricontrollando la preferenza ad ogni esecuzione della 'task', si può attivare/disattivare senza riavviare il programma <br>
+     */
     @Override
     public void execute(TaskExecutionContext context) throws RuntimeException {
         if (pref.isBool(USA_DAEMON_BIO)) {

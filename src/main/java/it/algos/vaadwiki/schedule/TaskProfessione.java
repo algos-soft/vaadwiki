@@ -1,7 +1,10 @@
-package it.algos.vaadwiki.task;
+package it.algos.vaadwiki.schedule;
 
 import it.algos.vaadflow.enumeration.EASchedule;
-import it.algos.vaadflow.service.IAService;
+import it.algos.vaadflow.schedule.ATask;
+import it.algos.vaadwiki.modules.attivita.AttivitaService;
+import it.algos.vaadwiki.modules.professione.ProfessioneService;
+import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,28 +20,20 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: mer, 05-dic-2018
- * Time: 13:30
+ * Date: Sat, 30-Mar-2019
+ * Time: 17:45
  */
 @SpringComponent
-@Qualifier(TAG_BIO)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Qualifier(TAG_PRO)
 @Slf4j
-public class TaskBio extends TaskWiki{
-
+public class TaskProfessione extends ATask {
 
     /**
-     * Costruttore @Autowired <br>
-     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-     * Regola il modello-dati specifico e lo passa al costruttore della superclasse <br>
-     *
-     * @param service layer di collegamento per la Repository e la Business Logic
+     * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    public TaskBio(@Qualifier(TAG_BIO) IAService service) {
-        super(service);
-    }// end of Spring constructor
+    private ProfessioneService service;
 
 
     /**
@@ -49,11 +44,22 @@ public class TaskBio extends TaskWiki{
      * <p>
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
      * ma l'ordine con cui vengono chiamati NON è garantito
+     * <p>
+     * Esiste il flag di preferenze per usare o meno questa Task <br>
+     * Se la si usa, controlla il flag generale di debug per 'intensificare' l'import <br>
      */
     @PostConstruct
     protected void inizia() {
-        super.eaSchedule = EASchedule.giornoDecimoMinuto;
-        super.usaDaemon = pref.isBool(USA_DAEMON_BIO);
+        super.eaSchedule = EASchedule.giornoTerzoMinuto;
+        super.usaDaemon = pref.isBool(USA_DAEMON_PROFESSIONE);
+    }// end of method
+
+
+    @Override
+    public void execute(TaskExecutionContext context) throws RuntimeException {
+        if (pref.isBool(USA_DAEMON_PROFESSIONE)) {
+            service.download();
+        }// end of if cycle
     }// end of method
 
 }// end of class

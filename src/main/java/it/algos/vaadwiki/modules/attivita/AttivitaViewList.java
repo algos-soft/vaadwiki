@@ -8,7 +8,7 @@ import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.WikiLayout;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
-import it.algos.vaadwiki.task.TaskAttivita;
+import it.algos.vaadwiki.schedule.TaskAttivita;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
