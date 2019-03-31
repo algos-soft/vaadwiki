@@ -50,7 +50,7 @@ public class TaskAttivita extends ATask {
      */
     @PostConstruct
     protected void inizia() {
-        super.eaSchedule = EASchedule.giornoPrimoMinuto;
+        super.eaSchedule = EASchedule.minuto;
         super.usaDaemon = pref.isBool(USA_DAEMON_ATTIVITA);
     }// end of method
 
