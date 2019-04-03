@@ -70,4 +70,12 @@ public @interface AIColumn {
      */
     String color() default "";
 
+
+    /**
+     * (Optional) field that expand the maximum
+     * Only one for list
+     * Defaults to false.
+     */
+    boolean flexGrow() default false;
+
 }// end of interface annotation

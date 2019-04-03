@@ -51,6 +51,7 @@ import javax.validation.constraints.Size;
  * -which gives a name to the key to be used to store the field inside the document.
  * -The property name (i.e. 'descrizione') would be used as the field key if this annotation was not included.
  * -Remember that field keys are repeated for every document so using a smaller key name will reduce the required space.
+ * Una (e una sola) property deve avere @AIColumn(flexGrow = true) per fissare la larghezza della Grid <br>
  */
 @Entity
 @Document(collection = "anno")
@@ -74,18 +75,6 @@ public class Anno extends AEntity {
 
 
     /**
-     * titolo (obbligatorio, unico) <br>
-     */
-    @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @Size(min = 3)
-    @Field("tit")
-    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(widthEM = 8)
-    public String titolo;
-
-
-    /**
      * ordinamento (obbligatorio, unico) <br>
      */
     @NotNull
@@ -105,7 +94,19 @@ public class Anno extends AEntity {
     @Field("mese")
     @AIField(type = EAFieldType.combo, clazz = SecoloService.class)
     @AIColumn(widthEM = 8)
-    public Secolo secolo ;
+    public Secolo secolo;
+
+
+    /**
+     * titolo (obbligatorio, unico) <br>
+     */
+    @NotNull
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Size(min = 3)
+    @Field("tit")
+    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
+    @AIColumn(flexGrow = true)
+    public String titolo;
 
 
     /**

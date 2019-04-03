@@ -84,7 +84,7 @@ public class Logtype extends AEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @Field("ord")
     @AIField(type = EAFieldType.integer, widthEM = 3)
-    @AIColumn(name = "#", widthEM = 4)
+    @AIColumn(name = "#", widthEM = 3)
     public int ordine;
     
 	/**
@@ -95,7 +95,7 @@ public class Logtype extends AEntity {
     @Size(min = 3)
     @Field("cod")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(width = 8)
+    @AIColumn(flexGrow = true)
     public String code;
     
 

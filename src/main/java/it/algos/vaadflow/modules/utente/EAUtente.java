@@ -17,9 +17,9 @@ public enum EAUtente {
     quattro((EACompany) null, "anonymous", "anonymous", EARole.user, ""),
     cinque(EACompany.test, "Addabbo Andrea", "addabbo123", EARole.user, "");
 
-    public String userName;
+    public String username;
 
-    public String passwordInChiaro;
+    public String password;
 
     public EARole ruolo;
 
@@ -28,10 +28,10 @@ public enum EAUtente {
     public EACompany company;
 
 
-    EAUtente(EACompany company, String userName, String passwordInChiaro, EARole ruolo, String mail) {
+    EAUtente(EACompany company, String username, String password, EARole ruolo, String mail) {
         this.setCompany(company);
-        this.setUserName(userName);
-        this.setPasswordInChiaro(passwordInChiaro);
+        this.setUsername(username);
+        this.setPassword(password);
         this.setRuolo(ruolo);
         this.setMail(mail);
     }// fine del costruttore
@@ -47,23 +47,23 @@ public enum EAUtente {
     }// end of method
 
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }// end of method
 
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }// end of method
 
 
-    public String getPasswordInChiaro() {
-        return passwordInChiaro;
+    public String getPassword() {
+        return password;
     }// end of method
 
 
-    public void setPasswordInChiaro(String passwordInChiaro) {
-        this.passwordInChiaro = passwordInChiaro;
+    public void setPassword(String password) {
+        this.password = password;
     }// end of method
 
 

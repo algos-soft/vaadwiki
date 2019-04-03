@@ -74,18 +74,6 @@ public class Giorno extends AEntity {
 
 
     /**
-     * titolo (obbligatorio, unico) <br>
-     */
-    @NotNull
-    @Indexed(unique = true, sparse = true, direction = IndexDirection.DESCENDING)
-    @Size(min = 3)
-    @Field("tit")
-    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(widthEM = 8)
-    public String titolo;
-
-
-    /**
      * ordinamento (obbligatorio, unico) <br>
      */
     @NotNull
@@ -106,6 +94,18 @@ public class Giorno extends AEntity {
     @AIField(type = EAFieldType.combo, clazz = MeseService.class)
     @AIColumn(widthEM = 8)
     public Mese mese;
+
+
+    /**
+     * titolo (obbligatorio, unico) <br>
+     */
+    @NotNull
+    @Indexed(unique = true, sparse = true, direction = IndexDirection.DESCENDING)
+    @Size(min = 3)
+    @Field("tit")
+    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
+    @AIColumn(flexGrow = true)
+    public String titolo;
 
 
     /**

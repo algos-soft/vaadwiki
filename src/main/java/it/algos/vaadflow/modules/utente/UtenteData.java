@@ -87,11 +87,11 @@ public class UtenteData extends ADataService {
      */
     public Utente newEntity(String userName, String passwordInChiaro, List<Role> ruoli, String mail, boolean locked) {
         Utente entity = Utente.builderUtente()
-                .userName(text.isValid(userName) ? userName : null)
-                .passwordInChiaro(text.isValid(passwordInChiaro) ? passwordInChiaro : null)
+                .username(text.isValid(userName) ? userName : null)
+                .password(text.isValid(passwordInChiaro) ? passwordInChiaro : null)
                 .ruoli(ruoli != null ? ruoli : role.getUserRole())
                 .mail(text.isValid(mail) ? mail : null)
-                .locked(locked)
+                .enabled(locked)
                 .build();
         entity.id = userName;
 
@@ -111,8 +111,8 @@ public class UtenteData extends ADataService {
         String mail;
 
         for (EAUtente utente : EAUtente.values()) {
-            userName = utente.getUserName();
-            passwordInChiaro = utente.getPasswordInChiaro();
+            userName = utente.getUsername();
+            passwordInChiaro = utente.getPassword();
             ruolo = utente.getRuolo();
             ruoli = role.getRoles(ruolo);
             mail = utente.getMail();

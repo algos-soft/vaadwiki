@@ -62,8 +62,6 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
 
     public final static String KEY_MAPPA_CRONO = "crono";
 
-    protected Map<String, List<Class>> mappaClassi;
-
     protected AppLayout appLayout;
 
     protected AppLayoutMenu appMenu;
@@ -73,6 +71,8 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
     private AReflectionService reflection = AReflectionService.getInstance();
 
     private ATextService text = ATextService.getInstance();
+
+    private Map<String, List<Class>> mappaClassi;
 
     private ALogin login;
 
@@ -239,7 +239,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
 //    }// end of method
 
 
-    protected Map<String, List<Class>> creaMappa(List<Class> listaClassiMenu) {
+    private Map<String, List<Class>> creaMappa(List<Class> listaClassiMenu) {
         Map<String, List<Class>> mappa = new HashMap<>();
         ArrayList<Class> devClazzList = new ArrayList<>();
         ArrayList<Class> cronoDevClazzList = new ArrayList<>();
@@ -403,7 +403,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
         i.getElement().setAttribute("style", "width: 60px; margin-top:10px");
 
         if (login != null && login.getUtente() != null) {
-            container.add(i, new H5(login.getUtente().userName));
+            container.add(i, new H5(login.getUtente().getUsername()));
         } else {
             container.add(i);
         }// end of if/else cycle
@@ -424,7 +424,12 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
         menuName = annotation.getMenuName(viewClazz);
         icon = reflection.getIconView(viewClazz);
 
-        return appMenu.addMenuItem(new AppLayoutMenuItem(icon.create(), menuName, linkRoute));
+        if (text.isValid(menuName) && text.isValid(linkRoute)) {
+            return appMenu.addMenuItem(new AppLayoutMenuItem(icon.create(), menuName, linkRoute));
+        } else {
+            return null;
+        }// end of if/else cycle
+
     }// end of method
 
 //    /**

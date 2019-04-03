@@ -74,7 +74,7 @@ public class PreferenzaViewList extends AViewList {
      */
     protected void fixPreferenzeSpecifiche() {
         super.usaSearchTextField = false;
-        super.usaBottoneEdit = true;
+//        super.usaBottoneEdit = true;
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;
         super.isEntityDeveloper = true;

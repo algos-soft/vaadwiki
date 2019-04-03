@@ -62,9 +62,9 @@ public class AUserDetailsService implements UserDetailsService {
         if (null == utente) {
             throw new UsernameNotFoundException("No user present with username: " + username);
         } else {
-            passwordHash = passwordEncoder.encode(utente.getPasswordInChiaro());
+            passwordHash = passwordEncoder.encode(utente.getPassword());
             authorities = roleService.getAuthorities(utente);
-            return new User(utente.getUserName(), passwordHash, authorities);
+            return new User(utente.getUsername(), passwordHash, authorities);
         }// end of if/else cycle
 
     }// end of method

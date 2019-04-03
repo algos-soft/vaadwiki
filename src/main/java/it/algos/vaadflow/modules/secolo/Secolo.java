@@ -58,8 +58,8 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderSecolo")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"titolo", "inizio", "fine", "anteCristo"})
-@AIForm(fields = {"titolo", "inizio", "fine", "anteCristo"})
+@AIList(fields = {"anteCristo", "inizio", "fine", "titolo"})
+@AIForm(fields = {"anteCristo", "inizio", "fine", "titolo"})
 @AIScript(sovrascrivibile = false)
 public class Secolo extends AEntity {
 
@@ -70,15 +70,15 @@ public class Secolo extends AEntity {
     private final static long serialVersionUID = 1L;
 
     /**
-     * titolo (obbligatorio, unico) <br>
+     * flag per i secoli prima di cristo (obbligatorio) <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
-    @Field("tit")
-    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(widthEM = 9)
-    public String titolo;
+    @Field("cod")
+    @AIField(type = EAFieldType.checkbox, required = true, focus = true, widthEM = 12)
+    @AIColumn(name = "AC", widthEM = 4)
+    public boolean anteCristo;
 
 
     /**
@@ -102,16 +102,17 @@ public class Secolo extends AEntity {
     @AIColumn(name = "#", widthEM = 5)
     public int fine;
 
+
     /**
-     * flag per i secoli prima di cristo (obbligatorio) <br>
+     * titolo (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed( direction = IndexDirection.DESCENDING)
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
-    @Field("cod")
-    @AIField(type = EAFieldType.checkbox, required = true, focus = true, widthEM = 12)
-    @AIColumn(name = "AC",widthEM = 4)
-    public boolean anteCristo;
+    @Field("tit")
+    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
+    @AIColumn(flexGrow = true)
+    public String titolo;
 
 
     /**

@@ -66,6 +66,7 @@ public class Address extends AEntity {
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
+
     /**
      * indirizzo: via, nome e numero (obbligatoria, non unica)
      */
@@ -73,8 +74,9 @@ public class Address extends AEntity {
     @Size(min = 2, max = 50)
     @Field("ind")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(width = 210)
+    @AIColumn(flexGrow = true)
     public String indirizzo;
+
     /**
      * località (obbligatoria, non unica)
      */
@@ -82,7 +84,7 @@ public class Address extends AEntity {
     @Size(min = 2, max = 50)
     @Field("loc")
     @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
-    @AIColumn(width = 370)
+    @AIColumn(widthEM = 14)
     public String localita;
 
     /**
@@ -91,8 +93,9 @@ public class Address extends AEntity {
     @Size(min = 5, max = 5, message = "Il codice postale deve essere di 5 cifre")
     @Field("cap")
     @AIField(type = EAFieldType.text, widthEM = 5)
-    @AIColumn(width = 370)
+    @AIColumn(widthEM = 6)
     public String cap;
+
 
     /**
      * @return a string representation of the object.

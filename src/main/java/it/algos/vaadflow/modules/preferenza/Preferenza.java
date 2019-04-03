@@ -78,7 +78,7 @@ public class Preferenza extends ACEntity {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Field("ord")
     @AIField(type = EAFieldType.integer, widthEM = 3)
-    @AIColumn(name = "#", width = 55)
+    @AIColumn(name = "#", widthEM = 3)
     public int ordine;
 
     /**
@@ -89,7 +89,7 @@ public class Preferenza extends ACEntity {
     @Size(min = 3)
     @Field("cod")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 9)
     public String code;
 
     /**
@@ -99,7 +99,7 @@ public class Preferenza extends ACEntity {
     @Size(min = 2, max = 50)
     @Field("desc")
     @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
-    @AIColumn(width = 370)
+    @AIColumn(flexGrow = true)
     public String descrizione;
 
 
@@ -109,6 +109,7 @@ public class Preferenza extends ACEntity {
     @NotNull
     @Field("type")
     @AIField(type = EAFieldType.enumeration, clazz = EAPrefType.class, required = true, focus = true, widthEM = 12)
+    @AIColumn(widthEM = 5)
     public EAPrefType type;
 
 
@@ -116,6 +117,7 @@ public class Preferenza extends ACEntity {
     @NotNull
     @Field("val")
     @AIField(type = EAFieldType.pref, required = true, name = "Valore", widthEM = 12)
+    @AIColumn(widthEM = 6)
     public byte[] value;
 
 

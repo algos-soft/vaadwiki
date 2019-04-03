@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
@@ -71,10 +72,10 @@ import java.util.List;
 @Builder(builderMethodName = "builderUtente")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.obbligatoria)
-@AIList(fields = {"company", "userName", "passwordInChiaro", "locked", "mail"})
-@AIForm(fields = {"company", "userName", "ruoli", "passwordInChiaro", "locked", "mail"})
+@AIList(fields = {"company", "username", "password", "enabled", "mail"})
+@AIForm(fields = {"company", "username", "ruoli", "password", "enabled", "mail"})
 @AIScript(sovrascrivibile = false)
-public class Utente extends ACEntity {
+public class Utente extends ACEntity implements UserDetails {
 
 
     /**
@@ -84,14 +85,14 @@ public class Utente extends ACEntity {
 
 
     /**
-     * userName o nickName (obbligatorio, unico)
+     * username o nickName (obbligatorio, unico)
      */
     @NotNull(message = "UserName, anche detto nickName, non può essere lasciato vuoto")
     @Indexed(unique = true, sparse = true, direction = IndexDirection.DESCENDING)
     @Field("user")
     @AIField(type = EAFieldType.text)
-    @AIColumn(name = "user")
-    public String userName;
+    @AIColumn(name = "user", widthEM = 10)
+    public String username;
 
 
     /**
@@ -100,18 +101,46 @@ public class Utente extends ACEntity {
      */
     @Field("pass")
     @AIField(type = EAFieldType.text)
-    @AIColumn(name = "pass")
-    public String passwordInChiaro;
+    @AIColumn(name = "pass", widthEM = 10)
+    public String password;
 
 
     /**
-     * flag locked (facoltativo, di default false)
+     * flag account valido (facoltativo, di default true)
      */
-    @Field("lock")
+    @Field("ane")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.checkbox)
-    @AIColumn(name = "lock")
-    public boolean locked;
+    @AIColumn(name = "ane", widthEM = 4)
+    public boolean accountNonExpired;
+
+    /**
+     * flag account non bloccato (facoltativo, di default true)
+     */
+    @Field("anl")
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = EAFieldType.checkbox)
+    @AIColumn(name = "anl", widthEM = 4)
+    public boolean accountNonLocked;
+
+    /**
+     * flag credenziali non scadute (facoltativo, di default true)
+     */
+    @Field("cne")
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = EAFieldType.checkbox)
+    @AIColumn(name = "cne", widthEM = 4)
+    public boolean credentialsNonExpired;
+
+
+    /**
+     * flag abilitato (facoltativo, di default true)
+     */
+    @Field("ena")
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = EAFieldType.checkbox)
+    @AIColumn(name = "ena", widthEM = 4)
+    public boolean enabled;
 
 
     /**
@@ -131,7 +160,7 @@ public class Utente extends ACEntity {
      */
     @Field("mail")
     @AIField(type = EAFieldType.email, widthEM = 24)
-    @AIColumn(width = 350, name = "eMail")
+    @AIColumn(name = "eMail", flexGrow = true)
     public String mail;
 
 

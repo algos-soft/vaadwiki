@@ -60,7 +60,7 @@ public class PersonService extends AService {
             Arrays.asList("userName", "passwordInChiaro", "locked", "nome", "cognome", "telefono", "mail", "indirizzo");
 
     public final static List<String> PROPERTIES_NOT_SECURED =
-            Arrays.asList("nome", "cognome", "telefono", "mail", "indirizzo");
+            Arrays.asList("nome", "cognome", "telefono",  "indirizzo");
 
     /**
      * versione della classe per la serializzazione

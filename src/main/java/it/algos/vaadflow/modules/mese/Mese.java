@@ -58,8 +58,8 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderMese")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"titoloLungo", "titoloBreve", "giorni"})
-@AIForm(fields = {"titoloLungo", "titoloBreve", "giorni"})
+@AIList(fields = {"titoloBreve", "giorni", "titoloLungo"})
+@AIForm(fields = {"titoloBreve", "giorni", "giorni"})
 @AIScript(sovrascrivibile = false)
 public class Mese extends AEntity {
 
@@ -68,18 +68,6 @@ public class Mese extends AEntity {
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
-
-
-    /**
-     * nome completo (obbligatorio, unico) <br>
-     */
-    @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @Size(min = 3)
-    @Field("lungo")
-    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(widthEM = 10)
-    public String titoloLungo;
 
 
     /**
@@ -101,8 +89,20 @@ public class Mese extends AEntity {
     @Indexed()
     @Field("giorni")
     @AIField(type = EAFieldType.integer, widthEM = 3)
-    @AIColumn(name = "#", widthEM = 5)
+    @AIColumn(name = "#", widthEM = 6)
     public int giorni;
+
+
+    /**
+     * nome completo (obbligatorio, unico) <br>
+     */
+    @NotNull
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Size(min = 3)
+    @Field("lungo")
+    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
+    @AIColumn(flexGrow = true)
+    public String titoloLungo;
 
 
     /**

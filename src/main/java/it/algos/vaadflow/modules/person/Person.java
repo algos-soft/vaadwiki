@@ -1,6 +1,5 @@
 package it.algos.vaadflow.modules.person;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.*;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
@@ -8,12 +7,8 @@ import it.algos.vaadflow.modules.address.Address;
 import it.algos.vaadflow.modules.address.AddressPresenter;
 import it.algos.vaadflow.modules.utente.Utente;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -21,8 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import static it.algos.vaadflow.application.FlowCost.TAG_PER;
 
 /**
  * Project vaadflow <br>
@@ -59,6 +52,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PER;
  * -Remember that field keys are repeated for every document so using a smaller key name will reduce the required space.
  */
 
+
 /**
  * Alcune property vengono gestite dalla superclasse Utente <br>
  */
@@ -71,7 +65,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PER;
 @Builder(builderMethodName = "builderPerson")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.facoltativa)
-@AIList(fields = {"nome", "cognome", "telefono", "mail", "indirizzo"})
+@AIList(fields = {"nome", "cognome", "telefono",  "indirizzo"})
 @AIForm(fields = {"nome", "cognome", "telefono", "indirizzo", "mail"})
 @AIScript(sovrascrivibile = false)
 public class Person extends Utente {
@@ -94,7 +88,7 @@ public class Person extends Utente {
     @Size(min = 4, max = 40)
     @Field("nome")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 20)
-    @AIColumn(width = 200,name="nome")
+    @AIColumn(name = "nome", widthEM = 7)
     public String nome;
 
     /**
@@ -106,7 +100,7 @@ public class Person extends Utente {
     @Size(min = 4, max = 40)
     @Field("cognome")
     @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 20)
-    @AIColumn(width = 200,name="cognome")
+    @AIColumn(name = "cognome", widthEM = 9)
     public String cognome;
 
     /**
@@ -114,7 +108,7 @@ public class Person extends Utente {
      */
     @Field("tel")
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 160,name="tel")
+    @AIColumn(name = "tel", widthEM = 7)
     public String telefono;
 
 
@@ -124,7 +118,7 @@ public class Person extends Utente {
      */
     @Field("ind")
     @AIField(type = EAFieldType.link, clazz = AddressPresenter.class, help = "Indirizzo")
-    @AIColumn(width = 400, name = "ind")
+    @AIColumn(name = "ind", flexGrow = true)
     public Address indirizzo;
 
 

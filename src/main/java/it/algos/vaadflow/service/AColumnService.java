@@ -92,6 +92,7 @@ public class AColumnService extends AbstractService {
         EAFieldType type = annotation.getFormType(entityClazz, propertyName);
         String header = annotation.getColumnName(entityClazz, propertyName);
         String width = annotation.getColumnWithEM(entityClazz, propertyName);
+        boolean isFlexGrow = annotation.isFlexGrow(entityClazz, propertyName);
         Class clazz = annotation.getComboClass(entityClazz, propertyName);
         String color = annotation.getColumnColor(entityClazz, propertyName);
 
@@ -178,7 +179,7 @@ public class AColumnService extends AbstractService {
                     }// fine del blocco try-catch
                     return new Label(testo);
                 }));//end of lambda expressions and anonymous inner class
-                width="8em";
+//                width = "8em";
                 break;
             case localdatetime:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
@@ -199,7 +200,7 @@ public class AColumnService extends AbstractService {
                     }// fine del blocco try-catch
                     return new Label(testo);
                 }));//end of lambda expressions and anonymous inner class
-                width="9em";
+                width = "9em";
                 break;
             case vaadinIcon:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
@@ -264,11 +265,13 @@ public class AColumnService extends AbstractService {
 //                colonna.setWidth("1px");
 //            }// end of if cycle
 
-            if (text.isValid(width)) {
-                colonna.setWidth(width);
-                colonna.setFlexGrow(0);
-            } else {
+            if (isFlexGrow) {
                 colonna.setFlexGrow(1);
+            } else {
+                if (text.isValid(width)) {
+                    colonna.setWidth(width);
+                    colonna.setFlexGrow(0);
+                }// end of if cycle
             }// end of if/else cycle
 
         }// end of if cycle

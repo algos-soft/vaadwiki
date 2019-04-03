@@ -107,7 +107,7 @@ public class UtenteService extends AService {
     public boolean creaIfNotExist(EAUtente eaUtente) {
         boolean creata = false;
 
-        if (isMancaByKeyUnica(eaUtente.userName)) {
+        if (isMancaByKeyUnica(eaUtente.getUsername())) {
             AEntity entity = save(newEntity(eaUtente));
             creata = entity != null;
         }// end of if cycle
@@ -176,8 +176,8 @@ public class UtenteService extends AService {
         EACompany eaCompany;
         Company company = null;
 
-        userName = eaUtente.getUserName();
-        passwordInChiaro = eaUtente.getPasswordInChiaro();
+        userName = eaUtente.getUsername();
+        passwordInChiaro = eaUtente.getPassword();
         ruolo = eaUtente.getRuolo();
         ruoli = roleService.getRoles(ruolo);
         mail = eaUtente.getMail();
@@ -210,11 +210,11 @@ public class UtenteService extends AService {
      */
     public Utente newEntity(Company company, String userName, String passwordInChiaro, List<Role> ruoli, String mail, boolean locked) {
         Utente entity = Utente.builderUtente()
-                .userName(text.isValid(userName) ? userName : null)
-                .passwordInChiaro(text.isValid(passwordInChiaro) ? passwordInChiaro : null)
+                .username(text.isValid(userName) ? userName : null)
+                .password(text.isValid(passwordInChiaro) ? passwordInChiaro : null)
                 .ruoli(ruoli != null ? ruoli : roleService.getUserRole())
                 .mail(text.isValid(mail) ? mail : null)
-                .locked(locked)
+                .enabled(locked)
                 .build();
         entity.company = company;
 
@@ -227,7 +227,7 @@ public class UtenteService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Utente) entityBean).getUserName();
+        return ((Utente) entityBean).getUsername();
     }// end of method
 
 
@@ -244,13 +244,13 @@ public class UtenteService extends AService {
     public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
         Utente entity = (Utente) super.beforeSave(entityBean, operation);
 
-        if (text.isEmpty(entity.userName)) {
+        if (text.isEmpty(entity.getUsername())) {
             entity.id = FlowCost.STOP_SAVE;
             log.error("userName è vuoto in UtenteService.beforeSave()");
         }// end of if cycle
 
-        if (text.isEmpty(entity.passwordInChiaro)) {
-            entity.passwordInChiaro = entity.userName + SUFFIX;
+        if (text.isEmpty(entity.getPassword())) {
+            entity.password = entity.getUsername() + SUFFIX;
         }// end of if cycle
 
         if (entity.ruoli == null) {
@@ -269,7 +269,7 @@ public class UtenteService extends AService {
      * @return istanza della Entity, null se non trovata
      */
     public Utente findByKeyUnica(String userName) {
-        return repository.findByUserName(userName);
+        return repository.findByUsername(userName);
     }// end of method
 
 

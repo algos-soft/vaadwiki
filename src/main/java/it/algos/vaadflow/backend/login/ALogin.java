@@ -20,9 +20,8 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOGIN;
  * Time: 16:23
  */
 @SpringComponent
-//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(TAG_LOGIN)
 @VaadinSessionScope
+@Qualifier(TAG_LOGIN)
 public class ALogin {
 
     private Utente utente;

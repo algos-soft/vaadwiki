@@ -1,6 +1,7 @@
 package it.algos.vaadflow.ui;
 
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayoutMenu;
 import com.vaadin.flow.component.applayout.AppLayoutMenuItem;
 import com.vaadin.flow.component.button.Button;
@@ -20,10 +21,7 @@ import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.BeforeLeaveEvent;
-import com.vaadin.flow.router.BeforeLeaveObserver;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.shared.ui.LoadMode;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
@@ -51,10 +49,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_LOGIN;
 import static it.algos.vaadflow.application.FlowCost.USA_MENU;
@@ -288,7 +283,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     protected boolean usaBottoneEdit;
 
     /**
-     * Flag di preferenza posizionare il bottone Edit come prima colonna. Normalmente true.
+     * Flag di preferenza posizionare il bottone Edit come prima colonna. Normalmente false.
      */
     protected boolean isBottoneEditBefore;
 
@@ -391,6 +386,22 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
     protected ArrayList<AppLayoutMenuItem> specificMenuItems = new ArrayList<AppLayoutMenuItem>();
 
+    /**
+     * Flag di preferenza per usare una route view come detail della singola istanza. Normalmente true.
+     * In alternativa si può usare un Dialog.
+     */
+    protected boolean usaRouteFormView;
+
+    /**
+     * Nome della route per la location della pagina di modifica (standard) del Form <br>
+     */
+    protected String routeNameFormEdit;
+
+    /**
+     * Nome della route per la location della pagina di visualizzazione (opzionale-senza modifica) del Form <br>
+     */
+    protected String routeNameFormShow;
+
 
     /**
      * Costruttore @Autowired (nella sottoclasse concreta) <br>
@@ -405,6 +416,23 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             this.service = presenter.getService();
             this.entityClazz = presenter.getEntityClazz();
         }// end of if cycle
+    }// end of Spring constructor
+
+
+    /**
+     * Costruttore @Autowired (nella sottoclasse concreta) <br>
+     * La sottoclasse usa un @Qualifier(), per avere la sottoclasse specifica <br>
+     * La sottoclasse usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
+     */
+    public AViewList(IAPresenter presenter, IADialog dialog, String routeNameFormEdit) {
+        this.presenter = presenter;
+        this.dialog = dialog;
+        if (presenter != null) {
+            this.presenter.setView(this);
+            this.service = presenter.getService();
+            this.entityClazz = presenter.getEntityClazz();
+        }// end of if cycle
+        this.routeNameFormEdit = routeNameFormEdit;
     }// end of Spring constructor
 
 
@@ -464,11 +492,11 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         //--Flag di preferenza per modificare la entity. Normalmente true.
         isEntityModificabile = true;
 
-        //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
-        usaBottoneEdit = true;
+        //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente false.
+        usaBottoneEdit = false;
 
-        //--Flag di preferenza posizionare il bottone Edit come prima colonna. Normalmente true
-        isBottoneEditBefore = true;
+        //--Flag di preferenza posizionare il bottone Edit come prima colonna. Normalmente false
+        isBottoneEditBefore = false;
 
         //--Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'.
         testoBottoneEdit = EDIT_NAME;
@@ -502,6 +530,10 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
         //--Flag di preferenza per selezionare il numero di righe visibili della Grid. Normalmente limit = pref.getInt(FlowCost.MAX_RIGHE_GRID) .
         limit = pref.getInt(FlowCost.MAX_RIGHE_GRID);
+
+        //--Flag di preferenza per usare una route view come detail della singola istanza. Normalmente true.
+        //--In alternativa si può usare un Dialog.
+        usaRouteFormView = false;
     }// end of method
 
 
@@ -875,8 +907,50 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     protected void apreDialogo(SingleSelectionEvent evento, EAOperation operation) {
         if (evento != null && evento.getOldValue() != evento.getValue()) {
             if (evento.getValue().getClass().getName().equals(entityClazz.getName())) {
-                dialog.open((AEntity) evento.getValue(), operation, context);
+                if (usaRouteFormView && text.isValid(routeNameFormEdit)) {
+                    AEntity entity = (AEntity) evento.getValue();
+                    routeVerso(routeNameFormEdit, entity);
+                } else {
+                    dialog.open((AEntity) evento.getValue(), operation, context);
+                }// end of if/else cycle
             }// end of if cycle
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Navigazione verso un altra pagina
+     */
+    protected void routeVerso() {
+    }// end of method
+    /**
+     * Navigazione verso un altra pagina
+     */
+
+    /**
+     * Navigazione verso un altra pagina
+     */
+    protected void routeVerso(String location, AEntity entity) {
+        routeVerso(location, entity.getId());
+    }// end of method
+
+
+    /**
+     * Navigazione verso un altra pagina
+     */
+    protected void routeVerso(String location, String idKey) {
+        UI ui = null;
+        Optional<UI> optional = getUI();
+
+        if (optional.isPresent()) {
+            ui = optional.get();
+        }// end of if cycle
+
+        if (ui != null) {
+            Map<String, String> mappa = new HashMap<>();
+            mappa.put("id", idKey);
+            QueryParameters query = QueryParameters.simple(mappa);
+            ui.navigate(location, query);
         }// end of if cycle
     }// end of method
 
@@ -916,7 +990,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         if (service == null) {
             return;
         }// end of if cycle
-
 
         int numRecCollezione = service.count();
         final String mess = "Gli elementi vengono mostrati divisi in pagine da " + limit + " elementi ciascuna. Con i bottoni (-) e (+) ci si muove avanti ed indietro, una pagina alla volta. Oppure si inserisce il numero della pagina desiderata.";

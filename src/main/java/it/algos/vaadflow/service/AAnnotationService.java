@@ -800,6 +800,45 @@ public class AAnnotationService extends AbstractService {
 
 
     /**
+     * Get the status flexibility of the property.
+     *
+     * @param entityClazz the entity class
+     * @param fieldName   the property name
+     *
+     * @return status of field
+     */
+    public boolean isFlexGrow(Class<? extends AEntity> entityClazz, String fieldName) {
+        boolean status = true;
+        Field field = reflection.getField(entityClazz, fieldName);
+
+        if (field != null) {
+            status = isFlexGrow(field);
+        }// end of if cycle
+
+        return status;
+    }// end of method
+
+
+    /**
+     * Get the status flexibility of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return status of field
+     */
+    public boolean isFlexGrow(Field reflectionJavaField) {
+        boolean status = true;
+        AIColumn annotation = this.getAIColumn(reflectionJavaField);
+
+        if (annotation != null) {
+            status = annotation.flexGrow();
+        }// end of if cycle
+
+        return status;
+    }// end of method
+
+
+    /**
      * Get the color of the property.
      *
      * @param entityClazz the entity class

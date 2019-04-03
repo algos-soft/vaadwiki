@@ -1,8 +1,6 @@
 package it.algos.vaadflow.modules.company;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.*;
-import it.algos.vaadflow.backend.entity.ACEntity;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
@@ -11,10 +9,6 @@ import it.algos.vaadflow.modules.address.AddressPresenter;
 import it.algos.vaadflow.modules.person.Person;
 import it.algos.vaadflow.modules.person.PersonPresenter;
 import lombok.*;
-import com.vaadin.flow.spring.annotation.UIScope;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -24,7 +18,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import static it.algos.vaadflow.application.FlowCost.TAG_COM;
 
 /**
  * Project vaadflow <br>
@@ -69,7 +62,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_COM;
 @Builder(builderMethodName = "builderCompany")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"code", "descrizione", "contatto","telefono", "mail"})
+@AIList(fields = {"code", "descrizione", "contatto", "telefono", "mail"})
 @AIForm(fields = {"code", "descrizione", "contatto", "telefono", "mail", "indirizzo", "note"})
 @AIScript(sovrascrivibile = false)
 public class Company extends AEntity {
@@ -80,9 +73,8 @@ public class Company extends AEntity {
      */
     private final static long serialVersionUID = 1L;
 
-    
 
-	/**
+    /**
      * codice di riferimento (obbligatorio, unico) <br>
      */
     @NotNull
@@ -90,17 +82,17 @@ public class Company extends AEntity {
     @Size(min = 3)
     @Field("code")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(width = 210)
+    @AIColumn(widthEM = 5)
     public String code;
-    
-	/**
+
+    /**
      * descrizione (obbligatoria, non unica) <br>
      */
     @NotNull(message = "La descrizione è obbligatoria")
     @Size(min = 2, max = 50)
     @Field("desc")
     @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
-    @AIColumn(width = 370)
+    @AIColumn(flexGrow = true)
     public String descrizione;
 
     /**
@@ -109,7 +101,7 @@ public class Company extends AEntity {
      */
     @Field("contatto")
     @AIField(type = EAFieldType.link, clazz = PersonPresenter.class, help = "Riferimento")
-    @AIColumn(width = 220, name = "Riferimento")
+    @AIColumn(name = "Riferimento", widthEM = 8)
     public Person contatto;
 
 
@@ -118,7 +110,7 @@ public class Company extends AEntity {
      */
     @Field("tel")
     @AIField(type = EAFieldType.text)
-    @AIColumn(width = 170)
+    @AIColumn(widthEM = 7)
     public String telefono;
 
 
@@ -127,7 +119,7 @@ public class Company extends AEntity {
      */
     @Field("mail")
     @AIField(type = EAFieldType.email, widthEM = 24)
-    @AIColumn(width = 350, name = "Mail")
+    @AIColumn(name = "Mail", widthEM = 14)
     public String mail;
 
 
@@ -137,7 +129,6 @@ public class Company extends AEntity {
      */
     @Field("ind")
     @AIField(type = EAFieldType.link, clazz = AddressPresenter.class, help = "Indirizzo")
-    @AIColumn(width = 400, name = "Indirizzo")
     public Address indirizzo;
 
 

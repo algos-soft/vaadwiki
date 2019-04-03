@@ -29,6 +29,6 @@ import static it.algos.vaadflow.application.FlowCost.TAG_UTE;
 @AIScript(sovrascrivibile = false)
 public interface UtenteRepository extends MongoRepository<Utente, String> {
 
-	public Utente findByUserName(String userName);
+	public Utente findByUsername(String username);
 
 }// end of class

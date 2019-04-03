@@ -62,7 +62,7 @@ public class UtenteViewList extends AViewList {
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
-    @Autowired
+//    @Autowired
     private PasswordEncoder passwordEncoder;
 
 

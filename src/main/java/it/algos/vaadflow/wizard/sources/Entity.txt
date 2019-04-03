@@ -53,6 +53,7 @@ import static it.algos.@MODULELOWER@.application.@COST@.@QUALIFIER@;
  * -which gives a name to the key to be used to store the field inside the document.
  * -The property name (i.e. 'descrizione') would be used as the field key if this annotation was not included.
  * -Remember that field keys are repeated for every document so using a smaller key name will reduce the required space.
+ * Una (e una sola) property deve avere @AIColumn(flexGrow = true) per fissare la larghezza della Grid <br>
  */
 @Entity
 @Document(collection = "@PACKAGE@")

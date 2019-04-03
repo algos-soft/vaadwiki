@@ -551,11 +551,11 @@ public class ATextService extends AbstractService {
     /**
      * Formattazione di un numero.
      * <p>
-     * Il numero può arrivare come stringa, intero o double
-     * Se la stringa contiene punti e virgole, viene pulita
-     * Se la stringa non è convertibile in numero, viene restituita uguale
-     * Inserisce il punto separatore ogni 3 cifre
-     * Se arriva un oggetto non previsto, restituisce null
+     * Il numero può arrivare come stringa, intero o double <br>
+     * Se la stringa contiene punti e virgole, viene pulita <br>
+     * Se la stringa non è convertibile in numero, viene restituita uguale <br>
+     * Inserisce il punto separatore ogni 3 cifre <br>
+     * Se arriva un oggetto non previsto, restituisce null <br>
      *
      * @param numObj da formattare (stringa, intero, long o double)
      *

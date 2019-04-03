@@ -13,8 +13,8 @@ import it.algos.vaadflow.modules.person.EAPerson;
 public enum EACompany {
 
     algos("algos", "Company ALGOS di prova", EAPerson.uno, "02.453677", "gac@algos.it", EAAddress.quattro),
-    demo("demo", "Company demo", EAPerson.due, "338 678932", "gates@win.com", EAAddress.cinque),
-    test("test", "Company di test", EAPerson.tre, "345 786631", "alfa@libero.it", EAAddress.sei);
+    demo("demo", "Company demo", EAPerson.due, "338 678932", "infostudioassociatomondadori@win.com", EAAddress.cinque),
+    test("test", "Company di test", EAPerson.tre, "345 786631", "presidentepontetaro@libero.it", EAAddress.sei);
 
 
     private String code;

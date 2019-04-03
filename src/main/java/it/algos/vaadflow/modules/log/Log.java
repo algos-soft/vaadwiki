@@ -86,13 +86,23 @@ public class Log extends ACEntity {
     public Livello livello;
 
     /**
+     * raggruppamento logico dei log per type di eventi (obbligatorio)
+     */
+    @NotEmpty(message = "La tipologia del log è obbligatoria")
+    @Indexed()
+    @Field("type")
+    @AIField(type = EAFieldType.combo, clazz = LogtypeService.class, nullSelectionAllowed = false, widthEM = 10)
+    @AIColumn(widthEM = 7)
+    private Logtype type;
+
+    /**
      * descrizione (obbligatoria, non unica) <br>
      */
     @NotNull(message = "La descrizione è obbligatoria")
     @Size(min = 2, max = 50)
     @Field("desc")
     @AIField(type = EAFieldType.textarea, firstCapital = true, widthEM = 24)
-    @AIColumn(widthEM = 50)
+    @AIColumn(flexGrow = true)
     public String descrizione;
 
     /**
@@ -105,15 +115,6 @@ public class Log extends ACEntity {
     @AIField(type = EAFieldType.localdatetime)
     public LocalDateTime evento;
 
-    /**
-     * raggruppamento logico dei log per type di eventi (obbligatorio)
-     */
-    @NotEmpty(message = "La tipologia del log è obbligatoria")
-    @Indexed()
-    @Field("type")
-    @AIField(type = EAFieldType.combo, clazz = LogtypeService.class, nullSelectionAllowed = false, widthEM = 10)
-    @AIColumn(widthEM = 7)
-    private Logtype type;
 
 
     /**

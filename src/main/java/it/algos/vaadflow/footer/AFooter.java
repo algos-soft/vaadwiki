@@ -89,7 +89,7 @@ public class AFooter extends VerticalLayout {
         String tag = "all companies";
         String companyCode = login.getCompany() != null ? login.getCompany().getCode() : "";
         String companyName = login.getCompany() != null ? login.getCompany().getDescrizione() : "";
-        String userName = login.getUtente() != null ? login.getUtente().getUserName() : "";
+        String userName = login.getUtente() != null ? login.getUtente().getUsername() : "";
         this.removeAll();
 
         if (pref.isBool(USA_COMPANY)) {

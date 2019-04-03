@@ -185,7 +185,7 @@ public class AFlowingcodeAppLayoutMenu extends AMenu {
         i.getElement().setAttribute("style", "width: 60px; margin-top:10px");
 
         if (login != null && login.getUtente() != null) {
-            container.add(i, new H5(login.getUtente().userName));
+            container.add(i, new H5(login.getUtente().getUsername()));
         } else {
             container.add(i);
         }// end of if/else cycle

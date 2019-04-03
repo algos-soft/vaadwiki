@@ -12,6 +12,7 @@ https://vaadin.com/docs/v7/framework/articles/CreatingACustomFieldForEditingTheA
 https://vaadin.com/docs/v10/flow/components/tutorial-flow-components-setup.html
 https://vaadin.com/docs/v10/flow/binding-data/tutorial-flow-field.html
 https://vaadin.com/components/browse
+https://vaadin.com/docs/flow/migration/5-components.html
 
 **Layout**
 https://vaadin.com/forum/thread/17047951
@@ -35,3 +36,6 @@ http://www.twelvetone.tv/iron-icons-search/index.html
 **Tutorial**
 https://vaadin.com/tutorials/getting-started-with-flow
 https://vaadin.com/tutorials/nested-layouts-in-flow
+
+**Versione ultima su Maven**
+https://mvnrepository.com/artifact/com.vaadin/vaadin
