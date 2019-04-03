@@ -131,7 +131,8 @@ public abstract class AttNazProfCatService extends AService {
                 message += date.deltaText(inizio);
                 message += "), con AQueryVoce, senza login, senza cookies, urlRequest di tipo GET";
 
-                log.info(message);
+                log.debug(message);
+                logger.debug(message);
             }// end of if cycle
         } else {
             logger.error(entityClass.getSimpleName() + " - Qualcosa non ha funzionato");
