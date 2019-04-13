@@ -3,7 +3,10 @@ package it.algos.vaadwiki.modules.wiki;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.ACronoViewList;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
@@ -11,6 +14,8 @@ import it.algos.vaadflow.ui.dialog.IADialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import java.util.Set;
 
 /**
  * Project vaadwiki
@@ -100,6 +105,39 @@ public abstract class WikiViewList extends ACronoViewList {
 
         sincroBottoniMenu(false);
         return topPlaceholder.getComponentCount() > 0;
+    }// end of method
+
+
+    protected void apreDialogo(SingleSelectionEvent evento, EAOperation operation) {
+        AEntity entitySelected = null;
+        Set selezione = grid.getSelectedItems();
+        boolean selezioneSingola = (selezione != null && selezione.size() == 1);
+
+        if (selezioneSingola) {
+            entitySelected = (AEntity) grid.getSelectedItems().toArray()[0];
+        }// end of if cycle
+
+//        SingleSelect<Grid<AEntity>, AEntity> entitySelected = null;
+//        boolean selezioneSingola = grid.getSelectionModel() == (GridSelectionModel<AEntity>) Grid.SelectionMode.SINGLE;
+//        if (selezioneSingola) {
+//            entitySelected = grid.asSingleSelect();
+//        }// end of if cycle
+        int alfa = grid.getSelectedItems().size();
+
+        if (evento != null && evento.getOldValue() != evento.getValue()) {
+            if (evento.getValue().getClass().getName().equals(entityClazz.getName())) {
+                if (usaRouteFormView && text.isValid(routeNameFormEdit)) {
+                    AEntity entity = (AEntity) evento.getValue();
+                    routeVerso(routeNameFormEdit, entity);
+                } else {
+                    dialog.open((AEntity) evento.getValue(), operation, context);
+                }// end of if/else cycle
+            }// end of if cycle
+        }// end of if cycle
+
+        if (selezioneSingola) {
+            grid.select(entitySelected);
+        }// end of if cycle
     }// end of method
 
 

@@ -53,7 +53,7 @@ public class TaskUpdate extends ATask {
      */
     @PostConstruct
     protected void inizia() {
-        super.eaSchedule = EASchedule.test;
+        super.eaSchedule = EASchedule.minutoDue;
         super.usaDaemon = pref.isBool(USA_DAEMON_BIO);
     }// end of method
 

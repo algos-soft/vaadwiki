@@ -92,6 +92,9 @@ public class WikiAnnoViewList extends WikiViewList {
         });//end of lambda expressions and anonymous inner class
 
         uploadOneMortoButton.addClickListener(selectionEvent -> {
+
+            Object pippo=grid.getSelectedItems();
+            int alfa=grid.getSelectedItems().size();
             if (grid.getSelectedItems().size() == 1) {
                 annoCorrente = (Anno) grid.getSelectedItems().toArray()[0];
                 uploadAnnoMorto.esegue(annoCorrente);

@@ -4,9 +4,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.boot.ABoot;
-import it.algos.vaadwiki.modules.Pippoz;
-import it.algos.vaadwiki.modules.wiki.WikiAnnoViewList;
-import it.algos.vaadwiki.modules.wiki.WikiGiornoViewList;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.modules.utente.UtenteService;
@@ -14,8 +11,11 @@ import it.algos.vaadwiki.modules.attivita.AttivitaViewList;
 import it.algos.vaadwiki.modules.bio.BioViewList;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaViewList;
 import it.algos.vaadwiki.modules.professione.ProfessioneViewList;
+import it.algos.vaadwiki.modules.wiki.WikiAnnoViewList;
+import it.algos.vaadwiki.modules.wiki.WikiGiornoViewList;
 import it.algos.vaadwiki.views.UtilityView;
 import it.algos.wiki.web.AQueryLogin;
+import it.algos.wiki.web.WLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -54,6 +54,10 @@ public class WikiBoot extends ABoot {
 
     @Autowired
     protected ApplicationContext appContext;
+
+    @Autowired
+    protected WLogin wLogin;
+
     @Autowired
     private UtenteService utenteService;
 
@@ -91,6 +95,7 @@ public class WikiBoot extends ABoot {
 //        WikiCost.WIKI_LOGIN = new WikiLogin("Gacbot@Gacbot", "tftgv0vhl16c0qnmfdqide3jqdp1i5m7");
     }// end of method
 
+
     /**
      * Metodo invocato subito DOPO il costruttore
      * <p>
@@ -99,11 +104,14 @@ public class WikiBoot extends ABoot {
      * <p>
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
      * ma l'ordine con cui vengono chiamati NON è garantito
+     * <p>
+     * Login inziale del bot
      */
     @PostConstruct
     protected void inizia() {
         appContext.getBean(AQueryLogin.class);
     }// end of method
+
 
     /**
      * Inizializzazione dei dati di alcune collections specifiche sul DB Mongo
@@ -136,6 +144,10 @@ public class WikiBoot extends ABoot {
         PROJECT_NAME = "vaadwiki";
         PROJECT_VERSION = "2.3";
         PROJECT_DATE = LocalDate.of(2019, 4, 3);
+
+        if (wLogin != null) {
+            PROJECT_NOTE = "- loggato come " + wLogin.getLgusername();
+        }// end of if cycle
     }// end of method
 
 
@@ -163,7 +175,7 @@ public class WikiBoot extends ABoot {
         FlowCost.MENU_CLAZZ_LIST.add(BioViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(WikiGiornoViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(WikiAnnoViewList.class);
-	}// end of method
+    }// end of method
 
 
 }// end of boot class

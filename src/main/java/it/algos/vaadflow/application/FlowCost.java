@@ -13,6 +13,7 @@ import java.util.Locale;
 public class FlowCost {
 
     public final static String TAG_LOG = "log";
+
     public final static String TAG_LOGIN = "alogin";
 
     public final static String TAG_TYP = "logtype";
@@ -330,5 +331,7 @@ public class FlowCost {
     public static String PROJECT_VERSION;
 
     public static LocalDate PROJECT_DATE;
+
+    public static String PROJECT_NOTE;
 
 }// end of static class

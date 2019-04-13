@@ -36,7 +36,6 @@ public enum EASchedule {
     biMensile("0 4 1,15 * *", "il primo ed il 15 di ogni mese alle ore 4 di notte."),
     oreQuattro("0 4 2-14,16-31 * *", "ogni giorno alle ore 4 di notte, escluso l'1 ed il 15"),
     oreOtto("0 8 * * *", "ogni giorno alle ore 8 del mattino."),
-    test("15 * 2-14,16-31 * *", "ogni giorno alle ore 4 di notte, escluso l'1 ed il 15"),
     ;
 
     private String tag;

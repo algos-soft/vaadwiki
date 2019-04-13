@@ -792,7 +792,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         this.setFlexGrow(1, layout);
 
         grid.addSelectionListener(new SelectionListener<Grid<AEntity>, AEntity>() {
-
             @Override
             public void selectionChange(SelectionEvent<Grid<AEntity>, AEntity> selectionEvent) {
                 boolean enabled = selectionEvent != null && selectionEvent.getAllSelectedItems().size() > 0;

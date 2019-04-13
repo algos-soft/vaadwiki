@@ -40,26 +40,35 @@ public class AFooter extends VerticalLayout {
     //    @Autowired
 //    public AHtmlService html;
     private final static String DEV_TAG = "Dev: ";
+
     private final static String ADMIN_TAG = "Admin: ";
+
     private final static String USER_TAG = "User: ";
+
     /**
      * Inietta da Spring come 'session'
      */
     @Autowired
     public ATextService text;
+
     /**
      * Inietta da Spring come 'session'
      */
     @Autowired
     public ADateService date;
+
     private ALogin login;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     private PreferenzaService pref;
+
     private String message = "";
+
     private Label label;
+
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -82,8 +91,9 @@ public class AFooter extends VerticalLayout {
 
     }// end of method
 
+
     public Label setAppMessage(String message, AContext context) {
-        ALogin login=context.getLogin();
+        ALogin login = context.getLogin();
         String sep = " - ";
         String spazio = " ";
         String tag = "all companies";
@@ -117,6 +127,9 @@ public class AFooter extends VerticalLayout {
         message += PROJECT_VERSION;
         message += " del ";
         message += date.get(PROJECT_DATE, EATime.normal);
+        if (text.isValid(PROJECT_NOTE)) {
+            message += " " + PROJECT_NOTE;
+        }// end of if cycle
         if (text.isValid(companyName)) {
             message += sep;
             message += companyName;

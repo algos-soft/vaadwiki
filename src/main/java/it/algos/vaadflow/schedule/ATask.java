@@ -2,7 +2,6 @@ package it.algos.vaadflow.schedule;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EASchedule;
-import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMailService;
@@ -48,12 +47,6 @@ public class ATask extends Task {
      */
     @Autowired
     protected AMailService mailService;
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    protected LogService logger;
 
     /**
      * Property usata da Daemonxxx <br>
