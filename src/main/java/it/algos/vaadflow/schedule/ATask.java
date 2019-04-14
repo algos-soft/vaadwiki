@@ -80,7 +80,7 @@ public class ATask extends Task {
 
 
     public String getSchedule() {
-        return eaSchedule.getTag();
+        return eaSchedule.getPattern();
     }// end of method
 
 

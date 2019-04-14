@@ -193,6 +193,7 @@ public class BioViewList extends AttNazProfCatViewList {
         super.usaBottoneStatistiche = false;
         super.usaBottoneModulo = false;
         super.usaBottoneEdit = true;
+        super.isBottoneEditBefore = true;
         super.task = taskUpdate;
         super.codeFlagDownload = USA_DAEMON_BIO;
         super.codeLastDownload = LAST_DOWNLOAD_BIO;
