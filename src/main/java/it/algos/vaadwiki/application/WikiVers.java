@@ -67,22 +67,22 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo",true);
+            creaPrefBool(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo",false);
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo",true);
+            creaPrefBool(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo",false);
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo",true);
+            creaPrefBool(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo",false);
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo",true);
+            creaPrefBool(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo",false);
         }// fine del blocco if
 
         //--creata una nuova preferenza

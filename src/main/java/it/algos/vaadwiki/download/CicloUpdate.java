@@ -69,7 +69,7 @@ public class CicloUpdate extends ABioService {
     public DownloadResult esegue() {
         DownloadResult result = new DownloadResult(pref.getStr(CAT_BIO));
         long inizio;
-        String nomeCategoria = pref.getStr(CAT_BIO);
+        String message = "";
         ArrayList<String> vociBio;
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
@@ -91,13 +91,19 @@ public class CicloUpdate extends ABioService {
         result.setVociDaCreare(appContext.getBean(AQueryCat.class, result.getNomeCategoria()).urlRequestTitle());
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             if (result.getNumVociCategoria() == 0) {
-                log.warn("Numero errato di voci sul server");
+                message = "Numero errato di voci sul server";
+                log.warn(message);
+                logger.warning("Download - " + message);
             }// end of if cycle
             if (result.getVociDaCreare() == null) {
-                log.warn("Non riesco a leggere le voci dal server. Forse non sono loggato come bot");
+                message = "Non riesco a leggere le voci dal server. Forse non sono loggato come bot";
+                log.warn(message);
+                logger.warning("Download - " + message);
             }// end of if cycle
             if (result.getNumVociCategoria() != result.getVociDaCreare().size()) {
-                log.warn("Le voci della categoria non coincidono: sul server ce ne sono " + text.format(result.getNomeCategoria()) + " e ne ha recuperate " + text.format(result.getVociDaCreare().size()));
+                message = "Le voci della categoria non coincidono: sul server ce ne sono " + text.format(result.getNumVociCategoria()) + " e ne ha recuperate " + text.format(result.getVociDaCreare().size());
+                log.warn(message);
+                logger.warning("Download - " + message);
             }// end of if cycle
         }// end of if cycle
 
