@@ -58,12 +58,6 @@ public abstract class AService extends AbstractService implements IAService {
 
     private final static int SIZE = 500;
 
-//    /**
-//     * Inietta da Spring come 'session'
-//     */
-//    @Autowired
-//    public ALogin login2;
-
     //--il modello-dati specifico viene regolato dalla sottoclasse nel costruttore
     public Class<? extends AEntity> entityClass;
 
@@ -136,42 +130,6 @@ public abstract class AService extends AbstractService implements IAService {
     public int count() {
         return mongo.count(entityClass);
     }// end of method
-
-
-//    /**
-//     * Returns the number of entities available for the current company
-//     *
-//     * @return the number of selected entities
-//     */
-//    @Override
-//    public int countByCompany() {
-////        Company company = null;
-////
-////        if (login != null) {
-////            company = login.getCompany();
-////        }// end of if cycle
-//
-//        return countByCompany(company);
-//    }// end of method
-
-
-//    /**
-//     * Returns the number of entities available for the company
-//     *
-//     * @return the number of selected entities
-//     */
-//    @Override
-//    public int countByCompany(Company company) {
-//        Long numRecords = 0L;
-//        Query query = null;
-//
-//        if (company != null) {
-//            query = new Query(Criteria.where("id").regex("^" + company.getCode()));
-//            numRecords = mongo.count(query, entityClass);
-//        }// end of if cycle
-//
-//        return numRecords.intValue();
-//    }// end of method
 
 
     /**
@@ -405,15 +363,9 @@ public abstract class AService extends AbstractService implements IAService {
     public List<? extends AEntity> findFilter(String filter) {
         List<? extends AEntity> lista = null;
         String normalizedFilter = filter.toLowerCase();
-//        boolean appUsaCompany = pref.isBool(EAPreferenza.usaCompany.getCode());
         boolean entityUsaCompanyObbligatoria = annotation.getCompanyRequired(entityClass) == EACompanyRequired.obbligatoria;
         boolean entityUsaCompanyFacoltativa = annotation.getCompanyRequired(entityClass) == EACompanyRequired.facoltativa;
-//        boolean entityUsaCompany = ();
         boolean mancaCompany = mancaCompanyNecessaria();
-//        Company companyLoggata = login.getCompany();
-//        boolean nonEsisteCompany = companyLoggata == null;
-//        boolean notDeveloper = !login.isDeveloper();
-//        String companyCode = companyLoggata != null ? companyLoggata.getCode() : "";
 
         if (mancaCompany) {
             return lista;
@@ -423,8 +375,6 @@ public abstract class AService extends AbstractService implements IAService {
             if (entityUsaCompanyObbligatoria) {
                 lista = findAll();
                 lista = lista.stream()
-//                        .filter(entity -> ((ACEntity) entity).company != null)
-//                        .filter(entity -> ((ACEntity) entity).company.getCode().equals(companyCode))
                         .filter(entity -> {
                             if (isEsisteEntityKeyUnica(entity)) {
                                 return getKeyUnica(entity).toLowerCase().startsWith(normalizedFilter);
@@ -447,15 +397,7 @@ public abstract class AService extends AbstractService implements IAService {
                     lista = lista.stream()
                             .filter(entity -> {
                                 boolean status = true;
-//                                boolean esisteCompany = ((ACEntity) entity).company != null;
-//                                if (esisteCompany) {
-//                                    status = ((ACEntity) entity).company.getCode().equals(companyCode);
-//                                } else {
-//                                    status = companyCode.equals("");
-//                                }// end of if/else cycle
-
                                 return status;
-//                            return ((ACEntity) entity).company != null && ((ACEntity) entity).company.getCode().equals(company.getCode());
                             })
                             .filter(entity -> {
                                 if (isEsisteEntityKeyUnica(entity)) {
@@ -513,15 +455,7 @@ public abstract class AService extends AbstractService implements IAService {
 
     public boolean mancaCompanyNecessaria() {
         boolean status = false;
-//        boolean appUsaCompany = pref.isBool(EAPreferenzxa.usaCompany.getCode());
         boolean entityUsaCompany = annotation.getCompanyRequired(entityClass) == EACompanyRequired.obbligatoria;
-//        Company company = login.getCompany();
-//        boolean nonEsisteCompany = company == null;
-//        boolean notDeveloper = !login.isDeveloper();
-
-//        if (appUsaCompany && entityUsaCompany && nonEsisteCompany) {
-//            status = true;
-//        }// end of if cycle
 
         return status;
     }// end of method
@@ -723,76 +657,19 @@ public abstract class AService extends AbstractService implements IAService {
         AEntity savedBean = null;
         Object obj = null;
 
-//        EACompanyRequired tableCompanyRequired = annotation.getCompanyRequired(modifiedBean.getClass());
-//        Map mappa = null;
-//        boolean nuovaEntity = oldBean == null || text.isEmpty(modifiedBean.id);
-//
-//        //--opportunità di controllare (per le nuove schede) che la key unica non esista già.
-//        if (nuovaEntity) {
-//            if (isEsisteEntityKeyUnica(modifiedBean)) {
-//                Notification.show("Nuova scheda", DuplicateException.MESSAGE, Notification.Type.ERROR_MESSAGE);
-//                log.error("Ha cercato di salvare una entity già esistente, ma unica");
-//                return null;
-//            }// end of if cycle
-//        }// end of if cycle
-//
         //--opportunità di usare una idKey specifica
         if (text.isEmpty(modifiedBean.id)) {
             creaIdKeySpecifica(modifiedBean);
         }// end of if cycle
-//
-//        //--inserisce il valore della data attuale per una nuova scheda
-//        if (modifiedBean.creazione == null) {
-//            modifiedBean.creazione = LocalDateTime.now();
-//        }// end of if cycle
-//
-//        // --inserisce il valore della data attuale per la modifica di una scheda
-//        modifiedBean.modifica = LocalDateTime.now();
-//
-//        //--Controlla se l'applicazione usa le company2
-//        if (AlgosApp.USE_MULTI_COMPANY) {
-//            switch (tableCompanyRequired) {
-//                case nonUsata:
-//                    savedBean = (AEntity) repository.save(modifiedBean);
-//                    break;
-//                case facoltativa:
-//                    savedBean = (AEntity) repository.save(modifiedBean);
-//                    break;
-//                case obbligatoria:
-//                    try { // prova ad eseguire il codice
-//                        if (checkCompany(modifiedBean, false)) {
-//                            savedBean = (AEntity) repository.save(modifiedBean);
-//                        } else {
-//                            log.warn("Entity non creata perché manca la Company (obbligatoria)");
-//                            savedBean = null;
-//                        }// end of if/else cycle
-//                    } catch (Exception unErrore) { // intercetta l'errore
-//                        log.error(unErrore.toString());
-//                    }// fine del blocco try-catch
-//                    break;
-//                default:
-//                    log.warn("Switch - caso non definito");
-//                    savedBean = (AEntity) repository.save(modifiedBean);
-//                    break;
-//            } // end of switch statement
-//        } else {
-//            savedBean = (AEntity) repository.save(modifiedBean);
-//        }// end of if/else cycle
-//
-//        if (!modifiedBean.getClass().getSimpleName().equals("Log")) {
-//            if (nuovaEntity) {
-//                logNewBean(modifiedBean);
-//            } else {
-//                mappa = chekDifferences(oldBean, modifiedBean);
-//                logDifferences(mappa, modifiedBean);
-//            }// end of if/else cycle
-//        }// end of if cycle
-//
-//        return savedBean;
 
         //--controlla l'integrità dei dati, elaborati dalle sottoclassi nei metodi beforeSave()
         if (modifiedBean.id == null || !modifiedBean.id.equals(FlowCost.STOP_SAVE)) {
-            obj = repository.save(modifiedBean);
+            try { // prova ad eseguire il codice
+                obj = repository.save(modifiedBean);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+                Notification.show("La scheda non è stata registrata", DURATA, Notification.Position.BOTTOM_START);
+            }// fine del blocco try-catch
         }// end of if cycle
 
         if (obj != null && obj instanceof AEntity) {
@@ -800,6 +677,44 @@ public abstract class AService extends AbstractService implements IAService {
         }// end of if cycle
 
         return savedBean;
+    }// end of method
+
+
+    /**
+     * Proviene da Lista (quasi sempre)
+     * Primo ingresso dopo il click sul bottone <br>
+     */
+    public AEntity save(AEntity entityBean, EAOperation operation) {
+        AEntity entitySaved = null;
+        entityBean = this.beforeSave(entityBean, operation);
+        switch (operation) {
+            case addNew:
+                if (this.isEsisteEntityKeyUnica(entityBean)) {
+                    try { // prova ad eseguire il codice
+                        Notification.show(entityBean + " non è stata registrata, perché esisteva già con lo stesso code ", 3000, Notification.Position.BOTTOM_START);
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
+                } else {
+                    entitySaved = this.save(entityBean);
+                    try { // prova ad eseguire il codice
+                        Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
+                }// end of if/else cycle
+                break;
+            case edit:
+            case editDaLink:
+                entitySaved = this.save(entityBean);
+                Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);
+                break;
+            default:
+                log.warn("Switch - caso non definito");
+                break;
+        } // end of switch statement
+
+        return entitySaved;
     }// end of method
 
 
@@ -833,12 +748,6 @@ public abstract class AService extends AbstractService implements IAService {
      * @param newEntityBean nuova da creare
      */
     public boolean isEsisteEntityKeyUnica(AEntity newEntityBean) {
-//        String keyID = getKeyUnica(newEntityBean);
-//        if (text.isValid(keyID)) {
-//            return findById(keyID) != null;
-//        } else {
-//            return false;
-//        }// end of if/else cycle
         return isEsisteByKeyUnica(getKeyUnica(newEntityBean));
     }// end of method
 
@@ -971,7 +880,7 @@ public abstract class AService extends AbstractService implements IAService {
         Company company = getCompany(entityBean);
 
         if (company != null) {
-//            code = company.getCode();
+            code = company.getCode();
         }// end of if cycle
 
         return code;
@@ -982,36 +891,12 @@ public abstract class AService extends AbstractService implements IAService {
         Company company = null;
 
         if (entityBean instanceof ACEntity) {
-//            company = ((ACEntity) entityBean).getCompany();
         } else {
             company = getCompany();
         }// end of if/else cycle
 
         return company;
     }// end of method
-
-
-//    /**
-//     * Property unica (se esiste) <br>
-//     * <p>
-//     * Se esiste la property 'code', utilizza il valore di questa property <br>
-//     * Altrimenti, se esiste la property 'descrizione', utilizza il valore di questa property <br>
-//     * Altrimenti, se esiste un metodo sovrascritto nella sottoclasse concreta, utilizza quello <br>
-//     * Altrimenti, restituisce un valore vuoto <br>
-//     */
-//    public String getPropertyUnica(AEntity entityBean) {
-//        String propertyUnica = "";
-//
-//        if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-//            propertyUnica = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_CODE);
-//        } else {
-//            if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
-//                propertyUnica = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_DESCRIZIONE);
-//            }// end of if cycle
-//        }// end of if/else cycle
-//
-//        return propertyUnica;
-//    }// end of method
 
 
     /**
@@ -1021,42 +906,6 @@ public abstract class AService extends AbstractService implements IAService {
      * Incrementa di uno il risultato <br>
      */
     public int getNewOrdine() {
-//        int ordine = 0;
-//        AEntity entityBean = null;
-//        Sort sort;
-//        List lista = null;
-//        Field field;
-//        Object value;
-//
-//        if (!reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
-//            return 0;
-//        }// end of if/else cycle
-//
-//        sort = new Sort(Sort.Direction.DESC, FIELD_NAME_ORDINE);
-//        if (usaCompany()) {
-//            lista = findAllByCompany( sort);
-//        } else {
-//            lista = findAll( sort);
-//        }// end of if/else cycle
-//
-//        if (array.isValid(lista)) {
-//            entityBean = (AEntity) lista.get(0);
-//        }// end of if cycle
-//
-//        if (entityBean != null) {
-//            field = reflection.getField(entityClass, FIELD_NAME_ORDINE);
-//            try { // prova ad eseguire il codice
-//                value = field.get(entityBean);
-//                if (value instanceof Integer) {
-//                    ordine = (Integer) value;
-//                }// end of if cycle
-//            } catch (Exception unErrore) { // intercetta l'errore
-//                log.error(unErrore.toString());
-//            }// fine del blocco try-catch
-//        }// end of if cycle
-//
-//        return ordine + 1;
-//
         return mongo.getNewOrdine(entityClass);
     }// end of method
 
@@ -1075,23 +924,14 @@ public abstract class AService extends AbstractService implements IAService {
         ArrayList<? extends AEntity> listAllEntities = null;
         Company company = null;
         ACEntity companyEntity;
-        String companyCode;
-
-//        if (login != null) {
-//            company = login.getCompany();
-//        }// end of if cycle
 
         if (company != null) {
-//            companyCode = company.getCode();
             listAllEntities = findAll(sort);
             if (array.isValid(listAllEntities)) {
                 listByCompany = new ArrayList<>();
                 for (AEntity entity : listAllEntities) {
                     if (entity instanceof ACEntity) {
                         companyEntity = (ACEntity) entity;
-//                        if (companyEntity.getCompany().getCode().equals(companyCode)) {
-//                            listByCompany.add(entity);
-//                        }// end of if cycle
                     }// end of if cycle
                 }// end of for cycle
             }// end of if cycle
@@ -1099,107 +939,6 @@ public abstract class AService extends AbstractService implements IAService {
 
         return listByCompany;
     }// end of method
-
-
-//    public void logNewBean(AEntity modifiedBean) {
-//        String note;
-//        String clazz = text.primaMaiuscola(modifiedBean.getClass().getSimpleName());
-//
-//        note = "";
-//        note += clazz;
-//        note += ": ";
-//        note += modifiedBean;
-//
-//        if (AlgosApp.SETUP_TIME) {
-//            logger.logSetup(modifiedBean, note);
-//        } else {
-//            logger.logNew(modifiedBean, note);
-//        }// end of if/else cycle
-//    }// end of method
-
-
-//    public void logDifferences(Map<String, String> mappa, AEntity modifiedBean) {
-//        String note;
-//        String aCapo = "\n";
-//        String clazz = text.primaMaiuscola(modifiedBean.getClass().getSimpleName());
-//
-//        for (String publicFieldName : mappa.keySet()) {
-//            note = "";
-//            note += clazz;
-//            note += ": ";
-//            note += modifiedBean;
-//            note += aCapo;
-//            note += "Property: ";
-//            note += text.primaMaiuscola(publicFieldName);
-//            note += aCapo;
-//            note += mappa.get(publicFieldName);
-//
-//            if (AlgosApp.SETUP_TIME) {
-//                logger.logSetup(modifiedBean, note);
-//            } else {
-//                logger.logEdit(modifiedBean, note);
-//            }// end of if/else cycle
-//        }// end of for cycle
-//    }// end of method
-
-
-//    protected Map<String, String> chekDifferences(AEntity oldBean, AEntity modifiedBean) {
-//        return chekDifferences(oldBean, modifiedBean, (EAPrefType) null);
-//    }// end of method
-
-
-//    protected Map<String, String> chekDifferences(AEntity oldBean, AEntity modifiedBean, EAPrefType type) {
-//        Map<String, String> mappa = new LinkedHashMap();
-//        List<String> listaNomi = reflection.getAllFieldsNameNoCrono(oldBean.getClass());
-//        Object oldValue;
-//        Object newValue;
-//        String descrizione = "";
-//
-//        for (String publicFieldName : listaNomi) {
-//            oldValue = reflection.getPropertyValue(oldBean, publicFieldName);
-//            newValue = reflection.getPropertyValue(modifiedBean, publicFieldName);
-//            descrizione = text.getModifiche(oldValue, newValue, type);
-//            if (text.isValid(descrizione)) {
-//                mappa.put(publicFieldName, descrizione);
-//            }// end of if cycle
-//        }// end of for cycle
-//
-//        return mappa;
-//    }// end of method
-
-
-//    /**
-//     * Controlla che la entity estenda ACompanyEntity
-//     * Se manca la company, cerca di usare quella del login (se esiste)
-//     * Se la campany manca ancora, lancia l'eccezione
-//     * //     * Controlla che la gestione della chiave unica sia soddisfatta
-//     *
-//     * @param entity da salvare
-//     */
-//    @Deprecated
-//    private boolean checkCompany(AEntity entity, boolean usaCodeCompanyUnico) throws Exception {
-//        ACEntity companyEntity;
-//        Company company2;
-//        String codeCompanyUnico;
-//
-//        if (entity instanceof ACEntity) {
-//            companyEntity = (ACEntity) entity;
-//            company2 = companyEntity.getCompany();
-//        } else {
-//            throw new NotCompanyEntityException(entityClass);
-//        }// end of if/else cycle
-//
-//        if (company2 == null) {
-////            company2 = LibSession.getCompany();@todo rimettere
-////            companyEntity.setCompany(company2);
-//        }// end of if cycle
-//
-//        if (companyEntity.getCompany() == null) {
-//            throw new NullCompanyException();
-//        }// end of if cycle
-//
-//        return true;
-//    }// end of method
 
 
     /**
@@ -1303,28 +1042,6 @@ public abstract class AService extends AbstractService implements IAService {
     }// end of method
 
 
-    //    public void logDeleteBean(AEntity deletedBean) {
-//        String note;
-//        String clazz = text.primaMaiuscola(deletedBean.getClass().getSimpleName());
-//
-//        note = "";
-//        note += clazz;
-//        note += ": ";
-//        note += deletedBean;
-//
-//        logger.logDelete(deletedBean, note);
-//    }// end of method
-
-//    /**
-//     * Deletes all entities of the collection.
-//     */
-//    @Override
-//    public boolean deleteAll() {
-//        repository.deleteAll();
-//        return repository.count() == 0;
-//    }// end of method
-
-
     /**
      * Metodo invocato da ABoot (o da una sua sottoclasse) <br>
      * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo per il developer) <br>
@@ -1358,33 +1075,6 @@ public abstract class AService extends AbstractService implements IAService {
     public int reset() {
         this.deleteAll();
         return 0;
-    }// end of method
-
-
-    /**
-     * Importazione di dati <br>
-     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
-     *
-     * @return true se sono stati importati correttamente
-     */
-    public boolean importa() {
-        this.deleteAll();
-        return false;
-    }// end of method
-
-
-    /**
-     * Importazione di dati <br>
-     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
-     *
-     * @param company di riferimento
-     *
-     * @return true se sono stati importati correttamente
-     */
-    @Override
-    public boolean importa(Company company) {
-        this.deleteAll();
-        return false;
     }// end of method
 
 

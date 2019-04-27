@@ -42,6 +42,7 @@ public enum EAPreferenza {
     usaMenu(FlowCost.USA_MENU, "Tipo di menu in uso", EAPrefType.string, EAMenu.flowing.toString()),
     textButtonSearch(FlowCost.FLAG_TEXT_SEARCH, "Testo del bottone Search", EAPrefType.string, FlowCost.BOT_SEARCH),
     textButtonNew(FlowCost.FLAG_TEXT_NEW, "Testo del bottone New", EAPrefType.string, FlowCost.BOT_CREATE),
+    showAccount(FlowCost.SHOW_ACCOUNT_ON_MENU, "Mostra l'account nella barra di menu", EAPrefType.bool, true),
     ;
 
 

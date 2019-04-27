@@ -359,6 +359,20 @@ public class ADateService extends AbstractService {
 
 
     /**
+     * Restituisce la data attuale completa di tempo
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getTime() {
+        return getTime(LocalDateTime.now());
+    }// end of method
+
+
+    /**
      * Restituisce la data completa di tempo
      * <p>
      * Returns a string representation of the date <br>
@@ -881,11 +895,6 @@ public class ADateService extends AbstractService {
         final int taglioBisestile = 60;
         String tag;
         String tagUno;
-
-//        //--patch per febbraio
-//        if (numMese == 2) {
-//            giorniDelMese++;
-//        }// fine del blocco if
 
         for (int k = 1; k <= giorniDelMese; k++) {
             progAnno++;

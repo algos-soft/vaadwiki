@@ -211,7 +211,7 @@ public class PersonService extends AService {
      *                         con inserimento del solo ruolo 'user' (prima del 'save') se la lista è nulla
      *                         lista modificabile solo da developer ed admin
      * @param mail             posta elettronica (facoltativo)
-     * @param locked           flag locked (facoltativo, di default false)
+     * @param enabled          flag enabled (facoltativo, di default true)
      * @param usaSuperClasse   (transient) per utilizzare le properties di Security della superclasse Utente (facoltativo)
      *
      * @return la nuova entity appena creata (non salvata)
@@ -226,7 +226,7 @@ public class PersonService extends AService {
             String passwordInChiaro,
             List<Role> ruoli,
             String mail,
-            boolean locked,
+            boolean enabled,
             boolean usaSuperClasse) {
         Person entity = null;
         Utente entityDellaSuperClasseUtente = null;
@@ -240,7 +240,7 @@ public class PersonService extends AService {
         //--se non usa la security, utilizza il metodo builderPerson
         if (usaSuperClasse && pref.isBool(EAPreferenza.usaSecurity.getCode())) {
             //--prima viene creata una entity di Utente, usando le regolazioni automatiche di quella superclasse.
-            entityDellaSuperClasseUtente = utenteService.newEntity(company, userName, passwordInChiaro, ruoli, mail, locked);
+            entityDellaSuperClasseUtente = utenteService.newEntity(company, userName, passwordInChiaro, ruoli, mail, enabled);
 
             //--poi vengono ricopiati i valori in Persona
             //--casting dalla superclasse alla classe attuale

@@ -12,3 +12,5 @@ button.addEventListener("click",
 
 
 icon.getElement().getClassList().add("rosso");
+iconButton.getElement().setAttribute("style", "color: verde");
+label.getStyle().set("font-size","small");

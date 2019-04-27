@@ -24,7 +24,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_DEV;
  */
 @Route(value = TAG_DEV)
 @Qualifier(TAG_DEV)
-//@AIView(roleTypeVisibility = EARoleType.developer)
+@AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
 public class DeveloperView extends VerticalLayout {
 

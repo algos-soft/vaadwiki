@@ -8,9 +8,12 @@ import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.shared.ui.LoadMode;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.modules.preferenza.EAPreferenza;
+import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.IAView;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +37,18 @@ import java.util.Map;
 @Slf4j
 public class AFlowingcodeAppLayoutMenu extends AMenu {
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected PreferenzaService pref;
+
+
     private AppLayout appLayout;
 
-    private ArrayList<MenuItem> listaMenu;
+    private ArrayList<MenuItem> menuButtons;
+
+    private ArrayList<MenuItem> toolBarButtons;
 
 
     /**
@@ -54,8 +66,9 @@ public class AFlowingcodeAppLayoutMenu extends AMenu {
      */
     @Override
     protected void inizia() {
+        menuButtons = new ArrayList<>();
+        toolBarButtons = new ArrayList<MenuItem>();
         appLayout = new AppLayout(null, createAvatarComponent(), FlowCost.LAYOUT_TITLE);
-        listaMenu = new ArrayList<>();
     }// end of method
 
 
@@ -81,8 +94,9 @@ public class AFlowingcodeAppLayoutMenu extends AMenu {
 
         matrice = listaSubMenuDev.toArray(new MenuItem[listaSubMenuDev.size()]);
         developerItem = new MenuItem("Developer", "build", matrice);
-        listaMenu.add(developerItem);
+        menuButtons.add(developerItem);
     }// end of method
+
 
     /**
      * Eventuali item di menu, se collegato come admin
@@ -102,8 +116,9 @@ public class AFlowingcodeAppLayoutMenu extends AMenu {
 
         matrice = listaSubMenuAdmin.toArray(new MenuItem[listaSubMenuAdmin.size()]);
         adminItem = new MenuItem("Admin", "build", matrice);
-        listaMenu.add(adminItem);
+        menuButtons.add(adminItem);
     }// end of method
+
 
     /**
      * Crea i menu crono, visibili solo per il developer <br>
@@ -132,11 +147,40 @@ public class AFlowingcodeAppLayoutMenu extends AMenu {
 
     /**
      * Item di menu logout sempre presente
+     * Sia nel menu laterale sia nella toolBar superiore
      */
     protected void creaMenuLogout() {
         MenuItem item = new MenuItem("Logout", "exit-to-app", () -> goTo("logout"));
-        listaMenu.add(item);
-        appLayout.setToolbarIconButtons(item);
+        menuButtons.add(item);
+
+        if (pref.isBool(EAPreferenza.showAccount.getCode())) {
+            toolBarButtons.add(new MenuItem("Account", "vaadin:user", () -> apriAccount()));
+        }// end of if cycle
+
+        toolBarButtons.add(item);
+        appLayout.setToolbarIconButtons(getMatrice(toolBarButtons));
+    }// end of method
+
+
+    public MenuItem[] getMatrice(ArrayList<MenuItem> toolBarButtons) {
+        MenuItem[] menuItemMatrice;
+
+        if (array.isValid(toolBarButtons)) {
+            menuItemMatrice = new MenuItem[toolBarButtons.size()];
+
+            for (int k = 0; k < toolBarButtons.size(); k++) {
+                menuItemMatrice[k] = toolBarButtons.get(k);
+            }// end of for cycle
+        } else {
+            menuItemMatrice = new MenuItem[0];
+        }// end of if/else cycle
+
+        return menuItemMatrice;
+    }// end of method
+
+
+    protected void apriAccount() {
+        Notification.show("Modifica account");
     }// end of method
 
 
@@ -145,7 +189,7 @@ public class AFlowingcodeAppLayoutMenu extends AMenu {
      */
     @Override
     protected void fixFinali() {
-        appLayout.setMenuItems(listaMenu.toArray(new MenuItem[listaMenu.size()]));
+        appLayout.setMenuItems(menuButtons.toArray(new MenuItem[menuButtons.size()]));
     }// end of method
 
 
@@ -170,7 +214,7 @@ public class AFlowingcodeAppLayoutMenu extends AMenu {
     @Override
     protected void addItem(Class<? extends AViewList> viewClazz) {
         MenuItem item = creaItem(viewClazz);
-        listaMenu.add(item);
+        menuButtons.add(item);
     }// end of method
 
 
@@ -184,11 +228,12 @@ public class AFlowingcodeAppLayoutMenu extends AMenu {
         Image i = new Image("/frontend/images/avatar.png", "avatar");
         i.getElement().setAttribute("style", "width: 60px; margin-top:10px");
 
-        if (login != null && login.getUtente() != null) {
-            container.add(i, new H5(login.getUtente().getUsername()));
-        } else {
-            container.add(i);
-        }// end of if/else cycle
+        //@todo per adesso non lo uso
+//        if (login != null && login.getUtente() != null) {
+//            container.add(i, new H5(login.getUtente().getUsername()));
+//        } else {
+//            container.add(i);
+//        }// end of if/else cycle
 
         return container;
     }// end of method
@@ -202,6 +247,11 @@ public class AFlowingcodeAppLayoutMenu extends AMenu {
 
     @Override
     public Component getComp() {
+        return appLayout;
+    }// end of method
+
+
+    public AppLayout getAppLayoutFlowing() {
         return appLayout;
     }// end of method
 

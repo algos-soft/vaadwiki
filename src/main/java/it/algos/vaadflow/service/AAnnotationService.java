@@ -10,6 +10,7 @@ import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.IAView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
 
@@ -312,6 +313,22 @@ public class AAnnotationService extends AbstractService {
     public NotNull getNotNull(final Field reflectionJavaField) {
         if (reflectionJavaField != null) {
             return reflectionJavaField.getAnnotation(NotNull.class);
+        } else {
+            return null;
+        }// end of if/else cycle
+    }// end of method
+
+
+    /**
+     * Get the specific annotation of the field.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the Annotation for the specific field
+     */
+    public Indexed getUnique(final Field reflectionJavaField) {
+        if (reflectionJavaField != null) {
+            return reflectionJavaField.getAnnotation(Indexed.class);
         } else {
             return null;
         }// end of if/else cycle
@@ -1222,6 +1239,26 @@ public class AAnnotationService extends AbstractService {
      */
     public boolean isNotNull(Field reflectionJavaField) {
         return getNotNull(reflectionJavaField) != null;
+    }// end of method
+
+
+    /**
+     * Get the status required of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return status of field
+     */
+    public boolean isUnique(Field reflectionJavaField) {
+        boolean status = false;
+        Indexed annotation = this.getUnique(reflectionJavaField);
+
+        if (annotation != null) {
+            status = annotation.unique();
+        }// end of if cycle
+
+        return status;
+
     }// end of method
 
 

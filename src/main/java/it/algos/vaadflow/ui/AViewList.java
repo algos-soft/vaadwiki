@@ -222,10 +222,15 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     protected Label headerGridHolder;
 
     /**
-     * Griglia principale (obbligatoria)
+     * Griglia principale senza paginazione
      * Alcune regolazioni da preferenza o da parametro (bottone Edit, ad esempio)
      */
     protected Grid<AEntity> grid;
+
+    /**
+     * PlaceHolder per la griglia con paginazione che deve essere dichiarata nella sottoclasse specifica
+     */
+    protected VerticalLayout gridHolder = new VerticalLayout();
 
     /**
      * Placeholder (eventuale) SOTTO la Grid <br>
@@ -278,12 +283,12 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     protected boolean usaCaption;
 
     /**
-     * Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente false.
+     * Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
      */
     protected boolean usaBottoneEdit;
 
     /**
-     * Flag di preferenza posizionare il bottone Edit come prima colonna. Normalmente false.
+     * Flag di preferenza posizionare il bottone Edit come prima colonna. Normalmente true.
      */
     protected boolean isBottoneEditBefore;
 
@@ -325,7 +330,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     /**
      * Flag di preferenza per aggiungere una caption di info sopra la grid. Normalmente false.
      */
-    protected boolean isEntityEmbadded;
+    protected boolean isEntityEmbedded;
 
     /**
      * Flag di preferenza se si caricano dati demo alla creazione. Resettabili. Normalmente false.
@@ -492,11 +497,11 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         //--Flag di preferenza per modificare la entity. Normalmente true.
         isEntityModificabile = true;
 
-        //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente false.
-        usaBottoneEdit = false;
+        //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
+        usaBottoneEdit = true;
 
-        //--Flag di preferenza posizionare il bottone Edit come prima colonna. Normalmente false
-        isBottoneEditBefore = false;
+        //--Flag di preferenza posizionare il bottone Edit come prima colonna. Normalmente true
+        isBottoneEditBefore = true;
 
         //--Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'.
         testoBottoneEdit = EDIT_NAME;
@@ -517,7 +522,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         isEntityAdmin = false;
 
         //--Flag di preferenza per aggiungere una caption di info sopra la grid. Normalmente false.
-        isEntityEmbadded = false;
+        isEntityEmbedded = false;
 
         //--Flag di preferenza se si caricano dati demo alla creazione. Resettabili. Normalmente false.
         isEntityUsaDatiDemo = false;
@@ -525,8 +530,8 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         //--Flag di preferenza per un refresh dopo aggiunta/modifica/cancellazione di una entity. Normalmente true.
         usaRefresh = true;
 
-        //--Flag di preferenza per limitare le righe della Grid e mostrarle a gruppi (pagine). Normalmente true.
-        usaPagination = true;
+        //--Flag di preferenza per limitare le righe della Grid e mostrarle a gruppi (pagine). Normalmente false.
+        usaPagination = false;
 
         //--Flag di preferenza per selezionare il numero di righe visibili della Grid. Normalmente limit = pref.getInt(FlowCost.MAX_RIGHE_GRID) .
         limit = pref.getInt(FlowCost.MAX_RIGHE_GRID);
@@ -561,15 +566,21 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             this.add(alertPlacehorder);
         }// end of if cycle
 
-        creaGrid();
+        if (usaPagination) {
+            creaGridPaginata();
+        } else {
+            creaGrid();
+        }// end of if/else cycle
+
         creaGridBottomLayout();
-        creaPaginationLayout();
+//        creaPaginationLayout();
         creaFooterLayout();
     }// end of method
 
 
     /**
-     * Costruisce la barra di menu <br>
+     * Costruisce la barra di menu e l'aggiunge alla UI <br>
+     * Lo standard è 'Flowingcode'
      */
     protected boolean creaMenuLayout() {
         IAMenu menu;
@@ -592,7 +603,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
                 case vaadin:
                     menu = StaticContextAccessor.getBean(AAppLayoutMenu.class);
                     this.add(new Label("."));
-                    this.add(menu.getAppLayout());
+                    this.add(((AFlowingcodeAppLayoutMenu) menu).getAppLayoutFlowing());
                     break;
                 default:
                     log.warn("Switch - caso non definito");
@@ -693,7 +704,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         alertPlacehorder.setSpacing(false);
         alertPlacehorder.setPadding(false);
 
-        if (isEntityDeveloper || isEntityAdmin || isEntityEmbadded || isEntityUsaDatiDemo) {
+        if (isEntityDeveloper || isEntityAdmin || isEntityEmbedded || isEntityUsaDatiDemo) {
             usaTopAlert = true;
         }// end of if cycle
 
@@ -706,17 +717,75 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
                 alertPlacehorder.add(new Label("Lista visibile solo perché sei collegato come admin. Gli utenti normali non la vedono."));
             }// end of if cycle
 
-            if (isEntityEmbadded) {
+            if (isEntityEmbedded) {
                 alertPlacehorder.add(new Label("Questa lista non dovrebbe mai essere usata direttamente (serve come test o per le sottoclassi specifiche)"));
                 alertPlacehorder.add(new Label("L'entity è 'embedded' nelle collezioni che la usano (no @Annotation property DbRef)"));
             }// end of if cycle
 
-            if (isEntityEmbadded || isEntityUsaDatiDemo) {
+            if (isEntityEmbedded || isEntityUsaDatiDemo) {
                 alertPlacehorder.add(new Label("Allo startup del programma, sono stati creati alcuni elementi di prova"));
             }// end of if cycle
         }// end of if cycle
 
         return alertPlacehorder.getComponentCount() > 0;
+    }// end of method
+
+
+    /**
+     * Crea il placeholder per la grid paginata (secondo il flag)
+     */
+    protected void creaGridPaginata() {
+        this.add(gridHolder);
+        this.setFlexGrow(1, gridHolder);
+        updateGridPaginata();
+    }// end of method
+
+
+    /**
+     * Prova a creare la grid paginata
+     * Deve essere sovrascritto
+     * Nella sottoclasse specifica vanno aggiunte le colonne che non si riesce ad aggiungere in automatico
+     * Componente grafico obbligatorio
+     * Costruisce la Grid con le colonne. Gli items vengono caricati in updateView()
+     * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto)
+     */
+    protected void updateGridPaginata() {
+    }// end of method
+
+
+    /**
+     * Regolazioni standard della gridPaginated
+     * Chiamato dalla sottoclasse
+     */
+    protected void gridPaginataBefore() {
+        //--Apre il dialog di detail
+        if (isBottoneEditBefore) {
+            this.addDetailDialog();
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Costruisce le colonne della grid paginata
+     * DEVE essere sovrascritto - Componente grafico obbligatorio
+     * Nella sottoclasse specifica vanno aggiunte le colonne che non si riesce ad aggiungere in automatico
+     */
+    protected void gridPaginataColumns() {
+    }// end of method
+
+
+    /**
+     * Regolazioni standard della gridPaginated
+     * Chiamato dalla sottoclasse
+     */
+    protected void gridPaginataAfter() {
+        //--Apre il dialog di detail
+        if (!isBottoneEditBefore) {
+            this.addDetailDialog();
+        }// end of if cycle
+
+        items = service != null ? service.findAll() : null;
+        fixGridHeader(getGridHeaderText());
     }// end of method
 
 
@@ -740,7 +809,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             try { // prova ad eseguire il codice
                 //--Costruisce la Grid SENZA creare automaticamente le colonne
                 //--Si possono così inserire colonne manuali prima e dopo di quelle automatiche
-                grid = new Grid(entityClazz);
+                grid = new Grid(entityClazz, false);
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
                 return;
@@ -749,11 +818,11 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             grid = new Grid();
         }// end of if/else cycle
 
-        //--@todo solo per la versione 10.0.5
-        //--@todo dalla versione 12.0.0, si può levare ed aggiungere 'false' come secondo parametro a new Grid(...,false)
-        for (Grid.Column column : grid.getColumns()) {
-            grid.removeColumn(column);
-        }// end of for cycle
+//        //--@todo solo per la versione 10.0.5
+//        //--@todo dalla versione 12.0.0, si può levare ed aggiungere 'false' come secondo parametro a new Grid(...,false)
+//        for (Grid.Column column : grid.getColumns()) {
+//            grid.removeColumn(column);
+//        }// end of for cycle
 
         //--Apre il dialog di detail
         if (isBottoneEditBefore) {
@@ -781,17 +850,16 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             this.addDetailDialog();
         }// end of if cycle
 
-        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        grid.setWidth("50em");
-        grid.setHeightByRows(true);
-        grid.addClassName("pippoz");
-        grid.getElement().setAttribute("theme", "row-dividers");
+        //--Regolazioni finali sulla grid e sulle colonne
+        this.fixLayout();
+
         layout.add(grid);
         this.add(layout);
         layout.setFlexGrow(1, grid);
         this.setFlexGrow(1, layout);
 
         grid.addSelectionListener(new SelectionListener<Grid<AEntity>, AEntity>() {
+
             @Override
             public void selectionChange(SelectionEvent<Grid<AEntity>, AEntity> selectionEvent) {
                 boolean enabled = selectionEvent != null && selectionEvent.getAllSelectedItems().size() > 0;
@@ -827,7 +895,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Header text
      */
     protected String getGridHeaderText() {
-        int numRecCollezione = service != null ? service.count() : 0;
+        int numRecCollezione = items.size();
         String filtro = text.format(items.size());
         String totale = text.format(numRecCollezione);
         String testo = entityClazz != null ? entityClazz.getSimpleName() + " - " : "";
@@ -878,6 +946,20 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
 
     /**
+     * Eventuali aggiustamenti finali al layout
+     * Regolazioni finali sulla grid e sulle colonne
+     * Sovrascritto
+     */
+    protected void fixLayout() {
+        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        grid.setWidth("60em");
+        grid.setHeightByRows(true);
+        grid.addClassName("pippoz");
+        grid.getElement().setAttribute("theme", "row-dividers");
+    }// end of method
+
+
+    /**
      * Apre il dialog di detail
      */
     protected void addDetailDialog() {
@@ -885,7 +967,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         if (usaBottoneEdit) {
             ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
             Grid.Column colonna = grid.addColumn(renderer);
-            colonna.setWidth("5em");
+            colonna.setWidth("6em");
             colonna.setFlexGrow(0);
         } else {
             EAOperation operation = isEntityModificabile ? EAOperation.edit : EAOperation.showOnly;
@@ -922,6 +1004,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     protected void routeVerso() {
     }// end of method
+
     /**
      * Navigazione verso un altra pagina
      */
@@ -977,52 +1060,52 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     }// end of method
 
 
-    /**
-     * Controlla la 'dimensione' della collezione <br>
-     * Se è inferiore alla 'soglia', non fa nulla <br>
-     * Se è superiore, costruisce un layout con freccia indietro, numero pagina, freccia avanti <br>
-     */
-    protected void creaPaginationLayout() {
-        if (!usaPagination) {
-            return;
-        }// end of if cycle
-        if (service == null) {
-            return;
-        }// end of if cycle
-
-        int numRecCollezione = service.count();
-        final String mess = "Gli elementi vengono mostrati divisi in pagine da " + limit + " elementi ciascuna. Con i bottoni (-) e (+) ci si muove avanti ed indietro, una pagina alla volta. Oppure si inserisce il numero della pagina desiderata.";
-
-        if (numRecCollezione < limit) {
-            isPagination = false;
-            return;
-        } else {
-            isPagination = true;
-        }// end of if/else cycle
-        offset = 0;
-
-        Button titleButton = new Button("Pagination");
-        titleButton.addClickListener(e -> Notification.show(mess, 6000, Notification.Position.BOTTOM_START));
-
-        minusButton = new Button("", new Icon("lumo", "minus"));
-        minusButton.addClickListener(e -> diminuiscePagination());
-        minusButton.setEnabled(false);
-
-        plusButton = new Button("", new Icon("lumo", "plus"));
-        plusButton.addClickListener(e -> aumentaPagination());
-
-        paginationField = new ATextField("");
-        paginationField.addValueChangeListener(e -> modificaPagination(e));
-        paginationField.setValue("1");
-        paginationField.setWidth("4em");
-
-        footerLayout = new HorizontalLayout();
-        footerLayout.add(titleButton);
-        footerLayout.add(minusButton);
-        footerLayout.add(paginationField);
-        footerLayout.add(plusButton);
-        this.add(footerLayout);
-    }// end of method
+//    /**
+//     * Controlla la 'dimensione' della collezione <br>
+//     * Se è inferiore alla 'soglia', non fa nulla <br>
+//     * Se è superiore, costruisce un layout con freccia indietro, numero pagina, freccia avanti <br>
+//     */
+//    protected void creaPaginationLayout() {
+//        if (!usaPagination) {
+//            return;
+//        }// end of if cycle
+//        if (service == null) {
+//            return;
+//        }// end of if cycle
+//
+//        int numRecCollezione = service.count();
+//        final String mess = "Gli elementi vengono mostrati divisi in pagine da " + limit + " elementi ciascuna. Con i bottoni (-) e (+) ci si muove avanti ed indietro, una pagina alla volta. Oppure si inserisce il numero della pagina desiderata.";
+//
+//        if (numRecCollezione < limit) {
+//            isPagination = false;
+//            return;
+//        } else {
+//            isPagination = true;
+//        }// end of if/else cycle
+//        offset = 0;
+//
+//        Button titleButton = new Button("Pagination");
+//        titleButton.addClickListener(e -> Notification.show(mess, 6000, Notification.Position.BOTTOM_START));
+//
+//        minusButton = new Button("", new Icon("lumo", "minus"));
+//        minusButton.addClickListener(e -> diminuiscePagination());
+//        minusButton.setEnabled(false);
+//
+//        plusButton = new Button("", new Icon("lumo", "plus"));
+//        plusButton.addClickListener(e -> aumentaPagination());
+//
+//        paginationField = new ATextField("");
+//        paginationField.addValueChangeListener(e -> modificaPagination(e));
+//        paginationField.setValue("1");
+//        paginationField.setWidth("4em");
+//
+//        footerLayout = new HorizontalLayout();
+//        footerLayout.add(titleButton);
+//        footerLayout.add(minusButton);
+//        footerLayout.add(paginationField);
+//        footerLayout.add(plusButton);
+//        this.add(footerLayout);
+//    }// end of method
 
 
     public void diminuiscePagination() {
@@ -1198,6 +1281,11 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         creaAlertLayout();
     }// end of method
 
+    /**
+     * Eventuale header text
+     */
+    protected void fixGridHeader(String messaggio) {
+    }// end of method
 
     /**
      * Opens the confirmation dialog before deleting all items.
@@ -1222,32 +1310,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Primo ingresso dopo il click sul bottone <br>
      */
     protected void save(AEntity entityBean, EAOperation operation) {
-        entityBean = service.beforeSave(entityBean, operation);
-        switch (operation) {
-            case addNew:
-                if (service.isEsisteEntityKeyUnica(entityBean)) {
-                    Notification.show(entityBean + " non è stata registrata, perché esisteva già con lo stesso code ", 3000, Notification.Position.BOTTOM_START);
-                } else {
-                    service.save(entityBean);
-                    updateView();
-                    Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);
-                }// end of if/else cycle
-                break;
-            case edit:
-            case editDaLink:
-                service.save(entityBean);
-                updateView();
-                Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);
-                break;
-            default:
-                log.warn("Switch - caso non definito");
-                break;
-        } // end of switch statement
-
-//        if (usaRefresh) {
-//            updateView();
-//        }// end of if cycle
-
+        if (service.save(entityBean, operation) != null) {
+            updateView();
+        }// end of if cycle
     }// end of method
 
 

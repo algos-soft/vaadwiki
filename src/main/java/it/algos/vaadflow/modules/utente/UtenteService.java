@@ -12,7 +12,6 @@ import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.Role;
 import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.service.AService;
-import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -186,7 +185,7 @@ public class UtenteService extends AService {
             company = companyService.findByKeyUnica(eaCompany.getCode());
         }// end of if cycle
 
-        return newEntity(company, userName, passwordInChiaro, ruoli, mail, false);
+        return newEntity(company, userName, passwordInChiaro, ruoli, mail, true);
     }// end of method
 
 
@@ -204,17 +203,17 @@ public class UtenteService extends AService {
      *                         con inserimento del solo ruolo 'user' (prima del 'save') se la lista è nulla
      *                         lista modificabile solo da developer ed admin
      * @param mail             posta elettronica (facoltativo)
-     * @param locked           flag locked (facoltativo, di default false)
+     * @param enabled          flag enabled (facoltativo, di default true)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Utente newEntity(Company company, String userName, String passwordInChiaro, List<Role> ruoli, String mail, boolean locked) {
+    public Utente newEntity(Company company, String userName, String passwordInChiaro, List<Role> ruoli, String mail, boolean enabled) {
         Utente entity = Utente.builderUtente()
                 .username(text.isValid(userName) ? userName : null)
                 .password(text.isValid(passwordInChiaro) ? passwordInChiaro : null)
                 .ruoli(ruoli != null ? ruoli : roleService.getUserRole())
                 .mail(text.isValid(mail) ? mail : null)
-                .enabled(locked)
+                .enabled(enabled)
                 .build();
         entity.company = company;
 

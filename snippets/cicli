@@ -7,3 +7,14 @@
 
         return lista;
     }// end of static method
+
+
+
+	// classic way, loop a Map
+	for (Map.Entry<String, String> entry : map.entrySet()) {
+		System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
+	}
+
+
+	        // Java 8, forEach and Lambda. recommend!
+            map.forEach((k, v) -> System.out.println("Key : " + k + " Value : " + v));

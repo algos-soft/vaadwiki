@@ -213,10 +213,10 @@ public class AColumnService extends AbstractService {
                     } catch (Exception unErrore) { // intercetta l'errore
                         log.error(unErrore.toString());
                     }// fine del blocco try-catch
-                    if (text.isValid(color)) {
+                    if (text.isValid(color) && icon != null) {
                         icon.getElement().getClassList().add(color);
                     }// end of if cycle
-                    return icon;
+                    return icon != null ? icon : new Label("");
                 }));//end of lambda expressions and anonymous inner class
                 break;
             case email:

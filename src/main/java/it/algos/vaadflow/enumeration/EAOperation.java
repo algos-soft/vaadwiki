@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Scope;
  * Delete is enabled when editing an already existing item.
  */
 public enum EAOperation {
-    addNew("Add New", "add", true, false),
+    addNew("New", "add", true, false),
     edit("Edit", "edit", true, true),
     editNoDelete("Edit", "edit", true, false),
     editDaLink("Edit", "edit", true, true),

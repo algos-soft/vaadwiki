@@ -1,6 +1,7 @@
 package it.algos.vaadflow.service;
 
-import it.algos.vaadflow.application.StaticContextAccessor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
 
@@ -16,6 +17,9 @@ import javax.annotation.PostConstruct;
  * I riferimenti sono 'public' per poterli usare con TestUnit <br>
  */
 public abstract class AbstractService {
+
+    @Autowired
+    public ApplicationContext appContext;
 
     /**
      * Service (pattern SINGLETON) recuperato come istanza dalla classe <br>
@@ -73,7 +77,7 @@ public abstract class AbstractService {
 
 
     @PostConstruct
-    protected  void postConstruct() {
+    protected void postConstruct() {
         this.annotation = AAnnotationService.getInstance();
         this.array = AArrayService.getInstance();
         this.column = AColumnService.getInstance();
@@ -88,7 +92,7 @@ public abstract class AbstractService {
     }// end of constructor
 
 
-    protected  void fixIncrociati() {
+    protected void fixIncrociati() {
         this.annotation.array = array;
         this.annotation.boot = boot;
         this.annotation.column = column;

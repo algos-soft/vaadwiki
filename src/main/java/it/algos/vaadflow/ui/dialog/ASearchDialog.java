@@ -134,7 +134,7 @@ public class ASearchDialog extends ADialog {
         //--Aggiunge il field ad una fieldMap, per recuperare i fields dal nome
         if (propertyNamesList != null) {
             for (String propertyName : propertyNamesList) {
-                propertyField = fieldService.create(null, ((AService) service).entityClass, propertyName);
+                propertyField = fieldService.create(null, null, ((AService) service).entityClass, propertyName);
                 if (propertyField != null) {
                     fieldMap.put(propertyName, propertyField);
                 }// end of if cycle

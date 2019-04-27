@@ -157,6 +157,10 @@ public class AFooter extends VerticalLayout {
         label = new Label(message);
         this.add(label);
 
+        label.getStyle().set("font-size","small");
+        label.getStyle().set("font-weight","bold");
+        label.getStyle().set("color","green");
+
         return label;
     }// end of method
 

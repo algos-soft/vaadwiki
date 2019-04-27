@@ -3,7 +3,6 @@ package it.algos.vaadflow.service;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
-import it.algos.vaadflow.modules.company.Company;
 import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
@@ -179,6 +178,11 @@ public interface IAService {
      */
     public AEntity save(AEntity oldBean, AEntity modifiedBean) throws Exception;
 
+    /**
+     * Proviene da Lista (quasi sempre)
+     * Primo ingresso dopo il click sul bottone <br>
+     */
+    public AEntity save(AEntity entityBean, EAOperation operation);
 
     /**
      * Costruisce una lista di nomi delle properties della Grid nell'ordine:
@@ -214,40 +218,6 @@ public interface IAService {
      * @return lista di nomi di properties
      */
     public List<String> getSearchPropertyNamesList(AContext context);
-
-
-//    /**
-//     * Fields visibili (e ordinati) nel Form
-//     * Sovrascrivibile
-//     * Il campo key ID normalmente non viene visualizzato
-//     * 1) Se questo metodo viene sovrascritto, si utilizza la lista della sottoclasse specifica (con o senza ID)
-//     * 2) Se la classe AEntity->@AIForm(fields = ...) prevede una lista specifica, usa quella lista (con o senza ID)
-//     * 3) Se non trova AEntity->@AIForm, usa tutti i campi della AEntity (senza ID)
-//     * 4) Se trova AEntity->@AIForm(showsID = true), questo viene aggiunto, indipendentemente dalla lista
-//     * 5) Vengono visualizzati anche i campi delle superclassi della classe AEntity
-//     * Ad esempio: company2 della classe ACompanyEntity
-//     *
-//     * @return lista di fields visibili nel Form
-//     */
-//    public List<Field> getFormFields();
-//
-//
-//    /**
-//     * Lista di bottoni presenti nella toolbar (footer) della view AList
-//     * Legge la enumeration indicata nella @Annotation della AEntity
-//     *
-//     * @return lista (type) di bottoni visibili nella toolbar della view AList
-//     */
-////    public List<EATypeButton> getListTypeButtons();
-//
-//
-//    /**
-//     * Lista di bottoni presenti nella toolbar (footer) della view AForm
-//     * Legge la enumeration indicata nella @Annotation della AEntity
-//     *
-//     * @return lista (type) di bottoni visibili nella toolbar della view AForm
-//     */
-////    public List<EATypeButton> getFormTypeButtons();
 
 
     /**
@@ -305,23 +275,6 @@ public interface IAService {
      */
     public int reset();
 
-    /**
-     * Importazione di dati <br>
-     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
-     *
-     * @return true se sono stati importati correttamente
-     */
-    public boolean importa();
-
-    /**
-     * Importazione di dati <br>
-     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
-     *
-     * @param company di riferimento
-     *
-     * @return true se sono stati importati correttamente
-     */
-    public boolean importa(Company company);
 
     /**
      * Recupera il context della session <br>

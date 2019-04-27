@@ -88,7 +88,7 @@ public class Person extends Utente {
     @Size(min = 4, max = 40)
     @Field("nome")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 20)
-    @AIColumn(name = "nome", widthEM = 7)
+    @AIColumn(name = "nome", widthEM = 8)
     public String nome;
 
     /**

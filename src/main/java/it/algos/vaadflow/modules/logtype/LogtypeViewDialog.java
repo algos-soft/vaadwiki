@@ -44,7 +44,7 @@ public class LogtypeViewDialog extends AViewDialog<Logtype> {
      * @param presenter per gestire la business logic del package
      */
     @Autowired
-    public LogtypeViewDialog(@Qualifier(TAG_LOG) IAPresenter presenter) {
+    public LogtypeViewDialog(@Qualifier(TAG_TYP) IAPresenter presenter) {
         super(presenter);
     }// end of Spring constructor
 

@@ -8,7 +8,6 @@ import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.AViewList;
-import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +77,7 @@ public class AddressViewList extends AViewList {
         super.usaSearchTextField = false;
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;
-        super.isEntityEmbadded = true;
+        super.isEntityEmbedded = true;
         super.isEntityDeveloper = true;
     }// end of method
 

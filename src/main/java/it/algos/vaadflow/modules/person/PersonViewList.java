@@ -9,7 +9,6 @@ import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadflow.ui.MainLayout;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -77,7 +76,7 @@ public class PersonViewList extends AViewList {
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;
         super.isEntityDeveloper = true;
-        super.isEntityEmbadded = true;
+        super.isEntityEmbedded = true;
     }// end of method
 
 }// end of class

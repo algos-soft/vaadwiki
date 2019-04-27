@@ -1,7 +1,6 @@
 package it.algos.vaadflow.service;
 
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
@@ -14,7 +13,9 @@ import it.algos.vaadflow.ui.fields.*;
 import it.algos.vaadflow.validator.AIntegerZeroValidator;
 import it.algos.vaadflow.validator.ALongZeroValidator;
 import it.algos.vaadflow.validator.AStringNullValidator;
+import it.algos.vaadflow.validator.AUniqueValidator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -44,6 +45,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class AFieldService extends AbstractService {
+
 
     /**
      * versione della classe per la serializzazione
@@ -86,11 +88,11 @@ public class AFieldService extends AbstractService {
      * @param binderClass  della Entity di riferimento
      * @param propertyName della property
      */
-    public AbstractField create(Binder binder, Class binderClass, String propertyName) {
+    public AbstractField create(ApplicationContext appContext, Binder binder, Class binderClass, String propertyName) {
         Field reflectionJavaField = reflection.getField(binderClass, propertyName);
 
         if (reflectionJavaField != null) {
-            return create(binder, reflectionJavaField);
+            return create(appContext, binder, reflectionJavaField);
         } else {
             return null;
         }// end of if/else cycle
@@ -104,18 +106,19 @@ public class AFieldService extends AbstractService {
      * @param binder              collegamento tra i fields e la entityBean
      * @param reflectionJavaField di riferimento per estrarre le Annotation
      */
-    public AbstractField create(Binder binder, Field reflectionJavaField) {
+    public AbstractField create(ApplicationContext appContext, Binder binder, Field reflectionJavaField) {
         AbstractField field = null;
         String fieldName = reflectionJavaField.getName();
 //        int minDefault = 3;
         Class clazz = null;
         EAFieldType type = annotation.getFormType(reflectionJavaField);
         boolean notNull;
+        boolean unique;
         String stringMessage = "Code must contain at least 3 printable characters";
         String intMessage = " deve contenere solo caratteri numerici";
         String messageNotNull = "";
         String mess = "";
-        StringLengthValidator stringValidator = null;
+        StringLengthValidator lengthValidator = null;
         StringToIntegerConverter integerConverter = null;
         StringToLongConverter longConverter = null;
         String message;
@@ -124,6 +127,7 @@ public class AFieldService extends AbstractService {
 
         clazz = annotation.getClazz(reflectionJavaField);
         notNull = annotation.isNotNull(reflectionJavaField);
+        unique = annotation.isUnique(reflectionJavaField);
         message = annotation.getMessage(reflectionJavaField);
         messageSize = annotation.getMessageSize(reflectionJavaField);
         messageNotNull = annotation.getMessageNull(reflectionJavaField);
@@ -139,6 +143,7 @@ public class AFieldService extends AbstractService {
         AStringNullValidator nullValidator = new AStringNullValidator(messageNotNull);
         AIntegerZeroValidator integerZeroValidator = new AIntegerZeroValidator();
         ALongZeroValidator longZeroValidator = new ALongZeroValidator();
+        AUniqueValidator uniqueValidator = null;
         String color = annotation.getFieldColor(reflectionJavaField);
 
         if (type == null) {
@@ -150,39 +155,71 @@ public class AFieldService extends AbstractService {
             return field;
         }// end of if cycle
 
+        lengthValidator = min > 0 ? new StringLengthValidator(messageSize, min, null) : null;
+        uniqueValidator = unique ? appContext.getBean(AUniqueValidator.class, reflectionJavaField.getDeclaringClass(), fieldName, caption) : null;
+
         switch (type) {
             case text:
                 field = new ATextField(caption);
-                if (notNull) {
-                    if (min > 0) {
-                        stringValidator = new StringLengthValidator(messageSize, min, null);
-                        if (binder != null) {
-                            binder
-                                    .forField(field)
-                                    .withValidator(nullValidator)
-                                    .withValidator(stringValidator)
-                                    .bind(fieldName);
-                        }// end of if cycle
+                if (binder != null) {
+                    if (notNull) {
+                        if (lengthValidator != null) {
+                            if (uniqueValidator != null) {
+                                binder
+                                        .forField(field)
+                                        .withValidator(nullValidator)
+                                        .withValidator(lengthValidator)
+                                        .withValidator(uniqueValidator)
+                                        .bind(fieldName);
+                            } else {
+                                binder
+                                        .forField(field)
+                                        .withValidator(nullValidator)
+                                        .withValidator(lengthValidator)
+                                        .bind(fieldName);
+                            }// end of if/else cycle
+                        } else {
+                            if (uniqueValidator != null) {
+                                binder
+                                        .forField(field)
+                                        .withValidator(nullValidator)
+                                        .withValidator(uniqueValidator)
+                                        .bind(fieldName);
+                            } else {
+                                binder
+                                        .forField(field)
+                                        .withValidator(nullValidator)
+                                        .bind(fieldName);
+                            }// end of if/else cycle
+                        }// end of if/else cycle
                     } else {
-                        if (binder != null) {
-                            binder
-                                    .forField(field)
-                                    .withValidator(nullValidator)
-                                    .bind(fieldName);
-                        }// end of if cycle
+                        if (lengthValidator != null) {
+                            if (uniqueValidator != null) {
+                                binder
+                                        .forField(field)
+                                        .withValidator(lengthValidator)
+                                        .withValidator(uniqueValidator)
+                                        .bind(fieldName);
+                            } else {
+                                binder
+                                        .forField(field)
+                                        .withValidator(lengthValidator)
+                                        .bind(fieldName);
+                            }// end of if/else cycle
+                        } else {
+                            if (uniqueValidator != null) {
+                                binder
+                                        .forField(field)
+                                        .withValidator(lengthValidator)
+                                        .bind(fieldName);
+                            } else {
+                                binder
+                                        .forField(field)
+                                        .bind(fieldName);
+                            }// end of if/else cycle
+                        }// end of if/else cycle
                     }// end of if/else cycle
-                } else {
-                    if (min > 0) {
-                        stringValidator = new StringLengthValidator(messageSize, min, null);
-                        if (binder != null) {
-                            binder.forField(field).withValidator(stringValidator).bind(fieldName);
-                        }// end of if cycle
-                    } else {
-                        if (binder != null) {
-                            binder.forField(field).bind(fieldName);
-                        }// end of if cycle
-                    }// end of if/else cycle
-                }// end of if/else cycle
+                }// end of if cycle
                 if (focus) {
                     ((ATextField) field).focus();
                 }// end of if cycle
