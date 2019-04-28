@@ -169,7 +169,7 @@ public class AFieldService extends AbstractService {
                                         .forField(field)
                                         .withValidator(nullValidator)
                                         .withValidator(lengthValidator)
-                                        .withValidator(uniqueValidator)
+//                                        .withValidator(uniqueValidator)
                                         .bind(fieldName);
                             } else {
                                 binder
@@ -183,7 +183,7 @@ public class AFieldService extends AbstractService {
                                 binder
                                         .forField(field)
                                         .withValidator(nullValidator)
-                                        .withValidator(uniqueValidator)
+//                                        .withValidator(uniqueValidator)
                                         .bind(fieldName);
                             } else {
                                 binder
@@ -198,7 +198,7 @@ public class AFieldService extends AbstractService {
                                 binder
                                         .forField(field)
                                         .withValidator(lengthValidator)
-                                        .withValidator(uniqueValidator)
+//                                        .withValidator(uniqueValidator)
                                         .bind(fieldName);
                             } else {
                                 binder
