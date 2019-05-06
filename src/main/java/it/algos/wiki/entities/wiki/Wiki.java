@@ -75,7 +75,7 @@ public class Wiki extends AEntity {
 //    //--mentre rimane il valore esatto del campo originario timestamp
 //    private Date letturaWiki;
 //
-//    //serve per le voci che sono state modificate sul server wiki rispetto alla versione sul database
+//    //serve per le pagine che sono state modificate sul server wiki rispetto alla versione sul database
 //    //si basa sul parametro lastrevid
 //    //per sicurezza è false (quindi all'inizio controllo tutto)
 //    private boolean allineata = false;

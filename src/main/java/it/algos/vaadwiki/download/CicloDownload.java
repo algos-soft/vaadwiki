@@ -39,8 +39,8 @@ public class CicloDownload extends ABioService {
      * Aggiorna le NAZIONALITA, con un download del modulo nazionalità
      * Aggiorna le PROFESSIONI, con un download del modulo professioni
      * <p>
-     * Recupera dal server wiki la lista delle voci della categoria
-     * Recupera dal server wiki il totale delle voci della categoria per un controllo
+     * Recupera dal server wiki la lista delle pagine della categoria
+     * Recupera dal server wiki il totale delle pagine della categoria per un controllo
      * <p>
      * Esegue un ciclo (NEW) di creazione di nuovi records esistenti sul server e mancanti nel database
      * <p>
@@ -67,28 +67,28 @@ public class CicloDownload extends ABioService {
         //--Download del modulo professione
         professioneService.download();
 
-        //--Recupera la lista delle voci della categoria dal server wiki
+        //--Recupera la lista delle pagine della categoria dal server wiki
         result.setNumVociCategoria(appContext.getBean(AQueryCatInfo.class, result.getNomeCategoria()).numVoci());
         result.setVociDaCreare(appContext.getBean(AQueryCat.class, result.getNomeCategoria()).urlRequestTitle());
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             if (result.getNumVociCategoria() == 0) {
-                message = "Numero errato di voci sul server";
+                message = "Numero errato di pagine sul server";
                 log.warn(message);
                 logger.warning("Download - " + message);
             }// end of if cycle
             if (result.getVociDaCreare() == null) {
-                message = "Non riesco a leggere le voci dal server. Forse non sono loggato come bot";
+                message = "Non riesco a leggere le pagine dal server. Forse non sono loggato come bot";
                 log.warn(message);
                 logger.warning("Download - " + message);
             }// end of if cycle
             if (result.getNumVociCategoria() != result.getVociDaCreare().size()) {
-                message = "Le voci della categoria non coincidono: sul server ce ne sono " + text.format(result.getNumVociCategoria()) + " e ne ha recuperate " + text.format(result.getVociDaCreare().size());
+                message = "Le pagine della categoria non coincidono: sul server ce ne sono " + text.format(result.getNumVociCategoria()) + " e ne ha recuperate " + text.format(result.getVociDaCreare().size());
                 log.warn(message);
                 logger.warning("Download - " + message);
             }// end of if cycle
         }// end of if cycle
 
-        //--Scarica dal server tutte le voci mancanti e crea le nuove entities sul mongoDB Bio
+        //--Scarica dal server tutte le pagine mancanti e crea le nuove entities sul mongoDB Bio
         result = newService.esegue(result);
 
         if (pref.isBool(SEND_MAIL_CICLO)) {
@@ -96,7 +96,7 @@ public class CicloDownload extends ABioService {
         }// end of if cycle
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Download - Ciclo totale attività, nazionalità, professione, categoria, nuove voci in " + date.deltaText(result.getInizioLong()));
+            log.info("Download - Ciclo totale attività, nazionalità, professione, categoria, nuove pagine in " + date.deltaText(result.getInizioLong()));
             log.info("Fine task di download: " + date.getTime(LocalDateTime.now()));
             log.info("");
         }// end of if cycle

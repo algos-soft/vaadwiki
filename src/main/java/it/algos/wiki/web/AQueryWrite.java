@@ -241,4 +241,9 @@ public class AQueryWrite extends AQueryPost {
         return testoPost;
     } // fine del metodo
 
+
+    public void setNewText(String newText) {
+        this.newText = newText;
+    }
+
 }// end of class

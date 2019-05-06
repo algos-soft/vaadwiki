@@ -1950,7 +1950,7 @@ public class LibBio {
 //    /**
 //     * Recupera una mappa completa (ordinata) dei nomi/cognomi e della loro frequenza
 //     *
-//     * @return mappa sigla (nomi/cognomi), numero di voci
+//     * @return mappa sigla (nomi/cognomi), numero di pagine
 //     */
 //    public static LinkedHashMap<String, Integer> findMappa(Vector vettoreAll, int taglio) {
 //        LinkedHashMap<String, Integer> mappa = new LinkedHashMap<>();
@@ -1992,7 +1992,7 @@ public class LibBio {
 //    /**
 //     * Recupera una mappa completa (ordinata) dei nomi/cognomi e della loro frequenza
 //     *
-//     * @return mappa sigla (nomi/cognomi), numero di voci
+//     * @return mappa sigla (nomi/cognomi), numero di pagine
 //     */
 //    public static LinkedHashMap<Attivita, ArrayList> findMappaAtt(Vector vettoreAll, int taglio) {
 //        LinkedHashMap<String, Integer> mappa = new LinkedHashMap<>();
@@ -2386,27 +2386,27 @@ public class LibBio {
         testo += "Durata totale: " + date.deltaText(result.getInizioLong());
 
         testo += A_CAPO;
-        testo += "Nella categoria " + result.getNomeCategoria() + " sono presenti al momento " + text.format(result.getNumVociCategoria()) + " voci biografiche";
+        testo += "Nella categoria " + result.getNomeCategoria() + " sono presenti al momento " + text.format(result.getNumVociCategoria()) + " pagine biografiche";
 
         if (result.getNumVociCancellate() > 0) {
             testo += A_CAPO;
             testo += "Sono state cancellate ";
             testo += text.format(result.getNumVociCancellate());
-            testo += " voci eccedenti (non più utilizzate nella categoria)";
+            testo += " pagine eccedenti (non più utilizzate nella categoria)";
         }// end of if cycle
         if (result.getNumVociCreate() > 0) {
             testo += A_CAPO;
             testo += "Sono state create ";
             testo += text.format(result.getNumVociCreate());
-            testo += " nuove voci";
+            testo += " nuove pagine";
         }// end of if cycle
 
         testo += A_CAPO;
-        testo += "Nel mongoDB ci sono adesso " + text.format(bio.count()) + " voci biografiche";
+        testo += "Nel mongoDB ci sono adesso " + text.format(bio.count()) + " pagine biografiche";
 
         if (result.getVociNonCreate().size() > 0) {
             testo += A_CAPO;
-            testo += "Non sono state registrate le seguenti voci:";
+            testo += "Non sono state registrate le seguenti pagine:";
             for (int k = 0; k < result.getVociNonCreate().size(); k++) {
                 testo += A_CAPO;
                 testo += (k + 1) + ") " + result.getVociNonCreate().get(k);
@@ -2415,7 +2415,7 @@ public class LibBio {
 
         if (type == EACicloType.update) {
             testo += A_CAPO;
-            testo += "Sono state aggiornate " + text.format(result.getNumVociAggiornate() + " voci su un totale di " + text.format(result.getNumVociDaAggiornare()));
+            testo += "Sono state aggiornate " + text.format(result.getNumVociAggiornate() + " pagine su un totale di " + text.format(result.getNumVociDaAggiornare()));
         }// end of if cycle
 
         if (pref.isBool(SEND_MAIL_CICLO)) {
@@ -2433,7 +2433,7 @@ public class LibBio {
 //        testo += EASchedule.oreQuattro.getNota();
 //        testo += A_CAPO;
 //        testo += A_CAPO;
-//        testo += "Aggiunge le voci biografiche mancanti,";
+//        testo += "Aggiunge le pagine biografiche mancanti,";
 //        testo += A_CAPO;
 //        testo += " cancella quelle eccedenti ";
 //        testo += A_CAPO;
@@ -2452,15 +2452,15 @@ public class LibBio {
 //            testo += A_CAPO;
 //            testo += "Durata totale: " + date.deltaText(result.getInizio());
 //            testo += A_CAPO;
-//            testo += "Nella categoria " + result.nomeCategoria + " ci sono " + text.format(result.numVociCategoria) + " voci biografiche";
+//            testo += "Nella categoria " + result.nomeCategoria + " ci sono " + text.format(result.numVociCategoria) + " pagine biografiche";
 //            testo += A_CAPO;
-//            testo += "Nel mongoDB ci sono " + text.format(bio.count()) + " voci biografiche";
+//            testo += "Nel mongoDB ci sono " + text.format(bio.count()) + " pagine biografiche";
 //
 //            if (result.vociEccedenti.size() > 0) {
 //                testo += A_CAPO;
 //                testo += "Sono state eliminate ";
 //                testo += text.format(result.vociEccedenti.size());
-//                testo += " voci non più presenti nella categoria ";
+//                testo += " pagine non più presenti nella categoria ";
 //                testo += result.nomeCategoria;
 //            }// end of if cycle
 //
@@ -2468,7 +2468,7 @@ public class LibBio {
 //                testo += A_CAPO;
 //                testo += "Sono state aggiunte ";
 //                testo += text.format(result.vociMancanti.size());
-//                testo += " nuove voci della categoria ";
+//                testo += " nuove pagine della categoria ";
 //                testo += result.nomeCategoria;
 //            }// end of if cycle
 //
@@ -2485,7 +2485,7 @@ public class LibBio {
         testo += EASchedule.biMensile.getNota();
         testo += A_CAPO;
         testo += A_CAPO;
-        testo += "Cancella tutte le voci biografiche e ricarica completamente il db";
+        testo += "Cancella tutte le pagine biografiche e ricarica completamente il db";
         testo += A_CAPO;
         testo += "Ciclo del " + date.get();
         testo += A_CAPO;
@@ -2499,7 +2499,7 @@ public class LibBio {
             testo += A_CAPO;
             testo += "Durata totale: " + date.deltaText(inizio);
             testo += A_CAPO;
-            testo += "Nel db ci sono " + text.format(bio.count()) + " voci biografiche";
+            testo += "Nel db ci sono " + text.format(bio.count()) + " pagine biografiche";
             mailService.send("Ciclo " + tag, testo);
         }// end of if cycle
     } // fine del metodo

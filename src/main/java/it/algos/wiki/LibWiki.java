@@ -1852,11 +1852,11 @@ public abstract class LibWiki {
 
 
     /**
-     * Crea una lista di voci back (valori pageids) dal testo JSON di una pagina puntata
+     * Crea una lista di pagine back (valori pageids) dal testo JSON di una pagina puntata
      *
      * @param textJSON in ingresso
      *
-     * @return lista pageid (valori Long) solo delle voci (namespace=0)
+     * @return lista pageid (valori Long) solo delle pagine (namespace=0)
      */
     public static ArrayList<Long> creaListaBackLongVociJson(String textJSON) {
         ArrayList<Long> lista = null;
@@ -1898,11 +1898,11 @@ public abstract class LibWiki {
 
 
     /**
-     * Crea una lista di voci back (valori title) dal testo JSON di una pagina puntata
+     * Crea una lista di pagine back (valori title) dal testo JSON di una pagina puntata
      *
      * @param textJSON in ingresso
      *
-     * @return lista title (valori String) solo delle voci (namespace=0)
+     * @return lista title (valori String) solo delle pagine (namespace=0)
      */
     public static ArrayList<String> creaListaBackTxtVociJson(String textJSON) {
         ArrayList<String> lista = null;

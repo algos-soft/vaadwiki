@@ -19,7 +19,7 @@ import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_BIO;
  * Time: 17:48
  * <p>
  * Esegue un ciclo (NEW) di controllo e creazione di nuovi records esistenti sul server e mancanti nel database
- * Scarica la lista di voci mancanti dal server e crea i nuovi records di Bio
+ * Scarica la lista di pagine mancanti dal server e crea i nuovi records di Bio
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -29,7 +29,7 @@ public class NewService extends ABioService {
 
     /**
      * Esegue un ciclo (NEW) di creazione di nuovi records esistenti sul server e mancanti nel database
-     * Scarica dal server tutte le voci indicate e crea le nuove entities sul mongoDB Bio
+     * Scarica dal server tutte le pagine indicate e crea le nuove entities sul mongoDB Bio
      * <p>
      * Esegue una serie di AQueryPages a blocchi di WIKI_PAGE_LIMIT (250) per volta <br>
      * Per ogni page crea la entity (Bio) corrispondente <br>
@@ -46,7 +46,7 @@ public class NewService extends ABioService {
             pref.saveValue(LAST_DOWNLOAD_BIO, LocalDateTime.now());
 
             if (result.getNumVociCreate() > 0) {
-                logger.info("NEW - download di nuove voci e creazione in mongoDB Bio (" + text.format(result.getNumVociCreate()) + " voci) in " + date.deltaText(inizio));
+                logger.info("NEW - download di nuove pagine e creazione in mongoDB Bio (" + text.format(result.getNumVociCreate()) + " pagine) in " + date.deltaText(inizio));
             }// end of if cycle
         } else {
             logger.info("NEW - nessuna nuova voce da scaricare");

@@ -166,7 +166,7 @@ public class AQueryPages extends AQueryGet {
 
 
     /**
-     * Effettua la request per voci indicate
+     * Effettua la request per pagine indicate
      */
     public void esegue(ArrayList<Long> arrayPageIds) {
 //        esegue(array.toStringaPipe(arrayPageIds));
@@ -174,7 +174,7 @@ public class AQueryPages extends AQueryGet {
 
 
     /**
-     * Effettua la request per voci indicate
+     * Effettua la request per pagine indicate
      */
     public void esegue(String stringaTitles) {
 //        try { // prova ad eseguire il codice

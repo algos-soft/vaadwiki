@@ -27,7 +27,7 @@ import static it.algos.vaadwiki.application.WikiCost.WIKI_PAGE_LIMIT;
  * <p>
  * Esegue un ciclo (UPDATE) di controllo e aggiornamento di tutti i records esistenti nel database
  * Ricontrolla (eventualmente) le due liste di pageid che devono essere uguali
- * Spazzola tutte le voci a blocchi di 'pageLimit' per volta per recuperare il 'timestamp' delle pagine
+ * Spazzola tutte le pagine a blocchi di 'pageLimit' per volta per recuperare il 'timestamp' delle pagine
  * Trova tutte le pagine (del blocco) modificate sul server DOPO l'ultima lettura
  * Aggiorna i records che sono stati modificati sul servere wiki DOPO l'ultima lettura
  * <p>
@@ -69,7 +69,7 @@ public class UpdateService extends ABioService {
 //     * Controlla che il numero di entities della due collezioni (Categoria e Bio) sia lo stesso
 //     * <p>
 //     * Recupera comunque la lista dei records della collezione categoria, perché serve sempre
-//     * Recupera la lista delle voci dalla categoria sul server wiki, solo se necessario
+//     * Recupera la lista delle pagine dalla categoria sul server wiki, solo se necessario
 //     */
 //    public boolean checkListePageids() {
 //        int catSize = categoriaService.count();
@@ -79,16 +79,16 @@ public class UpdateService extends ABioService {
 
 
     /**
-     * Esegue il ciclo per TUTTE le voci biografiche esistenti nella collezione mongoDB Bio
+     * Esegue il ciclo per TUTTE le pagine biografiche esistenti nella collezione mongoDB Bio
      * <p>
-     * Esegue dei cicli di elaborazione per ogni 500 voci (od altro numero)
+     * Esegue dei cicli di elaborazione per ogni 500 pagine (od altro numero)
      * Per ogni ciclo:
      * 1) recupera dalla collezione Bio una lista di 'WrapTime'
-     * 2) recupara dal server wiki una lista di 'WrapTime' delle voci corrispondenti
-     * 3) confronta le due liste ed estra una lista delle voci modificate dall'ultima lettura
-     * 4) rilegge solo le voci modificate
+     * 2) recupara dal server wiki una lista di 'WrapTime' delle pagine corrispondenti
+     * 3) confronta le due liste ed estra una lista delle pagine modificate dall'ultima lettura
+     * 4) rilegge solo le pagine modificate
      * 5) cancella le entities di mongoDB Bio che sono state modificate
-     * 6) inserisce (bulk) le voci modifcate nella collazione Bio
+     * 6) inserisce (bulk) le pagine modifcate nella collazione Bio
      */
     public DownloadResult esegueCiclo(DownloadResult result) {
         int numVociModificate = 0;
@@ -102,7 +102,7 @@ public class UpdateService extends ABioService {
         for (int k = 0; k < numCicliLetturaPagine; k++) {
             LinkedHashMap<String, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
             esegueSingoloBlocco(mappa, result);
-            info = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " voci e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
+            info = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " pagine e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
             if (pref.isBool(FlowCost.USA_DEBUG)) {
                 log.info(info);
             }// end of if cycle
@@ -116,11 +116,11 @@ public class UpdateService extends ABioService {
     /**
      * Esegue un singolo ciclo di elaborazione:
      * 1) recupera dalla lista di 'WrapTime' una lista di solo 'pageid'
-     * 2) recupara dal server wiki una lista di 'WrapTime' delle voci corrispondenti
-     * 3) confronta le due liste ed estra una lista delle voci modificate dall'ultima lettura
-     * 4) rilegge solo le voci modificate
+     * 2) recupara dal server wiki una lista di 'WrapTime' delle pagine corrispondenti
+     * 3) confronta le due liste ed estra una lista delle pagine modificate dall'ultima lettura
+     * 4) rilegge solo le pagine modificate
      * 5) cancella le entities di mongoDB Bio che sono state modificate
-     * 6) inserisce (bulk) le voci modifcate nella collazione Bio
+     * 6) inserisce (bulk) le pagine modifcate nella collazione Bio
      */
     public DownloadResult esegueSingoloBlocco(LinkedHashMap<String, Timestamp> mappa, DownloadResult result) {
         ArrayList<WrapTime> listaWrapTimeServer = null;

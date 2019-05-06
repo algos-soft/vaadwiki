@@ -9,6 +9,7 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.ACronoViewList;
+import it.algos.vaadflow.ui.dialog.AConfirmDialog;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import lombok.extern.slf4j.Slf4j;
@@ -149,7 +150,7 @@ public abstract class WikiViewList extends ACronoViewList {
      */
     protected void openUploadDialog(String tag) {
         String message = "Sei sicuro di voler aggiornare su wikipedia tutte le pagine " + tag + " ?";
-        ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
+        AConfirmDialog dialog = appContext.getBean(AConfirmDialog.class);
         dialog.open(message, this::uploadEffettivo);
     }// end of method
 

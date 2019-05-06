@@ -1,10 +1,14 @@
 package it.algos.wiki.web;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.enumeration.EASchedule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+
+import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_NAZIONALITA;
 
 /**
  * Project vaadwiki
@@ -12,6 +16,10 @@ import org.springframework.stereotype.Component;
  * User: gac
  * Date: mer, 13-feb-2019
  * Time: 12:06
+ * <p>
+ * Recupera il numero totale  di pagine (voci) e di sub-categorie <br>
+ * La query viene eseguita subito alla creazione dell'istanza della classe (visto che è SCOPE_PROTOTYPE) <br>
+ * La lista viene resa come un array di String (wikiTitle) nella variabile (pubblica) 'lista' <br>
  */
 @Component("AQueryCatInfo")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -22,6 +30,8 @@ public class AQueryCatInfo extends AQueryGet {
      * Tag completo 'urlDomain' per la richiesta di info sulla categoria
      */
     private static String TAG_INFO_CAT = TAG_QUERY + "&prop=categoryinfo&titles=Category:";
+
+    public int numVoci;
 
 
     /**
@@ -47,7 +57,22 @@ public class AQueryCatInfo extends AQueryGet {
     }// end of constructor
 
     /**
-     * Numero di voci della categoria
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * Performing the initialization in a constructor is not suggested
+     * as the state of the UI is not properly set up when the constructor is invoked.
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
+     * ma l'ordine con cui vengono chiamati NON è garantito
+     */
+    @PostConstruct
+    protected void inizia() {
+        numVoci();
+    }// end of method
+
+
+    /**
+     * Numero di pagine della categoria
      *
      * @return numero di pagine presenti nelloa categoria
      */
@@ -57,22 +82,21 @@ public class AQueryCatInfo extends AQueryGet {
 
 
     /**
-     * Numero di voci della categoria
+     * Numero di pagine della categoria
      *
      * @param titoloCat della categoria (necessita di codifica) usato nella urlRequest
      *
      * @return numero di pagine presenti nelloa categoria
      */
     public int numVoci(String titoloCat) {
-        int numeroVoci = 0;
         String urlResponse = "";
 
         if (text.isValid(titoloCat)) {
             urlResponse = super.urlRequest(titoloCat);
-            numeroVoci= wikiService.getNumVociCategory(urlResponse);
+            numVoci = wikiService.getNumVociCategory(urlResponse);
         }// end of if cycle
 
-        return numeroVoci;
+        return numVoci;
     }// end of method
 
 
@@ -93,7 +117,6 @@ public class AQueryCatInfo extends AQueryGet {
         String titoloWikiCodificato = super.fixUrlDomain(titoloWikiGrezzo);
         return titoloWikiCodificato.startsWith(TAG_INFO_CAT) ? titoloWikiCodificato : TAG_INFO_CAT + titoloWikiCodificato;
     } // fine del metodo
-
 
 
 }// end of class

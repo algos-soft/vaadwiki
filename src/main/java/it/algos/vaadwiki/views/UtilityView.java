@@ -59,7 +59,7 @@ public class UtilityView extends VerticalLayout {
 
     public static final String IRON_ICON = "build";
 
-    public static final String wikiTitleDebug = "Utente:Biobot/2";
+    public static final String WIKI_TITLE_DEBUG = "Utente:Biobot/2";
 
     public static final String wikiPagineDidascalie = "Progetto:Biografie/Didascalie";
 
@@ -202,7 +202,7 @@ public class UtilityView extends VerticalLayout {
 //        testo += bodyLayout(wikiTitle);
 //        testo += bottomLayout();
 //
-//        Api.scriveVoce(wikiTitleDebug, testo);
+//        Api.scriveVoce(WIKI_TITLE_DEBUG, testo);
     }// end of method
 
 
@@ -341,7 +341,7 @@ public class UtilityView extends VerticalLayout {
 
         wikiCat = "Nati nel 1225";
         titoliVociCategoria = appContext.getBean(AQueryCat.class).urlRequestTitle(wikiCat);
-        log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore senza parametri - " + titoliVociCategoria.size() + " voci" : "No buono"));
+        log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore senza parametri - " + titoliVociCategoria.size() + " pagine" : "No buono"));
 
         wikiTitle = Upload.PAGINA_PROVA;
         appContext.getBean(AQueryWrite.class, wikiTitle, "Quarta prova di scrittura del bot: " + "Biobot").urlRequest();
@@ -349,8 +349,8 @@ public class UtilityView extends VerticalLayout {
 //        wikiCat = "BioBot";
 //        long inizio = System.currentTimeMillis();
 //        titoliVociCategoria = appContext.getBean(AQueryCat.class, wikiCat).urlRequestTitle();
-//        log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore con wikiCat - " + titoliVociCategoria.size() + " voci" : "No buono"));
-//        log.info("AQueryCat: " + wikiCat + " - Response: ci sono " + titoliVociCategoria.size() + " voci e sono state caricate in " + date.deltaText(inizio));
+//        log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore con wikiCat - " + titoliVociCategoria.size() + " pagine" : "No buono"));
+//        log.info("AQueryCat: " + wikiCat + " - Response: ci sono " + titoliVociCategoria.size() + " pagine e sono state caricate in " + date.deltaText(inizio));
 ////        for (String titolo : titoliVociCategoria) {
 ////            log.info(titolo);
 ////        }// end of for cycle

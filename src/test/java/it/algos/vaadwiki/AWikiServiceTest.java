@@ -71,7 +71,7 @@ public class AWikiServiceTest extends ATest {
 
     @Test
     /**
-     * Numero di voci della categoria.
+     * Numero di pagine della categoria.
      *
      * @param contenutoCompletoPaginaWebInFormatoJSON in ingresso
      *

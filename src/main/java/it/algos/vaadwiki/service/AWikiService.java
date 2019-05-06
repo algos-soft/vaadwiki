@@ -279,7 +279,7 @@ public class AWikiService {
 
 
     /**
-     * Numero di voci della categoria.
+     * Numero di pagine della categoria.
      *
      * @param contenutoCompletoPaginaWebInFormatoJSON in ingresso
      *
@@ -329,6 +329,18 @@ public class AWikiService {
 
         return urlDomain;
     }// end of method
+
+
+//    /**
+//     * Scrive il testo indicato nella pagina indicata
+//     *
+//     * @param titoloPagina da modificare
+//     * @param testo        da utilizzare per la sostituzione
+//     *
+//     * @return stringa con i singoli valori divisi dal separatore pipe e codificati UTF-8
+//     */
+//    public void write(String titoloPagina, String testo) {
+//    }// end of method
 
 
 }// end of class

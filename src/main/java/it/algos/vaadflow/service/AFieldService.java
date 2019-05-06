@@ -156,7 +156,7 @@ public class AFieldService extends AbstractService {
         }// end of if cycle
 
         lengthValidator = min > 0 ? new StringLengthValidator(messageSize, min, null) : null;
-        uniqueValidator = unique ? appContext.getBean(AUniqueValidator.class, reflectionJavaField.getDeclaringClass(), fieldName, caption) : null;
+//        uniqueValidator = unique ? appContext.getBean(AUniqueValidator.class, reflectionJavaField.getDeclaringClass(), fieldName, caption) : null;
 
         switch (type) {
             case text:

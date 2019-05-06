@@ -59,7 +59,7 @@ public class DidascaliaService extends ABioService {
         testo += bottomLayout();
 
         appContext.getBean(AQueryWrite.class, wikiTitleDebug, testo).urlRequest();
-//        Api.scriveVoce(wikiTitleDebug, testo);
+//        Api.scriveVoce(WIKI_TITLE_DEBUG, testo);
     }// end of method
 
 

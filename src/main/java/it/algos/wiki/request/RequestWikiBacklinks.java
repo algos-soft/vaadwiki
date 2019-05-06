@@ -40,7 +40,7 @@ public class RequestWikiBacklinks extends RequestWiki {
     private ArrayList<String> listaAllTitles;
 
 
-    //--lista di voci linkate dalla pagina (namespace=0)
+    //--lista di pagine linkate dalla pagina (namespace=0)
     private ArrayList<Long> listaVociPageids;
     private ArrayList<String> listaVociTitles;
 

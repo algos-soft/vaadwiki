@@ -80,7 +80,7 @@ public class RequestWikiTimestamp extends RequestWiki {
 
 
     /**
-     * Effettua la request per voci indicate
+     * Effettua la request per pagine indicate
      */
     public void esegue(ArrayList<Long> arrayPageIds) {
         esegue(array.toStringaPipe(arrayPageIds));
@@ -88,7 +88,7 @@ public class RequestWikiTimestamp extends RequestWiki {
 
 
     /**
-     * Effettua la request per voci indicate
+     * Effettua la request per pagine indicate
      */
     public void esegue(String stringaPageIds) {
         super.stringaPageIds = stringaPageIds;

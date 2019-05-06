@@ -120,7 +120,7 @@ public abstract class ARequest {
     protected ArrayList<Long> listaPaginePageids;
     protected ArrayList<String> listaPagineTitles;
 
-    // liste di voci della categoria (namespace=0)
+    // liste di pagine della categoria (namespace=0)
     protected ArrayList<Long> listaVociPageids;
     protected ArrayList<String> listaVociTitles;
 

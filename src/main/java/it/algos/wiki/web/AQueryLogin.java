@@ -100,9 +100,6 @@ public class AQueryLogin extends AQueryWiki {
 
     private final static String TAG_SECOND_REQUEST_POST = TAG_BASE + "&action=login";
 
-    @Autowired
-    private UtenteService utenteService;
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -114,6 +111,9 @@ public class AQueryLogin extends AQueryWiki {
      */
     @Autowired
     protected LogService logger;
+
+    @Autowired
+    private UtenteService utenteService;
 
     private String itwiki_BPsession;
 
@@ -257,9 +257,9 @@ public class AQueryLogin extends AQueryWiki {
         String testoPost = "";
 
         testoPost += "lgname=";
-        testoPost += lgname;
+        testoPost += text.isValid(lgname) ? lgname : LG_NAME;
         testoPost += "&lgpassword=";
-        testoPost += lgpassword;
+        testoPost += text.isValid(lgpassword) ? lgpassword : LG_PASSWORD;
         testoPost += "&lgtoken=";
         testoPost += lgtoken;
 
@@ -338,23 +338,23 @@ public class AQueryLogin extends AQueryWiki {
 
             if (regolaWikiLoginSingleton()) {
                 if (checkCollegamentoComeBot()) {
-                    log.info("Algos - Bot loggato come " + lgusername);
                     try { // prova ad eseguire il codice
+                        log.info("Algos - Bot loggato come " + lgusername);
                         logger.debug("Bot loggato come " + lgusername);
                     } catch (Exception unErrore) { // intercetta l'errore
                         log.error(unErrore.toString());
                     }// fine del blocco try-catch
                 } else {
                     log.warn("Algos - Non sono riuscito a loggarmi come bot");
-                    mailService.send("Login","Non sono riuscito a loggarmi come bot");
+                    mailService.send("Login", "Non sono riuscito a loggarmi come bot");
                 }// end of if/else cycle
             } else {
                 log.warn("Algos - Non sono riuscito a loggarmi come bot");
-                mailService.send("Login","Non sono riuscito a loggarmi come bot");
+                mailService.send("Login", "Non sono riuscito a loggarmi come bot");
             }// end of if/else cycle
         } else {
             log.warn("Algos - Non sono riuscito a loggarmi");
-            mailService.send("Login","Non sono riuscito a loggarmi");
+            mailService.send("Login", "Non sono riuscito a loggarmi");
         }// end of if/else cycle
 
         return urlResponse;
@@ -387,5 +387,6 @@ public class AQueryLogin extends AQueryWiki {
     protected boolean checkCollegamentoComeBot() {
         return appContext.getBean(AQueryBot.class).isBot();
     } // fine del metodo
+
 
 }// end of class

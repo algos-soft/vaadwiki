@@ -274,11 +274,11 @@ public class Api {
 
     /**
      * Legge gli elementi appartenenti ad una categoria.
-     * Restituisce una lista (ArrayList) di pageid sia delle voci che delle subcategorie
+     * Restituisce una lista (ArrayList) di pageid sia delle pagine che delle subcategorie
      *
      * @param titleCat della categoria da ricercare
      *
-     * @return lista pageid sia delle voci che delle subcategorie
+     * @return lista pageid sia delle pagine che delle subcategorie
      */
     public static ArrayList<Long> leggeCatPageids(String titleCat) {
         ArrayList<Long> lista = null;
@@ -297,11 +297,11 @@ public class Api {
 
     /**
      * Legge gli elementi appartenenti ad una categoria.
-     * Restituisce una lista (ArrayList) di titoli solo delle voci senza le subcategorie
+     * Restituisce una lista (ArrayList) di titoli solo delle pagine senza le subcategorie
      *
      * @param titleCat della categoria da ricercare
      *
-     * @return lista titoli delle voci
+     * @return lista titoli delle pagine
      */
     public static ArrayList<String> leggeCatTitlesOnlyVoci(String titleCat) {
         ArrayList<String> lista = null;
@@ -353,12 +353,12 @@ public class Api {
 
 
     /**
-     * Legge i titoli delle voci che puntano ad una pagina.
-     * Restituisce una lista (ArrayList) di titoli solo delle voci nel namespace principale
+     * Legge i titoli delle pagine che puntano ad una pagina.
+     * Restituisce una lista (ArrayList) di titoli solo delle pagine nel namespace principale
      *
      * @param title della pagina da controllare
      *
-     * @return lista titoli delle voci
+     * @return lista titoli delle pagine
      */
     public static ArrayList<String> leggeBacklinksOnlyVoci(String title) {
         ArrayList<String> lista = null;
@@ -771,10 +771,10 @@ public class Api {
 
 //    /**
 //     * Legge gli elementi appartenenti ad una categoria.
-//     * Restituisce una lista (ArrayList) di titoli sia delle voci che delle subcategorie
+//     * Restituisce una lista (ArrayList) di titoli sia delle pagine che delle subcategorie
 //     *
 //     * @param titleCat della categoria da ricercare
-//     * @return lista titoli sia delle voci che delle subcategorie
+//     * @return lista titoli sia delle pagine che delle subcategorie
 //     */
 //    public  ArrayList<String> leggeCat(String titleCat) {
 //        return leggeCatTitles(titleCat);
@@ -933,11 +933,11 @@ public class Api {
 
     /**
      * Legge gli elementi appartenenti ad una categoria.
-     * Restituisce una lista (ArrayList) di pageid solo delle voci senza le subcategorie
+     * Restituisce una lista (ArrayList) di pageid solo delle pagine senza le subcategorie
      *
      * @param titleCat della categoria da ricercare
      *
-     * @return lista pageid delle voci
+     * @return lista pageid delle pagine
      */
     public ArrayList<Long> leggeCat(String titleCat) {
         return leggeCatLong(titleCat);
@@ -946,11 +946,11 @@ public class Api {
 
     /**
      * Legge gli elementi appartenenti ad una categoria.
-     * Restituisce una lista (ArrayList) di pageid solo delle voci senza le subcategorie
+     * Restituisce una lista (ArrayList) di pageid solo delle pagine senza le subcategorie
      *
      * @param titleCat della categoria da ricercare
      *
-     * @return lista pageid delle voci
+     * @return lista pageid delle pagine
      */
     public ArrayList<Long> leggeCatLong(String titleCat) {
         ArrayList<Long> lista = null;
@@ -968,11 +968,11 @@ public class Api {
 
     /**
      * Legge gli elementi appartenenti ad una categoria.
-     * Restituisce una lista (ArrayList) di titoli sia delle voci che delle subcategorie
+     * Restituisce una lista (ArrayList) di titoli sia delle pagine che delle subcategorie
      *
      * @param titleCat della categoria da ricercare
      *
-     * @return lista titoli sia delle voci che delle subcategorie
+     * @return lista titoli sia delle pagine che delle subcategorie
      */
     public ArrayList<String> leggeCatTitle(String titleCat) {
         ArrayList<String> lista = null;
@@ -990,11 +990,11 @@ public class Api {
 
 //    /**
 //     * Legge gli elementi appartenenti ad una categoria.
-//     * Restituisce una lista (ArrayList) di pageid/and/title solo delle voci senza le subcategorie
+//     * Restituisce una lista (ArrayList) di pageid/and/title solo delle pagine senza le subcategorie
 //     *
 //     * @param titleCat della categoria da ricercare
 //     *
-//     * @return lista pageid and title delle voci
+//     * @return lista pageid and title delle pagine
 //     */
 //    public ArrayList<Categoria> leggeCatCat(String titleCat) {
 //        ArrayList<Categoria> lista = null;

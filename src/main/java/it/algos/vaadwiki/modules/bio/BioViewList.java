@@ -453,7 +453,7 @@ public class BioViewList extends AttNazProfCatViewList {
 //        LocalDateTime end;
 //        String testo = "";
 //        testo += A_CAPO;
-//        testo += "Carica le nuove voci biografiche e aggiorna tutte quelle esistenti";
+//        testo += "Carica le nuove pagine biografiche e aggiorna tutte quelle esistenti";
 //        testo += A_CAPO;
 //        testo += A_CAPO;
 //        testo += "Ciclo del " + date.get();
@@ -467,9 +467,9 @@ public class BioViewList extends AttNazProfCatViewList {
 //            testo += A_CAPO;
 //            testo += "Durata totale: " + date.deltaText(inizio);
 //            testo += A_CAPO;
-//            testo += "Nel db ci sono " + text.format(service.count()) + " voci biografiche";
+//            testo += "Nel db ci sono " + text.format(service.count()) + " pagine biografiche";
 //            testo += A_CAPO;
-//            testo += "Sono state aggiornate " + text.format(result.getNumVociRegistrate()) + " voci";
+//            testo += "Sono state aggiornate " + text.format(result.getNumVociRegistrate()) + " pagine";
 //            mailService.send("Ciclo update", testo);
 //        }// end of if cycle
 //    }// end of method

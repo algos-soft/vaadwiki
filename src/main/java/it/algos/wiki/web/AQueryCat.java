@@ -1,6 +1,7 @@
 package it.algos.wiki.web;
 
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadwiki.enumeration.EAQueryCat;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
@@ -11,6 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,22 +37,43 @@ public class AQueryCat extends AQueryGet {
 
 
     /**
-     * Tag aggiunto nel 'urlDomain', specificando che si richiede una lista delle voci nella categoria
+     * Tag aggiunto nel 'urlDomain', specificando che si richiede una lista delle pagine nella categoria
      */
     private static String TAG_LIST = TAG_QUERY + "&list=categorymembers";
 
-//    /**
-//     * Tag aggiunto nel 'urlDomain', specificando namespace ed il tipo di categoria
-//     */
-//    private static String TYPE_VOCI = "&cmnamespace=0&cmtype=page";
+    /**
+     * Tag aggiunto nel 'urlDomain', specificando namespace
+     */
+    private static String TAG_NAMESPACE = "&cmnamespace=0";
 
-//    /**
-//     * Tag aggiunto nel 'urlDomain', specificando il numero di valori in risposta
-//     * Fino a 500 può essere usato anche senza cookies
-//     * Con i cookies (di admin o di bot) arriva a 5000
-//     */
-//    private static String TAG_LIMIT = "&cmlimit=5000";
-//
+    /**
+     * Tag aggiunto nel 'urlDomain', specificando il tipo di categoria
+     */
+    private static String TAG_TYPE = "&cmtype=";
+
+    /**
+     * Tag aggiunto nel 'urlDomain'
+     */
+    private static String TAG_TYPE_PAGE = "page";
+
+    /**
+     * Tag aggiunto nel 'urlDomain'
+     */
+    private static String TAG_TYPE_CAT = "subcat";
+
+    /**
+     * Tag aggiunto nel 'urlDomain'
+     */
+    private static String TAG_TYPE_ALL = "page|subcat";
+
+    /**
+     * Tag aggiunto nel 'urlDomain', specificando il numero di valori in risposta
+     * Fino a 500 può essere usato anche senza cookies
+     * Con i cookies (di admin o di bot) arriva a 5000
+     */
+    private static String TAG_LIMIT = "&cmlimit=";
+
+
     /**
      * Tag aggiunto nel 'urlDomain', specificando il titolo della categoria
      */
@@ -72,15 +95,16 @@ public class AQueryCat extends AQueryGet {
      */
     private static String TAG_CAT = TAG_LIST + TAG_PROP + TAG_TITLE;
 
+    public ArrayList<String> lista;
+
     @Autowired
     protected ApplicationContext appContext;
 
-//    @Autowired
-//    private WikiLoginOld wikiLoginOldCat;
+    protected EAQueryCat type = EAQueryCat.info;
+
+    protected int limit;
 
     private String textContinue;
-
-    private ArrayList<String> listaTitles;
 
 
     /**
@@ -107,6 +131,22 @@ public class AQueryCat extends AQueryGet {
 
 
     /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se ci sono superclassi e sottoclassi, chiama prima @PostConstruct della superclasse <br>
+     */
+    @PostConstruct
+    protected void inizia() {
+        urlRequestTitle();
+    }// end of method
+
+
+    /**
      * Le preferenze vengono (eventualmente) sovrascritte nella sottoclasse <br>
      * Invocare PRIMA il metodo della superclasse <br>
      */
@@ -115,6 +155,7 @@ public class AQueryCat extends AQueryGet {
         super.fixPreferenze();
         super.isUsaBot = true;
         super.isUploadCookies = true;
+        this.limit = 5000;
     }// end of method
 
 
@@ -152,23 +193,52 @@ public class AQueryCat extends AQueryGet {
     public ArrayList<String> urlRequestTitle(String titoloCat) {
         long inizio = System.currentTimeMillis();
         String message = "";
-        listaTitles = new ArrayList<>();
+        lista = new ArrayList<>();
+        int numVoci = appContext.getBean(AQueryCatInfo.class, titoloCat).numVoci;
+        int numCicliPrevisti = 0;
+        int k = 0;
 
-        super.urlRequest(titoloCat);
-        while (text.isValid(textContinue)) {
+        try { // prova ad eseguire il codice
+            numCicliPrevisti = (numVoci / limit) + 1;
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
+
+        System.out.println("");
+        do {
             super.urlRequest(titoloCat);
-        } // fine del blocco while
+            if (pref.isBool(FlowCost.USA_DEBUG) && numCicliPrevisti > 1) {
+                System.out.println("Recuperato il blocco di categoria n.: " + (k + 1) + " - Adesso ci sono " + text.format(lista.size()) + " voci");
+//                List<String> sub = lista.subList(k * limit, Math.min((k + 1) * limit, lista.size()));
+//                for (String voce : sub) {
+//                    System.out.println(voce);
+//                }// end of for cycle
+                k++;
+            }// end of if cycle
+        } while (text.isValid(textContinue));
+        System.out.println("");
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             message += "Download categoria ";
             message += titoloCat;
-            message += " (" + text.format(listaTitles.size()) + " voci in ";
+            message += " (" + text.format(lista.size()) + " pagine in ";
             message += date.deltaText(inizio);
             message += "), con AQueryCat, loggato come " + wLogin.getLgusername() + ", upload cookies, urlRequest di tipo GET";
             log.info(message);
         }// end of if cycle
 
-        return listaTitles != null && listaTitles.size() > 0 ? listaTitles : null;
+        if (pref.isBool(FlowCost.USA_DEBUG) && numCicliPrevisti > 0) {
+            System.out.println("");
+            System.out.println("Categoria " + titoloCat + " - Cicli previsti " + numCicliPrevisti + " - Effettivi " + k);
+            System.out.println("Categoria " + titoloCat + " - Previste " + text.format(numVoci) + " voci - Recuperate " + text.format(lista.size()));
+            if (numVoci > lista.size()) {
+                System.out.println("Categoria " + titoloCat + " - Mancano " + (numVoci - lista.size()) + " voci");
+            }// end of if cycle
+
+            System.out.println("");
+        }// end of if cycle
+
+        return lista != null && lista.size() > 0 ? lista : null;
     }// end of method
 
 
@@ -190,12 +260,34 @@ public class AQueryCat extends AQueryGet {
         urlDomain = urlDomain.startsWith(TAG_CAT) ? urlDomain : TAG_CAT + urlDomain;
 
         if (isUsaBot) {
-            urlDomain += TAG_BOT + TAG_LIMIT;
+            urlDomain += TAG_BOT;
+        }// end of if cycle
+
+        urlDomain += TAG_LIMIT + limit;
+
+        if (type != null) {
+            switch (type) {
+                case all:
+                    urlDomain += TAG_TYPE + TAG_TYPE_ALL;
+                    break;
+                case pagine:
+                    urlDomain += TAG_TYPE + TAG_TYPE_PAGE;
+                    break;
+                case categorie:
+                    urlDomain += TAG_TYPE + TAG_TYPE_CAT;
+                    break;
+                case info:
+                    break;
+                default:
+                    log.warn("Switch - caso non definito");
+                    break;
+            } // end of switch statement
         }// end of if cycle
 
         if (text.isValid(textContinue)) {
             urlDomain = urlDomain + TAG_CONTINUE + textContinue;
-        }// end of if cycle
+        }// end of if
+
         return urlDomain;
     } // fine del metodo
 
@@ -236,9 +328,7 @@ public class AQueryCat extends AQueryGet {
             textContinue = (String) mappa.get(LibWiki.CMCONTINUE);
             listaCat = (JSONArray) mappa.get(LibWiki.CATEGORY_MEMBERS);
             elaboraListaResponse(listaCat);
-            int a = 87;
         } else {
-            int a = 87;
         }// end of if/else cycle
 
         return urlResponse;
@@ -246,11 +336,16 @@ public class AQueryCat extends AQueryGet {
 
 
     protected void elaboraListaResponse(JSONArray listaCat) {
-        if (listaTitles != null) {
+        if (lista != null) {
             for (Object jsonObj : listaCat) {
-                listaTitles.add((String) ((JSONObject) jsonObj).get("title"));
+                lista.add((String) ((JSONObject) jsonObj).get("title"));
             }// end of for cycle
         }// end of if cycle
+    } // fine del metodo
+
+
+    public ArrayList<String> getLista() {
+        return lista;
     } // fine del metodo
 
 }// end of class

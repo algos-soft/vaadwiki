@@ -33,7 +33,7 @@ public class ElaboraService extends ABioService {
 
 
     /**
-     * Elabora le voci biografiche <br>
+     * Elabora le pagine biografiche <br>
      * Parte dal tmplBioServer e costruisce tutti parametri significativi <br>
      * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
@@ -44,7 +44,7 @@ public class ElaboraService extends ABioService {
 
 
     /**
-     * Elabora le voci biografiche <br>
+     * Elabora le pagine biografiche <br>
      * Parte dal tmplBioServer e costruisce tutti parametri significativi <br>
      * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
@@ -60,7 +60,7 @@ public class ElaboraService extends ABioService {
 
 
     /**
-     * Elabora le voci biografiche indicate <br>
+     * Elabora le pagine biografiche indicate <br>
      * Parte dal tmplBioServer e costruisce tutti parametri significativi <br>
      * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
@@ -72,7 +72,7 @@ public class ElaboraService extends ABioService {
             for (String title : lista) {
                 esegue(title);
             }// end of for cycle
-            log.info("ELABORA - elaborati i parametri delle nuove voci (" + text.format(lista.size()) + " elementi) in " + date.deltaText(inizio));
+            log.info("ELABORA - elaborati i parametri delle nuove pagine (" + text.format(lista.size()) + " elementi) in " + date.deltaText(inizio));
         }// end of if cycle
 
     }// end of method

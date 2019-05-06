@@ -102,12 +102,12 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_CATEGORIA, "Ultimo controllo di tutte le voci esistenti nella categoria BioBot");
+            creaPrefDate(LAST_DOWNLOAD_CATEGORIA, "Ultimo controllo di tutte le pagine esistenti nella categoria BioBot");
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_BIO, "Ultimo update delle voci della categoria BioBot");
+            creaPrefDate(LAST_DOWNLOAD_BIO, "Ultimo update delle pagine della categoria BioBot");
         }// fine del blocco if
 
         //--creata una nuova preferenza
@@ -127,12 +127,12 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefInt(DURATA_DOWNLOAD_CATEGORIA, "Durata in secondi dell'ultimo download delle voci della categoria BioBot");
+            creaPrefInt(DURATA_DOWNLOAD_CATEGORIA, "Durata in secondi dell'ultimo download delle pagine della categoria BioBot");
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefInt(DURATA_DOWNLOAD_BIO, "Durata in secondi dell'ultimo update delle voci della categoria BioBot");
+            creaPrefInt(DURATA_DOWNLOAD_BIO, "Durata in secondi dell'ultimo update delle pagine della categoria BioBot");
         }// fine del blocco if
 
         //--creata una nuova preferenza

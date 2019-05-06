@@ -19,7 +19,7 @@ public enum EACicloType {
             String testo = "";
             testo += A_CAPO;
             testo += A_CAPO;
-            testo += "Cancella tutte le voci biografiche e ricarica completamente il db";
+            testo += "Cancella tutte le pagine biografiche e ricarica completamente il db";
             testo += A_CAPO;
             return testo;
         }// end of method
@@ -30,7 +30,7 @@ public enum EACicloType {
             String testo = "";
             testo += A_CAPO;
             testo += A_CAPO;
-            testo += "Aggiunge le voci biografiche mancanti,";
+            testo += "Aggiunge le pagine biografiche mancanti,";
             testo += A_CAPO;
             testo += " cancella quelle eccedenti ";
             testo += A_CAPO;

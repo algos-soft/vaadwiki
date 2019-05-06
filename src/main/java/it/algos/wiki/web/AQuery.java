@@ -95,6 +95,9 @@ public abstract class AQuery {
      */
     protected boolean isDownloadCookies;
 
+
+
+
     /**
      * Indirizzo web usato nella urlRequest <br>
      */
@@ -496,5 +499,13 @@ public abstract class AQuery {
         return urlRequest(urlDomain);
     }// end of method
 
+    public void setUrlDomain(String urlDomain) {
+        this.urlDomain = urlDomain;
+    }// end of method
+
+
+    public void setAppContext(ApplicationContext appContext) {
+        this.appContext = appContext;
+    }
 
 }// end of class

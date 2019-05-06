@@ -62,7 +62,7 @@ public class PageService extends ABioService {
                     teorico = Math.min(teorico, result.getVociDaCreare().size());
                     effettivo = result.getNumVociCreate();
                     delta = teorico - effettivo;
-                    message = "New - aggiunte " + text.format(effettivo) + "/" + text.format(teorico) + " (-" + delta + ") voci totali a mongoDB.Bio in " + date.deltaText(inizio);
+                    message = "New - aggiunte " + text.format(effettivo) + "/" + text.format(teorico) + " (-" + delta + ") pagine totali a mongoDB.Bio in " + date.deltaText(inizio);
                     log.info(message);
                 }// end of if cycle
             }// end of for cycle
@@ -154,7 +154,7 @@ public class PageService extends ABioService {
             }// end of if/else cycle
         }// end of for cycle
 
-        //--cancella le voci esistenti prima di inserire le nuove versioni con update()
+        //--cancella le pagine esistenti prima di inserire le nuove versioni con update()
         try { // prova ad eseguire il codice
             bioService.deleteBulkByPageid(vociDaRegistrareInQuestoBlocco);
         } catch (Exception unErrore) { // intercetta l'errore
@@ -167,7 +167,7 @@ public class PageService extends ABioService {
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(" ");
                 log.error(unErrore.toString());
-                log.error("Numero voci (bio) da registrare: " + listaBio.size());
+                log.error("Numero pagine (bio) da registrare: " + listaBio.size());
                 log.error(listaBio.toString());
                 for (int k = 0; k < 10; k++) {
                     log.error(" ");

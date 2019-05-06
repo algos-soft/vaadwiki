@@ -58,10 +58,10 @@ public abstract class AQueryWiki extends AQuery {
     protected final static String TAG_QUERY = TAG_BASE + "&action=query";
 
     @Autowired
-    protected WLogin wLogin;
+    public WLogin wLogin;
 
     @Autowired
-    protected AWikiService wikiService;
+    public AWikiService wikiService;
 
     /**
      * Property per controllare se nella urlresponse esiste il tag 'batchcomplete=true'

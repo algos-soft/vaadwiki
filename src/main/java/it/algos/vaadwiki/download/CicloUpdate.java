@@ -45,8 +45,8 @@ public class CicloUpdate extends ABioService {
      * Aggiorna le NAZIONALITA, con un download del modulo nazionalità
      * Aggiorna le PROFESSIONI, con un download del modulo professioni
      * <p>
-     * Recupera dal server wiki la lista delle voci della categoria
-     * Recupera dal server wiki il totale delle voci della categoria per un controllo
+     * Recupera dal server wiki la lista delle pagine della categoria
+     * Recupera dal server wiki il totale delle pagine della categoria per un controllo
      * <p>
      * Crea una lista di titles dalla collezione Bio esistente sul mongoDB
      * <p>
@@ -56,10 +56,10 @@ public class CicloUpdate extends ABioService {
      * <p>
      * Trova la differenza negativa (records mancanti)
      * Esegue un ciclo (NEW) di creazione di nuovi records esistenti sul server e mancanti nel database
-     * Scarica la lista di voci mancanti dal server e crea i nuovi records di Bio
+     * Scarica la lista di pagine mancanti dal server e crea i nuovi records di Bio
      * <p>
      * Esegue un ciclo (UPDATE) di controllo e aggiornamento di tutti i records esistenti nel database
-     * Spazzola tutte le voci a blocchi di 'pageLimit' per volta per recuperare il 'timestamp' delle pagine
+     * Spazzola tutte le pagine a blocchi di 'pageLimit' per volta per recuperare il 'timestamp' delle pagine
      * Trova tutte le pagine (del blocco) modificate sul server DOPO l'ultima lettura
      * Aggiorna i records che sono stati modificati sul servere wiki DOPO l'ultima lettura
      * <p>
@@ -86,22 +86,22 @@ public class CicloUpdate extends ABioService {
         //--download del modulo professione
         professioneService.download();
 
-        //--Recupera la lista delle voci della categoria dal server wiki
+        //--Recupera la lista delle pagine della categoria dal server wiki
         result.setNumVociCategoria(appContext.getBean(AQueryCatInfo.class, result.getNomeCategoria()).numVoci());
         result.setVociDaCreare(appContext.getBean(AQueryCat.class, result.getNomeCategoria()).urlRequestTitle());
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             if (result.getNumVociCategoria() == 0) {
-                message = "Numero errato di voci sul server";
+                message = "Numero errato di pagine sul server";
                 log.warn(message);
                 logger.warning("Download - " + message);
             }// end of if cycle
             if (result.getVociDaCreare() == null) {
-                message = "Non riesco a leggere le voci dal server. Forse non sono loggato come bot";
+                message = "Non riesco a leggere le pagine dal server. Forse non sono loggato come bot";
                 log.warn(message);
                 logger.warning("Download - " + message);
             }// end of if cycle
             if (result.getNumVociCategoria() != result.getVociDaCreare().size()) {
-                message = "Le voci della categoria non coincidono: sul server ce ne sono " + text.format(result.getNumVociCategoria()) + " e ne ha recuperate " + text.format(result.getVociDaCreare().size());
+                message = "Le pagine della categoria non coincidono: sul server ce ne sono " + text.format(result.getNumVociCategoria()) + " e ne ha recuperate " + text.format(result.getVociDaCreare().size());
                 log.warn(message);
                 logger.warning("Download - " + message);
             }// end of if cycle
@@ -113,7 +113,7 @@ public class CicloUpdate extends ABioService {
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Debug - Inizio a calcolare le voci in eccedenza. Circa dodici minuti");
+            log.info("Debug - Inizio a calcolare le pagine in eccedenza. Circa dodici minuti");
         }// end of if cycle
         result.setVociDaCancellare(array.differenza(vociBio, result.getVociDaCreare()));
         if (pref.isBool(FlowCost.USA_DEBUG)) {
@@ -127,7 +127,7 @@ public class CicloUpdate extends ABioService {
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Debug - Inizio a calcolare le voci mancanti. Circa dodici minuti");
+            log.info("Debug - Inizio a calcolare le pagine mancanti. Circa dodici minuti");
         }// end of if cycle
         result.setVociDaCreare(array.differenza(result.getVociDaCreare(), vociBio));
         if (pref.isBool(FlowCost.USA_DEBUG)) {
@@ -135,7 +135,7 @@ public class CicloUpdate extends ABioService {
             logger.debug("Calcolate " + text.format(result.getVociDaCreare().size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
         }// end of if cycle
 
-        //--Scarica dal server la lista di voci mancanti e crea le nuove entities sul mongoDB Bio
+        //--Scarica dal server la lista di pagine mancanti e crea le nuove entities sul mongoDB Bio
         result = newService.esegue(result);
 
         //--aggiorna tutte le entities mongoDB Bio che sono stati modificate sul server wiki DOPO l'ultima lettura
@@ -146,7 +146,7 @@ public class CicloUpdate extends ABioService {
         }// end of if cycle
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Update - Ciclo totale attività, nazionalità, professione, categoria, nuove voci in " + date.deltaText(result.getInizioLong()));
+            log.info("Update - Ciclo totale attività, nazionalità, professione, categoria, nuove pagine in " + date.deltaText(result.getInizioLong()));
             log.info("Fine task di update: " + date.getTime(LocalDateTime.now()));
             log.info("");
         }// end of if cycle
