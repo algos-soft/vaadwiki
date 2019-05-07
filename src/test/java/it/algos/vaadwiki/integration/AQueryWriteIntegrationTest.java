@@ -46,6 +46,8 @@ public class AQueryWriteIntegrationTest extends ATest {
 
     private final static String TITOLO = UtilityView.WIKI_TITLE_DEBUG;
 
+    private final static String TESTO = "Prova 999";
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -67,7 +69,7 @@ public class AQueryWriteIntegrationTest extends ATest {
 
     @Test
     public void urlRequest() {
-        query = appContext.getBean(AQueryWrite.class, TITOLO);
+        query = appContext.getBean(AQueryWrite.class, TITOLO, TESTO);
     }// end of method
 
 }// end of class

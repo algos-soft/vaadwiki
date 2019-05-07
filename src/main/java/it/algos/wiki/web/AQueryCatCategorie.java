@@ -36,7 +36,7 @@ public class AQueryCatCategorie extends AQueryCat {
 
 
     /**
-     * Costruttore con parametri <br>
+     * Costruttore con parametri. È OBBLIGATORIO titoloCat <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(AQueryCatCategorie.class, titoloCat) <br>
      * Usa: appContext.getBean(AQueryCatCategorie.class, titoloCat).lista <br>

@@ -198,7 +198,7 @@ public abstract class AQuery {
      * La response viene sempre elaborata per estrarre le informazioni richieste <br>
      */
     public String urlRequest() {
-        return urlRequest("");
+        return urlRequest(urlDomain);
     } // fine del metodo
 
 

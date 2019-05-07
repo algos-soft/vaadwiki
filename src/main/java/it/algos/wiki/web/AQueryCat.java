@@ -188,7 +188,7 @@ public abstract class AQueryCat extends AQueryGet {
 
         System.out.println("");
         do {
-            super.urlRequest(urlDomain);
+            super.urlRequest();
             if (pref.isBool(FlowCost.USA_DEBUG) && numCicliPrevisti > 1) {
                 System.out.println("Recuperato il blocco di categoria n.: " + (k + 1) + " - Adesso ci sono " + text.format(lista.size()) + " voci");
 //                List<String> sub = lista.subList(k * limit, Math.min((k + 1) * limit, lista.size()));

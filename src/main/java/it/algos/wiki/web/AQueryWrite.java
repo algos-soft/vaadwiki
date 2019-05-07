@@ -1,11 +1,14 @@
 package it.algos.wiki.web;
 
+import it.algos.wiki.LibWiki;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -40,30 +43,22 @@ public class AQueryWrite extends AQueryPost {
 
     /**
      * Costruttore base senza parametri <br>
-     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(AQueryxxx.class) <br>
+     * NON usato <br>
+     * Viene usato solo il costruttore col titolo della categoria <br>
+     * Questo costruttore (deprecato) rimane SOLO per non mandare in errore (in rosso) la injection di Spring
+     * Se Spring trova un solo costruttore (quello col parametro) cerca di iniettare il parametro
+     * che però è una stringa e va in errore (solo visivo, in realtà compila lo stesso)
      */
+    @Deprecated
     public AQueryWrite() {
-        super();
     }// end of constructor
 
 
     /**
-     * Costruttore con parametri <br>
+     * Costruttore con parametri. È OBBLIGATORIO titoloWiki e  newText <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(AQueryxxx.class, titoloWiki).urlResponse() <br>
-     *
-     * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
-     */
-    public AQueryWrite(String titoloWiki) {
-        super(titoloWiki);
-    }// end of constructor
-
-
-    /**
-     * Costruttore con parametri <br>
-     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(AQueryxxx.class, titoloWiki, newText).urlResponse() <br>
+     * Usa: appContext.getBean(AQueryWrite.class, titoloWiki, newText).status <br>
+     * Usa: appContext.getBean(AQueryWrite.class, titoloWiki, newText) <br>
      *
      * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
      * @param newText    da inserire
@@ -73,22 +68,37 @@ public class AQueryWrite extends AQueryPost {
         this.newText = newText;
     }// end of constructor
 
-
     /**
-     * Request principale <br>
+     * Metodo invocato subito DOPO il costruttore
      * <p>
-     * La stringa del urlDomain per la request viene elaborata <br>
-     * Si crea la connessione <br>
-     * La request base usa solo il GET <br>
-     * In alcune request (non tutte) si aggiunge anche il POST <br>
-     * Alcune request (non tutte) scaricano e memorizzano i cookies ricevuti nella connessione <br>
-     * Alcune request (non tutte) hanno bisogno di inviare i cookies nella request <br>
-     * Si invia la connessione <br>
-     * La response viene sempre elaborata per estrarre le informazioni richieste <br>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se ci sono superclassi e sottoclassi, chiama prima @PostConstruct della superclasse <br>
      */
-    public String urlRequest() {
-        return urlRequest(urlDomain, newText);
+    @PostConstruct
+    protected void inizia() {
+        urlRequestWrite();
     }// end of method
+
+
+//    /**
+//     * Request principale <br>
+//     * <p>
+//     * La stringa del urlDomain per la request viene elaborata <br>
+//     * Si crea la connessione <br>
+//     * La request base usa solo il GET <br>
+//     * In alcune request (non tutte) si aggiunge anche il POST <br>
+//     * Alcune request (non tutte) scaricano e memorizzano i cookies ricevuti nella connessione <br>
+//     * Alcune request (non tutte) hanno bisogno di inviare i cookies nella request <br>
+//     * Si invia la connessione <br>
+//     * La response viene sempre elaborata per estrarre le informazioni richieste <br>
+//     */
+//    public String urlRequest() {
+//        return urlRequest(urlDomain, newText);
+//    }// end of method
 
 
 //    /**
@@ -126,13 +136,9 @@ public class AQueryWrite extends AQueryPost {
      * Alcune request (non tutte) hanno bisogno di inviare i cookies nella request <br>
      * Si invia la connessione <br>
      * La response viene sempre elaborata per estrarre le informazioni richieste <br>
-     *
-     * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
-     * @param newText    da inserire
      */
-    public String urlRequest(String titoloWiki, String newText) {
-        this.urlDomain = titoloWiki;
-        this.newText = newText;
+    public boolean urlRequestWrite() {
+        boolean status = false;
 
         //--La prima request è di tipo GET
         //--regole qui le preferenze perché sono diverse tra la preliminaryRequest e la urlRequest
@@ -148,7 +154,7 @@ public class AQueryWrite extends AQueryPost {
         super.isUsaPost = true;
         super.urlRequest();
 
-        return "";
+        return status;
     }// end of method
 
 
@@ -220,6 +226,23 @@ public class AQueryWrite extends AQueryPost {
         return urlDomain;
     } // fine del metodo
 
+    /**
+     * Allega i cookies alla request (upload)
+     * Serve solo la sessione
+     *
+     * @param urlConn connessione
+     */
+    @Override
+    protected void uploadCookies(URLConnection urlConn) {
+        HashMap<String, Object> mappa = null;
+        String txtCookies = "";
+
+        if (isUploadCookies && wLogin != null) {
+            mappa = wLogin.getCookies();
+            txtCookies = LibWiki.creaCookiesText(mappa);
+            urlConn.setRequestProperty("Cookie", txtCookies);
+        }// end of if cycle
+    } // fine del metodo
 
     /**
      * Crea il testo del POST della request
@@ -234,6 +257,12 @@ public class AQueryWrite extends AQueryPost {
             testoPost += "token" + "=";
             testoPost += csrftoken;
         }// end of if cycle
+
+        testoPost += "&bot=true";
+        testoPost += "&minor=true";
+//        if (!testoSummary.equals("")) {
+//            testoPost += "&summary=" + testoSummary;
+//        }// end of if cycle
 
         testoPost += "&text" + "=";
         testoPost += newText;

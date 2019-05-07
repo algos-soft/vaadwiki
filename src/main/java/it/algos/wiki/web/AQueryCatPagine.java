@@ -34,7 +34,7 @@ public class AQueryCatPagine extends AQueryCat {
 
 
     /**
-     * Costruttore con parametri <br>
+     * Costruttore con parametri. È OBBLIGATORIO titoloCat <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(AQueryCatPagine.class, titoloCat) <br>
      * Usa: appContext.getBean(AQueryCatPagine.class, titoloCat).lista <br>
