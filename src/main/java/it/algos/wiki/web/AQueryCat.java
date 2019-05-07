@@ -33,7 +33,7 @@ import java.util.HashMap;
 @Component("AQueryCat")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-public class AQueryCat extends AQueryGet {
+public abstract class AQueryCat extends AQueryGet {
 
 
     /**
@@ -110,7 +110,7 @@ public class AQueryCat extends AQueryGet {
     /**
      * Costruttore base senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(AQueryxxx.class) <br>
+     * Usa: appContext.getBean(AQueryCat.class) <br>
      */
     public AQueryCat() {
         super();
@@ -120,8 +120,8 @@ public class AQueryCat extends AQueryGet {
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(AQueryxxx.class, urlRequest) <br>
-     * Usa: appContext.getBean(AQueryxxx.class, urlRequest).urlResponse() <br>
+     * Usa: appContext.getBean(AQueryCat.class, urlRequest) <br>
+     * Usa: appContext.getBean(AQueryCat.class, urlRequest).urlResponse() <br>
      *
      * @param titoloCat della categoria (necessita di codifica) usato nella urlRequest
      */
@@ -142,7 +142,7 @@ public class AQueryCat extends AQueryGet {
      */
     @PostConstruct
     protected void inizia() {
-        urlRequestTitle();
+        urlRequestCat();
     }// end of method
 
 
@@ -159,22 +159,6 @@ public class AQueryCat extends AQueryGet {
     }// end of method
 
 
-    /**
-     * Request principale <br>
-     * <p>
-     * La stringa del urlDomain per la request viene elaborata <br>
-     * Si crea la connessione <br>
-     * La request base usa solo il GET <br>
-     * In alcune request (non tutte) si aggiunge anche il POST <br>
-     * Alcune request (non tutte) scaricano e memorizzano i cookies ricevuti nella connessione <br>
-     * Alcune request (non tutte) hanno bisogno di inviare i cookies nella request <br>
-     * Si invia la connessione <br>
-     * La response viene sempre elaborata per estrarre le informazioni richieste <br>
-     */
-    public ArrayList<String> urlRequestTitle() {
-        return urlRequestTitle(urlDomain);
-    }// end of method
-
 
     /**
      * Request principale <br>
@@ -187,14 +171,12 @@ public class AQueryCat extends AQueryGet {
      * Alcune request (non tutte) hanno bisogno di inviare i cookies nella request <br>
      * Si invia la connessione <br>
      * La response viene sempre elaborata per estrarre le informazioni richieste <br>
-     *
-     * @param titoloCat della categoria (necessita di codifica) usato nella urlRequest
      */
-    public ArrayList<String> urlRequestTitle(String titoloCat) {
+    public ArrayList<String> urlRequestCat() {
         long inizio = System.currentTimeMillis();
         String message = "";
         lista = new ArrayList<>();
-        int numVoci = appContext.getBean(AQueryCatInfo.class, titoloCat).numVoci;
+        int numVoci = appContext.getBean(AQueryCatInfo.class, urlDomain).numVoci;
         int numCicliPrevisti = 0;
         int k = 0;
 
@@ -206,7 +188,7 @@ public class AQueryCat extends AQueryGet {
 
         System.out.println("");
         do {
-            super.urlRequest(titoloCat);
+            super.urlRequest(urlDomain);
             if (pref.isBool(FlowCost.USA_DEBUG) && numCicliPrevisti > 1) {
                 System.out.println("Recuperato il blocco di categoria n.: " + (k + 1) + " - Adesso ci sono " + text.format(lista.size()) + " voci");
 //                List<String> sub = lista.subList(k * limit, Math.min((k + 1) * limit, lista.size()));
@@ -220,7 +202,7 @@ public class AQueryCat extends AQueryGet {
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             message += "Download categoria ";
-            message += titoloCat;
+            message += urlDomain;
             message += " (" + text.format(lista.size()) + " pagine in ";
             message += date.deltaText(inizio);
             message += "), con AQueryCat, loggato come " + wLogin.getLgusername() + ", upload cookies, urlRequest di tipo GET";
@@ -229,10 +211,10 @@ public class AQueryCat extends AQueryGet {
 
         if (pref.isBool(FlowCost.USA_DEBUG) && numCicliPrevisti > 0) {
             System.out.println("");
-            System.out.println("Categoria " + titoloCat + " - Cicli previsti " + numCicliPrevisti + " - Effettivi " + k);
-            System.out.println("Categoria " + titoloCat + " - Previste " + text.format(numVoci) + " voci - Recuperate " + text.format(lista.size()));
+            System.out.println("Categoria " + urlDomain + " - Cicli previsti " + numCicliPrevisti + " - Effettivi " + k);
+            System.out.println("Categoria " + urlDomain + " - Previste " + text.format(numVoci) + " voci - Recuperate " + text.format(lista.size()));
             if (numVoci > lista.size()) {
-                System.out.println("Categoria " + titoloCat + " - Mancano " + (numVoci - lista.size()) + " voci");
+                System.out.println("Categoria " + urlDomain + " - Mancano " + (numVoci - lista.size()) + " voci");
             }// end of if cycle
 
             System.out.println("");

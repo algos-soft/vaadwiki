@@ -69,7 +69,7 @@ public class CicloDownload extends ABioService {
 
         //--Recupera la lista delle pagine della categoria dal server wiki
         result.setNumVociCategoria(appContext.getBean(AQueryCatInfo.class, result.getNomeCategoria()).numVoci());
-        result.setVociDaCreare(appContext.getBean(AQueryCat.class, result.getNomeCategoria()).urlRequestTitle());
+        result.setVociDaCreare(appContext.getBean(AQueryCat.class, result.getNomeCategoria()).lista);
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             if (result.getNumVociCategoria() == 0) {
                 message = "Numero errato di pagine sul server";
