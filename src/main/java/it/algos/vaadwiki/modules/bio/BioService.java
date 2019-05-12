@@ -219,7 +219,9 @@ public class BioService extends AttNazProfCatService {
             if (sort != null) {
                 lista = new ArrayList(repository.findAll(sort));
             } else {
-                lista = new ArrayList(repository.findTop50ByOrderByWikiTitleAsc());
+                //@todo troppo lento - devo disabilitarlo
+//                lista = new ArrayList(repository.findTop50ByOrderByWikiTitleAsc());
+//                lista = new ArrayList(repository.findAllByOrderByWikiTitleAsc());
             }// end of if/else cycle
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
@@ -384,14 +386,33 @@ public class BioService extends AttNazProfCatService {
     }// end of method
 
 
-    public void downloadBio(String wikiTitle) {
+    public Bio downloadBio(String wikiTitle) {
+        Bio bio = null;
+
         Page pagina = api.leggePage(wikiTitle);
         if (pagina != null) {
             long pageId = pagina.getPageid();
             String templateText = api.estraeTmplBio(pagina);
-            Bio bio = crea(pageId, wikiTitle, templateText);
+            bio = crea(pageId, wikiTitle, templateText);
             elabora.esegue(bio, true);
         }// end of if cycle
+
+        return bio;
+    }// end of method
+
+
+    public Bio downloadBio(long pageid) {
+        Bio bio = null;
+
+        Page pagina = api.leggePage(pageid);
+        if (pagina != null) {
+            String wikiTitle = pagina.getTitle();
+            String templateText = api.estraeTmplBio(pagina);
+            bio = crea(pageid, wikiTitle, templateText);
+            elabora.esegue(bio, true);
+        }// end of if cycle
+
+        return bio;
     }// end of method
 
 
@@ -413,6 +434,31 @@ public class BioService extends AttNazProfCatService {
     public List<? extends AEntity> findAll(int offset, int size) {
         Sort sort = new Sort(Sort.Direction.ASC, "cognome");
         return findAll(offset, size, sort);
+    }// end of method
+
+
+    /**
+     * Returns pageid list of all entities of the type.
+     * <p>
+     * Senza filtri
+     * Ordinati per sort
+     *
+     * @return all entities
+     */
+    public ArrayList<Long> findAllPageid() {
+        ArrayList<Long> listaPageid = null;
+        List<Bio> listaBio;
+
+        listaBio = mongo.findAllProperty("pageid", Bio.class);
+
+        if (array.isValid(listaBio)) {
+            listaPageid = new ArrayList<>();
+            for (Bio bio : listaBio) {
+                listaPageid.add(bio.getPageid());
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaPageid;
     }// end of method
 
 
@@ -482,14 +528,14 @@ public class BioService extends AttNazProfCatService {
      *
      * @return map (wikititle,timestamp)
      */
-    public LinkedHashMap<String, Timestamp> findTimestampMap(int offset, int size, Sort sort) {
-        LinkedHashMap<String, Timestamp> mappa = null;
+    public LinkedHashMap<Long, Timestamp> findTimestampMap(int offset, int size, Sort sort) {
+        LinkedHashMap<Long, Timestamp> mappa = null;
         ArrayList<? extends AEntity> listaEntities = findAll(offset, size, sort);
 
         if (array.isValid(listaEntities)) {
             mappa = new LinkedHashMap<>();
             for (AEntity entity : listaEntities) {
-                mappa.put(((Bio) entity).wikiTitle, Timestamp.valueOf(((Bio) entity).lastLettura));
+                mappa.put(((Bio) entity).pageid, Timestamp.valueOf(((Bio) entity).lastLettura));
             }// end of for cycle
         }// end of if cycle
 

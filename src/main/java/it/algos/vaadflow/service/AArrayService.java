@@ -528,4 +528,81 @@ public class AArrayService extends AbstractService {
         return differenza;
     } // fine del metodo
 
+
+    /**
+     * Differenza tra due array di Long
+     *
+     * @param listaUno   array
+     * @param listaDue array
+     *
+     * @return differenza
+     */
+    public ArrayList delta(List<Long> listaUno, List<Long> listaDue) {
+        HashSet<Long> hashA = new HashSet<Long>();
+        HashSet<Long> hashB = new HashSet<Long>();
+        int pos = 0;
+        int sec = 0;
+        long inizio = System.currentTimeMillis();
+
+        for (Long stringaA : listaUno) {
+            hashA.add(stringaA);
+        }// end of for cycle
+        for (Long stringaB : listaDue) {
+            hashB.add(stringaB);
+        }// end of for cycle
+
+        for (Long stringa : hashB) {
+            if (hashA.contains(stringa)) {
+                hashA.remove(stringa);
+            }// end of if cycle
+            pos++;
+            sec++;
+            if (sec == 10000) {
+                log.info("Array. Differenza di " + text.format(pos) + " elementi in " + date.deltaText(inizio));
+                sec = 0;
+            }// end of if cycle
+        }// end of for cycle
+
+        return new ArrayList<Long>(hashA);
+    } // fine del metodo
+
+
+
+//    /**
+//     * Differenza tra due array
+//     *
+//     * @param primo   array
+//     * @param secondo array
+//     *
+//     * @return differenza
+//     */
+//    public ArrayList delta(List<String> listaUno, List<String> listaDue) {
+//        HashSet<String> hashA = new HashSet<String>();
+//        HashSet<String> hashB = new HashSet<String>();
+//        int pos = 0;
+//        int sec = 0;
+//        long inizio = System.currentTimeMillis();
+//
+//        for (String stringaA : listaUno) {
+//            hashA.add(stringaA);
+//        }// end of for cycle
+//        for (String stringaB : listaDue) {
+//            hashB.add(stringaB);
+//        }// end of for cycle
+//
+//        for (String stringa : hashA) {
+//            if (hashB.contains(stringa)) {
+//                hashB.remove(stringa);
+//            }// end of if cycle
+//            pos++;
+//            sec++;
+//            if (sec == 10000) {
+//                log.info("Array. Differenza di " + text.format(pos) + " elementi in " + date.deltaText(inizio));
+//                sec = 0;
+//            }// end of if cycle
+//        }// end of for cycle
+//
+//        return new ArrayList<String>(hashB);
+//    } // fine del metodo
+
 }// end of singleton class

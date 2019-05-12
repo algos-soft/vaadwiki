@@ -7,6 +7,7 @@ import it.algos.wiki.DownloadResult;
 import it.algos.wiki.web.AQueryCat;
 import it.algos.wiki.web.AQueryCatInfo;
 import it.algos.wiki.web.AQueryCatPagine;
+import it.algos.wiki.web.AQueryCatPaginePageid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -70,7 +71,7 @@ public class CicloDownload extends ABioService {
 
         //--Recupera la lista delle pagine della categoria dal server wiki
         result.setNumVociCategoria(appContext.getBean(AQueryCatInfo.class, result.getNomeCategoria()).numVoci());
-        result.setVociDaCreare(appContext.getBean(AQueryCatPagine.class, result.getNomeCategoria()).lista);
+        result.setVociDaCreare(appContext.getBean(AQueryCatPaginePageid.class, result.getNomeCategoria()).listaPageid);
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             if (result.getNumVociCategoria() == 0) {
                 message = "Numero errato di pagine sul server";

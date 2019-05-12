@@ -310,18 +310,18 @@ public class AWikiService {
      *
      * @return stringa con i singoli valori divisi dal separatore pipe e codificati UTF-8
      */
-    public String multiPages(ArrayList<String> array) {
+    public String multiPages(ArrayList<Long> arrayPageid) {
         String urlDomain;
         String sep = "|";
         StringBuilder textBuffer = new StringBuilder();
 
-        for (String titolo : array) {
-            try { // prova ad eseguire il codice
-                titolo = URLEncoder.encode(titolo, ENCODE);
-            } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
-            }// fine del blocco try-catch
-            textBuffer.append(titolo);
+        for (Long pageid : arrayPageid) {
+//            try { // prova ad eseguire il codice
+//                titolo = URLEncoder.encode(titolo, ENCODE);
+//            } catch (Exception unErrore) { // intercetta l'errore
+//                log.error(unErrore.toString());
+//            }// fine del blocco try-catch
+            textBuffer.append(pageid);
             textBuffer.append(sep);
         } // fine del ciclo for-each
         urlDomain = textBuffer.toString();

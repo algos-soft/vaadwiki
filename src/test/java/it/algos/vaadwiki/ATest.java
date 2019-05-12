@@ -145,6 +145,10 @@ public class ATest {
 
     protected ArrayList<Field> ottenutoFieldList;
 
+    protected ArrayList<Long> previstoLongList;
+
+    protected ArrayList<Long> ottenutoLongList;
+
     protected EAFieldType previstoType;
 
     protected EAFieldType ottenutoType;

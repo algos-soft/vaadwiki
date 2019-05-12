@@ -2267,6 +2267,39 @@ public class LibBio {
         if (testoValido.equals("1 gennaio") || testoValido.equals("1° gennaio")) {
             testoValido = "1º gennaio";
         }// end of if cycle
+        if (testoValido.equals("1 febbraio") || testoValido.equals("1° febbraio")) {
+            testoValido = "1º febbraio";
+        }// end of if cycle
+        if (testoValido.equals("1 marzo") || testoValido.equals("1° marzo")) {
+            testoValido = "1º marzo";
+        }// end of if cycle
+        if (testoValido.equals("1 aprile") || testoValido.equals("1° aprile")) {
+            testoValido = "1º aprile";
+        }// end of if cycle
+        if (testoValido.equals("1 maggio") || testoValido.equals("1° maggio")) {
+            testoValido = "1º maggio";
+        }// end of if cycle
+        if (testoValido.equals("1 giugno") || testoValido.equals("1° giugno")) {
+            testoValido = "1º giugno";
+        }// end of if cycle
+        if (testoValido.equals("1 luglio") || testoValido.equals("1° luglio")) {
+            testoValido = "1º luglio";
+        }// end of if cycle
+        if (testoValido.equals("1 agosto") || testoValido.equals("1° agosto")) {
+            testoValido = "1º agosto";
+        }// end of if cycle
+        if (testoValido.equals("1 settembre") || testoValido.equals("1° settembre")) {
+            testoValido = "1º settembre";
+        }// end of if cycle
+        if (testoValido.equals("1 ottobre") || testoValido.equals("1° ottobre")) {
+            testoValido = "1º ottobre";
+        }// end of if cycle
+        if (testoValido.equals("1 novembre") || testoValido.equals("1° novembre")) {
+            testoValido = "1º novembre";
+        }// end of if cycle
+        if (testoValido.equals("1 dicembre") || testoValido.equals("1° dicembre")) {
+            testoValido = "1º dicembre";
+        }// end of if cycle
 
         if (testoValido.contains(tagDoppio)) {
             testoValido = testoValido.replaceFirst(tagDoppio, SPAZIO);

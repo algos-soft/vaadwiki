@@ -334,7 +334,7 @@ public abstract class Upload {
             }// fine del blocco if
 
             if (pref.isBool(FlowCost.USA_DEBUG) || checkPossoRegistrare(titoloPagina, testo)) {
-                appContext.getBean(AQueryWrite.class, titoloPagina, testo).urlRequest();
+                appContext.getBean(AQueryWrite.class, titoloPagina, testo);
             }// end of if cycle
         }// fine del blocco if
     }// fine del metodo

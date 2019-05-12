@@ -43,7 +43,7 @@ public class PageService extends ABioService {
      * @return wrapper di dati risultanti
      */
     public DownloadResult downloadPagine(DownloadResult result) {
-        ArrayList<String> bloccoPage;
+        ArrayList<Long> bloccoPage;
         int dimBloccoLettura = pref.getInt(WIKI_PAGE_LIMIT);
         int numCicliLetturaPagine;
         long inizio = System.currentTimeMillis();
@@ -81,12 +81,12 @@ public class PageService extends ABioService {
      * Esegue un inserimento di tipo BULK nel mongoDB Bio <br>
      *
      * @param result      wrapper di dati risultanti
-     * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
+     * @param arrayPageid lista (pageid) di pagine da scaricare dal server wiki
      *
      * @return wrapper di dati risultanti
      */
-    public DownloadResult downloadSingoloBlocco(DownloadResult result, ArrayList<String> arrayTitles) {
-        return singoloBlocco(result, arrayTitles, EACicloType.download);
+    public DownloadResult downloadSingoloBlocco(DownloadResult result, ArrayList<Long> arrayPageid) {
+        return singoloBlocco(result, arrayPageid, EACicloType.download);
     }// end of method
 
 
@@ -99,12 +99,12 @@ public class PageService extends ABioService {
      * Esegue un inserimento di tipo BULK nel mongoDB Bio <br>
      *
      * @param result      wrapper di dati risultanti
-     * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
+     * @param arrayPageid lista (pageid) di pagine da scaricare dal server wiki
      *
      * @return wrapper di dati risultanti
      */
-    public DownloadResult updateSingoloBlocco(DownloadResult result, ArrayList<String> arrayTitles) {
-        return singoloBlocco(result, arrayTitles, EACicloType.update);
+    public DownloadResult updateSingoloBlocco(DownloadResult result, ArrayList<Long> arrayPageid) {
+        return singoloBlocco(result, arrayPageid, EACicloType.update);
     }// end of method
 
 
@@ -117,17 +117,17 @@ public class PageService extends ABioService {
      * Esegue un inserimento di tipo BULK nel mongoDB Bio <br>
      *
      * @param result      wrapper di dati risultanti
-     * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
+     * @param arrayPageid lista (pageid) di pagine da scaricare dal server wiki
      *
      * @return wrapper di dati risultanti
      */
-    private DownloadResult singoloBlocco(DownloadResult result, ArrayList<String> arrayTitles, EACicloType type) {
+    private DownloadResult singoloBlocco(DownloadResult result, ArrayList<Long> arrayPageid, EACicloType type) {
         ArrayList<Page> pages = null; // di norma 500
         Bio entity;
         ArrayList<Long> vociDaRegistrareInQuestoBlocco = new ArrayList<>();
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
 
-        pages = ((AQueryPages) appContext.getBean("AQueryPages", arrayTitles)).pagesResponse();
+        pages = ((AQueryPages) appContext.getBean("AQueryPages", arrayPageid)).pagesResponse();
 
         if (pages == null) {
             return result;

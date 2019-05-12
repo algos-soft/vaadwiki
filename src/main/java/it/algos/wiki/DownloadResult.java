@@ -22,9 +22,13 @@ public class DownloadResult {
 
     private LocalDateTime inizio;
 
-    private ArrayList<String> vociDaCancellare;
+//    private ArrayList<String> vociDaCancellare;
+//
+//    private ArrayList<String> vociDaCreare;
 
-    private ArrayList<String> vociDaCreare;
+    private ArrayList<Long> vociDaCancellare;
+
+    private ArrayList<Long> vociDaCreare;
 
     private ArrayList<String> vociNonCreate;
 
@@ -44,7 +48,7 @@ public class DownloadResult {
     }// end of constructor
 
 
-    public DownloadResult(ArrayList<String> vociDaCreare) {
+    public DownloadResult(ArrayList<Long> vociDaCreare) {
         this.vociDaCreare = vociDaCreare;
     }// end of constructor
 
@@ -94,12 +98,12 @@ public class DownloadResult {
     }// end of method
 
 
-    public ArrayList<String> getVociDaCreare() {
+    public ArrayList<Long> getVociDaCreare() {
         return vociDaCreare;
     }// end of method
 
 
-    public void setVociDaCreare(ArrayList<String> vociDaCreare) {
+    public void setVociDaCreare(ArrayList<Long> vociDaCreare) {
         this.vociDaCreare = vociDaCreare;
     }// end of method
 
@@ -114,12 +118,12 @@ public class DownloadResult {
     }// end of method
 
 
-    public ArrayList<String> getVociDaCancellare() {
+    public ArrayList<Long> getVociDaCancellare() {
         return vociDaCancellare;
     }// end of method
 
 
-    public void setVociDaCancellare(ArrayList<String> vociDaCancellare) {
+    public void setVociDaCancellare(ArrayList<Long> vociDaCancellare) {
         this.vociDaCancellare = vociDaCancellare;
     }// end of method
 

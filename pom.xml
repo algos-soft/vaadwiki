@@ -97,6 +97,25 @@
             <version>1.0.0</version>
         </dependency>
 
+        <!-- MultiSelectCombo -->
+        <dependency>
+            <groupId>org.vaadin.gatanaso</groupId>
+            <artifactId>multiselect-combo-box-flow</artifactId>
+            <version>0.0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bowergithub.vaadin</groupId>
+            <artifactId>vaadin-combo-box</artifactId>
+            <version>4.2.7</version>
+        </dependency>
+
+        <!-- Pagination -->
+        <dependency>
+            <groupId>org.vaadin.klaudeta</groupId>
+            <artifactId>grid-pagination</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
         <!-- Spring -->
         <dependency>
             <groupId>com.vaadin</groupId>

@@ -1,8 +1,15 @@
 package it.algos.vaadwiki.modules.attivita;
 
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.HeaderRow;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
@@ -12,6 +19,7 @@ import it.algos.vaadwiki.schedule.TaskAttivita;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.vaadin.klaudeta.PaginatedGrid;
 
 import javax.annotation.PostConstruct;
 
@@ -60,6 +68,7 @@ public class AttivitaViewList extends AttNazProfCatViewList {
     @Autowired
     private TaskAttivita taskAttivita;
 
+    private PaginatedGrid<Attivita> gridPaginated;
 
     /**
      * Costruttore @Autowired <br>
@@ -87,10 +96,71 @@ public class AttivitaViewList extends AttNazProfCatViewList {
         super.titoloModulo = service.titoloModuloAttivita;
         super.titoloPaginaStatistiche = service.titoloPaginaStatisticheAttivita;
         super.task = taskAttivita;
+        super.usaPagination = true;
         super.codeFlagDownload = USA_DAEMON_ATTIVITA;
         super.codeLastDownload = LAST_DOWNLOAD_ATTIVITA;
         super.durataLastDownload = DURATA_DOWNLOAD_ATTIVITA;
     }// end of method
 
+    /**
+     * Prova a creare la grid paginata (secondo il flag)
+     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     * Nella sottoclasse specifica vanno aggiunte le colonne che non si riesce ad aggiungere in automatico
+     * Componente grafico obbligatorio
+     * Costruisce la Grid con le colonne. Gli items vengono caricati in updateView()
+     * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto)
+     */
+    protected void updateGridPaginata() {
+        FlexLayout layout = new FlexLayout();
+        gridPaginated = new PaginatedGrid<>();
+        super.gridPaginataBefore();
+
+        gridPaginated.addColumn(Attivita::getSingolare).setHeader("Singolare").setFlexGrow(0).setWidth("25em");
+        gridPaginated.addColumn(Attivita::getPlurale).setHeader("Plurale");
+
+        super.gridPaginataAfter();
+
+        gridPaginated.setItems(items);
+
+        // Sets the max number of items to be rendered on the grid for each page
+        gridPaginated.setPageSize(15);
+
+        // Sets how many pages should be visible on the pagination before and/or after the current selected page
+        gridPaginated.setPaginatorSize(1);
+
+        gridHolder.add(gridPaginated);
+        gridHolder.setFlexGrow(1, gridPaginated);
+    }// end of method
+
+    /**
+     * Apre il dialog di detail
+     */
+    protected void addDetailDialog() {
+        //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
+        if (usaBottoneEdit) {
+            ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
+            Grid.Column colonna = gridPaginated.addColumn(renderer);
+            colonna.setWidth("6em");
+            colonna.setFlexGrow(0);
+        } else {
+            EAOperation operation = isEntityModificabile ? EAOperation.edit : EAOperation.showOnly;
+            grid.addSelectionListener(evento -> apreDialogo((SingleSelectionEvent) evento, operation));
+        }// end of if/else cycle
+    }// end of method
+
+    /**
+     * Eventuale header text
+     */
+    protected void fixGridHeader(String messaggio) {
+        try { // prova ad eseguire il codice
+            HeaderRow topRow = gridPaginated.prependHeaderRow();
+            Grid.Column[] matrix = array.getColumnArray(gridPaginated);
+            HeaderRow.HeaderCell informationCell = topRow.join(matrix);
+            Label testo = new Label(messaggio);
+            informationCell.setComponent(testo);
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
+    }// end of method
 
 }// end of class

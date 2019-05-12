@@ -340,7 +340,7 @@ public class UtilityView extends VerticalLayout {
         log.info("AQueryBio: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiCat = "Nati nel 1225";
-        titoliVociCategoria = appContext.getBean(AQueryCatPagine.class,wikiCat).lista;
+        titoliVociCategoria = appContext.getBean(AQueryCatPagine.class,wikiCat).listaTitle;
         log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore senza parametri - " + titoliVociCategoria.size() + " pagine" : "No buono"));
 
         wikiTitle = Upload.PAGINA_PROVA;

@@ -3,11 +3,9 @@ package it.algos.vaadwiki.download;
 import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
-import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.ABioService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -34,14 +32,22 @@ public class DeleteService extends ABioService {
      *
      * @param vociEccedenti elenco (title) delle pagine eccedenti da cancellare
      */
-    public void esegue(ArrayList<String> vociEccedenti) {
+    public void esegue(ArrayList<Long> vociEccedenti) {
         long inizio = System.currentTimeMillis();
         DeleteResult result;
+        Bio bio;
+        String wikiTitle;
 
         if (array.isValid(vociEccedenti)) {
-            result = mongo.deleteBulkByProperty(vociEccedenti, Bio.class, "wikiTitle");
+            result = mongo.deleteBulkByProperty(vociEccedenti, Bio.class, "pageid");
             if (result.getDeletedCount() < 1) {
                 logger.error("DELETE - Non sono riuscito ad eliminare nessuna voce delle " + vociEccedenti.size() + " eccedenti");
+                for (Long pageid : vociEccedenti) {
+                    bio = bioService.downloadBio(pageid);
+                    wikiTitle = bio != null ? bio.getWikiTitle() : "";
+                    logger.error("DELETE - " + (text.isEmpty(wikiTitle) ? "Questa proprio non ci sta: "+pageid+" (pageid)" : "Non pervenuta"));
+                }// end of for cycle
+
             } else {
                 logger.info("DELETE - eliminate le pagine da mongoDB Bio (" + result.getDeletedCount() + " elementi) in " + date.deltaText(inizio));
             }// end of if/else cycle

@@ -7,6 +7,7 @@ import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.ACronoViewList;
 import it.algos.vaadflow.ui.dialog.AConfirmDialog;
@@ -61,6 +62,7 @@ public abstract class WikiViewList extends ACronoViewList {
     protected void fixPreferenzeSpecifiche() {
         super.fixPreferenzeSpecifiche();
         super.testoBottoneEdit = SHOW_NAME;
+        super.usaPagination = true;
     }// end of method
 
 
@@ -82,28 +84,6 @@ public abstract class WikiViewList extends ACronoViewList {
 //        uploadAllButton.addClickListener(e -> openUploadDialog());
         topPlaceholder.add(uploadAllButton);
 
-        //--upload singola lista di un giorno per i nati
-        uploadOneNatoButton = new Button("Upload nati", new Icon(VaadinIcon.UPLOAD));
-        uploadOneNatoButton.getElement().setAttribute("theme", "error");
-//        uploadOneNatoButton.addClickListener(selectionEvent -> {
-//            if (grid.getSelectedItems().size() == 1) {
-//                giornoCorrente = (Giorno) grid.getSelectedItems().toArray()[0];
-//                uploadGiornoNato.esegue(giornoCorrente);
-//            }// end of if cycle
-//        });//end of lambda expressions and anonymous inner class
-        topPlaceholder.add(uploadOneNatoButton);
-
-        //--upload singola lista di un giorno per i nati
-        uploadOneMortoButton = new Button("Upload morti", new Icon(VaadinIcon.UPLOAD));
-        uploadOneMortoButton.getElement().setAttribute("theme", "error");
-//        uploadOneMortoButton.addClickListener(selectionEvent -> {
-//            if (grid.getSelectedItems().size() == 1) {
-//                giornoCorrente = (Giorno) grid.getSelectedItems().toArray()[0];
-//                uploadGiornoMorto.esegue(giornoCorrente);
-//            }// end of if cycle
-//        });//end of lambda expressions and anonymous inner class
-        topPlaceholder.add(uploadOneMortoButton);
-
         sincroBottoniMenu(false);
         return topPlaceholder.getComponentCount() > 0;
     }// end of method
@@ -123,7 +103,7 @@ public abstract class WikiViewList extends ACronoViewList {
 //        if (selezioneSingola) {
 //            entitySelected = grid.asSingleSelect();
 //        }// end of if cycle
-        int alfa = grid.getSelectedItems().size();
+//        int alfa = grid.getSelectedItems().size();
 
         if (evento != null && evento.getOldValue() != evento.getValue()) {
             if (evento.getValue().getClass().getName().equals(entityClazz.getName())) {

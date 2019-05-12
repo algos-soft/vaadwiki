@@ -18,7 +18,12 @@ public abstract class AQueryGet extends AQueryWiki {
     /**
      * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
      */
-    protected final static String TAG_INFO = "&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
+    protected final static String TAG_BASE = "&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&";
+
+    /**
+     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
+     */
+    protected final static String TAG_INFO = TAG_BASE + "titles=";
 
     /**
      * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo

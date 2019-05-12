@@ -3,10 +3,7 @@ package it.algos.vaadwiki.integration;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadwiki.ATest;
-import it.algos.wiki.web.AQueryCatAll;
-import it.algos.wiki.web.AQueryCatCategorie;
-import it.algos.wiki.web.AQueryCatInfo;
-import it.algos.wiki.web.AQueryCatPagine;
+import it.algos.wiki.web.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,7 +72,7 @@ public class AQueryCatIntegrationTest extends ATest {
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_PICCOLA).numVoci;
         Assert.assertEquals(ottenutoIntero, previstoIntero);
 
-        previstoIntero = 1178;
+        previstoIntero = 1180;
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_MEDIA).numVoci;
         Assert.assertEquals(ottenutoIntero, previstoIntero);
 
@@ -87,36 +84,56 @@ public class AQueryCatIntegrationTest extends ATest {
 
 
     @Test
-    public void queryCat() {
+    public void queryCatTitle() {
         previstoIntero = 13;
-        ottenutoList = appContext.getBean(AQueryCatPagine.class, TITOLO_CAT_MINIMA).lista;
+        ottenutoList = appContext.getBean(AQueryCatPagineTitle.class, TITOLO_CAT_MINIMA).listaTitle;
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
 
         previstoIntero = 2;
-        ottenutoList = appContext.getBean(AQueryCatCategorie.class, TITOLO_CAT_MINIMA).lista;
+        ottenutoList = appContext.getBean(AQueryCatCategorie.class, TITOLO_CAT_MINIMA).listaTitle;
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
 
         previstoIntero = 15;
-        ottenutoList = appContext.getBean(AQueryCatAll.class, TITOLO_CAT_MINIMA).lista;
+        ottenutoList = appContext.getBean(AQueryCatAll.class, TITOLO_CAT_MINIMA).listaTitle;
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
 
         previstoIntero = 272;
-        ottenutoList = appContext.getBean(AQueryCatPagine.class, TITOLO_CAT_PICCOLA).lista;
+        ottenutoList = appContext.getBean(AQueryCatPagineTitle.class, TITOLO_CAT_PICCOLA).listaTitle;
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
 
-        previstoIntero = 1177;
-        ottenutoList = appContext.getBean(AQueryCatPagine.class, TITOLO_CAT_MEDIA).lista;
+        previstoIntero = 1179;
+        ottenutoList = appContext.getBean(AQueryCatPagineTitle.class, TITOLO_CAT_MEDIA).listaTitle;
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
+    }// end of method
+
+
+    @Test
+    public void queryCatPageid() {
+        previstoIntero = 13;
+        ottenutoLongList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_MINIMA).listaPageid;
+        Assert.assertNotNull(ottenutoLongList);
+        Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
+
+        previstoIntero = 272;
+        ottenutoLongList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_PICCOLA).listaPageid;
+        Assert.assertNotNull(ottenutoLongList);
+        Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
+
+        previstoIntero = 1179;
+        ottenutoLongList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_MEDIA).listaPageid;
+        Assert.assertNotNull(ottenutoLongList);
+        Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
 
 //        previstoIntero = 371000;
 //        ottenutoList = appContext.getBean(AQueryCatPagine.class, TITOLO_CAT_GRANDE).lista;
 //        Assert.assertNotNull(ottenutoList);
 //        Assert.assertEquals(Math.min(previstoIntero, ottenutoList.size()), previstoIntero);
     }// end of method
+
 
 }// end of class

@@ -1,8 +1,8 @@
 package it.algos.wiki.web;
 
 import it.algos.wiki.LibWiki;
-import it.algos.wiki.TipoRisultato;
 import it.algos.wiki.WrapTime;
+import org.json.simple.JSONArray;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -24,18 +24,19 @@ public class AQueryTimestamp extends AQueryGet {
 
 
     //--tag per la costruzione della stringa della request
-    private final static String TAG_PROP_TITLES = "&prop=revisions&rvprop=timestamp&titles=";
+    private final static String TAG_PROP_PAGEIDS = "&prop=revisions&rvprop=timestamp&pageids=";
 
     /**
      * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
      */
-    protected final static String TAG_TIMESTAMP = TAG_QUERY + TAG_BOT + TAG_SLOTS + TAG_PROP_TITLES;
+    protected final static String TAG_TIMESTAMP = TAG_QUERY + TAG_BOT + TAG_SLOTS + TAG_PROP_PAGEIDS;
 
 
     //--stringa (separata da pipe oppure da virgola) dei titles
     private String stringaTitles;
 
-    private ArrayList<String> arrayTitles;
+    //    private ArrayList<String> arrayTitles;
+    private ArrayList<Long> arrayPageid;
 
     //--lista di wrapper con wikititle e timestamp
     private ArrayList<WrapTime> listaWrapTime;
@@ -54,14 +55,28 @@ public class AQueryTimestamp extends AQueryGet {
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(AQueryxxx.class, urlRequest) <br>
-     * Usa: appContext.getBean(AQueryxxx.class, urlRequest).pageResponse() <br>
+     * Usa: appContext.getBean(AQueryTimestamp.class, urlRequest) <br>
+     * Usa: appContext.getBean(AQueryTimestamp.class, urlRequest).timestampResponse() <br>
      *
-     * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
+     * @param arrayPageid lista (pageid) di pagine da scaricare dal server wiki
      */
-    public AQueryTimestamp(ArrayList<String> arrayTitles) {
-        this.arrayTitles = arrayTitles;
+    public AQueryTimestamp(ArrayList<Long> arrayPageid) {
+        this.arrayPageid = arrayPageid;
     }// end of constructor
+
+
+//    /**
+//     * Costruttore con parametri <br>
+//     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+//     * Usa: appContext.getBean(AQueryTimestamp.class, urlRequest) <br>
+//     * Usa: appContext.getBean(AQueryTimestamp.class, urlRequest).timestampResponse() <br>
+//     *
+//     * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
+//     */
+//    public AQueryTimestamp(ArrayList<String> arrayTitles) {
+//        this.arrayTitles = arrayTitles;
+//    }// end of constructor
+//
 
 
     /**
@@ -124,38 +139,60 @@ public class AQueryTimestamp extends AQueryGet {
      * @return lista dei wrapper costruiti con la risposta
      */
     public ArrayList<WrapTime> timestampResponse() {
-        return timestampResponse(arrayTitles);
+        return timestampResponse(arrayPageid);
     }// end of method
 
 
     /**
      * Lista di wrapper con wikititle e timestamp
      *
-     * @param arrayTitles lista (titles) di pagine da controllare sul server wiki
+     * @param arrayPageid lista (pageid) di pagine da controllare sul server wiki
      *
      * @return lista dei wrapper costruiti con la risposta
      */
-    public ArrayList<WrapTime> timestampResponse(ArrayList<String> arrayTitles) {
-        this.arrayTitles = arrayTitles;
-        return timestampResponse(wikiService.multiPages(arrayTitles));
+    public ArrayList<WrapTime> timestampResponse(ArrayList<Long> arrayPageid) {
+        this.arrayPageid = arrayPageid;
+        return timestampResponse(wikiService.multiPages(arrayPageid));
     }// end of method
 
 
     /**
+     * Elabora la risposta
+     * <p>
+     * Informazioni, contenuto e validità della risposta
+     * Controllo del contenuto (testo) ricevuto
+     * DEVE essere sovrascritto nelle sottoclassi specifiche
+     */
+    protected String elaboraResponse(String urlResponse) {
+        HashMap<String, ArrayList<WrapTime>> mappa;
+
+        super.elaboraResponse(urlResponse);
+
+        if (super.isUrlResponseValida) {
+            mappa = LibWiki.creaArrayWrapTime(urlResponse);
+            if (mappa != null) {
+                listaWrapTime = mappa.get(LibWiki.KEY_PAGINE_VALIDE);
+            }// end of if cycle
+        }// end of if cycle
+
+        return urlResponse;
+    } // fine del metodo
+
+    /**
      * Lista di wrapper con wikititle e timestamp
      *
-     * @param stringaTitles (separata da pipe oppure da virgola) dei titles
+     * @param stringaPageids (separata da pipe oppure da virgola) dei pageids
      *
      * @return lista dei wrapper costruiti con la risposta
      */
-    public ArrayList<WrapTime> timestampResponse(String stringaTitles) {
+    public ArrayList<WrapTime> timestampResponse(String stringaPageids) {
         ArrayList<WrapTime> listaWrapper = null;
         String contenutoCompletoPaginaWebInFormatoJSON = "";
         HashMap<String, ArrayList<WrapTime>> mappa;
 
-        if (text.isValid(stringaTitles)) {
+        if (text.isValid(stringaPageids)) {
             try { // prova ad eseguire il codice
-                contenutoCompletoPaginaWebInFormatoJSON = super.urlRequest(stringaTitles);
+                contenutoCompletoPaginaWebInFormatoJSON = super.urlRequest(stringaPageids);
 
                 mappa = LibWiki.creaArrayWrapTime(contenutoCompletoPaginaWebInFormatoJSON);
                 if (mappa != null) {

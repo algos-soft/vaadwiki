@@ -81,14 +81,14 @@ public class UpdateService extends ABioService {
     /**
      * Esegue il ciclo per TUTTE le pagine biografiche esistenti nella collezione mongoDB Bio
      * <p>
-     * Esegue dei cicli di elaborazione per ogni 500 pagine (od altro numero)
+     * Esegue dei cicli di elaborazione per ogni 250 pagine (od altro numero)
      * Per ogni ciclo:
      * 1) recupera dalla collezione Bio una lista di 'WrapTime'
      * 2) recupara dal server wiki una lista di 'WrapTime' delle pagine corrispondenti
-     * 3) confronta le due liste ed estra una lista delle pagine modificate dall'ultima lettura
+     * 3) confronta le due liste ed estrae una lista delle pagine modificate dall'ultima lettura
      * 4) rilegge solo le pagine modificate
      * 5) cancella le entities di mongoDB Bio che sono state modificate
-     * 6) inserisce (bulk) le pagine modifcate nella collazione Bio
+     * 6) inserisce (bulk) le pagine modifcate nella collezione Bio
      */
     public DownloadResult esegueCiclo(DownloadResult result) {
         int numVociModificate = 0;
@@ -100,7 +100,7 @@ public class UpdateService extends ABioService {
         String info = "";
 
         for (int k = 0; k < numCicliLetturaPagine; k++) {
-            LinkedHashMap<String, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
+            LinkedHashMap<Long, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
             esegueSingoloBlocco(mappa, result);
             info = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " pagine e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
             if (pref.isBool(FlowCost.USA_DEBUG)) {
@@ -117,15 +117,15 @@ public class UpdateService extends ABioService {
      * Esegue un singolo ciclo di elaborazione:
      * 1) recupera dalla lista di 'WrapTime' una lista di solo 'pageid'
      * 2) recupara dal server wiki una lista di 'WrapTime' delle pagine corrispondenti
-     * 3) confronta le due liste ed estra una lista delle pagine modificate dall'ultima lettura
+     * 3) confronta le due liste ed estrae una lista delle pagine modificate dall'ultima lettura
      * 4) rilegge solo le pagine modificate
      * 5) cancella le entities di mongoDB Bio che sono state modificate
-     * 6) inserisce (bulk) le pagine modifcate nella collazione Bio
+     * 6) inserisce (bulk) le pagine modifcate nella collezione Bio
      */
-    public DownloadResult esegueSingoloBlocco(LinkedHashMap<String, Timestamp> mappa, DownloadResult result) {
+    public DownloadResult esegueSingoloBlocco(LinkedHashMap<Long, Timestamp> mappa, DownloadResult result) {
         ArrayList<WrapTime> listaWrapTimeServer = null;
-        ArrayList<String> listaVoci = null;
-        ArrayList<String> vociModificateDaRileggere = null;
+        ArrayList<Long> listaVoci = null;
+        ArrayList<Long> vociModificateDaRileggere = null;
         Timestamp timestampLocalMongoItalianTime;
         Long pageid;
         String wikiTitle;
@@ -154,7 +154,7 @@ public class UpdateService extends ABioService {
                 timestampLocalMongoItalianTime = mappa.get(wikiTitle);
                 timeMongo = timestampLocalMongoItalianTime.getTime();
                 if (timeMongo < timeServer) {
-                    vociModificateDaRileggere.add(wrap.getWikiTitle());
+                    vociModificateDaRileggere.add(wrap.getPageid());
                     result.addVoceDaAggiornare();
                 }// end of if cycle
             }// end of for cycle

@@ -2,6 +2,9 @@ package it.algos.vaadwiki.modules.bio;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.HeaderRow;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -24,6 +27,7 @@ import it.algos.wiki.DownloadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.vaadin.klaudeta.PaginatedGrid;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -58,17 +62,18 @@ public class BioViewList extends AttNazProfCatViewList {
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
-    protected Button downloadButton;
 
     protected Button deleteButton;
 
     protected Button deleteAllButton;
 
+    protected Button downloadButton;
+
     protected Button searchButton;
 
-    protected Button updateButton;
-
     protected Button elaboraButton;
+
+    protected Button updateButton;
 
     protected Button uploadButton;
 
@@ -164,6 +169,8 @@ public class BioViewList extends AttNazProfCatViewList {
 
     private AComboBox<Upload> comboUpload;
 
+    private PaginatedGrid<Bio> gridPaginated;
+
 
     /**
      * Costruttore @Autowired <br>
@@ -195,6 +202,7 @@ public class BioViewList extends AttNazProfCatViewList {
         super.usaBottoneEdit = true;
         super.isBottoneEditBefore = true;
         super.task = taskUpdate;
+        super.usaPagination = false;
         super.codeFlagDownload = USA_DAEMON_BIO;
         super.codeLastDownload = LAST_DOWNLOAD_BIO;
         super.durataLastDownload = DURATA_DOWNLOAD_BIO;
@@ -215,10 +223,16 @@ public class BioViewList extends AttNazProfCatViewList {
         newButton.getElement().setAttribute("theme", "secondary");
 
         //--ciclo download iniziale
-        downloadButton = new Button("Download", new Icon(VaadinIcon.REFRESH));
+        downloadButton = new Button("Download", new Icon(VaadinIcon.ARROW_DOWN));
         downloadButton.getElement().setAttribute("theme", "error");
         downloadButton.addClickListener(e -> openConfirmDownloadDialog());
         topPlaceholder.add(downloadButton);
+
+        //--ri-elabora tutte le biografie biografia
+        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
+        elaboraButton.addClickListener(e -> elaboraService.esegue());
+        topPlaceholder.add(elaboraButton);
+
 
         //--ciclo upodate corrente
         updateButton = new Button("Update", new Icon(VaadinIcon.REFRESH));
@@ -251,6 +265,25 @@ public class BioViewList extends AttNazProfCatViewList {
 
         sincroBottoniMenu(false);
         return topPlaceholder.getComponentCount() > 0;
+    }// end of method
+
+
+    /**
+     * Eventuale header text
+     */
+    protected void fixGridHeader() {
+        int numRec = service.count();
+        String message = "Ci sono " + text.format(numRec) + " biografie che non posso mostrare perché è troppo lento";
+
+        try { // prova ad eseguire il codice
+            HeaderRow topRow = grid.prependHeaderRow();
+            Grid.Column[] matrix = array.getColumnArray(grid);
+            HeaderRow.HeaderCell informationCell = topRow.join(matrix);
+            headerGridHolder = new Label(message);
+            informationCell.setComponent(headerGridHolder);
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
     }// end of method
 
 
@@ -381,10 +414,6 @@ public class BioViewList extends AttNazProfCatViewList {
 
         if (deleteAllButton != null) {
             deleteAllButton.setEnabled(!enabled);
-        }// end of if cycle
-
-        if (elaboraButton != null) {
-            elaboraButton.setEnabled(enabled);
         }// end of if cycle
 
         if (uploadButton != null) {

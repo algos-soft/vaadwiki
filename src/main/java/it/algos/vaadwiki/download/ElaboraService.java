@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.download;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.vaadwiki.service.LibBio;
@@ -67,12 +68,29 @@ public class ElaboraService extends ABioService {
      */
     public void esegue(ArrayList<String> lista) {
         long inizio = System.currentTimeMillis();
+        int parz = 0;
+        int tot = 0;
 
         if (array.isValid(lista)) {
-            for (String title : lista) {
-                esegue(title);
+            if (pref.isBool(FlowCost.USA_DEBUG)) {
+                log.info("ELABORA - Inizio dell'elaborazione dei parametri di tutte le " + text.format(lista.size()) + " biografie");
+            }// end of if cycle
+
+            for (String wikiTitle : lista) {
+                esegue(wikiTitle);
+
+                parz++;
+                tot++;
+                if (parz == 10000) {
+                    log.info("ELABORA - Elaborate " + text.format(tot) + " voci biografiche su " + text.format(lista.size()) + " in " + date.deltaText(inizio));
+                    parz = 0;
+                }// end of if cycle
             }// end of for cycle
-            log.info("ELABORA - elaborati i parametri delle nuove pagine (" + text.format(lista.size()) + " elementi) in " + date.deltaText(inizio));
+
+            log.debug("ELABORA - elaborati i parametri delle nuove pagine (" + text.format(lista.size()) + " elementi) in " + date.deltaText(inizio));
+            if (pref.isBool(FlowCost.USA_DEBUG)) {
+                log.info("ELABORA - finito in " + date.deltaText(inizio));
+            }// end of if cycle
         }// end of if cycle
 
     }// end of method

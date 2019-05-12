@@ -35,6 +35,9 @@ public class AQueryWrite extends AQueryPost {
 
     private final static String TAG_SECOND_REQUEST_POST = TAG_BASE + TAG_BOT + "&action=edit&title=";
 
+    // oggetto della modifica in scrittura
+    protected String summary;
+
     // contenuto della pagina in scrittura
     private String newText;
 
@@ -64,9 +67,26 @@ public class AQueryWrite extends AQueryPost {
      * @param newText    da inserire
      */
     public AQueryWrite(String titoloWiki, String newText) {
+        this(titoloWiki, newText, "");
+    }// end of constructor
+
+
+    /**
+     * Costruttore con parametri. È OBBLIGATORIO titoloWiki e  newText <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(AQueryWrite.class, titoloWiki, newText, summary).status <br>
+     * Usa: appContext.getBean(AQueryWrite.class, titoloWiki, newText, summary) <br>
+     *
+     * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
+     * @param newText    da inserire
+     * @param summary    oggetto della modifica
+     */
+    public AQueryWrite(String titoloWiki, String newText, String summary) {
         super(titoloWiki);
         this.newText = newText;
+        this.summary = summary;
     }// end of constructor
+
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -226,6 +246,7 @@ public class AQueryWrite extends AQueryPost {
         return urlDomain;
     } // fine del metodo
 
+
     /**
      * Allega i cookies alla request (upload)
      * Serve solo la sessione
@@ -244,6 +265,7 @@ public class AQueryWrite extends AQueryPost {
         }// end of if cycle
     } // fine del metodo
 
+
     /**
      * Crea il testo del POST della request
      * <p>
@@ -252,6 +274,8 @@ public class AQueryWrite extends AQueryPost {
      */
     protected String elaboraPost() {
         String testoPost = "";
+        String testoSummary = "";
+        String testoCodificato = "";
 
         if (text.isValid(csrftoken)) {
             testoPost += "token" + "=";
@@ -260,12 +284,32 @@ public class AQueryWrite extends AQueryPost {
 
         testoPost += "&bot=true";
         testoPost += "&minor=true";
-//        if (!testoSummary.equals("")) {
-//            testoPost += "&summary=" + testoSummary;
-//        }// end of if cycle
 
-        testoPost += "&text" + "=";
-        testoPost += newText;
+        // summary
+        if (wLogin != null) {
+            summary = LibWiki.setQuadre("Utente:" + wLogin.getLgusername() + "|" + wLogin.getLgusername()) + summary;
+        }// end of if/else cycle
+        if (text.isValid(summary)) {
+            testoSummary = summary;
+//            try { // prova ad eseguire il codice
+//                testoSummary = URLEncoder.encode(summary, "UTF-8");
+//            } catch (Exception unErrore) { // intercetta l'errore
+//            }// fine del blocco try-catch
+        }// fine del blocco if
+        if (text.isValid(testoSummary)) {
+            testoPost += "&summary=" + testoSummary;
+        }// end of if cycle
+
+        try { // prova ad eseguire il codice
+            testoCodificato = URLEncoder.encode(newText, ENCODE);
+        } catch (Exception unErrore) { // intercetta l'errore
+            System.out.println(unErrore.toString());
+        }// fine del blocco try-catch
+
+        if (text.isValid(testoCodificato)) {
+            testoPost += "&text" + "=";
+            testoPost += testoCodificato;
+        }// end of if cycle
 
         return testoPost;
     } // fine del metodo

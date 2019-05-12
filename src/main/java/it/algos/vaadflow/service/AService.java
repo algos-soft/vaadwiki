@@ -267,7 +267,7 @@ public abstract class AService extends AbstractService implements IAService {
      *
      * @return all entities
      */
-    public ArrayList findAllProperty(String property, Class<? extends AEntity> clazz) {
+    public List findAllProperty(String property, Class<? extends AEntity> clazz) {
         return mongo.findAllProperty(property, clazz);
     }// end of method
 

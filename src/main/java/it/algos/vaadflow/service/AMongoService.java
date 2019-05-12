@@ -281,12 +281,12 @@ public class AMongoService extends AbstractService {
      *
      * @return all entities
      */
-    public ArrayList findAllProperty(String property, Class<? extends AEntity> clazz) {
-        ArrayList lista = null;
+    public List findAllProperty(String property, Class<? extends AEntity> clazz) {
+        List lista = null;
 
         Document projection = new Document(property, 1);
         Query query = new BasicQuery(new Document(), projection);
-        lista = (ArrayList) mongoOp.find(query, clazz).stream().collect(Collectors.toList());
+        lista =  mongoOp.find(query, clazz).stream().collect(Collectors.toList());
 
         return lista;
     }// end of method

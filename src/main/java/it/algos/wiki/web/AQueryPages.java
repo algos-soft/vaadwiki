@@ -37,12 +37,18 @@ public class AQueryPages extends AQueryGet {
     /**
      * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
      */
-    protected final static String TAG_PAGES = TAG_QUERY  + TAG_BOT + TAG_SLOTS + TAG_INFO;
+    protected final static String TAG_INFO_PAGES = TAG_BASE + "pageids=";
+
+    /**
+     * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
+     */
+    protected final static String TAG_PAGES = TAG_QUERY  + TAG_BOT + TAG_SLOTS + TAG_INFO_PAGES;
 
     //--stringa (separata da pipe oppure da virgola) dei titles
-    private String stringaTitles;
+    private String stringaPageids;
 
-    private ArrayList<String> arrayTitles;
+//    private ArrayList<String> arrayTitles;
+    private ArrayList<Long> arrayPageid;
 
 
     /**
@@ -55,16 +61,28 @@ public class AQueryPages extends AQueryGet {
     }// end of constructor
 
 
+//    /**
+//     * Costruttore con parametri <br>
+//     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+//     * Usa: appContext.getBean(AQueryxxx.class, urlRequest) <br>
+//     * Usa: appContext.getBean(AQueryxxx.class, urlRequest).pageResponse() <br>
+//     *
+//     * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
+//     */
+//    public AQueryPages(ArrayList<String> arrayTitles) {
+//        this.arrayTitles = arrayTitles;
+//    }// end of constructor
+
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(AQueryxxx.class, urlRequest) <br>
-     * Usa: appContext.getBean(AQueryxxx.class, urlRequest).pageResponse() <br>
+     * Usa: appContext.getBean(AQueryPages.class, urlRequest) <br>
+     * Usa: appContext.getBean(AQueryPages.class, urlRequest).pageResponse() <br>
      *
-     * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
+     * @param arrayPageid lista (pageid) di pagine da scaricare dal server wiki
      */
-    public AQueryPages(ArrayList<String> arrayTitles) {
-        this.arrayTitles = arrayTitles;
+    public AQueryPages(ArrayList<Long> arrayPageid) {
+        this.arrayPageid = arrayPageid;
     }// end of constructor
 
 
@@ -123,20 +141,20 @@ public class AQueryPages extends AQueryGet {
      * @return lista delle pagine costruite con la risposta
      */
     public ArrayList<Page> pagesResponse() {
-        return pagesResponse(arrayTitles);
+        return pagesResponse(arrayPageid);
     }// end of method
 
 
     /**
      * Pages della response
      *
-     * @param arrayTitles lista (titles) di pagine da scaricare dal server wiki
+     * @param arrayPageid lista (pageid) di pagine da scaricare dal server wiki
      *
      * @return lista delle pagine costruite con la risposta
      */
-    public ArrayList<Page> pagesResponse(ArrayList<String> arrayTitles) {
-        this.arrayTitles = arrayTitles;
-        return pagesResponse(wikiService.multiPages(arrayTitles));
+    public ArrayList<Page> pagesResponse(ArrayList<Long> arrayPageid) {
+        this.arrayPageid = arrayPageid;
+        return pagesResponse(wikiService.multiPages(arrayPageid));
 //        return pagesResponse(array.toStringaPipe(arrayTitles));
     }// end of method
 
@@ -144,17 +162,17 @@ public class AQueryPages extends AQueryGet {
     /**
      * Pages della response
      *
-     * @param stringaTitles (separata da pipe oppure da virgola) dei titles
+     * @param stringaPageids (separata da pipe oppure da virgola) dei pageid
      *
      * @return lista delle pagine costruite con la risposta
      */
-    public ArrayList<Page> pagesResponse(String stringaTitles) {
+    public ArrayList<Page> pagesResponse(String stringaPageids) {
         ArrayList<Page> listaPages = null;
         String contenutoCompletoPaginaWebInFormatoJSON = "";
 
-        if (text.isValid(stringaTitles)) {
+        if (text.isValid(stringaPageids)) {
             try { // prova ad eseguire il codice
-                contenutoCompletoPaginaWebInFormatoJSON = super.urlRequest(stringaTitles);
+                contenutoCompletoPaginaWebInFormatoJSON = super.urlRequest(stringaPageids);
                 listaPages = wikiService.getListaPages(contenutoCompletoPaginaWebInFormatoJSON);
             } catch (Exception unErrore) { // intercetta l'errore
                 String errore = unErrore.getMessage();

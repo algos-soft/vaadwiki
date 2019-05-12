@@ -147,7 +147,7 @@ public class UploadAnni extends Upload {
         testoIni += A_CAPO;
         testoIni += "|titolo=" + titoloPagina;
         testoIni += A_CAPO;
-        testoIni += "|pagine=" + numPersone;
+        testoIni += "|voci=" + numPersone;
         testoIni += A_CAPO;
         testoIni += "|testo=";
         testoIni += A_CAPO;
