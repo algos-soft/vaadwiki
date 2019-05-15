@@ -40,6 +40,7 @@ import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.ASearchDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.fields.ATextField;
+import it.algos.vaadflow.ui.fields.IAField;
 import it.algos.vaadflow.ui.menu.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1252,13 +1253,13 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     public void updateViewDopoSearch() {
         LinkedHashMap<String, AbstractField> fieldMap = searchDialog.fieldMap;
         List<AEntity> lista;
-        ATextField field;
-        String fieldValue;
+        IAField field;
+        Object fieldValue;
         ArrayList<CriteriaDefinition> listaCriteriaDefinition = new ArrayList();
 
         for (String fieldName : searchDialog.fieldMap.keySet()) {
-            field = (ATextField) searchDialog.fieldMap.get(fieldName);
-            fieldValue = field.getValue();
+            field = (IAField) searchDialog.fieldMap.get(fieldName);
+            fieldValue = field.getValore();
             if (text.isValid(fieldValue)) {
                 listaCriteriaDefinition.add(Criteria.where(fieldName).is(fieldValue));
             }// end of if cycle

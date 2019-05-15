@@ -56,4 +56,9 @@ public class ADatePicker extends DatePicker implements IAField {
         return null;
     }// end of method
 
+    @Override
+    public String getValore() {
+        return getValue().toString();
+    }// end of method
+
 }// end of class

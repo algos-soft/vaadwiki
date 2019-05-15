@@ -540,9 +540,6 @@ public class AArrayService extends AbstractService {
     public ArrayList delta(List<Long> listaUno, List<Long> listaDue) {
         HashSet<Long> hashA = new HashSet<Long>();
         HashSet<Long> hashB = new HashSet<Long>();
-        int pos = 0;
-        int sec = 0;
-        long inizio = System.currentTimeMillis();
 
         for (Long stringaA : listaUno) {
             hashA.add(stringaA);
@@ -554,12 +551,6 @@ public class AArrayService extends AbstractService {
         for (Long stringa : hashB) {
             if (hashA.contains(stringa)) {
                 hashA.remove(stringa);
-            }// end of if cycle
-            pos++;
-            sec++;
-            if (sec == 10000) {
-                log.info("Array. Differenza di " + text.format(pos) + " elementi in " + date.deltaText(inizio));
-                sec = 0;
             }// end of if cycle
         }// end of for cycle
 

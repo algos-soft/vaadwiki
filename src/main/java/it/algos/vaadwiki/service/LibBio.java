@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -2402,24 +2403,34 @@ public class LibBio {
 
     public void sendMailCiclo(DownloadResult result, EACicloType type) {
         LocalDateTime end;
+        InetAddress inetAddress = null;
         String tag = type.name();
         String testo = "";
         testo += "Eseguito in automatico ";
         testo += type.getSchedule();
         testo += type.getEsegue();
         testo += A_CAPO;
+
+        try { // prova ad eseguire il codice
+            inetAddress= InetAddress.getLocalHost();
+            testo += "IP Address:- " + inetAddress.getHostAddress();
+            testo += A_CAPO;
+            testo += "Host Name:- " + inetAddress.getHostName();
+            testo += A_CAPO;
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
+
         testo += "Ciclo del " + date.get();
         testo += A_CAPO;
         testo += "Iniziato alle " + date.getOrario(result.getInizio());
         testo += A_CAPO;
-
         end = LocalDateTime.now();
         testo += "Terminato alle " + date.getOrario(end);
         testo += A_CAPO;
         testo += "Durata totale: " + date.deltaText(result.getInizioLong());
-
         testo += A_CAPO;
-        testo += "Nella categoria " + result.getNomeCategoria() + " sono presenti al momento " + text.format(result.getNumVociCategoria()) + " pagine biografiche";
+        testo += "Nella categoria " + result.getNomeCategoria() + " sono presenti al momento " + text.format(result.getNumVociCategoria()) + " wikipagine biografiche";
 
         if (result.getNumVociCancellate() > 0) {
             testo += A_CAPO;
@@ -2431,15 +2442,15 @@ public class LibBio {
             testo += A_CAPO;
             testo += "Sono state create ";
             testo += text.format(result.getNumVociCreate());
-            testo += " nuove pagine";
+            testo += " nuove biografie";
         }// end of if cycle
 
         testo += A_CAPO;
-        testo += "Nel mongoDB ci sono adesso " + text.format(bio.count()) + " pagine biografiche";
+        testo += "Nel mongoDB ci sono adesso " + text.format(bio.count()) + " biografie";
 
         if (result.getVociNonCreate().size() > 0) {
             testo += A_CAPO;
-            testo += "Non sono state registrate le seguenti pagine:";
+            testo += "Non sono state registrate le seguenti biografie:";
             for (int k = 0; k < result.getVociNonCreate().size(); k++) {
                 testo += A_CAPO;
                 testo += (k + 1) + ") " + result.getVociNonCreate().get(k);
@@ -2448,7 +2459,7 @@ public class LibBio {
 
         if (type == EACicloType.update) {
             testo += A_CAPO;
-            testo += "Sono state aggiornate " + text.format(result.getNumVociAggiornate() + " pagine su un totale di " + text.format(result.getNumVociDaAggiornare()));
+            testo += "Sono state aggiornate " + text.format(result.getNumVociAggiornate()) + " biografie su un totale di " + text.format(result.getNumVociDaAggiornare()) + " biografie modificate";
         }// end of if cycle
 
         if (pref.isBool(SEND_MAIL_CICLO)) {

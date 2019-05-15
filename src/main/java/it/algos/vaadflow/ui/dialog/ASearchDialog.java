@@ -3,6 +3,7 @@ package it.algos.vaadflow.ui.dialog;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.service.AAnnotationService;
 import it.algos.vaadflow.service.AFieldService;
 import it.algos.vaadflow.service.AService;
 import it.algos.vaadflow.service.IAService;
@@ -36,6 +37,12 @@ public class ASearchDialog extends ADialog {
      * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
      */
     public AFieldService fieldService = AFieldService.getInstance();
+
+    /**
+     * Service (pattern SINGLETON) recuperato come istanza dalla classe <br>
+     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+     */
+    public AAnnotationService annotation = AAnnotationService.getInstance();
 
     public LinkedHashMap<String, AbstractField> fieldMap;
 
@@ -119,6 +126,7 @@ public class ASearchDialog extends ADialog {
     protected void creaFields() {
         List<String> propertyNamesList;
         AbstractField propertyField = null;
+        String fieldKeyMongo = "";
 
         //--Crea una mappa fieldMap (vuota), per recuperare i fields dal nome
         fieldMap = new LinkedHashMap<>();
@@ -136,7 +144,8 @@ public class ASearchDialog extends ADialog {
             for (String propertyName : propertyNamesList) {
                 propertyField = fieldService.create(null, null, ((AService) service).entityClass, propertyName);
                 if (propertyField != null) {
-                    fieldMap.put(propertyName, propertyField);
+                    fieldKeyMongo = annotation.getFieldKeyMongo(((AService) service).entityClass, propertyName);
+                    fieldMap.put(fieldKeyMongo, propertyField);
                 }// end of if cycle
             }// end of for cycle
         }// end of if cycle

@@ -33,4 +33,9 @@ public class ATextArea extends TextArea implements IAField {
         return this;
     }// end of method
 
+    @Override
+    public String getValore() {
+        return getValue();
+    }// end of method
+
 }// end of class

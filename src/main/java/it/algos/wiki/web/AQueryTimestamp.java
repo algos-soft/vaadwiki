@@ -167,7 +167,6 @@ public class AQueryTimestamp extends AQueryGet {
         HashMap<String, ArrayList<WrapTime>> mappa;
 
         super.elaboraResponse(urlResponse);
-
         if (super.isUrlResponseValida) {
             mappa = LibWiki.creaArrayWrapTime(urlResponse);
             if (mappa != null) {
@@ -186,32 +185,32 @@ public class AQueryTimestamp extends AQueryGet {
      * @return lista dei wrapper costruiti con la risposta
      */
     public ArrayList<WrapTime> timestampResponse(String stringaPageids) {
-        ArrayList<WrapTime> listaWrapper = null;
-        String contenutoCompletoPaginaWebInFormatoJSON = "";
-        HashMap<String, ArrayList<WrapTime>> mappa;
-
-        if (text.isValid(stringaPageids)) {
-            try { // prova ad eseguire il codice
-                contenutoCompletoPaginaWebInFormatoJSON = super.urlRequest(stringaPageids);
-
-                mappa = LibWiki.creaArrayWrapTime(contenutoCompletoPaginaWebInFormatoJSON);
-                if (mappa != null) {
-                    listaWrapTime = mappa.get(LibWiki.KEY_PAGINE_VALIDE);
-//                    listaWrapTimeMissing = mappa.get(LibWiki.KEY_PAGINE_MANCANTI);
-//                    risultato = TipoRisultato.letta;
-//                    valida = true;
-                } else {
-//                    risultato = TipoRisultato.nonTrovata;
-//                    valida = false;
-                }// end of if/else cycle
-
-
-//                listaPages = wikiService.getListaPages(contenutoCompletoPaginaWebInFormatoJSON);
-            } catch (Exception unErrore) { // intercetta l'errore
-                String errore = unErrore.getMessage();
-            }// fine del blocco try-catch
-        }// end of if cycle
-
+//        ArrayList<WrapTime> listaWrapper = null;
+//        String contenutoCompletoPaginaWebInFormatoJSON = "";
+//        HashMap<String, ArrayList<WrapTime>> mappa;
+//
+//        if (text.isValid(stringaPageids)) {
+//            try { // prova ad eseguire il codice
+//                contenutoCompletoPaginaWebInFormatoJSON = super.urlRequest(stringaPageids);
+//
+//                mappa = LibWiki.creaArrayWrapTime(contenutoCompletoPaginaWebInFormatoJSON);
+//                if (mappa != null) {
+//                    listaWrapTime = mappa.get(LibWiki.KEY_PAGINE_VALIDE);
+////                    listaWrapTimeMissing = mappa.get(LibWiki.KEY_PAGINE_MANCANTI);
+////                    risultato = TipoRisultato.letta;
+////                    valida = true;
+//                } else {
+////                    risultato = TipoRisultato.nonTrovata;
+////                    valida = false;
+//                }// end of if/else cycle
+//
+//
+////                listaPages = wikiService.getListaPages(contenutoCompletoPaginaWebInFormatoJSON);
+//            } catch (Exception unErrore) { // intercetta l'errore
+//                String errore = unErrore.getMessage();
+//            }// fine del blocco try-catch
+//        }// end of if cycle
+        super.urlRequest(stringaPageids);
         return listaWrapTime;
     }// end of method
 

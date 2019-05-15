@@ -72,7 +72,7 @@ public class AQueryCatIntegrationTest extends ATest {
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_PICCOLA).numVoci;
         Assert.assertEquals(ottenutoIntero, previstoIntero);
 
-        previstoIntero = 1180;
+        previstoIntero = 1179;
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_MEDIA).numVoci;
         Assert.assertEquals(ottenutoIntero, previstoIntero);
 
@@ -105,7 +105,7 @@ public class AQueryCatIntegrationTest extends ATest {
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
 
-        previstoIntero = 1179;
+        previstoIntero = 1178;
         ottenutoList = appContext.getBean(AQueryCatPagineTitle.class, TITOLO_CAT_MEDIA).listaTitle;
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
@@ -124,15 +124,15 @@ public class AQueryCatIntegrationTest extends ATest {
         Assert.assertNotNull(ottenutoLongList);
         Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
 
-        previstoIntero = 1179;
+        previstoIntero = 1178;
         ottenutoLongList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_MEDIA).listaPageid;
         Assert.assertNotNull(ottenutoLongList);
         Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
 
-//        previstoIntero = 371000;
-//        ottenutoList = appContext.getBean(AQueryCatPagine.class, TITOLO_CAT_GRANDE).lista;
-//        Assert.assertNotNull(ottenutoList);
-//        Assert.assertEquals(Math.min(previstoIntero, ottenutoList.size()), previstoIntero);
+        previstoIntero = 371000;
+        ArrayList<Long>  ottenutoList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_GRANDE).listaPageid;
+        Assert.assertNotNull(ottenutoList);
+        Assert.assertEquals(Math.min(previstoIntero, ottenutoList.size()), previstoIntero);
     }// end of method
 
 

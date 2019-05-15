@@ -17,8 +17,8 @@ import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
 import it.algos.wiki.LibWiki;
-import it.algos.wiki.WikiLoginOld;
 import it.algos.wiki.web.AQueryWrite;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -40,6 +40,7 @@ import static it.algos.vaadwiki.didascalia.Didascalia.TAG_SEP;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier("aaa")
+@Slf4j
 public abstract class Upload {
 
     public final static String PAGINA_PROVA = "Utente:Biobot/2";
@@ -335,6 +336,7 @@ public abstract class Upload {
 
             if (pref.isBool(FlowCost.USA_DEBUG) || checkPossoRegistrare(titoloPagina, testo)) {
                 appContext.getBean(AQueryWrite.class, titoloPagina, testo);
+                log.info(titoloPagina);
             }// end of if cycle
         }// fine del blocco if
     }// fine del metodo
@@ -527,7 +529,6 @@ public abstract class Upload {
      */
     protected String elaboraBody() {
         String testo = VUOTA;
-        boolean usaColonne = this.usaBodyDoppiaColonna;
         int maxRigheColonne = 10;//@todo mettere la preferenza
 
         if (mappaDidascalie != null && mappaDidascalie.size() > 0) {
@@ -542,13 +543,10 @@ public abstract class Upload {
             }// end of if/else cycle
         }// end of if cycle
 
-//        if (usaColonne && (numPersone > maxRigheColonne)) {
-//            text = LibWiki.listaDueColonne(text.trim());
-//        }// fine del blocco if
-//
-
         //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
-        testo = LibWiki.setColonne(testo);
+        if (usaBodyDoppiaColonna && (numPersone > maxRigheColonne)) {
+            testo = LibWiki.setColonne(testo);
+        }// fine del blocco if
 
         if (usaBodyTemplate) {
 //            if (Pref.getBool(CostBio.USA_DEBUG, false)) {
@@ -643,7 +641,7 @@ public abstract class Upload {
                 listaDidascalie = mappaDidascalie.get(key);
 
                 if (listaDidascalie.size() == 1) {
-                    testo += ASTERISCO + key + TAG_SEP + listaDidascalie.get(0) + A_CAPO;
+                    testo += ASTERISCO + (text.isValid(key) ? key + TAG_SEP : SPAZIO) + listaDidascalie.get(0) + A_CAPO;
                 } else {
                     if (text.isValid(key)) {
                         testo += ASTERISCO + key + A_CAPO;

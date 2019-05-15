@@ -36,4 +36,9 @@ public class ACheckBox extends Checkbox implements IAField{
         return this;
     }// end of method
 
+    @Override
+    public Object getValore() {
+        return null;
+    }// end of method
+
 }// end of class

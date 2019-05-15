@@ -235,6 +235,30 @@ public class AAnnotationService extends AbstractService {
     /**
      * Get the specific annotation of the field.
      *
+     * @param entityClazz  the entity class
+     * @param propertyName the property name
+     *
+     * @return the Annotation for the specific field
+     */
+    public String getFieldKeyMongo(Class<? extends AEntity> entityClazz, String propertyName) {
+        String fieldKeyMongo = propertyName;
+        org.springframework.data.mongodb.core.mapping.Field fieldAnnotation = null;
+        Field reflectionJavaField = reflection.getField(entityClazz, propertyName);
+
+        if (reflectionJavaField != null) {
+            fieldAnnotation = reflectionJavaField.getAnnotation(org.springframework.data.mongodb.core.mapping.Field.class);
+            if (fieldAnnotation != null) {
+                fieldKeyMongo = fieldAnnotation.value();
+            }// end of if cycle
+        }// end of if cycle
+
+        return fieldKeyMongo;
+    }// end of method
+
+
+    /**
+     * Get the specific annotation of the field.
+     *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
      * @return the Annotation for the specific field

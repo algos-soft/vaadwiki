@@ -15,12 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static it.algos.vaadwiki.application.WikiCost.CATEGORY_INFO;
-import static it.algos.vaadwiki.application.WikiCost.ENCODE;
 import static it.algos.wiki.Cost.QUERY;
 import static it.algos.wiki.LibWiki.PAGES;
 import static it.algos.wiki.web.AQuery.CSRF_TOKEN;
@@ -311,21 +309,20 @@ public class AWikiService {
      * @return stringa con i singoli valori divisi dal separatore pipe e codificati UTF-8
      */
     public String multiPages(ArrayList<Long> arrayPageid) {
-        String urlDomain;
+        String urlDomain = "";
         String sep = "|";
         StringBuilder textBuffer = new StringBuilder();
 
-        for (Long pageid : arrayPageid) {
-//            try { // prova ad eseguire il codice
-//                titolo = URLEncoder.encode(titolo, ENCODE);
-//            } catch (Exception unErrore) { // intercetta l'errore
-//                log.error(unErrore.toString());
-//            }// fine del blocco try-catch
-            textBuffer.append(pageid);
-            textBuffer.append(sep);
-        } // fine del ciclo for-each
-        urlDomain = textBuffer.toString();
-        urlDomain = text.levaCoda(urlDomain, sep);
+        if (array.isValid(arrayPageid)) {
+            for (Long pageid : arrayPageid) {
+                textBuffer.append(pageid);
+                textBuffer.append(sep);
+            } // fine del ciclo for-each
+            urlDomain = textBuffer.toString();
+            urlDomain = text.levaCoda(urlDomain, sep);
+        } else {
+            log.error("Qualcosa non ha funzionato in AWikiService.multiPages()");
+        }// end of if/else cycle
 
         return urlDomain;
     }// end of method

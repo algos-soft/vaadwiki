@@ -11,4 +11,5 @@ import com.vaadin.flow.component.AbstractField;
  */
 public interface IAField {
     public AbstractField getField();
+    public Object getValore();
 }// end of interface

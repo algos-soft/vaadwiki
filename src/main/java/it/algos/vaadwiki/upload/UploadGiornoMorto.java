@@ -68,7 +68,7 @@ public class UploadGiornoMorto extends UploadGiorni {
         cat = LibWiki.setCat("Liste di morti per giorno", SPAZIO + giorno.ordine);
         cat = nascosta ? LibWiki.setNowiki(cat) : cat;
         testo += cat;
-        cat = LibWiki.setCat("Morti il " + giorno.titolo, SPAZIO);
+        cat = LibWiki.setCat(titoloPagina, SPAZIO);
         cat = nascosta ? LibWiki.setNowiki(cat) : cat;
         testo += cat;
         testo = LibBio.setNoIncludeMultiRiga(testo);

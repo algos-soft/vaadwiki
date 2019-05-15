@@ -91,24 +91,42 @@ public class UpdateService extends ABioService {
      * 6) inserisce (bulk) le pagine modifcate nella collezione Bio
      */
     public DownloadResult esegueCiclo(DownloadResult result) {
-        int numVociModificate = 0;
+        int soglia = 50000;
+        int cont = 0;
         long inizio = System.currentTimeMillis();
         int recNum = bioService.count();
         int pageLimit = pref.getInt(WIKI_PAGE_LIMIT);
         int numCicliLetturaPagine = (recNum / pageLimit) + 1;
         Sort sort = new Sort(Sort.Direction.ASC, "pageid");
-        String info = "";
+        String message = "";
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            message = "UPDATE - inizio ";
+            log.info(message);
+        }// end of if cycle
 
         for (int k = 0; k < numCicliLetturaPagine; k++) {
             LinkedHashMap<Long, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
             esegueSingoloBlocco(mappa, result);
-            info = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " pagine e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
+
             if (pref.isBool(FlowCost.USA_DEBUG)) {
-                log.info(info);
+                cont = cont + pageLimit;
+                if (cont >= soglia) {
+                    message = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " pagine wiki e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
+                    cont = 0;
+                    log.info(message);
+                }// end of if cycle
             }// end of if cycle
         }// end of for cycle
 
-        logger.info(info);
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            message = "UPDATE - controllate " + text.format(pageLimit + pageLimit * numCicliLetturaPagine) + " pagine wiki e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
+            log.info(message);
+            message = "UPDATE - fine ";
+            log.info(message);
+        }// end of if cycle
+
+//        logger.info(message);
         return result;
     }// end of method
 
@@ -127,10 +145,10 @@ public class UpdateService extends ABioService {
         ArrayList<Long> listaVoci = null;
         ArrayList<Long> vociModificateDaRileggere = null;
         Timestamp timestampLocalMongoItalianTime;
-        Long pageid;
-        String wikiTitle;
-        long delta = 3600000;
-        long timeServer;
+        long pageid;
+        long deltaOraLegale = 3600000*24;//l'ora legale cambia; metto 24H così sono sicuro di beccare le ultime modifiche
+        long timeServerOraGMT;
+        long timeServerOraItaliana;
         long timeMongo;
 
         if (mappa != null) {
@@ -141,26 +159,32 @@ public class UpdateService extends ABioService {
             listaWrapTimeServer = ((AQueryTimestamp) appContext.getBean("AQueryTimestamp", listaVoci)).timestampResponse();
         }// end of if cycle
 
-        if (pref.isBool(FlowCost.USA_DEBUG)) {
-            delta = delta * 200;
-        }// end of if cycle
+//        if (pref.isBool(FlowCost.USA_DEBUG)) {
+//            delta = delta * 200;
+//        }// end of if cycle
 
         if (array.isValid(listaWrapTimeServer)) {
             vociModificateDaRileggere = new ArrayList<>();
             for (WrapTime wrap : listaWrapTimeServer) {
-                wikiTitle = wrap.getWikiTitle();
-                timeServer = wrap.getTimestamp().getTime();
-                timeServer = timeServer + delta; //ora legale
-                timestampLocalMongoItalianTime = mappa.get(wikiTitle);
-                timeMongo = timestampLocalMongoItalianTime.getTime();
-                if (timeMongo < timeServer) {
-                    vociModificateDaRileggere.add(wrap.getPageid());
-                    result.addVoceDaAggiornare();
+                pageid = wrap.getPageid();
+                timeServerOraGMT = wrap.getTimestamp().getTime();
+                timeServerOraItaliana = timeServerOraGMT + deltaOraLegale; //ora legale
+                timestampLocalMongoItalianTime = mappa.get(pageid);
+                if (timestampLocalMongoItalianTime!=null) {
+                    timeMongo = timestampLocalMongoItalianTime.getTime();
+                    if (timeMongo < timeServerOraItaliana) {
+                        vociModificateDaRileggere.add(wrap.getPageid());
+                        result.addVoceDaAggiornare();
+                    }// end of if cycle
                 }// end of if cycle
             }// end of for cycle
         }// end of if cycle
 
-        return pageService.updateSingoloBlocco(result, vociModificateDaRileggere);
+        if (array.isValid(vociModificateDaRileggere)) {
+            return pageService.updateSingoloBlocco(result, vociModificateDaRileggere);
+        } else {
+            return result;
+        }// end of if/else cycle
     }// end of method
 
 

@@ -1,8 +1,6 @@
 package it.algos.vaadwiki;
 
 import it.algos.vaadflow.service.ADateService;
-//import it.algos.vaadwiki.modules.categoria.Categoria;
-//import it.algos.vaadwiki.modules.categoria.CategoriaService;
 import it.algos.vaadwiki.didascalia.Didascalia;
 import it.algos.wiki.Api;
 import it.algos.wiki.request.RequestWikiCat;
@@ -13,8 +11,10 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.net.InetAddress;
+
+//import it.algos.vaadwiki.modules.categoria.Categoria;
+//import it.algos.vaadwiki.modules.categoria.CategoriaService;
 
 /**
  * Project vaadwiki
@@ -44,6 +44,7 @@ public class CategoriaTest extends ATest {
 
     @InjectMocks
     public RequestWikiCat requestCat;
+
     @Autowired
     private Didascalia didascalia;
 
@@ -84,7 +85,7 @@ public class CategoriaTest extends ATest {
     }// end of method
 
 
-        @Test
+    @Test
     public void download() {
 //        ArrayList<WrapCat> listaWrap = null;
 //        previstoIntero = previstoSizeAttoriStatunitensi;
@@ -95,8 +96,9 @@ public class CategoriaTest extends ATest {
 //        assertNotNull(listaWrap);
 //        ottenutoIntero = listaWrap.size();
 //        assertEquals(previstoIntero, ottenutoIntero);
-    }// end of single test
 
+
+    }// end of single test
 
 
 }// end of class

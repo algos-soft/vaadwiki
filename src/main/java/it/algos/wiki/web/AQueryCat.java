@@ -194,39 +194,28 @@ public abstract class AQueryCat extends AQueryGet {
             log.error(unErrore.toString());
         }// fine del blocco try-catch
 
-        System.out.println("");
         do {
             super.urlRequest();
-            size = array.isValid(listaTitle) ? listaTitle.size() : array.isValid(listaPageid) ? listaPageid.size() : 0;
-            if (pref.isBool(FlowCost.USA_DEBUG) && numCicliPrevisti > 1) {
-                System.out.println("Recuperato il blocco di categoria n.: " + (k + 1) + " - Adesso ci sono " + text.format(size) + " voci");
-//                List<String> sub = lista.subList(k * limit, Math.min((k + 1) * limit, lista.size()));
-//                for (String voce : sub) {
-//                    System.out.println(voce);
-//                }// end of for cycle
-                k++;
-            }// end of if cycle
         } while (text.isValid(textContinue));
-        System.out.println("");
 
+        size = usaTitle ? listaTitle.size() : listaPageid.size();
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            message += "Download categoria ";
+            message += "DOWNLOAD categoria ";
             message += urlDomain;
             message += " (" + text.format(size) + " pagine in ";
             message += date.deltaText(inizio);
             message += "), con AQueryCat, loggato come " + wLogin.getLgusername() + ", upload cookies, urlRequest di tipo GET";
             log.info(message);
-        }// end of if cycle
 
-        if (pref.isBool(FlowCost.USA_DEBUG) && numCicliPrevisti > 0) {
-            System.out.println("");
-            System.out.println("Categoria " + urlDomain + " - Cicli previsti " + numCicliPrevisti + " - Effettivi " + k);
-            System.out.println("Categoria " + urlDomain + " - Previste " + text.format(numVoci) + " voci - Recuperate " + text.format(size));
+            message = "Download categoria: previste ";
+            message += text.format(numVoci);
+            message += " voci - Recuperate ";
+            message += text.format(size);
             if (numVoci > size) {
-                System.out.println("Categoria " + urlDomain + " - Mancano " + (numVoci - size) + " voci");
+                message += " - Mancano " + (numVoci - size) + " voci";
             }// end of if cycle
+            log.info(message);
 
-            System.out.println("");
         }// end of if cycle
 
 //        return lista != null && lista.size() > 0 ? lista : null;

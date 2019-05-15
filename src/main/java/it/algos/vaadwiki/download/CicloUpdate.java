@@ -102,11 +102,6 @@ public class CicloUpdate extends ABioService {
                 log.warn(message);
                 logger.warning("Download - " + message);
             }// end of if cycle
-            if (result.getNumVociCategoria() != result.getVociDaCreare().size()) {
-                message = "Le pagine della categoria non coincidono: sul server ce ne sono " + text.format(result.getNumVociCategoria()) + " e ne ha recuperate " + text.format(result.getVociDaCreare().size());
-                log.warn(message);
-                logger.warning("Download - " + message);
-            }// end of if cycle
         }// end of if cycle
 
         //--recupera la lista dei pageid dalla collezione Bio
@@ -114,12 +109,9 @@ public class CicloUpdate extends ABioService {
 
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
-        if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Debug - Inizio a calcolare le pagine in eccedenza. Circa dodici minuti");
-        }// end of if cycle
         result.setVociDaCancellare(array.delta(vociBio, result.getVociDaCreare()));
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Calcolate " + text.format(result.getVociDaCancellare().size()) + " vociDaCancellare in " + date.deltaText(inizio));
+            log.info("Ci sono " + text.format(result.getVociDaCancellare().size()) + " biografie da cancellare");
             logger.debug("Calcolate " + text.format(result.getVociDaCancellare().size()) + " vociDaCancellare in " + date.deltaText(inizio));
         }// end of if cycle
 
@@ -128,12 +120,9 @@ public class CicloUpdate extends ABioService {
 
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
-        if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Debug - Inizio a calcolare le pagine mancanti. Circa dodici minuti");
-        }// end of if cycle
         result.setVociDaCreare(array.delta(result.getVociDaCreare(), vociBio));
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Calcolate " + text.format(result.getVociDaCreare().size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
+            log.info("Ci sono " + text.format(result.getVociDaCreare().size()) + " biografie da aggiungere" );
             logger.debug("Calcolate " + text.format(result.getVociDaCreare().size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
         }// end of if cycle
 

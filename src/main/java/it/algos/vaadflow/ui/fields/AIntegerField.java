@@ -53,4 +53,9 @@ public class AIntegerField extends TextField implements IAField {
         return this;
     }// end of method
 
+    @Override
+    public Integer getValore() {
+        return Integer.decode(getValue());
+    }// end of method
+
 }// end of class

@@ -39,16 +39,22 @@ public class AComboBox<T> extends ComboBox implements IAField {
     public Object getEmptyValue() {
         Object obj = super.getEmptyValue();
         return super.getEmptyValue();
-    }
+    }// end of method
 
     @Override
     public Object getValue() {
         Object obj = super.getValue();
         return super.getValue();
-    }
+    }// end of method
 
     @Override
     public void setValue(Object value) {
         super.setValue(value);
-    }
+    }// end of method
+
+    @Override
+    public String getValore() {
+        return getValue().toString();
+    }// end of method
+
 }// end of class

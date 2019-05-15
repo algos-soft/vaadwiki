@@ -112,13 +112,19 @@ public class UploadAnni extends Upload {
      */
     public String getTitoloPagina(Anno anno, String tag) {
         String titoloLista = VUOTA;
-        String articolo = "il";
-        String articoloBis = "l'";
+        String articolo = "nel";
+        String articoloBis = "nell'";
         String titolo = anno.getTitolo();
+        String TAG_AC = " a.C.";
 
         tag = tag.trim();
-        if (!titolo.equals("")) {
-            if (titolo.startsWith("8") || titolo.startsWith("11")) {
+        if (!titolo.equals(VUOTA)) {
+            if (titolo.equals("1")
+                    || titolo.equals("1" + TAG_AC)
+                    || titolo.equals("11")
+                    || titolo.equals("11" + TAG_AC)
+                    || titolo.startsWith("8")
+            ) {
                 titoloLista = tag + SPAZIO + articoloBis + titolo;
             } else {
                 titoloLista = tag + SPAZIO + articolo + SPAZIO + titolo;

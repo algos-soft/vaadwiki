@@ -68,7 +68,7 @@ public class UploadAnnoNato extends UploadAnni {
         cat = LibWiki.setCat("Liste di nati per anno", SPAZIO + anno.ordine);
         cat = nascosta ? LibWiki.setNowiki(cat) : cat;
         testo += cat;
-        cat = LibWiki.setCat("Nati nel " + anno.titolo, SPAZIO);
+        cat = LibWiki.setCat(titoloPagina, SPAZIO);
         cat = nascosta ? LibWiki.setNowiki(cat) : cat;
         testo += cat;
         testo = LibBio.setNoIncludeMultiRiga(testo);

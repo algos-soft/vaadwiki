@@ -69,7 +69,7 @@ public class UploadGiornoNato extends UploadGiorni {
         cat = LibWiki.setCat("Liste di nati per giorno", SPAZIO + giorno.ordine);
         cat = nascosta ? LibWiki.setNowiki(cat) : cat;
         testo += cat;
-        cat = LibWiki.setCat("Nati il " + giorno.titolo, SPAZIO);
+        cat = LibWiki.setCat(titoloPagina, SPAZIO);
         cat = nascosta ? LibWiki.setNowiki(cat) : cat;
         testo += cat;
         testo = LibBio.setNoIncludeMultiRiga(testo);

@@ -125,7 +125,7 @@ public interface IAService {
      *
      * @return all entities
      */
-    public List findAllProperty(String property, Class<? extends AEntity> clazz);
+    public ArrayList findAllProperty(String property, Class<? extends AEntity> clazz);
 
     /**
      * Fetches the entities whose 'main text property' matches the given filter text.

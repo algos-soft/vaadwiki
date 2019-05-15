@@ -119,7 +119,7 @@ public class UploadGiorni extends Upload {
         String titolo = giorno.getTitolo();
 
         tag = tag.trim();
-        if (!titolo.equals("")) {
+        if (!titolo.equals(VUOTA)) {
             if (titolo.startsWith("8") || titolo.startsWith("11")) {
                 titoloLista = tag + SPAZIO + articoloBis + titolo;
             } else {

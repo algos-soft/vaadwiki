@@ -38,4 +38,9 @@ public class ATextField extends TextField implements IAField {
         return super.getValue().equals("") ? null : super.getValue();
     }// end of method
 
+    @Override
+    public String getValore() {
+        return getValue();
+    }// end of method
+
 }// end of class
