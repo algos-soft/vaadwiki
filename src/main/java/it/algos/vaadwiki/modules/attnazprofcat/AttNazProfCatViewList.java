@@ -119,7 +119,7 @@ public class AttNazProfCatViewList extends AViewList {
         super.creaTopLayout();
 
         if (usaBottoneDeleteMongo) {
-            deleteMongoButton = new Button("Delete All", new Icon(VaadinIcon.CLOSE_CIRCLE));
+            deleteMongoButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
             deleteMongoButton.getElement().setAttribute("theme", "error");
             deleteMongoButton.addClickListener(e -> openConfirmDialog());
             topPlaceholder.add(deleteMongoButton);

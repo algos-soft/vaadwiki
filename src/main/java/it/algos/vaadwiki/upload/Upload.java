@@ -222,6 +222,12 @@ public abstract class Upload {
 
     protected boolean usaBodyRigheMultiple;
 
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected UploadService uploadService;
+
 //    protected String titoloPaginaMadre = "";
 
 
@@ -704,7 +710,7 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected boolean checkPossoRegistrare(String titolo, String testo) {
-        return true;
+        return uploadService.checkModificaSostanziale(titolo, testo, tagHeadTemplateAvviso, "}}");
     }// fine del metodo
 
 

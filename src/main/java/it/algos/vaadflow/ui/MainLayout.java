@@ -121,7 +121,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
 
 
     /**
-     * Chiamato DOPO aver terminato il costruttore
+     * Chiamato DOPO aver termionato il costruttore
      * Registra nel context l'indirizzo a questa istanza per modifiche specifiche ai menu
      */
     @PostConstruct

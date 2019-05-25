@@ -68,11 +68,11 @@ public class AQueryCatIntegrationTest extends ATest {
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_MINIMA).numVoci;
         Assert.assertEquals(ottenutoIntero, previstoIntero);
 
-        previstoIntero = 272;
+        previstoIntero = 273;
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_PICCOLA).numVoci;
         Assert.assertEquals(ottenutoIntero, previstoIntero);
 
-        previstoIntero = 1179;
+        previstoIntero = 1180;
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_MEDIA).numVoci;
         Assert.assertEquals(ottenutoIntero, previstoIntero);
 
@@ -100,12 +100,12 @@ public class AQueryCatIntegrationTest extends ATest {
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
 
-        previstoIntero = 272;
+        previstoIntero = 273;
         ottenutoList = appContext.getBean(AQueryCatPagineTitle.class, TITOLO_CAT_PICCOLA).listaTitle;
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
 
-        previstoIntero = 1178;
+        previstoIntero = 1179;
         ottenutoList = appContext.getBean(AQueryCatPagineTitle.class, TITOLO_CAT_MEDIA).listaTitle;
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
@@ -119,12 +119,12 @@ public class AQueryCatIntegrationTest extends ATest {
         Assert.assertNotNull(ottenutoLongList);
         Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
 
-        previstoIntero = 272;
+        previstoIntero = 273;
         ottenutoLongList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_PICCOLA).listaPageid;
         Assert.assertNotNull(ottenutoLongList);
         Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
 
-        previstoIntero = 1178;
+        previstoIntero = 1179;
         ottenutoLongList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_MEDIA).listaPageid;
         Assert.assertNotNull(ottenutoLongList);
         Assert.assertEquals(ottenutoLongList.size(), previstoIntero);

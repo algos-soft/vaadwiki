@@ -65,11 +65,9 @@ public class BioViewList extends AttNazProfCatViewList {
 
     protected Button deleteButton;
 
-    protected Button deleteAllButton;
-
     protected Button downloadButton;
 
-    protected Button searchButton;
+    protected Button cicloButton;
 
     protected Button elaboraButton;
 
@@ -195,6 +193,7 @@ public class BioViewList extends AttNazProfCatViewList {
         super.fixPreferenzeSpecifiche();
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = true;
+        super.usaBottoneDeleteMongo = false;
         super.usaBottoneDownload = false;
         super.usaBottoneUpload = false;
         super.usaBottoneStatistiche = false;
@@ -219,33 +218,44 @@ public class BioViewList extends AttNazProfCatViewList {
      */
     @Override
     protected boolean creaTopLayout() {
+        //--cancella il database
+        deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
+        deleteButton.getElement().setAttribute("theme", "error");
+        deleteButton.addClickListener(e -> openConfirmDeleteDialog());
+        topPlaceholder.add(deleteButton);
+
+        //-- bottoni 'Ricerca' e 'New'
         super.creaTopLayout();
         newButton.getElement().setAttribute("theme", "secondary");
 
-        //--ciclo download iniziale
-        downloadButton = new Button("Download", new Icon(VaadinIcon.ARROW_DOWN));
+        //--download iniziale
+        downloadButton = new Button("Reset", new Icon(VaadinIcon.DOWNLOAD));
         downloadButton.getElement().setAttribute("theme", "error");
-        downloadButton.addClickListener(e -> openConfirmDownloadDialog());
+        downloadButton.addClickListener(e -> openConfirmResetDialog());
         topPlaceholder.add(downloadButton);
 
-        //--ri-elabora tutte le biografie biografia
-        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
-        elaboraButton.addClickListener(e -> elaboraService.esegue());
-        topPlaceholder.add(elaboraButton);
-
-
         //--ciclo upodate corrente
-        updateButton = new Button("Update", new Icon(VaadinIcon.REFRESH));
+        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
         updateButton.getElement().setAttribute("theme", "primary");
         updateButton.addClickListener(e -> esegueUpdate());
         topPlaceholder.add(updateButton);
 
-//        //--delete singola biografia
-//        deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
-//        deleteButton.getElement().setAttribute("theme", "error");
-//        deleteButton.addClickListener(e -> service.delete(null));
-//        topPlaceholder.add(deleteButton);
-//
+        //--ri-elabora tutte le biografie
+        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
+        elaboraButton.addClickListener(e -> elaboraService.esegue());
+        topPlaceholder.add(elaboraButton);
+
+        //--upload le pagine cronologicvhe (giorni ed anni)
+        uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
+        uploadButton.getElement().setAttribute("theme", "error");
+        topPlaceholder.add(uploadButton);
+
+        //--delete singola biografia
+        cicloButton = new Button("Ciclo", new Icon(VaadinIcon.UPLOAD));
+        cicloButton.getElement().setAttribute("theme", "error");
+//        cicloButton.addClickListener(e -> service.delete(null));
+        topPlaceholder.add(cicloButton);
+
 //        //--aggiorna singola biografia
 //        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
 //        updateButton.getElement().setAttribute("theme", "primary");
@@ -256,10 +266,6 @@ public class BioViewList extends AttNazProfCatViewList {
 //        elaboraButton.addClickListener(e -> elaboraService.esegue());
 //        topPlaceholder.add(elaboraButton);
 //
-//        //--upload singola biografia
-//        uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
-//        uploadButton.getElement().setAttribute("theme", "error");
-//        topPlaceholder.add(uploadButton);
 
 //        topPlaceholder.add(creaPopup());
 
@@ -345,11 +351,11 @@ public class BioViewList extends AttNazProfCatViewList {
      * The dialog will display the given title and message(s), then call
      * <p>
      */
-    protected void openConfirmDialog() {
+    protected void openConfirmDeleteDialog() {
         String message = "Vuoi veramente cancellare TUTTE le biografie ?";
         String additionalMessage = "L'operazione non è reversibile";
         ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
-        dialog.open(message, additionalMessage, this::openSecondConfirmDialog);
+        dialog.open(message, additionalMessage, this::openSecondConfirmDeleteDialog);
     }// end of method
 
 
@@ -359,7 +365,7 @@ public class BioViewList extends AttNazProfCatViewList {
      * The dialog will display the given title and message(s), then call
      * <p>
      */
-    protected void openSecondConfirmDialog() {
+    protected void openSecondConfirmDeleteDialog() {
         String message = "SEI ASSOLUTAMENTE SICURO ?";
         ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
         dialog.open(message, this::deleteMongo);
@@ -372,7 +378,7 @@ public class BioViewList extends AttNazProfCatViewList {
      * The dialog will display the given title and message(s), then call
      * <p>
      */
-    protected void openConfirmDownloadDialog() {
+    protected void openConfirmResetDialog() {
         String message = "Questa operazione di download cancella TUTTE le biografie";
         String additionalMessage = "L'operazione non è reversibile";
         ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
@@ -407,19 +413,15 @@ public class BioViewList extends AttNazProfCatViewList {
 //    }// end of method
 
 
-    protected void sincroBottoniMenu(boolean enabled) {
-        if (deleteButton != null) {
-            deleteButton.setEnabled(enabled);
-        }// end of if cycle
-
-        if (deleteAllButton != null) {
-            deleteAllButton.setEnabled(!enabled);
-        }// end of if cycle
-
-        if (uploadButton != null) {
-            uploadButton.setEnabled(enabled);
-        }// end of if cycle
-    }// end of method
+//    protected void sincroBottoniMenu(boolean enabled) {
+//        if (deleteButton != null) {
+//            deleteButton.setEnabled(enabled);
+//        }// end of if cycle
+//
+//        if (deleteAllButton != null) {
+//            deleteAllButton.setEnabled(!enabled);
+//        }// end of if cycle
+//    }// end of method
 
 
     /**

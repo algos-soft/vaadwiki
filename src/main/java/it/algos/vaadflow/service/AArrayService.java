@@ -538,25 +538,20 @@ public class AArrayService extends AbstractService {
      * @return differenza
      */
     public ArrayList delta(List<Long> listaUno, List<Long> listaDue) {
+        List<Long> listaUnoCopia = new ArrayList<>(listaUno);
         HashSet<Long> hashA = new HashSet<Long>();
         HashSet<Long> hashB = new HashSet<Long>();
 
-        for (Long stringaA : listaUno) {
-            hashA.add(stringaA);
+        for (Long uno : listaUno) {
+            hashA.add(uno);
         }// end of for cycle
-        for (Long stringaB : listaDue) {
-            hashB.add(stringaB);
-        }// end of for cycle
-
-        for (Long stringa : hashB) {
-            if (hashA.contains(stringa)) {
-                hashA.remove(stringa);
-            }// end of if cycle
+        for (Long due : listaDue) {
+            hashB.add(due);
         }// end of for cycle
 
+        hashA.removeAll(hashB);
         return new ArrayList<Long>(hashA);
     } // fine del metodo
-
 
 
 //    /**

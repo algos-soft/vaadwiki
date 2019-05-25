@@ -559,6 +559,8 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     protected void creaLayout() {
         creaMenuLayout();
 
+        topPlaceholder.removeAll();
+        topPlaceholder.addClassName("view-toolbar");
         if (creaTopLayout()) {
             this.add(topPlaceholder);
         }// end of if cycle
@@ -627,8 +629,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Invocare PRIMA il metodo della superclasse
      */
     protected boolean creaTopLayout() {
-        topPlaceholder.removeAll();
-        topPlaceholder.addClassName("view-toolbar");
         String buttonTitle;
         Button deleteAllButton;
         Button resetButton;
