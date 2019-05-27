@@ -25,7 +25,7 @@ import static it.algos.vaadflow.application.FlowCost.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier("ccc")
 @Slf4j
-public class UploadGiorni extends Upload {
+public abstract class UploadGiorni extends Upload {
 
 
     protected String titoloGiorno;
@@ -106,6 +106,15 @@ public class UploadGiorni extends Upload {
         }// fine del blocco if
 
         return titolo;
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
+     * Sovrascritto
+     */
+    public String getTitoloPagina(Giorno giorno) {
+        return "";
     }// fine del metodo
 
 

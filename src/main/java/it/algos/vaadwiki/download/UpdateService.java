@@ -109,24 +109,19 @@ public class UpdateService extends ABioService {
             LinkedHashMap<Long, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
             esegueSingoloBlocco(mappa, result);
 
-            if (pref.isBool(FlowCost.USA_DEBUG)) {
-                cont = cont + pageLimit;
-                if (cont >= soglia) {
-                    message = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " pagine wiki e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
-                    cont = 0;
-                    log.info(message);
-                }// end of if cycle
+            cont = cont + pageLimit;
+            if (cont >= soglia) {
+                message = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " pagine wiki e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
+                cont = 0;
+                log.info(message);
             }// end of if cycle
         }// end of for cycle
 
-        if (pref.isBool(FlowCost.USA_DEBUG)) {
-            message = "UPDATE - controllate " + text.format(pageLimit + pageLimit * numCicliLetturaPagine) + " pagine wiki e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
-            log.info(message);
-            message = "UPDATE - fine ";
-            log.info(message);
-        }// end of if cycle
+        message = "UPDATE - controllate " + text.format(pageLimit + pageLimit * numCicliLetturaPagine) + " pagine wiki e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
+        log.info(message);
+        message = "UPDATE - fine ";
+        log.info(message);
 
-//        logger.info(message);
         return result;
     }// end of method
 
@@ -146,7 +141,7 @@ public class UpdateService extends ABioService {
         ArrayList<Long> vociModificateDaRileggere = null;
         Timestamp timestampLocalMongoItalianTime;
         long pageid;
-        long deltaOraLegale = 3600000*24;//l'ora legale cambia; metto 24H così sono sicuro di beccare le ultime modifiche
+        long deltaOraLegale = 3600000 * 24;//l'ora legale cambia; metto 24H così sono sicuro di beccare le ultime modifiche
         long timeServerOraGMT;
         long timeServerOraItaliana;
         long timeMongo;
@@ -170,7 +165,7 @@ public class UpdateService extends ABioService {
                 timeServerOraGMT = wrap.getTimestamp().getTime();
                 timeServerOraItaliana = timeServerOraGMT + deltaOraLegale; //ora legale
                 timestampLocalMongoItalianTime = mappa.get(pageid);
-                if (timestampLocalMongoItalianTime!=null) {
+                if (timestampLocalMongoItalianTime != null) {
                     timeMongo = timestampLocalMongoItalianTime.getTime();
                     if (timeMongo < timeServerOraItaliana) {
                         vociModificateDaRileggere.add(wrap.getPageid());

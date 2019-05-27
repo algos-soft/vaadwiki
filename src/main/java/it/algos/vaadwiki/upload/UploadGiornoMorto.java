@@ -2,6 +2,7 @@ package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.liste.ListaGiornoMorto;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
@@ -38,8 +39,16 @@ public class UploadGiornoMorto extends UploadGiorni {
     @Override
     protected void elaboraTitolo() {
         if (giorno != null) {
-            titoloPagina = getTitoloPagina(giorno, "Morti");
+            titoloPagina = getTitoloPagina(giorno);
         }// fine del blocco if
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
+     */
+    public String getTitoloPagina(Giorno giorno) {
+        return super.getTitoloPagina(giorno, "Morti");
     }// fine del metodo
 
 
@@ -54,6 +63,7 @@ public class UploadGiornoMorto extends UploadGiorni {
         mappaDidascalie = listaGiornoMorto.esegue(giorno);
         super.creaMappaDidascalie();
     }// fine del metodo
+
 
     /**
      * Piede della pagina

@@ -1,18 +1,21 @@
 package it.algos.vaadwiki.modules.wiki;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SingleSelectionEvent;
+import com.vaadin.flow.dom.Element;
+import com.vaadin.flow.dom.ElementFactory;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoViewDialog;
@@ -28,6 +31,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
+import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 import static it.algos.vaadwiki.application.WikiCost.TAG_WGIO;
 
 /**
@@ -67,7 +71,6 @@ public class WikiGiornoViewList extends WikiViewList {
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
 
-    @Autowired
     private UploadGiorni uploadGiorni;
 
     @Autowired
@@ -94,7 +97,6 @@ public class WikiGiornoViewList extends WikiViewList {
         super(presenter, dialog);
         ((GiornoViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
-
 
 
     /**
@@ -172,34 +174,98 @@ public class WikiGiornoViewList extends WikiViewList {
      * Sovrascritto
      */
     protected void addSpecificColumnsAfter() {
+        String lar = "7em";
         ComponentRenderer renderer;
         Grid.Column colonna;
 
+
+        renderer = new ComponentRenderer<>(this::createViewNatoButton);
+        colonna = gridPaginated.addColumn(renderer);
+        colonna.setHeader("Test");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+        renderer = new ComponentRenderer<>(this::createViewMortoButton);
+        colonna = gridPaginated.addColumn(renderer);
+        colonna.setHeader("Test");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+        renderer = new ComponentRenderer<>(this::createWikiNatoButton);
+        colonna = gridPaginated.addColumn(renderer);
+        colonna.setHeader("Wiki");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+        renderer = new ComponentRenderer<>(this::createWikiMortoButton);
+        colonna = gridPaginated.addColumn(renderer);
+        colonna.setHeader("Wiki");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
         renderer = new ComponentRenderer<>(this::createUploadNatoButton);
         colonna = gridPaginated.addColumn(renderer);
-        colonna.setWidth("10em");
+        colonna.setHeader("Upload");
+        colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createUploadMortoButton);
         colonna = gridPaginated.addColumn(renderer);
-        colonna.setWidth("10em");
+        colonna.setHeader("Upload");
+        colonna.setWidth(lar);
         colonna.setFlexGrow(0);
     }// end of method
 
 
+    protected Button createViewNatoButton(Giorno entityBean) {
+        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.LIST));
+        uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
+        uploadOneNatoButton.addClickListener(e -> viewNato(entityBean));
+        return uploadOneNatoButton;
+    }// end of method
+
+
+    protected Button createViewMortoButton(Giorno entityBean) {
+        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.LIST));
+        uploadOneMortoButton.getElement().setAttribute("theme", "secondary");
+        uploadOneMortoButton.getElement().setAttribute("color", "green");
+        uploadOneMortoButton.addClickListener(e -> viewMorto(entityBean));
+        return uploadOneMortoButton;
+    }// end of method
+
+
+    protected Button createWikiNatoButton(Giorno entityBean) {
+        Element input = ElementFactory.createInput();
+        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.SERVER));
+        uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
+        uploadOneNatoButton.getElement().getStyle().set("background-color", input.getProperty("green"));
+        uploadOneNatoButton.addClickListener(e -> wikiPageNato(entityBean));
+        return uploadOneNatoButton;
+    }// end of method
+
+
+    protected Button createWikiMortoButton(Giorno entityBean) {
+        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.SERVER));
+        uploadOneMortoButton.getElement().setAttribute("theme", "secondary");
+//        uploadOneMortoButton.getElement().getClassList().add("green");
+        uploadOneMortoButton.addClickListener(e -> wikiPageMorto(entityBean));
+        return uploadOneMortoButton;
+    }// end of method
+
+
     protected Button createUploadNatoButton(Giorno entityBean) {
-        uploadOneNatoButton = new Button("Upload nati", new Icon(VaadinIcon.UPLOAD));
+        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.UPLOAD));
         uploadOneNatoButton.getElement().setAttribute("theme", "error");
-        uploadOneNatoButton.addClickListener(e ->  uploadGiornoNato.esegue(entityBean));
+        uploadOneNatoButton.addClickListener(e -> uploadGiornoNato.esegue(entityBean));
         return uploadOneNatoButton;
     }// end of method
 
 
     protected Button createUploadMortoButton(Giorno entityBean) {
-        uploadOneNatoButton = new Button("Upload morti", new Icon(VaadinIcon.UPLOAD));
-        uploadOneNatoButton.getElement().setAttribute("theme", "error");
-        uploadOneNatoButton.addClickListener(e ->  uploadGiornoMorto.esegue(entityBean));
-        return uploadOneNatoButton;
+        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.UPLOAD));
+        uploadOneMortoButton.getElement().setAttribute("theme", "error");
+        uploadOneMortoButton.addClickListener(e -> uploadGiornoMorto.esegue(entityBean));
+        return uploadOneMortoButton;
     }// end of method
 
 
@@ -216,6 +282,28 @@ public class WikiGiornoViewList extends WikiViewList {
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
         }// fine del blocco try-catch
+    }// end of method
+
+
+    protected void viewNato(Giorno giorno) {
+        Notification.show("View nati il " + giorno.getTitolo(), 2000, Notification.Position.BOTTOM_START);
+    }// end of method
+
+
+    protected void viewMorto(Giorno giorno) {
+        Notification.show("View morti il " + giorno.getTitolo(), 2000, Notification.Position.BOTTOM_START);
+    }// end of method
+
+
+    protected void wikiPageNato(Giorno giorno) {
+        String link = "\"" + PATH_WIKI + uploadGiornoNato.getTitoloPagina(giorno) + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
+    protected void wikiPageMorto(Giorno giorno) {
+        String link = "\"" + PATH_WIKI + uploadGiornoMorto.getTitoloPagina(giorno) + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 

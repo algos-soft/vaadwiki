@@ -760,9 +760,6 @@ public class ADateService extends AbstractService {
             if (durata < MAX_SECONDI) {
                 div = Math.floorDiv(durata, MAX_MILLISEC);
                 mod = Math.floorMod(durata, MAX_MILLISEC);
-                if (mod >= MAX_MILLISEC / 2) {
-                    div++;
-                }// fine del blocco if
                 if (div < 60) {
                     tempo = div + SECONDI;
                 } else {
@@ -772,9 +769,6 @@ public class ADateService extends AbstractService {
                 if (durata < MAX_MINUTI) {
                     div = Math.floorDiv(durata, MAX_SECONDI);
                     mod = Math.floorMod(durata, MAX_SECONDI);
-                    if (mod >= MAX_SECONDI / 2) {
-                        div++;
-                    }// fine del blocco if
                     if (div < 60) {
                         tempo = div + MINUTI;
                     } else {
@@ -784,16 +778,13 @@ public class ADateService extends AbstractService {
                     if (durata < MAX_ORE) {
                         div = Math.floorDiv(durata, MAX_MINUTI);
                         mod = Math.floorMod(durata, MAX_MINUTI);
-                        if (mod >= MAX_MINUTI / 2) {
-                            div++;
-                        }// fine del blocco if
                         if (div < 24) {
                             if (div == 1) {
                                 tempo = div + ORA;
                             } else {
                                 tempo = div + ORE;
-                            }// fine del blocco if-else
-                            tempo += " e " + toText(durata - div * MAX_MINUTI);
+                            }// fine del blocco if-els
+                            tempo += " e " + toText(durata - (div * MAX_MINUTI));
                         } else {
                             tempo = "1" + GIORNO;
                         }// fine del blocco if-else
@@ -801,9 +792,6 @@ public class ADateService extends AbstractService {
                         if (durata < MAX_GIORNI) {
                             div = Math.floorDiv(durata, MAX_ORE);
                             mod = Math.floorMod(durata, MAX_ORE);
-                            if (mod >= MAX_ORE / 2) {
-                                div++;
-                            }// fine del blocco if
                             if (div < 365) {
                                 if (div == 1) {
                                     tempo = div + GIORNO;
@@ -816,9 +804,6 @@ public class ADateService extends AbstractService {
                         } else {
                             div = Math.floorDiv(durata, MAX_GIORNI);
                             mod = Math.floorMod(durata, MAX_GIORNI);
-                            if (mod >= MAX_GIORNI / 2) {
-                                div++;
-                            }// fine del blocco if
                             if (div == 1) {
                                 tempo = div + ANNO;
                             } else {
