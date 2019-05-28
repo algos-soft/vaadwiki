@@ -81,6 +81,15 @@ public abstract class UploadGiorni extends Upload {
 
 
     /**
+     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
+     */
+    public void esegueTest(Giorno giorno) {
+        this.giorno = giorno;
+        esegueTest();
+    }// fine del metodo
+
+
+    /**
      * Regola alcuni (eventuali) parametri specifici della sottoclasse
      * <p>
      * Nelle sottoclassi va SEMPRE richiamata la superclasse PRIMA di regolare localmente le variabili <br>

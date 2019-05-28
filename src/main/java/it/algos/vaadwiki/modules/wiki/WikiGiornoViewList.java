@@ -286,7 +286,11 @@ public class WikiGiornoViewList extends WikiViewList {
 
 
     protected void viewNato(Giorno giorno) {
-        Notification.show("View nati il " + giorno.getTitolo(), 2000, Notification.Position.BOTTOM_START);
+//        Notification.show("View nati il " + giorno.getTitolo(), 2000, Notification.Position.BOTTOM_START);
+//        uploadGiornoNato.esegueTest(giorno);
+//        String testo = uploadGiornoNato.getTesto();
+
+        getUI().ifPresent(ui -> ui.navigate(  "pippoz" ));
     }// end of method
 
 

@@ -198,6 +198,8 @@ public abstract class Upload {
 
     protected String titoloPagina;
 
+    protected String testo;
+
     protected boolean usaHeadNonScrivere;
 
     protected boolean usaHeadToc;
@@ -245,7 +247,18 @@ public abstract class Upload {
         elaboraParametri();
         elaboraTitolo();
         creaMappaDidascalie();
-        elaboraPagina();
+        elaboraPagina(true);
+    }// end of method
+
+
+    /**
+     * Esegue un ciclo di creazione (UPLOAD) delle liste
+     */
+    public void esegueTest() {
+        elaboraParametri();
+        elaboraTitolo();
+        creaMappaDidascalie();
+        elaboraPagina(false);
     }// end of method
 
 
@@ -314,10 +327,9 @@ public abstract class Upload {
      * Gli spazi (righe) di separazione vanno aggiunti qui <br>
      * Registra la pagina <br>
      */
-    private void elaboraPagina() {
+    private void elaboraPagina(boolean upload) {
         String summary = LibWiki.getSummary();
-        String testo = VUOTA;
-        String titolo;
+        testo = VUOTA;
 
         if (numPersone > 0) {
             //header
@@ -333,18 +345,21 @@ public abstract class Upload {
         }// fine del blocco if
 
         //registra la pagina
-        if (!testo.equals(VUOTA)) {
-            testo = testo.trim();
+        if (upload) {
+            if (text.isValid(testo)) {
+                testo = testo.trim();
 
-            if (pref.isBool(FlowCost.USA_DEBUG)) {
-                titoloPagina = PAGINA_PROVA;
+                if (pref.isBool(FlowCost.USA_DEBUG)) {
+                    titoloPagina = PAGINA_PROVA;
+                }// fine del blocco if
+
+                if (pref.isBool(FlowCost.USA_DEBUG) || checkPossoRegistrare(titoloPagina, testo)) {
+                    appContext.getBean(AQueryWrite.class, titoloPagina, testo);
+                    log.info(titoloPagina);
+                }// end of if cycle
             }// fine del blocco if
+        }// end of if cycle
 
-            if (pref.isBool(FlowCost.USA_DEBUG) || checkPossoRegistrare(titoloPagina, testo)) {
-                appContext.getBean(AQueryWrite.class, titoloPagina, testo);
-                log.info(titoloPagina);
-            }// end of if cycle
-        }// fine del blocco if
     }// fine del metodo
 
 
@@ -738,6 +753,11 @@ public abstract class Upload {
     @Override
     public String toString() {
         return "Upload";
+    }// end of method
+
+
+    public String getTesto() {
+        return testo;
     }// end of method
 
 }// end of class
