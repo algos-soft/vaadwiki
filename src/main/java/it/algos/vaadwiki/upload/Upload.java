@@ -685,7 +685,7 @@ public abstract class Upload {
     /**
      * Nessun raggruppamento
      */
-    protected String righeSemplici() {
+    public String righeSemplici() {
         String testo = VUOTA;
         ArrayList<String> listaDidascalie;
 

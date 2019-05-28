@@ -1,21 +1,15 @@
 package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.UIScope;
-import it.algos.vaadflow.ui.IAView;
-import it.algos.vaadflow.ui.MainLayout;
-import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadflow.modules.giorno.GiornoService;
+import it.algos.vaadwiki.upload.UploadGiornoNato;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import static it.algos.vaadwiki.application.WikiCost.TAG_WGIO;
+import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_GIORNI;
 
 /**
  * Project vaadwiki
@@ -24,11 +18,33 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_WGIO;
  * Date: Tue, 28-May-2019
  * Time: 05:38
  */
-@Route(value = "posta")
-public class ViewGiorni extends Div {
+@Route(value = ROUTE_VIEW_GIORNI)
+public class ViewGiorni extends Div implements HasUrlParameter<String> {
 
-    public ViewGiorni() {
-        setText("Hello world");
+    @Autowired
+    GiornoService giornoService;
+
+    @Autowired
+    private UploadGiornoNato uploadGiornoNato;
+
+    private String idKey;
+
+    private Giorno giorno;
+
+
+    @Override
+    public void setParameter(BeforeEvent event, String giornoIdKey) {
+        idKey = giornoIdKey;
+        inizia();
+    }// end of method
+
+
+    public void inizia() {
+        giorno = giornoService.findById(idKey);
+
+        uploadGiornoNato.esegueTest(giorno);
+        String testo = uploadGiornoNato.righeSemplici();
+        this.setText(testo);
     }// end of method
 
 }// end of class

@@ -171,6 +171,21 @@ public class GiornoService extends AService {
 
 
     /**
+     * Retrieves an entity by its id.
+     *
+     * @param id must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Giorno findById(String id) {
+        return (Giorno) super.findById(id);
+    }// end of method
+
+
+    /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
      * @param titolo (obbligatorio, unico)

@@ -7,7 +7,6 @@ import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SingleSelectionEvent;
@@ -31,8 +30,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
-import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
-import static it.algos.vaadwiki.application.WikiCost.TAG_WGIO;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki <br>
@@ -286,16 +284,12 @@ public class WikiGiornoViewList extends WikiViewList {
 
 
     protected void viewNato(Giorno giorno) {
-//        Notification.show("View nati il " + giorno.getTitolo(), 2000, Notification.Position.BOTTOM_START);
-//        uploadGiornoNato.esegueTest(giorno);
-//        String testo = uploadGiornoNato.getTesto();
-
-        getUI().ifPresent(ui -> ui.navigate(  "pippoz" ));
+        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_GIORNI + "/" + giorno.id));
     }// end of method
 
 
     protected void viewMorto(Giorno giorno) {
-        Notification.show("View morti il " + giorno.getTitolo(), 2000, Notification.Position.BOTTOM_START);
+        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_GIORNI + "/" + giorno.id));
     }// end of method
 
 
