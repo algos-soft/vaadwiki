@@ -2,27 +2,27 @@ package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
-import it.algos.vaadwiki.upload.UploadGiornoNato;
+import it.algos.vaadwiki.upload.UploadGiornoMorto;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_GIORNO_NATI;
+import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_GIORNO_MORTI;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: Tue, 28-May-2019
- * Time: 22:38
+ * Date: Wed, 29-May-2019
+ * Time: 15:46
  * Classe per la visualizzazione di una lista di prova di biografie di un particolare giorno <br>
  * Viene invocata da WikiGiornoViewList <br>
  * Eliminato header e footer della pagina definitiva su wiki <br>
- * Lista dei Nati nel giorno <br>
+ * Lista dei Morti nel giorno <br>
  */
-@Route(value = ROUTE_VIEW_GIORNO_NATI)
-public class ViewGiornoNato extends ViewGiorni {
+@Route(value = ROUTE_VIEW_GIORNO_MORTI)
+public class ViewGiornoMorto extends ViewGiorni {
 
     @Autowired
-    private UploadGiornoNato uploadGiornoNato;
+    private UploadGiornoMorto uploadGiornoMorto;
 
 
     @Override
@@ -34,15 +34,15 @@ public class ViewGiornoNato extends ViewGiorni {
 
     public void inizia() {
         giorno = giornoService.findById(idKey);
-        uploadGiornoNato.esegueTest(giorno);
-        testo = uploadGiornoNato.getTesto();
+        uploadGiornoMorto.esegueTest(giorno);
+        testo = uploadGiornoMorto.getTesto();
 
         super.inizia();
     }// end of method
 
 
     protected void addTitolo() {
-        String titolo = "Lista di biografie di persone nate il " + giorno.getTitolo() + "\n";
+        String titolo = "Lista di biografie di persone morte il " + giorno.getTitolo() + "\n";
         testo = titolo + testo;
     }// end of method
 

@@ -69,7 +69,8 @@ public class WikiGiornoViewList extends WikiViewList {
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
 
-    private UploadGiorni uploadGiorni;
+//    @Autowired
+//    private UploadGiorni uploadGiorni;
 
     @Autowired
     private UploadGiornoNato uploadGiornoNato;
@@ -312,7 +313,7 @@ public class WikiGiornoViewList extends WikiViewList {
      * <p>
      */
     protected void uploadEffettivo() {
-        uploadGiorni.esegueAll();
+        uploadGiornoNato.esegueAll();
     }// end of method
 
 

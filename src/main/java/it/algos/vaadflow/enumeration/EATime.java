@@ -14,6 +14,7 @@ public enum EATime {
     shortDate("short", "d-MM-yy", "5-10-14"),
     normal("normal", "d-MMM-yy", "5-ott-14"),
     weekShort("weekShort", "EEE d", "dom 5"),
+    mese("mese", "d MMMM", "5 ottobre"),
     weekLong("weekLong", "EEEE d", "domenica 5"),
     medium("medium", "d-MMMM-yy", "5-ottobre-14"),
     lunga("lunga", "d-MMMM-yyy", "5-ottobre-2014"),
