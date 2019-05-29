@@ -27,7 +27,8 @@ public class WikiCost {
 //	public final static String TAG_MES = "mese";
 //	public final static String TAG_ANN = "anno";
 //	public final static String TAG_GIO = "giorno";
-    public final static String ROUTE_VIEW_GIORNI = "routeviewgiorni";
+    public final static String ROUTE_VIEW_GIORNO_NATI = "viewgiornonati";
+    public final static String ROUTE_VIEW_GIORNO_MORTI = "viewgiornomorti";
 
     public final static String TAG_PRO = "professione";
 

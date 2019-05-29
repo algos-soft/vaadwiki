@@ -27,7 +27,6 @@ import java.util.LinkedHashMap;
  * Crea le liste dei nati o dei morti nel giorno
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public abstract class ListaGiorni extends Lista {
 

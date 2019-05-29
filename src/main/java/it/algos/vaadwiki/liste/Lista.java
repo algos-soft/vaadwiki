@@ -29,7 +29,6 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * Crea le liste dei nati o dei morti nel giorno o nel anno
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public abstract class Lista {
 

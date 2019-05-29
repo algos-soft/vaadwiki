@@ -29,7 +29,7 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 public class UploadGiornoNato extends UploadGiorni {
 
 
-    @Autowired
+        @Autowired
     protected ListaGiornoNato listaGiornoNato;
 
 
@@ -61,6 +61,7 @@ public class UploadGiornoNato extends UploadGiorni {
      */
     @Override
     protected void creaMappaDidascalie() {
+//        listaGiornoNato = appContext.getBean(ListaGiornoNato.class, giorno);
         mappaDidascalie = listaGiornoNato.esegue(giorno);
         super.creaMappaDidascalie();
     }// fine del metodo

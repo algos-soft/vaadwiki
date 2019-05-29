@@ -284,12 +284,12 @@ public class WikiGiornoViewList extends WikiViewList {
 
 
     protected void viewNato(Giorno giorno) {
-        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_GIORNI + "/" + giorno.id));
+        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_GIORNO_NATI + "/" + giorno.id));
     }// end of method
 
 
     protected void viewMorto(Giorno giorno) {
-        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_GIORNI + "/" + giorno.id));
+        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_GIORNO_MORTI + "/" + giorno.id));
     }// end of method
 
 

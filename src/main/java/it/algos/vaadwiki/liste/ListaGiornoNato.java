@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.didascalia.DidascaliaGiornoNato;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 
 /**
@@ -22,13 +24,58 @@ import java.util.ArrayList;
  * Crea la lista dei nati nel giorno
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class ListaGiornoNato extends ListaGiorni {
 
 
     @Autowired
     protected DidascaliaGiornoNato didascaliaGiornoNato;
+
+
+//    public ListaGiornoNato(Bio bio, EADidascalia type) {
+//        int a = 87;
+//    }// end of constructor
+
+
+//    public ListaGiornoNato(Giorno giorno) {
+//        int a = 87;
+//    }// end of constructor
+
+
+    /**
+     * Costruttore <br>
+     */
+    public void ListaGiornoNato() {
+//        super.giorno = giorno;
+        int a = 87;
+    }// end of Spring constructor
+
+
+//    /**
+//     * Costruttore <br>
+//     */
+////    @Autowired
+//    public void ListaGiornoNato(String giorno) {
+////        super.giorno = giorno;
+//        int a = 87;
+//    }// end of Spring constructor
+
+
+    /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se ci sono superclassi e sottoclassi, chiama prima @PostConstruct della superclasse <br>
+     */
+    @PostConstruct
+    protected void inizia() {
+        int a = 87;
+    }// end of method
 
 
     /**
