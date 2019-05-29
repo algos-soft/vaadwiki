@@ -29,7 +29,7 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 public class UploadGiornoNato extends UploadGiorni {
 
 
-        @Autowired
+    @Autowired
     protected ListaGiornoNato listaGiornoNato;
 
 

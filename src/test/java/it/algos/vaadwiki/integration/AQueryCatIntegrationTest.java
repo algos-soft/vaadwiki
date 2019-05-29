@@ -44,6 +44,8 @@ public class AQueryCatIntegrationTest extends ATest {
 
     private final static String TITOLO_CAT_GRANDE = "BioBot";
 
+    private final static int NUM_VOCI = 1182;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -72,7 +74,7 @@ public class AQueryCatIntegrationTest extends ATest {
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_PICCOLA).numVoci;
         Assert.assertEquals(ottenutoIntero, previstoIntero);
 
-        previstoIntero = 1182;
+        previstoIntero = NUM_VOCI + 1;
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_MEDIA).numVoci;
         Assert.assertEquals(ottenutoIntero, previstoIntero);
 
@@ -105,7 +107,7 @@ public class AQueryCatIntegrationTest extends ATest {
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
 
-        previstoIntero = 1181;
+        previstoIntero = NUM_VOCI;
         ottenutoList = appContext.getBean(AQueryCatPagineTitle.class, TITOLO_CAT_MEDIA).listaTitle;
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
@@ -124,13 +126,13 @@ public class AQueryCatIntegrationTest extends ATest {
         Assert.assertNotNull(ottenutoLongList);
         Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
 
-        previstoIntero = 1181;
+        previstoIntero = NUM_VOCI;
         ottenutoLongList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_MEDIA).listaPageid;
         Assert.assertNotNull(ottenutoLongList);
         Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
 
         previstoIntero = 371000;
-        ArrayList<Long>  ottenutoList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_GRANDE).listaPageid;
+        ArrayList<Long> ottenutoList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_GRANDE).listaPageid;
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(Math.min(previstoIntero, ottenutoList.size()), previstoIntero);
     }// end of method
