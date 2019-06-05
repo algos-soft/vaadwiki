@@ -2,6 +2,7 @@ package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadwiki.liste.ListaAnnoNato;
 import it.algos.vaadwiki.liste.ListaGiornoNato;
 import it.algos.vaadwiki.service.LibBio;
@@ -41,6 +42,13 @@ public class UploadAnnoNato extends UploadAnni {
         }// fine del blocco if
     }// fine del metodo
 
+    /**
+     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
+     * Sovrascritto
+     */
+    public String getTitoloPagina(Anno anno) {
+        return super.getTitoloPagina(anno, "Nati");
+    }// fine del metodo
 
     /**
      * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>

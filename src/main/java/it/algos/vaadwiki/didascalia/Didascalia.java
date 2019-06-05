@@ -21,11 +21,12 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_SEPARATORE;
  * User: gac
  * Date: ven, 18-gen-2019
  * Time: 19:07
- * Didascalia specializzata per le liste costruibili a partire dal template Bio.
- * Cronologiche (in namespace principale) di nati e morti nel giorno o nell'anno
- * Attività e nazionalità (in Progetto:Biografie).
  * <p>
- * Sovrascritta nelle sottoclassi concrete
+ * Didascalia specializzata per le liste costruibili a partire dal template Bio. <br>
+ * Cronologiche (in namespace principale) di nati e morti nel giorno o nell'anno <br>
+ * Attività e nazionalità (in Progetto:Biografie). <br>
+ * <p>
+ * Sovrascritta nelle sottoclassi concrete <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)

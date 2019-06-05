@@ -39,6 +39,8 @@ import it.algos.vaadflow.service.*;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.ASearchDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadflow.ui.fields.AIntegerField;
+import it.algos.vaadflow.ui.fields.ATextArea;
 import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadflow.ui.fields.IAField;
 import it.algos.vaadflow.ui.menu.*;
@@ -1260,8 +1262,15 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         for (String fieldName : searchDialog.fieldMap.keySet()) {
             field = (IAField) searchDialog.fieldMap.get(fieldName);
             fieldValue = field.getValore();
-            if (text.isValid(fieldValue)) {
-                listaCriteriaDefinition.add(Criteria.where(fieldName).is(fieldValue));
+            if (field instanceof ATextField || field instanceof ATextArea) {
+                if (text.isValid(fieldValue)) {
+                    listaCriteriaDefinition.add(Criteria.where(fieldName).is(fieldValue));
+                }// end of if cycle
+            }// end of if cycle
+            if (field instanceof AIntegerField) {
+                if ((Integer) fieldValue > 0) {
+                    listaCriteriaDefinition.add(Criteria.where(fieldName).is(fieldValue));
+                }// end of if cycle
             }// end of if cycle
         }// end of for cycle
 

@@ -37,7 +37,6 @@ import static it.algos.vaadwiki.application.WikiCost.SEND_MAIL_CICLO;
 
 /**
  * Created by gac on 20 ago 2015.
- * .
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -126,13 +125,16 @@ public class LibBio {
      */
     public static final String PARAGRAFO = "==";
 
+    /**
+     * Private final property
+     */
+    private static final LibBio INSTANCE = new LibBio();
 
     /**
      * Service (@Scope = 'singleton') iniettato da StaticContextAccessor e usato come libreria <br>
      * Unico per tutta l'applicazione. Usato come libreria.
      */
     public ATextService text = ATextService.getInstance();
-
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -193,6 +195,23 @@ public class LibBio {
      */
     @Autowired
     private NazionalitaService nazionalita;
+
+
+    /**
+     * Private constructor to avoid client applications to use constructor
+     */
+    private LibBio() {
+    }// end of constructor
+
+
+    /**
+     * Gets the unique instance of this Singleton.
+     *
+     * @return the unique instance of this Singleton
+     */
+    public static LibBio getInstance() {
+        return INSTANCE;
+    }// end of static method
 
 
     /**
@@ -2369,7 +2388,7 @@ public class LibBio {
         testo += A_CAPO;
 
         try { // prova ad eseguire il codice
-            inetAddress= InetAddress.getLocalHost();
+            inetAddress = InetAddress.getLocalHost();
             testo += "IP Address:- " + inetAddress.getHostAddress();
             testo += A_CAPO;
             testo += "Host Name:- " + inetAddress.getHostName();
@@ -2504,5 +2523,48 @@ public class LibBio {
             mailService.send("Ciclo " + tag, testo);
         }// end of if cycle
     } // fine del metodo
+
+
+    /**
+     * Recupera una mappa completa (ordinata) dei nomi/cognomi e della loro frequenza
+     *
+     * @return mappa sigla (nomi/cognomi), numero di voci
+     */
+    public LinkedHashMap<String, Integer> findMappa(Vector vettoreAll, int taglio) {
+        LinkedHashMap<String, Integer> mappa = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> mappaTmp = null;
+        Object[] obj;
+        String nomeText = "";
+        long numVociBio = 0;
+        String chiave;
+        int valore;
+
+        if (vettoreAll != null) {
+            mappaTmp = new LinkedHashMap<>();
+            for (Object vect : vettoreAll) {
+                if (vect instanceof Object[]) {
+                    obj = (Object[]) vect;
+                    nomeText = (String) obj[0];
+                    numVociBio = (long) obj[1];
+                    if (numVociBio >= taglio) {
+                        if (!nomeText.equals("")) {
+                            mappaTmp.put(nomeText, (int) numVociBio);
+                        }// end of if cycle
+                    }// end of if cycle
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+//        if (mappaTmp != null) {
+//            mappaTmp = LibArray.ordinaMappaAccentiSensibile(mappaTmp);
+//            for (Map.Entry<String, Object> elementoDellaMappa : mappaTmp.entrySet()) {
+//                chiave = elementoDellaMappa.getKey();
+//                valore = (int) elementoDellaMappa.getValue();
+//                mappa.put(chiave, valore);
+//            }// end of for cycle
+//        }// end of if cycle
+
+        return mappa;
+    }// end of method
 
 }// end of class

@@ -163,4 +163,7 @@ public class AttivitaViewList extends AttNazProfCatViewList {
         }// fine del blocco try-catch
     }// end of method
 
+    protected void uploadStatistiche() {
+    }// end of method
+
 }// end of class

@@ -22,18 +22,22 @@ public class AComboBox<T> extends ComboBox implements IAField {
         this("");
     }// end of constructor
 
+
     public AComboBox(String label) {
         super(label);
     }// end of constructor
+
 
     public AComboBox(String label, List items) {
         super(label, items);
     }// end of constructor
 
+
     @Override
     public AComboBox getField() {
         return null;
     }// end of method
+
 
     @Override
     public Object getEmptyValue() {
@@ -41,20 +45,23 @@ public class AComboBox<T> extends ComboBox implements IAField {
         return super.getEmptyValue();
     }// end of method
 
+
     @Override
     public Object getValue() {
         Object obj = super.getValue();
         return super.getValue();
     }// end of method
 
+
     @Override
     public void setValue(Object value) {
         super.setValue(value);
     }// end of method
 
+
     @Override
     public String getValore() {
-        return getValue().toString();
+        return getValue() != null ? getValue().toString() : "";
     }// end of method
 
 }// end of class

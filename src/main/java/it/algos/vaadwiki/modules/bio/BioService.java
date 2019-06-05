@@ -12,6 +12,7 @@ import it.algos.wiki.Api;
 import it.algos.wiki.Page;
 import it.algos.wiki.WrapTime;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -579,6 +580,15 @@ public class BioService extends AttNazProfCatService {
     public List<String> getSearchPropertyNamesList(AContext context) {
         return Arrays.asList("wikiTitle", "nome", "cognome", "luogoNato", "attivita", "nazionalita");
     }// end of method
+
+
+    public List<String> findDistinctNome() {
+//        return repository.findDistinctNome("nome");
+//        return repository.findDistinctByNome();
+//        JSONArray lista= repository.listDistinctNome();
+        return null;
+    }// end of method
+
 
 //    /**
 //     * Fetches the entities whose 'main text property' matches the given filter text.

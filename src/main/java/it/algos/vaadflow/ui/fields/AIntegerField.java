@@ -3,6 +3,7 @@ package it.algos.vaadflow.ui.fields;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.service.ATextService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -19,6 +20,12 @@ import javax.annotation.PostConstruct;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AIntegerField extends TextField implements IAField {
 
+
+    /**
+     * Service (pattern SINGLETON) recuperato come istanza dalla classe <br>
+     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+     */
+    public ATextService text = ATextService.getInstance();
 
     public AIntegerField() {
         this("");
@@ -55,7 +62,13 @@ public class AIntegerField extends TextField implements IAField {
 
     @Override
     public Integer getValore() {
-        return Integer.decode(getValue());
+        String textValue = getValue();
+
+        if (text.isValid(textValue)) {
+            return Integer.decode(textValue);
+        } else {
+            return new Integer(0);
+        }// end of if/else cycle
     }// end of method
 
 }// end of class

@@ -2,10 +2,12 @@ package it.algos.vaadwiki.modules.bio;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
@@ -47,5 +49,13 @@ public interface BioRepository extends MongoRepository<Bio, String> {
     public List<Bio> findAllByAnnoNato(String annoNato);
 
     public List<Bio> findAllByAnnoMorto(String annoMorto);
+
+//    @Query("{'nome':?0}")
+//    List<String> findDistinctNome(String nome);
+//
+//    @Query("{ distinct : 'bio', key : 'nome'}")
+//    JSONArray listDistinctNome();
+//
+//    List<String> findDistinctByNome();
 
 }// end of class

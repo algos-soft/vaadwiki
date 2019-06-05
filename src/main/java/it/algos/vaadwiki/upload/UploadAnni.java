@@ -3,6 +3,7 @@ package it.algos.vaadwiki.upload;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -80,6 +81,15 @@ public class UploadAnni extends Upload {
 
 
     /**
+     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
+     */
+    public void esegueTest(Anno anno) {
+        this.anno = anno;
+        esegueTest();
+    }// fine del metodo
+
+
+    /**
      * Regola alcuni (eventuali) parametri specifici della sottoclasse
      * <p>
      * Nelle sottoclassi va SEMPRE richiamata la superclasse PRIMA di regolare localmente le variabili <br>
@@ -107,6 +117,13 @@ public class UploadAnni extends Upload {
         return titolo;
     }// fine del metodo
 
+    /**
+     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
+     * Sovrascritto
+     */
+    public String getTitoloPagina(Anno anno) {
+        return "";
+    }// fine del metodo
 
     /**
      * Titolo della pagina Nati/Morti da creare/caricare su wikipedia

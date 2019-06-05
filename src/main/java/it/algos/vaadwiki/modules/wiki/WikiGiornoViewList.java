@@ -21,7 +21,6 @@ import it.algos.vaadflow.modules.giorno.GiornoViewDialog;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadwiki.upload.UploadGiorni;
 import it.algos.vaadwiki.upload.UploadGiornoMorto;
 import it.algos.vaadwiki.upload.UploadGiornoNato;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +36,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Created by Algos <br>
  * User: Gac <br>
  * Fix date: 19-gen-2019 11.33.37 <br>
- * <br>
+ * <p>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
  * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
@@ -176,7 +175,6 @@ public class WikiGiornoViewList extends WikiViewList {
         String lar = "7em";
         ComponentRenderer renderer;
         Grid.Column colonna;
-
 
         renderer = new ComponentRenderer<>(this::createViewNatoButton);
         colonna = gridPaginated.addColumn(renderer);

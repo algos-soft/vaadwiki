@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.modules.wiki;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
@@ -9,27 +10,26 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SingleSelectionEvent;
+import com.vaadin.flow.dom.Element;
+import com.vaadin.flow.dom.ElementFactory;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoViewDialog;
-import it.algos.vaadflow.modules.giorno.Giorno;
-import it.algos.vaadflow.modules.giorno.GiornoViewDialog;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadwiki.upload.*;
+import it.algos.vaadwiki.upload.UploadAnnoMorto;
+import it.algos.vaadwiki.upload.UploadAnnoNato;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
-import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
-import static it.algos.vaadwiki.application.WikiCost.TAG_WANN;
-import static it.algos.vaadwiki.application.WikiCost.TAG_WGIO;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
@@ -37,6 +37,22 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_WGIO;
  * User: gac
  * Date: gio, 24-gen-2019
  * Time: 17:17
+ * <p>
+ * Estende la classe astratta AViewList per visualizzare la Grid <br>
+ * <p>
+ * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+ * Le istanze @Autowired usate da questa classe vengono iniettate automaticamente da SpringBoot se: <br>
+ * 1) vengono dichiarate nel costruttore @Autowired di questa classe, oppure <br>
+ * 2) la property è di una classe con @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON), oppure <br>
+ * 3) vengono usate in un un metodo @PostConstruct di questa classe, perché SpringBoot le inietta DOPO init() <br>
+ * <p>
+ * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
+ * Not annotated with @SpringComponent (sbagliato) perché usa la @Route di VaadinFlow <br>
+ * Annotated with @UIScope (obbligatorio) <br>
+ * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
+ * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
 @Route(value = TAG_WANN, layout = MainLayout.class)
@@ -53,8 +69,8 @@ public class WikiAnnoViewList extends WikiViewList {
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
 
-    @Autowired
-    private UploadAnni uploadAnni;
+//    @Autowired
+//    private UploadAnni uploadAnni;
 
     @Autowired
     private UploadAnnoNato uploadAnnoNato;
@@ -65,6 +81,7 @@ public class WikiAnnoViewList extends WikiViewList {
     private Anno annoCorrente;
 
     private PaginatedGrid<Anno> gridPaginated;
+
 
     /**
      * Costruttore @Autowired <br>
@@ -79,7 +96,6 @@ public class WikiAnnoViewList extends WikiViewList {
         super(presenter, dialog);
         ((AnnoViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
-
 
 
     /**
@@ -157,34 +173,99 @@ public class WikiAnnoViewList extends WikiViewList {
      * Sovrascritto
      */
     protected void addSpecificColumnsAfter() {
+        String lar = "7em";
         ComponentRenderer renderer;
         Grid.Column colonna;
 
+        renderer = new ComponentRenderer<>(this::createViewNatoButton);
+        colonna = gridPaginated.addColumn(renderer);
+        colonna.setHeader("Test");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+        renderer = new ComponentRenderer<>(this::createViewMortoButton);
+        colonna = gridPaginated.addColumn(renderer);
+        colonna.setHeader("Test");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+        renderer = new ComponentRenderer<>(this::createWikiNatoButton);
+        colonna = gridPaginated.addColumn(renderer);
+        colonna.setHeader("Wiki");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+        renderer = new ComponentRenderer<>(this::createWikiMortoButton);
+        colonna = gridPaginated.addColumn(renderer);
+        colonna.setHeader("Wiki");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
         renderer = new ComponentRenderer<>(this::createUploadNatoButton);
         colonna = gridPaginated.addColumn(renderer);
-        colonna.setWidth("10em");
+        colonna.setHeader("Upload");
+        colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createUploadMortoButton);
         colonna = gridPaginated.addColumn(renderer);
-        colonna.setWidth("10em");
+        colonna.setHeader("Upload");
+        colonna.setWidth(lar);
         colonna.setFlexGrow(0);
     }// end of method
 
+
+    protected Button createViewNatoButton(Anno entityBean) {
+        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.LIST));
+        uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
+        uploadOneNatoButton.addClickListener(e -> viewNato(entityBean));
+        return uploadOneNatoButton;
+    }// end of method
+
+
+    protected Button createViewMortoButton(Anno entityBean) {
+        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.LIST));
+        uploadOneMortoButton.getElement().setAttribute("theme", "secondary");
+        uploadOneMortoButton.getElement().setAttribute("color", "green");
+        uploadOneMortoButton.addClickListener(e -> viewMorto(entityBean));
+        return uploadOneMortoButton;
+    }// end of method
+
+
+    protected Button createWikiNatoButton(Anno entityBean) {
+        Element input = ElementFactory.createInput();
+        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.SERVER));
+        uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
+        uploadOneNatoButton.getElement().getStyle().set("background-color", input.getProperty("green"));
+        uploadOneNatoButton.addClickListener(e -> wikiPageNato(entityBean));
+        return uploadOneNatoButton;
+    }// end of method
+
+
+    protected Button createWikiMortoButton(Anno entityBean) {
+        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.SERVER));
+        uploadOneMortoButton.getElement().setAttribute("theme", "secondary");
+//        uploadOneMortoButton.getElement().getClassList().add("green");
+        uploadOneMortoButton.addClickListener(e -> wikiPageMorto(entityBean));
+        return uploadOneMortoButton;
+    }// end of method
+
+
     protected Button createUploadNatoButton(Anno entityBean) {
-        uploadOneNatoButton = new Button("Upload nati", new Icon(VaadinIcon.UPLOAD));
+        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.UPLOAD));
         uploadOneNatoButton.getElement().setAttribute("theme", "error");
-        uploadOneNatoButton.addClickListener(e ->  uploadAnnoNato.esegue(entityBean));
+        uploadOneNatoButton.addClickListener(e -> uploadAnnoNato.esegue(entityBean));
         return uploadOneNatoButton;
     }// end of method
 
 
     protected Button createUploadMortoButton(Anno entityBean) {
-        uploadOneNatoButton = new Button("Upload morti", new Icon(VaadinIcon.UPLOAD));
-        uploadOneNatoButton.getElement().setAttribute("theme", "error");
-        uploadOneNatoButton.addClickListener(e ->  uploadAnnoMorto.esegue(entityBean));
-        return uploadOneNatoButton;
+        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.UPLOAD));
+        uploadOneMortoButton.getElement().setAttribute("theme", "error");
+        uploadOneMortoButton.addClickListener(e -> uploadAnnoMorto.esegue(entityBean));
+        return uploadOneMortoButton;
     }// end of method
+
 
     /**
      * Eventuale header text
@@ -201,6 +282,29 @@ public class WikiAnnoViewList extends WikiViewList {
         }// fine del blocco try-catch
     }// end of method
 
+
+    protected void viewNato(Anno anno) {
+        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_ANNO_NATI + "/" + anno.id));
+    }// end of method
+
+
+    protected void viewMorto(Anno anno) {
+        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_ANNO_MORTI + "/" + anno.id));
+    }// end of method
+
+
+    protected void wikiPageNato(Anno anno) {
+        String link = "\"" + PATH_WIKI + uploadAnnoNato.getTitoloPagina(anno) + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
+    protected void wikiPageMorto(Anno anno) {
+        String link = "\"" + PATH_WIKI + uploadAnnoMorto.getTitoloPagina(anno) + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
     /**
      * Opens the confirmation dialog before deleting the current item.
      * <p>
@@ -208,7 +312,7 @@ public class WikiAnnoViewList extends WikiViewList {
      * <p>
      */
     protected void uploadEffettivo() {
-        uploadAnni.esegueAll();
+        uploadAnnoNato.esegueAll();
     }// end of method
 
 

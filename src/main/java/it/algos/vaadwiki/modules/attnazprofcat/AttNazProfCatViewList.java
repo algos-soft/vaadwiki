@@ -135,13 +135,6 @@ public class AttNazProfCatViewList extends AViewList {
             topPlaceholder.add(donwloadMongoButton);
         }// end of if cycle
 
-        if (usaBottoneUpload) {
-            uploadStatisticheButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
-            uploadStatisticheButton.addClassName("view-toolbar__button");
-            uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
-            topPlaceholder.add(uploadStatisticheButton);
-        }// end of if cycle
-
         if (usaBottoneCategoria) {
             showCategoriaButton = new Button("Categoria", new Icon(VaadinIcon.LIST));
             showCategoriaButton.addClassName("view-toolbar__button");
@@ -157,10 +150,18 @@ public class AttNazProfCatViewList extends AViewList {
         }// end of if cycle
 
         if (usaBottoneStatistiche) {
-            showStatisticheButton = new Button("Statistiche", new Icon(VaadinIcon.TABLE));
+            showStatisticheButton = new Button("View statistiche", new Icon(VaadinIcon.TABLE));
             showStatisticheButton.addClassName("view-toolbar__button");
             showStatisticheButton.addClickListener(e -> showWikiStatistiche());
             topPlaceholder.add(showStatisticheButton);
+        }// end of if cycle
+
+        if (usaBottoneUpload) {
+            uploadStatisticheButton = new Button("Upload statistiche", new Icon(VaadinIcon.UPLOAD));
+            uploadStatisticheButton.getElement().setAttribute("theme", "error");
+            uploadStatisticheButton.addClassName("view-toolbar__button");
+            uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
+            topPlaceholder.add(uploadStatisticheButton);
         }// end of if cycle
 
         return topPlaceholder.getComponentCount() > 0;

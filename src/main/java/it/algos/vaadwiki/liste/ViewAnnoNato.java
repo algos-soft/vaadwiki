@@ -2,28 +2,30 @@ package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
+import it.algos.vaadwiki.upload.UploadAnnoNato;
 import it.algos.vaadwiki.upload.UploadGiornoNato;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_ANNO_NATI;
 import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_GIORNO_NATI;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: Tue, 28-May-2019
- * Time: 22:38
+ * Date: Wed, 29-May-2019
+ * Time: 22:14
  * <p>
- * Classe per la visualizzazione di una lista di prova di biografie di un particolare giorno <br>
- * Viene invocata da WikiGiornoViewList <br>
+ * Classe per la visualizzazione di una lista di prova di biografie di un particolare anno <br>
+ * Viene invocata da WikiAnnoViewList <br>
  * Eliminato header e footer della pagina definitiva su wiki <br>
- * Lista dei Nati nel giorno <br>
+ * Lista dei Nati nell'anno <br>
  */
-@Route(value = ROUTE_VIEW_GIORNO_NATI)
-public class ViewGiornoNato extends ViewGiorni {
+@Route(value = ROUTE_VIEW_ANNO_NATI)
+public class ViewAnnoNato extends ViewAnni {
 
     @Autowired
-    private UploadGiornoNato uploadGiornoNato;
+    private UploadAnnoNato uploadAnnoNato;
 
 
     @Override
@@ -34,16 +36,16 @@ public class ViewGiornoNato extends ViewGiorni {
 
 
     public void inizia() {
-        giorno = giornoService.findById(idKey);
-        uploadGiornoNato.esegueTest(giorno);
-        testo = uploadGiornoNato.getTesto();
+        anno = annoService.findById(idKey);
+        uploadAnnoNato.esegueTest(anno);
+        testo = uploadAnnoNato.getTesto();
 
         super.inizia();
     }// end of method
 
 
     protected void addTitolo() {
-        String titolo = "Lista di biografie di persone nate il " + giorno.getTitolo() + "\n";
+        String titolo = "Lista di biografie di persone nate nel " + anno.getTitolo() + "\n";
         testo = titolo + testo;
     }// end of method
 
