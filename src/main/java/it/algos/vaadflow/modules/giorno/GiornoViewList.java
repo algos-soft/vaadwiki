@@ -1,6 +1,8 @@
 package it.algos.vaadflow.modules.giorno;
 
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
@@ -8,12 +10,13 @@ import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.ACronoViewList;
-import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.list.ALayoutViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.vaadin.klaudeta.PaginatedGrid;
+
 import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
 
 /**
@@ -69,5 +72,38 @@ public class GiornoViewList extends ACronoViewList {
         ((GiornoViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
+    /**
+     * Crea la GridPaginata <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
+     */
+    protected void creaGridPaginata() {
+        PaginatedGrid<Giorno> gridPaginated = new PaginatedGrid<Giorno>();
+        super.grid = gridPaginated;
+        super.creaGridPaginata();
+    }// end of method
+
+
+    /**
+     * Aggiunge le colonne alla PaginatedGrid <br>
+     * Sovrascritto (obbligatorio) <br>
+     */
+    protected void addColumnsGridPaginata() {
+        fixColumn(Giorno::getOrdine,"ordine");
+        fixColumn(Giorno::getMese,"mese");
+        fixColumn(Giorno::getTitolo,"titolo");
+    }// end of method
+
+
+    /**
+     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
+     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
+     */
+    protected void fixColumn(ValueProvider<Giorno, ?> valueProvider , String propertyName) {
+        Grid.Column singleColumn;
+        singleColumn = ((PaginatedGrid<Giorno>) grid).addColumn(valueProvider);
+        columnService.fixColumn(singleColumn, Giorno.class, propertyName);
+    }// end of method
 
 }// end of class

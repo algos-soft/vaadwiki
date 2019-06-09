@@ -56,11 +56,13 @@ public abstract class WikiViewList extends ACronoViewList {
 
 
     /**
-     * Le preferenze sovrascritte nella sottoclasse
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixPreferenzeSpecifiche() {
-        super.fixPreferenzeSpecifiche();
+    protected void fixPreferenze() {
+        super.fixPreferenze();
         super.testoBottoneEdit = SHOW_NAME;
         super.usaPagination = true;
     }// end of method
@@ -75,7 +77,7 @@ public abstract class WikiViewList extends ACronoViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected boolean creaTopLayout() {
+    protected void creaTopLayout() {
         super.creaTopLayout();
 
         //--upload della lista completa di 365 + 365 giorni
@@ -85,7 +87,6 @@ public abstract class WikiViewList extends ACronoViewList {
         topPlaceholder.add(uploadAllButton);
 
         sincroBottoniMenu(false);
-        return topPlaceholder.getComponentCount() > 0;
     }// end of method
 
 

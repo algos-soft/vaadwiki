@@ -9,6 +9,7 @@ import it.algos.vaadflow.modules.company.Company;
 import it.algos.vaadflow.modules.company.CompanyService;
 import it.algos.vaadflow.modules.company.EACompany;
 import it.algos.vaadflow.modules.role.EARole;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.modules.role.Role;
 import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.service.AService;
@@ -67,17 +68,18 @@ public class UtenteService extends AService {
     public CompanyService companyService;
 
     /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-//    @Autowired
-//    private SecurityConfiguration securityConfiguration;
-
-    /**
      * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
      * Spring costruisce una implementazione concreta dell'interfaccia MongoRepository (prevista dal @Qualifier) <br>
      * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
     private UtenteRepository repository;
+
+
+    /**
+      * Istanza (@Scope = 'singleton') inietta da Spring <br>
+      */
+//    @Autowired
+//    private SecurityConfiguration securityConfiguration;
 
 
     /**
@@ -343,6 +345,29 @@ public class UtenteService extends AService {
         }// end of for cycle
 
         return false;
+    }// end of method
+
+
+    public EARoleType getRole(Utente utente) {
+        EARoleType role = EARoleType.nobody;
+
+        if (utente != null) {
+            if (isDev(utente)) {
+                role = EARoleType.developer;
+            } else {
+                if (isAdmin(utente)) {
+                    role = EARoleType.admin;
+                } else {
+                    if (isUser(utente)) {
+                        role = EARoleType.user;
+                    } else {
+                        role = EARoleType.guest;
+                    }// end of if/else cycle
+                }// end of if/else cycle
+            }// end of if/else cycle
+        }// end of if cycle
+
+        return role;
     }// end of method
 
 }// end of class

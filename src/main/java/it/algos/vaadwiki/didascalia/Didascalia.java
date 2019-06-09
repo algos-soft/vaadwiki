@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
+
 import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.TAG_SEPARATORE;
@@ -24,14 +26,13 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_SEPARATORE;
  * <p>
  * Didascalia specializzata per le liste costruibili a partire dal template Bio. <br>
  * Cronologiche (in namespace principale) di nati e morti nel giorno o nell'anno <br>
+ * Liste di nomi e cognomi. <br>
  * Attività e nazionalità (in Progetto:Biografie). <br>
  * <p>
  * Sovrascritta nelle sottoclassi concrete <br>
+ * Not annotated with @SpringComponent (sbagliato) perché è una classe astratta <br>
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Slf4j
-public class Didascalia {
+public abstract class Didascalia {
 
     public static String TAG_SEP = " - ";
 
@@ -50,23 +51,9 @@ public class Didascalia {
     @Autowired
     public AnnoService annoService;
 
-    @Autowired
-    public DidascaliaCompleta didascaliaCompleta;
+    public String testo = VUOTA;
 
-    @Autowired
-    public DidascaliaGiornoNato didascaliaGiornoNato;
-
-    @Autowired
-    public DidascaliaAnnoNato didascaliaAnnoNato;
-
-    @Autowired
-    public DidascaliaGiornoMorto didascaliaGiornoMorto;
-
-    @Autowired
-    public DidascaliaAnnoMorto didascaliaAnnoMorto;
-
-    @Autowired
-    public DidascaliaStandard didascaliaStandard;
+    protected boolean usaChiave = true;
 
     protected String wikiTitle = VUOTA;
 
@@ -94,57 +81,45 @@ public class Didascalia {
 
     protected String nazionalita = VUOTA;
 
-    protected String testo = VUOTA;
+    protected EADidascalia type;
+
+    protected Bio bio;
 
 
-    public String esegue(Bio bio, EADidascalia type) {
-        return esegue(bio, type, true);
+    public Didascalia() {
+    }// end of constructor
+
+
+    public Didascalia(Bio bio, EADidascalia type) {
+        this.bio = bio;
+        this.type = type;
+    }// end of constructor
+
+
+    /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se ci sono superclassi e sottoclassi, chiama prima @PostConstruct della superclasse <br>
+     */
+    @PostConstruct
+    protected void inizia() {
+        if (bio != null) {
+            this.esegue(bio);
+        }// end of if cycle
     }// end of method
-
-
-    public String esegue(Bio bio, EADidascalia type, boolean usaChiave) {
-        String testo = VUOTA;
-
-        switch (type) {
-            case completa:
-                testo = didascaliaCompleta.esegue(bio, usaChiave);
-                break;
-            case giornoNato:
-                testo = didascaliaGiornoNato.esegue(bio, usaChiave);
-                break;
-            case annoNato:
-                testo = didascaliaAnnoNato.esegue(bio, usaChiave);
-                break;
-            case giornoMorto:
-                testo = didascaliaGiornoMorto.esegue(bio, usaChiave);
-                break;
-            case annoMorto:
-                testo = didascaliaAnnoMorto.esegue(bio, usaChiave);
-                break;
-            case standard:
-                testo = didascaliaStandard.esegue(bio, usaChiave);
-                break;
-            default:
-                log.warn("Switch - caso non definito");
-                break;
-        } // end of switch statement
-
-        return testo;
-    }// end of method
-
 
     public String esegue(Bio bio) {
-        return esegue(bio, true);
-    }// end of method
-
-
-    public String esegue(Bio bio, boolean usaChiave) {
         this.reset();
         this.recuperaDatiAnagrafici(bio);
         this.recuperaDatiCrono(bio);
         this.recuperaDatiLocalita(bio);
         this.recuperaDatiAttNaz(bio);
-        this.regolaDidascalia(usaChiave);
+        this.regolaDidascalia();
 
         return testo;
     }// end of method
@@ -248,7 +223,7 @@ public class Didascalia {
      * Costruisce il testo della didascalia
      * Sovrascritto
      */
-    protected void regolaDidascalia(boolean usaChiave) {
+    protected void regolaDidascalia() {
         testo = VUOTA;
 
         // blocco iniziale (potrebbe non esserci)

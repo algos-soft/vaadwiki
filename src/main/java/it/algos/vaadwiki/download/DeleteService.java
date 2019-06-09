@@ -10,6 +10,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project vaadbio2
@@ -32,7 +33,7 @@ public class DeleteService extends ABioService {
      *
      * @param vociEccedenti elenco (title) delle pagine eccedenti da cancellare
      */
-    public void esegue(ArrayList<Long> vociEccedenti) {
+    public void esegue(List<Long> vociEccedenti) {
         long inizio = System.currentTimeMillis();
         DeleteResult result;
         Bio bio;

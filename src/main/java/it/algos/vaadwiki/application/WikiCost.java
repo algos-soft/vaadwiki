@@ -23,7 +23,7 @@ import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 @AIScript(sovrascrivibile = false)
 public class WikiCost {
 
-    public final static String TAG_NOM = "wikinome";
+    public final static String TAG_NOM = "nome";
 
     //	public final static String TAG_SEC = "secolo";
 //	public final static String TAG_MES = "mese";
@@ -36,6 +36,12 @@ public class WikiCost {
     public final static String ROUTE_VIEW_ANNO_NATI = "viewannonati";
 
     public final static String ROUTE_VIEW_ANNO_MORTI = "viewannomorti";
+
+    public final static String ROUTE_VIEW_NOMI = "viewnomi";
+
+    public final static String ROUTE_VIEW_COGNOMI = "viewcognomi";
+
+    public final static String ROUTE_DIDASCALIE = "didascalie";
 
     public final static String TAG_PRO = "professione";
 
@@ -63,6 +69,8 @@ public class WikiCost {
     public final static String PROF = "Professione";
 
     public final static String CAT = "Categoria:";
+
+    public final static String NOME = "Nome:";
 
     public final static String CODE = "lastDownload";
 
@@ -105,6 +113,8 @@ public class WikiCost {
     public final static String LAST_DOWNLOAD_CATEGORIA = CODE + CAT;
 
     public final static String LAST_DOWNLOAD_BIO = CODE + BIO;
+
+    public final static String LAST_ELABORA_NOME = CODE + NOME;
 
     //--tempo impiegato per l'ultimo download, in secondi
     public final static String DURATA_DOWNLOAD_ATTIVITA = DURATA + ATT;
@@ -161,6 +171,10 @@ public class WikiCost {
     public static final String CATEGORY_INFO = "categoryinfo";
 
     public final static String ENCODE = "UTF-8";
+
+    public final static String SOGLIA_NOMI_MONGO = "sogliaNomiMongo";
+
+    public final static String SOGLIA_NOMI_PAGINA_WIKI = "sogliaNomiPaginaWiki";
 
     public static WikiLoginOld WIKI_LOGIN = null;
 

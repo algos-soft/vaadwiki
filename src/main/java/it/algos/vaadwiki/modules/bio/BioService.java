@@ -12,7 +12,6 @@ import it.algos.wiki.Api;
 import it.algos.wiki.Page;
 import it.algos.wiki.WrapTime;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -291,6 +290,16 @@ public class BioService extends AttNazProfCatService {
      */
     public ArrayList<Bio> findAllByAnnoMorto(String annoMorto) {
         return (ArrayList) repository.findAllByAnnoMorto(annoMorto);
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<Bio> findAllByNome(String nome) {
+        return (ArrayList) repository.findAllByNome(nome);
     }// end of method
 
 

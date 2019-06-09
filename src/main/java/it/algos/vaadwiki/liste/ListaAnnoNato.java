@@ -21,12 +21,12 @@ import java.util.ArrayList;
  * Time: 10:33
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class ListaAnnoNato extends ListaAnni {
 
 
-    @Autowired
+//    @Autowired
     protected DidascaliaAnnoNato didascaliaAnnoNato;
 
     /**

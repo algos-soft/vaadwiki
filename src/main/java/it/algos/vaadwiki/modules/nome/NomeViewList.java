@@ -7,18 +7,22 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadflow.ui.list.AGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.vaadin.klaudeta.PaginatedGrid;
 
-import static it.algos.vaadwiki.application.WikiCost.TAG_NOM;
+import java.time.LocalDateTime;
+
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki <br>
@@ -47,7 +51,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_NOM;
 @Qualifier(TAG_NOM)
 @Slf4j
 @AIScript(sovrascrivibile = true)
-public class NomeViewList extends AViewList {
+public class NomeViewList extends AGridViewList {
 
 
     /**
@@ -56,6 +60,10 @@ public class NomeViewList extends AViewList {
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+
+    //    --Soglia minima per creare una entity nella collezione Nomi sul mongoDB
+    //--Soglia minima per creare una pagina di un nome sul server wiki
+    private int sogliaWiki;
 
 
     /**
@@ -79,11 +87,13 @@ public class NomeViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixPreferenzeSpecifiche() {
-        super.fixPreferenzeSpecifiche();
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
         super.usaSearchBottoneNew = false;
         super.usaBottoneDeleteAll = true;
-    }// end of if cycle
+        this.sogliaWiki = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI, 50);
+    }// end of method
 
 
     /**
@@ -95,16 +105,83 @@ public class NomeViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected boolean creaTopLayout() {
+    protected void creaTopLayout() {
         super.creaTopLayout();
 
-        Button creaButton = new Button("Crea", new Icon(VaadinIcon.LIST));
+        Button creaButton = new Button("Crea all", new Icon(VaadinIcon.LIST));
         creaButton.addClassName("view-toolbar__button");
-        creaButton.addClickListener(e -> ((NomeService) service).crea());
+        creaButton.addClickListener(e -> {
+            ((NomeService) service).crea();
+            updateItems();
+            updateView();
+        });//end of lambda expressions and anonymous inner class
         topPlaceholder.add(creaButton);
 
-        return true;
-    }// end of if cycle
+        Button updateButton = new Button("Elabora", new Icon(VaadinIcon.LIST));
+        updateButton.addClassName("view-toolbar__button");
+        updateButton.addClickListener(e -> {
+            ((NomeService) service).update();
+            updateItems();
+            updateView();
+        });//end of lambda expressions and anonymous inner class
+        topPlaceholder.add(updateButton);
+    }// end of method
+
+
+    /**
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+
+        Label label = null;
+        LocalDateTime lastDownload = pref.getDate(LAST_ELABORA_NOME);
+        if (lastDownload != null) {
+            label = new Label("Ultimo aggiornamento dei nomi il " + date.getTime(lastDownload));
+        } else {
+            label = new Label("I nomi non sono aggiornati ");
+        }// end of if/else cycle
+
+        alertPlacehorder.add(label);
+    }// end of method
+
+
+    /**
+     * Crea la GridPaginata <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
+     */
+    protected void creaGridPaginata() {
+        PaginatedGrid<Nome> gridPaginated = new PaginatedGrid<Nome>();
+        super.grid = gridPaginated;
+        super.creaGridPaginata();
+    }// end of method
+
+
+    /**
+     * Aggiunge le colonne alla PaginatedGrid <br>
+     * Sovrascritto (obbligatorio) <br>
+     */
+    protected void addColumnsGridPaginata() {
+        fixColumn(Nome::getNome, "nome");
+        fixColumn(Nome::getVoci, "voci");
+    }// end of method
+
+
+    /**
+     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
+     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
+     */
+    protected void fixColumn(ValueProvider<Nome, ?> valueProvider, String propertyName) {
+        Grid.Column singleColumn;
+        singleColumn = ((PaginatedGrid<Nome>) grid).addColumn(valueProvider);
+        columnService.fixColumn(singleColumn, Nome.class, propertyName);
+    }// end of method
 
 
     /**
@@ -139,18 +216,23 @@ public class NomeViewList extends AViewList {
     }// end of method
 
 
-    protected Button createViewButton() {
-        Button uploadOneNatoButton = new Button("Test", new Icon(VaadinIcon.LIST));
-        uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
-//        uploadOneNatoButton.addClickListener(e -> viewNato(entityBean));
-        return uploadOneNatoButton;
+    protected Button createViewButton(Nome nome) {
+        Button viewButton = new Button("Test", new Icon(VaadinIcon.LIST));
+        viewButton.getElement().setAttribute("theme", "secondary");
+        viewButton.addClickListener(e -> viewNome(nome));
+        return viewButton;
+    }// end of method
+
+
+
+    protected void viewNome(Nome nome) {
+        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_NOMI + "/" + nome.id));
     }// end of method
 
 
     protected Component createWikiButton(Nome entityBean) {
-
-        if (entityBean!=null&&entityBean.voci>=75) {
-            Button    uploadOneNatoButton = new Button("Wiki", new Icon(VaadinIcon.SERVER));
+        if (entityBean != null && entityBean.voci >= sogliaWiki) {
+            Button uploadOneNatoButton = new Button("Wiki", new Icon(VaadinIcon.SERVER));
             uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
 //        uploadOneNatoButton.addClickListener(e -> viewNato(entityBean));
             return uploadOneNatoButton;
@@ -159,19 +241,17 @@ public class NomeViewList extends AViewList {
         }// end of if/else cycle
 
 
-
     }// end of method
 
 
     protected Component createUploaButton(Nome entityBean) {
-
-        if (entityBean!=null&&entityBean.voci>=75) {
-            Button     uploadOneNatoButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
+        if (entityBean != null && entityBean.voci >= sogliaWiki) {
+            Button uploadOneNatoButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
             uploadOneNatoButton.getElement().setAttribute("theme", "error");
 //        uploadOneNatoButton.addClickListener(e -> viewNato(entityBean));
             return uploadOneNatoButton;
         } else {
-            return new Label("Niente");
+            return new Label("");
         }// end of if/else cycle
     }// end of method
 

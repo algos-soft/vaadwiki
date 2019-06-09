@@ -15,13 +15,38 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_SEPARATORE;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: lun, 21-gen-2019
- * Time: 18:33
+ * Date: Sun, 09-Jun-2019
+ * Time: 14:28
+ * <p>
+ * Didascalia specializzata per le liste di nome, cognomi, attività e nazionalità. <br>
+ * Può essere recuperata da DidascaliaService (Singleton). <br>
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-public class DidascaliaStandard extends Didascalia {
+public class DidascaliaListe extends Didascalia {
+
+
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
+     */
+    public DidascaliaListe() {
+    }// end of constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(DidascaliaListe.class, bio) <br>
+     *
+     * @param bio di cui costruire la didascalia
+     */
+    public DidascaliaListe(Bio bio) {
+        super(bio, EADidascalia.liste);
+    }// end of constructor
+
 
     /**
      * Costruisce il blocco finale (potrebbe non esserci)
@@ -57,10 +82,7 @@ public class DidascaliaStandard extends Didascalia {
             text += textMorte;
         }// fine del blocco if
 
-//        text = getMostraAnni(bio, text);
-
         text += tagParEnd;
-
         return text;
     }// end of method
 

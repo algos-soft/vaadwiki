@@ -3,13 +3,15 @@ package it.algos.vaadflow.backend.login;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow.modules.company.Company;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.modules.utente.Utente;
+import it.algos.vaadflow.modules.utente.UtenteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 import static it.algos.vaadflow.application.FlowCost.TAG_LOGIN;
 
 /**
@@ -28,12 +30,13 @@ public class ALogin {
 
     private Company company;
 
-    private boolean developer = false;
+    private EARoleType roleType;
 
-    private boolean admin = false;
-
-//    @Autowired
-//    private RoleService roleService;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    private UtenteService utenteService;
 
 
     public Utente getUtente() {
@@ -49,13 +52,11 @@ public class ALogin {
     public void setUtenteAndCompany(Utente utente, Company company) {
         this.utente = utente;
         this.company = company;
-        this.developer = false;
-        this.admin = false;
 
         if (utente != null) {
-            this.admin = utente.isAdmin();
-            this.developer = utente.isDev();
+            this.roleType = utenteService.getRole(utente);
         }// end of if cycle
+
     }// end of method
 
 
@@ -69,28 +70,28 @@ public class ALogin {
     }// end of method
 
 
-    public boolean isDeveloper() {
-        return developer;
+    public EARoleType getRoleType() {
+        return roleType;
     }// end of method
 
 
-    public void setDeveloper(boolean developer) {
-        this.developer = developer;
-    }// end of method
-
-
-    public boolean isAdmin() {
-        return admin;
-    }// end of method
-
-
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
+    public void setRoleType(EARoleType roleType) {
+        this.roleType = roleType;
     }// end of method
 
 
     public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
+    }// end of method
+
+
+    public boolean isDeveloper() {
+        return roleType == EARoleType.developer;
+    }// end of method
+
+
+    public boolean isAdmin() {
+        return roleType == EARoleType.admin;
     }// end of method
 
 

@@ -398,7 +398,7 @@ public class AArrayService extends AbstractService {
      *
      * @return sublista corrente del ciclo
      */
-    public ArrayList estraeSublista(ArrayList listaTotale, int dimBlocco, int cicloCorrente) {
+    public ArrayList estraeSublista(List listaTotale, int dimBlocco, int cicloCorrente) {
         int posIni = 0;
         int posEnd = 0;
 
@@ -537,7 +537,7 @@ public class AArrayService extends AbstractService {
      *
      * @return differenza
      */
-    public ArrayList delta(List<Long> listaUno, List<Long> listaDue) {
+    public List<Long> delta(List<Long> listaUno, List<Long> listaDue) {
         List<Long> listaUnoCopia = new ArrayList<>(listaUno);
         HashSet<Long> hashA = new HashSet<Long>();
         HashSet<Long> hashB = new HashSet<Long>();
@@ -552,6 +552,7 @@ public class AArrayService extends AbstractService {
         hashA.removeAll(hashB);
         return new ArrayList<Long>(hashA);
     } // fine del metodo
+
 
 
 //    /**

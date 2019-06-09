@@ -1,19 +1,21 @@
 package it.algos.vaadflow.modules.log;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.AViewList;
-import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.fields.AComboBox;
+import it.algos.vaadflow.ui.list.AGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.vaadin.klaudeta.PaginatedGrid;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 
@@ -44,7 +46,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 @AIView(roleTypeVisibility = EARoleType.admin)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class LogViewList extends AViewList {
+public class LogViewList extends AGridViewList {
 
     /**
      * Icona visibile nel menu (facoltativa)
@@ -74,10 +76,14 @@ public class LogViewList extends AViewList {
 
 
     /**
-     * Le preferenze sovrascritte nella sottoclasse
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixPreferenzeSpecifiche() {
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = false;
         super.isEntityAdmin = true;
@@ -96,10 +102,9 @@ public class LogViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected boolean creaTopLayout() {
+    protected void creaTopLayout() {
         super.creaTopLayout();
         topPlaceholder.add(creaPopup());
-        return topPlaceholder.getComponentCount() > 0;
     }// end of method
 
 
@@ -107,9 +112,48 @@ public class LogViewList extends AViewList {
         comboLivello = new AComboBox();
         comboLivello.setWidth("8em");
         comboLivello.setItems(Livello.values());
-        comboLivello.addValueChangeListener(e -> super.updateView());
+        comboLivello.addValueChangeListener(e -> {
+            updateItems();
+            updateView();
+        });
 
         return comboLivello;
+    }// end of method
+
+
+    /**
+     * Crea la GridPaginata <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
+     */
+    protected void creaGridPaginata() {
+        PaginatedGrid<Log> gridPaginated = new PaginatedGrid<Log>();
+        super.grid = gridPaginated;
+        super.creaGridPaginata();
+    }// end of method
+
+
+    /**
+     * Aggiunge le colonne alla PaginatedGrid <br>
+     * Sovrascritto (obbligatorio) <br>
+     */
+    protected void addColumnsGridPaginata() {
+        fixColumn(Log::getLivello, "livello");
+        fixColumn(Log::getType, "type");
+        fixColumn(Log::getEvento, "evento");
+        fixColumn(Log::getDescrizione, "descrizione");
+    }// end of method
+
+
+    /**
+     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
+     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
+     */
+    protected void fixColumn(ValueProvider<Log, ?> valueProvider, String propertyName) {
+        Grid.Column singleColumn;
+        singleColumn = ((PaginatedGrid<Log>) grid).addColumn(valueProvider);
+        columnService.fixColumn(singleColumn, Log.class, propertyName);
     }// end of method
 
 

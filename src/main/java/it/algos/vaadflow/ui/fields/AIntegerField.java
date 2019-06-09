@@ -27,17 +27,21 @@ public class AIntegerField extends TextField implements IAField {
      */
     public ATextService text = ATextService.getInstance();
 
+
     public AIntegerField() {
         this("");
     }// end of constructor
 
+
     public AIntegerField(String label) {
-        this(label,"");
+        this(label, "");
     }// end of constructor
+
 
     public AIntegerField(String label, String placeholder) {
         super(label, placeholder);
     }// end of constructor
+
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -55,10 +59,12 @@ public class AIntegerField extends TextField implements IAField {
         this.setSuffixComponent(new Span("€"));
     }// end of method
 
+
     @Override
     public AIntegerField getField() {
         return this;
     }// end of method
+
 
     @Override
     public Integer getValore() {
@@ -69,6 +75,7 @@ public class AIntegerField extends TextField implements IAField {
         } else {
             return new Integer(0);
         }// end of if/else cycle
+
     }// end of method
 
 }// end of class

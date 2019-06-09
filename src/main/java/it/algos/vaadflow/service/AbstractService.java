@@ -84,7 +84,7 @@ public abstract class AbstractService {
         this.boot = ABootService.getInstance();
         this.date = ADateService.getInstance();
         this.field = AFieldService.getInstance();
-        this.mongo = AMongoService.getInstance();
+        this.mongo = appContext.getBean(AMongoService.class);
         this.reflection = AReflectionService.getInstance();
         this.text = ATextService.getInstance();
 

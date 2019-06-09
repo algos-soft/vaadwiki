@@ -14,12 +14,14 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static it.algos.vaadwiki.application.WikiCost.TAG_NOM;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki <br>
@@ -181,6 +183,21 @@ public class NomeService extends AService {
 
 
     /**
+     * Retrieves an entity by its id.
+     *
+     * @param id must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Nome findById(String id) {
+        return (Nome) super.findById(id);
+    }// end of method
+
+
+    /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
      * @param nome di riferimento (obbligatorio ed unico)
@@ -202,42 +219,88 @@ public class NomeService extends AService {
 
 
     /**
-     * Elabora tutti i nomi <br>
+     * Returns all entities of the type <br>
+     * <p>
+     * Se esiste la property 'ordine', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'code', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'descrizione', ordinate secondo questa property <br>
+     * Altrimenti, ordinate secondo il metodo sovrascritto nella sottoclasse concreta <br>
+     * Altrimenti, ordinate in ordine di inserimento nel DB mongo <br>
+     *
+     * @return all ordered entities
+     */
+    @Override
+    public List<Nome> findAll() {
+//        return super.findAll(new Sort(Sort.Direction.ASC, "nome"));
+        return (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "voci"));
+    }// end of method
+
+
+    /**
+     * Cancella i nomi esistenti <br>
+     * Crea tutti i nomi <br>
      * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
      * Registra la entity <br>
+     * Non registra la entity col nome mancante <br>
      */
     public void crea() {
-        String message = "";
         long inizio = System.currentTimeMillis();
-        List<String> nomi;
         int cont = 0;
-        int numVoci = 0;
-        int numEntities;
-        numEntities = this.count();
-        System.out.println("Creazione completa nomi delle biografie. Circa due minuti.");
-        Sort sort = new Sort(Sort.Direction.DESC, "nome");
+        System.out.println("Creazione completa nomi delle biografie. Circa 1 minuto.");
+        deleteAll();
 
         DistinctIterable<String> listaNomiDistinti = mongo.mongoOp.getCollection("bio").distinct("nome", String.class);
         for (String nome : listaNomiDistinti) {
             cont++;
-
-            org.springframework.data.mongodb.core.query.Query query = new org.springframework.data.mongodb.core.query.Query();
-
-            query.addCriteria(Criteria.where("nome").is(nome));
-            query.with(sort);
-            numVoci = ((List) mongo.mongoOp.find(query, Bio.class)).size();
-
-            if (numVoci >= 50) {
-                this.findOrCrea(nome, numVoci);
-            }// end of if cycle
-
-            if (cont > 3700) {
-                break;
-            }// end of if cycle
-
+            saveNumVoci(nome);
         }// end of for cycle
 
-        System.out.println("Creazione completa nomi delle biografie. Tempo impiegato: " + date.deltaText(inizio));
+        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
+        System.out.println("Creazione completa di " + cont + " nomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
+
+
+    /**
+     * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
+     */
+    public void update() {
+        long inizio = System.currentTimeMillis();
+        System.out.println("Elaborazione nomi delle biografie. Meno di 1 minuto.");
+        for (Nome nome : findAll()) {
+            saveNumVoci(nome);
+        }// end of for cycle
+        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
+        System.out.println("Elaborazione completa dei nomi. Tempo impiegato: " + date.deltaText(inizio));
+    }// end of method
+
+
+    /**
+     * Registra il numero di voci biografiche che hanno il nome indicato <br>
+     */
+    public void saveNumVoci(String nome) {
+        //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
+        int sogliaMongo = pref.getInt(SOGLIA_NOMI_MONGO, 10);
+        int numVoci = 0;
+        Query query = new Query();
+        query.addCriteria(Criteria.where("nome").is(nome));
+        numVoci = ((List) mongo.mongoOp.find(query, Bio.class)).size();
+        if (numVoci >= sogliaMongo && text.isValid(nome)) {
+            this.findOrCrea(nome, numVoci);
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Registra il numero di voci biografiche che hanno il nome indicato <br>
+     */
+    public void saveNumVoci(Nome nome) {
+        int numVoci = 0;
+        Query query = new Query();
+        query.addCriteria(Criteria.where("nome").is(nome.nome));
+        numVoci = ((List) mongo.mongoOp.find(query, Bio.class)).size();
+        nome.voci = numVoci;
+        save(nome);
+    }// end of method
+
 
 }// end of class

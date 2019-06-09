@@ -11,7 +11,7 @@ import it.algos.vaadflow.backend.login.ALogin;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.*;
-import it.algos.vaadflow.ui.AViewList;
+import it.algos.vaadflow.ui.list.AViewList;
 import it.algos.vaadflow.ui.IAView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +123,7 @@ public abstract class AMenu extends Div implements IAMenu {
      * Login and context della sessione <br>
      */
     protected void fixContext() {
-        context = vaadinService.fixLoginAndContext(null);
+        context = vaadinService.fixLoginAndContext();
         login = context.getLogin();
     }// end of method
 

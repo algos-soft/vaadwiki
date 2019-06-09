@@ -22,12 +22,12 @@ import java.util.ArrayList;
  * Crea la lista dei morti nel giorno
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class ListaGiornoMorto extends ListaGiorni {
 
 
-    @Autowired
+//    @Autowired
     protected DidascaliaGiornoMorto didascaliaGiornoMorto;
 
 

@@ -16,28 +16,42 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * User: gac
  * Date: lun, 21-gen-2019
  * Time: 17:59
+ * <p>
+ * Didascalia specializzata per le liste di morti nel giorno. <br>
+ * Può essere recuperata da DidascaliaService (Singleton). <br>
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class DidascaliaGiornoMorto extends Didascalia {
 
 
-    public String esegue(Bio bio) {
-        return super.esegue(bio);
-    }// end of method
-
-
-    public String esegueSenza(Bio bio) {
-        return super.esegue(bio, false);
-    }// end of method
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
+     */
+    public DidascaliaGiornoMorto() {
+    }// end of constructor
 
 
     /**
-     * Costruisce il testo della didascalia
-     * Sovrascritto
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(DidascaliaGiornoMorto.class, bio) <br>
+     *
+     * @param bio di cui costruire la didascalia
      */
-    protected void regolaDidascalia(boolean usaChiave) {
+    public DidascaliaGiornoMorto(Bio bio) {
+        super(bio, EADidascalia.giornoMorto);
+    }// end of constructor
+
+
+    /**
+     * Costruisce il testo della didascalia <br>
+     * Sovrascritto <br>
+     */
+    protected void regolaDidascalia() {
         testo = VUOTA;
         String natoTxt;
 

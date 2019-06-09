@@ -187,10 +187,13 @@ public class BioViewList extends AttNazProfCatViewList {
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixPreferenzeSpecifiche() {
-        super.fixPreferenzeSpecifiche();
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = true;
         super.usaBottoneDeleteMongo = false;
@@ -199,13 +202,13 @@ public class BioViewList extends AttNazProfCatViewList {
         super.usaBottoneStatistiche = false;
         super.usaBottoneModulo = false;
         super.usaBottoneEdit = true;
-        super.isBottoneEditBefore = true;
         super.task = taskUpdate;
         super.usaPagination = false;
         super.codeFlagDownload = USA_DAEMON_BIO;
         super.codeLastDownload = LAST_DOWNLOAD_BIO;
         super.durataLastDownload = DURATA_DOWNLOAD_BIO;
     }// end of method
+
 
 
     /**
@@ -217,7 +220,7 @@ public class BioViewList extends AttNazProfCatViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected boolean creaTopLayout() {
+    protected void creaTopLayout() {
         //--cancella il database
         deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
         deleteButton.getElement().setAttribute("theme", "error");
@@ -270,7 +273,6 @@ public class BioViewList extends AttNazProfCatViewList {
 //        topPlaceholder.add(creaPopup());
 
         sincroBottoniMenu(false);
-        return topPlaceholder.getComponentCount() > 0;
     }// end of method
 
 

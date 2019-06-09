@@ -1,13 +1,11 @@
 package it.algos.vaadwiki.service;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.didascalia.Didascalia;
-import it.algos.vaadwiki.didascalia.EADidascalia;
+import it.algos.vaadwiki.didascalia.*;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.wiki.Api;
 import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -32,7 +30,7 @@ public class DidascaliaService extends ABioService {
 
     public String wikiTitle = "Ron Clarke";
 
-    @Autowired
+    //    @Autowired
     private Didascalia didascalia;
 
 
@@ -88,42 +86,42 @@ public class DidascaliaService extends ABioService {
         if (text.isValid(bio.getGiornoNato())) {
             testo += ASTERISCO;
             testo += pagina;
-            testo += "[[Nati il " + bio.getGiornoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoNato) + "'''";
+//            testo += "[[Nati il " + bio.getGiornoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoNato) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
         if (text.isValid(bio.getAnnoNato())) {
             testo += ASTERISCO;
             testo += pagina;
-            testo += "[[Nati nel " + bio.getAnnoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoNato) + "'''";
+//            testo += "[[Nati nel " + bio.getAnnoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoNato) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
         if (text.isValid(bio.getGiornoMorto())) {
             testo += ASTERISCO;
             testo += pagina;
-            testo += "[[Morti il " + bio.getGiornoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoMorto) + "'''";
+//            testo += "[[Morti il " + bio.getGiornoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoMorto) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
         if (text.isValid(bio.getAnnoMorto())) {
             testo += ASTERISCO;
             testo += pagina;
-            testo += "[[Morti nel " + bio.getAnnoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoMorto) + "'''";
+//            testo += "[[Morti nel " + bio.getAnnoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoMorto) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
         if (text.isValid(bio.getAnnoMorto())) {
             testo += ASTERISCO;
             testo += "Nelle liste di attività, nazionalità, nome e cognomi";
-            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.standard) + "'''";
+//            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.standard) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
         if (text.isValid(bio.getAnnoMorto())) {
             testo += ASTERISCO;
             testo += "Completa (nella biografia)";
-            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.completa) + "'''";
+//            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.completa) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
@@ -146,5 +144,99 @@ public class DidascaliaService extends ABioService {
 
         return testo;
     }// end of method
+
+
+    public DidascaliaGiornoNato getDidascaliaGiornoNato(Bio bio) {
+        return appContext.getBean(DidascaliaGiornoNato.class, bio);
+    }// end of method
+
+
+    public DidascaliaGiornoMorto getDidascaliaGiornoMorto(Bio bio) {
+        return appContext.getBean(DidascaliaGiornoMorto.class, bio);
+    }// end of method
+
+
+    public DidascaliaAnnoNato getDidascaliaAnnoNato(Bio bio) {
+        return appContext.getBean(DidascaliaAnnoNato.class, bio);
+    }// end of method
+
+
+    public DidascaliaAnnoMorto getDidascaliaAnnoMorto(Bio bio) {
+        return appContext.getBean(DidascaliaAnnoMorto.class, bio);
+    }// end of method
+
+
+    public DidascaliaListe getDidascaliaListe(Bio bio) {
+        return appContext.getBean(DidascaliaListe.class, bio);
+    }// end of method
+
+
+    public DidascaliaBiografie getDidascaliaBiografie(Bio bio) {
+        return appContext.getBean(DidascaliaBiografie.class, bio);
+    }// end of method
+
+
+    public String getBase(Bio bio, EADidascalia type) {
+        Didascalia didascalia = null;
+
+        if (bio != null && type != null) {
+            switch (type) {
+                case giornoNato:
+                    didascalia = getDidascaliaGiornoNato(bio);
+                    break;
+                case giornoMorto:
+                    didascalia = getDidascaliaGiornoMorto(bio);
+                    break;
+                case annoNato:
+                    didascalia = getDidascaliaAnnoNato(bio);
+                    break;
+                case annoMorto:
+                    didascalia = getDidascaliaAnnoMorto(bio);
+                    break;
+                case liste:
+                    didascalia = getDidascaliaListe(bio);
+                    break;
+                case biografie:
+                    didascalia = getDidascaliaBiografie(bio);
+                    break;
+                default:
+                    log.warn("Switch - caso non definito");
+                    break;
+            } // end of switch statement
+        }// end of if cycle
+
+        return didascalia != null ? didascalia.testo : VUOTA;
+    }// end of method
+
+
+    public String getGiornoNato(Bio bio) {
+        return getBase(bio, EADidascalia.giornoNato);
+    }// end of method
+
+
+    public String getGiornoMorto(Bio bio) {
+        return getBase(bio, EADidascalia.giornoMorto);
+    }// end of method
+
+
+    public String getAnnoNato(Bio bio) {
+        return getBase(bio, EADidascalia.annoNato);
+    }// end of method
+
+
+    public String getAnnoMorto(Bio bio) {
+        return getBase(bio, EADidascalia.annoMorto);
+    }// end of method
+
+
+    public String getListe(Bio bio) {
+        return getBase(bio, EADidascalia.liste);
+    }// end of method
+
+
+    public String getBiografie(Bio bio) {
+        return getBase(bio, EADidascalia.biografie);
+    }// end of method
+
 
 }// end of class

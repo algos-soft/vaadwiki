@@ -73,13 +73,13 @@ public class ADateService extends AbstractService {
 
     private static final long MAX_MILLISEC = 1000;
 
-    private static final long MAX_SECONDI = MAX_MILLISEC * 60;
+    private static final long MAX_SECONDI = 60 * MAX_MILLISEC;
 
-    private static final long MAX_MINUTI = MAX_SECONDI * 60;
+    private static final long MAX_MINUTI = 60 * MAX_SECONDI;
 
-    private static final long MAX_ORE = MAX_MINUTI * 24;
+    private static final long MAX_ORE = 24 * MAX_MINUTI;
 
-    private static final long MAX_GIORNI = MAX_ORE * 365;
+    private static final long MAX_GIORNI = 365 * MAX_ORE;
 
 
     /**
@@ -226,6 +226,22 @@ public class ADateService extends AbstractService {
      */
     public String get(LocalDate localDate) {
         return get(localDate, EATime.standard.getPattern());
+    }// end of method
+
+
+    /**
+     * Restituisce la data nella forma del pattern completo
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDate da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getCompleta(LocalDate localDate) {
+        return get(localDate, EATime.completa.getPattern());
     }// end of method
 
 

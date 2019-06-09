@@ -390,7 +390,12 @@ public class PreferenzaService extends AService {
 
 
     public int getInt(String keyCode) {
-        int valoreIntero = 0;
+        return getInt(keyCode,0);
+    } // end of method
+
+
+    public int getInt(String keyCode, int defaultValue) {
+        int valoreIntero = defaultValue;
         Object value = getValue(keyCode);
 
         if (value != null) {

@@ -6,8 +6,8 @@ import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.AViewList;
-import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadflow.ui.list.AViewList;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_ROL;
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class RoleViewList extends AViewList {
+public class RoleViewList extends AGridViewList {
 
 
     /**
@@ -71,10 +71,14 @@ public class RoleViewList extends AViewList {
 
 
     /**
-     * Le preferenze sovrascritte nella sottoclasse
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixPreferenzeSpecifiche() {
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
         super.usaSearchTextField = false;
         super.isEntityDeveloper = true;
         super.usaBottoneDeleteAll = true;
@@ -83,18 +87,15 @@ public class RoleViewList extends AViewList {
 
 
     /**
-     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
-     * Normalmente ad uso esclusivo del developer
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
+     * Placeholder (eventuale) per informazioni aggiuntive alla grid ed alla lista di elementi <br>
+     * Normalmente ad uso esclusivo del developer <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected boolean creaAlertLayout() {
+    protected void creaAlertLayout() {
         super.creaAlertLayout();
-
         alertPlacehorder.add(new Label("Serve per aggiungere altri eventuali 'authority' specifiche dell'applicazione"));
-
-        return true;
     }// end of method
 
 

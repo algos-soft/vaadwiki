@@ -7,7 +7,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.ui.LoadMode;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.ui.AViewList;
+import it.algos.vaadflow.ui.list.AViewList;
 import it.algos.vaadflow.ui.fields.AComboBox;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

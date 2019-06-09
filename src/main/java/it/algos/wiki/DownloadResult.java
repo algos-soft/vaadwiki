@@ -3,6 +3,7 @@ package it.algos.wiki;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project vaadwiki
@@ -26,9 +27,9 @@ public class DownloadResult {
 //
 //    private ArrayList<String> vociDaCreare;
 
-    private ArrayList<Long> vociDaCancellare;
+    private List<Long> vociDaCancellare;
 
-    private ArrayList<Long> vociDaCreare;
+    private List<Long> vociDaCreare;
 
     private ArrayList<String> vociNonCreate;
 
@@ -98,12 +99,12 @@ public class DownloadResult {
     }// end of method
 
 
-    public ArrayList<Long> getVociDaCreare() {
+    public List<Long> getVociDaCreare() {
         return vociDaCreare;
     }// end of method
 
 
-    public void setVociDaCreare(ArrayList<Long> vociDaCreare) {
+    public void setVociDaCreare(List<Long> vociDaCreare) {
         this.vociDaCreare = vociDaCreare;
     }// end of method
 
@@ -118,12 +119,12 @@ public class DownloadResult {
     }// end of method
 
 
-    public ArrayList<Long> getVociDaCancellare() {
+    public List<Long> getVociDaCancellare() {
         return vociDaCancellare;
     }// end of method
 
 
-    public void setVociDaCancellare(ArrayList<Long> vociDaCancellare) {
+    public void setVociDaCancellare(List<Long> vociDaCancellare) {
         this.vociDaCancellare = vociDaCancellare;
     }// end of method
 

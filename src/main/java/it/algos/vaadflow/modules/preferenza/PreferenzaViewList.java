@@ -1,18 +1,23 @@
 package it.algos.vaadflow.modules.preferenza;
 
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.modules.role.EARoleType;
+import it.algos.vaadflow.modules.secolo.Secolo;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.AViewList;
+import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadflow.ui.list.AViewList;
 import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadflow.ui.MainLayout;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.vaadin.klaudeta.PaginatedGrid;
+
 import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
 
 /**
@@ -43,7 +48,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class PreferenzaViewList extends AViewList {
+public class PreferenzaViewList extends AGridViewList {
 
 
     /**
@@ -70,14 +75,55 @@ public class PreferenzaViewList extends AViewList {
     }// end of Spring constructor
 
     /**
-     * Le preferenze sovrascritte nella sottoclasse
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
-    protected void fixPreferenzeSpecifiche() {
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
+        super.fixPreferenze();
         super.usaSearchTextField = false;
 //        super.usaBottoneEdit = true;
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;
         super.isEntityDeveloper = true;
+    }// end of method
+
+    /**
+     * Crea la GridPaginata <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
+     */
+    protected void creaGridPaginata() {
+        PaginatedGrid<Preferenza> gridPaginated = new PaginatedGrid<Preferenza>();
+        super.grid = gridPaginated;
+        super.creaGridPaginata();
+    }// end of method
+
+
+    /**
+     * Aggiunge le colonne alla PaginatedGrid <br>
+     * Sovrascritto (obbligatorio) <br>
+     */
+    protected void addColumnsGridPaginata() {
+        fixColumn(Preferenza::getOrdine,"ordine");
+        fixColumn(Preferenza::getCode,"code");
+        fixColumn(Preferenza::getDescrizione,"descrizione");
+        fixColumn(Preferenza::getType,"type");
+    }// end of method
+
+
+    /**
+     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
+     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
+     */
+    protected void fixColumn(ValueProvider<Preferenza, ?> valueProvider , String propertyName) {
+        Grid.Column singleColumn;
+        singleColumn = ((PaginatedGrid<Preferenza>) grid).addColumn(valueProvider);
+        columnService.fixColumn(singleColumn, Preferenza.class, propertyName);
     }// end of method
 
 }// end of class

@@ -30,6 +30,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * User: gac
  * Date: Sat, 04-May-2019
  * Time: 08:26
+ * <p>
  * Istanze di classi @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
  * - vanno dichiarate @Autowired
  * - sono disponibili da subito nel metodo @BeforeAll

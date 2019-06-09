@@ -66,7 +66,7 @@ public class UtilityView extends VerticalLayout {
     @Autowired
     protected ApplicationContext appContext;
 
-    @Autowired
+//    @Autowired
     private WikiLoginOld wikiLoginOld;
 
     @Autowired
@@ -75,7 +75,7 @@ public class UtilityView extends VerticalLayout {
     @Autowired
     private Api api;
 
-    @Autowired
+//    @Autowired
     private Didascalia didascalia;
 
     @Autowired
@@ -185,7 +185,7 @@ public class UtilityView extends VerticalLayout {
         log.info("");
         Bio bio = api.leggeBio(wikiTitle);
         for (EADidascalia dida : EADidascalia.values()) {
-            log.info(dida.name() + ": " + didascalia.esegue(bio, dida));
+//            log.info(dida.name() + ": " + didascalia.esegue(bio, dida));
         }// end of for cycle
         log.info("");
     }// end of method
@@ -396,42 +396,42 @@ public class UtilityView extends VerticalLayout {
         if (text.isValid(bio.getGiornoNato())) {
             testo += ASTERISCO;
             testo += pagina;
-            testo += "[[Nati il " + bio.getGiornoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoNato) + "'''";
+//            testo += "[[Nati il " + bio.getGiornoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoNato) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
         if (text.isValid(bio.getAnnoNato())) {
             testo += ASTERISCO;
             testo += pagina;
-            testo += "[[Nati nel " + bio.getAnnoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoNato) + "'''";
+//            testo += "[[Nati nel " + bio.getAnnoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoNato) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
         if (text.isValid(bio.getGiornoMorto())) {
             testo += ASTERISCO;
             testo += pagina;
-            testo += "[[Morti il " + bio.getGiornoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoMorto) + "'''";
+//            testo += "[[Morti il " + bio.getGiornoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoMorto) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
         if (text.isValid(bio.getAnnoMorto())) {
             testo += ASTERISCO;
             testo += pagina;
-            testo += "[[Morti nel " + bio.getAnnoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoMorto) + "'''";
+//            testo += "[[Morti nel " + bio.getAnnoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoMorto) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
         if (text.isValid(bio.getAnnoMorto())) {
             testo += ASTERISCO;
             testo += "Nelle liste di attività, nazionalità, nome e cognomi";
-            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.standard) + "'''";
+//            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.standard) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
         if (text.isValid(bio.getAnnoMorto())) {
             testo += ASTERISCO;
             testo += "Completa (nella biografia)";
-            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.completa) + "'''";
+//            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.completa) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 

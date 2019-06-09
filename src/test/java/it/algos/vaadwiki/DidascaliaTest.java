@@ -60,7 +60,7 @@ public class DidascaliaTest extends ATest {
     @InjectMocks
     public DidascaliaGiornoNato giornoNato;
 
-    @InjectMocks
+//    @InjectMocks
     public DidascaliaAnnoNato annoNato;
 
     @InjectMocks
@@ -70,10 +70,10 @@ public class DidascaliaTest extends ATest {
     public DidascaliaAnnoMorto annoMorto;
 
     @InjectMocks
-    public DidascaliaStandard standard;
+    public DidascaliaListe standard;
 
     @InjectMocks
-    public DidascaliaCompleta completa;
+    public DidascaliaBiografie completa;
 
     @InjectMocks
     public AnnoService annoService;
@@ -154,12 +154,12 @@ public class DidascaliaTest extends ATest {
         annoMorto.text = text;
         standard.text = text;
         completa.text = text;
-        didascalia.didascaliaCompleta = completa;
-        didascalia.didascaliaGiornoNato = giornoNato;
-        didascalia.didascaliaAnnoNato = annoNato;
-        didascalia.didascaliaGiornoMorto = giornoMorto;
-        didascalia.didascaliaAnnoMorto = annoMorto;
-        didascalia.didascaliaStandard = standard;
+//        didascalia.didascaliaCompleta = completa;
+//        didascalia.didascaliaGiornoNato = giornoNato;
+//        didascalia.didascaliaAnnoNato = annoNato;
+//        didascalia.didascaliaGiornoMorto = giornoMorto;
+//        didascalia.didascaliaAnnoMorto = annoMorto;
+//        didascalia.didascaliaStandard = standard;
         bio = api.leggeBio(wikiTitle);
         didascaliaService.wikiTitle = wikiTitle;
         didascaliaService.pref = pref;
@@ -176,14 +176,14 @@ public class DidascaliaTest extends ATest {
         System.out.println("Senza chiave");
         System.out.println("*************");
         for (EADidascalia dida : EADidascalia.values()) {
-            ottenuto = didascalia.esegue(bio, dida, false);
+//            ottenuto = didascalia.esegue(bio, dida, false);
             System.out.println(dida.name() + ": " + ottenuto);
         }// end of for cycle
         System.out.println("*************");
         System.out.println("Con chiave");
         System.out.println("*************");
         for (EADidascalia dida : EADidascalia.values()) {
-            ottenuto = didascalia.esegue(bio, dida);
+//            ottenuto = didascalia.esegue(bio, dida);
             System.out.println(dida.name() + ": " + ottenuto);
         }// end of for cycle
         System.out.println("*************");
@@ -204,7 +204,7 @@ public class DidascaliaTest extends ATest {
         System.out.println("");
         Bio bio = api.leggeBio(wikiTitle);
         for (EADidascalia dida : EADidascalia.values()) {
-            System.out.println(dida.name() + ": " + didascalia.esegue(bio, dida));
+//            System.out.println(dida.name() + ": " + didascalia.esegue(bio, dida));
         }// end of for cycle
         System.out.println("");
     }// end of single test

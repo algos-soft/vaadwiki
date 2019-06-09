@@ -48,23 +48,38 @@ public class WrapDidascalia {
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
-    @Autowired
+//    @Autowired
     protected DidascaliaGiornoNato didascaliaGiornoNato;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
-    @Autowired
+//    @Autowired
     protected DidascaliaGiornoMorto didascaliaGiornoMorto;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
-    @Autowired
+//    @Autowired
     protected DidascaliaAnnoNato didascaliaAnnoNato;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
-    @Autowired
+//    @Autowired
     protected DidascaliaAnnoMorto didascaliaAnnoMorto;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+//    @Autowired
+    protected DidascaliaBiografie didascaliaBiografie;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+//    @Autowired
+    protected DidascaliaListe didascaliaListe;
 
 
     /**
@@ -145,8 +160,6 @@ public class WrapDidascalia {
     @PostConstruct
     public void inizia() {
         switch (type) {
-            case completa:
-                break;
             case giornoNato:
                 giornoNato();
                 break;
@@ -159,13 +172,19 @@ public class WrapDidascalia {
             case annoMorto:
                 annoMorto();
                 break;
-            case standard:
+            case liste:
+                liste();
+                break;
+            case biografie:
+                biografie();
                 break;
             default:
                 log.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
     }// end of method
+
+
 
 
     public void giornoNato() {
@@ -176,7 +195,7 @@ public class WrapDidascalia {
         String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
         this.sottoChiave = cognome + wikiTitle;
         this.testo = didascaliaGiornoNato.esegue(bio);
-        this.testoSenza = didascaliaGiornoNato.esegueSenza(bio);
+//        this.testoSenza = didascaliaGiornoNato.esegueSenza(bio);
     }// end of method
 
 
@@ -188,7 +207,7 @@ public class WrapDidascalia {
         String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
         this.sottoChiave = cognome + wikiTitle;
         this.testo = didascaliaAnnoNato.esegue(bio);
-        this.testoSenza = didascaliaAnnoNato.esegueSenza(bio);
+//        this.testoSenza = didascaliaAnnoNato.esegueSenza(bio);
     }// end of method
 
 
@@ -200,7 +219,7 @@ public class WrapDidascalia {
         String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
         this.sottoChiave = cognome + wikiTitle;
         this.testo = didascaliaGiornoMorto.esegue(bio);
-        this.testoSenza = didascaliaGiornoMorto.esegueSenza(bio);
+//        this.testoSenza = didascaliaGiornoMorto.esegueSenza(bio);
     }// end of method
 
 
@@ -212,7 +231,31 @@ public class WrapDidascalia {
         String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
         this.sottoChiave = cognome + wikiTitle;
         this.testo = didascaliaAnnoMorto.esegue(bio);
-        this.testoSenza = didascaliaAnnoMorto.esegueSenza(bio);
+//        this.testoSenza = didascaliaAnnoMorto.esegueSenza(bio);
+    }// end of method
+
+
+
+    //--@todo ERRORE provvisorio
+    public void liste() {
+        this.riferimento = bio.getGiornoNato();
+        this.chiave = bio.getAnnoNato();
+        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
+        String wikiTitle = bio.getWikiTitle();
+        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+        this.sottoChiave = cognome + wikiTitle;
+        this.testo = didascaliaListe.esegue(bio);
+    }// end of method
+
+    //--@todo ERRORE provvisorio
+    public void biografie() {
+        this.riferimento = bio.getGiornoNato();
+        this.chiave = bio.getAnnoNato();
+        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
+        String wikiTitle = bio.getWikiTitle();
+        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+        this.sottoChiave = cognome + wikiTitle;
+        this.testo = didascaliaBiografie.esegue(bio);
     }// end of method
 
 

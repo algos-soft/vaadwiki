@@ -29,37 +29,18 @@ import java.util.ArrayList;
 public class ListaGiornoNato extends ListaGiorni {
 
 
-    @Autowired
+//    @Autowired
     protected DidascaliaGiornoNato didascaliaGiornoNato;
 
-
-//    public ListaGiornoNato(Bio bio, EADidascalia type) {
-//        int a = 87;
-//    }// end of constructor
-
-
-//    public ListaGiornoNato(Giorno giorno) {
-//        int a = 87;
-//    }// end of constructor
 
 
     /**
      * Costruttore <br>
      */
     public void ListaGiornoNato() {
-//        super.giorno = giorno;
         int a = 87;
     }// end of Spring constructor
 
-
-//    /**
-//     * Costruttore <br>
-//     */
-////    @Autowired
-//    public void ListaGiornoNato(String giorno) {
-////        super.giorno = giorno;
-//        int a = 87;
-//    }// end of Spring constructor
 
 
     /**

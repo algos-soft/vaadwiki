@@ -136,7 +136,7 @@ public class TDialogoPackage extends TDialogo {
         groupTitolo = new RadioButtonGroup<>();
         groupTitolo.setItems(RADIO_NEW, RADIO_UPDATE);
         groupTitolo.getElement().getStyle().set("display", "flex");
-        groupTitolo.getElement().getStyle().set("flexDirection", "column");
+        groupTitolo.getElement().getStyle().set("flexDirection", "columnService");
 
         if (newPackage) {
             groupTitolo.setValue(RADIO_NEW);

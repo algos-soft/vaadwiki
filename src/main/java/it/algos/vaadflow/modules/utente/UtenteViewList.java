@@ -8,8 +8,8 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.AViewList;
-import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadflow.ui.list.AViewList;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_UTE;
 @AIView(roleTypeVisibility = EARoleType.developer)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class UtenteViewList extends AViewList {
+public class UtenteViewList extends AGridViewList {
 
 
     /**
@@ -87,7 +87,9 @@ public class UtenteViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixPreferenzeSpecifiche() {
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
         super.usaSearchTextField = false;
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;
@@ -97,20 +99,18 @@ public class UtenteViewList extends AViewList {
 
 
     /**
-     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
-     * Normalmente ad uso esclusivo del developer
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
+     * Placeholder (eventuale) per informazioni aggiuntive alla grid ed alla lista di elementi <br>
+     * Normalmente ad uso esclusivo del developer <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected boolean creaAlertLayout() {
+    protected void creaAlertLayout() {
         super.creaAlertLayout();
 
         alertPlacehorder.add(new Label("Questa lista non dovrebbe mai essere usata direttamente"));
         alertPlacehorder.add(new Label("Serve per la creazione e gestione interna degli accessi della security"));
         alertPlacehorder.add(new Label("La entity 'utente' fa da superclasse per le anagrafiche: Persona, Milite, ecc."));
-
-        return true;
     }// end of method
 
 

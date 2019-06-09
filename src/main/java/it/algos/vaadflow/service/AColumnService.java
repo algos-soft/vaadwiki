@@ -79,8 +79,8 @@ public class AColumnService extends AbstractService {
 
 
     /**
-     * Create a single column.
-     * The column type is chosen according to the annotation @AIColumn or, if is not present, a @AIField.
+     * Create a single columnService.
+     * The columnService type is chosen according to the annotation @AIColumn or, if is not present, a @AIField.
      *
      * @param grid         a cui aggiungere la colonna
      * @param entityClazz  modello-dati specifico
@@ -200,7 +200,7 @@ public class AColumnService extends AbstractService {
                     }// fine del blocco try-catch
                     return new Label(testo);
                 }));//end of lambda expressions and anonymous inner class
-                width = "9em";
+                width = text.isValid(width) ? width : "7em";
                 break;
             case vaadinIcon:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
@@ -275,6 +275,34 @@ public class AColumnService extends AbstractService {
             }// end of if/else cycle
 
         }// end of if cycle
+
+    }// end of method
+
+
+    /**
+     * Regola una singola colonna <br>
+     * The columnService type is chosen according to the annotation @AIColumn or, if is not present, a @AIField <br>
+     *
+     * @param colonna      da regolare
+     * @param entityClazz  modello-dati specifico
+     * @param propertyName della property
+     */
+    public void fixColumn(Grid.Column colonna, Class<? extends AEntity> entityClazz, String propertyName) {
+        String header = annotation.getColumnName(entityClazz, propertyName);
+        String width = annotation.getColumnWithEM(entityClazz, propertyName);
+        boolean isFlexGrow = annotation.isFlexGrow(entityClazz, propertyName);
+
+        colonna.setHeader(text.isValid(header) ? header : propertyName);
+        colonna.setSortProperty(propertyName);
+
+        if (isFlexGrow) {
+            colonna.setFlexGrow(1);
+        } else {
+            if (text.isValid(width)) {
+                colonna.setWidth(width);
+                colonna.setFlexGrow(0);
+            }// end of if cycle
+        }// end of if/else cycle
 
     }// end of method
 

@@ -7,9 +7,10 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.schedule.ATask;
-import it.algos.vaadflow.ui.AViewList;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadflow.ui.list.AViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -17,6 +18,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 
@@ -29,7 +31,7 @@ import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
  */
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class AttNazProfCatViewList extends AViewList {
+public class AttNazProfCatViewList extends AGridViewList {
 
 
     @Autowired
@@ -96,10 +98,14 @@ public class AttNazProfCatViewList extends AViewList {
 
 
     /**
-     * Le preferenze sovrascritte nella sottoclasse
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
-    protected void fixPreferenzeSpecifiche() {
-//        super.usaBottoneNew = false; @todo rimettere
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = false;
         super.isEntityModificabile = false;
@@ -115,7 +121,7 @@ public class AttNazProfCatViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected boolean creaTopLayout() {
+    protected void creaTopLayout() {
         super.creaTopLayout();
 
         if (usaBottoneDeleteMongo) {
@@ -163,61 +169,7 @@ public class AttNazProfCatViewList extends AViewList {
             uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
             topPlaceholder.add(uploadStatisticheButton);
         }// end of if cycle
-
-        return topPlaceholder.getComponentCount() > 0;
     }// end of method
-
-
-//    protected void creaBottoni() {
-//        creaDeleteMongo();
-//        creaDownload();
-//        creaUpload();
-//        creaShowCategoria();
-//        creaShowModulo();
-//        creaShowStatistiche();
-//    }// end of method
-
-
-//    private void creaDeleteMongo() {
-//        deleteMongoButton = new Button("Delete All", new Icon(VaadinIcon.CLOSE_CIRCLE));
-//        deleteMongoButton.getElement().setAttribute("theme", "error");
-//        deleteMongoButton.addClickListener(e -> openConfirmDialog());
-//    }// end of method
-
-
-//    private void creaDownload() {
-//        donwloadMongoButton = new Button("Download", new Icon(VaadinIcon.DOWNLOAD));
-//        donwloadMongoButton.getElement().setAttribute("theme", "primary");
-//        donwloadMongoButton.addClickListener(e -> {
-//            service.download();
-//            updateView();
-//        });//end of lambda expressions and anonymous inner class
-//    }// end of method
-
-
-//    private void creaUpload() {
-//        uploadStatisticheButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
-//        uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
-//    }// end of method
-
-
-//    private void creaShowCategoria() {
-//        showCategoriaButton = new Button("Categoria", new Icon(VaadinIcon.LIST));
-//        showCategoriaButton.addClickListener(e -> showWikiCategoria());
-//    }// end of method
-
-
-//    private void creaShowModulo() {
-//        showModuloButton = new Button("Modulo", new Icon(VaadinIcon.LIST));
-//        showModuloButton.addClickListener(e -> showWikiModulo());
-//    }// end of method
-
-
-//    private void creaShowStatistiche() {
-//        showStatisticheButton = new Button("Statistiche", new Icon(VaadinIcon.TABLE));
-//        showStatisticheButton.addClickListener(e -> showWikiStatistiche());
-//    }// end of method
-
 
     /**
      * Opens the confirmation dialog before deleting all items.
@@ -272,10 +224,9 @@ public class AttNazProfCatViewList extends AViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected boolean creaAlertLayout() {
+    protected void creaAlertLayout() {
         super.creaAlertLayout();
         alertPlacehorder.add(creaInfoImport(task, codeFlagDownload, codeLastDownload));
-        return true;
     }// end of method
 
 

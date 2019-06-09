@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * Created by gac on 05 ott 2016.
  * AlgosInterfaceColumn (AIColumn)
- * Annotation to add some property for a single column of the Grid.
+ * Annotation to add some property for a single columnService of the Grid.
  * Alcune property sono in comune con AIField
  * Se nell'annotation AIColumn manca una property ,
  * si prende il valore della corrispondente property di AIField

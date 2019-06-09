@@ -7,6 +7,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SingleSelectionEvent;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
@@ -67,7 +68,6 @@ public class NazionalitaViewList extends AttNazProfCatViewList {
     @Autowired
     private TaskNazionalita taskNazionalita;
 
-    private PaginatedGrid<Nazionalita> gridPaginated;
 
     /**
      * Costruttore @Autowired <br>
@@ -90,8 +90,9 @@ public class NazionalitaViewList extends AttNazProfCatViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected void fixPreferenzeSpecifiche() {
-        super.fixPreferenzeSpecifiche();
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
         super.titoloModulo = service.titoloModuloNazionalita;
         super.titoloPaginaStatistiche = service.titoloPaginaStatisticheNazionalita;
         super.task = taskNazionalita;
@@ -102,65 +103,40 @@ public class NazionalitaViewList extends AttNazProfCatViewList {
     }// end of method
 
     /**
-     * Prova a creare la grid paginata (secondo il flag)
-     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse
-     * Nella sottoclasse specifica vanno aggiunte le colonne che non si riesce ad aggiungere in automatico
-     * Componente grafico obbligatorio
-     * Costruisce la Grid con le colonne. Gli items vengono caricati in updateView()
-     * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto)
+     * Crea la GridPaginata <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
      */
-    protected void updateGridPaginata() {
-        FlexLayout layout = new FlexLayout();
-        gridPaginated = new PaginatedGrid<>();
-
-        super.gridPaginataBefore();
-
-        gridPaginated.addColumn(Nazionalita::getSingolare).setHeader("Singolare").setFlexGrow(0).setWidth("25em");
-        gridPaginated.addColumn(Nazionalita::getPlurale).setHeader("Plurale");
-
-        super.gridPaginataAfter();
-
-        gridPaginated.setItems(items);
-
-        // Sets the max number of items to be rendered on the grid for each page
-        gridPaginated.setPageSize(15);
-
-        // Sets how many pages should be visible on the pagination before and/or after the current selected page
-        gridPaginated.setPaginatorSize(1);
-
-        gridHolder.add(gridPaginated);
-        gridHolder.setFlexGrow(1, gridPaginated);
+    protected void creaGridPaginata() {
+        PaginatedGrid<Nazionalita> gridPaginated = new PaginatedGrid<Nazionalita>();
+        super.grid = gridPaginated;
+        super.creaGridPaginata();
     }// end of method
 
-    /**
-     * Apre il dialog di detail
-     */
-    protected void addDetailDialog() {
-        //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
-        if (usaBottoneEdit) {
-            ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
-            Grid.Column colonna = gridPaginated.addColumn(renderer);
-            colonna.setWidth("6em");
-            colonna.setFlexGrow(0);
-        } else {
-            EAOperation operation = isEntityModificabile ? EAOperation.edit : EAOperation.showOnly;
-            grid.addSelectionListener(evento -> apreDialogo((SingleSelectionEvent) evento, operation));
-        }// end of if/else cycle
-    }// end of method
 
     /**
-     * Eventuale header text
+     * Aggiunge le colonne alla PaginatedGrid <br>
+     * Sovrascritto (obbligatorio) <br>
      */
-    protected void fixGridHeader(String messaggio) {
-        try { // prova ad eseguire il codice
-            HeaderRow topRow = gridPaginated.prependHeaderRow();
-            Grid.Column[] matrix = array.getColumnArray(gridPaginated);
-            HeaderRow.HeaderCell informationCell = topRow.join(matrix);
-            Label testo = new Label(messaggio);
-            informationCell.setComponent(testo);
-        } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
-        }// fine del blocco try-catch
+    protected void addColumnsGridPaginata() {
+        fixColumn(Nazionalita::getSingolare, "singolare");
+        fixColumn(Nazionalita::getPlurale, "plurale");
+    }// end of method
+
+
+    /**
+     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
+     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
+     */
+    protected void fixColumn(ValueProvider<Nazionalita, ?> valueProvider, String propertyName) {
+        Grid.Column singleColumn;
+        singleColumn = ((PaginatedGrid<Nazionalita>) grid).addColumn(valueProvider);
+        columnService.fixColumn(singleColumn, Nazionalita.class, propertyName);
+    }// end of method
+
+    //@todo Da sviluppare
+    protected void uploadStatistiche() {
     }// end of method
 
 }// end of class

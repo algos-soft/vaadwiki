@@ -39,8 +39,6 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
     protected String testo;
 
-//    protected Button backButton;
-
 
     protected void inizia() {
         TextArea area = new TextArea();

@@ -86,7 +86,7 @@ public class Nome extends AEntity {
     @NotNull
     @Indexed()
     @AIField(type = EAFieldType.integer, widthEM = 3)
-    @AIColumn(widthEM = 3)
+    @AIColumn(widthEM = 5)
     public int voci;
 
 

@@ -11,13 +11,9 @@ import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
 
 import java.util.*;
-
-import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
 /**
  * Project vaadwiki
@@ -33,13 +29,13 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 public abstract class Lista {
 
     @Autowired
-    protected ApplicationContext appContext;
-
-    @Autowired
     public GiornoService giornoService;
 
     @Autowired
     public AnnoService annoService;
+
+    @Autowired
+    protected ApplicationContext appContext;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -54,6 +50,8 @@ public abstract class Lista {
     protected PreferenzaService pref;
 
     protected ArrayList<Bio> listaGrezzaBio;
+
+    public LinkedHashMap<String, ArrayList<String>> mappa = null;
 
     protected TreeMap<Integer, Map> mappaOrdinataBio;
 
@@ -95,6 +93,7 @@ public abstract class Lista {
         ordinaListaDidascalie(lista);
         mappa = creaMappa(lista);
 
+        this.mappa = mappa;
         return mappa;
     }// fine del metodo
 

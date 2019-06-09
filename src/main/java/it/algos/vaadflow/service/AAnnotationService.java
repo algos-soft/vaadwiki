@@ -6,7 +6,7 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import it.algos.vaadflow.modules.role.EARoleType;
-import it.algos.vaadflow.ui.AViewList;
+import it.algos.vaadflow.ui.list.AViewList;
 import it.algos.vaadflow.ui.IAView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -650,13 +650,13 @@ public class AAnnotationService extends AbstractService {
 
 
     /**
-     * Get the name (column) of the property.
+     * Get the name (columnService) of the property.
      * Se manca, usa il nome del Field
      * Se manca, usa il nome della property
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the name (column) of the field
+     * @return the name (columnService) of the field
      */
     public String getColumnName(final Field reflectionJavaField) {
         String name = "";
@@ -675,14 +675,14 @@ public class AAnnotationService extends AbstractService {
 
 
     /**
-     * Get the name (column) of the property.
+     * Get the name (columnService) of the property.
      * Se manca, usa il nome del Field
      * Se manca, usa il nome della property
      *
      * @param entityClazz the entity class
      * @param fieldName   the property name
      *
-     * @return the name (column) of the field
+     * @return the name (columnService) of the field
      */
     public String getColumnName(Class<? extends AEntity> entityClazz, String fieldName) {
         String name = "";
@@ -696,12 +696,12 @@ public class AAnnotationService extends AbstractService {
     }// end of method
 
 //    /**
-//     * Get the type (column) of the property.
+//     * Get the type (columnService) of the property.
 //     * Se manca, usa il type del Field
 //     *
 //     * @param reflectionJavaField di riferimento per estrarre la Annotation
 //     *
-//     * @return the type for the specific column
+//     * @return the type for the specific columnService
 //     */
 //    public EAFieldType getColumnType(final Field reflectionJavaField) {
 //        EAFieldType type = null;
@@ -720,12 +720,12 @@ public class AAnnotationService extends AbstractService {
 
 
     /**
-     * Get the visibility of the column.
+     * Get the visibility of the columnService.
      * Di default true
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the visibility of the column
+     * @return the visibility of the columnService
      */
     @Deprecated
     public boolean isColumnVisibile(final Field reflectionJavaField) {
@@ -775,7 +775,7 @@ public class AAnnotationService extends AbstractService {
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the width of the column expressed in int
+     * @return the width of the columnService expressed in int
      */
     @SuppressWarnings("all")
     public int getColumnWith(final Field reflectionJavaField) {
@@ -796,7 +796,7 @@ public class AAnnotationService extends AbstractService {
      * @param entityClazz the entity class
      * @param fieldName   the property name
      *
-     * @return the name (column) of the field
+     * @return the name (columnService) of the field
      */
     public String getColumnWithEM(Class<? extends AEntity> entityClazz, String fieldName) {
         String widthTxt = "";
@@ -821,7 +821,7 @@ public class AAnnotationService extends AbstractService {
      * @param entityClazz the entity class
      * @param fieldName   the property name
      *
-     * @return the name (column) of the field
+     * @return the name (columnService) of the field
      */
     public String getColumnWithPX(Class<? extends AEntity> entityClazz, String fieldName) {
         String widthTxt = "";
@@ -885,7 +885,7 @@ public class AAnnotationService extends AbstractService {
      * @param entityClazz the entity class
      * @param fieldName   the property name
      *
-     * @return the color (column) of the field
+     * @return the color (columnService) of the field
      */
     public String getColumnColor(Class<? extends AEntity> entityClazz, String fieldName) {
         String color = "";
@@ -923,7 +923,7 @@ public class AAnnotationService extends AbstractService {
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the type for the specific column
+     * @return the type for the specific columnService
      */
     public EAFieldType getFormType(final Field reflectionJavaField) {
         EAFieldType type = null;
@@ -943,7 +943,7 @@ public class AAnnotationService extends AbstractService {
      * @param entityClazz the entity class
      * @param fieldName   the property name
      *
-     * @return the type for the specific column
+     * @return the type for the specific columnService
      */
     public EAFieldType getFormType(Class<? extends AEntity> entityClazz, String fieldName) {
         EAFieldType type = null;
@@ -960,7 +960,7 @@ public class AAnnotationService extends AbstractService {
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the type for the specific column
+     * @return the type for the specific columnService
      */
     public Class getClazz(final Field reflectionJavaField) {
         Class clazz = null;
@@ -980,7 +980,7 @@ public class AAnnotationService extends AbstractService {
      * @param entityClazz the entity class
      * @param fieldName   the property name
      *
-     * @return the type for the specific column
+     * @return the type for the specific columnService
      */
     public Class getClazz(Class<? extends AEntity> entityClazz, String fieldName) {
         Class clazz = null;
@@ -1076,7 +1076,7 @@ public class AAnnotationService extends AbstractService {
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the class for the specific column
+     * @return the class for the specific columnService
      */
     @SuppressWarnings("all")
     public Class getComboClass(Field reflectionJavaField) {
@@ -1096,7 +1096,7 @@ public class AAnnotationService extends AbstractService {
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the class for the specific column
+     * @return the class for the specific columnService
      */
     @SuppressWarnings("all")
     public Class getComboClass(Class<? extends AEntity> entityClazz, String fieldName) {

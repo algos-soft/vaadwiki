@@ -58,15 +58,15 @@ public class AMongoService extends AbstractService {
      */
     private final static long serialVersionUID = 1L;
 
-    /**
-     * Private final property
-     */
-    private static final AMongoService INSTANCE = new AMongoService();
+//    /**
+//     * Private final property
+//     */
+//    private static final AMongoService INSTANCE = new AMongoService();
 
     /**
      * Inietta da Spring
      */
-    @Autowired
+//    @Autowired
     public MongoOperations mongoOp;
 //    @Autowired
 //    public MongoTemplate template;
@@ -79,14 +79,20 @@ public class AMongoService extends AbstractService {
     }// end of constructor
 
 
-    /**
-     * Gets the unique instance of this Singleton.
-     *
-     * @return the unique instance of this Singleton
-     */
-    public static AMongoService getInstance() {
-        return INSTANCE;
-    }// end of static method
+    @Autowired
+    public AMongoService(MongoOperations mongoOp) {
+        this.mongoOp = mongoOp;
+    }// end of constructor
+
+
+//    /**
+//     * Gets the unique instance of this Singleton.
+//     *
+//     * @return the unique instance of this Singleton
+//     */
+//    public static AMongoService getInstance() {
+//        return INSTANCE;
+//    }// end of static method
 
 
 //    /**
@@ -269,7 +275,7 @@ public class AMongoService extends AbstractService {
      * @return true if exist
      */
     public boolean isEsisteByProperty(Class<? extends AEntity> clazz, String property, Object value) {
-        return findByProperty(clazz,property,value)!=null;
+        return findByProperty(clazz, property, value) != null;
     }// end of method
 
 

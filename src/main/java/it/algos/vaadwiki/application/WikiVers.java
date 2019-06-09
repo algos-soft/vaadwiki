@@ -160,6 +160,22 @@ public class WikiVers extends AVers {
             creaPrefBool(USA_UPLOAD_DURANTE_DOWNLOAD, "Corregge sul wiki la voce durante il download", false);
         }// fine del blocco if
 
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefInt(SOGLIA_NOMI_MONGO, "Soglia minima per creare una entity nella collezione Nomi sul mongoDB", 10);
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefInt(SOGLIA_NOMI_PAGINA_WIKI, "Soglia minima per creare una pagina di un nome sul server wiki", 50);
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefDate(LAST_ELABORA_NOME, "Ultima elaborazione dei nomi");
+        }// fine del blocco if
+
+
         return k;
     }// end of method
 
