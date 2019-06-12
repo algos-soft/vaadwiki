@@ -23,8 +23,8 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * Date: gio, 24-gen-2019
  * Time: 10:33
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+//@SpringComponent
+//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public class ListaAnni extends Lista {
 

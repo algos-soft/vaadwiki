@@ -18,7 +18,7 @@ import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadwiki.didascalia.Didascalia;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.vaadwiki.service.DidascaliaService;
+import it.algos.vaadwiki.didascalia.DidascaliaService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;

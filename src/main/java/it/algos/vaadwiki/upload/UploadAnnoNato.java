@@ -27,7 +27,7 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 @Slf4j
 public class UploadAnnoNato extends UploadAnni {
 
-    @Autowired
+//    @Autowired
     protected ListaAnnoNato listaAnnoNato;
 
 

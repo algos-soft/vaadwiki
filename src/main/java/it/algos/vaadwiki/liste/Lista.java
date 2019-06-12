@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**
@@ -22,9 +23,15 @@ import java.util.*;
  * Date: gio, 24-gen-2019
  * Time: 10:34
  * <p>
- * Crea le liste dei nati o dei morti nel giorno o nel anno
+ * Classe specializzata la creazione di liste. <br>
+ * <p>
+ * Liste cronologiche (in namespace principale) di nati e morti nel giorno o nell'anno <br>
+ * Liste di nomi e cognomi (in namespace principale). <br>
+ * Liste di attività e nazionalità (in Progetto:Biografie). <br>
+ * <p>
+ * Sovrascritta nelle sottoclassi concrete <br>
+ * Not annotated with @SpringComponent (sbagliato) perché è una classe astratta <br>
  */
-@SpringComponent
 @Slf4j
 public abstract class Lista {
 
@@ -75,6 +82,22 @@ public abstract class Lista {
 //        return elaboraDidascalie(mappaOrdinataBio);
 //    }// fine del metodo
 
+
+    /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
+     */
+    @PostConstruct
+    protected void inizia() {
+        this.esegue();
+    }// end of method
 
     /**
      * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
@@ -221,7 +244,7 @@ public abstract class Lista {
             } else {
                 lista = (ArrayList<String>) mappa.get(chiave);
             }// end of if/else cycle
-            lista.add(wrap.getTestoSenza());
+            lista.add(wrap.getTestoSenza()); //@todo rimettere
 
         }// end of for cycle
 

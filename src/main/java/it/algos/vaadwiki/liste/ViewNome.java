@@ -42,15 +42,15 @@ public class ViewNome extends ViewListe {
 
     @Override
     public void setParameter(BeforeEvent event, String nomeIdKey) {
-        super.idKey = nomeIdKey;
+//        super.idKey = nomeIdKey;
         this.inizia();
     }// end of method
 
 
     public void inizia() {
-        nome = nomeService.findById(idKey);
-        uploadNomi = appContext.getBean(UploadNomi.class,nome);
-        testo = uploadNomi.getTesto();
+//        nome = nomeService.findById(idKey);
+//        uploadNomi = appContext.getBean(UploadNomi.class,nome);
+//        testo = uploadNomi.getTesto();
 
         super.inizia();
     }// end of method

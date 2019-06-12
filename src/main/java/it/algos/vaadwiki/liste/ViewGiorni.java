@@ -22,7 +22,9 @@ public abstract class ViewGiorni extends ViewListe {
 
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected GiornoService giornoService;

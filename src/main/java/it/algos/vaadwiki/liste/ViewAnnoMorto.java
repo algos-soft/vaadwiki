@@ -33,15 +33,15 @@ public class ViewAnnoMorto extends ViewAnni {
 
     @Override
     public void setParameter(BeforeEvent event, String giornoIdKey) {
-        super.idKey = giornoIdKey;
+//        super.idKey = giornoIdKey;
         this.inizia();
     }// end of method
 
 
     public void inizia() {
-        anno = annoService.findById(idKey);
-        uploadAnnoMorto.esegueTest(anno);
-        testo = uploadAnnoMorto.getTesto();
+//        anno = annoService.findById(idKey);
+//        uploadAnnoMorto.esegueTest(anno);
+//        testo = uploadAnnoMorto.getTesto();
 
         super.inizia();
     }// end of method

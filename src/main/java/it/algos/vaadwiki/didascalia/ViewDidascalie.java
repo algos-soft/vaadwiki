@@ -13,11 +13,12 @@ import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.ui.list.ALayoutViewList;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
-import it.algos.vaadwiki.service.DidascaliaService;
+import it.algos.vaadwiki.statistiche.StatisticheDidascalie;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 import static it.algos.vaadwiki.application.WikiCost.ROUTE_DIDASCALIE;
+import static it.algos.vaadwiki.didascalia.DidascaliaService.TITOLO_PAGINA_WIKI;
 
 /**
  * Project vaadwiki
@@ -43,9 +44,6 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_DIDASCALIE;
  */
 @Route(value = ROUTE_DIDASCALIE)
 public class ViewDidascalie extends ALayoutViewList {
-
-    //--titolo della pagina di servizio sul server wiki
-    protected String titoloPaginaWiki = "Progetto:Biografie/Didascalie";
 
 
     private Bio bioDidascalia;
@@ -104,7 +102,7 @@ public class ViewDidascalie extends ALayoutViewList {
      */
     @Override
     protected void creaTopLayout() {
-        String bioIniziale = "Ron Clarke";
+        String bioIniziale = "Sergio Ferrero";
 
         searchField = new TextField("", "Search");
         searchField.setPrefixComponent(new Icon("lumo", "user"));
@@ -167,7 +165,7 @@ public class ViewDidascalie extends ALayoutViewList {
         if (bioDidascalia != null) {
             giornoNato = bioDidascalia.getGiornoNato();
             if (text.isValid(giornoNato)) {
-                didascalia = didascaliaService.getGiornoNato(bioDidascalia);
+                didascalia = didascaliaService.getGiornoNatoCon(bioDidascalia);
                 message = "Nati il " + giornoNato + " -> " + didascalia;
                 label.setText(message);
             }// end of if cycle
@@ -186,7 +184,7 @@ public class ViewDidascalie extends ALayoutViewList {
         if (bioDidascalia != null) {
             giornoMorto = bioDidascalia.getGiornoMorto();
             if (text.isValid(giornoMorto)) {
-                didascalia = didascaliaService.getGiornoMorto(bioDidascalia);
+                didascalia = didascaliaService.getGiornoMortoCon(bioDidascalia);
                 message = "Morti il " + giornoMorto + " -> " + didascalia;
                 label.setText(message);
             }// end of if cycle
@@ -205,7 +203,7 @@ public class ViewDidascalie extends ALayoutViewList {
         if (bioDidascalia != null) {
             annoNato = bioDidascalia.getAnnoNato();
             if (text.isValid(annoNato)) {
-                didascalia = didascaliaService.getAnnoNato(bioDidascalia);
+                didascalia = didascaliaService.getAnnoNatoCon(bioDidascalia);
                 message = "Nati nel " + annoNato + " -> " + didascalia;
                 label.setText(message);
             }// end of if cycle
@@ -224,7 +222,7 @@ public class ViewDidascalie extends ALayoutViewList {
         if (bioDidascalia != null) {
             annoMorto = bioDidascalia.getAnnoMorto();
             if (text.isValid(annoMorto)) {
-                didascalia = didascaliaService.getAnnoMorto(bioDidascalia);
+                didascalia = didascaliaService.getAnnoMortoCon(bioDidascalia);
                 message = "Morti nel " + annoMorto + " -> " + didascalia;
                 label.setText(message);
             }// end of if cycle
@@ -240,7 +238,7 @@ public class ViewDidascalie extends ALayoutViewList {
         String message = "";
 
         if (bioDidascalia != null) {
-            didascalia = didascaliaService.getListe(bioDidascalia);
+            didascalia = didascaliaService.getListeCon(bioDidascalia);
             message = "Liste di nomi, cognomi " + " -> " + didascalia;
             label.setText(message);
         }// end of if cycle
@@ -255,7 +253,7 @@ public class ViewDidascalie extends ALayoutViewList {
         String message = "";
 
         if (bioDidascalia != null) {
-            didascalia = didascaliaService.getBiografie(bioDidascalia);
+            didascalia = didascaliaService.getBiografieCon(bioDidascalia);
             message = "Incipit della biografia " + " -> " + didascalia;
             label.setText(message);
         }// end of if cycle
@@ -268,7 +266,7 @@ public class ViewDidascalie extends ALayoutViewList {
      * Apre una scheda del browser sulla pagina di wikipedia <br>
      */
     private void showPaginaWiki() {
-        String link = "\"" + PATH_WIKI + titoloPaginaWiki + "\"";
+        String link = "\"" + PATH_WIKI + TITOLO_PAGINA_WIKI + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
@@ -277,6 +275,7 @@ public class ViewDidascalie extends ALayoutViewList {
      * Registra una nuova versione della pagina sul server di wikipedia <br>
      */
     private void uploadPaginaWiki() {
+         appContext.getBean(StatisticheDidascalie.class, bioDidascalia);
     }// end of method
 
 }// end of class

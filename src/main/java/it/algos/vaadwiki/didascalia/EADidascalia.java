@@ -8,5 +8,5 @@ package it.algos.vaadwiki.didascalia;
  * Time: 16:35
  */
 public enum EADidascalia {
-    giornoNato, annoNato, giornoMorto, annoMorto, liste, biografie
+    giornoNato, giornoMorto, annoNato, annoMorto, liste, biografie
 }// end of enum

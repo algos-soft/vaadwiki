@@ -33,9 +33,23 @@
      * <p>
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
      * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
-     * Se ci sono superclassi e sottoclassi, chiama prima @PostConstruct della superclasse <br>
+     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
      */
     @PostConstruct
     protected void inizia() {
         ...
     }// end of method
+
+
+    Ordine in cui vengono chiamati i metodi (@PostConstruct con la stessa firma)
+
+    Constructor of child class is called.
+    Constructor of child class calls super
+    Constructor of parent class is called
+    Constructor of parent class is executed
+    Constructor of parent class is finished
+    Constructor of child class is executed
+    Constructor of child class is finished
+    @PostConstruct of child class is called, executed, and finished(because we called the constructor of child class)
+    @PostConstruct of parent class is called, executed, and finished(because we called the constructor of parent class)

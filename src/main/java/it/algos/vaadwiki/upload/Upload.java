@@ -1,6 +1,5 @@
 package it.algos.vaadwiki.upload;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.log.LogService;
@@ -20,10 +19,7 @@ import it.algos.wiki.LibWiki;
 import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
 
 import java.util.*;
 
@@ -36,10 +32,17 @@ import static it.algos.vaadwiki.didascalia.Didascalia.TAG_SEP;
  * User: gac
  * Date: gio, 17-gen-2019
  * Time: 17:45
+ * <p>
+ * Classe specializzata per caricare (upload) le liste sul server wiki. <br>
+ * <p>
+ * Liste cronologiche (in namespace principale) di nati e morti nel giorno o nell'anno <br>
+ * Liste di nomi e cognomi (in namespace principale). <br>
+ * Liste di attività e nazionalità (in Progetto:Biografie). <br>
+ * <p>
+ * Necessita del login come bot <br>
+ * Sovrascritta nelle sottoclassi concrete <br>
+ * Not annotated with @SpringComponent (sbagliato) perché è una classe astratta <br>
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier("aaa")
 @Slf4j
 public abstract class Upload {
 
@@ -51,140 +54,161 @@ public abstract class Upload {
 
     protected final static String TAG_NO_INDICE = "__NOTOC__";
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
     @Autowired
     protected ApplicationContext appContext;
 
-//    /**
-//     * La injection viene fatta da SpringBoot in automatico <br>
-//     */
-//    @Autowired
-//    protected WikiLoginOld wikiLoginOld;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected AttivitaService attivitaService;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected NazionalitaService nazionalitaService;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected ProfessioneService professioneService;
 
-//    /**
-//     * La injection viene fatta da SpringBoot in automatico <br>
-//     */
-//    @Autowired
-//    protected CategoriaService categoriaService;
-
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected BioService bioService;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected NewService newService;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected DeleteService deleteService;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected UpdateService updateService;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected PreferenzaService pref;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected ElaboraService elaboraService;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected PageService pageService;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected AArrayService array;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected ADateService date;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected Api api;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected AMongoService mongo;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected ATextService text;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected AMailService mail;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected LogService logger;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected MeseService mese;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected AnnoService anno;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected SecoloService secolo;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected UploadService uploadService;
+
 
     protected boolean usaHeadTemplateAvviso; // uso del template StatBio
 
@@ -224,17 +248,9 @@ public abstract class Upload {
 
     protected boolean usaBodyRigheMultiple;
 
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected UploadService uploadService;
-
-//    protected String titoloPaginaMadre = "";
-
 
     /**
-     * Costruttore completo
+     * Costruttore senza parametri
      */
     public Upload() {
     }// end of constructor

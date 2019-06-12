@@ -40,6 +40,13 @@ public class WrapDidascalia {
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected DidascaliaService didascaliaService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
     protected ATextService text;
@@ -49,37 +56,37 @@ public class WrapDidascalia {
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
 //    @Autowired
-    protected DidascaliaGiornoNato didascaliaGiornoNato;
+//    protected DidascaliaGiornoNato didascaliaGiornoNato;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
 //    @Autowired
-    protected DidascaliaGiornoMorto didascaliaGiornoMorto;
+//    protected DidascaliaGiornoMorto didascaliaGiornoMorto;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
 //    @Autowired
-    protected DidascaliaAnnoNato didascaliaAnnoNato;
+//    protected DidascaliaAnnoNato didascaliaAnnoNato;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
 //    @Autowired
-    protected DidascaliaAnnoMorto didascaliaAnnoMorto;
+//    protected DidascaliaAnnoMorto didascaliaAnnoMorto;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
 //    @Autowired
-    protected DidascaliaBiografie didascaliaBiografie;
+//    protected DidascaliaBiografie didascaliaBiografie;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
 //    @Autowired
-    protected DidascaliaListe didascaliaListe;
+//    protected DidascaliaListe didascaliaListe;
 
 
     /**
@@ -114,9 +121,9 @@ public class WrapDidascalia {
 
 
     /**
-     * Testo della didascalia completo <br>
+     * Testo della didascalia CON la chiave che viene usata nella composizione con 'righeParagrafo' <br>
      */
-    private String testo;
+    private String testoCon;
 
     /**
      * Testo della didascalia SENZA la chiave che viene aggiunta nella composizione della pagina <br>
@@ -129,19 +136,23 @@ public class WrapDidascalia {
     private EADidascalia type;
 
 
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
+     */
     public WrapDidascalia() {
     }// end of constructor
 
 
-    public WrapDidascalia(String riferimento, int ordine, String chiave, String sottoChiave, String testo) {
-        this.riferimento = riferimento;
-        this.ordine = ordine;
-        this.chiave = chiave;
-        this.sottoChiave = sottoChiave;
-        this.testo = testo;
-    }// end of constructor
-
-
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(WrapDidascalia.class, bio, type) <br>
+     *
+     * @param bio  di cui costruire la didascalia
+     * @param type con cui costruire la didascalia
+     */
     public WrapDidascalia(Bio bio, EADidascalia type) {
         this.bio = bio;
         this.type = type;
@@ -159,104 +170,133 @@ public class WrapDidascalia {
      */
     @PostConstruct
     public void inizia() {
+        Didascalia didascalia = null;
+
         switch (type) {
             case giornoNato:
-                giornoNato();
-                break;
-            case annoNato:
-                annoNato();
+                didascalia = didascaliaService.getDidascaliaGiornoNato(bio);
+                this.chiave = bio.getAnnoNato();
+//                giornoNato();
                 break;
             case giornoMorto:
-                giornoMorto();
+                didascalia = didascaliaService.getDidascaliaGiornoMorto(bio);
+                this.chiave = bio.getAnnoMorto();
+//                giornoMorto();
+                break;
+            case annoNato:
+                didascalia = didascaliaService.getDidascaliaAnnoNato(bio);
+                this.chiave = bio.getGiornoNato();
+//                annoNato();
                 break;
             case annoMorto:
-                annoMorto();
+                didascalia = didascaliaService.getDidascaliaAnnoMorto(bio);
+                this.chiave = bio.getGiornoMorto();
+//                annoMorto();
                 break;
             case liste:
-                liste();
+                didascalia = didascaliaService.getDidascaliaListe(bio);
+                this.chiave = "";
+//                liste();
                 break;
             case biografie:
-                biografie();
+                didascalia = didascaliaService.getDidascaliaBiografie(bio);
+                this.chiave = "";
+//                biografie();
                 break;
             default:
                 log.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
-    }// end of method
 
-
-
-
-    public void giornoNato() {
         this.riferimento = bio.getGiornoNato();
-        this.chiave = bio.getAnnoNato();
         this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
         String wikiTitle = bio.getWikiTitle();
         String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
         this.sottoChiave = cognome + wikiTitle;
-        this.testo = didascaliaGiornoNato.esegue(bio);
-//        this.testoSenza = didascaliaGiornoNato.esegueSenza(bio);
+
+        if (didascalia != null) {
+            this.testoCon = didascalia.testoCon;
+            this.testoSenza = didascalia.testoSenza;
+        }// end of if cycle
     }// end of method
 
 
-    public void annoNato() {
-        this.riferimento = bio.getAnnoNato();
-        this.chiave = bio.getGiornoNato();
-        this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
-        String wikiTitle = bio.getWikiTitle();
-        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-        this.sottoChiave = cognome + wikiTitle;
-        this.testo = didascaliaAnnoNato.esegue(bio);
-//        this.testoSenza = didascaliaAnnoNato.esegueSenza(bio);
-    }// end of method
+//    public void giornoNato() {
+//        Didascalia didascaliaGiornoNato = didascaliaService.getDidascaliaGiornoNato(bio);
+//        this.riferimento = bio.getGiornoNato();
+//        this.chiave = bio.getAnnoNato();
+//        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
+//        String wikiTitle = bio.getWikiTitle();
+//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+//        this.sottoChiave = cognome + wikiTitle;
+//        this.testoCon = didascaliaGiornoNato.testoCon;
+//        this.testoSenza = didascaliaGiornoNato.testoSenza;
+//    }// end of method
 
 
-    public void giornoMorto() {
-        this.riferimento = bio.getGiornoMorto();
-        this.chiave = bio.getAnnoMorto();
-        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
-        String wikiTitle = bio.getWikiTitle();
-        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-        this.sottoChiave = cognome + wikiTitle;
-        this.testo = didascaliaGiornoMorto.esegue(bio);
-//        this.testoSenza = didascaliaGiornoMorto.esegueSenza(bio);
-    }// end of method
+//    public void giornoMorto() {
+//        didascaliaGiornoMorto = didascaliaService.getDidascaliaGiornoMorto(bio);
+//        this.riferimento = bio.getGiornoMorto();
+//        this.chiave = bio.getAnnoMorto();
+//        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
+//        String wikiTitle = bio.getWikiTitle();
+//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+//        this.sottoChiave = cognome + wikiTitle;
+//        this.testoCon = didascaliaGiornoMorto.testoCon;
+//        this.testoSenza = didascaliaGiornoMorto.testoSenza;
+//    }// end of method
 
 
-    public void annoMorto() {
-        this.riferimento = bio.getAnnoMorto();
-        this.chiave = bio.getGiornoMorto();
-        this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
-        String wikiTitle = bio.getWikiTitle();
-        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-        this.sottoChiave = cognome + wikiTitle;
-        this.testo = didascaliaAnnoMorto.esegue(bio);
-//        this.testoSenza = didascaliaAnnoMorto.esegueSenza(bio);
-    }// end of method
+//    public void annoNato() {
+//        didascaliaAnnoNato = didascaliaService.getDidascaliaAnnoNato(bio);
+//        this.riferimento = bio.getAnnoNato();
+//        this.chiave = bio.getGiornoNato();
+//        this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
+//        String wikiTitle = bio.getWikiTitle();
+//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+//        this.sottoChiave = cognome + wikiTitle;
+//        this.testoCon = didascaliaAnnoNato.testoCon;
+//        this.testoSenza = didascaliaAnnoNato.testoSenza;
+//    }// end of method
 
 
+//    public void annoMorto() {
+//        didascaliaAnnoMorto = didascaliaService.getDidascaliaAnnoMorto(bio);
+//        this.riferimento = bio.getAnnoMorto();
+//        this.chiave = bio.getGiornoMorto();
+//        this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
+//        String wikiTitle = bio.getWikiTitle();
+//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+//        this.sottoChiave = cognome + wikiTitle;
+//        this.testoCon = didascaliaAnnoMorto.testoCon;
+//        this.testoSenza = didascaliaAnnoMorto.testoSenza;
+//    }// end of method
 
-    //--@todo ERRORE provvisorio
-    public void liste() {
-        this.riferimento = bio.getGiornoNato();
-        this.chiave = bio.getAnnoNato();
-        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
-        String wikiTitle = bio.getWikiTitle();
-        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-        this.sottoChiave = cognome + wikiTitle;
-        this.testo = didascaliaListe.esegue(bio);
-    }// end of method
 
-    //--@todo ERRORE provvisorio
-    public void biografie() {
-        this.riferimento = bio.getGiornoNato();
-        this.chiave = bio.getAnnoNato();
-        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
-        String wikiTitle = bio.getWikiTitle();
-        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-        this.sottoChiave = cognome + wikiTitle;
-        this.testo = didascaliaBiografie.esegue(bio);
-    }// end of method
+//    public void liste() {
+//        didascaliaListe = didascaliaService.getDidascaliaListe(bio);
+//        this.riferimento = bio.getGiornoNato();
+//        this.chiave = bio.getAnnoNato();
+//        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
+//        String wikiTitle = bio.getWikiTitle();
+//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+//        this.sottoChiave = cognome + wikiTitle;
+//        this.testoCon = didascaliaListe.testoCon;
+//        this.testoSenza = didascaliaListe.testoSenza;
+//    }// end of method
+
+
+//    public void biografie() {
+//        didascaliaBiografie = didascaliaService.getDidascaliaBiografie(bio);
+//        this.riferimento = bio.getGiornoNato();
+//        this.chiave = bio.getAnnoNato();
+//        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
+//        String wikiTitle = bio.getWikiTitle();
+//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+//        this.sottoChiave = cognome + wikiTitle;
+//        this.testoCon = didascaliaBiografie.testoCon;
+//        this.testoSenza = didascaliaBiografie.testoSenza;
+//    }// end of method
 
 
     public String getRiferimento() {
@@ -279,8 +319,8 @@ public class WrapDidascalia {
     }// end of method
 
 
-    public String getTesto() {
-        return testo;
+    public String getTestoCon() {
+        return testoCon;
     }// end of method
 
 

@@ -301,6 +301,11 @@ public abstract class APropertyViewList extends VerticalLayout {
     protected int limit;
 
     /**
+     * Flag per la larghezza della Grid. Default a 75. Espressa come numero per comodità; poi viene convertita in "em".
+     */
+    protected int gridWith;
+
+    /**
      * Istanza (@VaadinSessionScope) inietta da Spring ed unica nella sessione <br>
      */
     @Autowired

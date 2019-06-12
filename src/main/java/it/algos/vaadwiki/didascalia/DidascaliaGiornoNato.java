@@ -52,7 +52,8 @@ public class DidascaliaGiornoNato extends Didascalia {
      * Sovrascritto <br>
      */
     protected void regolaDidascalia() {
-        testo = VUOTA;
+        testoSenza = VUOTA;
+        testoCon = VUOTA;
         String mortoTxt;
 
         // giorno di nascita (deve esserci)
@@ -60,26 +61,30 @@ public class DidascaliaGiornoNato extends Didascalia {
             return;
         }// end of if cycle
 
-        // anno di nascita (potrebbe non esserci)
-        if (text.isValid(annoNato) && usaChiave) {
-            testo += LibWiki.setQuadre(annoNato);
-            testo += TAG_SEP;
-        }// end of if cycle
-
         // titolo e nome (obbligatori)
-        testo += getNomeCognome();
+        testoSenza += getNomeCognome();
 
         // attivitaNazionalita (potrebbe non esserci)
-        testo += getAttNaz();
+        testoSenza += getAttNaz();
 
         // anno di morte (potrebbe non esserci)
         if (text.isValid(annoMorto)) {
-            testo += SPAZIO;
+            testoSenza += SPAZIO;
             mortoTxt = TAG_MORTO;
             mortoTxt += SPAZIO;
             mortoTxt += LibWiki.setQuadre(annoMorto);
-            testo += LibWiki.setTonde(mortoTxt);
+            testoSenza += LibWiki.setTonde(mortoTxt);
         }// end of if cycle
+
+        //--chiave per il paragrafo
+        //--anno di nascita (potrebbe non esserci)
+        //--inserito all'inizio del testo
+        if (text.isValid(annoNato)) {
+            testoCon += LibWiki.setQuadre(annoNato);
+            testoCon += TAG_SEP;
+            testoCon += testoSenza;
+        }// end of if cycle
+
     }// end of method
 
 }// end of class

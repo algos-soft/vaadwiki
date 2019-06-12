@@ -1,15 +1,11 @@
 package it.algos.vaadwiki.didascalia;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.wiki.LibWiki;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
@@ -24,10 +20,12 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_SEPARATORE;
  * Date: ven, 18-gen-2019
  * Time: 19:07
  * <p>
- * Didascalia specializzata per le liste costruibili a partire dal template Bio. <br>
- * Cronologiche (in namespace principale) di nati e morti nel giorno o nell'anno <br>
- * Liste di nomi e cognomi. <br>
- * Attività e nazionalità (in Progetto:Biografie). <br>
+ * Classe specializzata per le didascalie costruibili a partire dal template Bio per le liste .
+ * <p>
+ * Didascalie cronologiche (in namespace principale) di nati e morti nel giorno o nell'anno <br>
+ * Didascalie di liste di nomi e cognomi (in namespace principale). <br>
+ * Didascalie di liste di attività e nazionalità (in Progetto:Biografie). <br>
+ * Ogni didascalia ha un testo completo ed un testo senza chiave identificativa del paragrafo <br>
  * <p>
  * Sovrascritta nelle sottoclassi concrete <br>
  * Not annotated with @SpringComponent (sbagliato) perché è una classe astratta <br>
@@ -50,8 +48,6 @@ public abstract class Didascalia {
 
     @Autowired
     public AnnoService annoService;
-
-    public String testo = VUOTA;
 
     protected boolean usaChiave = true;
 
@@ -85,6 +81,17 @@ public abstract class Didascalia {
 
     protected Bio bio;
 
+    /**
+     * Testo della didascalia CON la chiave che viene usata nella composizione con 'righeParagrafo' <br>
+     */
+    public String testoCon = VUOTA;
+
+    /**
+     * Testo della didascalia SENZA la chiave che viene aggiunta nella composizione della pagina <br>
+     * La chiave viene aggiunta in maniera differente tra 'righeSemplici' o 'righeRaggruppate' <br>
+     */
+    public String testoSenza = VUOTA;
+
 
     public Didascalia() {
     }// end of constructor
@@ -113,20 +120,20 @@ public abstract class Didascalia {
         }// end of if cycle
     }// end of method
 
-    public String esegue(Bio bio) {
+
+    public void esegue(Bio bio) {
         this.reset();
         this.recuperaDatiAnagrafici(bio);
         this.recuperaDatiCrono(bio);
         this.recuperaDatiLocalita(bio);
         this.recuperaDatiAttNaz(bio);
         this.regolaDidascalia();
-
-        return testo;
     }// end of method
 
 
     protected void reset() {
-        testo = VUOTA;
+        testoCon = VUOTA;
+        testoSenza = VUOTA;
         wikiTitle = VUOTA;
         nome = VUOTA;
         cognome = VUOTA;
@@ -224,19 +231,22 @@ public abstract class Didascalia {
      * Sovrascritto
      */
     protected void regolaDidascalia() {
-        testo = VUOTA;
+        testoSenza = VUOTA;
+        testoCon = VUOTA;
 
         // blocco iniziale (potrebbe non esserci)
-        testo += getBloccoIniziale();
+        testoSenza += getBloccoIniziale();
 
         // titolo e nome (obbligatori)
-        testo += this.getNomeCognome();
+        testoSenza += this.getNomeCognome();
 
         // attivitaNazionalita (potrebbe non esserci)
-        testo += this.getAttNaz();
+        testoSenza += this.getAttNaz();
 
         // blocco finale (potrebbe non esserci)
-        testo += this.getBloccoFinale();
+        testoSenza += this.getBloccoFinale();
+
+        testoCon = testoSenza;
     }// end of method
 
 

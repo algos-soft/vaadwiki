@@ -50,16 +50,19 @@ public class DidascaliaBiografie extends Didascalia {
      * Sovrascritto <br>
      */
     protected void regolaDidascalia() {
-        testo = VUOTA;
+        testoSenza = VUOTA;
+        testoCon = VUOTA;
 
         // titolo e nome (obbligatori)
-        testo += getNomeCognome();
+        testoSenza += getNomeCognome();
 
         // blocco cronologico e luoghi (potrebbe non esserci)
-        testo += getBloccoFinale();
+        testoSenza += getBloccoFinale();
 
         // attivitaNazionalita (potrebbe non esserci)
-        testo += getAttNaz();
+        testoSenza += getAttNaz();
+
+        testoCon = testoSenza;
     }// end of method
 
 }// end of class

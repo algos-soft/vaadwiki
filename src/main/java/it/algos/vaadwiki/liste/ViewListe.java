@@ -9,7 +9,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.HasUrlParameter;
 import it.algos.vaadflow.service.ADateService;
-import it.algos.vaadwiki.modules.wiki.WikiGiornoViewList;
+import it.algos.vaadwiki.upload.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -27,6 +27,23 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public abstract class ViewListe extends VerticalLayout implements HasUrlParameter<String> {
 
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected UploadService uploadService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected ListaService listaService;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -34,14 +51,22 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
     protected ADateService date;
 
 
-    protected String idKey;
-
 
     protected String testo;
 
 
+    /**
+     * Costruisce una mappa di tutte le didascalie relative al giorno considerato <br>
+     * Presenta le righe secondo uno dei possibili metodi di raggruppamento <br>
+     * Deve essere sovrascritto nella sottoclassse concreta <br>
+     * Dopo deve invocare il metodo della superclasse <br>
+     */
     protected void inizia() {
         TextArea area = new TextArea();
+
+        if (testo == null) {
+            testo = "";
+        }// end of if cycle
 
         this.add(backButton());
 
@@ -114,6 +139,10 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
     }// end of method
 
 
+    /**
+     * Costruisce il titolo della pagina <br>
+     * Sovrascritto <br>
+     */
     protected void addTitolo() {
     }// end of method
 

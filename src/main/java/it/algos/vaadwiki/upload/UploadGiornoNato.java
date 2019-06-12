@@ -7,10 +7,10 @@ import it.algos.vaadwiki.liste.ListaGiornoNato;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import javax.annotation.PostConstruct;
 
 import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
@@ -21,16 +21,44 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * User: gac
  * Date: gio, 24-gen-2019
  * Time: 08:21
+ * <p>
+ * Classe specializzata per caricare (upload) le liste sul server wiki. <br>
+ * <p>
+ * Viene chiamato da Scheduler (con frequenza giornaliera ?) <br>
+ * Può essere invocato dal bottone 'Upload all' della classe WikiGiornoViewList <br>
+ * Necessita del login come bot <br>
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier("ttt")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class UploadGiornoNato extends UploadGiorni {
 
 
-    @Autowired
+    //    @Autowired
     protected ListaGiornoNato listaGiornoNato;
+
+
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
+     */
+    public UploadGiornoNato() {
+    }// end of constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(UploadGiornoNato.class, giorno) <br>
+     *
+     * @param giorno di cui costruire la pagina sul server wiki
+     */
+    public UploadGiornoNato(Giorno giorno) {
+        this.giorno = giorno;
+    }// end of constructor
+
+
 
 
     /**

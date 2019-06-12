@@ -1,44 +1,43 @@
 package it.algos.vaadwiki.upload;
 
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 
 /**
- * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
+ * Classe specializzata per caricare (upload) le liste sul server wiki. <br>
  * <p>
- * Il ciclo viene chiamato da DaemonCrono (con frequenza giornaliera ?)
- * Il ciclo può essere invocato dal bottone 'Upload all' nella grid Giorno
- * Il ciclo necessita del login come bot
+ * Viene chiamato da Scheduler (con frequenza giornaliera ?) <br>
+ * Può essere invocato dal bottone 'Upload all' della classe WikiGiornoViewList <br>
+ * <p>
+ * Necessita del login come bot <br>
+ * Sovrascritta nelle sottoclassi concrete <br>
+ * Not annotated with @SpringComponent (sbagliato) perché è una classe astratta <br>
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier("ccc")
-@Slf4j
 public abstract class UploadGiorni extends Upload {
 
 
     protected String titoloGiorno;
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
     @Autowired
     protected GiornoService giornoService;
 
     protected Giorno giorno;
 
-    @Autowired
+    //    @Autowired
     private UploadGiornoNato uploadGiornoNato;
 
-    @Autowired
+    //    @Autowired
     private UploadGiornoMorto uploadGiornoMorto;
 
 
@@ -70,6 +69,21 @@ public abstract class UploadGiorni extends Upload {
 //        }// end of if cycle
     }// end of method
 
+    /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
+     */
+    @PostConstruct
+    protected void inizia() {
+        esegue(giorno);
+    }// fine del metodo
 
     /**
      * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno

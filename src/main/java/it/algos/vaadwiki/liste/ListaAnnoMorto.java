@@ -19,8 +19,8 @@ import java.util.ArrayList;
  * Date: gio, 24-gen-2019
  * Time: 10:33
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+//@SpringComponent
+//@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class ListaAnnoMorto extends ListaAnni {
 

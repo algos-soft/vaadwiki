@@ -112,3 +112,30 @@
      * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
      * Disponibile SOLO DOPO @PostConstruct <br>
      */
+
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile SOLO DOPO @PostConstruct <br>
+     */
+    @Autowired
+    protected ApplicationContext appContext;
+
+    //--Classe che parte da @Route
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected PreferenzaService pref;
+
+
+    //--Classe che NON parte da @Route
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected PreferenzaService pref;

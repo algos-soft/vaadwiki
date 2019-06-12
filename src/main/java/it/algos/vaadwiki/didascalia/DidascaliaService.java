@@ -1,8 +1,9 @@
-package it.algos.vaadwiki.service;
+package it.algos.vaadwiki.didascalia;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.didascalia.*;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.service.ABioService;
+import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
 import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,9 @@ import static it.algos.vaadflow.application.FlowCost.*;
 @Slf4j
 public class DidascaliaService extends ABioService {
 
+    //--titolo della pagina di servizio sul server wiki
+    public static final String TITOLO_PAGINA_WIKI = "Progetto:Biografie/Didascalie";
 
-    public static final String wikiPagineDidascalie = "Progetto:Biografie/Didascalie";
 
     public static final String wikiTitleDebug = "Utente:Biobot/2";
 
@@ -44,7 +46,7 @@ public class DidascaliaService extends ABioService {
         if (pref.isBool(USA_DEBUG)) {
             Api.scriveVoce(wikiTitleDebug, testo);
         } else {
-            Api.scriveVoce(wikiPagineDidascalie, testo);
+            Api.scriveVoce(TITOLO_PAGINA_WIKI, testo);
         }// end of if/else cycle
     }// end of method
 
@@ -176,7 +178,7 @@ public class DidascaliaService extends ABioService {
     }// end of method
 
 
-    public String getBase(Bio bio, EADidascalia type) {
+    public String getBase(Bio bio, EADidascalia type, boolean conChiave) {
         Didascalia didascalia = null;
 
         if (bio != null && type != null) {
@@ -205,37 +207,81 @@ public class DidascaliaService extends ABioService {
             } // end of switch statement
         }// end of if cycle
 
-        return didascalia != null ? didascalia.testo : VUOTA;
+        if (conChiave) {
+            return didascalia != null ? didascalia.testoCon : VUOTA;
+        } else {
+            return didascalia != null ? didascalia.testoSenza : VUOTA;
+        }// end of if/else cycle
     }// end of method
 
 
-    public String getGiornoNato(Bio bio) {
-        return getBase(bio, EADidascalia.giornoNato);
+    public String getBaseCon(Bio bio, EADidascalia type) {
+        return getBase(bio, type, true);
     }// end of method
 
 
-    public String getGiornoMorto(Bio bio) {
-        return getBase(bio, EADidascalia.giornoMorto);
+    public String getBaseSenza(Bio bio, EADidascalia type) {
+        return getBase(bio, type, false);
     }// end of method
 
 
-    public String getAnnoNato(Bio bio) {
-        return getBase(bio, EADidascalia.annoNato);
+    public String getGiornoNatoCon(Bio bio) {
+        return getBase(bio, EADidascalia.giornoNato, true);
     }// end of method
 
 
-    public String getAnnoMorto(Bio bio) {
-        return getBase(bio, EADidascalia.annoMorto);
+    public String getGiornoMortoCon(Bio bio) {
+        return getBase(bio, EADidascalia.giornoMorto, true);
     }// end of method
 
 
-    public String getListe(Bio bio) {
-        return getBase(bio, EADidascalia.liste);
+    public String getAnnoNatoCon(Bio bio) {
+        return getBase(bio, EADidascalia.annoNato, true);
     }// end of method
 
 
-    public String getBiografie(Bio bio) {
-        return getBase(bio, EADidascalia.biografie);
+    public String getAnnoMortoCon(Bio bio) {
+        return getBase(bio, EADidascalia.annoMorto, true);
+    }// end of method
+
+
+    public String getListeCon(Bio bio) {
+        return getBase(bio, EADidascalia.liste, true);
+    }// end of method
+
+
+    public String getBiografieCon(Bio bio) {
+        return getBase(bio, EADidascalia.biografie, true);
+    }// end of method
+
+
+    public String getGiornoNatoSenza(Bio bio) {
+        return getBase(bio, EADidascalia.giornoNato, false);
+    }// end of method
+
+
+    public String getGiornoMortoSenza(Bio bio) {
+        return getBase(bio, EADidascalia.giornoMorto, false);
+    }// end of method
+
+
+    public String getAnnoNatoSenza(Bio bio) {
+        return getBase(bio, EADidascalia.annoNato, false);
+    }// end of method
+
+
+    public String getAnnoMortoSenza(Bio bio) {
+        return getBase(bio, EADidascalia.annoMorto, false);
+    }// end of method
+
+
+    public String getListeSenza(Bio bio) {
+        return getBase(bio, EADidascalia.liste, false);
+    }// end of method
+
+
+    public String getBiografieSenza(Bio bio) {
+        return getBase(bio, EADidascalia.biografie, false);
     }// end of method
 
 

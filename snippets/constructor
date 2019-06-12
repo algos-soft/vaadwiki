@@ -27,3 +27,10 @@
       * Annotated with @Autowired annotation, perché c'è un altro costruttore <br>
       */
       @Autowired
+
+
+          /**
+           * Costruttore base senza parametri <br>
+           * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+           * Se manca, manda in rosso il parametro del costruttore usato <br>
+           */

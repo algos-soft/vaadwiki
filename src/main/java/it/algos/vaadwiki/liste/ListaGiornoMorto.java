@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.didascalia.DidascaliaGiornoMorto;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
@@ -30,6 +31,25 @@ public class ListaGiornoMorto extends ListaGiorni {
 //    @Autowired
     protected DidascaliaGiornoMorto didascaliaGiornoMorto;
 
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
+     */
+    public ListaGiornoMorto() {
+    }// end of constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(UploadGiornoNato.class, giorno) <br>
+     *
+     * @param giorno di cui costruire la pagina sul server wiki
+     */
+    public ListaGiornoMorto(Giorno giorno) {
+        this.giorno = giorno;
+    }// end of constructor
 
     /**
      * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoNato

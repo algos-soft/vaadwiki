@@ -3,9 +3,10 @@ package it.algos.vaadwiki.integration;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.ATest;
 import it.algos.vaadwiki.didascalia.Didascalia;
+import it.algos.vaadwiki.didascalia.DidascaliaService;
+import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
-import it.algos.vaadwiki.service.DidascaliaService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -85,14 +86,42 @@ public class DidascaliaIntegrationTest extends ATest {
 
 
     @Test
+    public void type() {
+        System.out.println("*************");
+        System.out.println("Tipi possibili di didascalie per " + NOME_BIO);
+        System.out.println("*************");
+        System.out.println("Con chiave");
+        System.out.println("*************");
+        for (EADidascalia type : EADidascalia.values()) {
+            ottenuto = didascaliaService.getBaseCon(bio, type);
+            System.out.println(type.name() + ": " + ottenuto);
+        }// end of for cycle
+        System.out.println("*************");
+        System.out.println("Senza chiave");
+        System.out.println("*************");
+        for (EADidascalia type : EADidascalia.values()) {
+            ottenuto = didascaliaService.getBaseSenza(bio, type);
+            System.out.println(type.name() + ": " + ottenuto);
+        }// end of for cycle
+        System.out.println("*************");
+    }// end of single test
+
+
+    @Test
     public void giornoNato() {
         previsto = "[[1937]] - [[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
-
         didascalia = didascaliaService.getDidascaliaGiornoNato(bio);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testo);
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getGiornoNatoCon(bio);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
 
-        ottenuto = didascaliaService.getGiornoNato(bio);
+        previsto = "[[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
+        didascalia = didascaliaService.getDidascaliaGiornoNato(bio);
+        Assert.assertNotNull(didascalia);
+        assertEquals(previsto, didascalia.testoSenza);
+        ottenuto = didascaliaService.getGiornoNatoSenza(bio);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
     }// end of method
@@ -101,12 +130,18 @@ public class DidascaliaIntegrationTest extends ATest {
     @Test
     public void giornoMorto() {
         previsto = "[[2015]] - [[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
-
         didascalia = didascaliaService.getDidascaliaGiornoMorto(bio);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testo);
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getGiornoMortoCon(bio);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
 
-        ottenuto = didascaliaService.getGiornoMorto(bio);
+        previsto = "[[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
+        didascalia = didascaliaService.getDidascaliaGiornoMorto(bio);
+        Assert.assertNotNull(didascalia);
+        assertEquals(previsto, didascalia.testoSenza);
+        ottenuto = didascaliaService.getGiornoMortoSenza(bio);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
     }// end of method
@@ -115,12 +150,18 @@ public class DidascaliaIntegrationTest extends ATest {
     @Test
     public void annoNato() {
         previsto = "[[21 febbraio]] - [[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
-
         didascalia = didascaliaService.getDidascaliaAnnoNato(bio);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testo);
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getAnnoNatoCon(bio);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
 
-        ottenuto = didascaliaService.getAnnoNato(bio);
+        previsto = "[[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
+        didascalia = didascaliaService.getDidascaliaAnnoNato(bio);
+        Assert.assertNotNull(didascalia);
+        assertEquals(previsto, didascalia.testoSenza);
+        ottenuto = didascaliaService.getAnnoNatoSenza(bio);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
     }// end of method
@@ -129,12 +170,18 @@ public class DidascaliaIntegrationTest extends ATest {
     @Test
     public void annoMorto() {
         previsto = "[[17 giugno]] - [[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
-
         didascalia = didascaliaService.getDidascaliaAnnoMorto(bio);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testo);
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getAnnoMortoCon(bio);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
 
-        ottenuto = didascaliaService.getAnnoMorto(bio);
+        previsto = "[[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
+        didascalia = didascaliaService.getDidascaliaAnnoMorto(bio);
+        Assert.assertNotNull(didascalia);
+        assertEquals(previsto, didascalia.testoSenza);
+        ottenuto = didascaliaService.getAnnoMortoSenza(bio);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
     }// end of method
@@ -143,26 +190,33 @@ public class DidascaliaIntegrationTest extends ATest {
     @Test
     public void liste() {
         previsto = "[[Ron Clarke]], mezzofondista e politico australiano ([[Melbourne]], n.[[1937]] - [[Gold Coast]], †[[2015]])";
-
         didascalia = didascaliaService.getDidascaliaListe(bio);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testo);
+        assertEquals(previsto, didascalia.testoCon);
 
-        ottenuto = didascaliaService.getListe(bio);
+        ottenuto = didascaliaService.getListeCon(bio);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
+
+        ottenuto = didascaliaService.getListeSenza(bio);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+
     }// end of method
 
 
     @Test
     public void biografie() {
         previsto = "[[Ron Clarke]] ([[Melbourne]], [[21 febbraio]][[1937]] - [[Gold Coast]], [[17 giugno]][[2015]]), mezzofondista e politico australiano";
-
         didascalia = didascaliaService.getDidascaliaBiografie(bio);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testo);
+        assertEquals(previsto, didascalia.testoCon);
 
-        ottenuto = didascaliaService.getBiografie(bio);
+        ottenuto = didascaliaService.getBiografieCon(bio);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+
+        ottenuto = didascaliaService.getBiografieSenza(bio);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
     }// end of method

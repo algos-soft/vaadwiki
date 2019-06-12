@@ -109,6 +109,8 @@ public abstract class APrefViewList extends AViewList {
         //--Specifico di ogni ViewList. Se non specificato è uguale alla preferenza. Default 50
         sogliaPagination = pref.getInt(FlowCost.SOGLIA_PAGINATION, 50);
 
+        //--Flag per la larghezza della Grid. Default a 75. Espressa come numero per comodità; poi viene convertita in "em".
+        gridWith = 75;
     }// end of method
 
 }// end of class

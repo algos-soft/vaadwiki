@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.Api;
@@ -93,5 +94,9 @@ public class UploadService extends ABioService {
         return status;
     } // fine del metodo
 
+
+    public UploadGiornoNato uploadGiornoNato(Giorno giorno) {
+       return appContext.getBean(UploadGiornoNato.class, giorno);
+    }// end of method
 
 }// end of class

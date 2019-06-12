@@ -7,7 +7,6 @@ import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -29,34 +28,45 @@ import java.util.ArrayList;
 public class ListaGiornoNato extends ListaGiorni {
 
 
-//    @Autowired
+    //    @Autowired
     protected DidascaliaGiornoNato didascaliaGiornoNato;
 
 
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
+     */
+    public ListaGiornoNato() {
+    }// end of constructor
+
 
     /**
-     * Costruttore <br>
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(UploadGiornoNato.class, giorno) <br>
+     *
+     * @param giorno di cui costruire la pagina sul server wiki
      */
-    public void ListaGiornoNato() {
-        int a = 87;
-    }// end of Spring constructor
+    public ListaGiornoNato(Giorno giorno) {
+        this.giorno = giorno;
+    }// end of constructor
 
 
-
-    /**
-     * Metodo invocato subito DOPO il costruttore
-     * <p>
-     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
-     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
-     * <p>
-     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
-     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
-     * Se ci sono superclassi e sottoclassi, chiama prima @PostConstruct della superclasse <br>
-     */
-    @PostConstruct
-    protected void inizia() {
-        int a = 87;
-    }// end of method
+//    /**
+//     * Metodo invocato subito DOPO il costruttore
+//     * <p>
+//     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+//     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+//     * <p>
+//     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+//     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+//     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+//     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
+//     */
+//    @PostConstruct
+//    protected void inizia() {
+//    }// end of method
 
 
     /**

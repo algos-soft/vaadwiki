@@ -121,9 +121,24 @@ public class LibBio {
     public static final String APICE = "'";
 
     /**
+     * tag di apertura e chiusura di 3 apici per effetto bold
+     */
+    public static final String BOLD = APICE + APICE + APICE;
+
+    /**
      * tag di apertura e chiusura di un paragrafo
      */
     public static final String PARAGRAFO = "==";
+
+    /**
+     * tag per il titolo di una lista cronologica
+     */
+    public static final String NATI = "Nati";
+
+    /**
+     * tag per il titolo di una lista cronologica
+     */
+    public static final String MORTI = "Morti";
 
     /**
      * Private final property
@@ -1197,6 +1212,19 @@ public class LibBio {
      */
     public static String setApici(String stringaIn) {
         return APICE + stringaIn.trim() + APICE;
+    } // fine del metodo
+
+
+    /**
+     * Aggiunge 3 apici in testa e coda alla stringa per avere l'effetto bold.
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con i 3 apici aggiunti
+     */
+    public static String setBold(String stringaIn) {
+        return BOLD + stringaIn.trim() + BOLD;
     } // fine del metodo
 
 
@@ -2566,5 +2594,117 @@ public class LibBio {
 
         return mappa;
     }// end of method
+
+
+    /**
+     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
+     */
+    public String getTitoloGiorno(String titolo, String tag) {
+        String titoloLista = VUOTA;
+        String articolo = "il";
+        String articoloBis = "l'";
+
+        tag = tag.trim();
+        if (!titolo.equals(VUOTA)) {
+            if (titolo.startsWith("8") || titolo.startsWith("11")) {
+                titoloLista = tag + SPAZIO + articoloBis + titolo;
+            } else {
+                titoloLista = tag + SPAZIO + articolo + SPAZIO + titolo;
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return titoloLista;
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nati da creare/caricare su wikipedia
+     */
+    public String getTitoloGiornoNato(String titolo) {
+        return getTitoloGiorno(titolo, NATI);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nati da creare/caricare su wikipedia
+     */
+    public String getTitoloGiornoNato(Giorno giorno) {
+        return getTitoloGiornoNato(giorno.getTitolo());
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Morti da creare/caricare su wikipedia
+     */
+    public String getTitoloGiornoMorto(String titolo) {
+        return getTitoloGiorno(titolo, MORTI);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Morti da creare/caricare su wikipedia
+     */
+    public String getTitoloGiornoMorto(Giorno giorno) {
+        return getTitoloGiornoMorto(giorno.getTitolo());
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
+     */
+    public String getTitoloAnno(String titolo, String tag) {
+        String titoloLista = VUOTA;
+        String articolo = "nel";
+        String articoloBis = "nell'";
+        String TAG_AC = " a.C.";
+
+        tag = tag.trim();
+        if (!titolo.equals(VUOTA)) {
+            if (titolo.equals("1")
+                    || titolo.equals("1" + TAG_AC)
+                    || titolo.equals("11")
+                    || titolo.equals("11" + TAG_AC)
+                    || titolo.startsWith("8")
+            ) {
+                titoloLista = tag + SPAZIO + articoloBis + titolo;
+            } else {
+                titoloLista = tag + SPAZIO + articolo + SPAZIO + titolo;
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return titoloLista;
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nati da creare/caricare su wikipedia
+     */
+    public String getTitoloAnnoNato(String titolo) {
+        return getTitoloAnno(titolo, NATI);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nati da creare/caricare su wikipedia
+     */
+    public String getTitoloAnnoNato(Anno anno) {
+        return getTitoloAnnoNato(anno.getTitolo());
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Morti da creare/caricare su wikipedia
+     */
+    public String getTitoloAnnoMorto(String titolo) {
+        return getTitoloAnno(titolo, MORTI);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Morti da creare/caricare su wikipedia
+     */
+    public String getTitoloAnnoMorto(Anno anno) {
+        return getTitoloAnnoMorto(anno.getTitolo());
+    }// fine del metodo
 
 }// end of class

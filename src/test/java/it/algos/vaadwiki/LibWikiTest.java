@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("libwiki")
 @DisplayName("Test per la libreria LibWiki")
 public class LibWikiTest extends ATest {
 

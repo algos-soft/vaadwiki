@@ -91,6 +91,7 @@ public class AFooter extends VerticalLayout {
 
         String message = "";
         Label label;
+        Label labelDebug;
         String sep = " - ";
         String spazio = " ";
         String tag = "all companies";
@@ -157,6 +158,15 @@ public class AFooter extends VerticalLayout {
         }// end of if cycle
 
         this.add(label);
+
+        if (pref.isBool(USA_DEBUG)) {
+            labelDebug= new Label("Sei in modalità DEBUG");
+            labelDebug.getStyle().set("font-size", "small");
+            labelDebug.getStyle().set("font-weight", "bold");
+            labelDebug.getElement().getStyle().set("color", "red");
+            this.add(labelDebug);
+        }// end of if cycle
+
     }// end of method
 
 

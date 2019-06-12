@@ -3,7 +3,6 @@ package it.algos.vaadwiki;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
-import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AReflectionService;
 import it.algos.vaadwiki.didascalia.*;
@@ -11,17 +10,18 @@ import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.download.PageService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
-import it.algos.vaadwiki.service.DidascaliaService;
+import it.algos.vaadwiki.didascalia.DidascaliaService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
+import name.falgout.jeffrey.testing.junit5.MockitoExtension;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -34,16 +34,19 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  * Time: 08:39
  */
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DataMongoTest
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = WikiApplication.class)
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//@DataMongoTest
+//@ExtendWith(SpringExtension.class)
+//@SpringBootTest(classes = WikiApplication.class)
 
 //@ExtendWith(MockitoExtension.class)
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 //@Tag("didascalia")
 //@DisplayName("Test per le didascalie")
-@Slf4j
+@ExtendWith(MockitoExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DisplayName("Test semplice per le didascalie")
+
 public class DidascaliaTest extends ATest {
 
 
@@ -51,8 +54,8 @@ public class DidascaliaTest extends ATest {
     public Api api;
 
 
-    @InjectMocks
-    public Didascalia didascalia;
+//    @InjectMocks
+//    public Didascalia didascalia;
 
     @InjectMocks
     public DidascaliaService didascaliaService;
@@ -60,7 +63,7 @@ public class DidascaliaTest extends ATest {
     @InjectMocks
     public DidascaliaGiornoNato giornoNato;
 
-//    @InjectMocks
+    @InjectMocks
     public DidascaliaAnnoNato annoNato;
 
     @InjectMocks
@@ -123,7 +126,7 @@ public class DidascaliaTest extends ATest {
 //        MockitoAnnotations.initMocks(mongoOperations);
 //        MockitoAnnotations.initMocks(mongoService);
         MockitoAnnotations.initMocks(text);
-        MockitoAnnotations.initMocks(didascalia);
+//        MockitoAnnotations.initMocks(didascalia);
         MockitoAnnotations.initMocks(giornoNato);
         MockitoAnnotations.initMocks(annoNato);
         MockitoAnnotations.initMocks(giornoMorto);
@@ -146,7 +149,7 @@ public class DidascaliaTest extends ATest {
 //        mongoService.mongoOp = mongoOperations;
 //        mongoService.reflection = reflection;
 //        mongoService.text = text;
-        didascalia.text = text;
+//        didascalia.text = text;
         giornoNato.annoService = annoService;
         giornoNato.text = text;
         annoNato.text = text;
@@ -210,12 +213,12 @@ public class DidascaliaTest extends ATest {
     }// end of single test
 
 
-    /**
-     * Pagina completa con uscita su pagina utente
-     */
-    @Test
-    public void esegueTestUplod() {
-        didascaliaService.esegue();
-    }// end of single test
+//    /**
+//     * Pagina completa con uscita su pagina utente
+//     */
+//    @Test
+//    public void esegueTestUplod() {
+//        didascaliaService.esegue();
+//    }// end of single test
 
 }// end of class
