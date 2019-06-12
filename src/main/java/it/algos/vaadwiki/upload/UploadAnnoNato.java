@@ -58,7 +58,7 @@ public class UploadAnnoNato extends UploadAnni {
      */
     @Override
     protected void creaMappaDidascalie() {
-        mappaDidascalie = listaAnnoNato.esegue(anno);
+//        mappaDidascalie = listaAnnoNato.esegue(anno);
         super.creaMappaDidascalie();
     }// fine del metodo
 

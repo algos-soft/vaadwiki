@@ -1,6 +1,5 @@
 package it.algos.vaadwiki.liste;
 
-import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
 
 import java.util.ArrayList;
@@ -26,16 +25,6 @@ public class ViewGiornoNato extends ViewGiorni {
 
 
     /**
-     * Recupera il giorno arrivato come parametro nella chiamata del browser effettuata da @Route <br>
-     */
-    @Override
-    public void setParameter(BeforeEvent event, String giornoIdKey) {
-        super.giorno = giornoService.findById(giornoIdKey);
-        this.inizia();
-    }// end of method
-
-
-    /**
      * Costruisce una mappa di tutte le didascalie relative al giorno considerato <br>
      * Presenta le righe secondo uno dei possibili metodi di raggruppamento <br>
      * Deve essere sovrascritto nella sottoclassse concreta <br>
@@ -47,6 +36,7 @@ public class ViewGiornoNato extends ViewGiorni {
         mappa = listaService.getMappaGiornoNato(giorno);
         super.testo = listaService.righeSemplici(mappa);
 
+        super.numVoci = listaService.getMappaSize(mappa);
         super.inizia();
     }// end of method
 
@@ -56,8 +46,9 @@ public class ViewGiornoNato extends ViewGiorni {
      * Sovrascritto <br>
      */
     protected void addTitolo() {
-        String titolo = "Lista di biografie di persone nate il " + giorno.getTitolo() + A_CAPO + A_CAPO;
+        String titolo = "Lista biografie di " + text.format(numVoci) + " persone nate il " + giorno.getTitolo() + A_CAPO + A_CAPO;
         super.testo = titolo + super.testo;
     }// end of method
+
 
 }// end of class

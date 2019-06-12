@@ -24,12 +24,11 @@ import java.util.ArrayList;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Slf4j
 public class ListaGiornoMorto extends ListaGiorni {
 
 
 //    @Autowired
-    protected DidascaliaGiornoMorto didascaliaGiornoMorto;
+//    protected DidascaliaGiornoMorto didascaliaGiornoMorto;
 
     /**
      * Costruttore base senza parametri <br>
@@ -43,23 +42,16 @@ public class ListaGiornoMorto extends ListaGiorni {
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(UploadGiornoNato.class, giorno) <br>
+     * Usa: appContext.getBean(ListaGiornoNato.class, giorno) <br>
      *
      * @param giorno di cui costruire la pagina sul server wiki
      */
     public ListaGiornoMorto(Giorno giorno) {
-        this.giorno = giorno;
+        super(giorno);
     }// end of constructor
 
     /**
-     * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoNato
-     * oppure
-     * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoMorto
-     * oppure
-     * Recupera una lista (array) di records Bio che usano questa istanza di Anno nella property annoNato
-     * oppure
-     * Recupera una lista (array) di records Bio che usano questa istanza di Anno nella property annoMorto
-     * <p>
+     * Recupera una lista (array) di records Bio che usano questa istanza di giorno/anno nella property nato/morto
      * Sovrascritto nella sottoclasse concreta
      *
      * @return lista delle istanze di Bio che usano questo istanza nella property appropriata
@@ -68,6 +60,7 @@ public class ListaGiornoMorto extends ListaGiorni {
     public ArrayList<Bio> listaBio() {
         return bioService.findAllByGiornoMorto(giorno.titolo);
     }// fine del metodo
+
 
     /**
      * Costruisce una lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>

@@ -84,8 +84,8 @@ public class UploadGiornoMorto extends UploadGiorni {
      */
     @Override
     protected void creaMappaDidascalie() {
-        mappaDidascalie = listaGiornoMorto.esegue(giorno);
-        super.creaMappaDidascalie();
+//        mappaDidascalie = listaGiornoMorto.esegue(giorno);
+//        super.creaMappaDidascalie();
     }// fine del metodo
 
 

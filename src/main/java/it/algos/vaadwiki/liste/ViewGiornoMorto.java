@@ -1,9 +1,6 @@
 package it.algos.vaadwiki.liste;
 
-import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
-import it.algos.vaadwiki.upload.UploadGiornoMorto;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,15 +23,6 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_GIORNO_MORTI;
 @Route(value = ROUTE_VIEW_GIORNO_MORTI)
 public class ViewGiornoMorto extends ViewGiorni {
 
-    /**
-     * Recupera il giorno arrivato come parametro nella chiamata del browser effettuata da @Route <br>
-     */
-    @Override
-    public void setParameter(BeforeEvent event, String giornoIdKey) {
-        super.giorno = giornoService.findById(giornoIdKey);
-        this.inizia();
-    }// end of method
-
 
     /**
      * Costruisce una mappa di tutte le didascalie relative al giorno considerato <br>
@@ -48,6 +36,7 @@ public class ViewGiornoMorto extends ViewGiorni {
         mappa = listaService.getMappaGiornoMorto(giorno);
         super.testo = listaService.righeSemplici(mappa);
 
+        super.numVoci = listaService.getMappaSize(mappa);
         super.inizia();
     }// end of method
 
@@ -57,10 +46,9 @@ public class ViewGiornoMorto extends ViewGiorni {
      * Sovrascritto <br>
      */
     protected void addTitolo() {
-        String titolo = "Lista di biografie di persone morte il " + giorno.getTitolo() + "\n";
+        String titolo = "Lista biografie di " + text.format(numVoci) + " persone morte il " + giorno.getTitolo() + A_CAPO + A_CAPO;
         super.testo = titolo + super.testo;
     }// end of method
-
 
 
 }// end of class

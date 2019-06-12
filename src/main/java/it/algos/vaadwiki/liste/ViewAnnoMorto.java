@@ -1,16 +1,12 @@
 package it.algos.vaadwiki.liste;
 
-import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
-import it.algos.vaadwiki.upload.UploadAnnoMorto;
-import it.algos.vaadwiki.upload.UploadAnnoNato;
-import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
-import static it.algos.vaadwiki.application.WikiCost.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
+import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_ANNO_MORTI;
 
 /**
  * Project vaadwiki
@@ -27,28 +23,30 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Route(value = ROUTE_VIEW_ANNO_MORTI)
 public class ViewAnnoMorto extends ViewAnni {
 
-    @Autowired
-    private UploadAnnoMorto uploadAnnoMorto;
 
-
-    @Override
-    public void setParameter(BeforeEvent event, String giornoIdKey) {
-//        super.idKey = giornoIdKey;
-        this.inizia();
-    }// end of method
-
-
+    /**
+     * Costruisce una mappa di tutte le didascalie relative al giorno considerato <br>
+     * Presenta le righe secondo uno dei possibili metodi di raggruppamento <br>
+     * Deve essere sovrascritto nella sottoclassse concreta <br>
+     * Dopo deve invocare il metodo della superclasse <br>
+     */
     public void inizia() {
-//        anno = annoService.findById(idKey);
-//        uploadAnnoMorto.esegueTest(anno);
-//        testo = uploadAnnoMorto.getTesto();
+        LinkedHashMap<String, ArrayList<String>> mappa;
 
+        mappa = listaService.getMappaAnnoMorto(anno);
+        super.testo = listaService.righeSemplici(mappa);
+
+        super.numVoci = listaService.getMappaSize(mappa);
         super.inizia();
     }// end of method
 
 
+    /**
+     * Costruisce il titolo della pagina <br>
+     * Sovrascritto <br>
+     */
     protected void addTitolo() {
-        String titolo = "Lista di biografie di persone morte nel " + anno.getTitolo() + "\n";
+        String titolo = "Lista biografie di " + text.format(numVoci) + " persone morte nel " + anno.getTitolo() + A_CAPO + A_CAPO;
         testo = titolo + testo;
     }// end of method
 

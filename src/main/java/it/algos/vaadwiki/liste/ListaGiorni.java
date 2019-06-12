@@ -2,19 +2,7 @@ package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.giorno.Giorno;
-import it.algos.vaadwiki.didascalia.EADidascalia;
-import it.algos.vaadwiki.didascalia.WrapDidascalia;
-import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 
 /**
  * Project vaadwiki
@@ -26,44 +14,32 @@ import java.util.LinkedHashMap;
  * <p>
  * Crea le liste dei nati o dei morti nel giorno
  */
-@SpringComponent
-@Slf4j
 public abstract class ListaGiorni extends Lista {
 
-
+    //--property
     protected Giorno giorno;
 
 
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
+     */
+    public ListaGiorni() {
+    }// end of constructor
+
 
     /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(UploadGiornoNato.class, giorno) <br>
+     * Usa: appContext.getBean(UploadGiornoMorto.class, giorno) <br>
      *
-     * @param giorno di riferimento per la lista
-     *
-     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+     * @param giorno di cui costruire la pagina sul server wiki
      */
-    public LinkedHashMap<String, ArrayList<String>> esegue(Giorno giorno) {
+    public ListaGiorni(Giorno giorno) {
         this.giorno = giorno;
-        return super.esegue();
-    }// fine del metodo
-
-
-    /**
-     * Costruisce una lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
-     * La lista NON è ordinata <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     *
-     * @param listaGrezzaBio di persone che hanno una valore valido per la pagina specifica
-     *
-     * @return lista NON ORDINATA di didascalie (Wrap)
-     */
-    @Override
-    public ArrayList<WrapDidascalia> creaListaDidascalie(ArrayList<Bio> listaGrezzaBio) {
-        return null;
-    }// fine del metodo
+    }// end of constructor
 
 
 }// end of class

@@ -176,22 +176,22 @@ public class WrapDidascalia {
             case giornoNato:
                 didascalia = didascaliaService.getDidascaliaGiornoNato(bio);
                 this.chiave = bio.getAnnoNato();
-//                giornoNato();
+                this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
                 break;
             case giornoMorto:
                 didascalia = didascaliaService.getDidascaliaGiornoMorto(bio);
                 this.chiave = bio.getAnnoMorto();
-//                giornoMorto();
+                this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
                 break;
             case annoNato:
                 didascalia = didascaliaService.getDidascaliaAnnoNato(bio);
                 this.chiave = bio.getGiornoNato();
-//                annoNato();
+                this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
                 break;
             case annoMorto:
                 didascalia = didascaliaService.getDidascaliaAnnoMorto(bio);
                 this.chiave = bio.getGiornoMorto();
-//                annoMorto();
+                this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
                 break;
             case liste:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
@@ -209,7 +209,6 @@ public class WrapDidascalia {
         } // end of switch statement
 
         this.riferimento = bio.getGiornoNato();
-        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
         String wikiTitle = bio.getWikiTitle();
         String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
         this.sottoChiave = cognome + wikiTitle;

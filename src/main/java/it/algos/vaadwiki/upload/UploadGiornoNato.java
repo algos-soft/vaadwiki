@@ -90,7 +90,7 @@ public class UploadGiornoNato extends UploadGiorni {
     @Override
     protected void creaMappaDidascalie() {
 //        listaGiornoNato = appContext.getBean(ListaGiornoNato.class, giorno);
-        mappaDidascalie = listaGiornoNato.esegue(giorno);
+//        mappaDidascalie = listaGiornoNato.esegue(giorno);
         super.creaMappaDidascalie();
     }// fine del metodo
 

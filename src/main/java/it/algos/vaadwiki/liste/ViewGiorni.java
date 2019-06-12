@@ -1,9 +1,8 @@
 package it.algos.vaadwiki.liste;
 
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.router.BeforeEvent;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
-import it.algos.vaadwiki.modules.wiki.WikiGiornoViewList;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -32,5 +31,16 @@ public abstract class ViewGiorni extends ViewListe {
 
     protected Giorno giorno;
 
+
+    /**
+     * Recupera il giorno arrivato come parametro nella chiamata del browser effettuata da @Route <br>
+     *
+     * @param giornoIdKey per recuperare l'istanza di Giorno
+     */
+    @Override
+    public void setParameter(BeforeEvent event, String giornoIdKey) {
+        this.giorno = giornoService.findById(giornoIdKey);
+        this.inizia();
+    }// end of method
 
 }// end of class

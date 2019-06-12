@@ -68,21 +68,6 @@ public abstract class Lista {
     protected BioService bioService;
 
 
-//    /**
-//     * Costruisce una 'lista' di biografie che hanno una valore valido per per questa pagina specifica (Giorno o Anno)
-//     * Costruisce una mappa ordinata che ha come chiave il giorno o l'anno e come valore la didascalia
-//     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere ed ordinare la 'lista'
-//     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome
-//     *
-//     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
-//     */
-//    public LinkedHashMap<Integer, ArrayList<String>> esegueOld() {
-//        listaGrezzaBio = listaBio();
-//        mappaOrdinataBio = ordina(listaGrezzaBio);
-//        return elaboraDidascalie(mappaOrdinataBio);
-//    }// fine del metodo
-
-
     /**
      * Metodo invocato subito DOPO il costruttore
      * <p>
@@ -98,6 +83,7 @@ public abstract class Lista {
     protected void inizia() {
         this.esegue();
     }// end of method
+
 
     /**
      * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>

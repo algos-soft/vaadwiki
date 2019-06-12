@@ -1,13 +1,11 @@
 package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.didascalia.DidascaliaAnnoNato;
-import it.algos.vaadwiki.didascalia.DidascaliaGiornoNato;
+import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -19,25 +17,37 @@ import java.util.ArrayList;
  * User: gac
  * Date: gio, 24-gen-2019
  * Time: 10:33
+ * <p>
+ * Crea la lista dei nati nell'anno
  */
-//@SpringComponent
-//@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Slf4j
+@SpringComponent
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ListaAnnoNato extends ListaAnni {
 
 
-//    @Autowired
-    protected DidascaliaAnnoNato didascaliaAnnoNato;
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
+     */
+    public ListaAnnoNato() {
+    }// end of constructor
+
 
     /**
-     * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoNato
-     * oppure
-     * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoMorto
-     * oppure
-     * Recupera una lista (array) di records Bio che usano questa istanza di Anno nella property annoNato
-     * oppure
-     * Recupera una lista (array) di records Bio che usano questa istanza di Anno nella property annoMorto
-     * <p>
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(ListaAnnoNato.class, anno) <br>
+     *
+     * @param anno di cui costruire la pagina sul server wiki
+     */
+    public ListaAnnoNato(Anno anno) {
+        super(anno);
+    }// end of constructor
+
+
+    /**
+     * Recupera una lista (array) di records Bio che usano questa istanza di giorno/anno nella property nato/morto
      * Sovrascritto nella sottoclasse concreta
      *
      * @return lista delle istanze di Bio che usano questo istanza nella property appropriata

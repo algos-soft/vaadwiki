@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.HasUrlParameter;
 import it.algos.vaadflow.service.ADateService;
+import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.upload.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -43,6 +44,13 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
      */
     @Autowired
     protected ListaService listaService;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected ATextService text;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -54,6 +62,7 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
     protected String testo;
 
+    protected int numVoci;
 
     /**
      * Costruisce una mappa di tutte le didascalie relative al giorno considerato <br>

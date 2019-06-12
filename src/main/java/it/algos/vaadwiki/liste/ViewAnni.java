@@ -1,18 +1,8 @@
 package it.algos.vaadwiki.liste;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.BeforeEvent;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
-import it.algos.vaadflow.service.ADateService;
-import it.algos.vaadwiki.modules.wiki.WikiAnnoViewList;
-import it.algos.vaadwiki.modules.wiki.WikiGiornoViewList;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -31,15 +21,26 @@ public abstract class ViewAnni extends ViewListe {
 
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected AnnoService annoService;
 
 
-
     protected Anno anno;
 
 
+    /**
+     * Recupera il giorno arrivato come parametro nella chiamata del browser effettuata da @Route <br>
+     *
+     * @param annoIdKey per recuperare l'istanza di Anno
+     */
+    @Override
+    public void setParameter(BeforeEvent event, String annoIdKey) {
+        this.anno = annoService.findById(annoIdKey);
+        this.inizia();
+    }// end of method
 
 }// end of class
