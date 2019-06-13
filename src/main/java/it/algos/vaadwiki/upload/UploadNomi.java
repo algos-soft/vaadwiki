@@ -72,10 +72,10 @@ public class UploadNomi extends Upload {
      * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
      */
     @Override
-    protected void creaMappaDidascalie() {
+    protected void elaboraMappaDidascalie() {
         listaNomi = appContext.getBean(ListaNomi.class, nome);
         mappaDidascalie = listaNomi.mappa;
-        super.creaMappaDidascalie();
+        super.elaboraMappaDidascalie();
     }// fine del metodo
 
 

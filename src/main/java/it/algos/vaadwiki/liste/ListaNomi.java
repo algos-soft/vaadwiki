@@ -44,7 +44,7 @@ public class ListaNomi extends Lista {
      */
     @PostConstruct
     protected void inizia() {
-        super.esegue();
+//        super.esegue();
     }// end of method
 
 //    /**

@@ -81,7 +81,7 @@ public abstract class Lista {
      */
     @PostConstruct
     protected void inizia() {
-        this.esegue();
+        this.creaMappaIniziale();
     }// end of method
 
 
@@ -93,17 +93,13 @@ public abstract class Lista {
      *
      * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
      */
-    public LinkedHashMap<String, ArrayList<String>> esegue() {
-        LinkedHashMap<String, ArrayList<String>> mappa = null;
+    public void creaMappaIniziale() {
         ArrayList<WrapDidascalia> lista = null;
 
         listaGrezzaBio = listaBio();
         lista = creaListaDidascalie(listaGrezzaBio);
         ordinaListaDidascalie(lista);
         mappa = creaMappa(lista);
-
-        this.mappa = mappa;
-        return mappa;
     }// fine del metodo
 
 

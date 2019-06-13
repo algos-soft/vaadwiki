@@ -209,6 +209,13 @@ public abstract class Upload {
     @Autowired
     protected UploadService uploadService;
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected LibBio libBio;
+
 
     protected boolean usaHeadTemplateAvviso; // uso del template StatBio
 
@@ -262,7 +269,7 @@ public abstract class Upload {
     public void esegue() {
         elaboraParametri();
         elaboraTitolo();
-        creaMappaDidascalie();
+        elaboraMappaDidascalie();
         elaboraPagina(true);
     }// end of method
 
@@ -273,7 +280,7 @@ public abstract class Upload {
     public void esegueTest() {
         elaboraParametri();
         elaboraTitolo();
-        creaMappaDidascalie();
+        elaboraMappaDidascalie();
         elaboraPagina(false);
     }// end of method
 
@@ -320,7 +327,7 @@ public abstract class Upload {
      * Sovrascritto nella sottoclasse concreta <br>
      * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
      */
-    protected void creaMappaDidascalie() {
+    protected void elaboraMappaDidascalie() {
         int num = 0;
 
         if (mappaDidascalie != null) {

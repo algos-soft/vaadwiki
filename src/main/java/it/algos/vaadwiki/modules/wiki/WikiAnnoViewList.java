@@ -65,10 +65,10 @@ public class WikiAnnoViewList extends WikiViewList {
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
 
-    @Autowired
+//    @Autowired
     private UploadAnnoNato uploadAnnoNato;
 
-    @Autowired
+//    @Autowired
     private UploadAnnoMorto uploadAnnoMorto;
 
 
@@ -225,7 +225,7 @@ public class WikiAnnoViewList extends WikiViewList {
     protected Button createUploadNatoButton(Anno entityBean) {
         uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.UPLOAD));
         uploadOneNatoButton.getElement().setAttribute("theme", "error");
-        uploadOneNatoButton.addClickListener(e -> uploadAnnoNato.esegue(entityBean));
+        uploadOneNatoButton.addClickListener(e -> uploadService.uploadAnnoNato(entityBean));
         return uploadOneNatoButton;
     }// end of method
 
@@ -233,7 +233,7 @@ public class WikiAnnoViewList extends WikiViewList {
     protected Button createUploadMortoButton(Anno entityBean) {
         uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.UPLOAD));
         uploadOneMortoButton.getElement().setAttribute("theme", "error");
-        uploadOneMortoButton.addClickListener(e -> uploadAnnoMorto.esegue(entityBean));
+        uploadOneMortoButton.addClickListener(e -> uploadService.uploadAnnoMorto(entityBean));
         return uploadOneMortoButton;
     }// end of method
 
@@ -249,14 +249,14 @@ public class WikiAnnoViewList extends WikiViewList {
 
 
     protected void wikiPageNato(Anno anno) {
-        String link = "\"" + PATH_WIKI + uploadAnnoNato.getTitoloPagina(anno) + "\"";
-        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+//        String link = "\"" + PATH_WIKI + uploadAnnoNato.getTitoloPagina(anno) + "\"";
+//        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 
     protected void wikiPageMorto(Anno anno) {
-        String link = "\"" + PATH_WIKI + uploadAnnoMorto.getTitoloPagina(anno) + "\"";
-        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+//        String link = "\"" + PATH_WIKI + uploadAnnoMorto.getTitoloPagina(anno) + "\"";
+//        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 

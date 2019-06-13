@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
-
 import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
@@ -34,10 +32,6 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 public class UploadGiornoNato extends UploadGiorni {
 
 
-    //    @Autowired
-    protected ListaGiornoNato listaGiornoNato;
-
-
     /**
      * Costruttore base senza parametri <br>
      * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
@@ -55,10 +49,8 @@ public class UploadGiornoNato extends UploadGiorni {
      * @param giorno di cui costruire la pagina sul server wiki
      */
     public UploadGiornoNato(Giorno giorno) {
-        this.giorno = giorno;
+        super(giorno);
     }// end of constructor
-
-
 
 
     /**
@@ -77,7 +69,7 @@ public class UploadGiornoNato extends UploadGiorni {
      * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
      */
     public String getTitoloPagina(Giorno giorno) {
-        return super.getTitoloPagina(giorno, "Nati");
+        return libBio.getTitoloGiornoNato(giorno);
     }// fine del metodo
 
 
@@ -88,10 +80,10 @@ public class UploadGiornoNato extends UploadGiorni {
      * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
      */
     @Override
-    protected void creaMappaDidascalie() {
-//        listaGiornoNato = appContext.getBean(ListaGiornoNato.class, giorno);
-//        mappaDidascalie = listaGiornoNato.esegue(giorno);
-        super.creaMappaDidascalie();
+    protected void elaboraMappaDidascalie() {
+        ListaGiornoNato listaGiornoNato = appContext.getBean(ListaGiornoNato.class, giorno);
+        mappaDidascalie = listaGiornoNato.mappa;
+        super.elaboraMappaDidascalie();
     }// fine del metodo
 
 

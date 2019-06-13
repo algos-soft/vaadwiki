@@ -7,8 +7,6 @@ import it.algos.vaadwiki.liste.ListaGiornoMorto;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -33,8 +31,6 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 @Slf4j
 public class UploadGiornoMorto extends UploadGiorni {
 
-//    @Autowired
-    protected ListaGiornoMorto listaGiornoMorto;
 
     /**
      * Costruttore base senza parametri <br>
@@ -48,13 +44,14 @@ public class UploadGiornoMorto extends UploadGiorni {
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(UploadGiornoNato.class, giorno) <br>
+     * Usa: appContext.getBean(UploadGiornoMorto.class, giorno) <br>
      *
      * @param giorno di cui costruire la pagina sul server wiki
      */
     public UploadGiornoMorto(Giorno giorno) {
-        this.giorno = giorno;
+        super(giorno);
     }// end of constructor
+
 
     /**
      * Titolo della pagina da creare/caricare su wikipedia
@@ -72,7 +69,7 @@ public class UploadGiornoMorto extends UploadGiorni {
      * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
      */
     public String getTitoloPagina(Giorno giorno) {
-        return super.getTitoloPagina(giorno, "Morti");
+        return libBio.getTitoloGiornoMorto(giorno);
     }// fine del metodo
 
 
@@ -83,9 +80,10 @@ public class UploadGiornoMorto extends UploadGiorni {
      * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
      */
     @Override
-    protected void creaMappaDidascalie() {
-//        mappaDidascalie = listaGiornoMorto.esegue(giorno);
-//        super.creaMappaDidascalie();
+    protected void elaboraMappaDidascalie() {
+        ListaGiornoMorto listaGiornoMorto = appContext.getBean(ListaGiornoMorto.class, giorno);
+        mappaDidascalie = listaGiornoMorto.mappa;
+        super.elaboraMappaDidascalie();
     }// fine del metodo
 
 

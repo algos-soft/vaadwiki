@@ -13,7 +13,9 @@ import it.algos.vaadflow.ui.ACronoViewList;
 import it.algos.vaadflow.ui.dialog.AConfirmDialog;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -37,6 +39,14 @@ public abstract class WikiViewList extends ACronoViewList {
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected UploadService uploadService;
 
     protected Button uploadAllButton;
 

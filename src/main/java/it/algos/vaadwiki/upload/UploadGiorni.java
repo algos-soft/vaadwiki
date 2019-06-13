@@ -35,39 +35,31 @@ public abstract class UploadGiorni extends Upload {
     protected Giorno giorno;
 
     //    @Autowired
-    private UploadGiornoNato uploadGiornoNato;
+//    private UploadGiornoNato uploadGiornoNato;
 
     //    @Autowired
-    private UploadGiornoMorto uploadGiornoMorto;
-
+//    private UploadGiornoMorto uploadGiornoMorto;
 
     /**
-     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
      */
-    public void esegueAll() {
-        ArrayList<Giorno> listaGiorni = giornoService.findAll();
-        long inizio = System.currentTimeMillis();
-        int modNati = 0;
-        int modMorti = 0;
-        String modTxt;
+    public UploadGiorni() {
+    }// end of constructor
 
-        for (Giorno giorno : listaGiorni) {
-            uploadGiornoNato.esegue(giorno);
-            modNati++;
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(UploadGiornoNato.class, giorno) <br>
+     * Usa: appContext.getBean(UploadGiornoMorto.class, giorno) <br>
+     *
+     * @param giorno di cui costruire la pagina sul server wiki
+     */
+    public UploadGiorni(Giorno giorno) {
+        this.giorno = giorno;
+    }// end of constructor
 
-            uploadGiornoMorto.esegue(giorno);
-            modMorti++;
-        }// end of for cycle
-
-//        if (Pref.getBool(CostBio.USA_LOG_DEBUG, false)) {
-//            modTxt = LibNum.format(modNati) + "+" + LibNum.format(modMorti);
-//            if (Pref.getBool(CostBio.USA_REGISTRA_SEMPRE_CRONO, true)) {
-//                Log.debug("upload", "Aggiornate tutte (366*2) le pagine dei giorni (nati e morti) in " + LibTime.difText(inizio));
-//            } else {
-//                Log.debug("upload", "Aggiornate solo le pagine modificate (" + modTxt + ") dei giorni (nati e morti) in " + LibTime.difText(inizio));
-//            }// end of if/else cycle
-//        }// end of if cycle
-    }// end of method
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -84,6 +76,37 @@ public abstract class UploadGiorni extends Upload {
     protected void inizia() {
         esegue(giorno);
     }// fine del metodo
+
+
+
+    /**
+     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
+     */
+    public void esegueAll() {
+        ArrayList<Giorno> listaGiorni = giornoService.findAll();
+        long inizio = System.currentTimeMillis();
+        int modNati = 0;
+        int modMorti = 0;
+        String modTxt;
+
+        for (Giorno giorno : listaGiorni) {
+//            uploadGiornoNato.esegue(giorno);
+            modNati++;
+
+//            uploadGiornoMorto.esegue(giorno);
+            modMorti++;
+        }// end of for cycle
+
+//        if (Pref.getBool(CostBio.USA_LOG_DEBUG, false)) {
+//            modTxt = LibNum.format(modNati) + "+" + LibNum.format(modMorti);
+//            if (Pref.getBool(CostBio.USA_REGISTRA_SEMPRE_CRONO, true)) {
+//                Log.debug("upload", "Aggiornate tutte (366*2) le pagine dei giorni (nati e morti) in " + LibTime.difText(inizio));
+//            } else {
+//                Log.debug("upload", "Aggiornate solo le pagine modificate (" + modTxt + ") dei giorni (nati e morti) in " + LibTime.difText(inizio));
+//            }// end of if/else cycle
+//        }// end of if cycle
+    }// end of method
+
 
     /**
      * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
@@ -140,27 +163,6 @@ public abstract class UploadGiorni extends Upload {
         return "";
     }// fine del metodo
 
-
-    /**
-     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
-     */
-    public String getTitoloPagina(Giorno giorno, String tag) {
-        String titoloLista = VUOTA;
-        String articolo = "il";
-        String articoloBis = "l'";
-        String titolo = giorno.getTitolo();
-
-        tag = tag.trim();
-        if (!titolo.equals(VUOTA)) {
-            if (titolo.startsWith("8") || titolo.startsWith("11")) {
-                titoloLista = tag + SPAZIO + articoloBis + titolo;
-            } else {
-                titoloLista = tag + SPAZIO + articolo + SPAZIO + titolo;
-            }// fine del blocco if-else
-        }// fine del blocco if
-
-        return titoloLista;
-    }// fine del metodo
 
 
     /**

@@ -7,7 +7,6 @@ import it.algos.vaadwiki.liste.ListaAnnoMorto;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -20,14 +19,38 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * User: gac
  * Date: gio, 24-gen-2019
  * Time: 17:22
+ * <p>
+ * Classe specializzata per caricare (upload) le liste sul server wiki. <br>
+ * <p>
+ * Viene chiamato da Scheduler (con frequenza giornaliera ?) <br>
+ * Può essere invocato dal bottone 'Upload all' della classe WikiAnnoViewList <br>
+ * Necessita del login come bot <br>
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
 public class UploadAnnoMorto extends UploadAnni {
 
-//    @Autowired
-    protected ListaAnnoMorto listaAnnoMorto;
+
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
+     */
+    public UploadAnnoMorto() {
+    }// end of constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(UploadAnnoNato.class, anno) <br>
+     *
+     * @param anno di cui costruire la pagina sul server wiki
+     */
+    public UploadAnnoMorto(Anno anno) {
+        super(anno);
+    }// end of constructor
 
 
     /**
@@ -37,7 +60,7 @@ public class UploadAnnoMorto extends UploadAnni {
     @Override
     protected void elaboraTitolo() {
         if (anno != null) {
-            titoloPagina = getTitoloPagina(anno, "Morti");
+            titoloPagina = getTitoloPagina(anno);
         }// fine del blocco if
     }// fine del metodo
 
@@ -47,8 +70,9 @@ public class UploadAnnoMorto extends UploadAnni {
      * Sovrascritto
      */
     public String getTitoloPagina(Anno anno) {
-        return super.getTitoloPagina(anno, "Morti");
+        return libBio.getTitoloAnnoMorto(anno);
     }// fine del metodo
+
 
     /**
      * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
@@ -57,10 +81,12 @@ public class UploadAnnoMorto extends UploadAnni {
      * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
      */
     @Override
-    protected void creaMappaDidascalie() {
-//        mappaDidascalie = listaAnnoMorto.esegue(anno);
-        super.creaMappaDidascalie();
+    protected void elaboraMappaDidascalie() {
+        ListaAnnoMorto listaAnnoMorto = appContext.getBean(ListaAnnoMorto.class, anno);
+        mappaDidascalie = listaAnnoMorto.mappa;
+        super.elaboraMappaDidascalie();
     }// fine del metodo
+
 
     /**
      * Piede della pagina

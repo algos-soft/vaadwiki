@@ -64,13 +64,6 @@ public class WikiGiornoViewList extends WikiViewList {
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected UploadService uploadService;
 
     //    @Autowired
     private UploadGiornoNato uploadGiornoNato;
@@ -240,7 +233,7 @@ public class WikiGiornoViewList extends WikiViewList {
     protected Button createUploadMortoButton(Giorno entityBean) {
         uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.UPLOAD));
         uploadOneMortoButton.getElement().setAttribute("theme", "error");
-//        uploadOneMortoButton.addClickListener(e -> uploadGiornoMorto.esegue(entityBean));
+        uploadOneMortoButton.addClickListener(e -> uploadService.uploadGiornoMorto(entityBean));
         return uploadOneMortoButton;
     }// end of method
 

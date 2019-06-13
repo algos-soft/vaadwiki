@@ -1,15 +1,11 @@
 package it.algos.vaadwiki.upload;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 
 import static it.algos.vaadflow.application.FlowCost.*;
@@ -20,12 +16,17 @@ import static it.algos.vaadflow.application.FlowCost.*;
  * User: gac
  * Date: gio, 17-gen-2019
  * Time: 19:05
+ * <p>
+ * Classe specializzata per caricare (upload) le liste sul server wiki. <br>
+ * <p>
+ * Viene chiamato da Scheduler (con frequenza giornaliera ?) <br>
+ * Può essere invocato dal bottone 'Upload all' della classe WikiAnnoViewList <br>
+ * <p>
+ * Necessita del login come bot <br>
+ * Sovrascritta nelle sottoclassi concrete <br>
+ * Not annotated with @SpringComponent (sbagliato) perché è una classe astratta <br>
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier("bbb")
-@Slf4j
-public class UploadAnni extends Upload {
+public abstract class UploadAnni extends Upload {
 
     protected String titoloAnno;
 
@@ -34,12 +35,44 @@ public class UploadAnni extends Upload {
 
     protected Anno anno;
 
-    @Autowired
-    private UploadAnnoNato uploadAnnoNato;
 
-    @Autowired
-    private UploadAnnoMorto uploadAnnoMorto;
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
+     */
+    public UploadAnni() {
+    }// end of constructor
 
+
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(UploadAnnoNato.class, giorno) <br>
+     * Usa: appContext.getBean(UploadAnnoMorto.class, giorno) <br>
+     *
+     * @param anno di cui costruire la pagina sul server wiki
+     */
+    public UploadAnni(Anno anno) {
+        this.anno = anno;
+    }// end of constructor
+
+
+    /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
+     */
+    @PostConstruct
+    protected void inizia() {
+        esegue(anno);
+    }// fine del metodo
 
 
     /**
@@ -53,10 +86,10 @@ public class UploadAnni extends Upload {
         String modTxt;
 
         for (Anno anno : listaAnni) {
-            uploadAnnoNato.esegue(anno);
+//            uploadAnnoNato.esegue(anno);
             modNati++;
 
-            uploadAnnoMorto.esegue(anno);
+//            uploadAnnoMorto.esegue(anno);
             modMorti++;
         }// end of for cycle
 
@@ -117,6 +150,7 @@ public class UploadAnni extends Upload {
         return titolo;
     }// fine del metodo
 
+
     /**
      * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
      * Sovrascritto
@@ -125,32 +159,7 @@ public class UploadAnni extends Upload {
         return "";
     }// fine del metodo
 
-    /**
-     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
-     */
-    public String getTitoloPagina(Anno anno, String tag) {
-        String titoloLista = VUOTA;
-        String articolo = "nel";
-        String articoloBis = "nell'";
-        String titolo = anno.getTitolo();
-        String TAG_AC = " a.C.";
 
-        tag = tag.trim();
-        if (!titolo.equals(VUOTA)) {
-            if (titolo.equals("1")
-                    || titolo.equals("1" + TAG_AC)
-                    || titolo.equals("11")
-                    || titolo.equals("11" + TAG_AC)
-                    || titolo.startsWith("8")
-            ) {
-                titoloLista = tag + SPAZIO + articoloBis + titolo;
-            } else {
-                titoloLista = tag + SPAZIO + articolo + SPAZIO + titolo;
-            }// fine del blocco if-else
-        }// fine del blocco if
-
-        return titoloLista;
-    }// fine del metodo
 
 
     /**
@@ -182,8 +191,6 @@ public class UploadAnni extends Upload {
 
         return testoOut;
     }// fine del metodo
-
-
 
 
     /**
