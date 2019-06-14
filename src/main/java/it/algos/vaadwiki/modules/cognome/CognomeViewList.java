@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.modules.nome;
+package it.algos.vaadwiki.modules.cognome;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -13,9 +13,11 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadwiki.modules.nome.Nome;
+import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Project vaadwiki <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 29-mag-2019 19.55.00 <br>
+ * Fix date: 14-giu-2019 16.34.34 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
@@ -50,11 +52,11 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_NOM, layout = MainLayout.class)
-@Qualifier(TAG_NOM)
+@Route(value = TAG_COG, layout = MainLayout.class)
+@Qualifier(TAG_COG)
 @Slf4j
 @AIScript(sovrascrivibile = true)
-public class NomeViewList extends AGridViewList {
+public class CognomeViewList extends AGridViewList {
 
 
     /**
@@ -63,6 +65,7 @@ public class NomeViewList extends AGridViewList {
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -93,11 +96,10 @@ public class NomeViewList extends AGridViewList {
      * @param dialog    per visualizzare i fields
      */
     @Autowired
-    public NomeViewList(@Qualifier(TAG_NOM) IAPresenter presenter, @Qualifier(TAG_NOM) IADialog dialog) {
+    public CognomeViewList(@Qualifier(TAG_COG) IAPresenter presenter, @Qualifier(TAG_COG) IADialog dialog) {
         super(presenter, dialog);
-        ((NomeViewDialog) dialog).fixFunzioni(this::save, this::delete);
+        ((CognomeViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
-
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
@@ -110,7 +112,7 @@ public class NomeViewList extends AGridViewList {
 
         super.usaSearchBottoneNew = false;
         super.usaBottoneDeleteAll = true;
-        this.sogliaWiki = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI, 50);
+        this.sogliaWiki = pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI, 50);
     }// end of method
 
 
@@ -129,7 +131,7 @@ public class NomeViewList extends AGridViewList {
         Button creaButton = new Button("Crea all", new Icon(VaadinIcon.LIST));
         creaButton.addClassName("view-toolbar__button");
         creaButton.addClickListener(e -> {
-            ((NomeService) service).crea();
+            ((CognomeService) service).crea();
             updateItems();
             updateView();
         });//end of lambda expressions and anonymous inner class
@@ -138,13 +140,12 @@ public class NomeViewList extends AGridViewList {
         Button updateButton = new Button("Elabora", new Icon(VaadinIcon.LIST));
         updateButton.addClassName("view-toolbar__button");
         updateButton.addClickListener(e -> {
-            ((NomeService) service).update();
+            ((CognomeService) service).update();
             updateItems();
             updateView();
         });//end of lambda expressions and anonymous inner class
         topPlaceholder.add(updateButton);
     }// end of method
-
 
     /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
@@ -157,11 +158,11 @@ public class NomeViewList extends AGridViewList {
         super.creaAlertLayout();
 
         Label label = null;
-        LocalDateTime lastDownload = pref.getDate(LAST_ELABORA_NOME);
+        LocalDateTime lastDownload = pref.getDate(LAST_ELABORA_COGNOME);
         if (lastDownload != null) {
-            label = new Label("Ultimo aggiornamento dei nomi il " + date.getTime(lastDownload));
+            label = new Label("Ultimo aggiornamento dei cognomi il " + date.getTime(lastDownload));
         } else {
-            label = new Label("I nomi non sono aggiornati ");
+            label = new Label("I cognomi non sono aggiornati ");
         }// end of if/else cycle
 
         alertPlacehorder.add(label);
@@ -186,8 +187,8 @@ public class NomeViewList extends AGridViewList {
      * Sovrascritto (obbligatorio) <br>
      */
     protected void addColumnsGridPaginata() {
-        fixColumn(Nome::getNome, "nome");
-        fixColumn(Nome::getVoci, "voci");
+        fixColumn(Cognome::getCognome, "cognome");
+        fixColumn(Cognome::getVoci, "voci");
     }// end of method
 
 
@@ -195,10 +196,10 @@ public class NomeViewList extends AGridViewList {
      * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
      * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
      */
-    protected void fixColumn(ValueProvider<Nome, ?> valueProvider, String propertyName) {
+    protected void fixColumn(ValueProvider<Cognome, ?> valueProvider, String propertyName) {
         Grid.Column singleColumn;
-        singleColumn = ((PaginatedGrid<Nome>) grid).addColumn(valueProvider);
-        columnService.fixColumn(singleColumn, Nome.class, propertyName);
+        singleColumn = ((PaginatedGrid<Cognome>) grid).addColumn(valueProvider);
+        columnService.fixColumn(singleColumn, Cognome.class, propertyName);
     }// end of method
 
 
@@ -230,21 +231,19 @@ public class NomeViewList extends AGridViewList {
         colonna.setHeader("Upload");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
-
     }// end of method
 
-
-    protected Button createViewButton(Nome nome) {
-        Button viewButton = new Button(nome.nome, new Icon(VaadinIcon.LIST));
+    protected Button createViewButton(Cognome entityBean) {
+        Button viewButton = new Button(entityBean.cognome, new Icon(VaadinIcon.LIST));
         viewButton.getElement().setAttribute("theme", "secondary");
-        viewButton.addClickListener(e -> viewNome(nome));
+        viewButton.addClickListener(e -> viewCognome(entityBean));
         return viewButton;
     }// end of method
 
 
-    protected Component createWikiButton(Nome entityBean) {
+    protected Component createWikiButton(Cognome entityBean) {
         if (entityBean != null && entityBean.voci >= sogliaWiki) {
-            Button uploadOneNatoButton = new Button(entityBean.nome, new Icon(VaadinIcon.SERVER));
+            Button uploadOneNatoButton = new Button(entityBean.cognome, new Icon(VaadinIcon.SERVER));
             uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
             uploadOneNatoButton.addClickListener(e -> wikiPage(entityBean));
             return uploadOneNatoButton;
@@ -254,25 +253,24 @@ public class NomeViewList extends AGridViewList {
     }// end of method
 
 
-    protected Component createUploaButton(Nome entityBean) {
+    protected Component createUploaButton(Cognome entityBean) {
         if (entityBean != null && entityBean.voci >= sogliaWiki) {
-            Button uploadOneNatoButton = new Button(entityBean.nome, new Icon(VaadinIcon.UPLOAD));
+            Button uploadOneNatoButton = new Button(entityBean.cognome, new Icon(VaadinIcon.UPLOAD));
             uploadOneNatoButton.getElement().setAttribute("theme", "error");
-            uploadOneNatoButton.addClickListener(e -> uploadService.uploadNome(entityBean));
+            uploadOneNatoButton.addClickListener(e -> uploadService.uploadCognome(entityBean));
             return uploadOneNatoButton;
         } else {
             return new Label("");
         }// end of if/else cycle
     }// end of method
 
-
-    protected void viewNome(Nome nome) {
-        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_NOMI + "/" + nome.id));
+    protected void viewCognome(Cognome cognome) {
+        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_COGNOMI + "/" + cognome.id));
     }// end of method
 
 
-    protected void wikiPage(Nome nome) {
-        String link = "\"" + PATH_WIKI + libBio.getTitoloNome(nome) + "\"";
+    protected void wikiPage(Cognome cognome) {
+        String link = "\"" + PATH_WIKI + libBio.getTitoloCognome(cognome) + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 

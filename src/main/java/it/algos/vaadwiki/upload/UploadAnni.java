@@ -75,33 +75,6 @@ public abstract class UploadAnni extends Upload {
     }// fine del metodo
 
 
-    /**
-     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
-     */
-    public void esegueAll() {
-        ArrayList<Anno> listaAnni = annoService.findAll();
-        long inizio = System.currentTimeMillis();
-        int modNati = 0;
-        int modMorti = 0;
-        String modTxt;
-
-        for (Anno anno : listaAnni) {
-//            uploadAnnoNato.esegue(anno);
-            modNati++;
-
-//            uploadAnnoMorto.esegue(anno);
-            modMorti++;
-        }// end of for cycle
-
-//        if (Pref.getBool(CostBio.USA_LOG_DEBUG, false)) {
-//            modTxt = LibNum.format(modNati) + "+" + LibNum.format(modMorti);
-//            if (Pref.getBool(CostBio.USA_REGISTRA_SEMPRE_CRONO, true)) {
-//                Log.debug("upload", "Aggiornate tutte (366*2) le pagine dei giorni (nati e morti) in " + LibTime.difText(inizio));
-//            } else {
-//                Log.debug("upload", "Aggiornate solo le pagine modificate (" + modTxt + ") dei giorni (nati e morti) in " + LibTime.difText(inizio));
-//            }// end of if/else cycle
-//        }// end of if cycle
-    }// end of method
 
 
     /**

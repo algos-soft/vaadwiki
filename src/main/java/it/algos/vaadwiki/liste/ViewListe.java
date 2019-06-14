@@ -12,6 +12,7 @@ import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.upload.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Project vaadwiki
@@ -28,6 +29,14 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public abstract class ViewListe extends VerticalLayout implements HasUrlParameter<String> {
 
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected ApplicationContext appContext;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>

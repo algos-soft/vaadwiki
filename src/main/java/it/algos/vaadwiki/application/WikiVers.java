@@ -175,6 +175,21 @@ public class WikiVers extends AVers {
             creaPrefDate(LAST_ELABORA_NOME, "Ultima elaborazione dei nomi");
         }// fine del blocco if
 
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefInt(SOGLIA_COGNOMI_MONGO, "Soglia minima per creare una entity nella collezione Cognomi sul mongoDB", 10);
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefInt(SOGLIA_COGNOMI_PAGINA_WIKI, "Soglia minima per creare una pagina di un nome sul server wiki", 50);
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefDate(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi");
+        }// fine del blocco if
+
 
         return k;
     }// end of method

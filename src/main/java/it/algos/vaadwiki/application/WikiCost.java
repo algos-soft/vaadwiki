@@ -23,6 +23,8 @@ import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 @AIScript(sovrascrivibile = false)
 public class WikiCost {
 
+    public final static String TAG_COG = "cognome";
+
     public final static String TAG_NOM = "nome";
 
     //	public final static String TAG_SEC = "secolo";
@@ -72,6 +74,8 @@ public class WikiCost {
 
     public final static String NOME = "Nome:";
 
+    public final static String COGNOME = "Cognome:";
+
     public final static String CODE = "lastDownload";
 
     public final static String DURATA = "durataDownload";
@@ -115,6 +119,8 @@ public class WikiCost {
     public final static String LAST_DOWNLOAD_BIO = CODE + BIO;
 
     public final static String LAST_ELABORA_NOME = CODE + NOME;
+
+    public final static String LAST_ELABORA_COGNOME = CODE + COGNOME;
 
     //--tempo impiegato per l'ultimo download, in secondi
     public final static String DURATA_DOWNLOAD_ATTIVITA = DURATA + ATT;
@@ -175,6 +181,10 @@ public class WikiCost {
     public final static String SOGLIA_NOMI_MONGO = "sogliaNomiMongo";
 
     public final static String SOGLIA_NOMI_PAGINA_WIKI = "sogliaNomiPaginaWiki";
+
+    public final static String SOGLIA_COGNOMI_MONGO = "sogliaCognomiMongo";
+
+    public final static String SOGLIA_COGNOMI_PAGINA_WIKI = "sogliaCognomiPaginaWiki";
 
     public static WikiLoginOld WIKI_LOGIN = null;
 

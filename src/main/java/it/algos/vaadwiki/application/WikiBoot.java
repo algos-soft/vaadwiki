@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.boot.ABoot;
+import it.algos.vaadwiki.modules.cognome.CognomeViewList;
 import it.algos.vaadwiki.didascalia.ViewDidascalie;
 import it.algos.vaadwiki.modules.nome.NomeViewList;
 import it.algos.vaadflow.modules.role.EARole;
@@ -179,6 +180,7 @@ public class WikiBoot extends ABoot {
         FlowCost.MENU_CLAZZ_LIST.add(WikiAnnoViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(NomeViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(ViewDidascalie.class);
+		FlowCost.MENU_CLAZZ_LIST.add(CognomeViewList.class);
 	}// end of method
 
 

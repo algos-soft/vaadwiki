@@ -15,21 +15,42 @@ import javax.annotation.PostConstruct;
  * User: gac
  * Date: Fri, 07-Jun-2019
  * Time: 20:28
+ * <p>
+ * Classe specializzata per caricare (upload) le liste sul server wiki. <br>
+ * <p>
+ * Viene chiamato da Scheduler (con frequenza giornaliera ?) <br>
+ * Può essere invocato dal bottone 'Upload all' della classe NomeViewList <br>
+ * Necessita del login come bot <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-public class UploadNomi extends Upload {
+public class UploadNome extends Upload {
 
-    //    @Autowired
-    protected ListaNomi listaNomi;
 
+    //--property
     protected Nome nome;
 
 
-    public UploadNomi(Nome nome) {
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
+     */
+    public UploadNome() {
+    }// end of constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(UploadNome.class, nome) <br>
+     *
+     * @param nome di cui costruire la pagina sul server wiki
+     */
+    public UploadNome(Nome nome) {
         this.nome = nome;
-    }// end of Spring constructor
+    }// end of constructor
 
 
     /**
@@ -56,6 +77,18 @@ public class UploadNomi extends Upload {
 
 
     /**
+     * Regola alcuni (eventuali) parametri specifici della sottoclasse
+     * <p>
+     * Nelle sottoclassi va SEMPRE richiamata la superclasse PRIMA di regolare localmente le variabili <br>
+     * Sovrascritto
+     */
+    protected void elaboraParametri() {
+        super.elaboraParametri();
+        usaSuddivisioneParagrafi = true;
+    }// fine del metodo
+
+
+    /**
      * Titolo della pagina da creare/caricare su wikipedia
      * Sovrascritto
      */
@@ -73,6 +106,7 @@ public class UploadNomi extends Upload {
      */
     @Override
     protected void elaboraMappaDidascalie() {
+        ListaNomi listaNomi;
         listaNomi = appContext.getBean(ListaNomi.class, nome);
         mappaDidascalie = listaNomi.mappa;
         super.elaboraMappaDidascalie();

@@ -15,6 +15,7 @@ import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.company.Company;
 import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
+import it.algos.vaadwiki.service.LibBio;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -91,6 +92,11 @@ public abstract class AService extends AbstractService implements IAService {
     @Autowired
     protected LogService logger;
 
+    /**
+     * Service (@Scope = 'singleton') iniettato da StaticContextAccessor e usato come libreria <br>
+     * Unico per tutta l'applicazione. Usato come libreria.
+     */
+    public LibBio libBio = LibBio.getInstance();
 
     /**
      * Default constructor

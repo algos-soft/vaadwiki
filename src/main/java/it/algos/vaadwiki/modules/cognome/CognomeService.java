@@ -1,12 +1,10 @@
-package it.algos.vaadwiki.modules.nome;
+package it.algos.vaadwiki.modules.cognome;
 
 import com.mongodb.client.DistinctIterable;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.AService;
 import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.vaadwiki.service.LibBio;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,7 +25,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Project vaadwiki <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 29-mag-2019 19.55.00 <br>
+ * Fix date: 14-giu-2019 16.34.34 <br>
  * <br>
  * Business class. Layer di collegamento per la Repository. <br>
  * <br>
@@ -41,10 +39,10 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(TAG_NOM)
+@Qualifier(TAG_COG)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class NomeService extends AService {
+public class CognomeService extends AService {
 
 
     /**
@@ -58,10 +56,7 @@ public class NomeService extends AService {
      * Spring costruisce una implementazione concreta dell'interfaccia MongoRepository (prevista dal @Qualifier) <br>
      * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
-    public NomeRepository repository;
-
-    @Autowired
-    private AMongoService mongo;
+    public CognomeRepository repository;
 
 
     /**
@@ -73,38 +68,44 @@ public class NomeService extends AService {
      * @param repository per la persistenza dei dati
      */
     @Autowired
-    public NomeService(@Qualifier(TAG_NOM) MongoRepository repository) {
+    public CognomeService(@Qualifier(TAG_COG) MongoRepository repository) {
         super(repository);
-        super.entityClass = Nome.class;
-        this.repository = (NomeRepository) repository;
+        super.entityClass = Cognome.class;
+        this.repository = (CognomeRepository) repository;
     }// end of Spring constructor
 
 
     /**
      * Ricerca di una entity (la crea se non la trova) <br>
      *
-     * @param nome di riferimento (obbligatorio ed unico)
+     * @param cognome di riferimento (obbligatorio ed unico)
      *
      * @return la entity trovata o appena creata
      */
-    public Nome findOrCrea(String nome) {
-        return findOrCrea(nome, 0);
+    public Cognome findOrCrea(String cognome) {
+        Cognome entity = findByKeyUnica(cognome);
+
+        if (entity == null) {
+            entity = crea(cognome, 0);
+        }// end of if cycle
+
+        return entity;
     }// end of method
 
 
     /**
      * Ricerca di una entity (la crea se non la trova) <br>
      *
-     * @param nome di riferimento (obbligatorio ed unico)
-     * @param voci biografiche con questo nome <br>
+     * @param cognome di riferimento (obbligatorio ed unico)
+     * @param voci    biografiche con questo cognome <br>
      *
      * @return la entity trovata o appena creata
      */
-    public Nome findOrCrea(String nome, int voci) {
-        Nome entity = findByKeyUnica(nome);
+    public Cognome findOrCrea(String cognome, int voci) {
+        Cognome entity = findByKeyUnica(cognome);
 
         if (entity == null) {
-            entity = crea(nome, voci);
+            entity = crea(cognome, voci);
         }// end of if cycle
 
         return entity;
@@ -114,25 +115,25 @@ public class NomeService extends AService {
     /**
      * Crea una entity e la registra <br>
      *
-     * @param nome di riferimento (obbligatorio ed unico)
+     * @param cognome di riferimento (obbligatorio ed unico)
      *
      * @return la entity appena creata
      */
-    public Nome crea(String nome) {
-        return crea(nome, 0);
+    public Cognome crea(String cognome) {
+        return crea(cognome, 0);
     }// end of method
 
 
     /**
      * Crea una entity e la registra <br>
      *
-     * @param nome di riferimento (obbligatorio ed unico)
-     * @param voci biografiche con questo nome <br>
+     * @param cognome di riferimento (obbligatorio ed unico)
+     * @param voci    biografiche con questo cognome <br>
      *
      * @return la entity appena creata
      */
-    public Nome crea(String nome, int voci) {
-        return (Nome) save(newEntity(nome, voci));
+    public Cognome crea(String cognome, int voci) {
+        return (Cognome) save(newEntity(cognome, voci));
     }// end of method
 
 
@@ -144,7 +145,7 @@ public class NomeService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     @Override
-    public Nome newEntity() {
+    public Cognome newEntity() {
         return newEntity("", 0);
     }// end of method
 
@@ -155,25 +156,25 @@ public class NomeService extends AService {
      * All properties <br>
      * Utilizza, eventualmente, la newEntity() della superclasse, per le property della superclasse <br>
      *
-     * @param nome di riferimento (obbligatorio ed unico)
-     * @param voci biografiche con questo nome <br>
+     * @param cognome di riferimento (obbligatorio ed unico)
+     * @param voci    biografiche con questo nome <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Nome newEntity(String nome, int voci) {
-        Nome entity = null;
+    public Cognome newEntity(String cognome, int voci) {
+        Cognome entity = null;
 
-        entity = findByKeyUnica(nome);
+        entity = findByKeyUnica(cognome);
         if (entity != null) {
-            return findByKeyUnica(nome);
+            return findByKeyUnica(cognome);
         }// end of if cycle
 
-        entity = Nome.builderNome()
-                .nome(text.isValid(nome) ? nome : null)
+        entity = Cognome.builderCognome()
+                .cognome(text.isValid(cognome) ? cognome : null)
                 .voci(voci != 0 ? voci : this.getNewOrdine())
                 .build();
 
-        return (Nome) creaIdKeySpecifica(entity);
+        return (Cognome) creaIdKeySpecifica(entity);
     }// end of method
 
 
@@ -187,20 +188,20 @@ public class NomeService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Nome findById(String id) {
-        return (Nome) super.findById(id);
+    public Cognome findById(String id) {
+        return (Cognome) super.findById(id);
     }// end of method
 
 
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
-     * @param nome di riferimento (obbligatorio ed unico)
+     * @param cognome di riferimento (obbligatorio)
      *
      * @return istanza della Entity, null se non trovata
      */
-    public Nome findByKeyUnica(String nome) {
-        return repository.findByNome(nome);
+    public Cognome findByKeyUnica(String cognome) {
+        return repository.findByCognome(cognome);
     }// end of method
 
 
@@ -209,7 +210,7 @@ public class NomeService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Nome) entityBean).getNome();
+        return ((Cognome) entityBean).getCognome();
     }// end of method
 
 
@@ -225,32 +226,32 @@ public class NomeService extends AService {
      * @return all ordered entities
      */
     @Override
-    public List<Nome> findAll() {
-        return (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "voci"));
+    public List<Cognome> findAll() {
+        return (List<Cognome>) super.findAll(new Sort(Sort.Direction.DESC, "voci"));
     }// end of method
 
 
     /**
-     * Cancella i nomi esistenti <br>
-     * Crea tutti i nomi <br>
-     * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
+     * Cancella i cognomi esistenti <br>
+     * Crea tutti i cognomi <br>
+     * Controlla che ci siano almeno n voci biografiche per il singolo cognomi <br>
      * Registra la entity <br>
-     * Non registra la entity col nome mancante <br>
+     * Non registra la entity col cognomi mancante <br>
      */
     public void crea() {
         long inizio = System.currentTimeMillis();
         int cont = 0;
-        System.out.println("Creazione completa nomi delle biografie. Circa 1 minuto.");
+        System.out.println("Creazione completa cognomi delle biografie. Circa 1 minuto.");
         deleteAll();
 
-        DistinctIterable<String> listaNomiDistinti = mongo.mongoOp.getCollection("bio").distinct("nome", String.class);
-        for (String nome : listaNomiDistinti) {
+        DistinctIterable<String> listaCognomiDistinti = mongo.mongoOp.getCollection("bio").distinct("cognome", String.class);
+        for (String cognome : listaCognomiDistinti) {
             cont++;
-            saveNumVoci(nome);
+            saveNumVoci(cognome);
         }// end of for cycle
 
         pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
-        System.out.println("Creazione completa di " + cont + " nomi. Tempo impiegato: " + date.deltaText(inizio));
+        System.out.println("Creazione completa di " + cont + " cognomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 
@@ -259,27 +260,27 @@ public class NomeService extends AService {
      */
     public void update() {
         long inizio = System.currentTimeMillis();
-        System.out.println("Elaborazione nomi delle biografie. Meno di 1 minuto.");
-        for (Nome nome : findAll()) {
-            saveNumVoci(nome);
+        System.out.println("Elaborazione cognomi delle biografie. Meno di 1 minuto.");
+        for (Cognome cognome : findAll()) {
+            saveNumVoci(cognome);
         }// end of for cycle
-        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
-        System.out.println("Elaborazione completa dei nomi. Tempo impiegato: " + date.deltaText(inizio));
+        pref.saveValue(LAST_ELABORA_COGNOME, LocalDateTime.now());
+        System.out.println("Elaborazione completa dei cognomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 
     /**
      * Registra il numero di voci biografiche che hanno il nome indicato <br>
      */
-    public void saveNumVoci(String nome) {
+    public void saveNumVoci(String cognome) {
         //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
-        int sogliaMongo = pref.getInt(SOGLIA_NOMI_MONGO, 10);
+        int sogliaMongo = pref.getInt(SOGLIA_COGNOMI_MONGO, 10);
         int numVoci = 0;
         Query query = new Query();
-        query.addCriteria(Criteria.where("nome").is(nome));
+        query.addCriteria(Criteria.where("cognome").is(cognome));
         numVoci = ((List) mongo.mongoOp.find(query, Bio.class)).size();
-        if (numVoci >= sogliaMongo && text.isValid(nome)) {
-            this.findOrCrea(nome, numVoci);
+        if (numVoci >= sogliaMongo && text.isValid(cognome)) {
+            this.findOrCrea(cognome, numVoci);
         }// end of if cycle
     }// end of method
 
@@ -287,14 +288,13 @@ public class NomeService extends AService {
     /**
      * Registra il numero di voci biografiche che hanno il nome indicato <br>
      */
-    public void saveNumVoci(Nome nome) {
+    public void saveNumVoci(Cognome cognome) {
         int numVoci = 0;
         Query query = new Query();
-        query.addCriteria(Criteria.where("nome").is(nome.nome));
+        query.addCriteria(Criteria.where("cognome").is(cognome.cognome));
         numVoci = ((List) mongo.mongoOp.find(query, Bio.class)).size();
-        nome.voci = numVoci;
-        save(nome);
+        cognome.voci = numVoci;
+        save(cognome);
     }// end of method
-
 
 }// end of class

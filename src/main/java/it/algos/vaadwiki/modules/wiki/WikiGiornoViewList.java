@@ -65,12 +65,6 @@ public class WikiGiornoViewList extends WikiViewList {
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
 
-    //    @Autowired
-    private UploadGiornoNato uploadGiornoNato;
-
-//    @Autowired
-    private UploadGiornoMorto uploadGiornoMorto;
-
 
     /**
      * Costruttore @Autowired <br>
@@ -249,14 +243,14 @@ public class WikiGiornoViewList extends WikiViewList {
 
 
     protected void wikiPageNato(Giorno giorno) {
-//        String link = "\"" + PATH_WIKI + uploadGiornoNato.getTitoloPagina(giorno) + "\"";
-//        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+        String link = "\"" + PATH_WIKI + libBio.getTitoloGiornoNato(giorno) + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 
     protected void wikiPageMorto(Giorno giorno) {
-//        String link = "\"" + PATH_WIKI + uploadGiornoMorto.getTitoloPagina(giorno) + "\"";
-//        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+        String link = "\"" + PATH_WIKI + libBio.getTitoloGiornoMorto(giorno) + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 
@@ -267,7 +261,7 @@ public class WikiGiornoViewList extends WikiViewList {
      * <p>
      */
     protected void uploadEffettivo() {
-        uploadGiornoNato.esegueAll();
+        uploadService.uploadAllGiorni();
     }// end of method
 
 

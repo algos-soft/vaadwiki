@@ -18,8 +18,10 @@ import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
+import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
+import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.wiki.DownloadResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2705,6 +2707,37 @@ public class LibBio {
      */
     public String getTitoloAnnoMorto(Anno anno) {
         return getTitoloAnnoMorto(anno.getTitolo());
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nomi da creare/caricare su wikipedia
+     */
+    public String getTitoloNome(String titolo) {
+        return "Persone di nome " + text.primaMaiuscola(titolo);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nomi da creare/caricare su wikipedia
+     */
+    public String getTitoloNome(Nome nome) {
+        return getTitoloNome(nome.getNome());
+    }// fine del metodo
+
+    /**
+     * Titolo della pagina Cognome da creare/caricare su wikipedia
+     */
+    public String getTitoloCognome(String titolo) {
+        return "Persone di cognome " + text.primaMaiuscola(titolo);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Cognome da creare/caricare su wikipedia
+     */
+    public String getTitoloCognome(Cognome cognome) {
+        return getTitoloCognome(cognome.getCognome());
     }// fine del metodo
 
 }// end of class

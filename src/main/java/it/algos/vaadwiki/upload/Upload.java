@@ -8,6 +8,7 @@ import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.modules.secolo.SecoloService;
 import it.algos.vaadflow.service.*;
 import it.algos.vaadwiki.download.*;
+import it.algos.vaadwiki.liste.ListaService;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
@@ -201,6 +202,14 @@ public abstract class Upload {
      */
     @Autowired
     protected SecoloService secolo;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected ListaService listaService;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -577,12 +586,12 @@ public abstract class Upload {
 
         if (mappaDidascalie != null && mappaDidascalie.size() > 0) {
             if (usaSuddivisioneParagrafi) {
-                testo = righeParagrafo();
+                testo = listaService.righeParagrafo(mappaDidascalie);
             } else {
                 if (usaBodyRigheMultiple) {
-                    testo = righeRaggruppate();
+                    testo = listaService.righeRaggruppate(mappaDidascalie);
                 } else {
-                    testo = righeSemplici();
+                    testo = listaService.righeSemplici(mappaDidascalie);
                 }// end of if/else cycle
             }// end of if/else cycle
         }// end of if cycle
@@ -616,121 +625,6 @@ public abstract class Upload {
         return testoIn;
     }// fine del metodo
 
-
-    /**
-     * Costruisce il paragrafo
-     * Sovrascrivibile
-     */
-    protected String righeParagrafo() {
-        String testo = VUOTA;
-        int numVociParagrafo;
-        HashMap<String, Object> mappa;
-        String titoloParagrafo;
-        String titoloSottopagina;
-        String paginaLinkata;
-        String titoloVisibile;
-        List<Bio> lista;
-
-//        for (Map.Entry<String, HashMap> mappaTmp : mappaBio.entrySet()) {
-//            testo += CostBio.A_CAPO;
-//
-//            mappa = mappaTmp.getValue();
-//
-//            if (usaOrdineAlfabeticoParagrafi) {
-//                titoloParagrafo = (String) mappa.get(KEY_MAP_PARAGRAFO_TITOLO);
-//            } else {
-//                titoloParagrafo = (String) mappa.get(KEY_MAP_PARAGRAFO_LINK);
-//            }// end of if/else cycle
-//
-//            titoloVisibile = (String) mappa.get(KEY_MAP_PARAGRAFO_TITOLO);
-//            lista = (List<Bio>) mappa.get(KEY_MAP_LISTA);
-//            numVociParagrafo = lista.size();
-//
-////            titoloParagrafo = costruisceTitolo(paginaLinkata, titoloVisibile);
-//            if (Pref.getBool(CostBio.USA_NUMERI_PARAGRAFO, false)) {
-//                testo += LibWiki.setParagrafo(titoloParagrafo, numVociParagrafo);
-//            } else {
-//                testo += LibWiki.setParagrafo(titoloParagrafo);
-//            }// end of if/else cycle
-//
-//            testo += CostBio.A_CAPO;
-//
-//            if (usaSottopagine && numVociParagrafo > maxVociParagrafo) {
-//                titoloSottopagina = titoloPagina + "/" + titoloVisibile;
-//                testo += "{{Vedi anche|" + titoloSottopagina + "}}";
-//                creaSottopagina(mappa);
-//            } else {
-//                for (Bio bio : lista) {
-//                    testo += CostBio.ASTERISCO;
-//                    testo += bio.getDidascaliaListe();
-//                    testo += CostBio.A_CAPO;
-//                }// end of for cycle
-//            }// end of if/else cycle
-//
-//        }// end of for cycle
-
-        return testo;
-    }// fine del metodo
-
-
-    /**
-     * Raggruppa le biografie
-     */
-    protected String righeRaggruppate() {
-        String testo = VUOTA;
-        ArrayList<String> listaDidascalie;
-
-        if (mappaDidascalie != null) {
-            for (String key : mappaDidascalie.keySet()) {
-                listaDidascalie = mappaDidascalie.get(key);
-
-                if (listaDidascalie.size() == 1) {
-                    testo += ASTERISCO + (text.isValid(key) ? key + TAG_SEP : SPAZIO) + listaDidascalie.get(0) + A_CAPO;
-                } else {
-                    if (text.isValid(key)) {
-                        testo += ASTERISCO + key + A_CAPO;
-                        for (String didascalia : listaDidascalie) {
-                            testo += ASTERISCO + ASTERISCO + didascalia + A_CAPO;
-                        }// end of if/else cycle
-                    } else {
-                        for (String didascalia : listaDidascalie) {
-                            testo += ASTERISCO + didascalia + A_CAPO;
-                        }// end of if/else cycle
-                    }// end of if/else cycle
-                }// end of for cycle
-            }// end of for cycle
-        }// end of if cycle
-
-        return testo;
-    }// fine del metodo
-
-
-    /**
-     * Nessun raggruppamento
-     */
-    public String righeSemplici() {
-        String testo = VUOTA;
-        ArrayList<String> listaDidascalie;
-
-        if (mappaDidascalie != null) {
-            for (String key : mappaDidascalie.keySet()) {
-                listaDidascalie = mappaDidascalie.get(key);
-
-                if (text.isValid(key)) {
-                    for (String didascalia : listaDidascalie) {
-                        testo += ASTERISCO + key + TAG_SEP + didascalia + A_CAPO;
-                    }// end of for cycle
-                } else {
-                    for (String didascalia : listaDidascalie) {
-                        testo += ASTERISCO + didascalia + A_CAPO;
-                    }// end of for cycle
-                }// end of if/else cycle
-
-            }// end of for cycle
-        }// end of if cycle
-
-        return testo;
-    }// fine del metodo
 
 
     /**

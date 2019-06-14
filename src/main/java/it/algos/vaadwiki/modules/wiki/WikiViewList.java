@@ -13,6 +13,7 @@ import it.algos.vaadflow.ui.ACronoViewList;
 import it.algos.vaadflow.ui.dialog.AConfirmDialog;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,13 @@ public abstract class WikiViewList extends ACronoViewList {
      */
     @Autowired
     protected UploadService uploadService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected LibBio libBio;
 
     protected Button uploadAllButton;
 
@@ -93,7 +101,7 @@ public abstract class WikiViewList extends ACronoViewList {
         //--upload della lista completa di 365 + 365 giorni
         uploadAllButton = new Button("Upload all", new Icon(VaadinIcon.UPLOAD));
         uploadAllButton.getElement().setAttribute("theme", "error");
-//        uploadAllButton.addClickListener(e -> openUploadDialog());
+        uploadAllButton.addClickListener(e -> openUploadDialog("cronologiche"));
         topPlaceholder.add(uploadAllButton);
 
         sincroBottoniMenu(false);

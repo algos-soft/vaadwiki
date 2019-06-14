@@ -2,13 +2,20 @@ package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.cognome.Cognome;
+import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import java.util.ArrayList;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
@@ -23,6 +30,79 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public class UploadService extends ABioService {
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected GiornoService giornoService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected AnnoService annoService;
+
+
+    /**
+     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
+     */
+    public void uploadAllGiorni() {
+        ArrayList<Giorno> listaGiorni = giornoService.findAll();
+        long inizio = System.currentTimeMillis();
+        int modNati = 0;
+        int modMorti = 0;
+        String modTxt;
+
+        for (Giorno giorno : listaGiorni) {
+            uploadGiornoNato(giorno);
+            modNati++;
+
+            uploadGiornoMorto(giorno);
+            modMorti++;
+        }// end of for cycle
+
+//        if (Pref.getBool(CostBio.USA_LOG_DEBUG, false)) {
+//            modTxt = LibNum.format(modNati) + "+" + LibNum.format(modMorti);
+//            if (Pref.getBool(CostBio.USA_REGISTRA_SEMPRE_CRONO, true)) {
+//                Log.debug("upload", "Aggiornate tutte (366*2) le pagine dei giorni (nati e morti) in " + LibTime.difText(inizio));
+//            } else {
+//                Log.debug("upload", "Aggiornate solo le pagine modificate (" + modTxt + ") dei giorni (nati e morti) in " + LibTime.difText(inizio));
+//            }// end of if/else cycle
+//        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
+     */
+    public void uploadAllAnni() {
+        ArrayList<Anno> listaAnni = annoService.findAll();
+        long inizio = System.currentTimeMillis();
+        int modNati = 0;
+        int modMorti = 0;
+        String modTxt;
+
+        for (Anno anno : listaAnni) {
+            uploadAnnoNato(anno);
+            modNati++;
+
+            uploadAnnoMorto(anno);
+            modMorti++;
+        }// end of for cycle
+
+//        if (Pref.getBool(CostBio.USA_LOG_DEBUG, false)) {
+//            modTxt = LibNum.format(modNati) + "+" + LibNum.format(modMorti);
+//            if (Pref.getBool(CostBio.USA_REGISTRA_SEMPRE_CRONO, true)) {
+//                Log.debug("upload", "Aggiornate tutte (366*2) le pagine dei giorni (nati e morti) in " + LibTime.difText(inizio));
+//            } else {
+//                Log.debug("upload", "Aggiornate solo le pagine modificate (" + modTxt + ") dei giorni (nati e morti) in " + LibTime.difText(inizio));
+//            }// end of if/else cycle
+//        }// end of if cycle
+    }// end of method
+
 
     /**
      * Carica sul servere wiki la entity indicata
@@ -113,6 +193,16 @@ public class UploadService extends ABioService {
 
     public UploadAnnoMorto uploadAnnoMorto(Anno anno) {
         return appContext.getBean(UploadAnnoMorto.class, anno);
+    }// end of method
+
+
+    public UploadNome uploadNome(Nome nome) {
+        return appContext.getBean(UploadNome.class, nome);
+    }// end of method
+
+
+    public UploadCognome uploadCognome(Cognome cognome) {
+        return appContext.getBean(UploadCognome.class, cognome);
     }// end of method
 
 }// end of class

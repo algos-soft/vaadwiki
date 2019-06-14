@@ -249,14 +249,14 @@ public class WikiAnnoViewList extends WikiViewList {
 
 
     protected void wikiPageNato(Anno anno) {
-//        String link = "\"" + PATH_WIKI + uploadAnnoNato.getTitoloPagina(anno) + "\"";
-//        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+        String link = "\"" + PATH_WIKI + libBio.getTitoloAnnoNato(anno) + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 
     protected void wikiPageMorto(Anno anno) {
-//        String link = "\"" + PATH_WIKI + uploadAnnoMorto.getTitoloPagina(anno) + "\"";
-//        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+        String link = "\"" + PATH_WIKI + libBio.getTitoloAnnoMorto(anno) + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 
@@ -267,7 +267,7 @@ public class WikiAnnoViewList extends WikiViewList {
      * <p>
      */
     protected void uploadEffettivo() {
-        uploadAnnoNato.esegueAll();
+        uploadService.uploadAllAnni();
     }// end of method
 
 

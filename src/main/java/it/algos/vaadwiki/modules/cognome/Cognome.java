@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.modules.nome;
+package it.algos.vaadwiki.modules.cognome;
 
 import it.algos.vaadflow.annotation.*;
 import it.algos.vaadflow.backend.entity.AEntity;
@@ -18,14 +18,13 @@ import javax.validation.constraints.Size;
  * Project vaadwiki <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 29-mag-2019 19.55.00 <br>
+ * Fix date: 14-giu-2019 16.34.34 <br>
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <p>
  * Not annotated with @SpringComponent (inutile).  <br>
  * Not annotated with @Scope (inutile). Le istanze 'prototype' vengono generate da xxxService.newEntity() <br>
  * Not annotated with @Qualifier (inutile) <br>
- * Annotated with @Entity (facoltativo) per significare che si tratta di una collection (DB Mongo) <br>
  * Annotated with @Document (facoltativo) per avere un nome della collection (DB Mongo) diverso dal nome della Entity <br>
  * Annotated with @TypeAlias (facoltativo) to replace the fully qualified class name with a different value. <br>
  * Annotated with @Data (Lombok) for automatic use of Getter and Setter <br>
@@ -51,18 +50,18 @@ import javax.validation.constraints.Size;
  * Una (e una sola) property deve avere @AIColumn(flexGrow = true) per fissare la larghezza della Grid <br>
  */
 @Entity
-@Document(collection = "nome")
-@TypeAlias("nome")
+@Document(collection = "cognome")
+@TypeAlias("cognome")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(builderMethodName = "builderNome")
+@Builder(builderMethodName = "builderCognome")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"nome", "voci"})
-@AIForm(fields = {"nome", "voci"})
+@AIList(fields = {"code", "descrizione"})
+@AIForm(fields = {"code", "descrizione"})
 @AIScript(sovrascrivibile = false)
-public class Nome extends AEntity {
+public class Cognome extends AEntity {
 
 
     /**
@@ -72,14 +71,14 @@ public class Nome extends AEntity {
 
 
     /**
-     * nome del biografato <br>
+     * cognome del biografato <br>
      */
     @NotNull
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 2)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
     @AIColumn(widthEM = 20)
-    public String nome;
+    public String cognome;
 
     /**
      * numero di voci biografiche con questo nome <br>
@@ -96,7 +95,7 @@ public class Nome extends AEntity {
      */
     @Override
     public String toString() {
-        return nome;
+        return cognome;
     }// end of method
 
 

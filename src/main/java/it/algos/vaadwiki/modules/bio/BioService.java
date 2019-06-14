@@ -305,6 +305,16 @@ public class BioService extends AttNazProfCatService {
 
     /**
      * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<Bio> findAllByCognome(String cognome) {
+        return (ArrayList) repository.findAllByCognome(cognome);
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
      * <p>
      *
      * @return all ordered entities

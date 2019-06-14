@@ -50,6 +50,8 @@ public interface BioRepository extends MongoRepository<Bio, String> {
 
     public List<Bio> findAllByNome(String nome);
 
+    public List<Bio> findAllByCognome(String cognome);
+
 //    @Query("{'nome':?0}")
 //    List<String> findDistinctNome(String nome);
 //

@@ -1,8 +1,6 @@
 package it.algos.vaadwiki.liste;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.giorno.Giorno;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Project vaadwiki
@@ -15,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
  * Crea le liste dei nati o dei morti nel giorno
  */
 public abstract class ListaGiorni extends Lista {
+
 
     //--property
     protected Giorno giorno;

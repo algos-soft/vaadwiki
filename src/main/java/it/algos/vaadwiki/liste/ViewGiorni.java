@@ -29,6 +29,7 @@ public abstract class ViewGiorni extends ViewListe {
     protected GiornoService giornoService;
 
 
+    //--property
     protected Giorno giorno;
 
 
