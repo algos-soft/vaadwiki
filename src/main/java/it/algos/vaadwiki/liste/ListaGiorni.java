@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.liste;
 
 import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadwiki.didascalia.EADidascalia;
 
 /**
  * Project vaadwiki
@@ -17,6 +18,7 @@ public abstract class ListaGiorni extends Lista {
 
     //--property
     protected Giorno giorno;
+
 
 
     /**

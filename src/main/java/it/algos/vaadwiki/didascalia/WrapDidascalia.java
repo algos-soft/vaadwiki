@@ -195,13 +195,11 @@ public class WrapDidascalia {
                 break;
             case liste:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
-                this.chiave = "";
-//                liste();
+                this.chiave = bio.getAttivita();
                 break;
             case biografie:
                 didascalia = didascaliaService.getDidascaliaBiografie(bio);
                 this.chiave = "";
-//                biografie();
                 break;
             default:
                 log.warn("Switch - caso non definito");
@@ -219,83 +217,6 @@ public class WrapDidascalia {
         }// end of if cycle
     }// end of method
 
-
-//    public void giornoNato() {
-//        Didascalia didascaliaGiornoNato = didascaliaService.getDidascaliaGiornoNato(bio);
-//        this.riferimento = bio.getGiornoNato();
-//        this.chiave = bio.getAnnoNato();
-//        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
-//        String wikiTitle = bio.getWikiTitle();
-//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-//        this.sottoChiave = cognome + wikiTitle;
-//        this.testoCon = didascaliaGiornoNato.testoCon;
-//        this.testoSenza = didascaliaGiornoNato.testoSenza;
-//    }// end of method
-
-
-//    public void giornoMorto() {
-//        didascaliaGiornoMorto = didascaliaService.getDidascaliaGiornoMorto(bio);
-//        this.riferimento = bio.getGiornoMorto();
-//        this.chiave = bio.getAnnoMorto();
-//        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
-//        String wikiTitle = bio.getWikiTitle();
-//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-//        this.sottoChiave = cognome + wikiTitle;
-//        this.testoCon = didascaliaGiornoMorto.testoCon;
-//        this.testoSenza = didascaliaGiornoMorto.testoSenza;
-//    }// end of method
-
-
-//    public void annoNato() {
-//        didascaliaAnnoNato = didascaliaService.getDidascaliaAnnoNato(bio);
-//        this.riferimento = bio.getAnnoNato();
-//        this.chiave = bio.getGiornoNato();
-//        this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
-//        String wikiTitle = bio.getWikiTitle();
-//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-//        this.sottoChiave = cognome + wikiTitle;
-//        this.testoCon = didascaliaAnnoNato.testoCon;
-//        this.testoSenza = didascaliaAnnoNato.testoSenza;
-//    }// end of method
-
-
-//    public void annoMorto() {
-//        didascaliaAnnoMorto = didascaliaService.getDidascaliaAnnoMorto(bio);
-//        this.riferimento = bio.getAnnoMorto();
-//        this.chiave = bio.getGiornoMorto();
-//        this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
-//        String wikiTitle = bio.getWikiTitle();
-//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-//        this.sottoChiave = cognome + wikiTitle;
-//        this.testoCon = didascaliaAnnoMorto.testoCon;
-//        this.testoSenza = didascaliaAnnoMorto.testoSenza;
-//    }// end of method
-
-
-//    public void liste() {
-//        didascaliaListe = didascaliaService.getDidascaliaListe(bio);
-//        this.riferimento = bio.getGiornoNato();
-//        this.chiave = bio.getAnnoNato();
-//        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
-//        String wikiTitle = bio.getWikiTitle();
-//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-//        this.sottoChiave = cognome + wikiTitle;
-//        this.testoCon = didascaliaListe.testoCon;
-//        this.testoSenza = didascaliaListe.testoSenza;
-//    }// end of method
-
-
-//    public void biografie() {
-//        didascaliaBiografie = didascaliaService.getDidascaliaBiografie(bio);
-//        this.riferimento = bio.getGiornoNato();
-//        this.chiave = bio.getAnnoNato();
-//        this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
-//        String wikiTitle = bio.getWikiTitle();
-//        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
-//        this.sottoChiave = cognome + wikiTitle;
-//        this.testoCon = didascaliaBiografie.testoCon;
-//        this.testoSenza = didascaliaBiografie.testoSenza;
-//    }// end of method
 
 
     public String getRiferimento() {

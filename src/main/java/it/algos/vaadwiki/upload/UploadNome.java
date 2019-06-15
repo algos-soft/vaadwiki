@@ -68,13 +68,6 @@ public class UploadNome extends Upload {
         super.esegue();
     }// end of method
 
-//    /**
-//     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
-//     */
-//    public void esegueTest() {
-//        esegueTest();
-//    }// fine del metodo
-
 
     /**
      * Regola alcuni (eventuali) parametri specifici della sottoclasse
@@ -85,6 +78,7 @@ public class UploadNome extends Upload {
     protected void elaboraParametri() {
         super.elaboraParametri();
         usaSuddivisioneParagrafi = true;
+        usaBodyDoppiaColonna = false;
     }// fine del metodo
 
 

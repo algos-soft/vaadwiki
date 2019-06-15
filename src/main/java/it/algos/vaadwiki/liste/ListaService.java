@@ -85,6 +85,7 @@ public class ListaService extends ABioService {
         return listaAnnoNato.mappa;
     }// end of method
 
+
     /**
      * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
      * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
@@ -153,9 +154,27 @@ public class ListaService extends ABioService {
         String titoloSottopagina;
         String paginaLinkata;
         String titoloVisibile;
-        List<Bio> lista=null;
+        List<Bio> lista = null;
 
-//        for (Map.Entry<String, HashMap> mappaTmp : mappaBio.entrySet()) {
+
+        ArrayList<String> listaDidascalie;
+
+        if (mappaDidascalie != null) {
+            for (String key : mappaDidascalie.keySet()) {
+                testo += "==" + key + "==";
+                listaDidascalie = mappaDidascalie.get(key);
+
+                if (array.isValid(listaDidascalie)) {
+                    testo +=  A_CAPO;
+                    for (String didascalia : listaDidascalie) {
+                        testo += ASTERISCO  + didascalia + A_CAPO;
+                    }// end of if/else cycle
+                }// end of for cycle
+            }// end of for cycle
+        }// end of if cycle
+
+
+//        for (Map.Entry<String, HashMap> mappaTmp : mappaDidascalie.entrySet()) {
 //            testo += CostBio.A_CAPO;
 //
 //            mappa = mappaTmp.getValue();
@@ -195,6 +214,7 @@ public class ListaService extends ABioService {
 
         return testo;
     }// fine del metodo
+
 
     /**
      * Raggruppa le biografie
@@ -260,9 +280,9 @@ public class ListaService extends ABioService {
         int numVoci = 0;
         ArrayList<String> lista;
 
-            for (Map.Entry<String, ArrayList<String>> elementoDellaMappa : mappa.entrySet()) {
-                lista = (ArrayList) elementoDellaMappa.getValue();
-                numVoci+=lista.size();
+        for (Map.Entry<String, ArrayList<String>> elementoDellaMappa : mappa.entrySet()) {
+            lista = (ArrayList) elementoDellaMappa.getValue();
+            numVoci += lista.size();
         }// end of for cycle
 
         return numVoci;

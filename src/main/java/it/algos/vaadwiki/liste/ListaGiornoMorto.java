@@ -2,12 +2,8 @@ package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.giorno.Giorno;
-import it.algos.vaadwiki.didascalia.DidascaliaGiornoMorto;
 import it.algos.vaadwiki.didascalia.EADidascalia;
-import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -27,9 +23,6 @@ import java.util.ArrayList;
 public class ListaGiornoMorto extends ListaGiorni {
 
 
-//    @Autowired
-//    protected DidascaliaGiornoMorto didascaliaGiornoMorto;
-
     /**
      * Costruttore base senza parametri <br>
      * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
@@ -48,7 +41,9 @@ public class ListaGiornoMorto extends ListaGiorni {
      */
     public ListaGiornoMorto(Giorno giorno) {
         super(giorno);
+        super.typeDidascalia = EADidascalia.giornoMorto;
     }// end of constructor
+
 
     /**
      * Recupera una lista (array) di records Bio che usano questa istanza di giorno/anno nella property nato/morto
@@ -61,27 +56,5 @@ public class ListaGiornoMorto extends ListaGiorni {
         return bioService.findAllByGiornoMorto(giorno.titolo);
     }// fine del metodo
 
-
-    /**
-     * Costruisce una lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
-     * La lista NON è ordinata <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     *
-     * @param listaGrezzaBio di persone che hanno una valore valido per la pagina specifica
-     *
-     * @return lista NON ORDINATA di didascalie (Wrap)
-     */
-    @Override
-    public ArrayList<WrapDidascalia> creaListaDidascalie(ArrayList<Bio> listaGrezzaBio) {
-        ArrayList<WrapDidascalia> lista = new ArrayList<WrapDidascalia>();
-        WrapDidascalia wrap;
-
-        for (Bio bio : listaGrezzaBio) {
-            wrap = appContext.getBean(WrapDidascalia.class, bio, EADidascalia.giornoMorto);
-            lista.add(wrap);
-        }// end of for cycle
-
-        return lista;
-    }// fine del metodo
 
 }// end of class

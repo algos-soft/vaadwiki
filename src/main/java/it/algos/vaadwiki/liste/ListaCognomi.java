@@ -1,14 +1,11 @@
 package it.algos.vaadwiki.liste;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.didascalia.EADidascalia;
-import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.cognome.Cognome;
-import it.algos.vaadwiki.modules.nome.Nome;
-import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 
@@ -18,12 +15,12 @@ import java.util.ArrayList;
  * User: gac
  * Date: Fri, 14-Jun-2019
  * Time: 17:23
- *
+ * <p>
  * Crea la lista delle persone col cognome <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ListaCognomi extends Lista{
+public class ListaCognomi extends ListaNomiCognomi {
 
 
     //--property
@@ -48,6 +45,7 @@ public class ListaCognomi extends Lista{
      */
     public ListaCognomi(Cognome cognome) {
         this.cognome = cognome;
+        super.typeDidascalia = EADidascalia.liste;
     }// end of constructor
 
 
@@ -62,26 +60,5 @@ public class ListaCognomi extends Lista{
         return bioService.findAllByCognome(cognome.cognome);
     }// fine del metodo
 
-    /**
-     * Costruisce una lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
-     * La lista NON è ordinata <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     *
-     * @param listaGrezzaBio di persone che hanno una valore valido per la pagina specifica
-     *
-     * @return lista NON ORDINATA di didascalie (Wrap)
-     */
-    @Override
-    public ArrayList<WrapDidascalia> creaListaDidascalie(ArrayList<Bio> listaGrezzaBio) {
-        ArrayList<WrapDidascalia> lista = new ArrayList<WrapDidascalia>();
-        WrapDidascalia wrap;
-
-        for (Bio bio : listaGrezzaBio) {
-            wrap = appContext.getBean(WrapDidascalia.class, bio, EADidascalia.liste);
-            lista.add(wrap);
-        }// end of for cycle
-
-        return lista;
-    }// fine del metodo
 
 }// end of class

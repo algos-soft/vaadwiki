@@ -1,23 +1,23 @@
-package it.algos.vaadwiki.liste;
+package it.algos.vaadwiki.views;
 
 import com.vaadin.flow.router.BeforeEvent;
-import it.algos.vaadflow.modules.giorno.Giorno;
-import it.algos.vaadflow.modules.giorno.GiornoService;
+import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadflow.modules.anno.AnnoService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: Tue, 28-May-2019
- * Time: 05:38
+ * Date: Wed, 29-May-2019
+ * Time: 22:13
  * <p>
- * Classe astratta per la visualizzazione di una lista di prova di biografie di un particolare giorno <br>
- * Viene invocata da WikiGiornoViewList <br>
+ * Classe astratta per la visualizzazione di una lista di prova di biografie di un particolare anno <br>
+ * Viene invocata da WikiAnnoViewList <br>
  * Eliminato header e footer della pagina definitiva su wiki <br>
  * Due sottoclassi (concrete) per i Nati e per i Morti <br>
  */
-public abstract class ViewGiorni extends ViewListe {
+public abstract class ViewAnni extends ViewListe {
 
 
     /**
@@ -26,21 +26,20 @@ public abstract class ViewGiorni extends ViewListe {
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    protected GiornoService giornoService;
+    protected AnnoService annoService;
 
 
-    //--property
-    protected Giorno giorno;
+    protected Anno anno;
 
 
     /**
      * Recupera il giorno arrivato come parametro nella chiamata del browser effettuata da @Route <br>
      *
-     * @param giornoIdKey per recuperare l'istanza di Giorno
+     * @param annoIdKey per recuperare l'istanza di Anno
      */
     @Override
-    public void setParameter(BeforeEvent event, String giornoIdKey) {
-        this.giorno = giornoService.findById(giornoIdKey);
+    public void setParameter(BeforeEvent event, String annoIdKey) {
+        this.anno = annoService.findById(annoIdKey);
         this.inizia();
     }// end of method
 

@@ -10,7 +10,6 @@ import it.algos.vaadflow.service.*;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.liste.ListaService;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
-import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
@@ -22,10 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static it.algos.vaadflow.application.FlowCost.*;
-import static it.algos.vaadwiki.didascalia.Didascalia.TAG_SEP;
 
 /**
  * Project vaadwiki
@@ -382,6 +382,7 @@ public abstract class Upload {
                 testo = testo.trim();
 
                 if (pref.isBool(FlowCost.USA_DEBUG)) {
+                    testo = titoloPagina + A_CAPO + testo;
                     titoloPagina = PAGINA_PROVA;
                 }// fine del blocco if
 
@@ -624,7 +625,6 @@ public abstract class Upload {
     protected String elaboraTemplate(String testoIn) {
         return testoIn;
     }// fine del metodo
-
 
 
     /**

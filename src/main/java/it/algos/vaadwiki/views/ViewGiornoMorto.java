@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.liste;
+package it.algos.vaadwiki.views;
 
 import com.vaadin.flow.router.Route;
 

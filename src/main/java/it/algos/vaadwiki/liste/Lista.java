@@ -1,10 +1,10 @@
 package it.algos.vaadwiki.liste;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ATextService;
+import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 
 /**
  * Project vaadwiki
@@ -35,37 +37,54 @@ import java.util.*;
 @Slf4j
 public abstract class Lista {
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
     @Autowired
     public GiornoService giornoService;
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
     @Autowired
     public AnnoService annoService;
 
-    @Autowired
-    protected ApplicationContext appContext;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    protected ATextService text;
+    public ApplicationContext appContext;
 
     /**
-     * La injection viene fatta da SpringBoot in automatico <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    protected PreferenzaService pref;
+    public ATextService text;
 
-    protected ArrayList<Bio> listaGrezzaBio;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    public PreferenzaService pref;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    public BioService bioService;
 
     public LinkedHashMap<String, ArrayList<String>> mappa = null;
 
-    protected TreeMap<Integer, Map> mappaOrdinataBio;
+    protected EADidascalia typeDidascalia;
 
-    protected LinkedHashMap<Integer, ArrayList<String>> mappaListaDidascalie;
-
-    @Autowired
-    protected BioService bioService;
+    protected ArrayList<Bio> listaGrezzaBio;
 
 
     /**
@@ -104,17 +123,10 @@ public abstract class Lista {
 
 
     /**
-     * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoNato
-     * oppure
-     * Recupera una lista (array) di records Bio che usano questa istanza di Giorno nella property giornoMorto
-     * oppure
-     * Recupera una lista (array) di records Bio che usano questa istanza di Anno nella property annoNato
-     * oppure
-     * Recupera una lista (array) di records Bio che usano questa istanza di Anno nella property annoMorto
-     * <p>
-     * Sovrascritto nella sottoclasse concreta
+     * Recupera una lista (array) di records Bio che usano un'istanza della property appropriata <br>
+     * Sovrascritto nella sottoclasse concreta <br>
      *
-     * @return lista delle istanze di Bio che usano questo istanza nella property appropriata
+     * @return lista delle istanze di Bio che usano questa istanza della property appropriata
      */
     @SuppressWarnings("all")
     public ArrayList<Bio> listaBio() {
@@ -125,20 +137,26 @@ public abstract class Lista {
     /**
      * Costruisce una lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
      * La lista NON è ordinata <br>
-     * Sovrascritto nella sottoclasse concreta <br>
      *
      * @param listaGrezzaBio di persone che hanno una valore valido per la pagina specifica
      *
      * @return lista NON ORDINATA di didascalie (Wrap)
      */
     public ArrayList<WrapDidascalia> creaListaDidascalie(ArrayList<Bio> listaGrezzaBio) {
-        return null;
+        ArrayList<WrapDidascalia> lista = new ArrayList<WrapDidascalia>();
+        WrapDidascalia wrap;
+
+        for (Bio bio : listaGrezzaBio) {
+            wrap = appContext.getBean(WrapDidascalia.class, bio, typeDidascalia);
+            lista.add(wrap);
+        }// end of for cycle
+
+        return lista;
     }// fine del metodo
 
 
     /**
      * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
-     * Sovrascritto nella sottoclasse concreta <br>
      *
      * @param listaDisordinata di didascalie
      *
@@ -162,7 +180,6 @@ public abstract class Lista {
                     return text.compareInt(w1Ord, w2Ord);
                 }// end of method
             });//end of lambda expressions and anonymous inner class
-
 
             listaDisordinata.sort(new Comparator<WrapDidascalia>() {
 
@@ -233,92 +250,5 @@ public abstract class Lista {
         return mappa;
     }// fine del metodo
 
-
-//    /**
-//     * Riordina la lista delle istanze di Bio per anno di nascita
-//     * oppure
-//     * Riordina la lista delle istanze di Bio per giorno di nascita
-//     * Sovrascritto nelle sottoclassi
-//     *
-//     * @param listaGrezzaBio delle biografie che hanno una valore valido per questa pagina specifica (Giorno o Anno)
-//     *
-//     * @return mappa ordinata delle istanze di Bio
-//     */
-//    @SuppressWarnings("all")
-//    public TreeMap<Integer, Map> ordina(ArrayList<Bio> listaGrezzaBio) {
-//        return null;
-//    }// fine del metodo
-
-
-//    /**
-//     * Recupera dalla entity Bio, la property annoNato (per le liste di GiornoNato)
-//     * oppure
-//     * Recupera dalla entity Bio, la property annoMorto (per le liste di GiornoMorto)
-//     * oppure
-//     * Recupera dalla entity Bio, la property giornoNato (per le liste di AnnoNato)
-//     * oppure
-//     * Recupera dalla entity Bio, la property giornoMorto (per le liste di AnnoMorto)
-//     *
-//     * @param bio entity
-//     *
-//     * @return property Bio richiesta
-//     */
-//    public String getKeyText(Bio bio) {
-//        return VUOTA;
-//    }// fine del metodo
-
-
-//    /**
-//     * Costruisce una mappa ordinata che ha come chiave il giorno o l'anno e come valore la didascalia
-//     *
-//     * @param mappaBioOrdinata mappa ordinata delle istanze di Bio
-//     *
-//     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
-//     */
-//    @SuppressWarnings("all")
-//    public LinkedHashMap<Integer, ArrayList<String>> elaboraDidascalie(TreeMap<Integer, Map> mappaBioOrdinata) {
-//        LinkedHashMap<Integer, ArrayList<String>> mappaListaDidascalie = new LinkedHashMap<>();
-//        Map<String, Bio> mappa;
-//        ArrayList<String> listaDida;
-//        Integer anno;
-//        String didascalia;
-//        Bio bio;
-//
-//        for (Map.Entry<Integer, Map> entry : mappaBioOrdinata.entrySet()) {
-//            listaDida = new ArrayList<>();
-//            anno = entry.getKey();
-//            mappa = entry.getValue();
-//            for (Map.Entry<String, Bio> entry2 : mappa.entrySet()) {
-//                bio = entry2.getValue();
-//                didascalia = getDidascalia(bio);
-//                listaDida.add(didascalia);
-//            }// end of for cycle
-//            mappaListaDidascalie.put(anno, listaDida);
-//        }// end of for cycle
-//
-//        if (pref.isBool(USA_DEBUG)) {
-////            testDidascalie(mappaListaDidascalie);
-//        }// end of if cycle
-//
-//        return mappaListaDidascalie;
-//    }// fine del metodo
-
-
-//    /**
-//     * Recupera dalla entity Bio, la didascalia giornoNato
-//     * oppure
-//     * Recupera dalla entity Bio, la didascalia giornoMorto
-//     * oppure
-//     * Recupera dalla entity Bio, la didascalia annoNato
-//     * oppure
-//     * Recupera dalla entity Bio, la didascalia annoMorto
-//     *
-//     * @param bio entity
-//     *
-//     * @return didascalia Bio richiesta
-//     */
-//    public String getDidascalia(Bio bio) {
-//        return VUOTA;
-//    }// fine del metodo
 
 }// end of class

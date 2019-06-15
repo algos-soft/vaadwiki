@@ -1,31 +1,34 @@
-package it.algos.vaadwiki.liste;
+package it.algos.vaadwiki.views;
 
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
-import it.algos.vaadwiki.modules.nome.Nome;
-import it.algos.vaadwiki.modules.nome.NomeService;
+import it.algos.vaadwiki.modules.cognome.Cognome;
+import it.algos.vaadwiki.modules.cognome.CognomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
-import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_NOMI;
+import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_COGNOMI;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: Fri, 07-Jun-2019
- * Time: 19:00
+ * Date: Fri, 14-Jun-2019
+ * Time: 17:19
  * <p>
- * Classe per la visualizzazione di una lista di prova di biografie di un particolare nome <br>
- * Viene invocata da NomeViewList <br>
+ * Classe per la visualizzazione di una lista di prova di biografie di un particolare cognome <br>
+ * Viene invocata da CognomeViewList <br>
  * Eliminato header e footer della pagina definitiva su wiki <br>
- * Lista delle biografie di un Nome <br>
+ * Lista delle biografie di un Cognome <br>
  */
-@Route(value = ROUTE_VIEW_NOMI)
-public class ViewNome extends ViewListe {
+@Route(value = ROUTE_VIEW_COGNOMI)
+public class ViewCognome extends ViewListe{
+
+
+
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -33,27 +36,29 @@ public class ViewNome extends ViewListe {
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    protected NomeService nomeService;
+    protected CognomeService cognomeService;
 
 
     //--property
-    protected Nome nome;
+    protected Cognome cognome;
 
 
     /**
      * Recupera il nome arrivato come parametro nella chiamata del browser effettuata da @Route <br>
      *
-     * @param nomeIdKey per recuperare l'istanza di Nome
+     * @param cognomeIdKey per recuperare l'istanza di Cognome
      */
     @Override
-    public void setParameter(BeforeEvent event, String nomeIdKey) {
-        this.nome = nomeService.findById(nomeIdKey);
+    public void setParameter(BeforeEvent event, String cognomeIdKey) {
+        this.cognome = cognomeService.findById(cognomeIdKey);
         this.inizia();
     }// end of method
 
 
+
+
     /**
-     * Costruisce una mappa di tutte le didascalie relative al nome considerato <br>
+     * Costruisce una mappa di tutte le didascalie relative al cognome considerato <br>
      * Presenta le righe secondo uno dei possibili metodi di raggruppamento <br>
      * Deve essere sovrascritto nella sottoclassse concreta <br>
      * Dopo deve invocare il metodo della superclasse <br>
@@ -61,7 +66,7 @@ public class ViewNome extends ViewListe {
     public void inizia() {
         LinkedHashMap<String, ArrayList<String>> mappa;
 
-        mappa = listaService.getMappaNomi(nome);
+        mappa = listaService.getMappaCognomi(cognome);
         super.testo = listaService.righeSemplici(mappa);
 
         super.numVoci = listaService.getMappaSize(mappa);
@@ -74,7 +79,7 @@ public class ViewNome extends ViewListe {
      * Sovrascritto <br>
      */
     protected void addTitolo() {
-        String titolo = "Lista biografie di " + text.format(numVoci) + " persone di nome " + nome.getNome() + A_CAPO + A_CAPO;
+        String titolo = "Lista biografie di " + text.format(numVoci) + " persone di cognome " + cognome.getCognome() + A_CAPO + A_CAPO;
         super.testo = titolo + super.testo;
     }// end of method
 
