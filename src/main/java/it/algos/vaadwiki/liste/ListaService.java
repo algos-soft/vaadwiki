@@ -5,14 +5,18 @@ import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
-import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.cognome.Cognome;
+import it.algos.vaadwiki.modules.genere.Genere;
+import it.algos.vaadwiki.modules.genere.GenereService;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.professione.Professione;
+import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.vaadwiki.service.ABioService;
+import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -33,6 +37,21 @@ import static it.algos.vaadwiki.didascalia.Didascalia.TAG_SEP;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public class ListaService extends ABioService {
+
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected ProfessioneService professioneService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected GenereService genereService;
 
 
     /**
@@ -152,11 +171,11 @@ public class ListaService extends ABioService {
     }// fine del metodo
 
 
-    public void pippo(ArrayList<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia) {
+    public void pippo(ArrayList<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia, String tagParagrafoNullo) {
         LinkedHashMap<String, HashMap> mappaBio = new LinkedHashMap<String, HashMap>();
         if (listaDidascalie != null && listaDidascalie.size() > 0) {
             for (WrapDidascalia wrap : listaDidascalie) {
-                elaboraMappaSingola(mappaBio, wrap);
+                elaboraMappaSingola(mappaBio, wrap, tagParagrafoNullo);
             }// end of if cycle
         }// end of for cycle
     }// fine del metodo
@@ -167,7 +186,7 @@ public class ListaService extends ABioService {
      * Sovrascritto
      */
     @SuppressWarnings("all")
-    protected void elaboraMappaSingola(LinkedHashMap<String, HashMap> mappaBio, WrapDidascalia wrap) {
+    protected void elaboraMappaSingola(LinkedHashMap<String, HashMap> mappaBio, WrapDidascalia wrap, String tagParagrafoNullo) {
         String key = wrap.getChiave();
         String didascalia;
         ArrayList<Bio> lista;
@@ -186,7 +205,7 @@ public class ListaService extends ABioService {
             lista = new ArrayList<>();
             lista.add(bio);
             mappa.put(KEY_MAP_PARAGRAFO_TITOLO, key);
-//            mappa.put(KEY_MAP_PARAGRAFO_LINK, getTitoloParagrafo(bio));
+            mappa.put(KEY_MAP_PARAGRAFO_LINK, getTitoloParagrafo(bio, tagParagrafoNullo));
             mappa.put(KEY_MAP_LISTA, lista);
             mappa.put(KEY_MAP_SESSO, bio.getSesso());
             mappa.put(KEY_MAP_VOCI, 1);
@@ -211,62 +230,97 @@ public class ListaService extends ABioService {
     }// fine del metodo
 
 
-//    /**
-//     * Costruisce il titolo del paragrafo
-//     * <p>
-//     * Questo deve essere composto da:
-//     * Professione.pagina
-//     * Genere.plurale
-//     */
-//    protected String getTitoloParagrafo(Bio bio) {
-//        String titoloParagrafo = tagParagrafoNullo;
-//        Professione professione = null;
-//        String professioneTxt;
-//        String paginaWiki = VUOTA;
-//        Genere genere = null;
-//        String genereTxt;
-//        String linkVisibile = VUOTA;
-//        Attivita attivita = null;
-//        String attivitaSingolare = VUOTA;
-//
-//        if (bio == null) {
-//            return VUOTA;
+    /**
+     * Costruisce il titolo del paragrafo
+     * <p>
+     * Questo deve essere composto da:
+     * Professione.pagina
+     * Genere.plurale
+     */
+    protected String getTitoloParagrafo(Bio bio, String tagParagrafoNullo) {
+        String titoloParagrafo = tagParagrafoNullo;
+        Professione professione = null;
+        String professioneTxt;
+        String paginaWiki = VUOTA;
+        Genere genere = null;
+        String genereTxt = "";
+        String linkVisibile = VUOTA;
+        String attivitaSingolare = VUOTA;
+
+        if (bio == null) {
+            return VUOTA;
+        }// end of if cycle
+
+        if (bio.getWikiTitle().equals("Ferdinando Ughelli")) {
+            int a = 87;
+        }// end of if cycle
+
+        attivitaSingolare = bio.getAttivita();
+        professione = professioneService.findByKeyUnica(attivitaSingolare);
+        genere = genereService.findByKeyUnica(attivitaSingolare);
 //        }// end of if cycle
-//
-//        if (bio.getTitle().equals("Ferdinando Ughelli")) {
-//            int a = 87;
-//        }// end of if cycle
-//
-//        attivita = bio.getAttivitaPunta();
-//
-//        if (attivita != null) {
-//            attivitaSingolare = attivita.getSingolare();
-//            professione = Professione.findBySingolare(attivitaSingolare);
-//            genere = Genere.findBySingolareAndSesso(attivitaSingolare, bio.getSesso());
-//        }// end of if cycle
-//
-//        if (professione != null) {
-//            professioneTxt = professione.getPagina();
-//        } else {
-//            professioneTxt = attivitaSingolare;
-//        }// end of if/else cycle
-//        if (!professioneTxt.equals(VUOTA)) {
-//            paginaWiki = LibText.primaMaiuscola(professioneTxt);
-//        }// end of if cycle
-//
-//        if (genere != null) {
-//            genereTxt = genere.getPlurale();
-//            if (!genereTxt.equals(CostBio.VUOTO)) {
-//                linkVisibile = LibText.primaMaiuscola(genereTxt);
+
+        if (professione != null) {
+            professioneTxt = professione.getPagina();
+        } else {
+            professioneTxt = attivitaSingolare;
+        }// end of if/else cycle
+        if (!professioneTxt.equals(VUOTA)) {
+            paginaWiki = text.primaMaiuscola(professioneTxt);
+        }// end of if cycle
+
+        if (genere != null) {
+            if (bio.getSesso().equals("M")) {
+                genereTxt = genere.getPluraleMaschile();
+            } else {
+                if (bio.getSesso().equals("F")) {
+                    genereTxt = genere.getPluraleFemminile();
+                } else {
+                    //@todo errore
+                }// end of if/else cycle
+            }// end of if/else cycle
+
+            if (text.isValid(genereTxt)) {
+                linkVisibile = text.primaMaiuscola(genereTxt);
+            }// end of if cycle
+        }// end of if cycle
+
+        if (text.isValid(paginaWiki) && text.isValid(linkVisibile)) {
+            titoloParagrafo = costruisceTitolo(paginaWiki, linkVisibile, tagParagrafoNullo);
+        }// end of if cycle
+
+        return titoloParagrafo;
+    }// fine del metodo
+
+
+    /**
+     * Costruisce il titolo
+     * Controlla se il titolo visibile (link) non esiste già
+     * Se esiste, sostituisce la pagina (prima parte del titolo) con quella già esistente
+     */
+    protected String costruisceTitolo(String paginaWiki, String linkVisibile, String tagParagrafoNullo) {
+        String titoloParagrafo = LibWiki.setLink(paginaWiki, linkVisibile);
+        String link;
+
+        if (linkVisibile.equals(tagParagrafoNullo)) {
+            return linkVisibile;
+        }// end of if cycle
+
+//        for (String keyCompleta : mappaBio.keySet()) {
+//            link = keyCompleta.substring(keyCompleta.indexOf("|") + 1);
+//            link = LibWiki.setNoQuadre(link);
+//            if (link.equals(linkVisibile)) {
+//                titoloParagrafo = keyCompleta;
+//                break;
 //            }// end of if cycle
-//        }// end of if cycle
-//
-//        if (!paginaWiki.equals(VUOTA) && !linkVisibile.equals(VUOTA)) {
-//            titoloParagrafo = costruisceTitolo(paginaWiki, linkVisibile);
-//        }// end of if cycle
-//
-//        return titoloParagrafo;
-//    }// fine del metodo
+//        }// end of for cycle
+
+//        if (usaTitoloParagrafoConLink) {
+//            titoloParagrafo = LibBio.fixLink(titoloParagrafo);
+//        }// end of if/else cycle
+
+        return titoloParagrafo;
+    }// fine del metodo
 
 
     /**

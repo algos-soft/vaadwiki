@@ -102,6 +102,7 @@ public abstract class Lista {
     @Autowired
     protected ListaService listaService;
 
+    protected String tagParagrafoNullo;
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -145,7 +146,7 @@ public abstract class Lista {
 
 
         //--Costruisce la mappa completa @todo TEST
-        listaService.pippo(listaDidascalie, typeDidascalia);
+//        listaService.pippo(listaDidascalie, typeDidascalia,tagParagrafoNullo);
     }// fine del metodo
 
 

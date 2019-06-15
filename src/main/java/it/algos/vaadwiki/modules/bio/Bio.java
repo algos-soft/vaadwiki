@@ -105,16 +105,6 @@ public class Bio extends AEntity {
     @AIField(type = EAFieldType.localdatetime, required = true, help = "ultima lettura/aggiornamento della voce effettuata dal programma VaadBio")
     public LocalDateTime lastLettura;
 
-//    /**
-//     * biografia NON allineata tra server wiki e mongoDB locale
-//     * viene sempre posta a FALSE alla creazione della entity
-//     * diventa TRUE se ultimaModifica è successiva a ultimaLettura
-//     * dopo un UPDATE ultimaLettura è sicuramente successiva a ultimaModifica ed il flag ridiventa FALSE
-//     */
-//    @Indexed
-//    @AIField(type = EAFieldType.checkbox)
-//    @AIColumn(name = "H")
-//    public boolean sporca;
 
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
@@ -130,17 +120,11 @@ public class Bio extends AEntity {
     @AIColumn(name = "X", widthEM = 2)
     private String sesso;
 
-//    @AIField(type = EAFieldType.text)
-//    private String luogoNato;
-
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(name = "LuogoNato", widthEM = 8)
     private String luogoNato;
 
-    //    @AIField(type = EAFieldType.text)
-//    @AIColumn(width = 210)
-//    private String luogoNascitaLink;
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
@@ -151,17 +135,11 @@ public class Bio extends AEntity {
     @AIColumn(name = "Nato", widthEM = 4)
     private String annoNato;
 
-//    @AIField(type = EAFieldType.text)
-//    private String luogoMorto;
-
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(name = "LuogoMorto", widthEM = 8)
     private String luogoMorto;
 
-    //    @AIField(type = EAFieldType.text)
-//    @AIColumn(width = 210)
-//    private String luogoMorteLink;
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(width = 210)
@@ -187,9 +165,6 @@ public class Bio extends AEntity {
     @AIColumn(widthEM = 8)
     private String attivita3;
 
-    //    @AIField(type = EAFieldType.text)
-//    @AIColumn(width = 210)
-//    private String attivitaAltre;
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(widthEM = 8)
