@@ -12,9 +12,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
@@ -72,6 +69,7 @@ public class AttivitaService extends AttNazProfCatService {
         super.codeLastDownload = LAST_DOWNLOAD_ATTIVITA;
         super.durataLastDownload = DURATA_DOWNLOAD_ATTIVITA;
     }// end of Spring constructor
+
 
     /**
      * Ricerca di una entity (la crea se non la trova) <br>
@@ -178,33 +176,5 @@ public class AttivitaService extends AttNazProfCatService {
     }// end of method
 
 
-//    /**
-//     * Fetches the entities whose 'main text property' matches the given filter text.
-//     * <p>
-//     * Se esiste la company, filtrate secondo la company <br>
-//     * The matching is case insensitive. When passed an empty filter text,
-//     * the method returns all categories. The returned list is ordered by name.
-//     * The 'main text property' is different in each entity class and chosen in the specific subclass
-//     *
-//     * @param filter the filter text
-//     *
-//     * @return the list of matching entities
-//     */
-//    @Override
-//    public List<? extends AEntity> findFilter(String filter) {
-//        List<? extends AEntity> lista = null;
-//        String normalizedFilter = filter.toLowerCase();
-//
-//        lista = findAll();
-//        if (lista != null) {
-//            lista = lista.stream()
-//                    .filter(entity -> {
-//                        return ((Attivita)entity).getSingolare().toLowerCase().startsWith(normalizedFilter);
-//                    })
-//                    .collect(Collectors.toList());
-//        }// end of if cycle
-//
-//        return lista;
-//    }// end of method
 
 }// end of class

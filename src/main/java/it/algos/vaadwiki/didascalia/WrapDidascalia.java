@@ -131,7 +131,7 @@ public class WrapDidascalia {
      */
     private String testoSenza;
 
-    private Bio bio;
+    public Bio bio;
 
     private EADidascalia type;
 

@@ -1,15 +1,16 @@
-package it.algos.vaadwiki.modules.attivita;
+package it.algos.vaadwiki.modules.genere;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
-import it.algos.vaadwiki.schedule.TaskAttivita;
+import it.algos.vaadwiki.schedule.TaskGenere;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,7 +22,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Project vaadwiki <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 5-ott-2018 12.04.32 <br>
+ * Fix date: 15-giu-2019 11.00.02 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
@@ -39,11 +40,12 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Route(value = TAG_ATT, layout = MainLayout.class)
-@Qualifier(TAG_ATT)
+@UIScope
+@Route(value = TAG_GEN, layout = MainLayout.class)
+@Qualifier(TAG_GEN)
 @Slf4j
-@AIScript(sovrascrivibile = false)
-public class AttivitaViewList extends AttNazProfCatViewList {
+@AIScript(sovrascrivibile = true)
+public class GenereViewList extends AttNazProfCatViewList {
 
 
     /**
@@ -51,15 +53,14 @@ public class AttivitaViewList extends AttNazProfCatViewList {
      * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.BOAT;
-
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    private TaskAttivita taskAttivita;
+    private TaskGenere taskGenere;
 
 
     /**
@@ -71,9 +72,9 @@ public class AttivitaViewList extends AttNazProfCatViewList {
      * @param dialog    per visualizzare i fields
      */
     @Autowired
-    public AttivitaViewList(@Qualifier(TAG_ATT) IAPresenter presenter, @Qualifier(TAG_ATT) IADialog dialog) {
+    public GenereViewList(@Qualifier(TAG_GEN) IAPresenter presenter, @Qualifier(TAG_GEN) IADialog dialog) {
         super(presenter, dialog);
-        ((AttivitaViewDialog) dialog).fixFunzioni(this::save, this::delete);
+        ((GenereViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
 
@@ -86,13 +87,14 @@ public class AttivitaViewList extends AttNazProfCatViewList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.titoloModulo = service.titoloModuloAttivita;
-        super.titoloPaginaStatistiche = service.titoloPaginaStatisticheAttivita;
-        super.task = taskAttivita;
+        super.titoloModulo = service.titoloModuloGenere;
+        super.usaBottoneStatistiche = false;
+        super.usaBottoneUpload = false;
+        super.task = taskGenere;
         super.usaPagination = true;
-        super.codeFlagDownload = USA_DAEMON_ATTIVITA;
-        super.codeLastDownload = LAST_DOWNLOAD_ATTIVITA;
-        super.durataLastDownload = DURATA_DOWNLOAD_ATTIVITA;
+        super.codeFlagDownload = USA_DAEMON_GENERE;
+        super.codeLastDownload = LAST_DOWNLOAD_GENERE;
+        super.durataLastDownload = DURATA_DOWNLOAD_GENERE;
     }// end of method
 
 
@@ -103,7 +105,7 @@ public class AttivitaViewList extends AttNazProfCatViewList {
      * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
      */
     protected void creaGridPaginata() {
-        PaginatedGrid<Attivita> gridPaginated = new PaginatedGrid<Attivita>();
+        PaginatedGrid<Genere> gridPaginated = new PaginatedGrid<Genere>();
         super.grid = gridPaginated;
         super.creaGridPaginata();
     }// end of method
@@ -114,8 +116,9 @@ public class AttivitaViewList extends AttNazProfCatViewList {
      * Sovrascritto (obbligatorio) <br>
      */
     protected void addColumnsGridPaginata() {
-        fixColumn(Attivita::getSingolare, "singolare");
-        fixColumn(Attivita::getPlurale, "plurale");
+        fixColumn(Genere::getSingolare, "singolare");
+        fixColumn(Genere::getPluraleMaschile, "pluraleMaschile");
+        fixColumn(Genere::getPluraleFemminile, "pluraleFemminile");
     }// end of method
 
 
@@ -123,15 +126,10 @@ public class AttivitaViewList extends AttNazProfCatViewList {
      * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
      * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
      */
-    protected void fixColumn(ValueProvider<Attivita, ?> valueProvider, String propertyName) {
+    protected void fixColumn(ValueProvider<Genere, ?> valueProvider, String propertyName) {
         Grid.Column singleColumn;
-        singleColumn = ((PaginatedGrid<Attivita>) grid).addColumn(valueProvider);
-        columnService.fixColumn(singleColumn, Attivita.class, propertyName);
-    }// end of method
-
-
-    //@todo Da sviluppare
-    protected void uploadStatistiche() {
+        singleColumn = ((PaginatedGrid<Genere>) grid).addColumn(valueProvider);
+        columnService.fixColumn(singleColumn, Genere.class, propertyName);
     }// end of method
 
 }// end of class

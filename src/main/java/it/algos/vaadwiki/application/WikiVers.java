@@ -62,27 +62,27 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_BIO, "Crono per ciclo bio completo",true);
+            creaPrefBool(USA_DAEMON_BIO, "Crono per ciclo bio completo", true);
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo",false);
+            creaPrefBool(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo", false);
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo",false);
+            creaPrefBool(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo", false);
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo",false);
+            creaPrefBool(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo", false);
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo",false);
+            creaPrefBool(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo", false);
         }// fine del blocco if
 
         //--creata una nuova preferenza
@@ -190,6 +190,19 @@ public class WikiVers extends AVers {
             creaPrefDate(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi");
         }// fine del blocco if
 
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_DAEMON_GENERE, "Crono per download genere, extra-ciclo", false);
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefDate(LAST_DOWNLOAD_GENERE, "Ultimo download del modulo genere (plurali)");
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefInt(DURATA_DOWNLOAD_GENERE, "Durata in secondi dell'ultimo download del modulo genere (plurali)");
+        }// fine del blocco if
 
         return k;
     }// end of method

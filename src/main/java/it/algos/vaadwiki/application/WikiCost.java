@@ -23,6 +23,8 @@ import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 @AIScript(sovrascrivibile = false)
 public class WikiCost {
 
+    public final static String TAG_GEN = "genere";
+
     public final static String TAG_COG = "cognome";
 
     public final static String TAG_NOM = "nome";
@@ -72,6 +74,8 @@ public class WikiCost {
 
     public final static String CAT = "Categoria:";
 
+    public final static String GEN = "Genere:";
+
     public final static String NOME = "Nome:";
 
     public final static String COGNOME = "Cognome:";
@@ -101,6 +105,8 @@ public class WikiCost {
 
     public final static String USA_DAEMON_CATEGORIA = DAEMON + CAT;
 
+    public final static String USA_DAEMON_GENERE = DAEMON + GEN;
+
     public final static String USA_DAEMON_NOMI = DAEMON + "Nomi";
 
     public final static String USA_DAEMON_COGNOMI = DAEMON + "Cognomi";
@@ -116,6 +122,8 @@ public class WikiCost {
 
     public final static String LAST_DOWNLOAD_CATEGORIA = CODE + CAT;
 
+    public final static String LAST_DOWNLOAD_GENERE = CODE + GEN;
+
     public final static String LAST_DOWNLOAD_BIO = CODE + BIO;
 
     public final static String LAST_ELABORA_NOME = CODE + NOME;
@@ -130,6 +138,8 @@ public class WikiCost {
     public final static String DURATA_DOWNLOAD_PROFESSIONE = DURATA + PROF;
 
     public final static String DURATA_DOWNLOAD_CATEGORIA = DURATA + CAT;
+
+    public final static String DURATA_DOWNLOAD_GENERE = DURATA + GEN;
 
     public final static String DURATA_DOWNLOAD_BIO = DURATA + BIO;
 
@@ -185,6 +195,24 @@ public class WikiCost {
     public final static String SOGLIA_COGNOMI_MONGO = "sogliaCognomiMongo";
 
     public final static String SOGLIA_COGNOMI_PAGINA_WIKI = "sogliaCognomiPaginaWiki";
+
+    public final static String KEY_MAP_PARAGRAFO_TITOLO = "keyMapTitolo";
+
+    public final static String KEY_MAP_PARAGRAFO_LINK = "keyMapLink";
+
+    public final static String KEY_MAP_SESSO = "keyMapSesso";
+
+    public final static String KEY_MAP_LISTA = "keyMapLista";
+
+    public final static String KEY_MAP_VOCI = "keyMapVoci";
+
+    public final static String KEY_MAP_ORDINE_ANNO_NATO = "keyMapOrdineAnnoNato";
+
+    public final static String KEY_MAP_ORDINE_ANNO_MORTO = "keyMapOrdineAnnoMorto";
+
+    public final static String KEY_MAP_ORDINE_GIORNO_NATO = "keyMapOrdineGiornoNato";
+
+    public final static String KEY_MAP_ORDINE_GIORNO_MORTO = "keyMapOrdineGiornoMorto";
 
     public static WikiLoginOld WIKI_LOGIN = null;
 

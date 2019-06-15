@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 
@@ -28,8 +29,6 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Date: gio, 12-lug-2018
  * Time: 16:39
  */
-//@SpringComponent
-//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public abstract class AttNazProfCatService extends AService {
 
@@ -38,6 +37,8 @@ public abstract class AttNazProfCatService extends AService {
     public String titoloModuloNazionalita = PATH_MODULO_PLURALE + NAZ.toLowerCase();
 
     public String titoloModuloProfessione = PATH_MODULO_LINK + ATT.toLowerCase();
+
+    public String titoloModuloGenere = titoloModuloAttivita + " genere";
 
     public String titoloPaginaStatisticheAttivita = PATH_PROGETTO + ATT;
 
@@ -101,10 +102,12 @@ public abstract class AttNazProfCatService extends AService {
         String plurale;
         String message = "";
 
+        deleteAll();
+
         //--legge la pagina wiki
         testo = ((AQueryVoce) appContext.getBean("AQueryVoce", titoloModulo)).urlRequest();
         if (text.isValid(testo)) {
-            righe = testo.split("\n");
+            righe = testo.split(A_CAPO);
         }// end of if cycle
 
         if (array.isValid(righe)) {

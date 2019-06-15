@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
-import static it.algos.vaadwiki.application.WikiCost.DURATA_DOWNLOAD_PROFESSIONE;
-import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_PROFESSIONE;
-import static it.algos.vaadwiki.application.WikiCost.TAG_PRO;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki <br>
@@ -74,14 +72,14 @@ public class ProfessioneService extends AttNazProfCatService {
         super.titoloModulo = titoloModuloProfessione;
         super.codeLastDownload = LAST_DOWNLOAD_PROFESSIONE;
         super.durataLastDownload = DURATA_DOWNLOAD_PROFESSIONE;
-   }// end of Spring constructor
+    }// end of Spring constructor
 
 
     /**
      * Ricerca di una entity (la crea se non la trova) <br>
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
-     * @param pagina wiki di riferimento per la professione - pipedlink (obbligatorio NON unico)
+     * @param pagina    wiki di riferimento per la professione - pipedlink (obbligatorio NON unico)
      *
      * @return la entity trovata o appena creata
      */
@@ -100,13 +98,14 @@ public class ProfessioneService extends AttNazProfCatService {
      * Crea una entity e la registra <br>
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
-     * @param pagina wiki di riferimento per la professione - pipedlink (obbligatorio NON unico)
+     * @param pagina    wiki di riferimento per la professione - pipedlink (obbligatorio NON unico)
      *
      * @return la entity appena creata
      */
     public Professione crea(String singolare, String pagina) {
-        return (Professione)save(newEntity(singolare, pagina));
+        return (Professione) save(newEntity(singolare, pagina));
     }// end of method
+
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata
@@ -127,7 +126,7 @@ public class ProfessioneService extends AttNazProfCatService {
      * All properties <br>
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
-     * @param pagina wiki di riferimento per la professione - pipedlink (obbligatorio NON unico)
+     * @param pagina    wiki di riferimento per la professione - pipedlink (obbligatorio NON unico)
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -159,6 +158,7 @@ public class ProfessioneService extends AttNazProfCatService {
         return repository.findBySingolare(singolare);
     }// end of method
 
+
     /**
      * Property unica (se esiste) <br>
      */
@@ -166,6 +166,7 @@ public class ProfessioneService extends AttNazProfCatService {
     public String getPropertyUnica(AEntity entityBean) {
         return ((Professione) entityBean).getSingolare();
     }// end of method
+
 
     /**
      * Costruisce una lista di nomi delle properties del Search nell'ordine:

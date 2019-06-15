@@ -8,14 +8,13 @@ import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
-import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -80,11 +79,28 @@ public abstract class Lista {
     @Autowired
     public BioService bioService;
 
+    /**
+     * Typo di didascalia da preparare per questa lista <br>
+     * Property della classe perché regolata nelle sottoclassi concrete <br>
+     */
+    public EADidascalia typeDidascalia;
+
+    /**
+     * Lista grezza delle voci biografiche da inserire in questa lista <br>
+     * Property della classe perché regolata nelle sottoclassi concrete <br>
+     */
+    public ArrayList<Bio> listaGrezzaBio;
+
     public LinkedHashMap<String, ArrayList<String>> mappa = null;
 
-    protected EADidascalia typeDidascalia;
+    public LinkedHashMap<String, HashMap> mappaBio = new LinkedHashMap<String, HashMap>();
 
-    protected ArrayList<Bio> listaGrezzaBio;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected ListaService listaService;
 
 
     /**
@@ -100,7 +116,7 @@ public abstract class Lista {
      */
     @PostConstruct
     protected void inizia() {
-        this.creaMappaIniziale();
+        this.creaMappa();
     }// end of method
 
 
@@ -112,13 +128,24 @@ public abstract class Lista {
      *
      * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
      */
-    public void creaMappaIniziale() {
-        ArrayList<WrapDidascalia> lista = null;
+    public void creaMappa() {
+        ArrayList<WrapDidascalia> listaDidascalie = null;
 
-        listaGrezzaBio = listaBio();
-        lista = creaListaDidascalie(listaGrezzaBio);
-        ordinaListaDidascalie(lista);
-        mappa = creaMappa(lista);
+        //--Crea la lista grezza delle voci biografiche
+        this.listaGrezzaBio = listaBio();
+
+        //--Crea una lista di didascalie specifiche
+        listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, typeDidascalia);
+
+        //--Ordina la lista di didascalie specifiche
+        listaService.ordinaListaDidascalie(listaDidascalie);
+
+        //--Costruisce la mappa completa
+        this.mappa = listaService.creaMappa(listaDidascalie);
+
+
+        //--Costruisce la mappa completa @todo TEST
+        listaService.pippo(listaDidascalie, typeDidascalia);
     }// fine del metodo
 
 
@@ -131,123 +158,6 @@ public abstract class Lista {
     @SuppressWarnings("all")
     public ArrayList<Bio> listaBio() {
         return null;
-    }// fine del metodo
-
-
-    /**
-     * Costruisce una lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
-     * La lista NON è ordinata <br>
-     *
-     * @param listaGrezzaBio di persone che hanno una valore valido per la pagina specifica
-     *
-     * @return lista NON ORDINATA di didascalie (Wrap)
-     */
-    public ArrayList<WrapDidascalia> creaListaDidascalie(ArrayList<Bio> listaGrezzaBio) {
-        ArrayList<WrapDidascalia> lista = new ArrayList<WrapDidascalia>();
-        WrapDidascalia wrap;
-
-        for (Bio bio : listaGrezzaBio) {
-            wrap = appContext.getBean(WrapDidascalia.class, bio, typeDidascalia);
-            lista.add(wrap);
-        }// end of for cycle
-
-        return lista;
-    }// fine del metodo
-
-
-    /**
-     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
-     *
-     * @param listaDisordinata di didascalie
-     *
-     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
-     */
-    public void ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
-        if (listaDisordinata != null) {
-
-            listaDisordinata.sort(new Comparator<WrapDidascalia>() {
-
-                int w1Ord;
-
-                int w2Ord;
-
-
-                @Override
-                public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
-                    w1Ord = dida1.getOrdine();
-                    w2Ord = dida2.getOrdine();
-
-                    return text.compareInt(w1Ord, w2Ord);
-                }// end of method
-            });//end of lambda expressions and anonymous inner class
-
-            listaDisordinata.sort(new Comparator<WrapDidascalia>() {
-
-                int w1Ord;
-
-                int w2Ord;
-
-                String w1Cog;
-
-                String w2Cog;
-
-                int resultOrdine;
-
-                int resultCognomi;
-
-
-                @Override
-                public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
-                    w1Ord = dida1.getOrdine();
-                    w2Ord = dida2.getOrdine();
-                    w1Cog = dida1.getSottoChiave();
-                    w2Cog = dida2.getSottoChiave();
-
-                    resultOrdine = text.compareInt(w1Ord, w2Ord);
-
-                    if (resultOrdine == 0) {
-                        return text.compareStr(w1Cog, w2Cog);
-                    } else {
-                        return resultOrdine;
-                    }// end of if/else cycle
-
-                }// end of method
-            });//end of lambda expressions and anonymous inner class
-        }// end of if cycle
-    }// fine del metodo
-
-
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     *
-     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
-     *
-     * @listaOrdinata di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
-     */
-    public LinkedHashMap<String, ArrayList<String>> creaMappa(ArrayList<WrapDidascalia> listaDisordinata) {
-        LinkedHashMap<String, ArrayList<String>> mappa = new LinkedHashMap<>();
-        ArrayList<String> lista = null;
-        String chiave;
-
-        for (WrapDidascalia wrap : listaDisordinata) {
-            chiave = wrap.getChiave();
-            chiave = text.isValid(chiave) ? LibWiki.setQuadre(chiave) : "";
-
-            if (mappa.get(chiave) == null) {
-                lista = new ArrayList<String>();
-                mappa.put(chiave, lista);
-            } else {
-                lista = (ArrayList<String>) mappa.get(chiave);
-            }// end of if/else cycle
-            lista.add(wrap.getTestoSenza()); //@todo rimettere
-
-        }// end of for cycle
-
-        return mappa;
     }// fine del metodo
 
 
