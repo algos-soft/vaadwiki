@@ -17,9 +17,6 @@ import it.algos.vaadflow.modules.giorno.GiornoViewDialog;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadwiki.upload.UploadGiornoMorto;
-import it.algos.vaadwiki.upload.UploadGiornoNato;
-import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -64,6 +61,7 @@ public class WikiGiornoViewList extends WikiViewList {
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
+    public static final String MENU_NAME = "Giorno";
 
 
     /**

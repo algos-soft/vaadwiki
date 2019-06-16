@@ -5,6 +5,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.enumeration.EAOperation;
@@ -191,7 +192,8 @@ public class BioViewDialog extends AViewDialog<Bio> {
                 obj = field.getValue();
             }// end of if cycle
             if (obj != null && obj instanceof String) {
-                bio = api.leggeBio((String) obj);
+                wikiTitle = (String) obj;
+                bio = api.leggeBio(wikiTitle);
             }// end of if cycle
         }// end of if cycle
 
@@ -199,8 +201,9 @@ public class BioViewDialog extends AViewDialog<Bio> {
             binder.setBean(bio);
             currentItem.lastLettura = bio.lastLettura;
             currentItem.lastModifica = bio.lastModifica;
-        }// end of if cycle
-
+        } else {
+            Notification.show("Non ho trovato la pagina " + (text.isValid(wikiTitle) ? wikiTitle : ""), 2000, Notification.Position.MIDDLE);
+        }// end of if/else cycle
     }// end of method
 
 

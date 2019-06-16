@@ -172,17 +172,17 @@ public class WikiBoot extends ABoot {
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
     protected void addRouteSpecifiche() {
+        FlowCost.MENU_CLAZZ_LIST.add(ViewDidascalie.class);
         FlowCost.MENU_CLAZZ_LIST.add(UtilityView.class);
         FlowCost.MENU_CLAZZ_LIST.add(AttivitaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(NazionalitaViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(ProfessioneViewList.class);
+        FlowCost.MENU_CLAZZ_LIST.add(GenereViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(BioViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(WikiGiornoViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(WikiAnnoViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(NomeViewList.class);
-        FlowCost.MENU_CLAZZ_LIST.add(ViewDidascalie.class);
 		FlowCost.MENU_CLAZZ_LIST.add(CognomeViewList.class);
-		FlowCost.MENU_CLAZZ_LIST.add(GenereViewList.class);
 	}// end of method
 
 

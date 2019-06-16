@@ -64,11 +64,13 @@ public class WikiAnnoViewList extends WikiViewList {
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
+    public static final String MENU_NAME = "Anno";
 
-//    @Autowired
+
+    //    @Autowired
     private UploadAnnoNato uploadAnnoNato;
 
-//    @Autowired
+    //    @Autowired
     private UploadAnnoMorto uploadAnnoMorto;
 
 

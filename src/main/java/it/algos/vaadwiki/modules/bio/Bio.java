@@ -171,8 +171,6 @@ public class Bio extends AEntity {
     @AIColumn(widthEM = 8)
     private String nazionalita;
 
-    private Giorno giornoProva;
-
 
     /**
      * @return a string representation of the object.

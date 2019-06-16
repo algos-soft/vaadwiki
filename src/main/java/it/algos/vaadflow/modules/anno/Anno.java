@@ -91,7 +91,7 @@ public class Anno extends AEntity {
      */
     @NotNull
     @DBRef
-    @Field("mese")
+    @Field("secolo")
     @AIField(type = EAFieldType.combo, clazz = SecoloService.class)
     @AIColumn(widthEM = 8)
     public Secolo secolo;

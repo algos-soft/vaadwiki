@@ -40,7 +40,7 @@ import static it.algos.@MODULELOWER@.application.@COST@.@QUALIFIER@;
 @Qualifier(@QUALIFIER@)
 @Slf4j
 @AIScript(sovrascrivibile = true)
-public class @ENTITY@ViewList extends AViewList {
+public class @ENTITY@ViewList extends AGridViewList {
 
 
     /**

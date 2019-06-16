@@ -158,7 +158,6 @@ public class AFooter extends VerticalLayout {
         }// end of if cycle
 
         this.add(label);
-
         if (pref.isBool(USA_DEBUG)) {
             labelDebug= new Label("Sei in modalità DEBUG");
             labelDebug.getStyle().set("font-size", "small");
