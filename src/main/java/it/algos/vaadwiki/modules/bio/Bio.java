@@ -5,11 +5,14 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadflow.modules.giorno.GiornoService;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -171,6 +174,15 @@ public class Bio extends AEntity {
     @AIColumn(widthEM = 8)
     private String nazionalita;
 
+    /**
+     * indirizzo (facoltativo, non unica)
+     * riferimento dinamico CON @DBRef
+     */
+    @DBRef
+    @Field("xxx")
+    @AIField(type = EAFieldType.combo, clazz = GiornoService.class, help = "Giorno nato")
+    @AIColumn(name = "gnl", widthEM = 8)
+    public Giorno giornoNatoLink;
 
     /**
      * @return a string representation of the object.
