@@ -203,7 +203,7 @@ public class PageService extends ABioService {
 
         if (pageid > 0 && text.isValid(wikiTitle) && text.isValid(template)) {
             entity = bioService.newEntity(pageid, wikiTitle, template, lastWikiModifica);
-            entity = elaboraService.esegueNoSave(entity);
+//            entity = elaboraService.esegueNoSave(entity);
         } else {
             if (text.isEmpty(template)) {
                 log.warn("Algos - Manca il template Bio alla voce " + wikiTitle);

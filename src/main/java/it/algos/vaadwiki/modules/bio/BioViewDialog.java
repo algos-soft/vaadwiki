@@ -7,6 +7,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.ATextService;
@@ -123,33 +124,47 @@ public class BioViewDialog extends AViewDialog<Bio> {
     }// end of constructor
 
 
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void fixPreferenzeSpecifiche() {
+        super.fixPreferenzeSpecifiche();
+        super.usaSaveButton = false;
+    }// end of method
+
+
     @PostConstruct
     protected void addBottoniSpecifici() {
         saveButton.getElement().setAttribute("theme", "secondary");
 
-        downloadButton.addClickListener(event -> downloadOnly());
-        downloadButton.getElement().setAttribute("theme", "primary");
         downloadButton.setIcon(new Icon(VaadinIcon.ARROW_DOWN));
+        downloadButton.getElement().setAttribute("theme", "primary");
+        downloadButton.addClickListener(event -> downloadOnly());
+        bottomLayout.add(downloadButton);
 
-        elaboraOnlyButton.addClickListener(event -> elaboraOnly());
         elaboraOnlyButton.setIcon(new Icon(VaadinIcon.ARROW_RIGHT));
+        elaboraOnlyButton.addClickListener(event -> elaboraOnly());
+        bottomLayout.add(elaboraOnlyButton);
 
-        wikiShowButton.addClickListener(event -> showWikiPage());
+        saveButton.setIcon(new Icon(VaadinIcon.DATABASE));
+        saveButton.getElement().setAttribute("theme", "error");
+        bottomLayout.add(saveButton);
+
         wikiShowButton.setIcon(new Icon(VaadinIcon.SEARCH));
+        wikiShowButton.addClickListener(event -> showWikiPage());
+        bottomLayout.add(wikiShowButton);
 
-        wikiEditButton.addClickListener(event -> editWikiPage());
         wikiEditButton.setIcon(new Icon(VaadinIcon.SEARCH));
+        wikiEditButton.addClickListener(event -> editWikiPage());
+        bottomLayout.add(wikiEditButton);
 
-        uploadButton.addClickListener(event -> upload());
         uploadButton.setIcon(new Icon(VaadinIcon.ARROW_UP));
         uploadButton.getElement().setAttribute("theme", "error");
-
-
-        bottomLayout.add(downloadButton);
-        bottomLayout.add(elaboraOnlyButton);
-        bottomLayout.add(wikiShowButton);
-        bottomLayout.add(wikiEditButton);
-        bottomLayout.add(uploadButton);
+        uploadButton.addClickListener(event -> upload());
+//        bottomLayout.add(uploadButton);
     }// end of method
 
 
@@ -194,9 +209,22 @@ public class BioViewDialog extends AViewDialog<Bio> {
      * Non chiude il Form <br>
      */
     protected Bio elaboraOnly() {
-        Bio bio = elaboraService.esegueNoSave(currentItem);
+        Bio bio = elaboraService.esegueNoSave(binder.getBean());
         binder.setBean(bio);
         return bio;
+    }// end of method
+
+
+    /**
+     * Azione proveniente dal click sul bottone Registra
+     * Inizio delle operazioni di registrazione
+     *
+     * @param operation
+     */
+    @Override
+    protected void saveClicked(EAOperation operation) {
+        elaboraOnly();
+        super.saveClicked(operation);
     }// end of method
 
 

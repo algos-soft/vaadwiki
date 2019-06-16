@@ -6,6 +6,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.wiki.Api;
@@ -75,6 +76,11 @@ public class BioService extends AttNazProfCatService {
      */
     @Autowired
     private ElaboraService elabora;
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private GiornoService giornoService;
 
     /**
      * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>

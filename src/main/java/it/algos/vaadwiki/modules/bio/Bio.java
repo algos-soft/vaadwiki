@@ -4,6 +4,7 @@ import it.algos.vaadflow.annotation.*;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -169,6 +170,8 @@ public class Bio extends AEntity {
     @AIField(type = EAFieldType.text)
     @AIColumn(widthEM = 8)
     private String nazionalita;
+
+    private Giorno giornoProva;
 
 
     /**
