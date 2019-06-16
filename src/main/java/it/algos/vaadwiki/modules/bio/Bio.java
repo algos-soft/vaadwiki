@@ -175,7 +175,7 @@ public class Bio extends AEntity {
     private String nazionalita;
 
     /**
-     * indirizzo (facoltativo, non unica)
+     * giorno di nascita (facoltativo, non unica)
      * riferimento dinamico CON @DBRef
      */
     @DBRef
