@@ -196,7 +196,7 @@ public class BioViewList extends AttNazProfCatViewList {
 
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = true;
-        super.usaBottoneDeleteMongo = false;
+        super.usaBottoneDeleteMongo = true;
         super.usaBottoneDownload = false;
         super.usaBottoneUpload = false;
         super.usaBottoneStatistiche = false;
@@ -243,10 +243,10 @@ public class BioViewList extends AttNazProfCatViewList {
         updateButton.addClickListener(e -> esegueUpdate());
         topPlaceholder.add(updateButton);
 
-        //--ri-elabora tutte le biografie
-        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
-        elaboraButton.addClickListener(e -> elaboraService.esegue());
-        topPlaceholder.add(elaboraButton);
+//        //--ri-elabora tutte le biografie
+//        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
+//        elaboraButton.addClickListener(e -> elaboraService.esegue());
+//        topPlaceholder.add(elaboraButton);
 
         //--upload le pagine cronologicvhe (giorni ed anni)
         uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));

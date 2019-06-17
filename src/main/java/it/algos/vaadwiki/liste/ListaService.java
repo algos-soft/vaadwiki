@@ -255,7 +255,7 @@ public class ListaService extends ABioService {
             int a = 87;
         }// end of if cycle
 
-        attivitaSingolare = bio.getAttivita();
+        attivitaSingolare = bio.getAttivita().singolare;
         professione = professioneService.findByKeyUnica(attivitaSingolare);
         genere = genereService.findByKeyUnica(attivitaSingolare);
 //        }// end of if cycle

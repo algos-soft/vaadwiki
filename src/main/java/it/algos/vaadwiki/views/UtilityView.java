@@ -393,42 +393,42 @@ public class UtilityView extends VerticalLayout {
         testo += "Pagina di servizio per il '''controllo''' delle didascalie utilizzate nelle pagine delle liste di giorni ed anni. Le didascalie sono di diversi tipi:";
         testo += A_CAPO;
 
-        if (text.isValid(bio.getGiornoNato())) {
+        if (text.isValid(bio.getGiornoNascita())) {
             testo += ASTERISCO;
             testo += pagina;
 //            testo += "[[Nati il " + bio.getGiornoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoNato) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
-        if (text.isValid(bio.getAnnoNato())) {
+        if (text.isValid(bio.getAnnoNascita())) {
             testo += ASTERISCO;
             testo += pagina;
 //            testo += "[[Nati nel " + bio.getAnnoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoNato) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
-        if (text.isValid(bio.getGiornoMorto())) {
+        if (text.isValid(bio.getGiornoMorte())) {
             testo += ASTERISCO;
             testo += pagina;
 //            testo += "[[Morti il " + bio.getGiornoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoMorto) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
-        if (text.isValid(bio.getAnnoMorto())) {
+        if (text.isValid(bio.getAnnoMorte())) {
             testo += ASTERISCO;
             testo += pagina;
 //            testo += "[[Morti nel " + bio.getAnnoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoMorto) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
-        if (text.isValid(bio.getAnnoMorto())) {
+        if (text.isValid(bio.getAnnoMorte())) {
             testo += ASTERISCO;
             testo += "Nelle liste di attività, nazionalità, nome e cognomi";
 //            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.standard) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
-        if (text.isValid(bio.getAnnoMorto())) {
+        if (text.isValid(bio.getAnnoMorte())) {
             testo += ASTERISCO;
             testo += "Completa (nella biografia)";
 //            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.completa) + "'''";

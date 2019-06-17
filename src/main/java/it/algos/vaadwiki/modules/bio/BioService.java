@@ -6,6 +6,9 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
@@ -76,6 +79,7 @@ public class BioService extends AttNazProfCatService {
      */
     @Autowired
     private ElaboraService elabora;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -203,9 +207,29 @@ public class BioService extends AttNazProfCatService {
                 .lastModifica(lastWikiModifica != null ? lastWikiModifica : LocalDateTime.of(2000, 1, 1, 0, 0))
                 .lastLettura(lastGacLettura != null ? lastGacLettura : LocalDateTime.now())
                 .build();
-        entity.id = entity.getWikiTitle() + "";
+
+        if (text.isValid(wikiTitle)) {
+            entity.id = wikiTitle;
+        }// end of if cycle
 
         return entity;
+    }// end of method
+
+
+    /**
+     * Operazioni eseguite PRIMA del save <br>
+     * Regolazioni automatiche di property <br>
+     * Controllo della validità delle properties obbligatorie <br>
+     * Può essere sovrascritto - Invocare PRIMA il metodo della superclasse
+     *
+     * @param entityBean da regolare prima del save
+     * @param operation  del dialogo (NEW, Edit)
+     *
+     * @return the modified entity
+     */
+    @Override
+    public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
+        return super.beforeSave(entityBean, operation);
     }// end of method
 
 
@@ -226,7 +250,7 @@ public class BioService extends AttNazProfCatService {
                 lista = new ArrayList(repository.findAll(sort));
             } else {
                 //@todo troppo lento - devo disabilitarlo
-//                lista = new ArrayList(repository.findTop50ByOrderByWikiTitleAsc());
+                lista = new ArrayList(repository.findTop50ByOrderByWikiTitleAsc());
 //                lista = new ArrayList(repository.findAllByOrderByWikiTitleAsc());
             }// end of if/else cycle
         } catch (Exception unErrore) { // intercetta l'errore
@@ -264,8 +288,8 @@ public class BioService extends AttNazProfCatService {
      *
      * @return all ordered entities
      */
-    public ArrayList<Bio> findAllByGiornoNato(String giornoNato) {
-        return (ArrayList) repository.findAllByGiornoNato(giornoNato);
+    public ArrayList<Bio> findAllByGiornoNascita(Giorno giornoNascita) {
+        return (ArrayList) repository.findAllByGiornoNascita(giornoNascita);
     }// end of method
 
 
@@ -274,8 +298,8 @@ public class BioService extends AttNazProfCatService {
      *
      * @return all ordered entities
      */
-    public ArrayList<Bio> findAllByGiornoMorto(String giornoMorto) {
-        return (ArrayList) repository.findAllByGiornoMorto(giornoMorto);
+    public ArrayList<Bio> findAllByGiornoMorte(Giorno giornoMorte) {
+        return (ArrayList) repository.findAllByGiornoMorte(giornoMorte);
     }// end of method
 
 
@@ -284,8 +308,8 @@ public class BioService extends AttNazProfCatService {
      *
      * @return all ordered entities
      */
-    public ArrayList<Bio> findAllByAnnoNato(String annoNato) {
-        return (ArrayList) repository.findAllByAnnoNato(annoNato);
+    public ArrayList<Bio> findAllByAnnoNascita(Anno annoNascita) {
+        return (ArrayList) repository.findAllByAnnoNascita(annoNascita);
     }// end of method
 
 
@@ -294,8 +318,8 @@ public class BioService extends AttNazProfCatService {
      *
      * @return all ordered entities
      */
-    public ArrayList<Bio> findAllByAnnoMorto(String annoMorto) {
-        return (ArrayList) repository.findAllByAnnoMorto(annoMorto);
+    public ArrayList<Bio> findAllByAnnoMorte(Anno annoMorte) {
+        return (ArrayList) repository.findAllByAnnoMorte(annoMorte);
     }// end of method
 
 

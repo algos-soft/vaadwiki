@@ -38,18 +38,14 @@ public class WrapDidascalia {
     @Autowired
     public AnnoService annoService;
 
+    public Bio bio;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected DidascaliaService didascaliaService;
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-    @Autowired
-    protected ATextService text;
 
 
     /**
@@ -88,6 +84,11 @@ public class WrapDidascalia {
 //    @Autowired
 //    protected DidascaliaListe didascaliaListe;
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected ATextService text;
 
     /**
      * Riferimento (giorno o anno) a cui si riferisce la didascalia <br>
@@ -112,13 +113,11 @@ public class WrapDidascalia {
      */
     private String chiave;
 
-
     /**
      * Ulteriore chiave per la lista di discalie per ogni chiave <br>
      * Composta dal cognome concatenato al titolo della pagina wikipedia (per essere sicuri che qualcosa esisista) <br>
      */
     private String sottoChiave;
-
 
     /**
      * Testo della didascalia CON la chiave che viene usata nella composizione con 'righeParagrafo' <br>
@@ -130,8 +129,6 @@ public class WrapDidascalia {
      * La chiave viene aggiunta in maniera differente tra 'righeSemplici' o 'righeRaggruppate' <br>
      */
     private String testoSenza;
-
-    public Bio bio;
 
     private EADidascalia type;
 
@@ -175,27 +172,28 @@ public class WrapDidascalia {
         switch (type) {
             case giornoNato:
                 didascalia = didascaliaService.getDidascaliaGiornoNato(bio);
-                this.chiave = bio.getAnnoNato();
+                this.chiave = bio.getAnnoNascita() != null ? bio.getAnnoNascita().titolo : "";
+//                this.riferimento = bio.getAnnoNascita() != null ? bio.getAnnoNascita().titolo : "";
                 this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
                 break;
             case giornoMorto:
                 didascalia = didascaliaService.getDidascaliaGiornoMorto(bio);
-                this.chiave = bio.getAnnoMorto();
+                this.chiave = bio.getAnnoMorte() != null ? bio.getAnnoMorte().titolo : "";
                 this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
                 break;
             case annoNato:
                 didascalia = didascaliaService.getDidascaliaAnnoNato(bio);
-                this.chiave = bio.getGiornoNato();
+                this.chiave = bio.getGiornoNascita() != null ? bio.getGiornoNascita().titolo : "";
                 this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
                 break;
             case annoMorto:
                 didascalia = didascaliaService.getDidascaliaAnnoMorto(bio);
-                this.chiave = bio.getGiornoMorto();
+                this.chiave = bio.getGiornoMorte() != null ? bio.getGiornoMorte().titolo : "";
                 this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
                 break;
             case liste:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
-                this.chiave = bio.getAttivita();
+                this.chiave = bio.getAttivita().singolare;
                 break;
             case biografie:
                 didascalia = didascaliaService.getDidascaliaBiografie(bio);
@@ -206,7 +204,6 @@ public class WrapDidascalia {
                 break;
         } // end of switch statement
 
-        this.riferimento = bio.getGiornoNato();
         String wikiTitle = bio.getWikiTitle();
         String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
         this.sottoChiave = cognome + wikiTitle;
@@ -216,7 +213,6 @@ public class WrapDidascalia {
             this.testoSenza = didascalia.testoSenza;
         }// end of if cycle
     }// end of method
-
 
 
     public String getRiferimento() {

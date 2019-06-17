@@ -250,7 +250,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            giornoNato = bio.getGiornoNato();
+            giornoNato = bio.getGiornoNascita().titolo;
             if (text.isValid(giornoNato)) {
                 didascalia = didascaliaService.getGiornoNatoCon(bio);
                 linkPagina = libBio.getTitoloGiornoNato(giornoNato);
@@ -273,7 +273,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            giornoMorto = bio.getGiornoMorto();
+            giornoMorto = bio.getGiornoMorte().titolo;
             if (text.isValid(giornoMorto)) {
                 didascalia = didascaliaService.getGiornoMortoCon(bio);
                 linkPagina = libBio.getTitoloGiornoMorto(giornoMorto);
@@ -296,7 +296,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            annoNato = bio.getAnnoNato();
+            annoNato = bio.getAnnoNascita().titolo;
             if (text.isValid(annoNato)) {
                 didascalia = didascaliaService.getAnnoNatoCon(bio);
                 linkPagina = libBio.getTitoloAnnoNato(annoNato);
@@ -319,7 +319,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            annoMorto = bio.getAnnoMorto();
+            annoMorto = bio.getAnnoMorte().titolo;
             if (text.isValid(annoMorto)) {
                 didascalia = didascaliaService.getAnnoMortoCon(bio);
                 linkPagina = libBio.getTitoloAnnoMorto(annoMorto);

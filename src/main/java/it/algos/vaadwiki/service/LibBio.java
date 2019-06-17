@@ -178,6 +178,20 @@ public class LibBio {
     public PreferenzaService pref;
 
     /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    public GiornoService giornoService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    public AnnoService annoService;
+
+    /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
@@ -203,15 +217,17 @@ public class LibBio {
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    private AttivitaService attivita;
+    private AttivitaService attivitaService;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    private NazionalitaService nazionalita;
+    private NazionalitaService nazionalitaService;
 
 
     /**
@@ -2324,6 +2340,34 @@ public class LibBio {
      * Regola questo campo
      * <p>
      * Elimina il testo successivo a varii tag (fixPropertyBase)
+     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese)
+     * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese)
+     * Controlla che il valore esista nella collezione Giorno
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di giorno valido
+     */
+    public Giorno fixGiornoLink(String testoGrezzo) {
+        Giorno giorno = null;
+        String testoValido = "";
+
+        if (text.isValid(testoGrezzo)) {
+            testoValido = fixGiornoValido(testoGrezzo);
+        }// end of if cycle
+
+        if (text.isValid(testoValido)) {
+            giorno = giornoService.findByKeyUnica(testoValido);
+        }// end of if cycle
+
+        return giorno;
+    } // // end of method
+
+
+    /**
+     * Regola questo campo
+     * <p>
+     * Elimina il testo successivo a varii tag (fixPropertyBase)
      * Elimina il testo se contiene la dicitura 'circa' (tipico dell'anno)
      * Controlla che il valore esista nella collezione Anno
      *
@@ -2351,6 +2395,34 @@ public class LibBio {
      * Regola questo campo
      * <p>
      * Elimina il testo successivo a varii tag (fixPropertyBase)
+     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese)
+     * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese)
+     * Controlla che il valore esista nella collezione Giorno
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di anno valido
+     */
+    public Anno fixAnnoLink(String testoGrezzo) {
+        Anno anno = null;
+        String testoValido = "";
+
+        if (text.isValid(testoGrezzo)) {
+            testoValido = fixAnnoValido(testoGrezzo);
+        }// end of if cycle
+
+        if (text.isValid(testoValido)) {
+            anno = annoService.findByKeyUnica(testoValido);
+        }// end of if cycle
+
+        return anno;
+    } // fine del metodo
+
+
+    /**
+     * Regola questo campo
+     * <p>
+     * Elimina il testo successivo a varii tag (fixPropertyBase)
      * Controlla che il valore esista nella collezione Attività
      *
      * @param testoGrezzo in entrata da elaborare
@@ -2369,7 +2441,33 @@ public class LibBio {
         } else {
             return VUOTA;
         }// end of if/else cycle
-    } // fine del metodo22
+    } // fine del metodo
+
+
+    /**
+     * Regola questo campo
+     * <p>
+     * Elimina il testo successivo a varii tag (fixPropertyBase)
+     * Controlla che il valore esista nella collezione Attività
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di attività valida
+     */
+    public Attivita fixAttivitaLink(String testoGrezzo) {
+        Attivita attivita = null;
+        String testoValido = "";
+
+        if (text.isValid(testoGrezzo)) {
+            testoValido = fixAttivitaValida(testoGrezzo);
+        }// end of if cycle
+
+        if (text.isValid(testoValido)) {
+            attivita = attivitaService.findByKeyUnica(testoValido);
+        }// end of if cycle
+
+        return attivita;
+    } // fine del metodo
 
 
     /**
@@ -2394,6 +2492,32 @@ public class LibBio {
         } else {
             return VUOTA;
         }// end of if/else cycle
+    } // fine del metodo
+
+
+    /**
+     * Regola questo campo
+     * <p>
+     * Elimina il testo successivo a varii tag (fixPropertyBase)
+     * Controlla che il valore esista nella collezione Nazionalità
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di nazionalità valida
+     */
+    public Nazionalita fixNazionalitaLink(String testoGrezzo) {
+        Nazionalita nazionalita = null;
+        String testoValido = "";
+
+        if (text.isValid(testoGrezzo)) {
+            testoValido = fixNazionalitaValida(testoGrezzo);
+        }// end of if cycle
+
+        if (text.isValid(testoValido)) {
+            nazionalita = nazionalitaService.findByKeyUnica(testoValido);
+        }// end of if cycle
+
+        return nazionalita;
     } // fine del metodo
 
 
@@ -2724,6 +2848,7 @@ public class LibBio {
     public String getTitoloNome(Nome nome) {
         return getTitoloNome(nome.getNome());
     }// fine del metodo
+
 
     /**
      * Titolo della pagina Cognome da creare/caricare su wikipedia

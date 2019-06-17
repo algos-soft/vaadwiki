@@ -82,23 +82,23 @@ public enum ParBio {
     giornoMeseNascita("GiornoMeseNascita", true, true, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setGiornoNato(value.equals("") ? null : libBio.fixGiornoValido(value));
+            bio.setGiornoNascita(value.equals("") ? null : libBio.fixGiornoLink(value));
         }// end of method
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getGiornoNato();
+            return bio.getGiornoNascita().titolo;
         }// end of method
     },// end of single enumeration
     annoNascita("AnnoNascita", true, true, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setAnnoNato(value.equals("") ? null : libBio.fixAnnoValido(value));
+            bio.setAnnoNascita(value.equals("") ? null : libBio.fixAnnoLink(value));
         }// end of method
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getAnnoNato();
+            return bio.getAnnoNascita().titolo;
         }// end of method
     },// end of single enumeration
     noteNascita("NoteNascita", true, true, true, false, false) {
@@ -121,23 +121,23 @@ public enum ParBio {
     giornoMeseMorte("GiornoMeseMorte", true, true, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setGiornoMorto(value.equals("") ? null : libBio.fixGiornoValido(value));
+            bio.setGiornoMorte(value.equals("") ? null : libBio.fixGiornoLink(value));
         }// end of method
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getGiornoMorto();
+            return bio.getGiornoMorte().titolo;
         }// end of method
     },// end of single enumeration
     annoMorte("AnnoMorte", true, true, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setAnnoMorto(value.equals("") ? null : libBio.fixAnnoValido(value));
+            bio.setAnnoMorte(value.equals("") ? null : libBio.fixAnnoLink(value));
         }// end of method
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getAnnoMorto();
+            return bio.getAnnoMorte().titolo;
         }// end of method
     },// end of single enumeration
     noteMorte("NoteMorte", true, true, true, false, false) {
@@ -147,34 +147,34 @@ public enum ParBio {
     attivita("Attività", true, true, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setAttivita(value.equals("") ? null : libBio.fixAttivitaValida(value));
+            bio.setAttivita(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getAttivita();
+            return bio.getAttivita().singolare;
         }// end of method
     },// end of single enumeration
     attivita2("Attività2", false, false, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setAttivita2(value.equals("") ? null : libBio.fixAttivitaValida(value));
+            bio.setAttivita2(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getAttivita2();
+            return bio.getAttivita2().singolare;
         }// end of method
     },// end of single enumeration
     attivita3("Attività3", false, false, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setAttivita3(value.equals("") ? null : libBio.fixAttivitaValida(value));
+            bio.setAttivita3(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getAttivita3();
+            return bio.getAttivita3().singolare;
         }// end of method
     },// end of single enumeration
     attivitaAltre("AttivitàAltre", false, false, false, false, false) {
@@ -186,12 +186,12 @@ public enum ParBio {
     nazionalita("Nazionalità", true, true, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setNazionalita(value.equals("") ? null : libBio.fixNazionalitaValida(value));
+            bio.setNazionalita(value.equals("") ? null : libBio.fixNazionalitaLink(value));
         }// end of method
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getNazionalita();
+            return bio.getNazionalita().singolare;
         }// end of method
     },// end of single enumeration
     nazionalitaNaturalizzato("NazionalitàNaturalizzato", true, true, true, false, false) {

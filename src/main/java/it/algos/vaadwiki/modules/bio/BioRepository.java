@@ -2,6 +2,8 @@ package it.algos.vaadwiki.modules.bio;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -40,13 +42,13 @@ public interface BioRepository extends MongoRepository<Bio, String> {
 
     public List<Bio> findTop50ByOrderByWikiTitleAsc();
 
-    public List<Bio> findAllByGiornoNato(String giornoNato);
+    public List<Bio> findAllByGiornoNascita(Giorno giornoNascita);
 
-    public List<Bio> findAllByGiornoMorto(String giornoMorto);
+    public List<Bio> findAllByGiornoMorte(Giorno giornoMorte);
 
-    public List<Bio> findAllByAnnoNato(String annoNato);
+    public List<Bio> findAllByAnnoNascita(Anno annoNascita);
 
-    public List<Bio> findAllByAnnoMorto(String annoMorto);
+    public List<Bio> findAllByAnnoMorte(Anno annoMorte);
 
     public List<Bio> findAllByNome(String nome);
 

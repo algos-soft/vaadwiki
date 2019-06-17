@@ -212,8 +212,21 @@ public class BioViewDialog extends AViewDialog<Bio> {
      * Non chiude il Form <br>
      */
     protected Bio elaboraOnly() {
-        Bio bio = elaboraService.esegueNoSave(binder.getBean());
-        binder.setBean(bio);
+        Bio bio = null;
+
+        if (binder != null) {
+            bio = binder.getBean();
+        }// end of if cycle
+
+        if (bio == null && currentItem != null) {
+            bio = currentItem;
+        }// end of if cycle
+
+        if (bio != null && text.isValid(bio.tmplBioServer)) {
+            bio = elaboraService.esegueNoSave(bio);
+            binder.setBean(bio);
+        }// end of if cycle
+
         return bio;
     }// end of method
 

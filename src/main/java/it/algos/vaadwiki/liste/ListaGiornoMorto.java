@@ -53,7 +53,7 @@ public class ListaGiornoMorto extends ListaGiorni {
      */
     @Override
     public ArrayList<Bio> listaBio() {
-        return bioService.findAllByGiornoMorto(giorno.titolo);
+        return bioService.findAllByGiornoMorte(giorno);
     }// fine del metodo
 
 

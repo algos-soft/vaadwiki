@@ -172,20 +172,20 @@ public abstract class Didascalia {
      * Recupera dal record di biografia i valori cronografici
      */
     private void recuperaDatiCrono(Bio bio) {
-        if (bio.getGiornoNato() != null) {
-            this.giornoNato = bio.getGiornoNato();
+        if (bio.getGiornoNascita() != null) {
+            this.giornoNato = bio.getGiornoNascita().titolo;
         }// fine del blocco if
 
-        if (bio.getGiornoMorto() != null) {
-            this.giornoMorto = bio.getGiornoMorto();
+        if (bio.getGiornoMorte() != null) {
+            this.giornoMorto = bio.getGiornoMorte().titolo;
         }// fine del blocco if
 
-        if (bio.getAnnoNato() != null) {
-            this.annoNato = bio.getAnnoNato();
+        if (bio.getAnnoNascita() != null) {
+            this.annoNato = bio.getAnnoNascita().titolo;
         }// fine del blocco if
 
-        if (bio.getAnnoMorto() != null) {
-            this.annoMorto = bio.getAnnoMorto();
+        if (bio.getAnnoMorte() != null) {
+            this.annoMorto = bio.getAnnoMorte().titolo;
         }// fine del blocco if
     }// end of method
 
@@ -209,19 +209,19 @@ public abstract class Didascalia {
      */
     private void recuperaDatiAttNaz(Bio bio) {
         if (bio.getAttivita() != null) {
-            this.attivita = bio.getAttivita();
+            this.attivita = bio.getAttivita().singolare;
         }// fine del blocco if
 
         if (bio.getAttivita2() != null) {
-            this.attivita2 = bio.getAttivita2();
+            this.attivita2 = bio.getAttivita2().singolare;
         }// fine del blocco if
 
         if (bio.getAttivita3() != null) {
-            this.attivita3 = bio.getAttivita3();
+            this.attivita3 = bio.getAttivita3().singolare;
         }// fine del blocco if
 
         if (bio.getNazionalita() != null) {
-            this.nazionalita = bio.getNazionalita();
+            this.nazionalita = bio.getNazionalita().singolare;
         }// fine del blocco if
     }// end of method
 

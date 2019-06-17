@@ -53,7 +53,7 @@ public class ListaAnnoNato extends ListaAnni {
      */
     @Override
     public ArrayList<Bio> listaBio() {
-        return bioService.findAllByAnnoNato(anno.titolo);
+        return bioService.findAllByAnnoNascita(anno);
     }// fine del metodo
 
 

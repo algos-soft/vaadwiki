@@ -55,7 +55,7 @@ public class ListaAnnoMorto extends ListaAnni {
      */
     @Override
     public ArrayList<Bio> listaBio() {
-        return bioService.findAllByAnnoMorto(anno.titolo);
+        return bioService.findAllByAnnoMorte(anno);
     }// fine del metodo
 
 
