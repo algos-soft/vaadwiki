@@ -4,16 +4,16 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.boot.ABoot;
-import it.algos.vaadwiki.modules.genere.GenereViewList;
-import it.algos.vaadwiki.modules.cognome.CognomeViewList;
-import it.algos.vaadwiki.didascalia.ViewDidascalie;
-import it.algos.vaadwiki.modules.nome.NomeViewList;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.modules.utente.UtenteService;
+import it.algos.vaadwiki.didascalia.ViewDidascalie;
 import it.algos.vaadwiki.modules.attivita.AttivitaViewList;
 import it.algos.vaadwiki.modules.bio.BioViewList;
+import it.algos.vaadwiki.modules.cognome.CognomeViewList;
+import it.algos.vaadwiki.modules.genere.GenereViewList;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaViewList;
+import it.algos.vaadwiki.modules.nome.NomeViewList;
 import it.algos.vaadwiki.modules.professione.ProfessioneViewList;
 import it.algos.vaadwiki.modules.wiki.WikiAnnoViewList;
 import it.algos.vaadwiki.modules.wiki.WikiGiornoViewList;
@@ -161,7 +161,8 @@ public class WikiBoot extends ABoot {
      * Se esistono, sostituisce i valori esistenti con quelli indicati qui
      */
     protected void regolaPreferenze() {
-//        pref.setBool(FlowCost.USA_COMPANY, true);
+        pref.setBool(USA_COMPANY, false);
+        pref.setBool(USA_SECURITY, false);
     }// end of method
 
 
@@ -182,8 +183,8 @@ public class WikiBoot extends ABoot {
         FlowCost.MENU_CLAZZ_LIST.add(WikiGiornoViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(WikiAnnoViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(NomeViewList.class);
-		FlowCost.MENU_CLAZZ_LIST.add(CognomeViewList.class);
-	}// end of method
+        FlowCost.MENU_CLAZZ_LIST.add(CognomeViewList.class);
+    }// end of method
 
 
 }// end of boot class

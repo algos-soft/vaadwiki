@@ -190,7 +190,7 @@ public abstract class AttNazProfCatService extends AService {
         int recNum = count();
         int size = 100;
         int giri = (recNum / size) + 1;
-        Sort sort = new Sort(Sort.Direction.ASC, "pageid");
+        Sort sort = new Sort(Sort.Direction.ASC, "page");
 
         for (int k = 0; k < giri; k++) {
             lista = array.somma(lista, findAllPageid(k, size, sort));

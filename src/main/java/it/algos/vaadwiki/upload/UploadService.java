@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 import java.util.ArrayList;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import static it.algos.vaadwiki.application.WikiCost.USA_REGISTRA_SEMPRE_CRONO;
 
 /**
  * Project vaadbio2
@@ -140,10 +141,15 @@ public class UploadService extends ABioService {
         boolean status = false;
         String testoOldSignificativo = VUOTA;
         String testoNewSignificativo = VUOTA;
-        String testoOld = Api.leggeVoce(titoloVoce);
+        String testoOld = "";
         int pos1 = 0;
         int pos2 = 0;
 
+        if (pref.isBool(USA_REGISTRA_SEMPRE_CRONO)) {
+            return true;
+        }// end of if cycle
+
+        testoOld = Api.leggeVoce(titoloVoce);
         if (text.isEmpty(testoOld)) {
             return true;
         }// end of if cycle

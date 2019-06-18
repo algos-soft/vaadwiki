@@ -62,22 +62,6 @@ public class UpdateService extends ABioService {
         return esegueCiclo(result);
     }// end of method
 
-
-//    /**
-//     * Ricontrolla (eventualmente) le due liste di pageid che devono essere uguali
-//     * oppure
-//     * Controlla che il numero di entities della due collezioni (Categoria e Bio) sia lo stesso
-//     * <p>
-//     * Recupera comunque la lista dei records della collezione categoria, perché serve sempre
-//     * Recupera la lista delle pagine dalla categoria sul server wiki, solo se necessario
-//     */
-//    public boolean checkListePageids() {
-//        int catSize = categoriaService.count();
-//        int bioSize = bioService.count();
-//        return bioSize == catSize;
-//    }// end of method
-
-
     /**
      * Esegue il ciclo per TUTTE le pagine biografiche esistenti nella collezione mongoDB Bio
      * <p>

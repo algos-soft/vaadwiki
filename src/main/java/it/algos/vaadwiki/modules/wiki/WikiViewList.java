@@ -101,7 +101,8 @@ public abstract class WikiViewList extends ACronoViewList {
         //--upload della lista completa di 365 + 365 giorni
         uploadAllButton = new Button("Upload all", new Icon(VaadinIcon.UPLOAD));
         uploadAllButton.getElement().setAttribute("theme", "error");
-        uploadAllButton.addClickListener(e -> openUploadDialog("cronologiche"));
+//        uploadAllButton.addClickListener(e -> openUploadDialog("cronologiche"));
+        uploadAllButton.addClickListener(e -> uploadEffettivo());
         topPlaceholder.add(uploadAllButton);
 
         sincroBottoniMenu(false);

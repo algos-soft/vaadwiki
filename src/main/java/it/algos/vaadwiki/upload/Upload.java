@@ -384,12 +384,14 @@ public abstract class Upload {
                 if (pref.isBool(FlowCost.USA_DEBUG)) {
                     testo = titoloPagina + A_CAPO + testo;
                     titoloPagina = PAGINA_PROVA;
-                }// fine del blocco if
-
-                if (pref.isBool(FlowCost.USA_DEBUG) || checkPossoRegistrare(titoloPagina, testo)) {
-                    appContext.getBean(AQueryWrite.class, titoloPagina, testo);
-                    log.info(titoloPagina);
-                }// end of if cycle
+                } else {
+                    if (checkPossoRegistrare(titoloPagina, testo)) {
+                        appContext.getBean(AQueryWrite.class, titoloPagina, testo);
+                        log.info("Registrata la pagina: " + titoloPagina);
+                    } else {
+                        log.info("Non modificata la pagina: " + titoloPagina);
+                    }// end of if/else cycle
+                }// end of if/else cycle
             }// fine del blocco if
         }// end of if cycle
 

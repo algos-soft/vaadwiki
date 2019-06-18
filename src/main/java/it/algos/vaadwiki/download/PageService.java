@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.download;
 
+import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.enumeration.EACicloType;
@@ -122,9 +123,10 @@ public class PageService extends ABioService {
      * @return wrapper di dati risultanti
      */
     private DownloadResult singoloBlocco(DownloadResult result, ArrayList<Long> arrayPageid, EACicloType type) {
+        DeleteResult deleteResult = null;
         ArrayList<Page> pages = null; // di norma 500
         Bio entity;
-        ArrayList<Long> vociDaRegistrareInQuestoBlocco = new ArrayList<>();
+        ArrayList<Long> vociDaCancellarePrimaDiReinserirle = new ArrayList<>();
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
 
         pages = ((AQueryPages) appContext.getBean("AQueryPages", arrayPageid)).pagesResponse();
@@ -137,7 +139,7 @@ public class PageService extends ABioService {
             entity = creaBio(page);
             if (entity != null) {
                 listaBio.add(entity);
-                vociDaRegistrareInQuestoBlocco.add(page.getPageid());
+                vociDaCancellarePrimaDiReinserirle.add(page.getPageid());
                 switch (type) {
                     case download:
                         result.addVoceCreata();
@@ -155,11 +157,19 @@ public class PageService extends ABioService {
         }// end of for cycle
 
         //--cancella le pagine esistenti prima di inserire le nuove versioni con update()
-        try { // prova ad eseguire il codice
-            bioService.deleteBulkByPageid(vociDaRegistrareInQuestoBlocco);
-        } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
-        }// fine del blocco try-catch
+        if (type == EACicloType.update) {
+            try { // prova ad eseguire il codice
+                deleteResult = bioService.deleteBulkByPageid(vociDaCancellarePrimaDiReinserirle);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
+
+            if (deleteResult != null && deleteResult.getDeletedCount() < vociDaCancellarePrimaDiReinserirle.size()) {
+                log.error(" ");
+                log.error("Non sono riuscito a cancellare: " + (vociDaCancellarePrimaDiReinserirle.size() - deleteResult.getDeletedCount()) + " voci prima di reinserirle per aggiornarle");
+                log.error(" ");
+            }// end of if cycle
+        }// end of if cycle
 
         if (listaBio.size() > 0) {
             try { // prova ad eseguire il codice

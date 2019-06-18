@@ -216,4 +216,6 @@ public class WikiCost {
 
     public static WikiLoginOld WIKI_LOGIN = null;
 
+    public final static String USA_REGISTRA_SEMPRE_CRONO = "salvaSempreCrono";
+
 }// end of static class

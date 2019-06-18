@@ -250,7 +250,7 @@ public class BioService extends AttNazProfCatService {
                 lista = new ArrayList(repository.findAll(sort));
             } else {
                 //@todo troppo lento - devo disabilitarlo
-                lista = new ArrayList(repository.findTop50ByOrderByWikiTitleAsc());
+//                lista = new ArrayList(repository.findTop50ByOrderByWikiTitleAsc());
 //                lista = new ArrayList(repository.findAllByOrderByWikiTitleAsc());
             }// end of if/else cycle
         } catch (Exception unErrore) { // intercetta l'errore
@@ -608,12 +608,12 @@ public class BioService extends AttNazProfCatService {
     /**
      * Delete a list of entities.
      *
-     * @param listaPageid di ObjectId da cancellare
+     * @param listaPage di ObjectId da cancellare
      *
      * @return numero di elementi cancellati
      */
-    public DeleteResult deleteBulkByPageid(ArrayList<Long> listaPageid) {
-        return super.deleteBulkByProperty(listaPageid, Bio.class, "pageid");
+    public DeleteResult deleteBulkByPageid(ArrayList<Long> listaPage) {
+        return super.deleteBulkByProperty(listaPage, Bio.class, "page");
     }// end of method
 
 

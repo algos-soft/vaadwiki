@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.login.ALogin;
 import it.algos.vaadflow.modules.company.Company;
+import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.modules.utente.Utente;
 import it.algos.vaadflow.modules.utente.UtenteService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
 
-import static it.algos.vaadflow.application.FlowCost.KEY_CONTEXT;
-import static it.algos.vaadflow.application.FlowCost.KEY_SECURITY_CONTEXT;
+import static it.algos.vaadflow.application.FlowCost.*;
 
 /**
  * Project vaadflow
@@ -30,9 +30,9 @@ import static it.algos.vaadflow.application.FlowCost.KEY_SECURITY_CONTEXT;
  * Date: mer, 31-ott-2018
  * Time: 09:16
  * Implementa il 'pattern' SINGLETON; l'istanza può essere richiamata con: <br>
- * 1) StaticContextAccessor.getBean(ATextService.class); <br>
- * 2) ATextService.getInstance(); <br>
- * 3) @Autowired private ATextService textService; <br>
+ * 1) StaticContextAccessor.getBean(AVaadinService.class); <br>
+ * 2) AVaadinService.getInstance(); <br>
+ * 3) @Autowired private AVaadinService vaadinService; <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -58,33 +58,16 @@ public class AVaadinService {
     private UtenteService utenteService;
 
     /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    public PreferenzaService pref;
+
+    /**
      * Private constructor to avoid client applications to use constructor
      */
     private AVaadinService() {
     }// end of constructor
-
-//    /**
-//     * Costruttore @Autowired <br>
-//     */
-//    public AVaadinService(UtenteService utenteService) {
-//        this.utenteService = utenteService;
-//    }// end of Spring constructor
-
-
-//    /**
-//     * Crea il login ed il context <br>
-//     * Controlla che non esista già il context nella vaadSession
-//     * Invocato quando la @route fa partire la AViewList. <br>
-//     * (non è chiaro se passa prima da MainLayout o da AViewList o da AViewDialog) <br>
-//     * <p>
-//     * Recupera l'user dall'attributo della sessione HttpSession al termine della security <br>
-//     * Crea il login <br>
-//     * Crea il context <br>
-//     * Inserisce il context come attributo nella vaadSession <br>
-//     */
-//    public AContext fixLoginAndContext() {
-//        return fixLoginAndContext((ALogin) null);
-//    }// end of method
 
 
     /**
@@ -116,27 +99,26 @@ public class AVaadinService {
             HttpSession httpSession = attr.getRequest().getSession(true);
             SecurityContext securityContext = (SecurityContext) httpSession.getAttribute(KEY_SECURITY_CONTEXT);
 
-            try { // prova ad eseguire il codice
-                springUser = (User) securityContext.getAuthentication().getPrincipal();
-                uniqueUserName = springUser.getUsername();
+            if (pref.isBool(USA_SECURITY)) {
+                try { // prova ad eseguire il codice
+                    springUser = (User) securityContext.getAuthentication().getPrincipal();
+                    uniqueUserName = springUser.getUsername();
 
-                utente = utenteService.findByKeyUnica(uniqueUserName);
-                if (utente != null) {
-                    login.setUtenteAndCompany(utente, utente.company);
-                    login.setRoleType(utenteService.getRole(utente));
-                }// end of if cycle
+                    utente = utenteService.findByKeyUnica(uniqueUserName);
+                    if (utente != null) {
+                        login.setUtenteAndCompany(utente, utente.company);
+                        login.setRoleType(utenteService.getRole(utente));
+                    }// end of if cycle
 
-                secured = true;
-            } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
-            }// fine del blocco try-catch
-
-            if (!secured) {
+                    secured = true;
+                } catch (Exception unErrore) { // intercetta l'errore
+                    log.error(unErrore.toString());
+                }// fine del blocco try-catch
             }// end of if cycle
+
             context = new AContext(login, company);
             context.setSecured(secured);
             vaadSession.setAttribute(KEY_CONTEXT, context);
-
         }// end of if cycle
 
         return context;

@@ -12,10 +12,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -94,8 +91,6 @@ public abstract class AQuery {
      * Flag di preferenza per le request che scaricano e memorizzano i cookies ricevuti nella connessione <br>
      */
     protected boolean isDownloadCookies;
-
-
 
 
     /**
@@ -230,7 +225,20 @@ public abstract class AQuery {
             urlResponse = sendRequest(urlConn);
             downlodSecondaryCookies(urlConn);
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            log.error(unErrore.toString()+". Probabili problemi di connessione");
+            if (unErrore instanceof IOException) {
+                try { // prova ad eseguire il codice
+                    log.info("Riprovo. Se non esce subito un altro errore, vuol dire che questa volta il collegamento ha funzionato");
+                    urlDomain = fixUrlDomain(urlDomain);
+                    urlConn = creaGetConnection(urlDomain);
+                    uploadCookies(urlConn);
+                    addPostConnection(urlConn);
+                    urlResponse = sendRequest(urlConn);
+                    downlodSecondaryCookies(urlConn);
+                } catch (Exception unErrore2) { // intercetta l'errore
+                    log.error("Questo url non ha funzionato: " + urlDomain);
+                }// fine del blocco try-catch
+            }// end of if cycle
         }// fine del blocco try-catch
 
         return elaboraResponse(urlResponse);
@@ -498,6 +506,7 @@ public abstract class AQuery {
     public String urlResponse() {
         return urlRequest(urlDomain);
     }// end of method
+
 
     public void setUrlDomain(String urlDomain) {
         this.urlDomain = urlDomain;

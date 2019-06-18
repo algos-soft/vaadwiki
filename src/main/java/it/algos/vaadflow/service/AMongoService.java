@@ -495,9 +495,12 @@ public class AMongoService extends AbstractService {
      * @return lista
      */
     public DeleteResult deleteBulkByProperty(List lista, Class<? extends AEntity> clazz, String property) {
+        DeleteResult result;
         Bson condition = new Document("$in", lista);
         Bson filter = new Document(property, condition);
-        return getCollection(clazz).deleteMany(filter);
+        result = getCollection(clazz).deleteMany(filter);
+
+        return result;
     }// end of method
 
 

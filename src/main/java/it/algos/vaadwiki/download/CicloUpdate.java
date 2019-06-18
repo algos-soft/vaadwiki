@@ -4,9 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
-import it.algos.wiki.web.AQueryCat;
 import it.algos.wiki.web.AQueryCatInfo;
-import it.algos.wiki.web.AQueryCatPagine;
 import it.algos.wiki.web.AQueryCatPaginePageid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -74,10 +72,8 @@ public class CicloUpdate extends ABioService {
         String message = "";
         ArrayList<Long> vociBio;
 
-        if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("");
-            log.info("Inizio task di update: " + date.getTime(result.getInizio()));
-        }// end of if cycle
+        log.info("");
+        log.info("Inizio task di update: " + date.getTime(result.getInizio()));
 
         //--download del modulo attività
         attivitaService.download();
@@ -91,17 +87,16 @@ public class CicloUpdate extends ABioService {
         //--Recupera la lista delle pagine della categoria dal server wiki
         result.setNumVociCategoria(appContext.getBean(AQueryCatInfo.class, result.getNomeCategoria()).numVoci());
         result.setVociDaCreare(appContext.getBean(AQueryCatPaginePageid.class, result.getNomeCategoria()).listaPageid);
-        if (pref.isBool(FlowCost.USA_DEBUG)) {
-            if (result.getNumVociCategoria() == 0) {
-                message = "Numero errato di pagine sul server";
-                log.warn(message);
-                logger.warning("Download - " + message);
-            }// end of if cycle
-            if (result.getVociDaCreare() == null) {
-                message = "Non riesco a leggere le pagine dal server. Forse non sono loggato come bot";
-                log.warn(message);
-                logger.warning("Download - " + message);
-            }// end of if cycle
+        if (result.getNumVociCategoria() == 0) {
+            message = "Numero errato di pagine sul server";
+            log.warn(message);
+            logger.warning("Download - " + message);
+        }// end of if cycle
+        if (result.getVociDaCreare() == null) {
+            message = "Non riesco a leggere le pagine dal server. Forse non sono loggato come bot";
+            log.warn(message);
+            logger.warning("Download - " + message);
+            return result;
         }// end of if cycle
 
         //--recupera la lista dei pageid dalla collezione Bio
@@ -110,10 +105,8 @@ public class CicloUpdate extends ABioService {
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         result.setVociDaCancellare(array.delta(vociBio, result.getVociDaCreare()));
-        if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Ci sono " + text.format(result.getVociDaCancellare().size()) + " biografie da cancellare");
-            logger.debug("Calcolate " + text.format(result.getVociDaCancellare().size()) + " vociDaCancellare in " + date.deltaText(inizio));
-        }// end of if cycle
+        log.info("Ci sono " + text.format(result.getVociDaCancellare().size()) + " biografie da cancellare");
+        logger.debug("Calcolate " + text.format(result.getVociDaCancellare().size()) + " vociDaCancellare in " + date.deltaText(inizio));
 
         //--Cancella dal mongoDB tutte le entities non più presenti nella categoria
         deleteService.esegue(result.getVociDaCancellare());
@@ -122,7 +115,7 @@ public class CicloUpdate extends ABioService {
         inizio = System.currentTimeMillis();
         result.setVociDaCreare(array.delta(result.getVociDaCreare(), vociBio));
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Ci sono " + text.format(result.getVociDaCreare().size()) + " biografie da aggiungere" );
+            log.info("Ci sono " + text.format(result.getVociDaCreare().size()) + " biografie da aggiungere");
             logger.debug("Calcolate " + text.format(result.getVociDaCreare().size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
         }// end of if cycle
 
@@ -136,11 +129,9 @@ public class CicloUpdate extends ABioService {
             libBio.sendUpdate(result);
         }// end of if cycle
 
-        if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Update - Ciclo totale attività, nazionalità, professione, categoria, nuove pagine in " + date.deltaText(result.getInizioLong()));
-            log.info("Fine task di update: " + date.getTime(LocalDateTime.now()));
-            log.info("");
-        }// end of if cycle
+        log.info("Update - Ciclo totale attività, nazionalità, professione, categoria, nuove pagine in " + date.deltaText(result.getInizioLong()));
+        log.info("Fine task di update: " + date.getTime(LocalDateTime.now()));
+        log.info("");
 
         return result;
     }// end of method

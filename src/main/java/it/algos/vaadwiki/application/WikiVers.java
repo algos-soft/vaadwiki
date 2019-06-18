@@ -199,9 +199,15 @@ public class WikiVers extends AVers {
         if (installa(++k)) {
             creaPrefDate(LAST_DOWNLOAD_GENERE, "Ultimo download del modulo genere (plurali)");
         }// fine del blocco if
+
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefInt(DURATA_DOWNLOAD_GENERE, "Durata in secondi dell'ultimo download del modulo genere (plurali)");
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_REGISTRA_SEMPRE_CRONO, "Registra sempre le pagine di giorni ed anni", false);
         }// fine del blocco if
 
         return k;
