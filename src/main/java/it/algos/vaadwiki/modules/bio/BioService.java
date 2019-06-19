@@ -289,7 +289,8 @@ public class BioService extends AttNazProfCatService {
      * @return all ordered entities
      */
     public ArrayList<Bio> findAllByGiornoNascita(Giorno giornoNascita) {
-        return (ArrayList) repository.findAllByGiornoNascita(giornoNascita);
+        Sort sort = new Sort(Sort.Direction.ASC, "annoNascita.ord", "cognome");
+        return (ArrayList) repository.findAllByGiornoNascita(giornoNascita, sort);
     }// end of method
 
 
@@ -299,7 +300,8 @@ public class BioService extends AttNazProfCatService {
      * @return all ordered entities
      */
     public ArrayList<Bio> findAllByGiornoMorte(Giorno giornoMorte) {
-        return (ArrayList) repository.findAllByGiornoMorte(giornoMorte);
+        Sort sort = new Sort(Sort.Direction.ASC, "annoMorte.ord", "cognome");
+        return (ArrayList) repository.findAllByGiornoMorte(giornoMorte, sort);
     }// end of method
 
 
@@ -309,7 +311,8 @@ public class BioService extends AttNazProfCatService {
      * @return all ordered entities
      */
     public ArrayList<Bio> findAllByAnnoNascita(Anno annoNascita) {
-        return (ArrayList) repository.findAllByAnnoNascita(annoNascita);
+        Sort sort = new Sort(Sort.Direction.ASC, "giornoNascita.ord", "cognome");
+        return (ArrayList) repository.findAllByAnnoNascita(annoNascita, sort);
     }// end of method
 
 
@@ -319,7 +322,8 @@ public class BioService extends AttNazProfCatService {
      * @return all ordered entities
      */
     public ArrayList<Bio> findAllByAnnoMorte(Anno annoMorte) {
-        return (ArrayList) repository.findAllByAnnoMorte(annoMorte);
+        Sort sort = new Sort(Sort.Direction.ASC, "giornoMorte.ord", "cognome");
+        return (ArrayList) repository.findAllByAnnoMorte(annoMorte, sort);
     }// end of method
 
 

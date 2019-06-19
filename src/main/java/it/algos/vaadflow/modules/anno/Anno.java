@@ -65,7 +65,7 @@ import javax.validation.constraints.Size;
 @AIList(fields = {"ordine", "secolo", "titolo"})
 @AIForm(fields = {"ordine", "secolo", "titolo"})
 @AIScript(sovrascrivibile = false)
-public class Anno extends AEntity {
+public class Anno extends AEntity  {
 
 
     /**
@@ -116,5 +116,7 @@ public class Anno extends AEntity {
     public String toString() {
         return titolo;
     }// end of method
+
+
 
 }// end of entity class

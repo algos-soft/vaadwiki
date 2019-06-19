@@ -7,6 +7,7 @@ import it.algos.vaadflow.modules.giorno.Giorno;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -42,13 +43,13 @@ public interface BioRepository extends MongoRepository<Bio, String> {
 
     public List<Bio> findTop50ByOrderByWikiTitleAsc();
 
-    public List<Bio> findAllByGiornoNascita(Giorno giornoNascita);
+    public List<Bio> findAllByGiornoNascita(Giorno giornoNascita, Sort sort);
 
-    public List<Bio> findAllByGiornoMorte(Giorno giornoMorte);
+    public List<Bio> findAllByGiornoMorte(Giorno giornoMorte, Sort sort);
 
-    public List<Bio> findAllByAnnoNascita(Anno annoNascita);
+    public List<Bio> findAllByAnnoNascita(Anno annoNascita, Sort sort);
 
-    public List<Bio> findAllByAnnoMorte(Anno annoMorte);
+    public List<Bio> findAllByAnnoMorte(Anno annoMorte, Sort sort);
 
     public List<Bio> findAllByNome(String nome);
 

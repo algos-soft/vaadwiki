@@ -139,7 +139,7 @@ public abstract class Lista {
         listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, typeDidascalia);
 
         //--Ordina la lista di didascalie specifiche
-        listaService.ordinaListaDidascalie(listaDidascalie);
+        listaService.ordinaListaDidascalie(listaDidascalie);//@todo la query è già ordinata  MA FORSE NO
 
         //--Costruisce la mappa completa
         this.mappa = listaService.creaMappa(listaDidascalie);

@@ -51,6 +51,7 @@ public class PageService extends ABioService {
         String message;
         int teorico;
         int effettivo;
+        int totale;
         int delta;
 
         if (result.getVociDaCreare().size() > 0) {
@@ -60,10 +61,11 @@ public class PageService extends ABioService {
                 result = downloadSingoloBlocco(result, bloccoPage);
                 if (pref.isBool(FlowCost.USA_DEBUG)) {
                     teorico = (k + 1) * dimBloccoLettura;
-                    teorico = Math.min(teorico, result.getVociDaCreare().size());
+                    totale=result.getVociDaCreare().size();
+                    teorico = Math.min(teorico, totale);
                     effettivo = result.getNumVociCreate();
                     delta = teorico - effettivo;
-                    message = "New - aggiunte " + text.format(effettivo) + "/" + text.format(teorico) + " (-" + delta + ") pagine totali a mongoDB.Bio in " + date.deltaText(inizio);
+                    message = "New - aggiunte " + text.format(effettivo) + "/" + text.format(totale) + " (-" + delta + ") pagine totali a mongoDB.Bio in " + date.deltaText(inizio);
                     log.info(message);
                 }// end of if cycle
             }// end of for cycle
