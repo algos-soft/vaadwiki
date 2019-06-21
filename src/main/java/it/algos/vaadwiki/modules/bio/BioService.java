@@ -333,10 +333,11 @@ public class BioService extends AttNazProfCatService {
      * @return all ordered entities
      */
     public ArrayList<Bio> findAllByNome(String nome) {
-        return (ArrayList) repository.findAllByNome(nome);
+        Sort sort = new Sort(Sort.Direction.ASC, "attivita", "cognome");
+        return (ArrayList) repository.findAllByNome(nome, sort);
     }// end of method
 
-
+    /**
     /**
      * Returns all entities of the type <br>
      *

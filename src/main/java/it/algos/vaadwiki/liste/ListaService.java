@@ -13,7 +13,6 @@ import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.professione.Professione;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.vaadwiki.service.ABioService;
-import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,11 +63,18 @@ public class ListaService extends ABioService {
      */
     public ArrayList<WrapDidascalia> creaListaDidascalie(ArrayList<Bio> listaGrezzaBio, EADidascalia typeDidascalia) {
         ArrayList<WrapDidascalia> listaDidascalie = new ArrayList<WrapDidascalia>();
-        WrapDidascalia wrap;
+        WrapDidascalia wrap = null;
 
         for (Bio bio : listaGrezzaBio) {
-            wrap = appContext.getBean(WrapDidascalia.class, bio, typeDidascalia);
-            listaDidascalie.add(wrap);
+            try { // prova ad eseguire il codice
+                wrap = appContext.getBean(WrapDidascalia.class, bio, typeDidascalia);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
+
+            if (wrap != null) {
+                listaDidascalie.add(wrap);
+            }// end of if cycle
         }// end of for cycle
 
         return listaDidascalie;

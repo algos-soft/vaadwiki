@@ -2,6 +2,7 @@ package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.didascalia.EADidascalia;
+import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.nome.Nome;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -60,5 +61,32 @@ public class ListaNomi extends ListaNomiCognomi {
         return bioService.findAllByNome(nome.nome);
     }// fine del metodo
 
+    /**
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+     *
+     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    public void creaMappa() {
+        ArrayList<WrapDidascalia> listaDidascalie = null;
+
+        //--Crea la lista grezza delle voci biografiche
+        this.listaGrezzaBio = listaBio();
+
+        //--Crea una lista di didascalie specifiche
+        listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, typeDidascalia);
+
+//        //--Ordina la lista di didascalie specifiche
+//        listaService.ordinaListaDidascalie(listaDidascalie);//@todo la query è già ordinata  MA FORSE NO
+
+        //--Costruisce la mappa completa
+        this.mappa = listaService.creaMappa(listaDidascalie);
+
+
+        //--Costruisce la mappa completa @todo TEST
+//        listaService.pippo(listaDidascalie, typeDidascalia,tagParagrafoNullo);
+    }// fine del metodo
 
 }// end of class

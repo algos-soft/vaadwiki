@@ -193,7 +193,7 @@ public class WrapDidascalia {
                 break;
             case liste:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
-                this.chiave = bio.getAttivita().singolare;
+                this.chiave = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
                 break;
             case biografie:
                 didascalia = didascaliaService.getDidascaliaBiografie(bio);
