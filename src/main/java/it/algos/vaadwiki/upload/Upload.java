@@ -8,6 +8,7 @@ import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.modules.secolo.SecoloService;
 import it.algos.vaadflow.service.*;
 import it.algos.vaadwiki.download.*;
+import it.algos.vaadwiki.liste.Lista;
 import it.algos.vaadwiki.liste.ListaService;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.BioService;
@@ -21,9 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 
@@ -43,6 +44,7 @@ import static it.algos.vaadflow.application.FlowCost.*;
  * Necessita del login come bot <br>
  * Sovrascritta nelle sottoclassi concrete <br>
  * Not annotated with @SpringComponent (sbagliato) perché è una classe astratta <br>
+ * Punto di inzio @PostConstruct inizia() nella superclasse <br>
  */
 @Slf4j
 public abstract class Upload {
@@ -234,11 +236,8 @@ public abstract class Upload {
 
     protected LinkedHashMap<String, ArrayList<String>> mappaDidascalie;
 
-    protected int numPersone = 0;
+    protected int numVoci = 0;
 
-    protected String titoloPagina;
-
-    protected String testo;
 
     protected boolean usaHeadNonScrivere;
 
@@ -258,49 +257,53 @@ public abstract class Upload {
 
     protected boolean usaSuddivisioneParagrafi;
 
-    protected boolean usaOrdineAlfabeticoParagrafi;
-
-    protected boolean usaBodySottopagine;
-
+    //
+//    protected boolean usaOrdineAlfabeticoParagrafi;
+//
+//    protected boolean usaBodySottopagine;
+//
     protected boolean usaBodyRigheMultiple;
 
+    //--property
+    protected Lista lista;
 
-    /**
-     * Costruttore senza parametri
-     */
-    public Upload() {
-    }// end of constructor
+    //--property
+    protected String titoloPagina;
 
+    //--property
+    protected String tagCategoria;
 
-    /**
-     * Esegue un ciclo di creazione (UPLOAD) delle liste
-     */
-    public void esegue() {
-        elaboraParametri();
-        elaboraTitolo();
-        elaboraMappaDidascalie();
-        elaboraPagina(true);
-    }// end of method
+    //--property
+    protected String testoLista;
+
+    //--property
+    protected String testoPagina;
 
 
     /**
-     * Esegue un ciclo di creazione (UPLOAD) delle liste
-     */
-    public void esegueTest() {
-        elaboraParametri();
-        elaboraTitolo();
-        elaboraMappaDidascalie();
-        elaboraPagina(false);
-    }// end of method
-
-
-    /**
-     * Regola alcuni (eventuali) parametri specifici della sottoclasse
+     * Metodo invocato subito DOPO il costruttore
      * <p>
-     * Nelle sottoclassi va SEMPRE richiamata la superclasse PRIMA di regolare localmente le variabili <br>
-     * Sovrascritto
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
      */
-    protected void elaboraParametri() {
+    @PostConstruct
+    protected void inizia() {
+        this.fixPreferenze();
+        this.elaboraPagina();
+    }// end of method
+
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
         // head
         usaHeadNonScrivere = true; //pref.isBool(CostBio.USA_HEAD_NON_SCRIVERE, true);
         usaHeadInclude = true; //--tipicamente sempre true. Si attiva solo se c'è del testo (iniziale) da includere
@@ -313,40 +316,13 @@ public abstract class Upload {
         usaHeadIncipit = false; //--normalmente false. Sovrascrivibile da preferenze
 
         // body
-        usaSuddivisioneParagrafi = false;
-        usaOrdineAlfabeticoParagrafi = false;
-        usaBodySottopagine = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
-        usaBodyRigheMultiple = true; //--normalmente false. Sovrascrivibile da preferenze
+//        usaSuddivisioneParagrafi = false;
+//        usaOrdineAlfabeticoParagrafi = false;
+//        usaBodySottopagine = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
+        usaBodyRigheMultiple = true; //--normalmente true. Sovrascrivibile da preferenze
         usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         usaBodyTemplate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
-    }// fine del metodo
-
-
-    /**
-     * Titolo della pagina da creare/caricare su wikipedia
-     * Sovrascritto
-     */
-    protected void elaboraTitolo() {
-    }// fine del metodo
-
-
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
-     */
-    protected void elaboraMappaDidascalie() {
-        int num = 0;
-
-        if (mappaDidascalie != null) {
-            for (Map.Entry<String, ArrayList<String>> entry : mappaDidascalie.entrySet()) {
-                num += entry.getValue().size();
-            }// end of for cycle
-        }// end of if cycle
-
-        numPersone = num;
-    }// fine del metodo
+    }// end of method
 
 
     /**
@@ -359,41 +335,39 @@ public abstract class Upload {
      * Gli spazi (righe) di separazione vanno aggiunti qui <br>
      * Registra la pagina <br>
      */
-    private void elaboraPagina(boolean upload) {
+    private void elaboraPagina() {
         String summary = LibWiki.getSummary();
-        testo = VUOTA;
+        testoPagina = VUOTA;
 
-        if (numPersone > 0) {
-            //header
-            testo += this.elaboraHead();
+        //header
+        testoPagina += this.elaboraHead();
 
-            //body
-            //a capo, ma senza senza righe di separazione
-            testo += this.elaboraBody();
+        //body
+        //a capo, ma senza senza righe di separazione
+        testoPagina += this.elaboraBody();
 
-            //footer
-            //di fila nella stessa riga, senza ritorno a capo (se inizia con <include>)
-            testo += this.elaboraFooter();
-        }// fine del blocco if
+        //footer
+        //di fila nella stessa riga, senza ritorno a capo (se inizia con <include>)
+        testoPagina += this.elaboraFooter();
+//        }// fine del blocco if
 
         //registra la pagina
-        if (upload) {
-            if (text.isValid(testo)) {
-                testo = testo.trim();
+        if (text.isValid(testoPagina)) {
+            testoPagina = testoPagina.trim();
 
-                if (pref.isBool(FlowCost.USA_DEBUG)) {
-                    testo = titoloPagina + A_CAPO + testo;
-                    titoloPagina = PAGINA_PROVA;
+            if (pref.isBool(FlowCost.USA_DEBUG)) {
+                testoPagina = titoloPagina + A_CAPO + testoPagina;
+                titoloPagina = PAGINA_PROVA;
+                appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina);
+            } else {
+                if (checkPossoRegistrare(titoloPagina, testoPagina)) {
+                    appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina);
+                    log.info("Registrata la pagina: " + titoloPagina);
                 } else {
-                    if (checkPossoRegistrare(titoloPagina, testo)) {
-                        appContext.getBean(AQueryWrite.class, titoloPagina, testo);
-                        log.info("Registrata la pagina: " + titoloPagina);
-                    } else {
-                        log.info("Non modificata la pagina: " + titoloPagina);
-                    }// end of if/else cycle
+                    log.info("Non modificata la pagina: " + titoloPagina);
                 }// end of if/else cycle
-            }// fine del blocco if
-        }// end of if cycle
+            }// end of if/else cycle
+        }// fine del blocco if
 
     }// fine del metodo
 
@@ -516,7 +490,7 @@ public abstract class Upload {
     private String elaboraTemplateAvviso() {
         String testo = VUOTA;
         String dataCorrente = date.get();
-        String personeTxt = text.format(numPersone);
+        String personeTxt = text.format(lista.size);
 
         if (usaHeadTemplateAvviso) {
             testo += tagHeadTemplateAvviso;
@@ -584,24 +558,13 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected String elaboraBody() {
-        String testo = VUOTA;
+        testoLista = lista.testo;
+        numVoci = lista.size;
         int maxRigheColonne = 10;//@todo mettere la preferenza
 
-        if (mappaDidascalie != null && mappaDidascalie.size() > 0) {
-            if (usaSuddivisioneParagrafi) {
-                testo = listaService.righeParagrafo(mappaDidascalie);
-            } else {
-                if (usaBodyRigheMultiple) {
-                    testo = listaService.righeRaggruppate(mappaDidascalie);
-                } else {
-                    testo = listaService.righeSemplici(mappaDidascalie);
-                }// end of if/else cycle
-            }// end of if/else cycle
-        }// end of if cycle
-
         //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
-        if (usaBodyDoppiaColonna && (numPersone > maxRigheColonne)) {
-            testo = LibWiki.setColonne(testo);
+        if (usaBodyDoppiaColonna && (numVoci > maxRigheColonne)) {
+            testoLista = LibWiki.setColonne(testoLista);
         }// fine del blocco if
 
         if (usaBodyTemplate) {
@@ -611,11 +574,13 @@ public abstract class Upload {
 //                text = elaboraTemplate(text);
 //            }// end of if/else cycle
             if (!pref.isBool(USA_DEBUG)) {
-                testo = elaboraTemplate(testo);
+                testoLista = elaboraTemplate(testoLista);
             }// end of if cycle
+
+
         }// end of if cycle
 
-        return testo;
+        return testoLista;
     }// fine del metodo
 
 
@@ -634,7 +599,20 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected String elaboraFooter() {
-        return VUOTA;
+        String testo = VUOTA;
+        boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
+        String cat;
+
+        testo += LibWiki.setPortale(tagHeadTemplateProgetto);
+        cat = tagCategoria;
+        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
+        testo += cat;
+        cat = LibWiki.setCat(titoloPagina, SPAZIO);
+        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
+        testo += cat;
+        testo = LibBio.setNoIncludeMultiRiga(testo);
+
+        return testo;
     }// fine del metodo
 
 
@@ -676,7 +654,7 @@ public abstract class Upload {
 
 
     public String getTesto() {
-        return testo;
+        return testoPagina;
     }// end of method
 
 }// end of class

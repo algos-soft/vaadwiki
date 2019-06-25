@@ -1,7 +1,8 @@
 package it.algos.vaadwiki.liste;
 
 import it.algos.vaadflow.modules.giorno.Giorno;
-import it.algos.vaadwiki.didascalia.EADidascalia;
+
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
@@ -18,7 +19,6 @@ public abstract class ListaGiorni extends Lista {
 
     //--property
     protected Giorno giorno;
-
 
 
     /**
@@ -42,5 +42,19 @@ public abstract class ListaGiorni extends Lista {
         this.giorno = giorno;
     }// end of constructor
 
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
+        super.usaSuddivisioneParagrafi = pref.isBool(USA_PARAGRAFI_GIORNI);
+        super.usaRigheRaggruppate = pref.isBool(USA_RIGHE_RAGGRUPPATE_GIORNI);
+        super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
+    }// end of method
 
 }// end of class

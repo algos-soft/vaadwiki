@@ -2,6 +2,8 @@ package it.algos.vaadwiki.views;
 
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
+import it.algos.vaadwiki.liste.ListaGiornoNato;
+import it.algos.vaadwiki.liste.ListaNomi;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,6 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_NOMI;
  * <p>
  * Classe per la visualizzazione di una lista di prova di biografie di un particolare nome <br>
  * Viene invocata da NomeViewList <br>
- * Eliminato header e footer della pagina definitiva su wiki <br>
  * Lista delle biografie di un Nome <br>
  */
 @Route(value = ROUTE_VIEW_NOMI)
@@ -41,8 +42,9 @@ public class ViewNome extends ViewListe {
 
 
     /**
-     * Recupera il nome arrivato come parametro nella chiamata del browser effettuata da @Route <br>
+     * Punto di ingresso dopo la chiamata navigate() effettuata da com.vaadin.flow.router.Router verso questa view <br>
      *
+     * @param event       con la Location, segments, target, source, ecc
      * @param nomeIdKey per recuperare l'istanza di Nome
      */
     @Override
@@ -53,18 +55,14 @@ public class ViewNome extends ViewListe {
 
 
     /**
-     * Costruisce una mappa di tutte le didascalie relative al nome considerato <br>
+     * Costruisce il testo con tutte le didascalie relative al giorno considerato <br>
      * Presenta le righe secondo uno dei possibili metodi di raggruppamento <br>
      * Deve essere sovrascritto nella sottoclassse concreta <br>
-     * Dopo deve invocare il metodo della superclasse <br>
+     * Dopo DEVE invocare il metodo della superclasse <br>
      */
+    @Override
     public void inizia() {
-        LinkedHashMap<String, ArrayList<String>> mappa;
-
-        mappa = listaService.getMappaNomi(nome);
-        super.testo = listaService.righeSemplici(mappa);
-
-        super.numVoci = listaService.getMappaSize(mappa);
+        lista = appContext.getBean(ListaNomi.class, nome);
         super.inizia();
     }// end of method
 
@@ -73,9 +71,9 @@ public class ViewNome extends ViewListe {
      * Costruisce il titolo della pagina <br>
      * Sovrascritto <br>
      */
-    protected void addTitolo() {
-        String titolo = "Lista biografie di " + text.format(numVoci) + " persone di nome " + nome.getNome() + A_CAPO + A_CAPO;
-        super.testo = titolo + super.testo;
+    @Override
+    protected String addTitolo() {
+        return "Lista biografie di " + text.format(numVoci) + " persone di nome " + nome.getNome() + A_CAPO;
     }// end of method
 
 }// end of class

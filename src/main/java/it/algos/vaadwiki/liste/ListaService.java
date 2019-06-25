@@ -3,6 +3,7 @@ package it.algos.vaadwiki.liste;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadwiki.application.WikiCost;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
@@ -24,6 +25,7 @@ import java.util.*;
 import static it.algos.vaadflow.application.FlowCost.*;
 import static it.algos.vaadwiki.application.WikiCost.*;
 import static it.algos.vaadwiki.didascalia.Didascalia.TAG_SEP;
+import static it.algos.wiki.LibWiki.PARAGRAFO;
 
 /**
  * Project vaadwiki
@@ -88,7 +90,8 @@ public class ListaService extends ABioService {
      *
      * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
      */
-    public void ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
+    public ArrayList<WrapDidascalia> ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
+        ArrayList<WrapDidascalia> listaOrdinata = listaDisordinata;
         if (listaDisordinata != null) {
 
             listaDisordinata.sort(new Comparator<WrapDidascalia>() {
@@ -140,6 +143,8 @@ public class ListaService extends ABioService {
                 }// end of method
             });//end of lambda expressions and anonymous inner class
         }// end of if cycle
+
+        return listaOrdinata;
     }// fine del metodo
 
 
@@ -177,14 +182,74 @@ public class ListaService extends ABioService {
     }// fine del metodo
 
 
-    public void pippo(ArrayList<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia, String tagParagrafoNullo) {
-        LinkedHashMap<String, HashMap> mappaBio = new LinkedHashMap<String, HashMap>();
-        if (listaDidascalie != null && listaDidascalie.size() > 0) {
-            for (WrapDidascalia wrap : listaDidascalie) {
-                elaboraMappaSingola(mappaBio, wrap, tagParagrafoNullo);
-            }// end of if cycle
+    /**
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+     * Sovrascritto nella sottoclasse concreta <br>
+     *
+     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+     *
+     * @listaOrdinata di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> creaMappaChiaveUno(ArrayList<WrapDidascalia> listaGrezza, String titoloParagrafoVuoto) {
+        LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaGenerale = new LinkedHashMap<>();
+        LinkedHashMap<String, ArrayList<WrapDidascalia>> mappaParagrafi = new LinkedHashMap<>();
+        LinkedHashMap<String, ArrayList<String>> mappaChiaveDue;
+        ArrayList<WrapDidascalia> listaChiaveDue = null;
+        String chiaveUno;
+
+        for (WrapDidascalia wrap : listaGrezza) {
+            chiaveUno = text.isValid(wrap.chiaveUno) ? wrap.chiaveUno : titoloParagrafoVuoto;
+
+            if (mappaParagrafi.get(chiaveUno) == null) {
+                listaChiaveDue = new ArrayList<WrapDidascalia>();
+            } else {
+                listaChiaveDue = (ArrayList<WrapDidascalia>) mappaParagrafi.get(chiaveUno);
+            }// end of if/else cycle
+            listaChiaveDue.add(wrap);
+            mappaParagrafi.put(chiaveUno, listaChiaveDue);
         }// end of for cycle
+
+        for (String key : mappaParagrafi.keySet()) {
+            mappaChiaveDue = creaMappaChiaveDue(mappaParagrafi.get(key));
+            mappaGenerale.put(key, mappaChiaveDue);
+        }// end of for cycle
+
+        return mappaGenerale;
     }// fine del metodo
+
+
+    public LinkedHashMap<String, ArrayList<String>> creaMappaChiaveDue(ArrayList<WrapDidascalia> listaDidascalieDellaChiaveUno) {
+        LinkedHashMap<String, ArrayList<String>> mappa = new LinkedHashMap<>();
+        ArrayList<String> lista = null;
+        String chiaveDue;
+        String chiaveTre;
+
+        for (WrapDidascalia wrap : listaDidascalieDellaChiaveUno) {
+            chiaveDue = wrap.chiaveDue;
+
+            if (mappa.get(chiaveDue) == null) {
+                lista = new ArrayList<String>();
+            } else {
+                lista = (ArrayList<String>) mappa.get(chiaveDue);
+            }// end of if/else cycle
+            lista.add(wrap.getTestoSenza());
+            mappa.put(chiaveDue, lista);
+        }// end of for cycle
+
+        return mappa;
+    }// fine del metodo
+
+//    public void pippo(ArrayList<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia, String tagParagrafoNullo) {
+//        LinkedHashMap<String, HashMap> mappaBio = new LinkedHashMap<String, HashMap>();
+//        if (listaDidascalie != null && listaDidascalie.size() > 0) {
+//            for (WrapDidascalia wrap : listaDidascalie) {
+//                elaboraMappaSingola(mappaBio, wrap, tagParagrafoNullo);
+//            }// end of if cycle
+//        }// end of for cycle
+//    }// fine del metodo
 
 
     /**
@@ -358,6 +423,44 @@ public class ListaService extends ABioService {
      *
      * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
      */
+    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> getMappaGiornoNatoNew(Giorno giorno, String titoloParagrafoVuoto, boolean paragrafoVuotoInCoda) {
+        LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa = null;
+        ListaGiornoNato listaGiornoNato;
+
+        listaGiornoNato = appContext.getBean(ListaGiornoNato.class, giorno, titoloParagrafoVuoto, paragrafoVuotoInCoda);
+        return listaGiornoNato.mappa2;
+    }// end of method
+
+
+    /**
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+     *
+     * @param giorno di riferimento per la lista
+     *
+     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> getMappaGiornoMortoNew(Giorno giorno, String titoloParagrafoVuoto, boolean paragrafoVuotoInCoda) {
+        LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa = null;
+        ListaGiornoMorto listaGiornoMorto;
+
+        listaGiornoMorto = appContext.getBean(ListaGiornoMorto.class, giorno, titoloParagrafoVuoto, paragrafoVuotoInCoda);
+        return listaGiornoMorto.mappa2;
+    }// end of method
+
+
+    /**
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+     *
+     * @param giorno di riferimento per la lista
+     *
+     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+     */
     public LinkedHashMap<String, ArrayList<String>> getMappaGiornoMorto(Giorno giorno) {
         LinkedHashMap<String, ArrayList<String>> mappa = null;
         ListaGiornoMorto listaGiornoMorto;
@@ -444,9 +547,9 @@ public class ListaService extends ABioService {
 
 
     /**
-     * Biografie con paragrafi
+     * Elabora la mappa di didascalie e costruisce il testo della pagina <br>
      */
-    public String righeParagrafo(LinkedHashMap<String, ArrayList<String>> mappaDidascalie) {
+    public String righeParagrafo(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaGenerale) {
         String testo = VUOTA;
         int numVociParagrafo;
         HashMap<String, Object> mappa;
@@ -455,21 +558,60 @@ public class ListaService extends ABioService {
         String paginaLinkata;
         String titoloVisibile;
         List<Bio> lista = null;
+        LinkedHashMap<String, ArrayList<String>> mappaParagrafi = new LinkedHashMap<>();
+        LinkedHashMap<String, ArrayList<String>> mappaChiaveDue;
+        ArrayList<WrapDidascalia> listaChiaveDue = null;
 
 
-        ArrayList<String> listaDidascalie;
+        ArrayList<String> listaDidascalie = null;
 
-        if (mappaDidascalie != null) {
-            for (String key : mappaDidascalie.keySet()) {
-                testo += "==" + key + "==";
-                listaDidascalie = mappaDidascalie.get(key);
+        if (mappaGenerale != null) {
+            for (String keyUno : mappaGenerale.keySet()) {
+                testo += A_CAPO;
+                testo += PARAGRAFO + keyUno + PARAGRAFO;
 
-                if (array.isValid(listaDidascalie)) {
-                    testo += A_CAPO;
-                    for (String didascalia : listaDidascalie) {
-                        testo += ASTERISCO + didascalia + A_CAPO;
-                    }// end of if/else cycle
-                }// end of for cycle
+                mappaParagrafi = mappaGenerale.get(keyUno);
+
+                if (mappaParagrafi != null) {
+                    for (String keyDue : mappaParagrafi.keySet()) {
+                        listaDidascalie = mappaParagrafi.get(keyDue);
+
+                        if (array.isValid(listaDidascalie)) {
+                            if (listaDidascalie.size() == 1) {
+                                testo += A_CAPO;
+                                testo += AST;
+                                if (text.isValid(keyDue)) {
+                                    testo += LibWiki.setQuadre(keyDue);
+                                    testo += WikiCost.TAG_SEP;
+                                }// end of if cycle
+                                testo += listaDidascalie.get(0);
+                            } else {
+                                if (text.isValid(keyDue)) {
+                                    testo += A_CAPO;
+                                    testo += AST;
+                                    testo += LibWiki.setQuadre(keyDue);
+                                    for (String stringa : listaDidascalie) {
+                                        testo += A_CAPO;
+                                        testo += AST;
+                                        testo += AST;
+                                        testo += stringa;
+                                    }// end of for cycle
+                                } else {
+                                    for (String stringa : listaDidascalie) {
+                                        testo += A_CAPO;
+                                        testo += AST;
+                                        testo += stringa;
+                                    }// end of for cycle
+                                }// end of if/else cycle
+
+                            }// end of if/else cycle
+
+                        }// end of if cycle
+
+                    }// end of for cycle
+
+                }// end of if cycle
+                testo += A_CAPO;
             }// end of for cycle
         }// end of if cycle
 
@@ -576,16 +718,47 @@ public class ListaService extends ABioService {
     }// fine del metodo
 
 
-    public int getMappaSize(LinkedHashMap<String, ArrayList<String>> mappa) {
+    public int getMappaSize(LinkedHashMap<String, ArrayList<String>> mappaGenerale) {
         int numVoci = 0;
-        ArrayList<String> lista;
 
-        for (Map.Entry<String, ArrayList<String>> elementoDellaMappa : mappa.entrySet()) {
-            lista = (ArrayList) elementoDellaMappa.getValue();
+        for (ArrayList<String> lista : mappaGenerale.values()) {
             numVoci += lista.size();
         }// end of for cycle
 
         return numVoci;
     }// end of method
+
+
+    public int getMappaDueSize(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaGenerale) {
+        int numVoci = 0;
+
+        for (LinkedHashMap<String, ArrayList<String>> mappaChiaveDue : mappaGenerale.values()) {
+            for (ArrayList<String> lista : mappaChiaveDue.values()) {
+                numVoci += lista.size();
+            }// end of for cycle
+        }// end of for cycle
+
+        return numVoci;
+    }// end of method
+
+
+    /**
+     * La mappa delle biografie arriva non ordinata
+     * Occorre spostare in basso il paragrafo vuoto
+     */
+    protected void fixPosizioneParagrafoVuoto(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaGenerale, String titoloParagrafoVuoto) {
+        LinkedHashMap<String, ArrayList<String>> mappaChiaveDue;
+
+        if (mappaGenerale == null) {
+            return;
+        }// end of if cycle
+
+        if (mappaGenerale.containsKey(titoloParagrafoVuoto)) {
+            mappaChiaveDue = mappaGenerale.get(titoloParagrafoVuoto);
+            mappaGenerale.remove(titoloParagrafoVuoto);
+            mappaGenerale.put(titoloParagrafoVuoto, mappaChiaveDue);
+        }// end of if cycle
+
+    }// fine del metodo
 
 }// end of class

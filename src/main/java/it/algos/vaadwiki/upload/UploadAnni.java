@@ -2,13 +2,10 @@ package it.algos.vaadwiki.upload;
 
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
-import it.algos.vaadflow.modules.giorno.Giorno;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-
-import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
 /**
  * Project vaadwiki
@@ -28,11 +25,15 @@ import static it.algos.vaadflow.application.FlowCost.*;
  */
 public abstract class UploadAnni extends Upload {
 
-    protected String titoloAnno;
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
     @Autowired
     protected AnnoService annoService;
 
+    //--property
     protected Anno anno;
 
 
@@ -59,52 +60,16 @@ public abstract class UploadAnni extends Upload {
 
 
     /**
-     * Metodo invocato subito DOPO il costruttore
-     * <p>
-     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
-     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
-     * <p>
-     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
-     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
-     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
-     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
      */
-    @PostConstruct
-    protected void inizia() {
-        esegue(anno);
-    }// fine del metodo
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
 
-
-
-
-    /**
-     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
-     */
-    public void esegue(Anno anno) {
-        this.anno = anno;
-        esegue();
-    }// fine del metodo
-
-
-    /**
-     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
-     */
-    public void esegueTest(Anno anno) {
-        this.anno = anno;
-        esegueTest();
-    }// fine del metodo
-
-
-    /**
-     * Regola alcuni (eventuali) parametri specifici della sottoclasse
-     * <p>
-     * Nelle sottoclassi va SEMPRE richiamata la superclasse PRIMA di regolare localmente le variabili <br>
-     * Sovrascritto
-     */
-    protected void elaboraParametri() {
-        super.elaboraParametri();
-        usaHeadTocIndice = false;
-    }// fine del metodo
+        super.usaHeadTocIndice = false;
+    }// end of method
 
 
     /**
@@ -122,16 +87,6 @@ public abstract class UploadAnni extends Upload {
 
         return titolo;
     }// fine del metodo
-
-
-    /**
-     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
-     * Sovrascritto
-     */
-    public String getTitoloPagina(Anno anno) {
-        return "";
-    }// fine del metodo
-
 
 
 
@@ -153,7 +108,7 @@ public abstract class UploadAnni extends Upload {
         testoIni += A_CAPO;
         testoIni += "|titolo=" + titoloPagina;
         testoIni += A_CAPO;
-        testoIni += "|voci=" + numPersone;
+        testoIni += "|voci=" + numVoci;
         testoIni += A_CAPO;
         testoIni += "|testo=";
         testoIni += A_CAPO;

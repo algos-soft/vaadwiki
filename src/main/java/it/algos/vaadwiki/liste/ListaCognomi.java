@@ -45,7 +45,7 @@ public class ListaCognomi extends ListaNomiCognomi {
      */
     public ListaCognomi(Cognome cognome) {
         this.cognome = cognome;
-        super.typeDidascalia = EADidascalia.liste;
+        super.typeDidascalia = EADidascalia.listaCognomi;
     }// end of constructor
 
 

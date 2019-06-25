@@ -1,17 +1,16 @@
 package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.liste.ListaGiornoMorto;
-import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
+
 import static it.algos.vaadflow.application.FlowCost.SPAZIO;
-import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
 /**
  * Project vaadwiki
@@ -24,7 +23,10 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * <p>
  * Viene chiamato da Scheduler (con frequenza giornaliera ?) <br>
  * Può essere invocato dal bottone 'Upload all' della classe WikiGiornoViewList <br>
+ * Può essere invocato dal bottone 'Morti' della colonna 'Upload' della classe WikiGiornoViewList <br>
  * Necessita del login come bot <br>
+ * Creata con appContext.getBean(UploadGiornoMorto.class, giorno) <br>
+ * Punto di inzio @PostConstruct inizia() nella superclasse <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -54,58 +56,34 @@ public class UploadGiornoMorto extends UploadGiorni {
 
 
     /**
-     * Titolo della pagina da creare/caricare su wikipedia
-     * Sovrascritto
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
+     */
+    @PostConstruct
+    protected void inizia() {
+        lista = appContext.getBean(ListaGiornoMorto.class, giorno);
+        super.inizia();
+    }// end of method
+
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void elaboraTitolo() {
-        if (giorno != null) {
-            titoloPagina = getTitoloPagina(giorno);
-        }// fine del blocco if
-    }// fine del metodo
+    protected void fixPreferenze() {
+        super.fixPreferenze();
 
-
-    /**
-     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
-     */
-    public String getTitoloPagina(Giorno giorno) {
-        return libBio.getTitoloGiornoMorto(giorno);
-    }// fine del metodo
-
-
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
-     */
-    @Override
-    protected void elaboraMappaDidascalie() {
-        ListaGiornoMorto listaGiornoMorto = appContext.getBean(ListaGiornoMorto.class, giorno);
-        mappaDidascalie = listaGiornoMorto.mappa;
-        super.elaboraMappaDidascalie();
-    }// fine del metodo
-
-
-    /**
-     * Piede della pagina
-     * Sovrascritto
-     */
-    protected String elaboraFooter() {
-        String testo = VUOTA;
-        boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
-        String cat;
-
-        testo += LibWiki.setPortale(tagHeadTemplateProgetto);
-        cat = LibWiki.setCat("Liste di morti per giorno", SPAZIO + giorno.ordine);
-        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
-        testo += cat;
-        cat = LibWiki.setCat(titoloPagina, SPAZIO);
-        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
-        testo += cat;
-        testo = LibBio.setNoIncludeMultiRiga(testo);
-
-        return testo;
-    }// fine del metodo
+        super.titoloPagina = uploadService.getTitoloGiornoMorto(giorno);
+        super.tagCategoria = LibWiki.setCat("Liste di morti per giorno", SPAZIO + giorno.ordine);
+    }// end of method
 
 }// end of class

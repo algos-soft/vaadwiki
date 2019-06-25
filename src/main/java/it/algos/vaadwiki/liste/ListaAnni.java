@@ -2,6 +2,8 @@ package it.algos.vaadwiki.liste;
 
 import it.algos.vaadflow.modules.anno.Anno;
 
+import static it.algos.vaadwiki.application.WikiCost.*;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -39,5 +41,18 @@ public abstract class ListaAnni extends Lista {
         this.anno = anno;
     }// end of constructor
 
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
+        super.usaSuddivisioneParagrafi = pref.isBool(USA_PARAGRAFI_ANNI);
+        super.usaRigheRaggruppate = pref.isBool(USA_RIGHE_RAGGRUPPATE_ANNI);
+        super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_ANNI_IN_CODA);
+    }// end of method
 
 }// end of class

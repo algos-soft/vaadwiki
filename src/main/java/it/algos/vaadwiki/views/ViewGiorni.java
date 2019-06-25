@@ -5,6 +5,8 @@ import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static it.algos.vaadwiki.application.WikiCost.*;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -14,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * <p>
  * Classe astratta per la visualizzazione di una lista di prova di biografie di un particolare giorno <br>
  * Viene invocata da WikiGiornoViewList <br>
- * Eliminato header e footer della pagina definitiva su wiki <br>
  * Due sottoclassi (concrete) per i Nati e per i Morti <br>
  */
 public abstract class ViewGiorni extends ViewListe {
@@ -34,14 +35,15 @@ public abstract class ViewGiorni extends ViewListe {
 
 
     /**
-     * Recupera il giorno arrivato come parametro nella chiamata del browser effettuata da @Route <br>
+     * Punto di ingresso dopo la chiamata navigate() effettuata da com.vaadin.flow.router.Router verso questa view <br>
      *
+     * @param event       con la Location, segments, target, source, ecc
      * @param giornoIdKey per recuperare l'istanza di Giorno
      */
-    @Override
     public void setParameter(BeforeEvent event, String giornoIdKey) {
         this.giorno = giornoService.findById(giornoIdKey);
         this.inizia();
     }// end of method
+
 
 }// end of class

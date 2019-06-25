@@ -272,7 +272,7 @@ public class NomeViewList extends AGridViewList {
 
 
     protected void wikiPage(Nome nome) {
-        String link = "\"" + PATH_WIKI + libBio.getTitoloNome(nome) + "\"";
+        String link = "\"" + PATH_WIKI + uploadService.getTitoloNome(nome) + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 

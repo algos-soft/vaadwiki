@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 
+import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_MORTE;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -16,7 +18,10 @@ import java.util.ArrayList;
  * Date: gio, 24-gen-2019
  * Time: 08:37
  * <p>
- * Crea la lista dei morti nel giorno
+ * Lista dei morti nel giorno <br>
+ * La lista è un semplice testo (formattato secondo i possibili tipi di raggruppamento) <br>
+ * Creata con appContext.getBean(ListaGiornoMorto.class, giorno) <br>
+ * Punto di inzio @PostConstruct inizia() nella superclasse <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -43,6 +48,18 @@ public class ListaGiornoMorto extends ListaGiorni {
         super(giorno);
         super.typeDidascalia = EADidascalia.giornoMorto;
     }// end of constructor
+
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_GIORNI_MORTE);
+    }// end of method
 
 
     /**

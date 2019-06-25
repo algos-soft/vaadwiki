@@ -1,6 +1,8 @@
 package it.algos.vaadwiki.statistiche;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.didascalia.DidascaliaService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
@@ -50,6 +52,7 @@ public class StatisticheDidascalie extends Statistiche {
      */
     @Autowired
     private BioService bioService;
+
 
     private Bio bio;
 
@@ -246,14 +249,14 @@ public class StatisticheDidascalie extends Statistiche {
     protected String rigaGiornoNato() {
         String testo = INIZIO_RIGA;
         String didascalia = "";
-        String giornoNato = "";
-        String linkPagina;
+        Giorno giorno = null;
+        String linkPagina = "";
 
         if (bio != null) {
-            giornoNato = bio.getGiornoNascita().titolo;
-            if (text.isValid(giornoNato)) {
+            giorno = bio.getGiornoNascita();
+            if (giorno != null) {
                 didascalia = didascaliaService.getGiornoNatoCon(bio);
-                linkPagina = libBio.getTitoloGiornoNato(giornoNato);
+                linkPagina = uploadService.getTitoloGiornoNato(giorno);
                 linkPagina = LibWiki.setQuadre(linkPagina);
                 testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
             }// end of if cycle
@@ -269,14 +272,14 @@ public class StatisticheDidascalie extends Statistiche {
     protected String rigaGiornoMorto() {
         String testo = INIZIO_RIGA;
         String didascalia = "";
-        String giornoMorto = "";
+        Giorno giorno = null;
         String linkPagina;
 
         if (bio != null) {
-            giornoMorto = bio.getGiornoMorte().titolo;
-            if (text.isValid(giornoMorto)) {
+            giorno = bio.getGiornoMorte();
+            if (giorno != null) {
                 didascalia = didascaliaService.getGiornoMortoCon(bio);
-                linkPagina = libBio.getTitoloGiornoMorto(giornoMorto);
+                linkPagina = uploadService.getTitoloGiornoMorto(giorno);
                 linkPagina = LibWiki.setQuadre(linkPagina);
                 testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
             }// end of if cycle
@@ -292,14 +295,14 @@ public class StatisticheDidascalie extends Statistiche {
     protected String rigaAnnoNato() {
         String testo = INIZIO_RIGA;
         String didascalia = "";
-        String annoNato = "";
+        Anno anno = null;
         String linkPagina;
 
         if (bio != null) {
-            annoNato = bio.getAnnoNascita().titolo;
-            if (text.isValid(annoNato)) {
+            anno = bio.getAnnoNascita();
+            if (anno != null) {
                 didascalia = didascaliaService.getAnnoNatoCon(bio);
-                linkPagina = libBio.getTitoloAnnoNato(annoNato);
+                linkPagina = uploadService.getTitoloAnnoNato(anno);
                 linkPagina = LibWiki.setQuadre(linkPagina);
                 testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
             }// end of if cycle
@@ -315,14 +318,14 @@ public class StatisticheDidascalie extends Statistiche {
     protected String rigaAnnoMorto() {
         String testo = INIZIO_RIGA;
         String didascalia = "";
-        String annoMorto = "";
+        Anno anno = null;
         String linkPagina;
 
         if (bio != null) {
-            annoMorto = bio.getAnnoMorte().titolo;
-            if (text.isValid(annoMorto)) {
+            anno = bio.getAnnoMorte();
+            if (anno != null) {
                 didascalia = didascaliaService.getAnnoMortoCon(bio);
-                linkPagina = libBio.getTitoloAnnoMorto(annoMorto);
+                linkPagina = uploadService.getTitoloAnnoMorto(anno);
                 linkPagina = LibWiki.setQuadre(linkPagina);
                 testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
             }// end of if cycle

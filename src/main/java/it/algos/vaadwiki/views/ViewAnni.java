@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * <p>
  * Classe astratta per la visualizzazione di una lista di prova di biografie di un particolare anno <br>
  * Viene invocata da WikiAnnoViewList <br>
- * Eliminato header e footer della pagina definitiva su wiki <br>
  * Due sottoclassi (concrete) per i Nati e per i Morti <br>
  */
 public abstract class ViewAnni extends ViewListe {
@@ -29,12 +28,14 @@ public abstract class ViewAnni extends ViewListe {
     protected AnnoService annoService;
 
 
+    //--property
     protected Anno anno;
 
 
     /**
      * Recupera il giorno arrivato come parametro nella chiamata del browser effettuata da @Route <br>
      *
+     * @param event       con la Location, segments, target, source, ecc
      * @param annoIdKey per recuperare l'istanza di Anno
      */
     @Override

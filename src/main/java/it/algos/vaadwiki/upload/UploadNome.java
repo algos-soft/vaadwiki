@@ -3,11 +3,14 @@ package it.algos.vaadwiki.upload;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.liste.ListaNomi;
 import it.algos.vaadwiki.modules.nome.Nome;
+import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
+
+import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 
 /**
  * Project vaadwiki
@@ -20,6 +23,7 @@ import javax.annotation.PostConstruct;
  * <p>
  * Viene chiamato da Scheduler (con frequenza giornaliera ?) <br>
  * Può essere invocato dal bottone 'Upload all' della classe NomeViewList <br>
+ * Può essere invocato dal bottone della colonna 'Upload' della classe NomeViewList <br>
  * Necessita del login come bot <br>
  */
 @SpringComponent
@@ -61,50 +65,29 @@ public class UploadNome extends Upload {
      * <p>
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
      * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
-     * Se ci sono superclassi e sottoclassi, chiama prima @PostConstruct della superclasse <br>
+     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
      */
     @PostConstruct
     protected void inizia() {
-        super.esegue();
+        lista = appContext.getBean(ListaNomi.class, nome);
+        super.inizia();
     }// end of method
 
 
     /**
-     * Regola alcuni (eventuali) parametri specifici della sottoclasse
-     * <p>
-     * Nelle sottoclassi va SEMPRE richiamata la superclasse PRIMA di regolare localmente le variabili <br>
-     * Sovrascritto
-     */
-    protected void elaboraParametri() {
-        super.elaboraParametri();
-        usaSuddivisioneParagrafi = true;
-        usaBodyDoppiaColonna = false;
-    }// fine del metodo
-
-
-    /**
-     * Titolo della pagina da creare/caricare su wikipedia
-     * Sovrascritto
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void elaboraTitolo() {
-        super.elaboraTitolo();
-    }// fine del metodo
+    protected void fixPreferenze() {
+        super.fixPreferenze();
 
-
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
-     */
-    @Override
-    protected void elaboraMappaDidascalie() {
-        ListaNomi listaNomi;
-        listaNomi = appContext.getBean(ListaNomi.class, nome);
-        mappaDidascalie = listaNomi.mappa;
-        super.elaboraMappaDidascalie();
-    }// fine del metodo
-
+        super.titoloPagina = uploadService.getTitoloNome(nome);
+        super.usaHeadTocIndice = false;
+        super.usaBodyDoppiaColonna = false;
+        super.tagCategoria = LibWiki.setCat("Liste di nati per giorno", SPAZIO + nome.getNome());
+    }// end of method
 
 }// end of class

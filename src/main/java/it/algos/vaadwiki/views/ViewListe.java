@@ -3,13 +3,16 @@ package it.algos.vaadwiki.views;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.HasUrlParameter;
+import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
+import it.algos.vaadwiki.liste.Lista;
 import it.algos.vaadwiki.liste.ListaService;
 import it.algos.vaadwiki.upload.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +57,7 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
      */
     @Autowired
     protected ListaService listaService;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
@@ -63,25 +67,51 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
     protected ATextService text;
 
     /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected PreferenzaService pref;
+
+    /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     protected ADateService date;
 
 
+    //--property
+    protected boolean usaSuddivisioneParagrafi;
+
+    //--property
+    protected String titoloParagrafoVuoto;
+
+    //--property
+    protected boolean paragrafoVuotoInCoda;
 
     protected String testo;
 
     protected int numVoci;
 
+    protected  Lista lista;
+
+
     /**
-     * Costruisce una mappa di tutte le didascalie relative al giorno considerato <br>
+     * Costruisce il testo con tutte le didascalie relative al giorno considerato <br>
      * Presenta le righe secondo uno dei possibili metodi di raggruppamento <br>
      * Deve essere sovrascritto nella sottoclassse concreta <br>
-     * Dopo deve invocare il metodo della superclasse <br>
+     * Dopo DEVE invocare il metodo della superclasse <br>
      */
     protected void inizia() {
         TextArea area = new TextArea();
+        this.setSpacing(false);
+
+        this.testo = lista.testo;
+        this.numVoci = lista.size;
+        this.usaSuddivisioneParagrafi = lista.usaSuddivisioneParagrafi;
+        this.titoloParagrafoVuoto = lista.titoloParagrafoVuoto;
+        this.paragrafoVuotoInCoda = lista.paragrafoVuotoInCoda;
 
         if (testo == null) {
             testo = "";
@@ -91,9 +121,12 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
         this.levaHeader();
         this.levaFooter();
-        this.addTitolo();
+        this.add(addTitolo());
+        this.add(new Label((usaSuddivisioneParagrafi) ? "Con paragrafo" : "Senza paragrafo"));
+        this.add(new Label("Titolo paragrafo vuoto: " + titoloParagrafoVuoto));
+        this.add(new Label("Paragrafo vuoto posizionato " + (paragrafoVuotoInCoda ? "in coda" : "in testa")));
 
-        area.setValue(testo);
+        area.setValue(testo.trim());
         area.setSizeFull();
         this.add(area);
 
@@ -162,7 +195,8 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
      * Costruisce il titolo della pagina <br>
      * Sovrascritto <br>
      */
-    protected void addTitolo() {
+    protected String addTitolo() {
+        return "";
     }// end of method
 
 }// end of class

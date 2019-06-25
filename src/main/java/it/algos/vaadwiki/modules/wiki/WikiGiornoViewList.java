@@ -241,13 +241,13 @@ public class WikiGiornoViewList extends WikiViewList {
 
 
     protected void wikiPageNato(Giorno giorno) {
-        String link = "\"" + PATH_WIKI + libBio.getTitoloGiornoNato(giorno) + "\"";
+        String link = "\"" + PATH_WIKI + uploadService.getTitoloGiornoNato(giorno) + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 
     protected void wikiPageMorto(Giorno giorno) {
-        String link = "\"" + PATH_WIKI + libBio.getTitoloGiornoMorto(giorno) + "\"";
+        String link = "\"" + PATH_WIKI + uploadService.getTitoloGiornoMorto(giorno) + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 

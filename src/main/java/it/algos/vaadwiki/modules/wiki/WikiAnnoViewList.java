@@ -251,13 +251,13 @@ public class WikiAnnoViewList extends WikiViewList {
 
 
     protected void wikiPageNato(Anno anno) {
-        String link = "\"" + PATH_WIKI + libBio.getTitoloAnnoNato(anno) + "\"";
+        String link = "\"" + PATH_WIKI + uploadService.getTitoloAnnoNato(anno) + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 
     protected void wikiPageMorto(Anno anno) {
-        String link = "\"" + PATH_WIKI + libBio.getTitoloAnnoMorto(anno) + "\"";
+        String link = "\"" + PATH_WIKI + uploadService.getTitoloAnnoMorto(anno) + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 

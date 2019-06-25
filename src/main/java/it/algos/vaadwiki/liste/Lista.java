@@ -85,6 +85,12 @@ public abstract class Lista {
      */
     public EADidascalia typeDidascalia;
 
+    //--property
+    public String testo;
+
+    //--property
+    public int size;
+
     /**
      * Lista grezza delle voci biografiche da inserire in questa lista <br>
      * Property della classe perché regolata nelle sottoclassi concrete <br>
@@ -93,7 +99,21 @@ public abstract class Lista {
 
     public LinkedHashMap<String, ArrayList<String>> mappa = null;
 
+    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa2 = null;
+
     public LinkedHashMap<String, HashMap> mappaBio = new LinkedHashMap<String, HashMap>();
+
+    //--property
+    public boolean usaSuddivisioneParagrafi;
+
+    //--property
+    public boolean usaRigheRaggruppate;
+
+    //--property
+    public String titoloParagrafoVuoto;
+
+    //--property
+    public boolean paragrafoVuotoInCoda;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -102,7 +122,6 @@ public abstract class Lista {
     @Autowired
     protected ListaService listaService;
 
-    protected String tagParagrafoNullo;
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -117,7 +136,20 @@ public abstract class Lista {
      */
     @PostConstruct
     protected void inizia() {
+        this.fixPreferenze();
         this.creaMappa();
+    }// end of method
+
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        this.usaSuddivisioneParagrafi = true;
+        this.titoloParagrafoVuoto = "";
+        this.paragrafoVuotoInCoda = true;
     }// end of method
 
 
@@ -139,14 +171,30 @@ public abstract class Lista {
         listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, typeDidascalia);
 
         //--Ordina la lista di didascalie specifiche
-        listaService.ordinaListaDidascalie(listaDidascalie);//@todo la query è già ordinata  MA FORSE NO
+        listaDidascalie = this.ordinaListaDidascalie(listaDidascalie);//@todo la query è già ordinata  MA FORSE NO
 
         //--Costruisce la mappa completa
         this.mappa = listaService.creaMappa(listaDidascalie);
 
-
         //--Costruisce la mappa completa @todo TEST
-//        listaService.pippo(listaDidascalie, typeDidascalia,tagParagrafoNullo);
+        mappa2 = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto);
+
+        if (paragrafoVuotoInCoda) {
+            listaService.fixPosizioneParagrafoVuoto(mappa2, titoloParagrafoVuoto);
+        }// end of if cycle
+
+        if (usaSuddivisioneParagrafi) {
+            this.testo = listaService.righeParagrafo(mappa2);
+            this.size = listaService.getMappaDueSize(mappa2);
+        } else {
+            if (usaRigheRaggruppate) {
+                this.testo = listaService.righeRaggruppate(mappa);
+            } else {
+                this.testo = listaService.righeSemplici(mappa);
+            }// end of if/else cycle
+            this.size = listaService.getMappaSize(mappa);
+        }// end of if/else cycle
+
     }// fine del metodo
 
 
@@ -161,5 +209,13 @@ public abstract class Lista {
         return null;
     }// fine del metodo
 
+
+    /**
+     * Ordina la lista di didascalie specifiche <br>
+     */
+    @SuppressWarnings("all")
+    public ArrayList<WrapDidascalia> ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
+        return listaService.ordinaListaDidascalie(listaDisordinata);
+    }// fine del metodo
 
 }// end of class

@@ -1,11 +1,8 @@
 package it.algos.vaadwiki.views;
 
 import com.vaadin.flow.router.Route;
+import it.algos.vaadwiki.liste.ListaGiornoNato;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
-import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_GIORNO_NATI;
 
 /**
@@ -17,7 +14,6 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_GIORNO_NATI;
  * <p>
  * Classe per la visualizzazione di una lista di prova di biografie di un particolare giorno <br>
  * Viene invocata da WikiGiornoViewList <br>
- * Eliminato header e footer della pagina definitiva su wiki <br>
  * Lista dei Nati nel giorno <br>
  */
 @Route(value = ROUTE_VIEW_GIORNO_NATI)
@@ -25,18 +21,14 @@ public class ViewGiornoNato extends ViewGiorni {
 
 
     /**
-     * Costruisce una mappa di tutte le didascalie relative al giorno considerato <br>
+     * Costruisce il testo con tutte le didascalie relative al giorno considerato <br>
      * Presenta le righe secondo uno dei possibili metodi di raggruppamento <br>
      * Deve essere sovrascritto nella sottoclassse concreta <br>
-     * Dopo deve invocare il metodo della superclasse <br>
+     * Dopo DEVE invocare il metodo della superclasse <br>
      */
+    @Override
     public void inizia() {
-        LinkedHashMap<String, ArrayList<String>> mappa;
-
-        mappa = listaService.getMappaGiornoNato(giorno);
-        super.testo = listaService.righeSemplici(mappa);
-
-        super.numVoci = listaService.getMappaSize(mappa);
+        lista = appContext.getBean(ListaGiornoNato.class, giorno);
         super.inizia();
     }// end of method
 
@@ -45,9 +37,9 @@ public class ViewGiornoNato extends ViewGiorni {
      * Costruisce il titolo della pagina <br>
      * Sovrascritto <br>
      */
-    protected void addTitolo() {
-        String titolo = "Lista biografie di " + text.format(numVoci) + " persone nate il " + giorno.getTitolo() + A_CAPO + A_CAPO;
-        super.testo = titolo + super.testo;
+    @Override
+    protected String addTitolo() {
+        return "Lista biografie di " + text.format(numVoci) + " persone nate il " + giorno.getTitolo();
     }// end of method
 
 

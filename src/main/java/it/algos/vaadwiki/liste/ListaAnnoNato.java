@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 
+import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_ANNI_NASCITA;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -16,7 +18,10 @@ import java.util.ArrayList;
  * Date: gio, 24-gen-2019
  * Time: 10:33
  * <p>
- * Crea la lista dei nati nell'anno
+ * Lista dei nati nell'anno
+ * La lista è un semplice testo (formattato secondo i possibili tipi di raggruppamento) <br>
+ * Creata con appContext.getBean(ListaAnnoNato.class, anno) <br>
+ * Punto di inzio @PostConstruct inizia() nella superclasse <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -43,6 +48,18 @@ public class ListaAnnoNato extends ListaAnni {
         super(anno);
         super.typeDidascalia = EADidascalia.annoNato;
     }// end of constructor
+
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_ANNI_NASCITA);
+    }// end of method
 
 
     /**

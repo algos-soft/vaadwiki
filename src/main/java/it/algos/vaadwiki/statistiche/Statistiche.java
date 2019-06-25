@@ -5,6 +5,7 @@ import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.service.LibBio;
+import it.algos.vaadwiki.upload.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -77,5 +78,13 @@ public abstract class Statistiche {
      */
     @Autowired
     protected GiornoService giornoService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected UploadService uploadService;
 
 }// end of class

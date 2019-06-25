@@ -63,6 +63,10 @@ public class WikiCost {
 
     public final static String TAG_WANN = "wikianno";
 
+    public final static String TAG_SEP = " - ";
+
+    public static final String AST = "*";
+
     // daemons
     public final static String BIO = "Bio";
 
@@ -214,8 +218,37 @@ public class WikiCost {
 
     public final static String KEY_MAP_ORDINE_GIORNO_MORTO = "keyMapOrdineGiornoMorto";
 
-    public static WikiLoginOld WIKI_LOGIN = null;
-
     public final static String USA_REGISTRA_SEMPRE_CRONO = "salvaSempreCrono";
+
+
+    public final static String USA_PARAGRAFI_GIORNI = "usaParagrafiGiorni";
+
+    public final static String USA_RIGHE_RAGGRUPPATE_GIORNI = "usaRigheRaggruppateGiorni";
+
+    public final static String TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA = "tagParagrafoVuotoGiorniNascita";
+
+    public final static String TAG_PARAGRAFO_VUOTO_GIORNI_MORTE = "tagParagrafoVuotoGiorniMorte";
+
+    public final static String IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA = "isParagrafoVuotoGiorniInCoda";
+
+    public final static String USA_FORCETOC_GIORNI = "usaForcetocGiorni";
+
+    public final static String USA_PARAGRAFI_ANNI = "usaParagrafiAnni";
+
+    public final static String TAG_PARAGRAFO_VUOTO_ANNI_NASCITA = "tagParagrafoVuotoAnniNascita";
+
+    public final static String TAG_PARAGRAFO_VUOTO_ANNI_MORTE = "tagParagrafoVuotoAnniMorte";
+
+    public final static String IS_PARAGRAFO_VUOTO_ANNI_IN_CODA = "isParagrafoVuotoAnniInCoda";
+
+    public final static String USA_FORCETOC_ANNI = "usaForcetocAnni";
+
+    public final static String USA_RIGHE_RAGGRUPPATE_ANNI = "usaRigheRaggruppateAnni";
+
+    public final static String TAG_PARAGRAFO_VUOTO_NOMI = "tagParagrafoVuotoNomi";
+
+    public final static String TAG_PARAGRAFO_VUOTO_COGNOMI = "tagParagrafoVuotoCognomi";
+
+    public static WikiLoginOld WIKI_LOGIN = null;
 
 }// end of static class

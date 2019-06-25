@@ -1,17 +1,16 @@
 package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadwiki.liste.ListaAnnoNato;
-import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
+
 import static it.algos.vaadflow.application.FlowCost.SPAZIO;
-import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
 /**
  * Project vaadwiki
@@ -24,7 +23,10 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * <p>
  * Viene chiamato da Scheduler (con frequenza giornaliera ?) <br>
  * Può essere invocato dal bottone 'Upload all' della classe WikiAnnoViewList <br>
+ * Può essere invocato dal bottone 'Nati' della colonna 'Upload' della classe WikiAnnoViewList <br>
  * Necessita del login come bot <br>
+ * Creata con appContext.getBean(UploadAnnoNato.class, anno) <br>
+ * Punto di inzio @PostConstruct inizia() nella superclasse <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -54,59 +56,35 @@ public class UploadAnnoNato extends UploadAnni {
 
 
     /**
-     * Titolo della pagina da creare/caricare su wikipedia
-     * Sovrascritto
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
+     */
+    @PostConstruct
+    protected void inizia() {
+        lista = appContext.getBean(ListaAnnoNato.class, anno);
+        super.inizia();
+    }// end of method
+
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void elaboraTitolo() {
-        if (anno != null) {
-            titoloPagina = getTitoloPagina(anno);
-        }// fine del blocco if
-    }// fine del metodo
+    protected void fixPreferenze() {
+        super.fixPreferenze();
 
+        super.titoloPagina = uploadService.getTitoloAnnoNato(anno);
+        super.tagCategoria = LibWiki.setCat("Liste di nati per anno", SPAZIO + anno.ordine);
+    }// end of method
 
-    /**
-     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
-     * Sovrascritto
-     */
-    public String getTitoloPagina(Anno anno) {
-        return libBio.getTitoloAnnoNato(anno);
-    }// fine del metodo
-
-
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
-     */
-    @Override
-    protected void elaboraMappaDidascalie() {
-        ListaAnnoNato listaAnnoNato = appContext.getBean(ListaAnnoNato.class, anno);
-        mappaDidascalie = listaAnnoNato.mappa;
-        super.elaboraMappaDidascalie();
-    }// fine del metodo
-
-
-    /**
-     * Piede della pagina
-     * Sovrascritto
-     */
-    protected String elaboraFooter() {
-        String testo = VUOTA;
-        boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
-        String cat;
-
-        testo += LibWiki.setPortale(tagHeadTemplateProgetto);
-        cat = LibWiki.setCat("Liste di nati per anno", SPAZIO + anno.ordine);
-        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
-        testo += cat;
-        cat = LibWiki.setCat(titoloPagina, SPAZIO);
-        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
-        testo += cat;
-        testo = LibBio.setNoIncludeMultiRiga(testo);
-
-        return testo;
-    }// fine del metodo
 
 }// end of class

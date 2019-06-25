@@ -69,7 +69,7 @@ public class ViewCognome extends ViewListe{
         mappa = listaService.getMappaCognomi(cognome);
         super.testo = listaService.righeSemplici(mappa);
 
-        super.numVoci = listaService.getMappaSize(mappa);
+//        super.numVoci = listaService.getMappaSize(mappa);
         super.inizia();
     }// end of method
 
@@ -78,9 +78,9 @@ public class ViewCognome extends ViewListe{
      * Costruisce il titolo della pagina <br>
      * Sovrascritto <br>
      */
-    protected void addTitolo() {
-        String titolo = "Lista biografie di " + text.format(numVoci) + " persone di cognome " + cognome.getCognome() + A_CAPO + A_CAPO;
-        super.testo = titolo + super.testo;
+    @Override
+    protected String addTitolo() {
+        return "Lista biografie di " + text.format(numVoci) + " persone di cognome " + cognome.getCognome() + A_CAPO;
     }// end of method
 
 }// end of class

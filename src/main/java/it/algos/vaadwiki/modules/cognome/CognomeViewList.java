@@ -270,7 +270,7 @@ public class CognomeViewList extends AGridViewList {
 
 
     protected void wikiPage(Cognome cognome) {
-        String link = "\"" + PATH_WIKI + libBio.getTitoloCognome(cognome) + "\"";
+        String link = "\"" + PATH_WIKI + uploadService.getTitoloCognome(cognome) + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 

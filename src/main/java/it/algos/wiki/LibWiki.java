@@ -55,6 +55,7 @@ public abstract class LibWiki {
 
     public static final String NOTE = "<!--";
 
+
     public static final String PARAGRAFO = "==";
 
     public static final String TONDA_INI = "(";

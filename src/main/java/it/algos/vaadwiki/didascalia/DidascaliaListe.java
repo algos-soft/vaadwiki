@@ -44,7 +44,7 @@ public class DidascaliaListe extends Didascalia {
      * @param bio di cui costruire la didascalia
      */
     public DidascaliaListe(Bio bio) {
-        super(bio, EADidascalia.liste);
+        super(bio, EADidascalia.listaNomi);
     }// end of constructor
 
 

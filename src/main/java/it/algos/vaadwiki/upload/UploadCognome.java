@@ -51,58 +51,58 @@ public class UploadCognome extends Upload {
         this.cognome = cognome;
     }// end of constructor
 
+//    /**
+//     * Metodo invocato subito DOPO il costruttore
+//     * <p>
+//     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+//     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+//     * <p>
+//     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+//     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+//     * Se ci sono superclassi e sottoclassi, chiama prima @PostConstruct della superclasse <br>
+//     */
+//    @PostConstruct
+//    protected void inizia() {
+//        super.esegue();
+//    }// end of method
+//
+
+
     /**
-     * Metodo invocato subito DOPO il costruttore
-     * <p>
-     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
-     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
-     * <p>
-     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
-     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
-     * Se ci sono superclassi e sottoclassi, chiama prima @PostConstruct della superclasse <br>
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
      */
-    @PostConstruct
-    protected void inizia() {
-        super.esegue();
-    }// end of method
-
-
-
-    /**
-     * Regola alcuni (eventuali) parametri specifici della sottoclasse
-     * <p>
-     * Nelle sottoclassi va SEMPRE richiamata la superclasse PRIMA di regolare localmente le variabili <br>
-     * Sovrascritto
-     */
-    protected void elaboraParametri() {
-        super.elaboraParametri();
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
         usaSuddivisioneParagrafi = false;
     }// fine del metodo
 
 
-    /**
-     * Titolo della pagina da creare/caricare su wikipedia
-     * Sovrascritto
-     */
-    @Override
-    protected void elaboraTitolo() {
-        super.elaboraTitolo();
-    }// fine del metodo
+//    /**
+//     * Titolo della pagina da creare/caricare su wikipedia
+//     * Sovrascritto
+//     */
+//    @Override
+//    protected void elaboraTitolo() {
+//        super.elaboraTitolo();
+//    }// fine del metodo
 
 
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
-     */
-    @Override
-    protected void elaboraMappaDidascalie() {
-//        ListaCognomi listaCognomi;
-//        listaCognomi = appContext.getBean(ListaCognomi.class, cognome);
-//        mappaDidascalie = listaNomi.mappa;
-//        super.elaboraMappaDidascalie();
-    }// fine del metodo
+//    /**
+//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+//     * Sovrascritto nella sottoclasse concreta <br>
+//     * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
+//     */
+//    @Override
+//    protected void elaboraMappaDidascalie() {
+////        ListaCognomi listaCognomi;
+////        listaCognomi = appContext.getBean(ListaCognomi.class, cognome);
+////        mappaDidascalie = listaNomi.mappa;
+////        super.elaboraMappaDidascalie();
+//    }// fine del metodo
 
 
 }// end of class

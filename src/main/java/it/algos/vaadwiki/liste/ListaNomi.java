@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 
+import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA;
+import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_NOMI;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -17,7 +20,10 @@ import java.util.ArrayList;
  * Date: Fri, 07-Jun-2019
  * Time: 20:32
  * <p>
- * Crea la lista delle persone col nome <br>
+ * Lista delle persone col nome <br>
+ * La lista è un semplice testo (formattato secondo i possibili tipi di raggruppamento) <br>
+ * Creata con appContext.getBean(ListaNomi.class, nome) <br>
+ * Punto di inzio @PostConstruct inizia() nella superclasse <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -46,8 +52,20 @@ public class ListaNomi extends ListaNomiCognomi {
      */
     public ListaNomi(Nome nome) {
         this.nome = nome;
-        super.typeDidascalia = EADidascalia.liste;
+        super.typeDidascalia = EADidascalia.listaNomi;
     }// end of constructor
+
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI);
+    }// end of method
 
 
     /**
@@ -62,31 +80,11 @@ public class ListaNomi extends ListaNomiCognomi {
     }// fine del metodo
 
     /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
-     *
-     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+     * Ordina la lista di didascalie specifiche <br>
      */
-    public void creaMappa() {
-        ArrayList<WrapDidascalia> listaDidascalie = null;
-
-        //--Crea la lista grezza delle voci biografiche
-        this.listaGrezzaBio = listaBio();
-
-        //--Crea una lista di didascalie specifiche
-        listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, typeDidascalia);
-
-//        //--Ordina la lista di didascalie specifiche
-//        listaService.ordinaListaDidascalie(listaDidascalie);//@todo la query è già ordinata  MA FORSE NO
-
-        //--Costruisce la mappa completa
-        this.mappa = listaService.creaMappa(listaDidascalie);
-
-
-        //--Costruisce la mappa completa @todo TEST
-//        listaService.pippo(listaDidascalie, typeDidascalia,tagParagrafoNullo);
+    @SuppressWarnings("all")
+    public ArrayList<WrapDidascalia> ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
+        return listaDisordinata;
     }// fine del metodo
 
 }// end of class

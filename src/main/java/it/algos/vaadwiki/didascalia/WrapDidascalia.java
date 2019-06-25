@@ -41,48 +41,27 @@ public class WrapDidascalia {
     public Bio bio;
 
     /**
+     * Chiave principale <br>
+     * Di solito il paragrafo (che potrebbe anche non esserci) <br>
+     */
+    public String chiaveUno;
+
+    /**
+     * Ulteriore chiave per la lista di discalie per ogni chiave <br>
+     */
+    public String chiaveDue;
+
+    /**
+     * Composta dal cognome concatenato al titolo della pagina wikipedia (per essere sicuri che qualcosa esisista) <br>
+     */
+    public String chiaveTre;
+
+    /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected DidascaliaService didascaliaService;
-
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-//    @Autowired
-//    protected DidascaliaGiornoNato didascaliaGiornoNato;
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-//    @Autowired
-//    protected DidascaliaGiornoMorto didascaliaGiornoMorto;
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-//    @Autowired
-//    protected DidascaliaAnnoNato didascaliaAnnoNato;
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-//    @Autowired
-//    protected DidascaliaAnnoMorto didascaliaAnnoMorto;
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-//    @Autowired
-//    protected DidascaliaBiografie didascaliaBiografie;
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     */
-//    @Autowired
-//    protected DidascaliaListe didascaliaListe;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -173,27 +152,50 @@ public class WrapDidascalia {
             case giornoNato:
                 didascalia = didascaliaService.getDidascaliaGiornoNato(bio);
                 this.chiave = bio.getAnnoNascita() != null ? bio.getAnnoNascita().titolo : "";
-//                this.riferimento = bio.getAnnoNascita() != null ? bio.getAnnoNascita().titolo : "";
                 this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
+
+                chiaveUno = bio.getAnnoNascita() != null ? bio.getAnnoNascita().secolo.titolo : "";
+                chiaveDue = chiave;
+                chiaveTre = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 break;
             case giornoMorto:
                 didascalia = didascaliaService.getDidascaliaGiornoMorto(bio);
                 this.chiave = bio.getAnnoMorte() != null ? bio.getAnnoMorte().titolo : "";
                 this.ordine = text.isValid(chiave) ? annoService.findByKeyUnica(chiave).ordine : 0;
+
+                chiaveUno = bio.getAnnoMorte() != null ? bio.getAnnoMorte().secolo.titolo : "";
+                chiaveDue = chiave;
+                chiaveTre = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 break;
             case annoNato:
                 didascalia = didascaliaService.getDidascaliaAnnoNato(bio);
                 this.chiave = bio.getGiornoNascita() != null ? bio.getGiornoNascita().titolo : "";
                 this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
+
+                chiaveUno = bio.getGiornoNascita() != null ? bio.getGiornoNascita().mese.titoloLungo : "";
+                chiaveUno = text.primaMaiuscola(chiaveUno);
+                chiaveDue = chiave;
+                chiaveTre = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 break;
             case annoMorto:
                 didascalia = didascaliaService.getDidascaliaAnnoMorto(bio);
                 this.chiave = bio.getGiornoMorte() != null ? bio.getGiornoMorte().titolo : "";
                 this.ordine = text.isValid(chiave) ? giornoService.findByKeyUnica(chiave).ordine : 0;
+
+                chiaveUno = bio.getGiornoMorte() != null ? bio.getGiornoMorte().mese.titoloLungo : "";
+                chiaveUno = text.primaMaiuscola(chiaveUno);
+                chiaveDue = chiave;
+                chiaveTre = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 break;
-            case liste:
+            case listaNomi:
+            case listaCognomi:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
                 this.chiave = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
+
+                chiaveUno = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
+                chiaveUno = text.primaMaiuscola(chiaveUno);
+                chiaveDue = "";
+                chiaveTre = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 break;
             case biografie:
                 didascalia = didascaliaService.getDidascaliaBiografie(bio);

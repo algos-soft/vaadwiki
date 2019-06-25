@@ -195,7 +195,8 @@ public class DidascaliaService extends ABioService {
                 case annoMorto:
                     didascalia = getDidascaliaAnnoMorto(bio);
                     break;
-                case liste:
+                case listaNomi:
+                case listaCognomi:
                     didascalia = getDidascaliaListe(bio);
                     break;
                 case biografie:
@@ -246,7 +247,7 @@ public class DidascaliaService extends ABioService {
 
 
     public String getListeCon(Bio bio) {
-        return getBase(bio, EADidascalia.liste, true);
+        return getBase(bio, EADidascalia.listaNomi, true);
     }// end of method
 
 
@@ -276,7 +277,7 @@ public class DidascaliaService extends ABioService {
 
 
     public String getListeSenza(Bio bio) {
-        return getBase(bio, EADidascalia.liste, false);
+        return getBase(bio, EADidascalia.listaNomi, false);
     }// end of method
 
 

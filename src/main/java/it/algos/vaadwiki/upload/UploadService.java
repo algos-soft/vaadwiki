@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 
+import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.USA_REGISTRA_SEMPRE_CRONO;
 
@@ -31,6 +32,16 @@ import static it.algos.vaadwiki.application.WikiCost.USA_REGISTRA_SEMPRE_CRONO;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public class UploadService extends ABioService {
+
+    /**
+     * tag per il titolo di una lista cronologica
+     */
+    public static final String NATI = "Nati";
+
+    /**
+     * tag per il titolo di una lista cronologica
+     */
+    public static final String MORTI = "Morti";
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -210,5 +221,119 @@ public class UploadService extends ABioService {
     public UploadCognome uploadCognome(Cognome cognome) {
         return appContext.getBean(UploadCognome.class, cognome);
     }// end of method
+
+
+    /**
+     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
+     */
+    public String getTitoloGiorno(Giorno giorno, String tag) {
+        String titoloLista = VUOTA;
+        String titolo = giorno.getTitolo();
+        String articolo = "il";
+        String articoloBis = "l'";
+
+        tag = tag.trim();
+        if (!titolo.equals(VUOTA)) {
+            if (titolo.startsWith("8") || titolo.startsWith("11")) {
+                titoloLista = tag + SPAZIO + articoloBis + titolo;
+            } else {
+                titoloLista = tag + SPAZIO + articolo + SPAZIO + titolo;
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return titoloLista;
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nati da creare/caricare su wikipedia
+     */
+    public String getTitoloGiornoNato(Giorno giorno) {
+        return getTitoloGiorno(giorno, NATI);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Morti da creare/caricare su wikipedia
+     */
+    public String getTitoloGiornoMorto(Giorno giorno) {
+        return getTitoloGiorno(giorno, MORTI);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nati/Morti da creare/caricare su wikipedia
+     */
+    public String getTitoloAnno(Anno anno, String tag) {
+        String titoloLista = VUOTA;
+        String titolo = anno.getTitolo();
+        String articolo = "nel";
+        String articoloBis = "nell'";
+        String TAG_AC = " a.C.";
+
+        tag = tag.trim();
+        if (!titolo.equals(VUOTA)) {
+            if (titolo.equals("1")
+                    || titolo.equals("1" + TAG_AC)
+                    || titolo.equals("11")
+                    || titolo.equals("11" + TAG_AC)
+                    || titolo.startsWith("8")
+            ) {
+                titoloLista = tag + SPAZIO + articoloBis + titolo;
+            } else {
+                titoloLista = tag + SPAZIO + articolo + SPAZIO + titolo;
+            }// fine del blocco if-else
+        }// fine del blocco if
+
+        return titoloLista;
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nati da creare/caricare su wikipedia
+     */
+    public String getTitoloAnnoNato(Anno anno) {
+        return getTitoloAnno(anno, NATI);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Morti da creare/caricare su wikipedia
+     */
+    public String getTitoloAnnoMorto(Anno anno) {
+        return getTitoloAnno(anno, MORTI);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nomi da creare/caricare su wikipedia
+     */
+    public String getTitoloNome(String titolo) {
+        return "Persone di nome " + text.primaMaiuscola(titolo);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nomi da creare/caricare su wikipedia
+     */
+    public String getTitoloNome(Nome nome) {
+        return getTitoloNome(nome.getNome());
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Cognome da creare/caricare su wikipedia
+     */
+    public String getTitoloCognome(String titolo) {
+        return "Persone di cognome " + text.primaMaiuscola(titolo);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Cognome da creare/caricare su wikipedia
+     */
+    public String getTitoloCognome(Cognome cognome) {
+        return getTitoloCognome(cognome.getCognome());
+    }// fine del metodo
 
 }// end of class
