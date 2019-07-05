@@ -8,6 +8,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
@@ -30,8 +32,11 @@ import org.springframework.context.ApplicationContext;
  * Eliminato header e footer della pagina definitiva su wiki <br>
  * Due sottoclassi (concrete) per i Nati e per i Morti dei giorni <br>
  * Due sottoclassi (concrete) per i Nati e per i Morti degli anni <br>
+ * Implementa l'interfaccia HasUrlParameter invece di BeforeEnterObserver <br>
+ * e quindi il metodo setParameter(BeforeEvent event, ...) invece di beforeEnter(BeforeEnterEvent beforeEnterEvent <br>
  */
-public abstract class ViewListe extends VerticalLayout implements HasUrlParameter<String> {
+public abstract class ViewListe extends VerticalLayout implements HasUrlParameter<String>  {
+
 
 
     /**
