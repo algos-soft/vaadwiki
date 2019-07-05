@@ -1,3 +1,3 @@
-        if (croce.getClass().isAssignableFrom(WamEntity.class) ) {
+        if (WamEntity.class.isAssignableFrom(entityClass)||Milite.class.isAssignableFrom(entityClass)) {
             codice
         }// end of if cycle

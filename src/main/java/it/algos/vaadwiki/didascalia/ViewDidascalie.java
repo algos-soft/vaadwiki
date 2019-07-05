@@ -145,13 +145,13 @@ public class ViewDidascalie extends ALayoutViewList {
 
     private void creaDidascalie() {
         if (bioDidascalia != null) {
-            gridHolder.removeAll();
-            gridHolder.add(didascaliaGiornoNato());
-            gridHolder.add(didascaliaGiornoMorto());
-            gridHolder.add(didascaliaAnnoNato());
-            gridHolder.add(didascaliaAnnoMorto());
-            gridHolder.add(didascaliaListe());
-            gridHolder.add(didascaliaBiografie());
+            gridPlaceholder.removeAll();
+            gridPlaceholder.add(didascaliaGiornoNato());
+            gridPlaceholder.add(didascaliaGiornoMorto());
+            gridPlaceholder.add(didascaliaAnnoNato());
+            gridPlaceholder.add(didascaliaAnnoMorto());
+            gridPlaceholder.add(didascaliaListe());
+            gridPlaceholder.add(didascaliaBiografie());
         }// end of if cycle
     }// end of method
 

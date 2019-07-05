@@ -4,16 +4,20 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.application.StaticContextAccessor;
+import it.algos.vaadflow.enumeration.EAColor;
 import it.algos.vaadflow.enumeration.EAMenu;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.menu.*;
 import lombok.extern.slf4j.Slf4j;
 
+import static it.algos.vaadflow.application.FlowCost.USA_DEBUG;
 import static it.algos.vaadflow.application.FlowCost.USA_MENU;
 
 /**
@@ -42,6 +46,37 @@ public abstract class ALayoutViewList extends APrefViewList {
     public ALayoutViewList(IAPresenter presenter, IADialog dialog) {
         super(presenter, dialog);
     }// end of Spring constructor
+
+
+    /**
+     * Costruisce gli oggetti base (placeholder) di questa view <br>
+     * Li aggiunge alla view stessa <br>
+     * Può essere sovrascritto, per modificare il layout standard <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixLayout() {
+        super.fixLayout();
+        this.setMargin(false);
+        this.setSpacing(false);
+        this.setPadding(false);
+
+        this.topPlaceholder = new HorizontalLayout();
+        this.alertPlacehorder = new VerticalLayout();
+        this.gridPlaceholder = new VerticalLayout();
+        this.bottomPlacehorder = new HorizontalLayout();
+
+        if (pref.isBool(USA_DEBUG)) {
+            this.getElement().getStyle().set("background-color", EAColor.yellow.getEsadecimale());
+            topPlaceholder.getElement().getStyle().set("background-color", EAColor.lime.getEsadecimale());
+            alertPlacehorder.getElement().getStyle().set("background-color", EAColor.blue.getEsadecimale());
+            gridPlaceholder.getElement().getStyle().set("background-color", EAColor.silver.getEsadecimale());
+            bottomPlacehorder.getElement().getStyle().set("background-color", EAColor.lime.getEsadecimale());
+        }// end of if cycle
+
+        gridPlaceholder.setMargin(false);
+        gridPlaceholder.setSpacing(false);
+        gridPlaceholder.setPadding(false);
+    }// end of method
 
 
     /**

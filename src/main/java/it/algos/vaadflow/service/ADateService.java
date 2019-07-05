@@ -933,4 +933,73 @@ public class ADateService extends AbstractService {
         return listaMese;
     }// end of method
 
+
+    public int getNumSettimana(LocalDate giornoIn) {
+        return giornoIn.getDayOfWeek().getValue();
+    }// fine del metodo
+
+
+    /**
+     * Recupera il primo lunedì precedente al giorno indicato <br>
+     */
+    public LocalDate getFirstLunedì(LocalDate giorno) {
+        LocalDate lunedi = null;
+        LocalDate corrente = null;
+        int tagLunedi = 1;
+
+        for (int k = 0; k < 7; k++) {
+            corrente = giorno.minusDays(k);
+            if (getNumSettimana(corrente) == tagLunedi) {
+                lunedi = corrente;
+                break;
+            }// end of if cycle
+        }// end of for cycle
+
+        return lunedi;
+    }// end of method
+
+
+    /**
+     * Recupera un giorno tot giorni prima o dopo la data corrente <br>
+     */
+    public LocalDate getGiornoDelta(String textGiorniDelta) {
+        int numGiorniDelta = 0;
+
+        if (text.isValid(textGiorniDelta)) {
+            try { // prova ad eseguire il codice
+                numGiorniDelta = Integer.decode(textGiorniDelta);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
+        }// end of if cycle
+
+        return getGiornoDelta(numGiorniDelta);
+    }// end of method
+
+
+    /**
+     * Recupera un giorno tot giorni prima o dopo la data corrente <br>
+     */
+    public LocalDate getGiornoDelta(int numGiorniDelta) {
+        return LocalDate.now().plusDays(numGiorniDelta);
+    }// end of method
+
+
+    /**
+     * Durata tra due momenti individuati da ora e minuti <br>
+     */
+    public int getDurata(int oraFine, int oraIni, int minFine, int minIni) {
+        int durata = 0;
+        int ore = 0;
+        int minuti = 0;
+
+        ore = oraFine - oraIni;
+        durata += ore * 60;
+
+        minuti = minFine - minIni;
+        durata += minuti;
+
+        return durata;
+    }// end of method
+
 }// end of class

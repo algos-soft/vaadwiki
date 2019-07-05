@@ -158,7 +158,7 @@ public class WikiCost {
 
     public final static String WIKI_PAGE_LIMIT = "wikiPageLimit";
 
-    public final static String USA_CHECK_LISTE_PAGEID = "usaCheckListe";
+//    public final static String USA_CHECK_LISTE_PAGEID = "usaCheckListe";
 
     public final static String TAG_SEPARATORE = SPAZIO + "-" + SPAZIO;
 
@@ -178,7 +178,7 @@ public class WikiCost {
 
     public final static String SEND_MAIL_CICLO = "sendMailCiclo";
 
-    public final static String USA_UPLOAD_DURANTE_DOWNLOAD = "usaUploadDuranteDownload";
+//    public final static String USA_UPLOAD_DURANTE_DOWNLOAD = "usaUploadDuranteDownload";
 
     public static final String PAGES = "pages";
 

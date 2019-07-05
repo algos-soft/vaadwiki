@@ -87,6 +87,11 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
+            creaPrefBool(USA_DAEMON_GENERE, "Crono per download genere, extra-ciclo", false);
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
             creaPrefDate(LAST_DOWNLOAD_ATTIVITA, "Ultimo download del modulo attività");
         }// fine del blocco if
 
@@ -98,6 +103,11 @@ public class WikiVers extends AVers {
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefDate(LAST_DOWNLOAD_PROFESSIONE, "Ultimo download del modulo professione");
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefDate(LAST_DOWNLOAD_GENERE, "Ultimo download del modulo genere (plurali)");
         }// fine del blocco if
 
         //--creata una nuova preferenza
@@ -137,6 +147,11 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
+            creaPrefInt(DURATA_DOWNLOAD_GENERE, "Durata in secondi dell'ultimo download del modulo genere (plurali)");
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
             creaPrefTxt(CAT_BIO, "Categoria attiva", "BioBot");
         }// fine del blocco if
 
@@ -145,20 +160,20 @@ public class WikiVers extends AVers {
             creaPrefInt(WIKI_PAGE_LIMIT, "Numero di pagine wiki da controllare nel blocco", 250);
         }// fine del blocco if
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_CHECK_LISTE_PAGEID, "Controllo di sicurezza delle liste di pageid tra Categoria server e mongoDB", true);
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_CHECK_LISTE_PAGEID, "Controllo di sicurezza delle liste di pageid tra Categoria server e mongoDB", true);
+//        }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefBool(SEND_MAIL_CICLO, "Mail di conferma e controllo del ciclo giornaliero", true);
         }// fine del blocco if
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_UPLOAD_DURANTE_DOWNLOAD, "Corregge sul wiki la voce durante il download", false);
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_UPLOAD_DURANTE_DOWNLOAD, "Corregge sul wiki la voce durante il download", false);
+//        }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
@@ -188,21 +203,6 @@ public class WikiVers extends AVers {
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefDate(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_GENERE, "Crono per download genere, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_GENERE, "Ultimo download del modulo genere (plurali)");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(DURATA_DOWNLOAD_GENERE, "Durata in secondi dell'ultimo download del modulo genere (plurali)");
         }// fine del blocco if
 
         //--creata una nuova preferenza
@@ -239,7 +239,6 @@ public class WikiVers extends AVers {
         if (installa(++k)) {
             creaPrefTxt(TAG_PARAGRAFO_VUOTO_GIORNI_MORTE, "Titolo del paragrafo per le biografie senza anno di morte specificato", "Senza anno di morte");
         }// fine del blocco if
-
 
         //--creata una nuova preferenza
         if (installa(++k)) {

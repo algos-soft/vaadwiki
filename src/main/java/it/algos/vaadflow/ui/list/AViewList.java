@@ -12,6 +12,7 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.footer.AFooter;
 import it.algos.vaadflow.presenter.IAPresenter;
+import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.ui.IAView;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
@@ -22,8 +23,6 @@ import it.algos.vaadflow.ui.fields.ATextArea;
 import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadflow.ui.fields.IAField;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 
@@ -64,8 +63,8 @@ import java.util.*;
  * 3) un alertPlaceholder di avviso (eventuale) con label o altro per informazioni; di norma per il developer
  * 4) un headerGridHolder della Grid (obbligatoria) con informazioni sugli elementi della lista
  * 5) una Grid (obbligatoria); alcune regolazioni da preferenza o da parametro (bottone Edit, ad esempio)
- * 6) un bottomLayout della Grid (eventuale) con informazioni sugli elementi della lista; di norma delle somme
- * 7) un bottomLayout (eventuale) con bottoni aggiuntivi
+ * 6) un bottomPlacehorder della Grid (eventuale) con informazioni sugli elementi della lista; di norma delle somme
+ * 7) un bottomPlacehorder (eventuale) con bottoni aggiuntivi
  * 8) un footer (obbligatorio) con informazioni generali
  * <p>
  * Le injections vengono fatta da SpringBoot nel metodo @PostConstruct DOPO init() automatico
@@ -77,6 +76,11 @@ import java.util.*;
  * -Unable to start web server;
  * -nested exception is org.springframework.boot.web.server.WebServerException:
  * -Unable to start embedded Tomcat'
+ * <p>
+ * Non usa l'interfaccia HasUrlParameter col metodo setParameter(BeforeEvent event, ...)
+ * che serve per chiamate che NON usano @Route
+ * Usa l'interfaccia BeforeEnterObserver col metodo beforeEnter()
+ * invocato da @Route al termine dell'init() di questa classe e DOPO il metodo @PostConstruct
  * <p>
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  */
@@ -122,20 +126,27 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
      * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Questo metodo viene chiamato per primo subito dopo il costruttore <br>
+     * Dopo viene chiamato beforeEnter(); <br>
+     * <p>
      * Le preferenze vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
      * Creazione e posizionamento dei componenti UI <br>
      * Possono essere sovrascritti nelle sottoclassi <br>
      */
     @PostConstruct
     protected void initView() {
-        super.initView();
         this.setMargin(false);
         this.setSpacing(false);
         this.removeAll();
 
         //--Login and context della sessione
+        this.mongo = appContext.getBean(AMongoService.class);
         context = vaadinService.fixLoginAndContext();
         login = context.getLogin();
+
+        //--Placeholder
+        this.fixLayout();
 
         //--Le preferenze standard e specifiche
         this.fixPreferenze();
@@ -158,10 +169,34 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
         //--body con la Grid
         //--seleziona quale grid usare e la aggiunge al layout
         this.creaGridPaginataOppureNormale();
-        this.add(gridHolder);
+        this.add(gridPlaceholder);
 
         //--aggiunge il footer standard
         this.add(appContext.getBean(AFooter.class));
+    }// end of method
+
+
+    /**
+     * Metodo chiamato da com.vaadin.flow.router.Router verso questa view tramite l'interfaccia BeforeEnterObserver <br>
+     * Chiamato DOPO @PostConstruct <br>
+     *
+     * @param beforeEnterEvent con la location, ui, navigationTarget, source, ecc
+     */
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        this.addSpecificRoutes();
+        this.updateItems();
+        this.updateView();
+    }// end of method
+
+
+    /**
+     * Costruisce gli oggetti base (placeholder) di questa view <br>
+     * Li aggiunge alla view stessa <br>
+     * Può essere sovrascritto, per modificare il layout standard <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixLayout() {
     }// end of method
 
 
@@ -224,14 +259,6 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
         return "";
     }// end of method
 
-
-    /**
-     * Navigazione verso un altra pagina
-     */
-    protected void routeVerso() {
-    }// end of method
-
-
     /**
      * Navigazione verso un altra pagina
      */
@@ -257,14 +284,6 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
             QueryParameters query = QueryParameters.simple(mappa);
             ui.navigate(location, query);
         }// end of if cycle
-    }// end of method
-
-
-    @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        this.addSpecificRoutes();
-        this.updateItems();
-        this.updateView();
     }// end of method
 
 
@@ -328,7 +347,7 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
         LinkedHashMap<String, AbstractField> fieldMap = searchDialog.fieldMap;
         List<AEntity> lista;
         IAField field;
-        Object fieldValue=null;
+        Object fieldValue = null;
         ArrayList<CriteriaDefinition> listaCriteriaDefinition = new ArrayList();
 
         for (String fieldName : searchDialog.fieldMap.keySet()) {

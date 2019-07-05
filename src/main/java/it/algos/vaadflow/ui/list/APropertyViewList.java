@@ -89,15 +89,18 @@ public abstract class APropertyViewList extends VerticalLayout {
     public ATextService text = ATextService.getInstance();
 
     /**
-     * Service (pattern SINGLETON) recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+     * Istanza unica di una classe di servizio: <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     public AMongoService mongo;
 
     /**
      * Istanza unica di una classe di servizio: <br>
      * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
-     * Disponibile SOLO DOPO @PostConstruct <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected ApplicationContext appContext;
@@ -105,7 +108,8 @@ public abstract class APropertyViewList extends VerticalLayout {
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
      * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
-     * Disponibile SOLO DOPO @PostConstruct <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected LogService logger;
@@ -113,11 +117,31 @@ public abstract class APropertyViewList extends VerticalLayout {
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
      * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
-     * Disponibile SOLO DOPO @PostConstruct <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected UtenteService utenteService;
 
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected AVaadinService vaadinService;
+
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected PreferenzaService pref;
+
+    //--property
     protected TextField searchField;
 
     /**
@@ -132,6 +156,7 @@ public abstract class APropertyViewList extends VerticalLayout {
      */
     protected IADialog dialog;
 
+    //--property
     protected ASearchDialog searchDialog;
 
     /**
@@ -147,68 +172,71 @@ public abstract class APropertyViewList extends VerticalLayout {
     protected Class<? extends AEntity> entityClazz;
 
     /**
-     * Placeholder (eventuale, presente di default) SOPRA la Grid
-     * - con o senza campo edit search, regolato da preferenza o da parametro
-     * - con o senza bottone New, regolato da preferenza o da parametro
-     * - con eventuali altri bottoni specifici
+     * Placeholder SOPRA la Grid <br>
+     * Contenuto eventuale, presente di default <br>
+     * - con o senza campo edit search, regolato da preferenza o da parametro <br>
+     * - con o senza bottone New, regolato da preferenza o da parametro <br>
+     * - con eventuali altri bottoni specifici <br>
      */
-    protected HorizontalLayout topPlaceholder = new HorizontalLayout();
+    protected HorizontalLayout topPlaceholder;
 
     /**
-     * Placeholder (eventuale) SOPRA la Grid <br>
-     * Label o altro per informazioni specifiche; di norma per il developer
+     * Placeholder SOPRA la Grid <br>
+     * Contenuto eventuale, non presente di default <br>
+     * Label o altro per informazioni specifiche; di norma per il developer <br>
      */
-    protected VerticalLayout alertPlacehorder = new VerticalLayout();
+    protected VerticalLayout alertPlacehorder;
 
     /**
-     * Label (obbligatoria)  che appare nell'header della Grid.
-     * Informazioni sugli elementi della lista
+     * Label (obbligatoria)  che appare nell'header della Grid. <br>
+     * Informazioni sugli elementi della lista <br>
      */
     protected Label headerGridHolder;
 
     /**
-     * Griglia principale con o senza senza paginazione
-     * Alcune regolazioni da preferenza o da parametro (bottone Edit, ad esempio)
+     * Placeholder per la Grid dichiarata nella superclasse oppure <br>
+     * per la griglia con paginazione che deve essere dichiarata nella sottoclasse specifica <br>
+     */
+    protected VerticalLayout gridPlaceholder;
+
+    /**
+     * Griglia principale con o senza senza paginazione <br>
+     * Alcune regolazioni da preferenza o da parametro (bottone Edit, ad esempio) <br>
      */
     protected Grid grid;
 
     /**
-     * PlaceHolder per la griglia con paginazione che deve essere dichiarata nella sottoclasse specifica
+     * Placeholder SOTTO la Grid <br>
+     * Eventuali bottoni aggiuntivi <br>
      */
-    protected VerticalLayout gridHolder = new VerticalLayout();
-
-    /**
-     * Placeholder (eventuale) SOTTO la Grid <br>
-     * Eventuali bottoni aggiuntivi
-     */
-    protected HorizontalLayout bottomLayout;
+    protected HorizontalLayout bottomPlacehorder;
 
 
     /**
-     * Flag di preferenza per usare il campo-testo di ricerca e selezione nella barra dei menu.
-     * Facoltativo ed alternativo a usaSearchTextDialog. Normalmente false.
+     * Flag di preferenza per usare il campo-testo di ricerca e selezione nella barra dei menu. <br>
+     * Facoltativo ed alternativo a usaSearchTextDialog. Normalmente false. <br>
      */
     protected boolean usaSearchTextField;
 
     /**
-     * Flag di preferenza per aprire un dialogo di ricerca e selezione.
+     * Flag di preferenza per aprire un dialogo di ricerca e selezione. <br>
      * Facoltativo ed alternativo a usaSearchTextField. Normalmente true.
      */
     protected boolean usaSearchTextDialog;
 
     /**
-     * Flag di preferenza per usare il bottone all situato nella searchBar. Normalmente true
+     * Flag di preferenza per usare il bottone all situato nella searchBar. Normalmente true <br>
      */
     protected boolean usaAllButton;
 
     /**
-     * Flag di preferenza per limitare le righe della Grid e mostrarle a gruppi (pagine). Normalmente true.
+     * Flag di preferenza per limitare le righe della Grid e mostrarle a gruppi (pagine). Normalmente true. <br>
      */
     protected boolean usaPagination;
 
     /**
-     * Flag di preferenza per la soglia di elementi che fanno scattare la pagination.
-     * Specifico di ogni ViewList. Se non specificato è uguale alla preferenza. Default 50
+     * Flag di preferenza per la soglia di elementi che fanno scattare la pagination. <br>
+     * Specifico di ogni ViewList. Se non specificato è uguale alla preferenza. Default 50 <br>
      */
     protected int sogliaPagination;
 
@@ -218,90 +246,91 @@ public abstract class APropertyViewList extends VerticalLayout {
     protected boolean usaGridPaginata;
 
     /**
-     * Flag di preferenza per usare il bottone new situato nella topLayout. Normalmente true.
+     * Flag di preferenza per usare il bottone new situato nella topLayout. Normalmente true. <br>
      */
     protected boolean usaSearchBottoneNew;
 
     protected Button newButton;
 
     /**
-     * Flag di preferenza per usare il placeholder di informazioni specifiche sopra la Grid. Normalmente false.
+     * Flag di preferenza per usare il placeholder di informazioni specifiche sopra la Grid. Normalmente false. <br>
      */
     protected boolean usaTopAlert;
 
     /**
-     * Flag di preferenza per la Label nell'header della Grid grid. Normalmente true.
+     * Flag di preferenza per la Label nell'header della Grid grid. Normalmente true. <br>
      */
     protected boolean usaHaederGrid;
 
     /**
-     * Flag di preferenza per mostrare una caption sopra la grid. Normalmente true.
+     * Flag di preferenza per mostrare una caption sopra la grid. Normalmente true. <br>
      */
     @Deprecated
     protected boolean usaCaption;
 
     /**
-     * Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
+     * Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true. <br>
      */
     protected boolean usaBottoneEdit;
 
     /**
-     * Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'.
+     * Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'. <br>
      */
     protected String testoBottoneEdit;
 
     /**
-     * Flag di preferenza per usare il placeholder di bottoni ggiuntivi sotto la Grid. Normalmente false.
+     * Flag di preferenza per usare il placeholder di bottoni ggiuntivi sotto la Grid. Normalmente false. <br>
      */
     protected boolean usaBottomLayout;
 
     /**
-     * Flag di preferenza per cancellare tutti gli elementi. Normalmente false.
+     * Flag di preferenza per cancellare tutti gli elementi. Normalmente false. <br>
      */
     protected boolean usaBottoneDeleteAll;
 
     /**
-     * Flag di preferenza per resettare le condizioni standard di partenza. Normalmente false.
+     * Flag di preferenza per resettare le condizioni standard di partenza. Normalmente false. <br>
      */
     protected boolean usaBottoneReset;
 
     /**
-     * Flag di preferenza per aggiungere una caption di info sopra la grid. Normalmente false.
+     * Flag di preferenza per aggiungere una caption di info sopra la grid. Normalmente false. <br>
      */
     protected boolean isEntityDeveloper;
 
     /**
-     * Flag di preferenza per aggiungere una caption di info sopra la grid. Normalmente false.
+     * Flag di preferenza per aggiungere una caption di info sopra la grid. Normalmente false. <br>
      */
     protected boolean isEntityAdmin;
 
     /**
-     * Flag di preferenza per modificare la entity. Normalmente true.
+     * Flag di preferenza per modificare la entity. Normalmente true. <br>
      */
     protected boolean isEntityModificabile;
 
     /**
-     * Flag di preferenza per aggiungere una caption di info sopra la grid. Normalmente false.
+     * Flag di preferenza per aggiungere una caption di info sopra la grid. Normalmente false. <br>
      */
     protected boolean isEntityEmbedded;
 
     /**
-     * Flag di preferenza se si caricano dati demo alla creazione. Resettabili. Normalmente false.
+     * Flag di preferenza se si caricano dati demo alla creazione. Resettabili. Normalmente false. <br>
      */
     protected boolean isEntityUsaDatiDemo;
 
     /**
-     * Flag di preferenza per un refresh dopo aggiunta/modifica/cancellazione di una entity. Normalmente true.
+     * Flag di preferenza per un refresh dopo aggiunta/modifica/cancellazione di una entity. Normalmente true. <br>
      */
     protected boolean usaRefresh;
 
     /**
-     * Flag di preferenza per selezionare il numero di righe visibili della Grid. Normalmente limit = pref.getInt(FlowCost.MAX_RIGHE_GRID) .
+     * Flag di preferenza per selezionare il numero di righe visibili della Grid. <br>
+     * Normalmente limit = pref.getInt(FlowCost.MAX_RIGHE_GRID). <br>
      */
     protected int limit;
 
     /**
-     * Flag per la larghezza della Grid. Default a 75. Espressa come numero per comodità; poi viene convertita in "em".
+     * Flag per la larghezza della Grid. Default a 75. Espressa come numero per comodità; poi viene convertita in "em". <br>
      */
     protected int gridWith;
 
@@ -320,20 +349,6 @@ public abstract class APropertyViewList extends VerticalLayout {
 
     protected int offset;
 
-    protected Button minusButton;
-
-    protected Button plusButton;
-
-    protected ATextField paginationField;
-
-    /**
-     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
-     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
-     * Disponibile SOLO DOPO @PostConstruct <br>
-     */
-    @Autowired
-    protected AVaadinService vaadinService;
-
     protected boolean isPagination;
 
     protected Collection items;
@@ -343,7 +358,7 @@ public abstract class APropertyViewList extends VerticalLayout {
     protected ArrayList<AppLayoutMenuItem> specificMenuItems = new ArrayList<AppLayoutMenuItem>();
 
     /**
-     * Flag di preferenza per usare una route view come detail della singola istanza. Normalmente true.
+     * Flag di preferenza per usare una route view come detail della singola istanza. Normalmente true. <br>
      * In alternativa si può usare un Dialog.
      */
     protected boolean usaRouteFormView;
@@ -352,31 +367,5 @@ public abstract class APropertyViewList extends VerticalLayout {
      * Nome della route per la location della pagina di modifica (standard) del Form <br>
      */
     protected String routeNameFormEdit;
-
-    /**
-     * Nome della route per la location della pagina di visualizzazione (opzionale-senza modifica) del Form <br>
-     */
-    protected String routeNameFormShow;
-
-    /**
-     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
-     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
-     * Disponibile SOLO DOPO @PostConstruct <br>
-     */
-    @Autowired
-    protected PreferenzaService pref;
-
-
-    /**
-     * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
-     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
-     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
-     * Le preferenze vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
-     * Creazione e posizionamento dei componenti UI <br>
-     * Possono essere sovrascritti nelle sottoclassi <br>
-     */
-    protected void initView() {
-        this.mongo = appContext.getBean(AMongoService.class);
-    }// end of method
 
 }// end of class

@@ -83,9 +83,9 @@ public abstract class AGridViewList extends ALayoutViewList {
      * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto) <br>
      */
     protected void creaGrid() {
-        gridHolder.setMargin(false);
-        gridHolder.setSpacing(false);
-        gridHolder.setPadding(false);
+        gridPlaceholder.setMargin(false);
+        gridPlaceholder.setSpacing(false);
+        gridPlaceholder.setPadding(false);
 
         List<String> gridPropertyNamesList = null;
         FlexLayout layout = new FlexLayout();
@@ -112,7 +112,7 @@ public abstract class AGridViewList extends ALayoutViewList {
                 grid = new Grid();
             }// end of if/else cycle
         }// end of if cycle
-
+        grid.setHeightByRows(true);
 
         //--Apre il dialog di detail
         //--Eventuale inserimento (se previsto nelle preferenze) del bottone Edit come prima colonna
@@ -133,12 +133,12 @@ public abstract class AGridViewList extends ALayoutViewList {
         this.addSpecificColumnsAfter();
 
         //--Regolazioni finali sulla grid e sulle colonne
-        this.fixLayout();
+        this.fixGridLayout();
 
         //questo funzione per gridPaginated
-        gridHolder.add(grid);
+        gridPlaceholder.add(grid);
         grid.setWidth(gridWith + "em");
-//        gridHolder.setFlexGrow(1, grid); //@todo Non sembra che funzioni
+//        gridPlaceholder.setFlexGrow(1, grid); //@todo Non sembra che funzioni
 
         grid.addSelectionListener(new SelectionListener<Grid<AEntity>, AEntity>() {
 
@@ -226,7 +226,7 @@ public abstract class AGridViewList extends ALayoutViewList {
      * Regolazioni finali sulla grid e sulle colonne
      * Sovrascritto
      */
-    protected void fixLayout() {
+    protected void fixGridLayout() {
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
         grid.setWidth("60em");
         grid.setHeightByRows(true);
@@ -242,11 +242,11 @@ public abstract class AGridViewList extends ALayoutViewList {
      * Invocare PRIMA il metodo della superclasse
      */
     protected void creaGridBottomLayout() {
-        bottomLayout = new HorizontalLayout();
-        bottomLayout.addClassName("view-toolbar");
+        bottomPlacehorder = new HorizontalLayout();
+        bottomPlacehorder.addClassName("view-toolbar");
 
         if (usaBottomLayout) {
-            this.add(bottomLayout);
+            this.add(bottomPlacehorder);
         }// end of if cycle
     }// end of method
 

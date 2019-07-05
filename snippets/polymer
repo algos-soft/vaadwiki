@@ -1,0 +1,26 @@
+Data binding
+Don’t forget: Polymer camel-cases properties, so if in JavaScript you use myProperty, in HTML you would use my-property.
+
+*QUADRE
+One way binding:when myProperty changes, theirProperty gets updated:
+<some-element their-property="[[myProperty]]"></some-element>
+
+
+GRAFFE
+*Two way binding: when myProperty changes, theirProperty gets updated, and vice versa:
+<some-element their-property="{{myProperty}}"></some-element>
+
+
+*Attribute binding: when myProperty is true, the element is hidden; when it’s false, the element is visible.
+The difference between attribute and property binding is that property binding is equivalent to someElement.someProp = value, whereas attribute binding is equivalent to: someElement.setAttribute(someProp, value)
+<some-element hidden$="[[myProperty]]"></some-element>
+
+
+*Computed binding: binding to the class attribute will recompile styles when myProperty changes:
+<some-element class$="[[_computeSomething(myProperty)]]"></some-element>
+<script>
+_computeSomething: function(prop) {
+  return prop ? 'a-class-name' : 'another-class-name';
+}
+</script>
+

@@ -1129,9 +1129,13 @@ public abstract class AService extends AbstractService implements IAService {
     public Company getCompany() {
         Company company = null;
         AContext context = getContext();
+        ALogin login;
 
         if (context != null) {
-            company = context.getCompany();
+            login = context.getLogin();
+            if (login != null) {
+                company = login.getCompany();
+            }// end of if cycle
         }// end of if cycle
 
         return company;

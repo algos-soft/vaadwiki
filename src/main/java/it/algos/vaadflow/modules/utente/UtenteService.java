@@ -76,8 +76,8 @@ public class UtenteService extends AService {
 
 
     /**
-      * Istanza (@Scope = 'singleton') inietta da Spring <br>
-      */
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
 //    @Autowired
 //    private SecurityConfiguration securityConfiguration;
 
@@ -316,35 +316,47 @@ public class UtenteService extends AService {
 
 
     public boolean isUser(Utente utente) {
-        for (Role role : utente.ruoli) {
-            if (role.code.equals(roleService.getUser().code)) {
-                return true;
-            }// end of if cycle
-        }// end of for cycle
+        boolean status = false;
 
-        return false;
+        if (utente.ruoli != null) {
+            for (Role role : utente.ruoli) {
+                if (role.code.equals(roleService.getUser().code)) {
+                    return true;
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return status;
     }// end of method
 
 
     public boolean isAdmin(Utente utente) {
-        for (Role role : utente.ruoli) {
-            if (role.code.equals(roleService.getAdmin().code)) {
-                return true;
-            }// end of if cycle
-        }// end of for cycle
+        boolean status = false;
 
-        return false;
+        if (utente.ruoli != null) {
+            for (Role role : utente.ruoli) {
+                if (role.code.equals(roleService.getAdmin().code)) {
+                    status = true;
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return status;
     }// end of method
 
 
     public boolean isDev(Utente utente) {
-        for (Role role : utente.ruoli) {
-            if (role.code.equals(roleService.getDeveloper().code)) {
-                return true;
-            }// end of if cycle
-        }// end of for cycle
+        boolean status = false;
 
-        return false;
+        if (utente.ruoli != null) {
+            for (Role role : utente.ruoli) {
+                if (role.code.equals(roleService.getDeveloper().code)) {
+                    status = true;
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return status;
     }// end of method
 
 

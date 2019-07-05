@@ -4,7 +4,6 @@ import it.algos.vaadflow.annotation.*;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EACompanyRequired;
 import it.algos.vaadflow.enumeration.EAFieldType;
-import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.mese.Mese;
 import it.algos.vaadflow.modules.mese.MeseService;
 import lombok.*;
@@ -65,7 +64,7 @@ import javax.validation.constraints.Size;
 @AIList(fields = {"ordine", "mese", "titolo"})
 @AIForm(fields = {"ordine", "mese", "titolo"})
 @AIScript(sovrascrivibile = false)
-public class Giorno extends AEntity  {
+public class Giorno extends AEntity {
 
 
     /**
@@ -116,7 +115,6 @@ public class Giorno extends AEntity  {
     public String toString() {
         return titolo;
     }// end of method
-
 
 
 }// end of entity class

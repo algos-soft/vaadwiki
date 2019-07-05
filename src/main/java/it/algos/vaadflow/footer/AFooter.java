@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.login.ALogin;
+import it.algos.vaadflow.enumeration.EAColor;
 import it.algos.vaadflow.enumeration.EATime;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
@@ -163,6 +164,7 @@ public class AFooter extends VerticalLayout {
             labelDebug.getStyle().set("font-size", "small");
             labelDebug.getStyle().set("font-weight", "bold");
             labelDebug.getElement().getStyle().set("color", "red");
+            this.getElement().getStyle().set("background-color", EAColor.lime.getEsadecimale());
             this.add(labelDebug);
         }// end of if cycle
 

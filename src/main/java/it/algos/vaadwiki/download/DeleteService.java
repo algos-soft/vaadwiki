@@ -40,7 +40,7 @@ public class DeleteService extends ABioService {
         String wikiTitle;
 
         if (array.isValid(vociEccedenti)) {
-            result = mongo.deleteBulkByProperty(vociEccedenti, Bio.class, "pageid");
+            result = mongo.deleteBulkByProperty(vociEccedenti, Bio.class, "page");
             if (result.getDeletedCount() < 1) {
                 logger.error("DELETE - Non sono riuscito ad eliminare nessuna voce delle " + vociEccedenti.size() + " eccedenti");
                 for (Long pageid : vociEccedenti) {
