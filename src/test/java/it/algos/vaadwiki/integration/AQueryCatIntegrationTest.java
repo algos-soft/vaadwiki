@@ -45,7 +45,7 @@ public class AQueryCatIntegrationTest extends ATest {
 
     private final static String TITOLO_CAT_GRANDE = "BioBot";
 
-    private final static int NUM_VOCI = 1183;
+    private final static int NUM_VOCI = 1186;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -71,7 +71,7 @@ public class AQueryCatIntegrationTest extends ATest {
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_MINIMA).numVoci;
         Assert.assertEquals(ottenutoIntero, previstoIntero);
 
-        previstoIntero = 273;
+        previstoIntero = 275;
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_PICCOLA).numVoci;
         Assert.assertEquals(ottenutoIntero, previstoIntero);
 
@@ -103,7 +103,7 @@ public class AQueryCatIntegrationTest extends ATest {
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
 
-        previstoIntero = 273;
+        previstoIntero = 275;
         ottenutoList = appContext.getBean(AQueryCatPagineTitle.class, TITOLO_CAT_PICCOLA).listaTitle;
         Assert.assertNotNull(ottenutoList);
         Assert.assertEquals(ottenutoList.size(), previstoIntero);
@@ -122,7 +122,7 @@ public class AQueryCatIntegrationTest extends ATest {
         Assert.assertNotNull(ottenutoLongList);
         Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
 
-        previstoIntero = 273;
+        previstoIntero = 275;
         ottenutoLongList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_PICCOLA).listaPageid;
         Assert.assertNotNull(ottenutoLongList);
         Assert.assertEquals(ottenutoLongList.size(), previstoIntero);

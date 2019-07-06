@@ -339,6 +339,11 @@ public abstract class Upload {
         String summary = LibWiki.getSummary();
         testoPagina = VUOTA;
 
+        if (lista == null || lista.size == 0) {
+            log.info("La pagina: " + titoloPagina + " non aveva nessuna biografia");
+            return;
+        }// end of if cycle
+
         //header
         testoPagina += this.elaboraHead();
 

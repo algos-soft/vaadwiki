@@ -271,6 +271,7 @@ public class FlowCost {
     public final static String SHOW_GIORNO = "showGiorno";
 
     public final static String SHOW_ACCOUNT_ON_MENU = "showAccount";
+
     public final static String SOGLIA_PAGINATION = "sogliaPagination";
 
     public final static String LOAD_UTENTI = "loadUtenti";
