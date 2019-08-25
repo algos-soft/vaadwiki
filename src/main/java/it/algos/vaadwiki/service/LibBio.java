@@ -2367,12 +2367,15 @@ public class LibBio {
      * @return testoValido regolato in uscita
      */
     public String fixAnnoValido(String testoGrezzo) {
-        String testoValido = fixPropertyBase(testoGrezzo);
+        String testoValido;
         String tagCirca = "circa";
+        String tagInterrogativo = "?";
+        String tagVirgola = ",";
 
-        if (text.isEmpty(testoValido) || testoGrezzo.contains(tagCirca)) {
+        if (text.isEmpty(testoGrezzo) || testoGrezzo.contains(tagCirca)|| testoGrezzo.contains(tagInterrogativo)|| testoGrezzo.contains(tagVirgola)) {
             return VUOTA;
         }// end of if cycle
+        testoValido = fixPropertyBase(testoGrezzo);
 
         if (text.isValid(testoValido) && mongo.isEsisteByProperty(Anno.class, "titolo", testoValido)) {
             return testoValido.trim();
