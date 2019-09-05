@@ -9,8 +9,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
-import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA;
 import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_NOMI;
 
 /**
@@ -20,7 +20,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_NOMI;
  * Date: Fri, 07-Jun-2019
  * Time: 20:32
  * <p>
- * Lista delle persone col nome <br>
+ * Lista delle persone per nome <br>
  * La lista è un semplice testo (formattato secondo i possibili tipi di raggruppamento) <br>
  * Creata con appContext.getBean(ListaNomi.class, nome) <br>
  * Punto di inzio @PostConstruct inizia() nella superclasse <br>
@@ -65,6 +65,7 @@ public class ListaNomi extends ListaNomiCognomi {
     protected void fixPreferenze() {
         super.fixPreferenze();
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI);
+        this.paragrafoVuotoInCoda = false;
     }// end of method
 
 
@@ -79,6 +80,7 @@ public class ListaNomi extends ListaNomiCognomi {
         return bioService.findAllByNome(nome.nome);
     }// fine del metodo
 
+
     /**
      * Ordina la lista di didascalie specifiche <br>
      */
@@ -86,5 +88,34 @@ public class ListaNomi extends ListaNomiCognomi {
     public ArrayList<WrapDidascalia> ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
         return listaDisordinata;
     }// fine del metodo
+
+
+//    /**
+//     * Costruisce la mappa <br>
+//     */
+//    protected void creaMappaConParagrafi(ArrayList<WrapDidascalia> listaDidascalie) {
+//        LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> newMappa = new LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>>();
+//        LinkedHashMap<String, ArrayList<String>> value = null;
+//        String newTitolo = "";
+//        super.creaMappaConParagrafi(listaDidascalie);
+//
+//        for (String oldTitolo : mappaComplessa.keySet()) {
+//            if (!oldTitolo.equals(super.titoloParagrafoVuoto)) {
+//                value = mappaComplessa.get(oldTitolo);
+//                newTitolo = fixTitoloParagrafoNomi(oldTitolo);
+//                newMappa.put(newTitolo, value);
+//            }// end of if cycle
+//        }// end of for cycle
+//
+//        mappaComplessa = newMappa;
+//    }// fine del metodo
+//
+//
+//    protected String fixTitoloParagrafoNomi(String titoloParagrafo) {
+//        String newTitolo = "";
+//
+//
+//        return titoloParagrafo + "x";
+//    }// fine del metodo
 
 }// end of class

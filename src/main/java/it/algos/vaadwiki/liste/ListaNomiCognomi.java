@@ -1,8 +1,11 @@
 package it.algos.vaadwiki.liste;
 
+import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.genere.GenereService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 

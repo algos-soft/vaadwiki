@@ -409,7 +409,7 @@ public class ListaService extends ABioService {
         ListaGiornoNato listaGiornoNato;
 
         listaGiornoNato = appContext.getBean(ListaGiornoNato.class, giorno);
-        return listaGiornoNato.mappa;
+        return listaGiornoNato.mappaSemplice;
     }// end of method
 
 
@@ -428,7 +428,7 @@ public class ListaService extends ABioService {
         ListaGiornoNato listaGiornoNato;
 
         listaGiornoNato = appContext.getBean(ListaGiornoNato.class, giorno, titoloParagrafoVuoto, paragrafoVuotoInCoda);
-        return listaGiornoNato.mappa2;
+        return listaGiornoNato.mappaComplessa;
     }// end of method
 
 
@@ -447,7 +447,7 @@ public class ListaService extends ABioService {
         ListaGiornoMorto listaGiornoMorto;
 
         listaGiornoMorto = appContext.getBean(ListaGiornoMorto.class, giorno, titoloParagrafoVuoto, paragrafoVuotoInCoda);
-        return listaGiornoMorto.mappa2;
+        return listaGiornoMorto.mappaComplessa;
     }// end of method
 
 
@@ -466,7 +466,7 @@ public class ListaService extends ABioService {
         ListaGiornoMorto listaGiornoMorto;
 
         listaGiornoMorto = appContext.getBean(ListaGiornoMorto.class, giorno);
-        return listaGiornoMorto.mappa;
+        return listaGiornoMorto.mappaSemplice;
     }// end of method
 
 
@@ -485,7 +485,7 @@ public class ListaService extends ABioService {
         ListaAnnoNato listaAnnoNato;
 
         listaAnnoNato = appContext.getBean(ListaAnnoNato.class, anno);
-        return listaAnnoNato.mappa;
+        return listaAnnoNato.mappaSemplice;
     }// end of method
 
 
@@ -504,7 +504,7 @@ public class ListaService extends ABioService {
         ListaAnnoMorto listaAnnoMorto;
 
         listaAnnoMorto = appContext.getBean(ListaAnnoMorto.class, anno);
-        return listaAnnoMorto.mappa;
+        return listaAnnoMorto.mappaSemplice;
     }// end of method
 
 
@@ -523,7 +523,7 @@ public class ListaService extends ABioService {
         ListaNomi listaNomi;
 
         listaNomi = appContext.getBean(ListaNomi.class, nome);
-        return listaNomi.mappa;
+        return listaNomi.mappaSemplice;
     }// end of method
 
 
@@ -542,7 +542,7 @@ public class ListaService extends ABioService {
         ListaCognomi listaCognomi;
 
         listaCognomi = appContext.getBean(ListaCognomi.class, cognome);
-        return listaCognomi.mappa;
+        return listaCognomi.mappaSemplice;
     }// end of method
 
 
@@ -561,7 +561,6 @@ public class ListaService extends ABioService {
         LinkedHashMap<String, ArrayList<String>> mappaParagrafi = new LinkedHashMap<>();
         LinkedHashMap<String, ArrayList<String>> mappaChiaveDue;
         ArrayList<WrapDidascalia> listaChiaveDue = null;
-
 
         ArrayList<String> listaDidascalie = null;
 

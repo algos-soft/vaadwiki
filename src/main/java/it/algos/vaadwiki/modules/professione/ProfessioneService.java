@@ -5,6 +5,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.vaadwiki.modules.genere.Genere;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -179,6 +180,20 @@ public class ProfessioneService extends AttNazProfCatService {
     @Override
     public List<String> getSearchPropertyNamesList(AContext context) {
         return Arrays.asList("pagina");
+    }// end of method
+
+    /**
+     * Pagina da linkare (se esiste).
+     */
+    public String getPagina(String singolare) {
+        String pagina = "";
+        Professione professione = findByKeyUnica(singolare);
+
+        if (professione != null) {
+            pagina = professione.pagina;
+        }// end of if cycle
+
+        return pagina;
     }// end of method
 
 }// end of class

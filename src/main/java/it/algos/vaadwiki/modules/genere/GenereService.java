@@ -288,4 +288,34 @@ public class GenereService extends AttNazProfCatService {
 //        System.out.println("Elaborazione completa dei nomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
+
+    /**
+     * Plurale maschile (se esiste).
+     */
+    public String getPluraleMaschile(String singolare) {
+        String plurale = "";
+        Genere genere = findByKeyUnica(singolare);
+
+        if (genere != null) {
+            plurale = genere.pluraleMaschile;
+        }// end of if cycle
+
+        return plurale;
+    }// end of method
+
+
+    /**
+     * Plurale femminile (se esiste).
+     */
+    public String getPluraleFemminile(String singolare) {
+        String plurale = "";
+        Genere genere = findByKeyUnica(singolare);
+
+        if (genere != null) {
+            plurale = genere.pluraleFemminile;
+        }// end of if cycle
+
+        return plurale;
+    }// end of method
+
 }// end of class

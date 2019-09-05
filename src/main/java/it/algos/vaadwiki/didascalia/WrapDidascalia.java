@@ -5,6 +5,9 @@ import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.genere.GenereService;
+import it.algos.vaadwiki.modules.professione.ProfessioneService;
+import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -56,12 +59,27 @@ public class WrapDidascalia {
      */
     public String chiaveTre;
 
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected DidascaliaService didascaliaService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected GenereService genereService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected ProfessioneService professioneService;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -147,6 +165,14 @@ public class WrapDidascalia {
     @PostConstruct
     public void inizia() {
         Didascalia didascalia = null;
+        String paginaAttivita = "";
+        boolean sessoMaschile = true;
+
+        try { // prova ad eseguire il codice
+            sessoMaschile = bio.getSesso().equals("F") ? false : true;
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error("Manca il sesso alla bio: " + bio.wikiTitle);
+        }// fine del blocco try-catch
 
         switch (type) {
             case giornoNato:
@@ -192,8 +218,7 @@ public class WrapDidascalia {
                 didascalia = didascaliaService.getDidascaliaListe(bio);
                 this.chiave = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
 
-                chiaveUno = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
-                chiaveUno = text.primaMaiuscola(chiaveUno);
+                chiaveUno = fixChiaveUno(chiave, sessoMaschile);
                 chiaveDue = "";
                 chiaveTre = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 break;
@@ -214,6 +239,36 @@ public class WrapDidascalia {
             this.testoCon = didascalia.testoCon;
             this.testoSenza = didascalia.testoSenza;
         }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Chiave per nomi e cognomi. Titolo del paragrafo.
+     * La prima parte è la pagina della professione (a cui va il wikilink)
+     * Se non esiste, rimane l'attività singolare
+     * La seconda parte è il plurale dell'attività distinto per genere (che è quanto viene visualizzato)
+     */
+    public String fixChiaveUno(String chiaveSingolare, boolean sessoMaschile) {
+        String chiaveUno = "";
+        String linkPaginaProfessione = professioneService.getPagina(chiaveSingolare);
+        String attivitaPlurale = "";
+        String sep = "|";
+
+        if (text.isEmpty(chiaveSingolare)) {
+            return "";
+        }// end of if cycle
+
+        linkPaginaProfessione = text.isValid(linkPaginaProfessione) ? linkPaginaProfessione : chiaveSingolare;
+        if (sessoMaschile) {
+            attivitaPlurale = genereService.getPluraleMaschile(chiaveSingolare);
+        } else {
+            attivitaPlurale = genereService.getPluraleFemminile(chiaveSingolare);
+        }// end of if/else cycle
+
+        chiaveUno = text.primaMaiuscola(linkPaginaProfessione) + sep + text.primaMaiuscola(attivitaPlurale);
+        chiaveUno = LibWiki.setQuadre(chiaveUno);
+
+        return chiaveUno;
     }// end of method
 
 
