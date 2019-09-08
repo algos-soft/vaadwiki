@@ -88,7 +88,7 @@ public class UploadCognome extends Upload {
         super.titoloPagina = uploadService.getTitoloCognome(cognome);
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_COGNOMI);
         super.usaBodyDoppiaColonna = false;
-        super.tagCategoria = LibWiki.setCat("Liste di persone per cognome", SPAZIO + cognome.getCognome());
+        super.tagCategoria = LibWiki.setCat("Liste di persone per cognome",  cognome.getCognome());
     }// fine del metodo
 
 }// end of class

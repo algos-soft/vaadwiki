@@ -202,8 +202,8 @@ public class GiornoService extends AService {
      *
      * @return all ordered entities
      */
-    public ArrayList<Giorno> findAll() {
-        return (ArrayList) repository.findAllByOrderByOrdineAsc();
+    public List<Giorno> findAll() {
+        return  repository.findAllByOrderByOrdineAsc();
     }// end of method
 
 

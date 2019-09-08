@@ -206,8 +206,8 @@ public class AnnoService extends AService {
      *
      * @return all ordered entities
      */
-    public ArrayList<Anno> findAll() {
-        return (ArrayList) repository.findAllByOrderByOrdineDesc();
+    public List<Anno> findAll() {
+        return repository.findAllByOrderByOrdineDesc();
     }// end of method
 
 

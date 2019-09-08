@@ -9,8 +9,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 
-import static it.algos.vaadwiki.application.WikiCost.IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA;
-import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
@@ -65,6 +64,7 @@ public class ListaCognomi extends ListaNomiCognomi {
         super.fixPreferenze();
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA);
+        super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_COGNOMI);
     }// end of method
 
 

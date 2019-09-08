@@ -112,6 +112,9 @@ public abstract class Lista {
     //--property
     public boolean paragrafoVuotoInCoda;
 
+    //--property
+    public boolean usaParagrafoSize;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
@@ -150,6 +153,7 @@ public abstract class Lista {
         this.usaSuddivisioneParagrafi = true;
         this.titoloParagrafoVuoto = "";
         this.paragrafoVuotoInCoda = true;
+        this.usaParagrafoSize = false;
     }// end of method
 
 
@@ -198,11 +202,11 @@ public abstract class Lista {
     protected void creaMappaConParagrafi(ArrayList<WrapDidascalia> listaDidascalie) {
 
         //--Costruisce la mappa completa
-        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto);
+        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, usaParagrafoSize,paragrafoVuotoInCoda);
 
-        if (paragrafoVuotoInCoda) {
-            listaService.fixPosizioneParagrafoVuoto(mappaComplessa, titoloParagrafoVuoto);
-        }// end of if cycle
+//        if (paragrafoVuotoInCoda) {
+//            listaService.fixPosizioneParagrafoVuoto(mappaComplessa, titoloParagrafoVuoto);
+//        }// end of if cycle
     }// end of method
 
 

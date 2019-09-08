@@ -10,9 +10,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_NOMI;
-import static it.algos.vaadwiki.application.WikiCost.USA_PARAGRAFI_GIORNI;
 
 /**
  * Project vaadwiki
@@ -89,7 +87,7 @@ public class UploadNome extends Upload {
         super.titoloPagina = uploadService.getTitoloNome(nome);
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_NOMI);
         super.usaBodyDoppiaColonna = false;
-        super.tagCategoria = LibWiki.setCat("Liste di persone per nome", SPAZIO + nome.getNome());
+        super.tagCategoria = LibWiki.setCat("Liste di persone per nome", nome.getNome());
     }// end of method
 
 }// end of class

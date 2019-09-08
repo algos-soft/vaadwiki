@@ -255,6 +255,10 @@ public class WikiCost {
 
     public final static String IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA = "isParagrafoVuotoCognomiInCoda";
 
+    public final static String USA_PARAGRAFO_SIZE_NOMI = "usaParagrafoSizeNomi";
+
+    public final static String USA_PARAGRAFO_SIZE_COGNOMI = "usaParagrafoSizeCognomi";
+
     public static WikiLoginOld WIKI_LOGIN = null;
 
 }// end of static class

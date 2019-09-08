@@ -200,15 +200,54 @@ public class ListaService extends ABioService {
      *
      * @listaOrdinata di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
      */
+    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> creaMappaChiaveUno(ArrayList<WrapDidascalia> listaGrezza) {
+        return creaMappaChiaveUno(listaGrezza, "");
+    }// fine del metodo
+
+
+    /**
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+     * Sovrascritto nella sottoclasse concreta <br>
+     *
+     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+     *
+     * @listaOrdinata di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
     public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> creaMappaChiaveUno(ArrayList<WrapDidascalia> listaGrezza, String titoloParagrafoVuoto) {
+        return creaMappaChiaveUno(listaGrezza, titoloParagrafoVuoto, false, true);
+    }// fine del metodo
+
+
+    /**
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+     * Sovrascritto nella sottoclasse concreta <br>
+     *
+     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+     *
+     * @listaOrdinata di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> creaMappaChiaveUno(
+            ArrayList<WrapDidascalia> listaGrezza,
+            String titoloParagrafoVuoto,
+            boolean usaParagrafoSize,
+            boolean paragrafoVuotoInCoda) {
         LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaGenerale = new LinkedHashMap<>();
         LinkedHashMap<String, ArrayList<WrapDidascalia>> mappaParagrafi = new LinkedHashMap<>();
         LinkedHashMap<String, ArrayList<String>> mappaChiaveDue;
         ArrayList<WrapDidascalia> listaChiaveDue = null;
         String chiaveUno;
+        String titoloParagrafo;
+        int size = 0;
+        String paragrafoVuoto = titoloParagrafoVuoto;
 
         for (WrapDidascalia wrap : listaGrezza) {
-            chiaveUno = text.isValid(wrap.chiaveUno) ? wrap.chiaveUno : titoloParagrafoVuoto;
+            chiaveUno = text.isValid(wrap.chiaveUno) ? wrap.chiaveUno : paragrafoVuoto;
 
             if (mappaParagrafi.get(chiaveUno) == null) {
                 listaChiaveDue = new ArrayList<WrapDidascalia>();
@@ -220,9 +259,25 @@ public class ListaService extends ABioService {
         }// end of for cycle
 
         for (String key : mappaParagrafi.keySet()) {
-            mappaChiaveDue = creaMappaChiaveDue(mappaParagrafi.get(key));
-            mappaGenerale.put(key, mappaChiaveDue);
+            titoloParagrafo = key;
+            size = 0;
+            boolean cambia = false;
+            mappaChiaveDue = creaMappaChiaveDue(mappaParagrafi.get(titoloParagrafo));
+
+            if (usaParagrafoSize) {
+                cambia = titoloParagrafo.equals(paragrafoVuoto);
+                size = mappaChiaveDue.get("").size();
+                titoloParagrafo += " <small><small>(" + size + ")</small></small>";
+                paragrafoVuoto = cambia ? titoloParagrafo : paragrafoVuoto;
+            }// end of if cycle
+            mappaGenerale.put(titoloParagrafo, mappaChiaveDue);
         }// end of for cycle
+
+        if (mappaGenerale.containsKey(paragrafoVuoto)) {
+            mappaChiaveDue = mappaGenerale.get(paragrafoVuoto);
+            mappaGenerale.remove(paragrafoVuoto);
+            mappaGenerale.put(paragrafoVuoto, mappaChiaveDue);
+        }// end of if cycle
 
         return mappaGenerale;
     }// fine del metodo

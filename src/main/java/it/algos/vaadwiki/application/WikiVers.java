@@ -259,6 +259,11 @@ public class WikiVers extends AVers {
 
         // --creata una nuova preferenza
         if (installa(++k)) {
+            creaPrefBool(USA_PARAGRAFO_SIZE_NOMI, "Dimensione del paragrafo nel titolo per i nomi", true);
+        }// fine del blocco if
+
+        // --creata una nuova preferenza
+        if (installa(++k)) {
             creaPrefDate(LAST_ELABORA_NOME, "Ultima elaborazione dei nomi");
         }// fine del blocco if
 
@@ -281,8 +286,13 @@ public class WikiVers extends AVers {
         // --creata una nuova preferenza
         if (installa(++k)) {
             creaPrefBool(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza attività specificata", true);
-
         }// fine del blocco if
+
+        // --creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_PARAGRAFO_SIZE_COGNOMI, "Dimensione del paragrafo nel titolo per i cognomi", true);
+        }// fine del blocco if
+
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefDate(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi");
