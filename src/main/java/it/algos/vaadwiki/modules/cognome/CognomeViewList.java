@@ -18,6 +18,7 @@ import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
+import it.algos.vaadwiki.modules.wiki.WikiViewList;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +57,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_COG)
 @Slf4j
 @AIScript(sovrascrivibile = true)
-public class CognomeViewList extends AGridViewList {
+public class CognomeViewList extends WikiViewList {
 
 
     /**
@@ -113,6 +114,9 @@ public class CognomeViewList extends AGridViewList {
         super.usaSearchBottoneNew = false;
         super.usaBottoneDeleteAll = true;
         this.sogliaWiki = pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI, 50);
+
+        this.usaCreaButton = true;
+        this.usaUpdateButton = true;
     }// end of method
 
 
@@ -272,6 +276,16 @@ public class CognomeViewList extends AGridViewList {
     protected void wikiPage(Cognome cognome) {
         String link = "\"" + PATH_WIKI + uploadService.getTitoloCognome(cognome) + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+    /**
+     * Opens the confirmation dialog before deleting the current item.
+     * <p>
+     * The dialog will display the given title and message(s), then call
+     * <p>
+     */
+    protected void uploadEffettivo() {
+        uploadService.uploadAllCognomi();
     }// end of method
 
 }// end of class

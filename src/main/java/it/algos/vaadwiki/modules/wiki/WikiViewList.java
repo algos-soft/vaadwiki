@@ -7,12 +7,11 @@ import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
-import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.ui.ACronoViewList;
 import it.algos.vaadflow.ui.dialog.AConfirmDialog;
-import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,14 +31,8 @@ import java.util.Set;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public abstract class WikiViewList extends ACronoViewList {
+public abstract class WikiViewList extends AGridViewList {
 
-    /**
-     * Icona visibile nel menu (facoltativa)
-     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
-     * Se manca il MENU_NAME, di default usa il 'name' della view
-     */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -56,11 +49,31 @@ public abstract class WikiViewList extends ACronoViewList {
     @Autowired
     protected LibBio libBio;
 
-    protected Button uploadAllButton;
 
     protected Button uploadOneNatoButton;
 
     protected Button uploadOneMortoButton;
+
+    protected Button creaButton;
+
+    protected Button updateButton;
+
+    protected Button uploadAllButton;
+
+    /**
+     * Flag di preferenza per usare il bottone creaButton situato nella topLayout. Normalmente false. <br>
+     */
+    protected boolean usaCreaButton;
+
+    /**
+     * Flag di preferenza per usare il bottone updateButton situato nella topLayout. Normalmente false. <br>
+     */
+    protected boolean usaUpdateButton;
+
+    /**
+     * Flag di preferenza per usare il bottone uploadAllButton situato nella topLayout. Normalmente true. <br>
+     */
+    protected boolean usaUploadAllButton;
 
 
     /**
@@ -81,8 +94,17 @@ public abstract class WikiViewList extends ACronoViewList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
+        super.usaSearchTextField = false;
+        super.usaSearchBottoneNew = false;
+        super.isEntityDeveloper = true;
+
         super.testoBottoneEdit = SHOW_NAME;
         super.usaPagination = true;
+
+        this.usaCreaButton = false;
+        this.usaUpdateButton = false;
+        this.usaUploadAllButton = true;
     }// end of method
 
 
@@ -98,12 +120,35 @@ public abstract class WikiViewList extends ACronoViewList {
     protected void creaTopLayout() {
         super.creaTopLayout();
 
-        //--upload della lista completa di 365 + 365 giorni
-        uploadAllButton = new Button("Upload all", new Icon(VaadinIcon.UPLOAD));
-        uploadAllButton.getElement().setAttribute("theme", "error");
-//        uploadAllButton.addClickListener(e -> openUploadDialog("cronologiche"));
-        uploadAllButton.addClickListener(e -> uploadEffettivo());
-        topPlaceholder.add(uploadAllButton);
+        if (usaCreaButton) {
+            creaButton = new Button("Crea all", new Icon(VaadinIcon.LIST));
+            creaButton.addClassName("view-toolbar__button");
+            creaButton.addClickListener(e -> {
+                ((NomeService) service).crea();
+                updateItems();
+                updateView();
+            });//end of lambda expressions and anonymous inner class
+            topPlaceholder.add(creaButton);
+        }// end of if cycle
+
+        if (usaUpdateButton) {
+            updateButton = new Button("Elabora", new Icon(VaadinIcon.LIST));
+            updateButton.addClassName("view-toolbar__button");
+            updateButton.addClickListener(e -> {
+                ((NomeService) service).update();
+                updateItems();
+                updateView();
+            });//end of lambda expressions and anonymous inner class
+            topPlaceholder.add(updateButton);
+        }// end of if cycle
+
+        //--upload della lista completa di 365 + 365 giorni (nel caso di giorni o anni)
+        if (usaUploadAllButton) {
+            uploadAllButton = new Button("Upload all", new Icon(VaadinIcon.UPLOAD));
+            uploadAllButton.getElement().setAttribute("theme", "error");
+            uploadAllButton.addClickListener(e -> uploadEffettivo());
+            topPlaceholder.add(uploadAllButton);
+        }// end of if cycle
 
         sincroBottoniMenu(false);
     }// end of method

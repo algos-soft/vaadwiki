@@ -241,9 +241,10 @@ public class NomeService extends AService {
     public void crea() {
         long inizio = System.currentTimeMillis();
         int cont = 0;
-        System.out.println("Creazione completa nomi delle biografie. Circa 1 minuto.");
+        System.out.println("Creazione completa nomi delle biografie. Circa 10 minuti.");
         deleteAll();
 
+        //@Field("nome")
         DistinctIterable<String> listaNomiDistinti = mongo.mongoOp.getCollection("bio").distinct("nome", String.class);
         for (String nome : listaNomiDistinti) {
             cont++;

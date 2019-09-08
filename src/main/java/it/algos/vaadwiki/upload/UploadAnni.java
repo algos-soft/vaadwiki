@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import static it.algos.vaadwiki.application.WikiCost.USA_PARAGRAFI_ANNI;
+import static it.algos.vaadwiki.application.WikiCost.USA_PARAGRAFI_GIORNI;
 
 /**
  * Project vaadwiki
@@ -23,7 +25,7 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * Sovrascritta nelle sottoclassi concrete <br>
  * Not annotated with @SpringComponent (sbagliato) perché è una classe astratta <br>
  */
-public abstract class UploadAnni extends Upload {
+public abstract class UploadAnni extends UploadCrono {
 
 
     /**
@@ -67,8 +69,7 @@ public abstract class UploadAnni extends Upload {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-
-        super.usaHeadTocIndice = false;
+        super.usaHeadTocIndice = pref.isBool(USA_PARAGRAFI_ANNI);
     }// end of method
 
 

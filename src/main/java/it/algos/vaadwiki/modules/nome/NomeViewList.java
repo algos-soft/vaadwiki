@@ -16,6 +16,7 @@ import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadwiki.modules.wiki.WikiViewList;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_NOM)
 @Slf4j
 @AIScript(sovrascrivibile = true)
-public class NomeViewList extends AGridViewList {
+public class NomeViewList extends WikiViewList {
 
 
     /**
@@ -111,39 +112,11 @@ public class NomeViewList extends AGridViewList {
         super.usaSearchBottoneNew = false;
         super.usaBottoneDeleteAll = true;
         this.sogliaWiki = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI, 50);
+
+        this.usaCreaButton = true;
+        this.usaUpdateButton = true;
     }// end of method
 
-
-    /**
-     * Placeholder (eventuale, presente di default) SOPRA la Grid
-     * - con o senza campo edit search, regolato da preferenza o da parametro
-     * - con o senza bottone New, regolato da preferenza o da parametro
-     * - con eventuali altri bottoni specifici
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
-     */
-    @Override
-    protected void creaTopLayout() {
-        super.creaTopLayout();
-
-        Button creaButton = new Button("Crea all", new Icon(VaadinIcon.LIST));
-        creaButton.addClassName("view-toolbar__button");
-        creaButton.addClickListener(e -> {
-            ((NomeService) service).crea();
-            updateItems();
-            updateView();
-        });//end of lambda expressions and anonymous inner class
-        topPlaceholder.add(creaButton);
-
-        Button updateButton = new Button("Elabora", new Icon(VaadinIcon.LIST));
-        updateButton.addClassName("view-toolbar__button");
-        updateButton.addClickListener(e -> {
-            ((NomeService) service).update();
-            updateItems();
-            updateView();
-        });//end of lambda expressions and anonymous inner class
-        topPlaceholder.add(updateButton);
-    }// end of method
 
 
     /**
@@ -274,6 +247,16 @@ public class NomeViewList extends AGridViewList {
     protected void wikiPage(Nome nome) {
         String link = "\"" + PATH_WIKI + uploadService.getTitoloNome(nome) + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+    /**
+     * Opens the confirmation dialog before deleting the current item.
+     * <p>
+     * The dialog will display the given title and message(s), then call
+     * <p>
+     */
+    protected void uploadEffettivo() {
+        uploadService.uploadAllNomi();
     }// end of method
 
 }// end of class

@@ -115,6 +115,17 @@ public class UploadService extends ABioService {
 //        }// end of if cycle
     }// end of method
 
+    /**
+     * Esegue un ciclo di creazione (UPLOAD) delle liste persone per ogni nome superiore alla soglia fissata
+     */
+    public void uploadAllNomi() {
+    }// end of method
+
+    /**
+     * Esegue un ciclo di creazione (UPLOAD) delle liste persone per ogni cognome superiore alla soglia fissata
+     */
+    public void uploadAllCognomi() {
+    }// end of method
 
     /**
      * Carica sul servere wiki la entity indicata

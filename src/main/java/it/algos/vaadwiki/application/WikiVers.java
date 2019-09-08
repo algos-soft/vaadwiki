@@ -177,6 +177,68 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
+            creaPrefBool(USA_REGISTRA_SEMPRE_CRONO, "Registra sempre le pagine di giorni ed anni", false);
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_RIGHE_RAGGRUPPATE_GIORNI, "Usa righe raggruppate per anno nella liste dei giorni", true);
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_PARAGRAFI_GIORNI, "Paragrafi dei secoli nelle liste dei giorni", false);
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefTxt(TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA, "Titolo del paragrafo per le biografie senza anno di nascita specificato", "Senza anno di nascita");
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefTxt(TAG_PARAGRAFO_VUOTO_GIORNI_MORTE, "Titolo del paragrafo per le biografie senza anno di morte specificato", "Senza anno di morte");
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_FORCETOC_GIORNI, "Usa l'indice dei paragrafi nelle liste dei giorni", false);
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza anno specificato", true);
+        }// fine del blocco if
+
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_RIGHE_RAGGRUPPATE_ANNI, "Usa righe raggruppate per giorno nella liste degli anni", true);
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_PARAGRAFI_ANNI, "Paragrafi dei mesi nelle liste degli anni", false);
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefTxt(TAG_PARAGRAFO_VUOTO_ANNI_NASCITA, "Titolo del paragrafo per le biografie senza giorno di nascita specificato", "Senza giorno di nascita");
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefTxt(TAG_PARAGRAFO_VUOTO_ANNI_MORTE, "Titolo del paragrafo per le biografie senza giorno di morte specificato", "Senza giorno di morte");
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_FORCETOC_ANNI, "Usa l'indice dei paragrafi nelle liste degli anni", false);
+        }// fine del blocco if
+        // --creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(IS_PARAGRAFO_VUOTO_ANNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza giorno specificato", true);
+        }// fine del blocco if
+
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefTxt(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI, "Titolo del paragrafo per le biografie senza attività specificata", "Senza attività specificata");
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
             creaPrefInt(SOGLIA_NOMI_MONGO, "Soglia minima per creare una entity nella collezione Nomi sul mongoDB", 10);
         }// fine del blocco if
 
@@ -187,8 +249,19 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
+            creaPrefBool(USA_FORCETOC_NOMI, "Usa l'indice dei paragrafi nelle liste dei nomi", true);
+        }// fine del blocco if
+
+        // --creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(IS_PARAGRAFO_VUOTO_NOMI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza attività specificata", true);
+        }// fine del blocco if
+
+        // --creata una nuova preferenza
+        if (installa(++k)) {
             creaPrefDate(LAST_ELABORA_NOME, "Ultima elaborazione dei nomi");
         }// fine del blocco if
+
 
         //--creata una nuova preferenza
         if (installa(++k)) {
@@ -197,88 +270,24 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefInt(SOGLIA_COGNOMI_PAGINA_WIKI, "Soglia minima per creare una pagina di un nome sul server wiki", 50);
+            creaPrefInt(SOGLIA_COGNOMI_PAGINA_WIKI, "Soglia minima per creare una pagina di un cognome sul server wiki", 50);
         }// fine del blocco if
 
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_FORCETOC_COGNOMI, "Usa l'indice dei paragrafi nelle liste dei cognomi", true);
+        }// fine del blocco if
+
+        // --creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza attività specificata", true);
+
+        }// fine del blocco if
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefDate(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi");
         }// fine del blocco if
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_REGISTRA_SEMPRE_CRONO, "Registra sempre le pagine di giorni ed anni", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_PARAGRAFI_GIORNI, "Paragrafi dei secoli nelle liste dei giorni", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_PARAGRAFI_ANNI, "Paragrafi dei mesi nelle liste degli anni", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA, "Titolo del paragrafo per le biografie senza anno di nascita specificato", "Senza anno di nascita");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza anno specificato", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_FORCETOC_GIORNI, "Usa l'indice nelle liste dei giorni", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_PARAGRAFO_VUOTO_GIORNI_MORTE, "Titolo del paragrafo per le biografie senza anno di morte specificato", "Senza anno di morte");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_PARAGRAFO_VUOTO_ANNI_NASCITA, "Titolo del paragrafo per le biografie senza giorno di nascita specificato", "Senza giorno di nascita");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(IS_PARAGRAFO_VUOTO_ANNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza giorno specificato", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_FORCETOC_ANNI, "Usa l'indice nelle liste degli anni", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_PARAGRAFO_VUOTO_ANNI_MORTE, "Titolo del paragrafo per le biografie senza giorno di morte specificato", "Senza giorno di morte");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_RIGHE_RAGGRUPPATE_GIORNI, "Usa righe raggruppate per anno nella liste dei giorni", true);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_RIGHE_RAGGRUPPATE_ANNI, "Usa righe raggruppate per giorno nella liste degli anni", true);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_PARAGRAFO_VUOTO_NOMI, "Titolo del paragrafo per le biografie senza attività specificata", "Senza attività specificata");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_PARAGRAFO_VUOTO_COGNOMI, "Titolo del paragrafo per le biografie senza attività specificata", "Senza attività specificata");
-        }// fine del blocco if
 
         return k;
     }// end of method

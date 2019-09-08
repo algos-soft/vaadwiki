@@ -11,7 +11,8 @@ import org.springframework.context.annotation.Scope;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_NOMI;
+import static it.algos.vaadwiki.application.WikiCost.IS_PARAGRAFO_VUOTO_NOMI_IN_CODA;
+import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI;
 
 /**
  * Project vaadwiki
@@ -64,8 +65,8 @@ public class ListaNomi extends ListaNomiCognomi {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI);
-        this.paragrafoVuotoInCoda = false;
+        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
+        super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_NOMI_IN_CODA);
     }// end of method
 
 
@@ -81,41 +82,5 @@ public class ListaNomi extends ListaNomiCognomi {
     }// fine del metodo
 
 
-    /**
-     * Ordina la lista di didascalie specifiche <br>
-     */
-    @SuppressWarnings("all")
-    public ArrayList<WrapDidascalia> ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
-        return listaDisordinata;
-    }// fine del metodo
-
-
-//    /**
-//     * Costruisce la mappa <br>
-//     */
-//    protected void creaMappaConParagrafi(ArrayList<WrapDidascalia> listaDidascalie) {
-//        LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> newMappa = new LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>>();
-//        LinkedHashMap<String, ArrayList<String>> value = null;
-//        String newTitolo = "";
-//        super.creaMappaConParagrafi(listaDidascalie);
-//
-//        for (String oldTitolo : mappaComplessa.keySet()) {
-//            if (!oldTitolo.equals(super.titoloParagrafoVuoto)) {
-//                value = mappaComplessa.get(oldTitolo);
-//                newTitolo = fixTitoloParagrafoNomi(oldTitolo);
-//                newMappa.put(newTitolo, value);
-//            }// end of if cycle
-//        }// end of for cycle
-//
-//        mappaComplessa = newMappa;
-//    }// fine del metodo
-//
-//
-//    protected String fixTitoloParagrafoNomi(String titoloParagrafo) {
-//        String newTitolo = "";
-//
-//
-//        return titoloParagrafo + "x";
-//    }// fine del metodo
 
 }// end of class

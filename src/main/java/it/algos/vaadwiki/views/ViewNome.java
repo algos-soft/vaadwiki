@@ -23,6 +23,7 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_NOMI;
  * <p>
  * Classe per la visualizzazione di una lista di prova di biografie di un particolare nome <br>
  * Viene invocata da NomeViewList <br>
+ * Eliminato header e footer della pagina definitiva su wiki <br>
  * Lista delle biografie di un Nome <br>
  */
 @Route(value = ROUTE_VIEW_NOMI)

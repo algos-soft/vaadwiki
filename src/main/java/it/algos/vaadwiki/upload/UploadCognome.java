@@ -1,13 +1,19 @@
 package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadwiki.liste.ListaCognomi;
 import it.algos.vaadwiki.liste.ListaNomi;
 import it.algos.vaadwiki.modules.cognome.Cognome;
+import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
+
+import static it.algos.vaadflow.application.FlowCost.SPAZIO;
+import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_COGNOMI;
+import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_NOMI;
 
 /**
  * Project vaadwiki
@@ -20,6 +26,7 @@ import javax.annotation.PostConstruct;
  * <p>
  * Viene chiamato da Scheduler (con frequenza giornaliera ?) <br>
  * Può essere invocato dal bottone 'Upload all' della classe CognomeViewList <br>
+ * Può essere invocato dal bottone della colonna 'Upload' della classe CognomeViewList <br>
  * Necessita del login come bot <br>
  */
 @SpringComponent
@@ -51,21 +58,22 @@ public class UploadCognome extends Upload {
         this.cognome = cognome;
     }// end of constructor
 
-//    /**
-//     * Metodo invocato subito DOPO il costruttore
-//     * <p>
-//     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
-//     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
-//     * <p>
-//     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
-//     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
-//     * Se ci sono superclassi e sottoclassi, chiama prima @PostConstruct della superclasse <br>
-//     */
-//    @PostConstruct
-//    protected void inizia() {
-//        super.esegue();
-//    }// end of method
-//
+    /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
+     */
+    @PostConstruct
+    protected void inizia() {
+        lista = appContext.getBean(ListaCognomi.class, cognome);
+        super.inizia();
+    }// end of method
 
 
     /**
@@ -76,33 +84,11 @@ public class UploadCognome extends Upload {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-        usaSuddivisioneParagrafi = false;
+
+        super.titoloPagina = uploadService.getTitoloCognome(cognome);
+        super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_COGNOMI);
+        super.usaBodyDoppiaColonna = false;
+        super.tagCategoria = LibWiki.setCat("Liste di persone per cognome", SPAZIO + cognome.getCognome());
     }// fine del metodo
-
-
-//    /**
-//     * Titolo della pagina da creare/caricare su wikipedia
-//     * Sovrascritto
-//     */
-//    @Override
-//    protected void elaboraTitolo() {
-//        super.elaboraTitolo();
-//    }// fine del metodo
-
-
-//    /**
-//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-//     * Sovrascritto nella sottoclasse concreta <br>
-//     * DOPO invoca il metodo della superclasse per calcolare la dimensione della mappa <br>
-//     */
-//    @Override
-//    protected void elaboraMappaDidascalie() {
-////        ListaCognomi listaCognomi;
-////        listaCognomi = appContext.getBean(ListaCognomi.class, cognome);
-////        mappaDidascalie = listaNomi.mappa;
-////        super.elaboraMappaDidascalie();
-//    }// fine del metodo
-
 
 }// end of class

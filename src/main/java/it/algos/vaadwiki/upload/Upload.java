@@ -612,10 +612,6 @@ public abstract class Upload {
         cat = tagCategoria;
         cat = nascosta ? LibWiki.setNowiki(cat) : cat;
         testo += cat;
-        cat = LibWiki.setCat(titoloPagina, SPAZIO);
-        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
-        testo += cat;
-        testo = LibBio.setNoIncludeMultiRiga(testo);
 
         return testo;
     }// fine del metodo

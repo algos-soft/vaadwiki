@@ -2,6 +2,7 @@ package it.algos.vaadwiki.views;
 
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
+import it.algos.vaadwiki.liste.ListaCognomi;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.cognome.CognomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +65,7 @@ public class ViewCognome extends ViewListe{
      * Dopo deve invocare il metodo della superclasse <br>
      */
     public void inizia() {
-        LinkedHashMap<String, ArrayList<String>> mappa;
-
-        mappa = listaService.getMappaCognomi(cognome);
-        super.testo = listaService.righeSemplici(mappa);
-
-//        super.numVoci = listaService.getMappaSize(mappa);
+        lista = appContext.getBean(ListaCognomi.class, cognome);
         super.inizia();
     }// end of method
 

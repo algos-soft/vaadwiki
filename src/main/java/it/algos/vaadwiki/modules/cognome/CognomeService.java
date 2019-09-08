@@ -241,16 +241,17 @@ public class CognomeService extends AService {
     public void crea() {
         long inizio = System.currentTimeMillis();
         int cont = 0;
-        System.out.println("Creazione completa cognomi delle biografie. Circa 1 minuto.");
+        System.out.println("Creazione completa cognomi delle biografie. Circa 10 minuti.");
         deleteAll();
 
-        DistinctIterable<String> listaCognomiDistinti = mongo.mongoOp.getCollection("bio").distinct("cognome", String.class);
+        //@Field("cogn")
+        DistinctIterable<String> listaCognomiDistinti = mongo.mongoOp.getCollection("bio").distinct("cogn", String.class);
         for (String cognome : listaCognomiDistinti) {
             cont++;
             saveNumVoci(cognome);
         }// end of for cycle
 
-        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
+        pref.saveValue(LAST_ELABORA_COGNOME, LocalDateTime.now());
         System.out.println("Creazione completa di " + cont + " cognomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 

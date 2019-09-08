@@ -245,9 +245,15 @@ public class WikiCost {
 
     public final static String USA_RIGHE_RAGGRUPPATE_ANNI = "usaRigheRaggruppateAnni";
 
-    public final static String TAG_PARAGRAFO_VUOTO_NOMI = "tagParagrafoVuotoNomi";
+    public final static String TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI = "tagParagrafoVuotoNomi";
 
-    public final static String TAG_PARAGRAFO_VUOTO_COGNOMI = "tagParagrafoVuotoCognomi";
+    public final static String USA_FORCETOC_NOMI = "usaForcetocNomi";
+
+    public final static String USA_FORCETOC_COGNOMI = "usaForcetocCognomi";
+
+    public final static String IS_PARAGRAFO_VUOTO_NOMI_IN_CODA = "isParagrafoVuotoNomiInCoda";
+
+    public final static String IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA = "isParagrafoVuotoCognomiInCoda";
 
     public static WikiLoginOld WIKI_LOGIN = null;
 

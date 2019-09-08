@@ -2832,7 +2832,7 @@ public abstract class LibWiki {
      * @return stringa coi tag aggiunti
      */
     public static String setNowiki(String stringaIn) {
-        String stringaOut = stringaIn;
+        String stringaOut = "";
 
         if (stringaIn != null && stringaIn.length() > 0) {
             stringaOut = NO_WIKI_INI + stringaIn + NO_WIKI_END;

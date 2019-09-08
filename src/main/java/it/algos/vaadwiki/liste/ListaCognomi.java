@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 
+import static it.algos.vaadwiki.application.WikiCost.IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA;
+import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -16,7 +19,10 @@ import java.util.ArrayList;
  * Date: Fri, 14-Jun-2019
  * Time: 17:23
  * <p>
- * Crea la lista delle persone col cognome <br>
+ * Crea la lista delle persone per cognome <br>
+ * La lista è un semplice testo (formattato secondo i possibili tipi di raggruppamento) <br>
+ * Creata con appContext.getBean(ListaCognomi.class, nome) <br>
+ * Punto di inzio @PostConstruct inizia() nella superclasse <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -47,6 +53,19 @@ public class ListaCognomi extends ListaNomiCognomi {
         this.cognome = cognome;
         super.typeDidascalia = EADidascalia.listaCognomi;
     }// end of constructor
+
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
+        super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA);
+    }// end of method
 
 
     /**
