@@ -248,16 +248,15 @@ public class BioViewList extends AttNazProfCatViewList {
 //        elaboraButton.addClickListener(e -> elaboraService.esegue());
 //        topPlaceholder.add(elaboraButton);
 
-        //--upload le pagine cronologicvhe (giorni ed anni)
-        uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
-        uploadButton.getElement().setAttribute("theme", "error");
-        topPlaceholder.add(uploadButton);
-
-        //--delete singola biografia
-        cicloButton = new Button("Ciclo", new Icon(VaadinIcon.UPLOAD));
-        cicloButton.getElement().setAttribute("theme", "error");
-//        cicloButton.addClickListener(e -> service.delete(null));
-        topPlaceholder.add(cicloButton);
+//        //--upload le pagine cronologiche (giorni ed anni)
+//        uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
+//        uploadButton.getElement().setAttribute("theme", "error");
+//        topPlaceholder.add(uploadButton);
+//
+//        cicloButton = new Button("Ciclo", new Icon(VaadinIcon.UPLOAD));
+//        cicloButton.getElement().setAttribute("theme", "error");
+////        cicloButton.addClickListener(e -> service.delete(null));
+//        topPlaceholder.add(cicloButton);
 
 //        //--aggiorna singola biografia
 //        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
@@ -268,7 +267,6 @@ public class BioViewList extends AttNazProfCatViewList {
 //        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
 //        elaboraButton.addClickListener(e -> elaboraService.esegue());
 //        topPlaceholder.add(elaboraButton);
-//
 
 //        topPlaceholder.add(creaPopup());
 

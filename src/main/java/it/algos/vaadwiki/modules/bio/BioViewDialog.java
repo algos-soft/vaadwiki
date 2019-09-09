@@ -165,7 +165,7 @@ public class BioViewDialog extends AViewDialog<Bio> {
         uploadButton.setIcon(new Icon(VaadinIcon.ARROW_UP));
         uploadButton.getElement().setAttribute("theme", "error");
         uploadButton.addClickListener(event -> upload());
-//        bottomLayout.add(uploadButton);
+        bottomLayout.add(uploadButton);
     }// end of method
 
 
@@ -262,8 +262,8 @@ public class BioViewDialog extends AViewDialog<Bio> {
         String wikiTitle = this.getWikiTitle();
 
         if (text.isValid(wikiTitle)) {
-            bioService.save(currentItem);
-            uploadService.esegue(wikiTitle);
+            saveClicked(EAOperation.edit);
+            uploadService.uploadBio(wikiTitle);
         }// end of if cycle
 
         super.close();

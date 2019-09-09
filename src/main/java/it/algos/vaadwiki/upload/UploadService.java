@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
@@ -12,6 +13,7 @@ import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.Api;
+import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -19,8 +21,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
-import static it.algos.vaadflow.application.FlowCost.SPAZIO;
-import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import static it.algos.vaadflow.application.FlowCost.*;
 import static it.algos.vaadwiki.application.WikiCost.USA_REGISTRA_SEMPRE_CRONO;
 
 /**
@@ -125,12 +126,34 @@ public class UploadService extends ABioService {
 
 
     /**
-     * Carica sul servere wiki la entity indicata
+     * Carica sul server wiki la entity indicata
+     * <p>
+     * 1) Recupera la entity dal mongoDB
+     * 2) Costruisce un template-entity
+     * 2) Scarica la voce dal server
+     * 3) Estrae il template-server
+     * 4) Spazzola i template ed esegue un merge (ragionato)
+     * 5) Sostituisce il template-merge al template-server nel testo della voce
+     * 6) Upload del testo
      *
      * @param wikiTitle della pagina wiki (obbligatorio, unico)
      */
-    public void esegue(String wikiTitle) {
+    public void uploadBio(String wikiTitle) {
         Bio entity = bioService.findByKeyUnica(wikiTitle);
+        String templateEntity = creaTemplate(entity);
+
+        String testoServer = Api.leggeVoce(wikiTitle);
+        String templateServer = Api.estraeTmplBio(testoServer);
+        String templateMerged = mergeTemplates(templateServer, templateEntity);
+
+        testoServer = text.sostituisce(testoServer, templateServer, templateMerged);
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            appContext.getBean(AQueryWrite.class, Upload.PAGINA_PROVA, testoServer);
+        } else {
+            appContext.getBean(AQueryWrite.class, wikiTitle, testoServer);
+        }// end of if/else cycle
+
     }// end of method
 
 
@@ -143,6 +166,19 @@ public class UploadService extends ABioService {
 //        Bio entity = bioService.findByKeyUnica(pageid);
 
         return newTemplate;
+    }// end of method
+
+
+    /**
+     * Legg
+     * Crea un nuovo template dai dati dellla entity
+     */
+    public String mergeTemplates(String templateServer, String templateEntity) {
+        String newTemplate = "";
+//        Bio entity = bioService.findByKeyUnica(pageid);
+        templateServer= text.sostituisce(templateServer,"abate","abate\n|Attività2 = politico");
+
+        return templateServer;
     }// end of method
 
 
