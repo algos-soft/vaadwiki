@@ -12,6 +12,7 @@ import it.algos.vaadwiki.modules.cognome.CognomeService;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.service.ABioService;
+import it.algos.vaadwiki.service.ParBio;
 import it.algos.wiki.Api;
 import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,8 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
-import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadflow.application.FlowCost.SPAZIO;
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.USA_REGISTRA_SEMPRE_CRONO;
 
 /**
@@ -140,7 +142,7 @@ public class UploadService extends ABioService {
      */
     public void uploadBio(String wikiTitle) {
         Bio entity = bioService.findByKeyUnica(wikiTitle);
-        String templateEntity = creaTemplate(entity);
+        String templateEntity = libBio.creaTemplate(entity);
 
         String testoServer = Api.leggeVoce(wikiTitle);
         String templateServer = Api.estraeTmplBio(testoServer);
@@ -157,16 +159,6 @@ public class UploadService extends ABioService {
     }// end of method
 
 
-    /**
-     * Legg
-     * Crea un nuovo template dai dati dellla entity
-     */
-    public String creaTemplate(Bio entity) {
-        String newTemplate = "";
-//        Bio entity = bioService.findByKeyUnica(pageid);
-
-        return newTemplate;
-    }// end of method
 
 
     /**
@@ -176,7 +168,7 @@ public class UploadService extends ABioService {
     public String mergeTemplates(String templateServer, String templateEntity) {
         String newTemplate = "";
 //        Bio entity = bioService.findByKeyUnica(pageid);
-        templateServer= text.sostituisce(templateServer,"abate","abate\n|Attività2 = politico");
+        templateServer = text.sostituisce(templateServer, "abate", "abate\n|Attività2 = politico");
 
         return templateServer;
     }// end of method

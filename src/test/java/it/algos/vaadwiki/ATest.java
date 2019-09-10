@@ -10,6 +10,8 @@ import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.AReflectionService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.ui.IAView;
+import it.algos.vaadwiki.download.PageService;
+import it.algos.wiki.Api;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
@@ -106,6 +108,7 @@ public class ATest {
 
     @InjectMocks
     public ATextService text;
+
 
     @InjectMocks
     protected AAnnotationService annotation;

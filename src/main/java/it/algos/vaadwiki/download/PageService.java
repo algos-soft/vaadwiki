@@ -61,7 +61,7 @@ public class PageService extends ABioService {
                 result = downloadSingoloBlocco(result, bloccoPage);
                 if (pref.isBool(FlowCost.USA_DEBUG)) {
                     teorico = (k + 1) * dimBloccoLettura;
-                    totale=result.getVociDaCreare().size();
+                    totale = result.getVociDaCreare().size();
                     teorico = Math.min(teorico, totale);
                     effettivo = result.getNumVociCreate();
                     delta = teorico - effettivo;
@@ -224,6 +224,7 @@ public class PageService extends ABioService {
 
         return entity;
     }// end of method
+
 
 
     public void registraPagina(long pageid) {

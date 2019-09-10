@@ -46,7 +46,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Test semplice per le didascalie")
-
 public class DidascaliaTest extends ATest {
 
 

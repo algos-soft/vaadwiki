@@ -40,6 +40,10 @@ public class FlowCost {
 
     public static final String SPAZIO = " ";
 
+    public static final String UGUALE = "=";
+
+    public static final String UGUALE_SPAZIATO = SPAZIO + UGUALE + SPAZIO;
+
     public final static String A_CAPO = "\n";
 
     public final static String ASTERISCO = "*";

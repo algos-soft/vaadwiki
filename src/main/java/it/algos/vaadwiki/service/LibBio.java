@@ -18,11 +18,10 @@ import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
-import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
-import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.wiki.DownloadResult;
+import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -2372,12 +2371,12 @@ public class LibBio {
         String tagInterrogativo = "?";
         String tagVirgola = ",";
 
-        if (text.isEmpty(testoGrezzo) || testoGrezzo.contains(tagCirca)|| testoGrezzo.contains(tagInterrogativo)|| testoGrezzo.contains(tagVirgola)) {
+        if (text.isEmpty(testoGrezzo) || testoGrezzo.contains(tagCirca) || testoGrezzo.contains(tagInterrogativo) || testoGrezzo.contains(tagVirgola)) {
             return VUOTA;
         }// end of if cycle
         testoValido = fixPropertyBase(testoGrezzo);
 
-        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Anno.class, "titolo", testoValido)) {
+        if (text.isValid(testoValido) && annoService.isEsiste(testoValido)) {
             return testoValido.trim();
         } else {
             return VUOTA;
@@ -2513,6 +2512,117 @@ public class LibBio {
 
         return nazionalita;
     } // fine del metodo
+
+
+    public String creaBioPar(String parBioText, String value) {
+        return PIPE + parBioText + UGUALE_SPAZIATO + value + A_CAPO;
+    } // fine del metodo
+
+
+    public String creaBioPar(ParBio parBio, String value) {
+        return creaBioPar(parBio.getTag(), value);
+    } // fine del metodo
+
+
+    public String creaBioParAll(LinkedHashMap<String, String> mappa) {
+        String templateText = "";
+
+        for (Map.Entry<String, String> entry : mappa.entrySet()) {
+            templateText += creaBioPar(entry.getKey(), entry.getValue());
+        }// end of for cycle
+        templateText = templateText.trim();
+
+        return templateText;
+    } // fine del metodo
+
+
+    public String creaBioParTemplate(LinkedHashMap<String, String> mappa) {
+        String templateText = "";
+
+        templateText += LibWiki.GRAFFE_INI;
+        templateText += "Bio";
+        templateText += A_CAPO;
+        templateText += creaBioParAll(mappa);
+        templateText += A_CAPO;
+        templateText += LibWiki.GRAFFE_END;
+
+        return templateText;
+    } // fine del metodo
+
+
+    /**
+     * Costruisce il template Bio con i parametri (valorizzati) in ingresso
+     * Aggiunge (vuoti) i parametri obbligatori mancanti
+     */
+    public String creaBioAll(LinkedHashMap<ParBio, String> mappa) {
+        String templateText = "";
+        String value = "";
+
+        for (ParBio parBio : ParBio.values()) {
+            value = mappa.containsKey(parBio) ? mappa.get(parBio) : "";
+            if (parBio.isCampoNormale()) {
+                templateText += creaBioPar(parBio.getTag(), value);
+            } else {
+                if (text.isValid(value)) {
+                    templateText += creaBioPar(parBio.getTag(), value);
+                }// end of if cycle
+            }// end of if/else cycle
+        }// end of for cycle
+        templateText = templateText.trim();
+
+        return templateText;
+    } // fine del metodo
+
+
+    /**
+     * Costruisce il template Bio con i parametri (valorizzati) in ingresso
+     * Aggiunge (vuoti) i parametri obbligatori mancanti
+     */
+    public String creaBioTemplate(LinkedHashMap<ParBio, String> mappa) {
+        String templateText = "";
+
+        templateText += LibWiki.GRAFFE_INI;
+        templateText += "Bio";
+        templateText += A_CAPO;
+        templateText += creaBioAll(mappa);
+        templateText += A_CAPO;
+        templateText += LibWiki.GRAFFE_END;
+
+        return templateText;
+    } // fine del metodo
+
+
+    /**
+     * Crea un nuovo template dai dati della entity
+     */
+    public String creaTemplate(Bio entity) {
+        String templateText = "";
+        String value = "";
+
+        for (ParBio parBio : ParBio.values()) {
+            value = parBio.getValue(entity);
+            templateText += creaBioPar(parBio, value);
+        }// end of for cycle
+
+        return templateText;
+    }// end of method
+
+
+    /**
+     * Crea un nuovo template dai dati della entity
+     */
+    public String creaBioTemplate(Bio entity) {
+        String templateText = "";
+
+        templateText += LibWiki.GRAFFE_INI;
+        templateText += "Bio";
+        templateText += A_CAPO;
+        templateText += creaTemplate(entity);
+        templateText += A_CAPO;
+        templateText += LibWiki.GRAFFE_END;
+
+        return templateText;
+    }// end of method
 
 
     public void sendDownload(DownloadResult result) {
@@ -2714,7 +2824,6 @@ public class LibBio {
 
         return mappa;
     }// end of method
-
 
 
 }// end of class

@@ -1,8 +1,9 @@
 package it.algos.vaadwiki.service;
 
 
+import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.modules.bio.Bio;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.SingularAttribute;
@@ -23,6 +24,7 @@ public enum ParBio {
             bio.setNome(value.equals("") ? null : libBio.fixNomeValido(value));
         }// end of method
 
+
         @Override
         public String getValue(Bio bio) {
             return bio.getNome();
@@ -34,20 +36,21 @@ public enum ParBio {
             bio.setCognome(value.equals("") ? null : libBio.fixCognomeValido(value));
         }// end of method
 
+
         @Override
         public String getValue(Bio bio) {
             return bio.getCognome();
         }// end of method
     },// end of single enumeration
-    pseudonimo("Pseudonimo", true, true, true, false, false) {
+    pseudonimo("Pseudonimo", true, false, true, false, false) {
     },// end of single enumeration
-    postPseudonimo("PostPseudonimo", true, true, true, false, false) {
+    postPseudonimo("PostPseudonimo", true, false, true, false, false) {
     },// end of single enumeration
-    cognomePrima("CognomePrima", true, true, true, false, false) {
+    cognomePrima("CognomePrima", true, false, true, false, false) {
     },// end of single enumeration
-    postCognome("PostCognome", true, true, true, false, false) {
+    postCognome("PostCognome", true, false, true, false, false) {
     },// end of single enumeration
-    postCognomeVirgola("PostCognomeVirgola", true, true, true, false, false) {
+    postCognomeVirgola("PostCognomeVirgola", false, false, true, false, false) {
     },// end of single enumeration
     forzaOrdinamento("ForzaOrdinamento", false, false, false, false, false) {
     },// end of single enumeration
@@ -59,6 +62,7 @@ public enum ParBio {
             bio.setSesso(value.equals("") ? null : value);
         }// end of method
 
+
         @Override
         public String getValue(Bio bio) {
             return bio.getSesso();
@@ -69,6 +73,7 @@ public enum ParBio {
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setLuogoNato(value.equals("") ? null : value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -85,9 +90,11 @@ public enum ParBio {
             bio.setGiornoNascita(value.equals("") ? null : libBio.fixGiornoLink(value));
         }// end of method
 
+
         @Override
         public String getValue(Bio bio) {
-            return bio.getGiornoNascita().titolo;
+            Giorno giorno = bio.getGiornoNascita();
+            return giorno != null ? giorno.titolo : "";
         }// end of method
     },// end of single enumeration
     annoNascita("AnnoNascita", true, true, true, false, false) {
@@ -96,18 +103,21 @@ public enum ParBio {
             bio.setAnnoNascita(value.equals("") ? null : libBio.fixAnnoLink(value));
         }// end of method
 
+
         @Override
         public String getValue(Bio bio) {
-            return bio.getAnnoNascita().titolo;
+            Anno anno = bio.getAnnoNascita();
+            return anno != null ? anno.titolo : "";
         }// end of method
     },// end of single enumeration
-    noteNascita("NoteNascita", true, true, true, false, false) {
+    noteNascita("NoteNascita", true, false, true, false, false) {
     },// end of single enumeration
     luogoMorte("LuogoMorte", true, true, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setLuogoMorto(value.equals("") ? null : value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -124,9 +134,11 @@ public enum ParBio {
             bio.setGiornoMorte(value.equals("") ? null : libBio.fixGiornoLink(value));
         }// end of method
 
+
         @Override
         public String getValue(Bio bio) {
-            return bio.getGiornoMorte().titolo;
+            Giorno giorno = bio.getGiornoMorte();
+            return giorno != null ? giorno.titolo : "";
         }// end of method
     },// end of single enumeration
     annoMorte("AnnoMorte", true, true, true, false, false) {
@@ -135,20 +147,23 @@ public enum ParBio {
             bio.setAnnoMorte(value.equals("") ? null : libBio.fixAnnoLink(value));
         }// end of method
 
+
         @Override
         public String getValue(Bio bio) {
-            return bio.getAnnoMorte().titolo;
+            Anno anno = bio.getAnnoMorte();
+            return anno != null ? anno.titolo : "";
         }// end of method
     },// end of single enumeration
-    noteMorte("NoteMorte", true, true, true, false, false) {
+    noteMorte("NoteMorte", true, false, true, false, false) {
     },// end of single enumeration
-    preAttivita("PreAttività", true, true, true, false, false) {
+    preAttivita("PreAttività", true, false, true, false, false) {
     },// end of single enumeration
     attivita("Attività", true, true, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setAttivita(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -161,6 +176,7 @@ public enum ParBio {
             bio.setAttivita2(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
 
+
         @Override
         public String getValue(Bio bio) {
             return bio.getAttivita2().singolare;
@@ -172,6 +188,7 @@ public enum ParBio {
             bio.setAttivita3(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
 
+
         @Override
         public String getValue(Bio bio) {
             return bio.getAttivita3().singolare;
@@ -179,9 +196,9 @@ public enum ParBio {
     },// end of single enumeration
     attivitaAltre("AttivitàAltre", false, false, false, false, false) {
     },// end of single enumeration
-    epoca("Epoca", true, true, true, false, false) {
+    epoca("Epoca", true, false, true, false, false) {
     },// end of single enumeration
-    epoca2("Epoca2", true, true, true, false, false) {
+    epoca2("Epoca2", true, false, true, false, false) {
     },// end of single enumeration
     nazionalita("Nazionalità", true, true, true, false, false) {
         @Override
@@ -189,30 +206,31 @@ public enum ParBio {
             bio.setNazionalita(value.equals("") ? null : libBio.fixNazionalitaLink(value));
         }// end of method
 
+
         @Override
         public String getValue(Bio bio) {
             return bio.getNazionalita().singolare;
         }// end of method
     },// end of single enumeration
-    nazionalitaNaturalizzato("NazionalitàNaturalizzato", true, true, true, false, false) {
+    nazionalitaNaturalizzato("NazionalitàNaturalizzato", true, false, true, false, false) {
     },// end of single enumeration
-    cittadinanza("Cittadinanza", true, true, true, false, false) {
+    cittadinanza("Cittadinanza", true, false, true, false, false) {
     },// end of single enumeration
-    categorie("Categorie", true, true, true, false, false) {
+    categorie("Categorie", true, false, true, false, false) {
     },// end of single enumeration
-    postNazionalita("PostNazionalità", true, true, true, false, false) {
+    postNazionalita("PostNazionalità", true, false, true, false, false) {
     },// end of single enumeration
-    punto("Punto", true, true, true, false, false) {
+    punto("Punto", true, false, true, false, false) {
     },// end of single enumeration
-    fineIncipit("FineIncipit", true, true, true, false, false) {
+    fineIncipit("FineIncipit", true, false, true, false, false) {
     },// end of single enumeration
-    immagine("Immagine", true, true, true, false, false) {
+    immagine("Immagine", true, false, true, false, false) {
     },// end of single enumeration
-    dimImmagine("DimImmagine", true, true, true, false, false) {
+    dimImmagine("DimImmagine", true, false, true, false, false) {
     },// end of single enumeration
-    didascalia("Didascalia", true, true, true, false, false) {
+    didascalia("Didascalia", true, false, true, false, false) {
     },// end of single enumeration
-    didascalia2("Didascalia2", true, true, true, false, false) {
+    didascalia2("Didascalia2", true, false, true, false, false) {
     };// end of single enumeration
 
     private static String VUOTA = "";
@@ -223,12 +241,19 @@ public enum ParBio {
 //    private LibBio libBio;
 
     private String tag = "";
+
     private boolean visibileLista = false;
+
     private boolean campoNormale = false;
+
     private boolean campoSignificativo = false;
+
     private SingularAttribute<Bio, String> attributo;
+
     private boolean campoValido = false;
+
     private boolean campoPunta = false;
+
 
     ParBio(String tag, boolean visibileLista, boolean campoNormale, boolean campoSignificativo, boolean campoValido, boolean campoPunta) {
         this.setTag(tag);
@@ -238,6 +263,7 @@ public enum ParBio {
         this.setCampoValido(campoValido);
         this.setCampoPunta(campoPunta);
     }// end of general constructor
+
 
     public static Attribute<?, ?>[] getCampiLista() {
         Attribute<?, ?>[] matrice;
@@ -255,6 +281,7 @@ public enum ParBio {
         return matrice;
     }// end of method
 
+
     public static Attribute<?, ?>[] getCampiForm() {
         Attribute<?, ?>[] matrice;
         ArrayList<Attribute> lista = new ArrayList<Attribute>();
@@ -268,6 +295,7 @@ public enum ParBio {
         matrice = lista.toArray(new Attribute[lista.size()]);
         return matrice;
     }// end of method
+
 
     public static Attribute<?, ?>[] getCampiValida() {
         Attribute<?, ?>[] matrice;
@@ -285,6 +313,7 @@ public enum ParBio {
         return matrice;
     }// end of method
 
+
     public static ArrayList<ParBio> getCampiSignificativi() {
         ArrayList<ParBio> lista = new ArrayList<ParBio>();
 
@@ -296,6 +325,7 @@ public enum ParBio {
 
         return lista;
     }// end of method
+
 
     public static ArrayList<ParBio> getCampiNormali() {
         ArrayList<ParBio> lista = new ArrayList<ParBio>();
@@ -309,6 +339,7 @@ public enum ParBio {
         return lista;
     }// end of method
 
+
     public static ArrayList<ParBio> getCampiValidi() {
         ArrayList<ParBio> lista = new ArrayList<ParBio>();
 
@@ -320,6 +351,7 @@ public enum ParBio {
 
         return lista;
     }// end of method
+
 
     public static ArrayList<ParBio> getCampiPunta() {
         ArrayList<ParBio> lista = new ArrayList<ParBio>();
@@ -362,6 +394,7 @@ public enum ParBio {
 //    public void setValue(Bio bio, String value) {
 //    }// end of method
 
+
     /**
      * Inserisce nell'istanza il valore passato come parametro
      * La property dell'istanza ha lo stesso nome della enumeration
@@ -386,6 +419,7 @@ public enum ParBio {
      */
     public void setBioValida(Bio istanza) {
     }// end of method
+
 
     /**
      * Recupera dall'istanza il valore
@@ -420,6 +454,7 @@ public enum ParBio {
         }// end of if/else cycle
     }// end of method
 
+
     /**
      * Recupera dall'istanza la key ed il valore
      * La property dell'istanza ha lo stesso nome della enumeration
@@ -436,6 +471,7 @@ public enum ParBio {
         }// end of if/else cycle
     }// end of method
 
+
     /**
      * Recupera il valore del parametro sesso da Originale
      * Inserisce il valore del parametro sesso in Valida
@@ -446,57 +482,71 @@ public enum ParBio {
     public void setBioValidaSesso(Bio istanza) {
     }// end of method
 
+
     public String getTag() {
         return tag;
     }// end of getter method
+
 
     public void setTag(String tag) {
         this.tag = tag;
     }//end of setter method
 
+
     public boolean isVisibileLista() {
         return visibileLista;
     }// end of getter method
+
 
     public void setVisibileLista(boolean visibileLista) {
         this.visibileLista = visibileLista;
     }//end of setter method
 
+
     public boolean isCampoSignificativo() {
         return campoSignificativo;
     }// end of getter method
+
 
     public void setCampoSignificativo(boolean campoSignificativo) {
         this.campoSignificativo = campoSignificativo;
     }//end of setter method
 
+
     public SingularAttribute<Bio, String> getAttributo() {
         return attributo;
     }// end of getter method
+
 
     public void setAttributo(SingularAttribute<Bio, String> attributo) {
         this.attributo = attributo;
     }//end of setter method
 
+
     public boolean isCampoNormale() {
         return campoNormale;
     }// end of getter method
+
 
     public void setCampoNormale(boolean campoNormale) {
         this.campoNormale = campoNormale;
     }//end of setter method
 
+
     public boolean isCampoValido() {
         return campoValido;
     }// end of getter method
+
 
     public void setCampoValido(boolean campoValido) {
         this.campoValido = campoValido;
     }//end of setter method
 
+
     public boolean isCampoPunta() {
         return campoPunta;
     }// end of getter method
+
 
     public void setCampoPunta(boolean campoPunta) {
         this.campoPunta = campoPunta;
