@@ -2,7 +2,6 @@ package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.liste.ListaCognomi;
-import it.algos.vaadwiki.liste.ListaNomi;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +10,9 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadflow.application.FlowCost.SPAZIO;
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_COGNOMI;
-import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_NOMI;
+import static it.algos.vaadwiki.service.LibBio.PIPE;
 
 /**
  * Project vaadwiki
@@ -58,6 +57,7 @@ public class UploadCognome extends Upload {
         this.cognome = cognome;
     }// end of constructor
 
+
     /**
      * Metodo invocato subito DOPO il costruttore
      * <p>
@@ -87,8 +87,28 @@ public class UploadCognome extends Upload {
 
         super.titoloPagina = uploadService.getTitoloCognome(cognome);
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_COGNOMI);
+        super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
-        super.tagCategoria = LibWiki.setCat("Liste di persone per cognome",  cognome.getCognome());
+        super.tagCategoria = LibWiki.setCat("Liste di persone per cognome", cognome.getCognome());
+    }// fine del metodo
+
+
+    /**
+     * Costruisce la frase di incipit iniziale
+     * <p>
+     * Sovrascrivibile <br>
+     * Parametrizzato (nelle sottoclassi) l'utilizzo e la formulazione <br>
+     */
+    protected String elaboraIncipitSpecifico() {
+        String testo = VUOTA;
+
+        testo += "incipit lista cognomi";
+        testo += PIPE;
+        testo += "cognome=";
+        testo += cognome.cognome;
+        testo = LibWiki.setGraffe(testo);
+
+        return testo;
     }// fine del metodo
 
 }// end of class
