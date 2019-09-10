@@ -20,12 +20,5 @@ import java.util.ArrayList;
  */
 public abstract class ListaNomiCognomi extends Lista {
 
-    /**
-     * Ordina la lista di didascalie specifiche <br>
-     */
-    @SuppressWarnings("all")
-    public ArrayList<WrapDidascalia> ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
-        return listaService.ordinaListaDidascalieNomiCognomi(listaDisordinata);
-    }// fine del metodo
 
 }// end of class

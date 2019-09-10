@@ -81,4 +81,12 @@ public class ListaCognomi extends ListaNomiCognomi {
     }// fine del metodo
 
 
+    /**
+     * Ordina la lista di didascalie specifiche <br>
+     */
+    @SuppressWarnings("all")
+    public ArrayList<WrapDidascalia> ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
+        return listaService.ordinaListaDidascalieCognomi(listaDisordinata);
+    }// fine del metodo
+
 }// end of class

@@ -81,5 +81,12 @@ public class ListaNomi extends ListaNomiCognomi {
         return bioService.findAllByNome(nome.nome);
     }// fine del metodo
 
+    /**
+     * Ordina la lista di didascalie specifiche <br>
+     */
+    @SuppressWarnings("all")
+    public ArrayList<WrapDidascalia> ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
+        return listaService.ordinaListaDidascalieNomi(listaDisordinata);
+    }// fine del metodo
 
 }// end of class

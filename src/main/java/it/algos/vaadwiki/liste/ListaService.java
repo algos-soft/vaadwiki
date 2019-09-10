@@ -130,7 +130,6 @@ public class ListaService extends ABioService {
     }// fine del metodo
 
 
-
     /**
      * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
      *
@@ -138,7 +137,7 @@ public class ListaService extends ABioService {
      *
      * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
      */
-    public ArrayList<WrapDidascalia> ordinaListaDidascalieNomiCognomi(ArrayList<WrapDidascalia> listaDisordinata) {
+    public ArrayList<WrapDidascalia> ordinaListaDidascalieNomi(ArrayList<WrapDidascalia> listaDisordinata) {
         ArrayList<WrapDidascalia> listaOrdinata = listaDisordinata;
         if (listaDisordinata != null) {
 
@@ -156,6 +155,50 @@ public class ListaService extends ABioService {
                     return text.compareStr(w1ChiaveUno, w2ChiaveUno);
                 }// end of method
             });//end of lambda expressions and anonymous inner class
+        }// end of if cycle
+
+        return listaOrdinata;
+    }// fine del metodo
+
+
+    /**
+     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+     *
+     * @param listaDisordinata di didascalie
+     *
+     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    public ArrayList<WrapDidascalia> ordinaListaDidascalieCognomi(ArrayList<WrapDidascalia> listaDisordinata) {
+        ArrayList<WrapDidascalia> listaOrdinata = new ArrayList<>();
+        LinkedHashMap<String, ArrayList<WrapDidascalia>> mappa = new LinkedHashMap<>();
+        ArrayList<String> listaKey = new ArrayList<>();
+        ArrayList<String> listaKeyOrdinata = new ArrayList<>();
+        String key = "";
+        ArrayList<WrapDidascalia> listaWrap;
+
+        if (listaDisordinata != null) {
+            for (WrapDidascalia wrap : listaDisordinata) {
+                key = wrap.chiaveUno;
+                if (!listaKey.contains(key)) {
+                    listaKey.add(key);
+                }// end of if cycle
+
+                if (mappa.containsKey(key)) {
+                    listaWrap = mappa.get(key);
+                } else {
+                    listaWrap = new ArrayList<>();
+                }// end of if/else cycle
+                listaWrap.add(wrap);
+                mappa.put(key, listaWrap);
+            }// end of for cycle
+
+            listaKeyOrdinata = array.sort(listaKey);
+            for (String keyOrdinata : listaKeyOrdinata) {
+                listaWrap = mappa.get(keyOrdinata);
+                for (WrapDidascalia wrap : listaWrap) {
+                    listaOrdinata.add(wrap);
+                }// end of for cycle
+            }// end of for cycle
         }// end of if cycle
 
         return listaOrdinata;
