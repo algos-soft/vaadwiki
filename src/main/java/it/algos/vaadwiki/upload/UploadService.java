@@ -12,7 +12,6 @@ import it.algos.vaadwiki.modules.cognome.CognomeService;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.service.ABioService;
-import it.algos.vaadwiki.service.ParBio;
 import it.algos.wiki.Api;
 import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,7 @@ import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
-import static it.algos.vaadwiki.application.WikiCost.USA_REGISTRA_SEMPRE_CRONO;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadbio2
@@ -110,7 +109,9 @@ public class UploadService extends ABioService {
         List<Nome> listaNomi = nomeService.findAll();
 
         for (Nome nome : listaNomi) {
-            uploadNome(nome);
+            if (nome.voci > pref.getInt(SOGLIA_NOMI_PAGINA_WIKI)) {
+                uploadNome(nome);
+            }// end of if cycle
         }// end of for cycle
     }// end of method
 
@@ -122,7 +123,9 @@ public class UploadService extends ABioService {
         List<Cognome> listaCognomi = cognomeService.findAll();
 
         for (Cognome cognome : listaCognomi) {
-            uploadCognome(cognome);
+            if (cognome.voci > pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI)) {
+                uploadCognome(cognome);
+            }// end of if cycle
         }// end of for cycle
     }// end of method
 
@@ -157,8 +160,6 @@ public class UploadService extends ABioService {
         }// end of if/else cycle
 
     }// end of method
-
-
 
 
     /**

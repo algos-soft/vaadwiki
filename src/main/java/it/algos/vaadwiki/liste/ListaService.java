@@ -94,31 +94,11 @@ public class ListaService extends ABioService {
         ArrayList<WrapDidascalia> listaOrdinata = listaDisordinata;
         if (listaDisordinata != null) {
 
-//            listaDisordinata.sort(new Comparator<WrapDidascalia>() {
-//
-//                int w1Ord;
-//
-//                int w2Ord;
-//
-//
-//                @Override
-//                public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
-//                    w1Ord = dida1.getOrdine();
-//                    w2Ord = dida2.getOrdine();
-//
-//                    return text.compareInt(w1Ord, w2Ord);
-//                }// end of method
-//            });//end of lambda expressions and anonymous inner class
-
             listaDisordinata.sort(new Comparator<WrapDidascalia>() {
 
                 int w1Ord;
 
                 int w2Ord;
-
-                String w1Cog;
-
-                String w2Cog;
 
                 String w1ChiaveUno;
 
@@ -126,22 +106,16 @@ public class ListaService extends ABioService {
 
                 int resultOrdine;
 
-                int resultCognomi;
-
-
                 @Override
                 public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
                     w1Ord = dida1.getOrdine();
                     w2Ord = dida2.getOrdine();
-                    w1Cog = dida1.getSottoChiave();
-                    w2Cog = dida2.getSottoChiave();
                     w1ChiaveUno = dida1.getChiave();
                     w2ChiaveUno = dida2.getChiave();
 
                     resultOrdine = text.compareInt(w1Ord, w2Ord);
 
                     if (resultOrdine == 0) {
-//                        return text.compareStr(w1Cog, w2Cog);
                         return text.compareStr(w1ChiaveUno, w2ChiaveUno);
                     } else {
                         return resultOrdine;
