@@ -2,6 +2,7 @@ package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.didascalia.EADidascalia;
+import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

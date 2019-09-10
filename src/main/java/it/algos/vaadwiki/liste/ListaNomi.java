@@ -82,5 +82,4 @@ public class ListaNomi extends ListaNomiCognomi {
     }// fine del metodo
 
 
-
 }// end of class

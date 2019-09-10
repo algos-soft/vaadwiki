@@ -106,6 +106,7 @@ public class ListaService extends ABioService {
 
                 int resultOrdine;
 
+
                 @Override
                 public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
                     w1Ord = dida1.getOrdine();
@@ -121,6 +122,38 @@ public class ListaService extends ABioService {
                         return resultOrdine;
                     }// end of if/else cycle
 
+                }// end of method
+            });//end of lambda expressions and anonymous inner class
+        }// end of if cycle
+
+        return listaOrdinata;
+    }// fine del metodo
+
+
+
+    /**
+     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+     *
+     * @param listaDisordinata di didascalie
+     *
+     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    public ArrayList<WrapDidascalia> ordinaListaDidascalieNomiCognomi(ArrayList<WrapDidascalia> listaDisordinata) {
+        ArrayList<WrapDidascalia> listaOrdinata = listaDisordinata;
+        if (listaDisordinata != null) {
+
+            listaDisordinata.sort(new Comparator<WrapDidascalia>() {
+
+                String w1ChiaveUno;
+
+                String w2ChiaveUno;
+
+
+                @Override
+                public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
+                    w1ChiaveUno = dida1.getChiave();
+                    w2ChiaveUno = dida2.getChiave();
+                    return text.compareStr(w1ChiaveUno, w2ChiaveUno);
                 }// end of method
             });//end of lambda expressions and anonymous inner class
         }// end of if cycle
