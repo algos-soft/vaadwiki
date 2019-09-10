@@ -6,6 +6,7 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.AService;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.wiki.NomeCognomeService;
 import it.algos.vaadwiki.service.LibBio;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_NOM)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class NomeService extends AService {
+public class NomeService extends NomeCognomeService {
 
 
     /**
@@ -241,7 +242,7 @@ public class NomeService extends AService {
     public void crea() {
         long inizio = System.currentTimeMillis();
         int cont = 0;
-        System.out.println("Creazione completa nomi delle biografie. Circa 10 minuti.");
+        log.info("Creazione completa nomi delle biografie. Circa 10 minuti.");
         deleteAll();
 
         //@Field("nome")
@@ -252,7 +253,7 @@ public class NomeService extends AService {
         }// end of for cycle
 
         pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
-        System.out.println("Creazione completa di " + cont + " nomi. Tempo impiegato: " + date.deltaText(inizio));
+        log.info("Creazione completa di " + cont + " nomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 
@@ -261,12 +262,14 @@ public class NomeService extends AService {
      */
     public void update() {
         long inizio = System.currentTimeMillis();
-        System.out.println("Elaborazione nomi delle biografie. Meno di 1 minuto.");
+        log.info("Elaborazione nomi delle biografie. Circa 5 minuti.");
+
         for (Nome nome : findAll()) {
             saveNumVoci(nome);
         }// end of for cycle
+
         pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
-        System.out.println("Elaborazione completa dei nomi. Tempo impiegato: " + date.deltaText(inizio));
+        log.info("Elaborazione completa dei nomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 

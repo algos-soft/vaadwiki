@@ -124,7 +124,7 @@ public abstract class WikiViewList extends AGridViewList {
             creaButton = new Button("Crea all", new Icon(VaadinIcon.LIST));
             creaButton.addClassName("view-toolbar__button");
             creaButton.addClickListener(e -> {
-                ((NomeService) service).crea();
+                ((NomeCognomeService) service).crea();
                 updateItems();
                 updateView();
             });//end of lambda expressions and anonymous inner class
@@ -132,10 +132,10 @@ public abstract class WikiViewList extends AGridViewList {
         }// end of if cycle
 
         if (usaUpdateButton) {
-            updateButton = new Button("Elabora", new Icon(VaadinIcon.LIST));
+            updateButton = new Button("Elabora all", new Icon(VaadinIcon.LIST));
             updateButton.addClassName("view-toolbar__button");
             updateButton.addClickListener(e -> {
-                ((NomeService) service).update();
+                ((NomeCognomeService) service).update();
                 updateItems();
                 updateView();
             });//end of lambda expressions and anonymous inner class

@@ -5,6 +5,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.service.AService;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.wiki.NomeCognomeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,7 +43,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_COG)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class CognomeService extends AService {
+public class CognomeService extends NomeCognomeService {
 
 
     /**
@@ -241,7 +242,7 @@ public class CognomeService extends AService {
     public void crea() {
         long inizio = System.currentTimeMillis();
         int cont = 0;
-        System.out.println("Creazione completa cognomi delle biografie. Circa 10 minuti.");
+        log.info("Creazione completa cognomi delle biografie. Circa 12 minuti.");
         deleteAll();
 
         //@Field("cogn")
@@ -252,7 +253,7 @@ public class CognomeService extends AService {
         }// end of for cycle
 
         pref.saveValue(LAST_ELABORA_COGNOME, LocalDateTime.now());
-        System.out.println("Creazione completa di " + cont + " cognomi. Tempo impiegato: " + date.deltaText(inizio));
+        log.info("Creazione completa di " + cont + " cognomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 
@@ -261,12 +262,14 @@ public class CognomeService extends AService {
      */
     public void update() {
         long inizio = System.currentTimeMillis();
-        System.out.println("Elaborazione cognomi delle biografie. Meno di 1 minuto.");
+        log.info("Elaborazione cognomi delle biografie. Circa 1 minuto.");
+
         for (Cognome cognome : findAll()) {
             saveNumVoci(cognome);
         }// end of for cycle
+
         pref.saveValue(LAST_ELABORA_COGNOME, LocalDateTime.now());
-        System.out.println("Elaborazione completa dei cognomi. Tempo impiegato: " + date.deltaText(inizio));
+        log.info("Elaborazione completa dei cognomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 
