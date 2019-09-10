@@ -4,6 +4,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.wiki.LibWiki;
 import it.algos.wiki.web.AQueryVoce;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,8 +98,6 @@ public class GenereService extends AttNazProfCatService {
         String pluraleFemminile;
         String message = "";
 
-        deleteAll();
-
         //--legge la pagina wiki
         testo = ((AQueryVoce) appContext.getBean("AQueryVoce", titoloModulo)).urlRequest();
         if (text.isValid(testo)) {
@@ -118,9 +117,13 @@ public class GenereService extends AttNazProfCatService {
                     singolare = text.estrae(singolare, tagApi);
                     testoPlurale = parti[1].trim();
 
+                    if (singolare.equals("arbitro di calcio")) {
+                        int a = 87;
+                    }// end of if cycle
+
                     if (testoPlurale.contains(tagM) && testoPlurale.contains(tagF)) {
                         pluraleMaschile = text.estrae(testoPlurale, tagApi);
-                        pluraleFemminile = text.estrae(testoPlurale, tagM + tagVir + tagApi, tagApi);
+                        pluraleFemminile = estraeFemminile(testoPlurale);
                     } else {
                         if (testoPlurale.contains(tagM)) {
                             pluraleMaschile = text.estrae(testoPlurale, tagApi);
@@ -150,6 +153,41 @@ public class GenereService extends AttNazProfCatService {
         } else {
             logger.error(entityClass.getSimpleName() + " - Qualcosa non ha funzionato");
         }// end of if/else cycle
+    }// end of method
+
+
+    /**
+     * Funziona solo per il format: { "avvocati","M", "avvocate","F"}
+     */
+    public String estraeFemminile(String testoPlurale) {
+        String pluraleFemminile = "";
+        String plurale = "";
+        String tagIni = "{";
+        String tagEnd = "}";
+        String tagVir = ",";
+        String tagUgu = "=";
+        String tagApi = "";
+        String tagM = "M";
+        String tagF = "F";
+        String[] parti;
+        String tag = "F";
+
+        // Funziona solo per il format: { "avvocati","M", "avvocate","F"}
+        plurale = LibWiki.setNoGraffe(testoPlurale);
+        parti = plurale.split(tagVir);
+        for (int k = 0; k < parti.length; k++) {
+            parti[k] = LibWiki.setNoVirgolette(parti[k]);
+        }// end of for cycle
+
+        for (int k = 0; k < parti.length; k++) {
+            if (parti[k].equals(tag)) {
+                if (k > 0) {
+                    pluraleFemminile = parti[k - 1];
+                }// end of if cycle
+            }// end of if cycle
+        }// end of for cycle
+
+        return pluraleFemminile;
     }// end of method
 
 
@@ -309,11 +347,31 @@ public class GenereService extends AttNazProfCatService {
      */
     public String getPluraleFemminile(String singolare) {
         String plurale = "";
+        String tagVir = ",";
         Genere genere = findByKeyUnica(singolare);
+        String[] parti;
+        String tag = "F";
 
         if (genere != null) {
             plurale = genere.pluraleFemminile;
         }// end of if cycle
+
+//        // Funziona solo per il format: { "avvocati","M", "avvocate","F"}
+//        if (plurale.contains(GRAFFA_INI) && plurale.contains(GRAFFA_END)) {
+//            plurale = LibWiki.setNoGraffe(plurale);
+//            parti = plurale.split(tagVir);
+//            for (int k = 0; k < parti.length; k++) {
+//                parti[k]=LibWiki.setNoVirgolette(parti[k]);
+//            }// end of for cycle
+//
+//            for (int k = 0; k < parti.length; k++) {
+//                if (parti[k].equals(tag)) {
+//                    if (k > 0) {
+//                        plurale = parti[k - 1];
+//                    }// end of if cycle
+//                }// end of if cycle
+//            }// end of for cycle
+//        }// end of if cycle
 
         return plurale;
     }// end of method

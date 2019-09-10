@@ -2710,6 +2710,28 @@ public abstract class LibWiki {
 
 
     /**
+     * Elimina (eventuali) virgolette in testa e coda della stringa.
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con virgolette eliminate
+     */
+    public static String setNoVirgolette(String stringaIn) {
+        String stringaOut = stringaIn;
+        String tag = "\"";
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut = stringaIn.trim();
+            stringaOut = levaTesta(stringaOut, tag);
+            stringaOut = levaCoda(stringaOut, tag);
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
+
+
+    /**
      * Elimina (eventuali) doppi uguali (paragrafo) in testa e coda della stringa.
      * Funziona solo se i doppi uguali sono esattamente in TESTA ed in CODA alla stringa
      * Se arriva una stringa vuota, restituisce una stringa vuota
