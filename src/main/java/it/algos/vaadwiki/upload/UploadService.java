@@ -145,7 +145,7 @@ public class UploadService extends ABioService {
      */
     public void uploadBio(String wikiTitle) {
         Bio entity = bioService.findByKeyUnica(wikiTitle);
-        String templateEntity = libBio.creaTemplate(entity);
+        String templateEntity = libBio.creaTemplateBio(entity);
 
         String testoServer = Api.leggeVoce(wikiTitle);
         String templateServer = Api.estraeTmplBio(testoServer);

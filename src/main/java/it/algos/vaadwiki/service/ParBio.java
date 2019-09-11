@@ -3,7 +3,9 @@ package it.algos.vaadwiki.service;
 
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.SingularAttribute;
@@ -27,7 +29,7 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getNome();
+            return bio.getNome() != null ? bio.getNome() : "";
         }// end of method
     },// end of single enumeration
     cognome("Cognome", true, true, true, false, false) {
@@ -39,7 +41,7 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getCognome();
+            return bio.getCognome() != null ? bio.getCognome() : "";
         }// end of method
     },// end of single enumeration
     pseudonimo("Pseudonimo", true, false, true, false, false) {
@@ -65,7 +67,7 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getSesso();
+            return bio.getSesso() != null ? bio.getSesso() : "";
         }// end of method
     },// end of single enumeration
     luogoNascita("LuogoNascita", true, true, true, false, false) {
@@ -77,7 +79,7 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getLuogoNato();
+            return bio.getLuogoNato() != null ? bio.getLuogoNato() : "";
         }// end of method
     },// end of single enumeration
     luogoNascitaLink("LuogoNascitaLink", false, false, true, false, false) {
@@ -121,7 +123,7 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getLuogoMorto();
+            return bio.getLuogoMorto() != null ? bio.getLuogoMorto() : "";
         }// end of method
     },// end of single enumeration
     luogoMorteLink("LuogoMorteLink", false, false, true, false, false) {
@@ -167,7 +169,8 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getAttivita().singolare;
+            Attivita attivita = bio.getAttivita();
+            return attivita != null ? attivita.singolare : "";
         }// end of method
     },// end of single enumeration
     attivita2("Attività2", false, false, true, false, false) {
@@ -179,7 +182,8 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getAttivita2().singolare;
+            Attivita attivita = bio.getAttivita2();
+            return attivita != null ? attivita.singolare : "";
         }// end of method
     },// end of single enumeration
     attivita3("Attività3", false, false, true, false, false) {
@@ -191,7 +195,8 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getAttivita3().singolare;
+            Attivita attivita = bio.getAttivita3();
+            return attivita != null ? attivita.singolare : "";
         }// end of method
     },// end of single enumeration
     attivitaAltre("AttivitàAltre", false, false, false, false, false) {
@@ -209,7 +214,8 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            return bio.getNazionalita().singolare;
+            Nazionalita nazionalita = bio.getNazionalita();
+            return nazionalita != null ? nazionalita.singolare : "";
         }// end of method
     },// end of single enumeration
     nazionalitaNaturalizzato("NazionalitàNaturalizzato", true, false, true, false, false) {

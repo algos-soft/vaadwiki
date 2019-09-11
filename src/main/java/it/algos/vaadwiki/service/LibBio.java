@@ -13,6 +13,7 @@ import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.ATextService;
+import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.enumeration.EACicloType;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
@@ -218,6 +219,13 @@ public class LibBio {
      */
     @Autowired
     private NazionalitaService nazionalitaService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    private ElaboraService elaboraService;
 
 
     /**
@@ -2514,21 +2522,46 @@ public class LibBio {
     } // fine del metodo
 
 
-    public String creaBioPar(String parBioText, String value) {
+    /**
+     * Crea la singola riga del template chiave=valore con pipe e ritorno a capo
+     *
+     * @param parBioText nome della property del template
+     * @param value      corrispondente
+     *
+     * @return riga di testo
+     */
+    public String creaRigaTemplate(String parBioText, String value) {
         return PIPE + parBioText + UGUALE_SPAZIATO + value + A_CAPO;
     } // fine del metodo
 
 
-    public String creaBioPar(ParBio parBio, String value) {
-        return creaBioPar(parBio.getTag(), value);
+    /**
+     * Crea la singola riga del template chiave=valore con pipe e ritorno a capo
+     * Rimanda la metodo base recuperando la stringa dal ParBio
+     *
+     * @param parBio enumeration da cui estrarre il nome della property
+     * @param value  corrispondente
+     *
+     * @return riga di testo
+     */
+    public String creaRigaTemplate(ParBio parBio, String value) {
+        return creaRigaTemplate(parBio.getTag(), value);
     } // fine del metodo
 
 
-    public String creaBioParAll(LinkedHashMap<String, String> mappa) {
+    /**
+     * Crea tutte le righe della mappa ricevuta
+     * Usa SOLO i parametri presenti nella mappa
+     *
+     * @param mappa chiave=valore da costruire
+     *
+     * @return testo del template senza graffe
+     */
+    public String creaTemplateSenzaGraffe(LinkedHashMap<String, String> mappa) {
         String templateText = "";
 
         for (Map.Entry<String, String> entry : mappa.entrySet()) {
-            templateText += creaBioPar(entry.getKey(), entry.getValue());
+            templateText += creaRigaTemplate(entry.getKey(), entry.getValue());
         }// end of for cycle
         templateText = templateText.trim();
 
@@ -2536,13 +2569,21 @@ public class LibBio {
     } // fine del metodo
 
 
-    public String creaBioParTemplate(LinkedHashMap<String, String> mappa) {
+    /**
+     * Crea il template bio della mappa ricevuta
+     * Usa SOLO i parametri presenti nella mappa
+     *
+     * @param mappa chiave=valore da costruire
+     *
+     * @return testo del template bio comprensivo di graffe di apertura e chiusura
+     */
+    public String creaTemplate(LinkedHashMap<String, String> mappa) {
         String templateText = "";
 
         templateText += LibWiki.GRAFFE_INI;
         templateText += "Bio";
         templateText += A_CAPO;
-        templateText += creaBioParAll(mappa);
+        templateText += creaTemplateSenzaGraffe(mappa);
         templateText += A_CAPO;
         templateText += LibWiki.GRAFFE_END;
 
@@ -2551,20 +2592,25 @@ public class LibBio {
 
 
     /**
-     * Costruisce il template Bio con i parametri (valorizzati) in ingresso
+     * Costruisce il template Bio della mappa ricevuta con i parametri (valorizzati) in ingresso
+     * Nella mappa ci possono essere anche parametri non obbligatori che vengono mantenuti
      * Aggiunge (vuoti) i parametri obbligatori mancanti
+     *
+     * @param mappa chiave=valore da costruire
+     *
+     * @return testo del template senza graffe
      */
-    public String creaBioAll(LinkedHashMap<ParBio, String> mappa) {
+    public String creaTemplateBioSenzaGraffe(LinkedHashMap<ParBio, String> mappa) {
         String templateText = "";
         String value = "";
 
         for (ParBio parBio : ParBio.values()) {
             value = mappa.containsKey(parBio) ? mappa.get(parBio) : "";
             if (parBio.isCampoNormale()) {
-                templateText += creaBioPar(parBio.getTag(), value);
+                templateText += creaRigaTemplate(parBio.getTag(), value);
             } else {
                 if (text.isValid(value)) {
-                    templateText += creaBioPar(parBio.getTag(), value);
+                    templateText += creaRigaTemplate(parBio.getTag(), value);
                 }// end of if cycle
             }// end of if/else cycle
         }// end of for cycle
@@ -2575,16 +2621,21 @@ public class LibBio {
 
 
     /**
-     * Costruisce il template Bio con i parametri (valorizzati) in ingresso
+     * Costruisce il template Bio della mappa ricevuta con i parametri (valorizzati) in ingresso
+     * Nella mappa ci possono essere anche parametri non obbligatori che vengono mantenuti
      * Aggiunge (vuoti) i parametri obbligatori mancanti
+     *
+     * @param mappa chiave=valore da costruire
+     *
+     * @return testo del template bio comprensivo di graffe di apertura e chiusura
      */
-    public String creaBioTemplate(LinkedHashMap<ParBio, String> mappa) {
+    public String creaTemplateBio(LinkedHashMap<ParBio, String> mappa) {
         String templateText = "";
 
         templateText += LibWiki.GRAFFE_INI;
         templateText += "Bio";
         templateText += A_CAPO;
-        templateText += creaBioAll(mappa);
+        templateText += creaTemplateBioSenzaGraffe(mappa);
         templateText += A_CAPO;
         templateText += LibWiki.GRAFFE_END;
 
@@ -2593,31 +2644,105 @@ public class LibBio {
 
 
     /**
-     * Crea un nuovo template dai dati della entity
+     * Costruisce il template Bio dai dati della entity
+     * Aggiunge (vuoti) i parametri obbligatori mancanti
+     * NON aggiunge altri parametri non presenti nella entity e non obbligatori
+     *
+     * @param entity di riferimento
+     *
+     * @return testo del template bio senza graffe
      */
-    public String creaTemplate(Bio entity) {
+    public String creaTemplateBioSenzaGraffe(Bio entity) {
         String templateText = "";
         String value = "";
 
-        for (ParBio parBio : ParBio.values()) {
+        for (ParBio parBio : ParBio.getCampiNormali()) {
             value = parBio.getValue(entity);
-            templateText += creaBioPar(parBio, value);
+            templateText += creaRigaTemplate(parBio, value);
         }// end of for cycle
+        templateText = templateText.trim();
 
         return templateText;
     }// end of method
 
 
     /**
-     * Crea un nuovo template dai dati della entity
+     * Costruisce il template Bio dai dati della entity
+     * Aggiunge (vuoti) i parametri obbligatori mancanti
+     * NON aggiunge altri parametri non presenti nella entity e non obbligatori
+     *
+     * @param entity di riferimento
+     *
+     * @return testo del template bio comprensivo di graffe di apertura e chiusura
      */
-    public String creaBioTemplate(Bio entity) {
+    public String creaTemplateBio(Bio entity) {
         String templateText = "";
 
         templateText += LibWiki.GRAFFE_INI;
         templateText += "Bio";
         templateText += A_CAPO;
-        templateText += creaTemplate(entity);
+        templateText += creaTemplateBioSenzaGraffe(entity);
+        templateText += A_CAPO;
+        templateText += LibWiki.GRAFFE_END;
+
+        return templateText;
+    }// end of method
+
+
+    /**
+     * Costruisce il template Bio
+     * Merge tra il template del server ed i dati (eventualmente) modificati della entity
+     * Aggiunge (vuoti) i parametri obbligatori mancanti
+     * NON aggiunge altri parametri non presenti sul server e non obbligatori
+     *
+     * @param entity di riferimento
+     *
+     * @return testo del template bio senza graffe
+     */
+    public String creaTemplateMergedSenzaGraffe(Bio entity) {
+        String templateText = "";
+        String key = "";
+        String valueServer = "";
+        String valueMongo = "";
+        String valueMerged = "";
+        HashMap<String, String> mappa = getMappaBio(entity.tmplBioServer);
+
+        //--spazzola TUTTI i parametri possibili in ordine
+        for (ParBio parBio : ParBio.values()) {
+            key = parBio.getTag();
+
+            if (mappa.containsKey(key)) {
+                valueServer = mappa.get(key);
+                valueMongo = parBio.getValue(entity);
+                valueMerged = text.isValid(valueMongo) ? valueMongo : valueServer;
+                templateText += creaRigaTemplate(parBio, valueMerged);
+            } else {
+            }// end of if/else cycle
+
+        }// end of for cycle
+        templateText = templateText.trim();
+
+        return templateText;
+    }// end of method
+
+
+    /**
+     * Costruisce il template Bio
+     * Merge tra il template del server ed i dati (eventualmente) modificati della entity
+     * Aggiunge (vuoti) i parametri obbligatori mancanti
+     * NON aggiunge altri parametri non presenti sul server e non obbligatori
+     *
+     * @param entity di riferimento
+     *
+     * @return testo del template bio comprensivo di graffe di apertura e chiusura
+     */
+    public String creaTemplateMerged(Bio entity) {
+        String templateText = "";
+
+        templateText += LibWiki.GRAFFE_INI;
+        templateText += "Bio";
+        templateText += A_CAPO;
+        templateText += creaTemplateMergedSenzaGraffe(entity);
         templateText += A_CAPO;
         templateText += LibWiki.GRAFFE_END;
 

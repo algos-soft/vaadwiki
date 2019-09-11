@@ -194,7 +194,7 @@ public class ElaboraService extends ABioService {
     /**
      * Estrae dal templateServer una mappa di parametri corrispondenti ai campi della tavola Bio
      */
-    private HashMap<String, String> getMappaBio(Bio bio) {
+    public HashMap<String, String> getMappaBio(Bio bio) {
         HashMap<String, String> mappa = null;
         String tmplBioServer = bio.getTmplBioServer();
 
