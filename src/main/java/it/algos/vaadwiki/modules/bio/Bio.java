@@ -64,7 +64,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
 @AIList(fields = {"wikiTitle", "cognome", "lastModifica", "lastLettura", "nome", "sesso", "luogoNato", "annoNascita", "annoMorte", "attivita", "attivita2", "attivita3", "nazionalita", "luogoMorto", "giornoNascita", "giornoMorte"})
-@AIForm(fields = {"pageid", "wikiTitle", "lastModifica", "lastLettura", "tmplBioServer", "nome", "cognome", "sesso", "luogoNato", "giornoNascita", "annoNascita", "luogoMorto", "giornoMorte", "annoMorte", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita", "lastModifica", "lastLettura"})
+@AIForm(fields = {"pageid", "wikiTitle", "lastModifica", "lastLettura", "tmplBioServer", "nome", "cognome", "sesso", "luogoNato", "luogoNatoLink", "giornoNascita", "annoNascita", "luogoMorto", "luogoMortoLink", "giornoMorte", "annoMorte", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita", "lastModifica", "lastLettura"})
 @AIScript(sovrascrivibile = false)
 public class Bio extends AEntity {
 
@@ -183,11 +183,23 @@ public class Bio extends AEntity {
     @AIColumn(name = "LuogoNato", widthEM = 8)
     private String luogoNato;
 
+    @Field("locnatolink")
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = EAFieldType.text)
+    @AIColumn(name = "LuogoNato", widthEM = 8)
+    private String luogoNatoLink;
+
     @Field("locmorto")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(name = "LuogoMorto", widthEM = 8)
     private String luogoMorto;
+
+    @Field("locmortolink")
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = EAFieldType.text)
+    @AIColumn(name = "LuogoMorto", widthEM = 8)
+    private String luogoMortoLink;
 
     /**
      * attività principale (facoltativo, non unica)

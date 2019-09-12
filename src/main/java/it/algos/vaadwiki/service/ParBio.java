@@ -82,7 +82,17 @@ public enum ParBio {
             return bio.getLuogoNato() != null ? bio.getLuogoNato() : "";
         }// end of method
     },// end of single enumeration
-    luogoNascitaLink("LuogoNascitaLink", false, false, true, false, false) {
+    luogoNascitaLink("LuogoNascitaLink", true, false, true, false, false) {
+        @Override
+        public void setValue(Bio bio, String value, LibBio libBio) {
+            bio.setLuogoNatoLink(value.equals("") ? null : value);
+        }// end of method
+
+
+        @Override
+        public String getValue(Bio bio) {
+            return bio.getLuogoNatoLink() != null ? bio.getLuogoNatoLink() : "";
+        }// end of method
     },// end of single enumeration
     luogoNascitaAlt("LuogoNascitaAlt", false, false, true, false, false) {
     },// end of single enumeration
@@ -123,11 +133,20 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            // provalink
             return bio.getLuogoMorto() != null ? bio.getLuogoMorto() : "";
         }// end of method
     },// end of single enumeration
-    luogoMorteLink("LuogoMorteLink", false, false, true, false, false) {
+    luogoMorteLink("LuogoMorteLink", true, false, true, false, false) {
+        @Override
+        public void setValue(Bio bio, String value, LibBio libBio) {
+            bio.setLuogoMortoLink(value.equals("") ? null : value);
+        }// end of method
+
+
+        @Override
+        public String getValue(Bio bio) {
+            return bio.getLuogoMortoLink() != null ? bio.getLuogoMortoLink() : "";
+        }// end of method
     },// end of single enumeration
     luogoMorteAlt("LuogoMorteAlt", false, false, true, false, false) {
     },// end of single enumeration

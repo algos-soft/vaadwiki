@@ -219,14 +219,14 @@ public class ElaboraService extends ABioService {
         try { // prova ad eseguire il codice
             if (bio != null) {
 
-                // patch per i luoghi di nascita e morte
-                // se è pieno il parametro link, lo usa
-                if (text.isValid(mappa.get(ParBio.luogoNascitaLink.getTag()))) {
-                    mappa.put(ParBio.luogoNascita.getTag(), mappa.get(ParBio.luogoNascitaLink.getTag()));
-                }// end of if cycle
-                if (text.isValid(mappa.get(ParBio.luogoMorteLink.getTag()))) {
-                    mappa.put(ParBio.luogoMorte.getTag(), mappa.get(ParBio.luogoMorteLink.getTag()));
-                }// end of if cycle
+//                // patch per i luoghi di nascita e morte
+//                // se è pieno il parametro link, lo usa
+//                if (text.isValid(mappa.get(ParBio.luogoNascitaLink.getTag()))) {
+//                    mappa.put(ParBio.luogoNascita.getTag(), mappa.get(ParBio.luogoNascitaLink.getTag()));
+//                }// end of if cycle
+//                if (text.isValid(mappa.get(ParBio.luogoMorteLink.getTag()))) {
+//                    mappa.put(ParBio.luogoMorte.getTag(), mappa.get(ParBio.luogoMorteLink.getTag()));
+//                }// end of if cycle
 
                 for (ParBio par : ParBio.values()) {
                     value = mappa.get(par.getTag());

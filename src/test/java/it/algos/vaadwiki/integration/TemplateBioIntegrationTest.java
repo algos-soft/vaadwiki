@@ -44,6 +44,7 @@ public class TemplateBioIntegrationTest extends ATest {
     private static String titoloBio2 = "Flavio Bucci";
 
 //    private static String titoloBio3 = "Giuseppe Frignani";
+
     private static String titoloBio3 = "Giovanni Dellepiane";
 
 //    private static String titoloBio3 = "Giuseppe Fiori (narratore)";
@@ -439,7 +440,6 @@ public class TemplateBioIntegrationTest extends ATest {
         System.out.println("*************creaTemplateMerged");
         System.out.println("");
     }// end of single test
-
 
 
     /**
