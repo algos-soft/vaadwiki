@@ -2696,21 +2696,24 @@ public class LibBio {
      * NON aggiunge altri parametri non presenti sul server e non obbligatori
      *
      * @param tmplBioServer template originale del server
-     * @param entity di riferimento
+     * @param entity        di riferimento
      *
      * @return testo del template bio senza graffe
      */
     public String creaTemplateMergedSenzaGraffe(String tmplBioServer, Bio entity) {
         String templateText = "";
         String key = "";
-        String valueServer = "";
-        String valueMongo = "";
-        String valueMerged = "";
+        String valueServer;
+        String valueMongo;
+        String valueMerged;
         HashMap<String, String> mappa = getMappaBio(tmplBioServer);
 
         //--spazzola TUTTI i parametri possibili in ordine
         for (ParBio parBio : ParBio.values()) {
             key = parBio.getTag();
+            valueServer = "";
+            valueMongo = "";
+            valueMerged = "";
 
             if (mappa.containsKey(key)) {
                 valueServer = mappa.get(key);
@@ -2748,7 +2751,7 @@ public class LibBio {
      * NON aggiunge altri parametri non presenti sul server e non obbligatori
      *
      * @param tmplBioServer template originale del server
-     * @param entity di riferimento
+     * @param entity        di riferimento
      *
      * @return testo del template bio comprensivo di graffe di apertura e chiusura
      */
@@ -2758,7 +2761,7 @@ public class LibBio {
         templateText += LibWiki.GRAFFE_INI;
         templateText += "Bio";
         templateText += A_CAPO;
-        templateText += creaTemplateMergedSenzaGraffe(tmplBioServer,entity);
+        templateText += creaTemplateMergedSenzaGraffe(tmplBioServer, entity);
         templateText += A_CAPO;
         templateText += LibWiki.GRAFFE_END;
 
