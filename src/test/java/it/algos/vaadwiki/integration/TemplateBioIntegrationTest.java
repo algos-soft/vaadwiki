@@ -1,11 +1,14 @@
 package it.algos.vaadwiki.integration;
 
+import it.algos.vaadflow.modules.anno.AnnoService;
+import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadwiki.ATest;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.service.ParBio;
+import it.algos.vaadwiki.upload.UploadService;
 import it.algos.wiki.Api;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,10 +43,15 @@ public class TemplateBioIntegrationTest extends ATest {
 
     private static String titoloBio2 = "Flavio Bucci";
 
-    private static String titoloBio3 = "Luigi Augussori";
+    private static String titoloBio3 = "Giuseppe Frignani";
+
+//    private static String titoloBio3 = "Giuseppe Fiori (narratore)";
 
     @Autowired
     public BioService bioService;
+
+    @Autowired
+    public PreferenzaService pref;
 
     @Autowired
     public Api api;
@@ -52,7 +60,13 @@ public class TemplateBioIntegrationTest extends ATest {
     public ElaboraService elaboraService;
 
     @Autowired
+    public UploadService uploadService;
+
+    @Autowired
     protected LibBio libBio;
+
+    @Autowired
+    protected AnnoService annoService;
 
 
     @BeforeClass
@@ -134,6 +148,7 @@ public class TemplateBioIntegrationTest extends ATest {
         creaTemplateMerged();
         creaTemplateMerged2();
         creaTemplateMerged3();
+        uploadBio();
     }// end of single test
 
 
@@ -311,8 +326,6 @@ public class TemplateBioIntegrationTest extends ATest {
      */
     public void creaTemplateBioEntity() {
         Bio bio = api.leggeBio(titoloBio);
-        bio = elaboraService.esegueNoSave(bio);
-
         String testoGrezzo = libBio.creaTemplateBio(bio);
 
         System.out.println("");
@@ -338,19 +351,17 @@ public class TemplateBioIntegrationTest extends ATest {
      */
     public void creaTemplateMerged() {
         Bio bio = api.leggeBio(titoloBio);
-        bio = elaboraService.esegueNoSave(bio);
         String testoGrezzoEntity = libBio.creaTemplateBio(bio);
-        String testoGrezzoMerged = libBio.creaTemplateMerged(bio);
+        String testoGrezzoMerged = libBio.mergeTemplates(bio.tmplBioServer, bio);
 
         System.out.println("");
         System.out.println("*************creaTemplateMerged");
         System.out.println("Nove. Crea un template bio");
         System.out.println("Nove. Merge tra il template del server ed i dati (eventualmente) modificati della entity");
         System.out.println("Nove. NON aggiunge altri parametri non presenti sul server e non obbligatori");
-        System.out.println("*************templateOriginario");
+        System.out.println("*************templateOriginarioDelServer");
         System.out.println(bio.getTmplBioServer());
-        System.out.println("*************propertyModificata");
-        System.out.println("*************templateEntity");
+        System.out.println("*************templateVirtualeInMemoriaConLePropertyDellaEntity");
         System.out.println(testoGrezzoEntity);
         System.out.println("*************templateMerged");
         System.out.println(testoGrezzoMerged);
@@ -370,29 +381,31 @@ public class TemplateBioIntegrationTest extends ATest {
      */
     public void creaTemplateMerged2() {
         Bio bio = api.leggeBio(titoloBio2);
-        bio = elaboraService.esegueNoSave(bio);
         bio.setLuogoNato("Napoli"); //modificato
         bio.setLuogoMorto("Palermo"); //aggiunto
+        bio.setAnnoMorte(annoService.findByKeyUnica("1948"));
         String testoGrezzoEntity = libBio.creaTemplateBio(bio);
-        String testoGrezzoMerged = libBio.creaTemplateMerged(bio);
+        String testoGrezzoMerged = libBio.mergeTemplates(bio.tmplBioServer, bio);
 
         System.out.println("");
         System.out.println("*************creaTemplateMerged");
         System.out.println("Dieci. Crea un template bio");
         System.out.println("Dieci. Merge tra il template del server ed i dati (eventualmente) modificati della entity");
         System.out.println("Dieci. NON aggiunge altri parametri non presenti sul server e non obbligatori");
-        System.out.println("*************templateOriginario");
+        System.out.println("*************templateOriginarioDelServer");
         System.out.println(bio.getTmplBioServer());
         System.out.println("*************propertyModificata");
         System.out.println("LuogoNascita -> Napoli (modificato)");
         System.out.println("LuogoMorte -> Palermo (aggiunto)");
-        System.out.println("*************templateEntity");
+        System.out.println("AnnoMorte -> 1948 (aggiunto)");
+        System.out.println("*************templateVirtualeInMemoriaConLePropertyDellaEntity");
         System.out.println(testoGrezzoEntity);
         System.out.println("*************templateMerged");
         System.out.println(testoGrezzoMerged);
         System.out.println("*************creaTemplateMerged");
         System.out.println("");
     }// end of single test
+
 
     /**
      * Costruisce il template Bio
@@ -405,28 +418,43 @@ public class TemplateBioIntegrationTest extends ATest {
      */
     public void creaTemplateMerged3() {
         Bio bio = api.leggeBio(titoloBio3);
-        bio = elaboraService.esegueNoSave(bio);
         bio.setSesso("M"); //aggiunto
-        bio.setLuogoMorto("Pavia"); //aggiunto
         String testoGrezzoEntity = libBio.creaTemplateBio(bio);
-        String testoGrezzoMerged = libBio.creaTemplateMerged(bio);
+        String testoGrezzoMerged = libBio.mergeTemplates(bio.tmplBioServer, bio);
 
         System.out.println("");
         System.out.println("*************creaTemplateMerged");
         System.out.println("Undici. Crea un template bio");
         System.out.println("Undici. Merge tra il template del server ed i dati (eventualmente) modificati della entity");
         System.out.println("Undici. NON aggiunge altri parametri non presenti sul server e non obbligatori");
-        System.out.println("*************templateOriginario");
+        System.out.println("*************templateOriginarioDelServer");
         System.out.println(bio.getTmplBioServer());
         System.out.println("*************propertyModificata");
         System.out.println("Sesso -> M (aggiunto)");
-        System.out.println("LuogoMorte -> Pavia (aggiunto)");
-        System.out.println("*************templateEntity");
+        System.out.println("*************templateVirtualeInMemoriaConLePropertyDellaEntity");
         System.out.println(testoGrezzoEntity);
         System.out.println("*************templateMerged");
         System.out.println(testoGrezzoMerged);
         System.out.println("*************creaTemplateMerged");
         System.out.println("");
+    }// end of single test
+
+
+
+    /**
+     * Carica sul server wiki la entity indicata
+     * <p>
+     * 1) Recupera la entity dal mongoDB (parametri eventualmente modificati dal programma)
+     * 2) Scarica la voce dal server (senza modificare il template)
+     * 4) Esegue un merge (ragionato) tra il template del server e la entity
+     * 5) Sostituisce il templateMerged al testoServerNew nel testo della voce
+     * 6) Upload del testo
+     *
+     * @param wikiTitle della pagina wiki (obbligatorio, unico)
+     */
+    public void uploadBio() {
+        //--controllare che il flag di preferenze FlowCost.USA_DEBUG sia true
+        uploadService.uploadBio(titoloBio3);
     }// end of single test
 
 

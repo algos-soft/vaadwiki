@@ -2695,17 +2695,18 @@ public class LibBio {
      * Aggiunge (vuoti) i parametri obbligatori mancanti
      * NON aggiunge altri parametri non presenti sul server e non obbligatori
      *
+     * @param tmplBioServer template originale del server
      * @param entity di riferimento
      *
      * @return testo del template bio senza graffe
      */
-    public String creaTemplateMergedSenzaGraffe(Bio entity) {
+    public String creaTemplateMergedSenzaGraffe(String tmplBioServer, Bio entity) {
         String templateText = "";
         String key = "";
         String valueServer = "";
         String valueMongo = "";
         String valueMerged = "";
-        HashMap<String, String> mappa = getMappaBio(entity.tmplBioServer);
+        HashMap<String, String> mappa = getMappaBio(tmplBioServer);
 
         //--spazzola TUTTI i parametri possibili in ordine
         for (ParBio parBio : ParBio.values()) {
@@ -2715,10 +2716,24 @@ public class LibBio {
                 valueServer = mappa.get(key);
                 valueMongo = parBio.getValue(entity);
                 valueMerged = text.isValid(valueMongo) ? valueMongo : valueServer;
-                templateText += creaRigaTemplate(parBio, valueMerged);
-            } else {
-            }// end of if/else cycle
 
+                //se è un campo normale, lo aggiunge sempre
+                if (parBio.isCampoNormale()) {
+                    templateText += creaRigaTemplate(parBio, valueMerged);
+                } else {
+                    //altrimenti lo aggiunge solo se non è vuoto
+                    if (text.isValid(valueMerged)) {
+                        templateText += creaRigaTemplate(parBio, valueMerged);
+                    }// end of if cycle
+                }// end of if/else cycle
+            } else {
+                //se mancava ed è un campo normale, lo aggiunge
+                if (parBio.isCampoNormale()) {
+                    valueMongo = parBio.getValue(entity);
+                    valueMerged = text.isValid(valueMongo) ? valueMongo : "";
+                    templateText += creaRigaTemplate(parBio, valueMerged);
+                }// end of if cycle
+            }// end of if/else cycle
         }// end of for cycle
         templateText = templateText.trim();
 
@@ -2732,22 +2747,48 @@ public class LibBio {
      * Aggiunge (vuoti) i parametri obbligatori mancanti
      * NON aggiunge altri parametri non presenti sul server e non obbligatori
      *
+     * @param tmplBioServer template originale del server
      * @param entity di riferimento
      *
      * @return testo del template bio comprensivo di graffe di apertura e chiusura
      */
-    public String creaTemplateMerged(Bio entity) {
+    public String mergeTemplates(String tmplBioServer, Bio entity) {
         String templateText = "";
 
         templateText += LibWiki.GRAFFE_INI;
         templateText += "Bio";
         templateText += A_CAPO;
-        templateText += creaTemplateMergedSenzaGraffe(entity);
+        templateText += creaTemplateMergedSenzaGraffe(tmplBioServer,entity);
         templateText += A_CAPO;
         templateText += LibWiki.GRAFFE_END;
 
         return templateText;
     }// end of method
+
+
+//    /**
+//     * Costruisce il template Bio come modificato nella entity
+//     * Merge tra il template del server ed i dati (eventualmente) modificati della entity
+//     * Aggiunge (vuoti) i parametri obbligatori mancanti
+//     * NON aggiunge altri parametri non presenti sul server e non obbligatori
+//     *
+//     * @param bioServer col template originale
+//     * @param bioMongo  coi parametri eventualemnte modificati
+//     *
+//     * @return testo del template bio merged comprensivo di graffe di apertura e chiusura
+//     */
+//    public String mergeTemplates(Bio bioServer, Bio bioMongo) {
+//        String templateText = "";
+//
+//        templateText += LibWiki.GRAFFE_INI;
+//        templateText += "Bio";
+//        templateText += A_CAPO;
+////        templateText += creaTemplateMergedSenzaGraffe(entity);
+//        templateText += A_CAPO;
+//        templateText += LibWiki.GRAFFE_END;
+//
+//        return templateText;
+//    }// end of method
 
 
     public void sendDownload(DownloadResult result) {

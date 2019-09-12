@@ -133,45 +133,30 @@ public class UploadService extends ABioService {
     /**
      * Carica sul server wiki la entity indicata
      * <p>
-     * 1) Recupera la entity dal mongoDB
-     * 2) Costruisce un template-entity
-     * 2) Scarica la voce dal server
-     * 3) Estrae il template-server
-     * 4) Spazzola i template ed esegue un merge (ragionato)
-     * 5) Sostituisce il template-merge al template-server nel testo della voce
+     * 1) Recupera la entity dal mongoDB (parametri eventualmente modificati dal programma)
+     * 2) Scarica la voce dal server (senza modificare il template)
+     * 4) Esegue un merge (ragionato) tra il template del server e la entity
+     * 5) Sostituisce il templateMerged al testoServerNew nel testo della voce
      * 6) Upload del testo
      *
      * @param wikiTitle della pagina wiki (obbligatorio, unico)
      */
     public void uploadBio(String wikiTitle) {
+        String testoServerNew;
+        String summary = "fixParametri";
         Bio entity = bioService.findByKeyUnica(wikiTitle);
-        String templateEntity = libBio.creaTemplateBio(entity);
+        String testoServerOld = Api.leggeVoce(wikiTitle);
+        String templateServer = Api.estraeTmplBio(testoServerOld);
+        String templateMerged = libBio.mergeTemplates(templateServer, entity);
 
-        String testoServer = Api.leggeVoce(wikiTitle);
-        String templateServer = Api.estraeTmplBio(testoServer);
-        String templateMerged = mergeTemplates(templateServer, templateEntity);
-
-        testoServer = text.sostituisce(testoServer, templateServer, templateMerged);
+        testoServerNew = text.sostituisce(testoServerOld, templateServer, templateMerged);
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            appContext.getBean(AQueryWrite.class, Upload.PAGINA_PROVA, testoServer);
+            appContext.getBean(AQueryWrite.class, Upload.PAGINA_PROVA, testoServerNew, summary);
         } else {
-            appContext.getBean(AQueryWrite.class, wikiTitle, testoServer);
+            appContext.getBean(AQueryWrite.class, wikiTitle, testoServerNew, summary);
         }// end of if/else cycle
 
-    }// end of method
-
-
-    /**
-     * Legg
-     * Crea un nuovo template dai dati dellla entity
-     */
-    public String mergeTemplates(String templateServer, String templateEntity) {
-        String newTemplate = "";
-//        Bio entity = bioService.findByKeyUnica(pageid);
-        templateServer = text.sostituisce(templateServer, "abate", "abate\n|Attività2 = politico");
-
-        return templateServer;
     }// end of method
 
 

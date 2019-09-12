@@ -1,9 +1,6 @@
 package it.algos.vaadflow.ui.dialog;
 
-import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.KeyModifier;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -31,6 +28,7 @@ import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.fields.AIntegerField;
 import it.algos.vaadflow.ui.fields.ATextArea;
 import it.algos.vaadflow.ui.fields.ATextField;
+import it.algos.vaadwiki.modules.bio.Bio;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,9 +39,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 
@@ -724,6 +724,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected void saveClicked(EAOperation operation) {
         boolean isValid = false;
         if (currentItem != null) {
+            //--trasferisce tutti i valori (se accettabili nel loro insieme) dai campi GUI al currentItem
             isValid = binder.writeBeanIfValid(currentItem);
         }// end of if cycle
 

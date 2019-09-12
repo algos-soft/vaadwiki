@@ -287,7 +287,7 @@ public class AQueryWrite extends AQueryPost {
 
         // summary
         if (wLogin != null) {
-            summary = LibWiki.setQuadre("Utente:" + wLogin.getLgusername() + "|" + wLogin.getLgusername()) + summary;
+            summary = text.isValid(summary) ? summary : LibWiki.setQuadre("Utente:" + wLogin.getLgusername() + "|" + wLogin.getLgusername());
         }// end of if/else cycle
         if (text.isValid(summary)) {
             testoSummary = summary;

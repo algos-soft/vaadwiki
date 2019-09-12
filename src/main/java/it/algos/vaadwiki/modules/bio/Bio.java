@@ -64,7 +64,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
 @AIList(fields = {"wikiTitle", "cognome", "lastModifica", "lastLettura", "nome", "sesso", "luogoNato", "annoNascita", "annoMorte", "attivita", "attivita2", "attivita3", "nazionalita", "luogoMorto", "giornoNascita", "giornoMorte"})
-@AIForm(fields = {"pageid", "wikiTitle", "lastModifica", "lastLettura", "tmplBioServer", "nome", "cognome", "sesso", "luogoNato", "giornoNascita", "annoNascita", "luogoMorte", "giornoMorte", "annoMorte", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita", "lastModifica", "lastLettura"})
+@AIForm(fields = {"pageid", "wikiTitle", "lastModifica", "lastLettura", "tmplBioServer", "nome", "cognome", "sesso", "luogoNato", "giornoNascita", "annoNascita", "luogoMorto", "giornoMorte", "annoMorte", "attivita", "attivita2", "attivita3", "attivitaAltre", "nazionalita", "lastModifica", "lastLettura"})
 @AIScript(sovrascrivibile = false)
 public class Bio extends AEntity {
 

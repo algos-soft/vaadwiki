@@ -231,19 +231,6 @@ public class BioViewDialog extends AViewDialog<Bio> {
     }// end of method
 
 
-    /**
-     * Azione proveniente dal click sul bottone Registra
-     * Inizio delle operazioni di registrazione
-     *
-     * @param operation
-     */
-    @Override
-    protected void saveClicked(EAOperation operation) {
-        elaboraOnly();
-        super.saveClicked(operation);
-    }// end of method
-
-
     protected void showWikiPage() {
         String wikiTitle = this.getWikiTitle();
         String link = "\"" + PATH_WIKI + wikiTitle + "\"";
