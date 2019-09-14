@@ -49,6 +49,17 @@ public abstract class Didascalia {
     @Autowired
     public AnnoService annoService;
 
+    /**
+     * Testo della didascalia CON la chiave che viene usata nella composizione con 'righeParagrafo' <br>
+     */
+    public String testoCon = VUOTA;
+
+    /**
+     * Testo della didascalia SENZA la chiave che viene aggiunta nella composizione della pagina <br>
+     * La chiave viene aggiunta in maniera differente tra 'righeSemplici' o 'righeRaggruppate' <br>
+     */
+    public String testoSenza = VUOTA;
+
     protected boolean usaChiave = true;
 
     protected String wikiTitle = VUOTA;
@@ -59,11 +70,15 @@ public abstract class Didascalia {
 
     protected String luogoNato = VUOTA;
 
+    protected String luogoNatoLink = VUOTA;
+
     protected String giornoNato = VUOTA;
 
     protected String annoNato = VUOTA;
 
     protected String luogoMorto = VUOTA;
+
+    protected String luogoMortoLink = VUOTA;
 
     protected String giornoMorto = VUOTA;
 
@@ -80,17 +95,6 @@ public abstract class Didascalia {
     protected EADidascalia type;
 
     protected Bio bio;
-
-    /**
-     * Testo della didascalia CON la chiave che viene usata nella composizione con 'righeParagrafo' <br>
-     */
-    public String testoCon = VUOTA;
-
-    /**
-     * Testo della didascalia SENZA la chiave che viene aggiunta nella composizione della pagina <br>
-     * La chiave viene aggiunta in maniera differente tra 'righeSemplici' o 'righeRaggruppate' <br>
-     */
-    public String testoSenza = VUOTA;
 
 
     public Didascalia() {
@@ -138,9 +142,11 @@ public abstract class Didascalia {
         nome = VUOTA;
         cognome = VUOTA;
         luogoNato = VUOTA;
+        luogoNatoLink = VUOTA;
         giornoNato = VUOTA;
         annoNato = VUOTA;
         luogoMorto = VUOTA;
+        luogoMortoLink = VUOTA;
         giornoMorto = VUOTA;
         annoMorto = VUOTA;
         attivita = VUOTA;
@@ -198,8 +204,16 @@ public abstract class Didascalia {
             this.luogoNato = bio.getLuogoNato();
         }// fine del blocco if
 
+        if (bio.getLuogoNatoLink() != null) {
+            this.luogoNatoLink = bio.getLuogoNatoLink();
+        }// fine del blocco if
+
         if (bio.getLuogoMorto() != null) {
             this.luogoMorto = bio.getLuogoMorto();
+        }// fine del blocco if
+
+        if (bio.getLuogoMortoLink() != null) {
+            this.luogoMortoLink = bio.getLuogoMortoLink();
         }// fine del blocco if
     }// end of method
 
@@ -426,6 +440,7 @@ public abstract class Didascalia {
     private String getBloccoFinaleNascita() {
         String testo = VUOTA;
         boolean isEsisteLocalita = text.isValid(luogoNato);
+        boolean isEsisteLocalitaLink = text.isValid(luogoNatoLink);
         boolean isEsisteNascita = text.isValid(annoNato);
         boolean isEsisteGiorno = text.isValid(giornoNato);
 
@@ -433,11 +448,17 @@ public abstract class Didascalia {
             if (!isEsisteNascita) {
                 testo += TAG_NATO;
             }// end of if cycle
-            if (luogoNato.endsWith(")")) {
-                testo += LibWiki.setQuadre(luogoNato + "|");
+            if (isEsisteLocalitaLink) {
+                testo += LibWiki.setQuadre(luogoNato + "|" + luogoNatoLink);
             } else {
                 testo += LibWiki.setQuadre(luogoNato);
             }// end of if/else cycle
+
+//            if (luogoNato.endsWith(")")) {
+//                testo += LibWiki.setQuadre(luogoNato + "|");
+//            } else {
+//                testo += LibWiki.setQuadre(luogoNato);
+//            }// end of if/else cycle
         }// fine del blocco if
 
         if (isEsisteLocalita && isEsisteNascita) {
@@ -465,6 +486,7 @@ public abstract class Didascalia {
     private String getBloccoFinaleMorte() {
         String testo = VUOTA;
         boolean isEsisteLocalita = text.isValid(luogoMorto);
+        boolean isEsisteLocalitaLink = text.isValid(luogoMortoLink);
         boolean isEsisteMorte = text.isValid(annoMorto);
         boolean isEsisteGiorno = text.isValid(giornoMorto);
 
@@ -472,11 +494,17 @@ public abstract class Didascalia {
             if (!isEsisteMorte) {
                 testo += TAG_MORTO;
             }// end of if cycle
-            if (luogoMorto.endsWith(")")) {
-                testo += LibWiki.setQuadre(luogoMorto + "|");
+            if (isEsisteLocalitaLink) {
+                testo += LibWiki.setQuadre(luogoMorto + "|" + luogoMortoLink);
             } else {
                 testo += LibWiki.setQuadre(luogoMorto);
             }// end of if/else cycle
+
+//            if (luogoMorto.endsWith(")")) {
+//                testo += LibWiki.setQuadre(luogoMorto + "|");
+//            } else {
+//                testo += LibWiki.setQuadre(luogoMorto);
+//            }// end of if/else cycle
         }// fine del blocco if
 
         if (isEsisteLocalita && isEsisteMorte) {

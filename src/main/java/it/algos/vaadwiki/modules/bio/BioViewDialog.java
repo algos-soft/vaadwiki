@@ -11,11 +11,13 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.presenter.IAPresenter;
+import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.ui.dialog.AViewDialog;
 import it.algos.vaadwiki.download.DeleteService;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.download.PageService;
+import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -87,6 +89,9 @@ public class BioViewDialog extends AViewDialog<Bio> {
     @Autowired
     protected PreferenzaService pref;
 
+    @Autowired
+    private LibBio libBio;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -155,11 +160,11 @@ public class BioViewDialog extends AViewDialog<Bio> {
         bottomLayout.add(saveButton);
 
         wikiShowButton.setIcon(new Icon(VaadinIcon.SEARCH));
-        wikiShowButton.addClickListener(event -> showWikiPage());
+        wikiShowButton.addClickListener(event -> libBio.showWikiPage(getWikiTitle()));
         bottomLayout.add(wikiShowButton);
 
         wikiEditButton.setIcon(new Icon(VaadinIcon.SEARCH));
-        wikiEditButton.addClickListener(event -> editWikiPage());
+        wikiEditButton.addClickListener(event -> libBio.editWikiPage(getWikiTitle()));
         bottomLayout.add(wikiEditButton);
 
         uploadButton.setIcon(new Icon(VaadinIcon.ARROW_UP));
@@ -231,18 +236,18 @@ public class BioViewDialog extends AViewDialog<Bio> {
     }// end of method
 
 
-    protected void showWikiPage() {
-        String wikiTitle = this.getWikiTitle();
-        String link = "\"" + PATH_WIKI + wikiTitle + "\"";
-        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
-    }// end of method
-
-
-    protected void editWikiPage() {
-        String wikiTitle = this.getWikiTitle();
-        String link = "\"" + PATH_WIKI_EDIT_ANTE + wikiTitle + PATH_WIKI_EDIT_POST + "&section=0\"";
-        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
-    }// end of method
+//    protected void showWikiPage() {
+//        String wikiTitle = this.getWikiTitle();
+//        String link = "\"" + PATH_WIKI + wikiTitle + "\"";
+//        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+//    }// end of method
+//
+//
+//    protected void editWikiPage() {
+//        String wikiTitle = this.getWikiTitle();
+//        String link = "\"" + PATH_WIKI_EDIT_ANTE + wikiTitle + PATH_WIKI_EDIT_POST + "&section=0\"";
+//        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+//    }// end of method
 
 
     protected void upload() {

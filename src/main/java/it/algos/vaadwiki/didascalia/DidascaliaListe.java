@@ -94,15 +94,16 @@ public class DidascaliaListe extends Didascalia {
      */
     private String getBloccoFinaleNascita() {
         String testo = VUOTA;
-        boolean isEsisteLocalita = !luogoNato.equals(VUOTA);
+        boolean isEsisteLocalita = text.isValid(luogoNato);
+        boolean isEsisteLocalitaLink = text.isValid(luogoNatoLink);
         boolean isEsisteNascita = !annoNato.equals(VUOTA);
 
         if (isEsisteLocalita) {
             if (!isEsisteNascita) {
                 testo += TAG_NATO;
             }// end of if cycle
-            if (luogoNato.endsWith(")")) {
-                testo += LibWiki.setQuadre(luogoNato + "|");
+            if (isEsisteLocalitaLink) {
+                testo += LibWiki.setQuadre(luogoNatoLink + "|" + luogoNato);
             } else {
                 testo += LibWiki.setQuadre(luogoNato);
             }// end of if/else cycle
@@ -128,15 +129,16 @@ public class DidascaliaListe extends Didascalia {
      */
     private String getBloccoFinaleMorte() {
         String testo = VUOTA;
-        boolean isEsisteLocalita = !luogoMorto.equals(VUOTA);
+        boolean isEsisteLocalita = text.isValid(luogoMorto);
+        boolean isEsisteLocalitaLink = text.isValid(luogoMortoLink);
         boolean isEsisteMorte = !annoMorto.equals(VUOTA);
 
         if (isEsisteLocalita) {
             if (!isEsisteMorte) {
                 testo += TAG_MORTO;
             }// end of if cycle
-            if (luogoMorto.endsWith(")")) {
-                testo += LibWiki.setQuadre(luogoMorto + "|");
+            if (isEsisteLocalitaLink) {
+                testo += LibWiki.setQuadre(luogoMortoLink + "|" + luogoMorto);
             } else {
                 testo += LibWiki.setQuadre(luogoMorto);
             }// end of if/else cycle

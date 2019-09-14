@@ -3,24 +3,32 @@ package it.algos.vaadwiki.views;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIView;
+import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadwiki.didascalia.Didascalia;
+import it.algos.vaadwiki.didascalia.DidascaliaService;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.vaadwiki.didascalia.DidascaliaService;
+import it.algos.vaadwiki.modules.bio.BioService;
+import it.algos.vaadwiki.modules.bio.BioViewDialog;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.Upload;
+import it.algos.vaadwiki.upload.UploadService;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
 import it.algos.wiki.WikiLoginOld;
@@ -29,12 +37,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static it.algos.vaadflow.application.FlowCost.*;
-import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
-import static it.algos.vaadwiki.application.WikiCost.TAG_UTI;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
@@ -63,10 +75,91 @@ public class UtilityView extends VerticalLayout {
 
     public static final String wikiPagineDidascalie = "Progetto:Biografie/Didascalie";
 
+    private static List<String> elencoNomiFemminili = new ArrayList<>(Arrays.asList(
+            "Paola",
+            "Risa",
+            "Alicia",
+            "Cornelia",
+            "Egidia"));
+
+    private static List<String> elencoNomiMaschili = new ArrayList<>(Arrays.asList(
+            "João",
+            "Francesco",
+            "Alric",
+            "Ming",
+            "Joachim",
+            "Max",
+            "Ivanko",
+            "Nazareno",
+            "Diego",
+            "Anton",
+            "Stephen",
+            "Tim",
+            "Cornelius",
+            "Ottavio",
+            "Marcos",
+            "Alfredo",
+            "Dante",
+            "Antonio",
+            "Antonino",
+            "Marcello",
+            "Giulio",
+            "Paul",
+            "Louis",
+            "Angelo",
+            "Nino",
+            "Iacopo",
+            "Daniel",
+            "Davide",
+            "August",
+            "Michele",
+            "William",
+            "Alessandro",
+            "Teodoro",
+            "Gianni",
+            "Enrico",
+            "Manuel",
+            "Cesare",
+            "Alberto",
+            "Orlando",
+            "Dario",
+            "Franco",
+            "Guido",
+            "Salvatore",
+            "Luigi",
+            "Pierluigi",
+            "Lorenzo",
+            "Albert",
+            "Franco",
+            "Marco",
+            "Renato",
+            "Otto",
+            "Pietro",
+            "Carlo",
+            "Gregorio",
+            "Amadeo",
+            "Anselmo",
+            "Sam",
+            "Domenico",
+            "Giacomo",
+            "Claudio"));
+
+    @Autowired
+    public MongoTemplate mongoTemplate;
+
+    @Autowired
+    public UploadService uploadService;
+
     @Autowired
     protected ApplicationContext appContext;
 
-//    @Autowired
+    @Autowired
+    protected BioService bioService;
+
+    @Autowired
+    protected BioViewDialog dialog;
+
+    //    @Autowired
     private WikiLoginOld wikiLoginOld;
 
     @Autowired
@@ -75,7 +168,7 @@ public class UtilityView extends VerticalLayout {
     @Autowired
     private Api api;
 
-//    @Autowired
+    //    @Autowired
     private Didascalia didascalia;
 
     @Autowired
@@ -86,8 +179,20 @@ public class UtilityView extends VerticalLayout {
 
     @Autowired
     private ATextService text;
+    @Autowired
+    private LibBio libBio;
 
     private String wikiTitle = "Ron Clarke";
+
+    private Div pageDidascalie = new Div();
+
+    private Div pageLogin = new Div();
+
+    private Div pageQuery = new Div();
+
+    private Div pageSesso = new Div();
+
+    private VerticalLayout pageSessoResult = new VerticalLayout();
 
 
     @Autowired
@@ -101,9 +206,11 @@ public class UtilityView extends VerticalLayout {
         this.setSpacing(true);
 
         this.add(creaTitolo());
-        this.add(creaDidascalie());
-        this.add(creaTestLogin());
-        this.add(creaTestQuery());
+        this.creaTab();
+        this.creaDidascalie();
+        this.creaTestLogin();
+        this.creaTestQuery();
+        this.creaCheckSesso();
     }// end of method
 
 
@@ -113,12 +220,39 @@ public class UtilityView extends VerticalLayout {
     }// end of method
 
 
-    public Component creaDidascalie() {
+    public void creaTab() {
+        Tab tabDidascalie = new Tab("Didascalie");
+        Tab tabLogin = new Tab("Login");
+        Tab tabQuery = new Tab("Query");
+        Tab tabSesso = new Tab("Sesso");
+
+        Map<Tab, Component> tabsToPages = new HashMap<>();
+        tabsToPages.put(tabDidascalie, pageDidascalie);
+        tabsToPages.put(tabLogin, pageLogin);
+        tabsToPages.put(tabQuery, pageQuery);
+        tabsToPages.put(tabSesso, pageSesso);
+
+        Tabs tabs = new Tabs(tabDidascalie, tabLogin, tabQuery, tabSesso);
+        Div pages = new Div(pageDidascalie, pageLogin, pageQuery, pageSesso);
+        Set<Component> pagesShown = Stream.of(pageDidascalie).collect(Collectors.toSet());
+
+        tabs.addSelectedChangeListener(event -> {
+            pagesShown.forEach(page -> page.setVisible(false));
+            pagesShown.clear();
+            Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
+            selectedPage.setVisible(true);
+            pagesShown.add(selectedPage);
+        });
+
+        this.add(tabs);
+        this.add(pages);
+    }// end of method
+
+
+    public void creaDidascalie() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setMargin(false);
         layout.setSpacing(true);
-
-        Label label = new Label("Didascalie");
 
         Button buttonTest = new Button("Test", new Icon(VaadinIcon.REFRESH));
         buttonTest.getElement().setAttribute("theme", "secondary");
@@ -136,40 +270,71 @@ public class UtilityView extends VerticalLayout {
         buttonView.getElement().setAttribute("theme", "primary");
         buttonView.addClickListener(e -> esegueView());
 
-        layout.add(label, buttonTest, buttonUploadTest, buttonUpload, buttonView);
-        return layout;
+        layout.add(buttonTest, buttonUploadTest, buttonUpload, buttonView);
+        pageDidascalie.add(layout);
+        pageDidascalie.setVisible(false);
     }// end of method
 
 
-    public Component creaTestLogin() {
+    public void creaTestLogin() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setMargin(false);
         layout.setSpacing(true);
-
-        Label label = new Label("Login");
 
         Button buttonLogin = new Button("Test", new Icon(VaadinIcon.REFRESH));
         buttonLogin.getElement().setAttribute("theme", "secondary");
         buttonLogin.addClickListener(e -> esegueTestLogin());
 
-        layout.add(label, buttonLogin);
-        return layout;
+        layout.add(buttonLogin);
+        pageLogin.add(layout);
+        pageLogin.setVisible(false);
     }// end of method
 
 
-    public Component creaTestQuery() {
+    public void creaTestQuery() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setMargin(false);
         layout.setSpacing(true);
-
-        Label label = new Label("Query");
 
         Button buttonTest = new Button("Test", new Icon(VaadinIcon.REFRESH));
         buttonTest.getElement().setAttribute("theme", "secondary");
         buttonTest.addClickListener(e -> esegueTestQuery());
 
-        layout.add(label, buttonTest);
-        return layout;
+        layout.add(buttonTest);
+        pageQuery.add(layout);
+        pageQuery.setVisible(false);
+    }// end of method
+
+
+    public void creaCheckSesso() {
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.setMargin(false);
+        layout.setSpacing(true);
+
+        Button buttonCount = new Button("Count", new Icon(VaadinIcon.QUESTION));
+        buttonCount.getElement().setAttribute("theme", "secondary");
+        buttonCount.addClickListener(e -> esegueTestCountSex());
+
+        Button buttonSizeF = new Button("Forse", new Icon(VaadinIcon.FEMALE));
+        buttonSizeF.getElement().setAttribute("theme", "secondary");
+        buttonSizeF.addClickListener(e -> esegueCountF());
+
+        Button buttonSizeM = new Button("Forse", new Icon(VaadinIcon.MALE));
+        buttonSizeM.getElement().setAttribute("theme", "secondary");
+        buttonSizeM.addClickListener(e -> esegueCountM());
+
+        Button buttonListF = new Button("List", new Icon(VaadinIcon.FEMALE));
+        buttonListF.getElement().setAttribute("theme", "secondary");
+        buttonListF.addClickListener(e -> esegueListF());
+
+        Button buttonListM = new Button("List", new Icon(VaadinIcon.MALE));
+        buttonListM.getElement().setAttribute("theme", "secondary");
+        buttonListM.addClickListener(e -> esegueListM());
+
+        layout.add(buttonCount, buttonSizeF, buttonSizeM, buttonListF, buttonListM);
+        pageSesso.add(layout);
+        pageSesso.add(pageSessoResult);
+        pageSesso.setVisible(false);
     }// end of method
 
 
@@ -340,7 +505,7 @@ public class UtilityView extends VerticalLayout {
         log.info("AQueryBio: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiCat = "Nati nel 1225";
-        titoliVociCategoria = appContext.getBean(AQueryCatPagine.class,wikiCat).listaTitle;
+        titoliVociCategoria = appContext.getBean(AQueryCatPagine.class, wikiCat).listaTitle;
         log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore senza parametri - " + titoliVociCategoria.size() + " pagine" : "No buono"));
 
         wikiTitle = Upload.PAGINA_PROVA;
@@ -453,6 +618,140 @@ public class UtilityView extends VerticalLayout {
         testo += catText;
 
         return testo;
+    }// end of method
+
+
+    /**
+     * Voci biografiche senza valore al parametro 'sesso' (che deve essere 'M' o 'F')
+     */
+    public List<Bio> bioSenzaSesso() {
+        List<Bio> lista;
+        Query query = new Query(Criteria.where("sesso").exists(false));
+        lista = mongoTemplate.find(query, Bio.class, "bio");
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Numero di voci biografiche senza valore al parametro 'sesso' (che deve essere 'M' o 'F')
+     */
+    public void esegueTestCountSex() {
+        List<Bio> lista = bioSenzaSesso();
+        pageSesso.add(new Label(" Ci sono " + lista.size() + " voci biografiche SENZA indicazione (obbligatoria) del genere"));
+    }// end of method
+
+
+    /**
+     * Voci biografiche che sono contenute nella lista di controllo
+     */
+    public List<Bio> bioProbabilmente(List<String> listaControllo) {
+        List<Bio> listaFemmine = new ArrayList<>();
+        String nome;
+        List<Bio> lista = bioSenzaSesso();
+
+        for (Bio bio : lista) {
+            nome = bio.getNome();
+            if (listaControllo.contains(nome)) {
+                listaFemmine.add(bio);
+            }// end of if cycle
+        }// end of for cycle
+
+        return listaFemmine;
+    }// end of method
+
+
+    /**
+     * Numero di voci biografiche che sono PROBABILMENTE di genere femminile
+     */
+    public void esegueCountF() {
+        List<Bio> listaFemmine = bioProbabilmente(elencoNomiFemminili);
+        pageSessoResult.add(new Label("Ci sono " + listaFemmine.size() + " voci biografiche che sono PROBABILMENTE di genere femminile"));
+    }// end of method
+
+
+    /**
+     * Numero di voci biografiche che sono PROBABILMENTE di genere maschile
+     */
+    public void esegueCountM() {
+        List<Bio> listaMaschi = bioProbabilmente(elencoNomiMaschili);
+        pageSessoResult.add(new Label("Ci sono " + listaMaschi.size() + " voci biografiche che sono PROBABILMENTE di genere maschile"));
+    }// end of method
+
+
+    /**
+     * Lista di voci biografiche che sono PROBABILMENTE di genere femminile
+     */
+    public void esegueListF() {
+        List<Bio> listaFemmine = bioProbabilmente(elencoNomiFemminili);
+        pageSessoResult.add(new Label("Elenco delle " + listaFemmine.size() + " voci biografiche che sono PROBABILMENTE di genere femminile"));
+        allRighe(listaFemmine, "F");
+    }// end of method
+
+
+    /**
+     * Lista di voci biografiche che sono PROBABILMENTE di genere femminile
+     */
+    public void esegueListM() {
+        List<Bio> listaMaschi = bioProbabilmente(elencoNomiMaschili);
+        pageSessoResult.add(new Label("Elenco delle " + listaMaschi.size() + " voci biografiche che sono PROBABILMENTE di genere maschile"));
+        allRighe(listaMaschi, "M");
+    }// end of method
+
+
+    public void allRighe(List<Bio> listaGenere, String genere) {
+        for (Bio bio : listaGenere) {
+            riga(bio, genere);
+        }// end of for cycle
+    }// end of method
+
+
+    public void riga(Bio bio, String genere) {
+        final String nome = bio.getNome();
+        final String wikiTitle = bio.getWikiTitle();
+
+        Button buttonMongo = new Button("Mongo", new Icon(VaadinIcon.DATABASE));
+        buttonMongo.getElement().setAttribute("theme", "secondary");
+        buttonMongo.addClickListener(e -> apreDialogo(wikiTitle));
+
+        Button buttonWikiShow = new Button("Wiki view", new Icon(VaadinIcon.SEARCH));
+        buttonWikiShow.getElement().setAttribute("theme", "secondary");
+        buttonWikiShow.addClickListener(e -> libBio.showWikiPage(wikiTitle));
+
+        Button buttonWikiEdit = new Button("Wiki edit", new Icon(VaadinIcon.EDIT));
+        buttonWikiEdit.getElement().setAttribute("theme", "secondary");
+        buttonWikiEdit.addClickListener(e -> libBio.editWikiPage(wikiTitle));
+
+        Button buttonTest = new Button("Test", new Icon(VaadinIcon.MAGIC));
+        buttonTest.getElement().setAttribute("theme", "secondary");
+        buttonTest.addClickListener(e -> esegueTestSesso(wikiTitle, genere));
+
+        Button buttonUpload = new Button("Upload", new Icon(VaadinIcon.ARROW_UP));
+        buttonUpload.getElement().setAttribute("theme", "error");
+        buttonUpload.addClickListener(e -> esegueFixSesso(wikiTitle, genere));
+
+        pageSessoResult.add(new HorizontalLayout(new Label(nome), buttonMongo, buttonWikiShow,buttonWikiEdit, buttonTest, buttonUpload));
+    }// end of method
+
+
+    public void apreDialogo(String wikiTitle) {
+        Bio bio = bioService.findByKeyUnica(wikiTitle);
+        dialog.open((AEntity) bio, EAOperation.showOnly, null);
+    }// end of method
+
+
+    public void esegueTestSesso(String wikiTitle, String genere) {
+        Bio bio = bioService.findByKeyUnica(wikiTitle);
+        bio.setSesso(genere);
+        uploadService.uploadBioDebug(bio);
+    }// end of method
+
+
+    public void esegueFixSesso(String wikiTitle, String genere) {
+        Bio bio = bioService.findByKeyUnica(wikiTitle);
+        bio.setSesso(genere);
+        bioService.save(bio);
+        uploadService.uploadBio(wikiTitle);
     }// end of method
 
 }// end of class

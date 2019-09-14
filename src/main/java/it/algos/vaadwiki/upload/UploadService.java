@@ -161,6 +161,30 @@ public class UploadService extends ABioService {
 
 
     /**
+     * Carica sul server wiki la entity indicata
+     * <p>
+     * 1) Recupera la entity dal mongoDB (parametri eventualmente modificati dal programma)
+     * 2) Scarica la voce dal server (senza modificare il template)
+     * 4) Esegue un merge (ragionato) tra il template del server e la entity
+     * 5) Sostituisce il templateMerged al testoServerNew nel testo della voce
+     * 6) Upload del testo
+     *
+     * @param wikiTitle della pagina wiki (obbligatorio, unico)
+     */
+    public void uploadBioDebug(Bio entity) {
+        String testoServerNew;
+        String summary = "fixParametri";
+        String testoServerOld = Api.leggeVoce(entity.wikiTitle);
+        String templateServer = Api.estraeTmplBio(testoServerOld);
+        String templateMerged = libBio.mergeTemplates(templateServer, entity);
+
+        testoServerNew = text.sostituisce(testoServerOld, templateServer, templateMerged);
+
+        appContext.getBean(AQueryWrite.class, Upload.PAGINA_PROVA, testoServerNew, summary);
+    }// end of method
+
+
+    /**
      * Controlla che esistano modifiche sostanziali (non solo la data)
      *
      * @param titoloVoce eventualmente da modificare

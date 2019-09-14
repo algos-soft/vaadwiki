@@ -172,7 +172,7 @@ public abstract class Lista {
         listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, typeDidascalia);
 
         //--Ordina la lista di didascalie specifiche
-        listaDidascalie = this.ordinaListaDidascalie(listaDidascalie);//@todo la query è già ordinata  MA FORSE NO
+        listaDidascalie = this.ordinaListaDidascalie(listaDidascalie);
 
         return listaDidascalie;
     }// end of method

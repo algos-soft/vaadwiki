@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.service;
 
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.modules.anno.Anno;
@@ -34,7 +35,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static it.algos.vaadflow.application.FlowCost.*;
-import static it.algos.vaadwiki.application.WikiCost.SEND_MAIL_CICLO;
+import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI_EDIT_POST;
 
 
 /**
@@ -2722,7 +2724,11 @@ public class LibBio {
 
                 //se è un campo normale, lo aggiunge sempre
                 if (parBio.isCampoNormale()) {
-                    templateText += creaRigaTemplate(parBio, valueMerged);
+                    if (parBio == ParBio.attivita && text.isEmpty(valueServer) && text.isValid(mappa.get(ParBio.categorie.getTag())) && text.isValid(mappa.get(ParBio.fineIncipit.getTag()))) {
+                        int a = 87;
+                    } else {
+                        templateText += creaRigaTemplate(parBio, valueMerged);
+                    }// end of if/else cycle
                 } else {
                     //altrimenti lo aggiunge solo se non è vuoto
                     if (text.isValid(valueMerged)) {
@@ -2994,5 +3000,16 @@ public class LibBio {
         return mappa;
     }// end of method
 
+
+    public void showWikiPage(String wikiTitle) {
+        String link = "\"" + PATH_WIKI + wikiTitle + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
+    public void editWikiPage(String wikiTitle) {
+        String link = "\"" + PATH_WIKI_EDIT_ANTE + wikiTitle + PATH_WIKI_EDIT_POST + "&section=0\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
 
 }// end of class

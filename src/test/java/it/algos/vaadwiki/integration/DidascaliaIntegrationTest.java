@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.integration;
 
+import com.mongodb.client.DistinctIterable;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.ATest;
 import it.algos.vaadwiki.didascalia.Didascalia;
@@ -15,7 +16,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,7 +49,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class DidascaliaIntegrationTest extends ATest {
 
 
-    private static String NOME_BIO = "Ron Clarke";
+    //    private static String NOME_BIO = "Ron Clarke";
+    private static String NOME_BIO = "Giovanni di Pacheco";
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -72,6 +80,11 @@ public class DidascaliaIntegrationTest extends ATest {
 
     private Didascalia didascalia;
 
+    @Autowired
+    public MongoOperations mongoOp;
+
+    @Autowired
+    public MongoTemplate mongoTemplate;
 
     @Before
     public void setUp() {
@@ -86,6 +99,19 @@ public class DidascaliaIntegrationTest extends ATest {
 
 
     @Test
+    public void metodoPerOrdinareTuttiTest() {
+        type();
+        giornoNato();
+//        giornoMorto();
+//        annoNato();
+//        annoMorto();
+        liste();
+//        biografie();
+    }// end of single test
+
+
+
+
     public void type() {
         System.out.println("*************");
         System.out.println("Tipi possibili di didascalie per " + NOME_BIO);
@@ -94,20 +120,23 @@ public class DidascaliaIntegrationTest extends ATest {
         System.out.println("*************");
         for (EADidascalia type : EADidascalia.values()) {
             ottenuto = didascaliaService.getBaseCon(bio, type);
-            System.out.println(type.name() + ": " + ottenuto);
+            if (text.isValid(ottenuto)) {
+                System.out.println(type.name() + ": " + ottenuto);
+            }// end of if cycle
         }// end of for cycle
         System.out.println("*************");
         System.out.println("Senza chiave");
         System.out.println("*************");
         for (EADidascalia type : EADidascalia.values()) {
             ottenuto = didascaliaService.getBaseSenza(bio, type);
-            System.out.println(type.name() + ": " + ottenuto);
+            if (text.isValid(ottenuto)) {
+                System.out.println(type.name() + ": " + ottenuto);
+            }// end of if cycle
         }// end of for cycle
         System.out.println("*************");
     }// end of single test
 
 
-    @Test
     public void giornoNato() {
         previsto = "[[1937]] - [[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
         didascalia = didascaliaService.getDidascaliaGiornoNato(bio);
@@ -127,7 +156,6 @@ public class DidascaliaIntegrationTest extends ATest {
     }// end of method
 
 
-    @Test
     public void giornoMorto() {
         previsto = "[[2015]] - [[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
         didascalia = didascaliaService.getDidascaliaGiornoMorto(bio);
@@ -147,7 +175,6 @@ public class DidascaliaIntegrationTest extends ATest {
     }// end of method
 
 
-    @Test
     public void annoNato() {
         previsto = "[[21 febbraio]] - [[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
         didascalia = didascaliaService.getDidascaliaAnnoNato(bio);
@@ -167,7 +194,6 @@ public class DidascaliaIntegrationTest extends ATest {
     }// end of method
 
 
-    @Test
     public void annoMorto() {
         previsto = "[[17 giugno]] - [[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
         didascalia = didascaliaService.getDidascaliaAnnoMorto(bio);
@@ -187,9 +213,9 @@ public class DidascaliaIntegrationTest extends ATest {
     }// end of method
 
 
-    @Test
     public void liste() {
-        previsto = "[[Ron Clarke]], mezzofondista e politico australiano ([[Melbourne]], n.[[1937]] - [[Gold Coast]], †[[2015]])";
+//        previsto = "[[Ron Clarke]], mezzofondista e politico australiano ([[Melbourne]], n.[[1937]] - [[Gold Coast]], †[[2015]])";
+        previsto = "[[Giovanni di Pacheco]], nobile e politico spagnolo ([[Belmonte (Spagna)|Belmonte]], n.[[1419]] - [[Santa Cruz de la Sierra (Spagna)|Santa Cruz de la Sierra]], †[[1474]])";
         didascalia = didascaliaService.getDidascaliaListe(bio);
         Assert.assertNotNull(didascalia);
         assertEquals(previsto, didascalia.testoCon);
@@ -205,7 +231,6 @@ public class DidascaliaIntegrationTest extends ATest {
     }// end of method
 
 
-    @Test
     public void biografie() {
         previsto = "[[Ron Clarke]] ([[Melbourne]], [[21 febbraio]][[1937]] - [[Gold Coast]], [[17 giugno]][[2015]]), mezzofondista e politico australiano";
         didascalia = didascaliaService.getDidascaliaBiografie(bio);
