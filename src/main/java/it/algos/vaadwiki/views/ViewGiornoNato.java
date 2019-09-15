@@ -3,6 +3,7 @@ package it.algos.vaadwiki.views;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadwiki.liste.ListaGiornoNato;
 
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_GIORNO_NATI;
 
 /**
@@ -35,12 +36,13 @@ public class ViewGiornoNato extends ViewGiorni {
 
     /**
      * Costruisce il titolo della pagina <br>
-     * Sovrascritto <br>
+     * Deve essere sovrascritto nella sottoclassse concreta <br>
+     * Dopo DEVE invocare il metodo della superclasse <br>
      */
     @Override
-    protected String addTitolo() {
-        return "Lista biografie di " + text.format(numVoci) + " persone nate il " + giorno.getTitolo();
+    protected void addInfoTitolo() {
+        this.add("Lista biografie di " + text.format(numVoci) + " persone nate il " + giorno.getTitolo());
+        super.addInfoTitolo();
     }// end of method
-
 
 }// end of class

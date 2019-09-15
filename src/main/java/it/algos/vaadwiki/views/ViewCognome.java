@@ -72,11 +72,13 @@ public class ViewCognome extends ViewListe{
 
     /**
      * Costruisce il titolo della pagina <br>
-     * Sovrascritto <br>
+     * Deve essere sovrascritto nella sottoclassse concreta <br>
+     * Dopo DEVE invocare il metodo della superclasse <br>
      */
     @Override
-    protected String addTitolo() {
-        return "Lista biografie di " + text.format(numVoci) + " persone di cognome " + cognome.getCognome() + A_CAPO;
+    protected void addInfoTitolo() {
+        this.add("Lista biografie di " + text.format(numVoci) + " persone di cognome " + cognome.getCognome());
+        super.addInfoTitolo();
     }// end of method
 
 }// end of class

@@ -40,12 +40,13 @@ public class ViewAnnoMorto extends ViewAnni {
 
     /**
      * Costruisce il titolo della pagina <br>
-     * Sovrascritto <br>
+     * Deve essere sovrascritto nella sottoclassse concreta <br>
+     * Dopo DEVE invocare il metodo della superclasse <br>
      */
     @Override
-    protected String addTitolo() {
-        return "Lista biografie di " + text.format(numVoci) + " persone morte nel " + anno.getTitolo();
+    protected void addInfoTitolo() {
+        this.add("Lista biografie di " + text.format(numVoci) + " persone morte nel " + anno.getTitolo());
+        super.addInfoTitolo();
     }// end of method
-
 
 }// end of class

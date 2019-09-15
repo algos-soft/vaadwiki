@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.views;
 
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadwiki.liste.ListaGiornoNato;
@@ -70,11 +71,13 @@ public class ViewNome extends ViewListe {
 
     /**
      * Costruisce il titolo della pagina <br>
-     * Sovrascritto <br>
+     * Deve essere sovrascritto nella sottoclassse concreta <br>
+     * Dopo DEVE invocare il metodo della superclasse <br>
      */
     @Override
-    protected String addTitolo() {
-        return "Lista biografie di " + text.format(numVoci) + " persone di nome " + nome.getNome() + A_CAPO;
+    protected void addInfoTitolo() {
+        this.add("Lista biografie di " + text.format(numVoci) + " persone di nome " + nome.getNome() + A_CAPO);
+        super.addInfoTitolo();
     }// end of method
 
 }// end of class

@@ -96,6 +96,8 @@ public abstract class Lista {
      */
     public ArrayList<Bio> listaGrezzaBio;
 
+    public ArrayList<WrapDidascalia> listaDidascalie;
+
     public LinkedHashMap<String, ArrayList<String>> mappaSemplice;
 
     public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaComplessa;
@@ -136,10 +138,8 @@ public abstract class Lista {
      */
     @PostConstruct
     protected void inizia() {
-        ArrayList<WrapDidascalia> listaDidascalie = null;
-
         this.fixPreferenze();
-        listaDidascalie = this.creaDidascalie();
+        this.creaDidascalie();
         this.creaMappa(listaDidascalie);
     }// end of method
 
@@ -162,9 +162,7 @@ public abstract class Lista {
      *
      * @return mappa ordinata delle didascalie ordinate per giorno/anno/nome/cognome (key) e poi per cognome (value)
      */
-    protected ArrayList<WrapDidascalia> creaDidascalie() {
-        ArrayList<WrapDidascalia> listaDidascalie = null;
-
+    protected void creaDidascalie() {
         //--Crea la lista grezza delle voci biografiche
         this.listaGrezzaBio = listaBio();
 
@@ -173,8 +171,6 @@ public abstract class Lista {
 
         //--Ordina la lista di didascalie specifiche
         listaDidascalie = this.ordinaListaDidascalie(listaDidascalie);
-
-        return listaDidascalie;
     }// end of method
 
 
@@ -190,6 +186,7 @@ public abstract class Lista {
         if (usaSuddivisioneParagrafi) {
             creaMappaConParagrafi(listaDidascalie);
             creaTestoConParagrafi();
+            mappaSemplice = listaService.creaMappa(listaDidascalie);//todo IN PROVA
         } else {
             creaTestoSenzaParagrafi(listaDidascalie);
         }// end of if/else cycle
@@ -202,7 +199,7 @@ public abstract class Lista {
     protected void creaMappaConParagrafi(ArrayList<WrapDidascalia> listaDidascalie) {
 
         //--Costruisce la mappa completa
-        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, usaParagrafoSize,paragrafoVuotoInCoda);
+        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, usaParagrafoSize, paragrafoVuotoInCoda);
 
 //        if (paragrafoVuotoInCoda) {
 //            listaService.fixPosizioneParagrafoVuoto(mappaComplessa, titoloParagrafoVuoto);

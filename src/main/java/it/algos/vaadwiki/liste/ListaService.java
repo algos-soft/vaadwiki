@@ -11,6 +11,7 @@ import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.genere.Genere;
 import it.algos.vaadwiki.modules.genere.GenereService;
 import it.algos.vaadwiki.modules.nome.Nome;
+import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.modules.professione.Professione;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.vaadwiki.service.ABioService;
@@ -20,7 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -53,6 +57,13 @@ public class ListaService extends ABioService {
      */
     @Autowired
     protected GenereService genereService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected NomeService nomeService;
 
 
     /**
@@ -547,7 +558,7 @@ public class ListaService extends ABioService {
     /**
      * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
      * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+     * Ogni chiave della mappa è una dei giorni in cui suddividere la pagina <br>
      * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
      *
      * @param giorno di riferimento per la lista
@@ -621,15 +632,16 @@ public class ListaService extends ABioService {
 
 
     /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
      * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una dei nomi/cognomi in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br> //@todo Forse
+     * Ogni chiave della mappa è una delle attività in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
      *
      * @param nome di riferimento per la lista
      *
-     * @return mappa ordinata delle didascalie ordinate per nomi/cognomi (key) e poi per cognome (value)//@todo Forse
+     * @return mappa ordinata delle didascalie ordinate per nomi (key) e poi per cognome (value)
      */
+    @Deprecated
     public LinkedHashMap<String, ArrayList<String>> getMappaNomi(Nome nome) {
         LinkedHashMap<String, ArrayList<String>> mappa = null;
         ListaNomi listaNomi;
@@ -640,7 +652,70 @@ public class ListaService extends ABioService {
 
 
     /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Ogni chiave della mappa è una delle attività in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+     *
+     * @param nomeText di riferimento per la lista
+     *
+     * @return mappa ordinata delle didascalie ordinate per nomi (key) e poi per cognome (value)
+     */
+    @Deprecated
+    public LinkedHashMap<String, ArrayList<String>> getMappaNomi(String nomeText) {
+        LinkedHashMap<String, ArrayList<String>> mappa = null;
+        Nome nomeEntity = nomeService.findByKeyUnica(nomeText);
+
+        if (nomeEntity != null) {
+            mappa = getMappaNomi(nomeEntity);
+        }// end of if cycle
+
+        return mappa;
+    }// end of method
+
+    /**
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da una LinkedHashMap <br>
+     * Ogni chiave della mappa è una delle attività in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+     *
+     * @param nome di riferimento per la lista
+     *
+     * @return mappa ordinata delle didascalie ordinate per nomi (key) e poi per cognome (value)
+     */
+    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> getMappaNome(Nome nome) {
+        LinkedHashMap<String, ArrayList<String>> mappa = null;
+        ListaNomi listaNomi;
+
+        listaNomi = appContext.getBean(ListaNomi.class, nome);
+        return listaNomi.mappaComplessa;
+    }// end of method
+
+
+    /**
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
+     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+     * Ogni chiave della mappa è una delle attività in cui suddividere la pagina <br>
+     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br> //@todo Forse
+     *
+     * @param nomeText di riferimento per la lista
+     *
+     * @return mappa ordinata delle didascalie ordinate per nomi (key) e poi per cognome (value)//@todo Forse
+     */
+    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> getMappaNome(String nomeText) {
+        LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa = null;
+        Nome nomeEntity = nomeService.findByKeyUnica(nomeText);
+
+        if (nomeEntity != null) {
+            mappa = getMappaNome(nomeEntity);
+        }// end of if cycle
+
+        return mappa;
+    }// end of method
+
+
+    /**
+     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
      * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
      * Ogni chiave della mappa è una dei nomi/cognomi in cui suddividere la pagina <br>
      * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br> //@todo Forse
@@ -664,15 +739,15 @@ public class ListaService extends ABioService {
     public String righeParagrafo(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaGenerale) {
         String testo = VUOTA;
         int numVociParagrafo;
-        HashMap<String, Object> mappa;
-        String titoloParagrafo;
-        String titoloSottopagina;
-        String paginaLinkata;
-        String titoloVisibile;
-        List<Bio> lista = null;
+//        HashMap<String, Object> mappa;
+//        String titoloParagrafo;
+//        String titoloSottopagina;
+//        String paginaLinkata;
+//        String titoloVisibile;
+//        List<Bio> lista = null;
         LinkedHashMap<String, ArrayList<String>> mappaParagrafi = new LinkedHashMap<>();
-        LinkedHashMap<String, ArrayList<String>> mappaChiaveDue;
-        ArrayList<WrapDidascalia> listaChiaveDue = null;
+//        LinkedHashMap<String, ArrayList<String>> mappaChiaveDue;
+//        ArrayList<WrapDidascalia> listaChiaveDue = null;
 
         ArrayList<String> listaDidascalie = null;
 
@@ -770,42 +845,156 @@ public class ListaService extends ABioService {
 
 
     /**
-     * Raggruppa le biografie
+     * Righe suddivise per paragrafi <br>
+     * All'interno dei paragrafi usa righeSemplici <br>
      */
-    public String righeRaggruppate(LinkedHashMap<String, ArrayList<String>> mappaDidascalie) {
-        String testo = VUOTA;
-        ArrayList<String> listaDidascalie;
+    public String paragrafoConRigheSemplici(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa) {
+        StringBuilder testo = new StringBuilder(VUOTA);
+        LinkedHashMap<String, ArrayList<String>> mappaParagrafo;
 
-        if (mappaDidascalie != null) {
-            for (String key : mappaDidascalie.keySet()) {
-                listaDidascalie = mappaDidascalie.get(key);
-
-                if (listaDidascalie.size() == 1) {
-                    testo += ASTERISCO + (text.isValid(key) ? key + TAG_SEP : SPAZIO) + listaDidascalie.get(0) + A_CAPO;
-                } else {
-                    if (text.isValid(key)) {
-                        testo += ASTERISCO + key + A_CAPO;
-                        for (String didascalia : listaDidascalie) {
-                            testo += ASTERISCO + ASTERISCO + didascalia + A_CAPO;
-                        }// end of if/else cycle
-                    } else {
-                        for (String didascalia : listaDidascalie) {
-                            testo += ASTERISCO + didascalia + A_CAPO;
-                        }// end of if/else cycle
-                    }// end of if/else cycle
-                }// end of for cycle
+        if (mappa != null) {
+            for (String keyUno : mappa.keySet()) {
+                testo.append(PARAGRAFO).append(keyUno).append(PARAGRAFO);
+                mappaParagrafo = mappa.get(keyUno);
+                testo.append(contenutoParagrafoSemplice(mappaParagrafo));
+                testo.append(A_CAPO);
             }// end of for cycle
         }// end of if cycle
 
-        return testo;
-    }// fine del metodo
+        return testo.toString();
+    }// end of method
+
+    /**
+     * Righe suddivise per paragrafi <br>
+     * All'interno dei paragrafi usa righe righeRaggruppate <br>
+     */
+    public String paragrafoConRigheRaggruppate(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa) {
+        StringBuilder testo = new StringBuilder(VUOTA);
+        LinkedHashMap<String, ArrayList<String>> mappaParagrafo;
+
+        if (mappa != null) {
+            for (String keyUno : mappa.keySet()) {
+                testo.append(PARAGRAFO).append(keyUno).append(PARAGRAFO);
+                mappaParagrafo = mappa.get(keyUno);
+                testo.append(contenutoParagrafoRaggruppato(mappaParagrafo));
+                testo.append(A_CAPO);
+            }// end of for cycle
+        }// end of if cycle
+
+        return testo.toString();
+    }// end of method
 
 
     /**
-     * Nessun raggruppamento
+     * Righe suddivise per paragrafi <br>
+     * All'interno dei paragrafi usa righeSemplici <br>
+     */
+    public String contenutoParagrafoSemplice(LinkedHashMap<String, ArrayList<String>> mappaParagrafo) {
+        StringBuilder testo = new StringBuilder(VUOTA);
+        ArrayList<String> listaDidascalie = null;
+
+        if (mappaParagrafo != null) {
+            for (String keyDue : mappaParagrafo.keySet()) {
+                listaDidascalie = mappaParagrafo.get(keyDue);
+
+                if (array.isValid(listaDidascalie)) {
+                    if (listaDidascalie.size() == 1) {
+                        testo.append(A_CAPO);
+                        testo.append(AST);
+                        if (text.isValid(keyDue)) {
+                            testo.append(LibWiki.setQuadre(keyDue));
+                            testo.append(WikiCost.TAG_SEP);
+                        }// end of if cycle
+                        testo.append(listaDidascalie.get(0));
+                    } else {
+                        if (text.isValid(keyDue)) {
+                            testo.append(A_CAPO);
+                            testo.append(AST);
+                            testo.append(LibWiki.setQuadre(keyDue));
+                            for (String stringa : listaDidascalie) {
+                                testo.append(A_CAPO);
+                                testo.append(AST);
+                                testo.append(AST);
+                                testo.append(stringa);
+                            }// end of for cycle
+                        } else {
+                            for (String stringa : listaDidascalie) {
+                                testo.append(A_CAPO);
+                                testo.append(AST);
+                                testo.append(stringa);
+                            }// end of for cycle
+                        }// end of if/else cycle
+
+                    }// end of if/else cycle
+
+                }// end of if cycle
+
+            }// end of for cycle
+
+        }// end of if cycle
+        testo.append(A_CAPO);
+
+        return testo.toString();
+    }// end of method
+    /**
+     * Righe suddivise per paragrafi <br>
+     * All'interno dei paragrafi usa righeRaggruppate <br>
+     */
+    public String contenutoParagrafoRaggruppato(LinkedHashMap<String, ArrayList<String>> mappaParagrafo) {
+        StringBuilder testo = new StringBuilder(VUOTA);
+        ArrayList<String> listaDidascalie = null;
+
+        if (mappaParagrafo != null) {
+            for (String keyDue : mappaParagrafo.keySet()) {
+                listaDidascalie = mappaParagrafo.get(keyDue);
+
+                if (array.isValid(listaDidascalie)) {
+                    if (listaDidascalie.size() == 1) {
+                        testo.append(A_CAPO);
+                        testo.append(AST);
+                        if (text.isValid(keyDue)) {
+                            testo.append(LibWiki.setQuadre(keyDue));
+                            testo.append(WikiCost.TAG_SEP);
+                        }// end of if cycle
+                        testo.append(listaDidascalie.get(0));
+                    } else {
+                        if (text.isValid(keyDue)) {
+                            testo.append(A_CAPO);
+                            testo.append(AST);
+                            testo.append(LibWiki.setQuadre(keyDue));
+                            for (String stringa : listaDidascalie) {
+                                testo.append(A_CAPO);
+                                testo.append(AST);
+                                testo.append(AST);
+                                testo.append(stringa);
+                            }// end of for cycle
+                        } else {
+                            for (String stringa : listaDidascalie) {
+                                testo.append(A_CAPO);
+                                testo.append(AST);
+                                testo.append(stringa);
+                            }// end of for cycle
+                        }// end of if/else cycle
+
+                    }// end of if/else cycle
+
+                }// end of if cycle
+
+            }// end of for cycle
+
+        }// end of if cycle
+        testo.append(A_CAPO);
+
+        return testo.toString();
+    }// end of method
+
+
+
+    /**
+     * Righe singole senza nessun raggruppamento
      */
     public String righeSemplici(LinkedHashMap<String, ArrayList<String>> mappaDidascalie) {
-        String testo = VUOTA;
+        StringBuilder testo = new StringBuilder(VUOTA);
         ArrayList<String> listaDidascalie;
 
         if (mappaDidascalie != null) {
@@ -814,18 +1003,50 @@ public class ListaService extends ABioService {
 
                 if (text.isValid(key)) {
                     for (String didascalia : listaDidascalie) {
-                        testo += ASTERISCO + key + TAG_SEP + didascalia + A_CAPO;
+                        testo.append(ASTERISCO).append(key).append(TAG_SEP).append(didascalia).append(A_CAPO);
                     }// end of for cycle
                 } else {
                     for (String didascalia : listaDidascalie) {
-                        testo += ASTERISCO + didascalia + A_CAPO;
+                        testo.append(ASTERISCO).append(didascalia).append(A_CAPO);
                     }// end of for cycle
                 }// end of if/else cycle
 
             }// end of for cycle
         }// end of if cycle
 
-        return testo;
+        return testo.toString();
+    }// fine del metodo
+
+
+    /**
+     * Righe raggruppate per anno/giorno
+     */
+    public String righeRaggruppate(LinkedHashMap<String, ArrayList<String>> mappaDidascalie) {
+        StringBuilder testo = new StringBuilder(VUOTA);
+        ArrayList<String> listaDidascalie;
+
+        if (mappaDidascalie != null) {
+            for (String key : mappaDidascalie.keySet()) {
+                listaDidascalie = mappaDidascalie.get(key);
+
+                if (listaDidascalie.size() == 1) {
+                    testo.append(ASTERISCO).append(text.isValid(key) ? key + TAG_SEP : SPAZIO).append(listaDidascalie.get(0)).append(A_CAPO);
+                } else {
+                    if (text.isValid(key)) {
+                        testo.append(ASTERISCO).append(key).append(A_CAPO);
+                        for (String didascalia : listaDidascalie) {
+                            testo.append(ASTERISCO + ASTERISCO).append(didascalia).append(A_CAPO);
+                        }// end of if/else cycle
+                    } else {
+                        for (String didascalia : listaDidascalie) {
+                            testo.append(ASTERISCO).append(didascalia).append(A_CAPO);
+                        }// end of if/else cycle
+                    }// end of if/else cycle
+                }// end of for cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return testo.toString();
     }// fine del metodo
 
 

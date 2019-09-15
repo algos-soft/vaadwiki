@@ -142,29 +142,12 @@ public class BioIntegrationTest extends ATest {
         String tag = "a";
 
         for (Bio bio : lista) {
-//            if (getLastChar(bio.getAttivita()).equals(tag)) {
-//                if (!listaFemmine.contains(bio)) {
-//                    listaFemmine.add(bio);
-//                }// end of if cycle
-//            }// end of if cycle
-//            if (getLastChar(bio.getAttivita2()).equals(tag)) {
-//                if (!listaFemmine.contains(bio)) {
-//                    listaFemmine.add(bio);
-//                }// end of if cycle
-//            }// end of if cycle
-//            if (getLastChar(bio.getAttivita3()).equals(tag)) {
-//                if (!listaFemmine.contains(bio)) {
-//                    listaFemmine.add(bio);
-//                }// end of if cycle
-//            }// end of if cycle
             if (getLastChar(bio.getNazionalita()).equals(tag)) {
                 if (!listaFemmine.contains(bio)) {
                     listaFemmine.add(bio);
                 }// end of if cycle
             }// end of if cycle
         }// end of for cycle
-
-        int a = 87;
     }// end of single test
 
 

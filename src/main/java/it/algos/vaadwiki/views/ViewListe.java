@@ -8,8 +8,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
@@ -19,6 +17,9 @@ import it.algos.vaadwiki.liste.ListaService;
 import it.algos.vaadwiki.upload.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * Project vaadwiki
@@ -35,9 +36,11 @@ import org.springframework.context.ApplicationContext;
  * Implementa l'interfaccia HasUrlParameter invece di BeforeEnterObserver <br>
  * e quindi il metodo setParameter(BeforeEvent event, ...) invece di beforeEnter(BeforeEnterEvent beforeEnterEvent <br>
  */
-public abstract class ViewListe extends VerticalLayout implements HasUrlParameter<String>  {
+public abstract class ViewListe extends VerticalLayout implements HasUrlParameter<String> {
 
 
+    //--property
+    public boolean usaRigheRaggruppate;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -85,6 +88,9 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
     @Autowired
     protected ADateService date;
 
+    protected LinkedHashMap<String, ArrayList<String>> mappaSemplice;
+    //--property
+    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaComplessa;
 
     //--property
     protected boolean usaSuddivisioneParagrafi;
@@ -95,50 +101,60 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
     //--property
     protected boolean paragrafoVuotoInCoda;
 
-    protected String testo;
+    protected TextArea area = new TextArea();
 
+    //--property
     protected int numVoci;
 
-    protected  Lista lista;
+    protected Lista lista;
 
 
     /**
-     * Costruisce il testo con tutte le didascalie relative al giorno considerato <br>
+     * Costruisce il testo con tutte le didascalie relative al giorno/anno/nome/cognome considerato <br>
      * Presenta le righe secondo uno dei possibili metodi di raggruppamento <br>
      * Deve essere sovrascritto nella sottoclassse concreta <br>
      * Dopo DEVE invocare il metodo della superclasse <br>
      */
     protected void inizia() {
-        TextArea area = new TextArea();
         this.setSpacing(false);
+        area.setSizeFull();
 
-        this.testo = lista.testo;
-        this.numVoci = lista.size;
-        this.usaSuddivisioneParagrafi = lista.usaSuddivisioneParagrafi;
-        this.titoloParagrafoVuoto = lista.titoloParagrafoVuoto;
-        this.paragrafoVuotoInCoda = lista.paragrafoVuotoInCoda;
+        //--Regola le preferenze
+        fixPreferenze();
 
-        if (testo == null) {
-            testo = "";
-        }// end of if cycle
-
+        //--Ritorno alla view chiamante con un bottone nel top
         this.add(backButton());
 
-        this.levaHeader();
-        this.levaFooter();
-        this.add(addTitolo());
-        this.add(new Label((usaSuddivisioneParagrafi) ? "Con paragrafo" : "Senza paragrafo"));
-        this.add(new Label("Titolo paragrafo vuoto: " + titoloParagrafoVuoto));
-        this.add(new Label("Paragrafo vuoto posizionato " + (paragrafoVuotoInCoda ? "in coda" : "in testa")));
+        //--Mostra le preferenze utilizzate
+        this.addInfoTitolo();
 
-        area.setValue(testo.trim());
-        area.setSizeFull();
+        //--Costruisce il corpo della pagina
+        this.creaBody();
+
         this.add(area);
 
+        //--Ritorno alla view chiamante con un bottone nel bottom
         this.add(backButton());
     }// end of method
 
 
+    /**
+     * Regola le preferenze <br>
+     */
+    protected void fixPreferenze() {
+        this.numVoci = lista.size;
+        this.usaSuddivisioneParagrafi = lista.usaSuddivisioneParagrafi;
+        this.titoloParagrafoVuoto = lista.titoloParagrafoVuoto;
+        this.paragrafoVuotoInCoda = lista.paragrafoVuotoInCoda;
+        this.usaRigheRaggruppate = lista.usaRigheRaggruppate;
+        this.mappaSemplice = lista.mappaSemplice;
+        this.mappaComplessa = lista.mappaComplessa;
+    }// end of method
+
+
+    /**
+     * Ritorno alla view chiamante <br>
+     */
     protected Component backButton() {
         Button backButton = new Button("Back", new Icon(VaadinIcon.ARROW_LEFT));
         backButton.getElement().setAttribute("theme", "primary");
@@ -149,59 +165,42 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
 
     /**
-     * Leva il testo iniziale (sempre) fino al tag1 <br>
-     * Leva il testo iniziale (opzionale) fino al tag2 <br>
-     */
-    protected void levaHeader() {
-        String tag1 = "</noinclude>";
-        String tag2 = "{{Div col}}";
-        int pos = 0;
-
-        pos = testo.indexOf(tag1);
-        if (pos > 0) {
-            pos += tag1.length();
-            testo = testo.substring(pos);
-        }// end of if cycle
-
-        pos = testo.indexOf(tag2);
-        if (pos > 0) {
-            pos += tag2.length();
-            testo = testo.substring(pos);
-        }// end of if cycle
-
-        testo.trim();
-    }// end of method
-
-
-    /**
-     * Leva il testo finale (sempre) dopo il tag1 <br>
-     * Leva il testo finale (opzionale) dopo il tag2 <br>
-     */
-    protected void levaFooter() {
-        String tag1 = "<noinclude>";
-        String tag2 = "{{Div col end}}";
-        int pos = 0;
-
-        pos = testo.indexOf(tag1);
-        if (pos > 0) {
-            testo = testo.substring(0, pos);
-        }// end of if cycle
-
-        pos = testo.indexOf(tag2);
-        if (pos > 0) {
-            testo = testo.substring(0, pos);
-        }// end of if cycle
-
-        testo.trim();
-    }// end of method
-
-
-    /**
      * Costruisce il titolo della pagina <br>
-     * Sovrascritto <br>
+     * Deve essere sovrascritto nella sottoclassse concreta <br>
+     * Dopo DEVE invocare il metodo della superclasse <br>
      */
-    protected String addTitolo() {
-        return "";
+    protected void addInfoTitolo() {
+        this.add(new Label((usaSuddivisioneParagrafi) ? "Con paragrafi" : "Senza paragrafi"));
+        if (usaSuddivisioneParagrafi) {
+            this.add(new Label("Titolo paragrafo vuoto: " + titoloParagrafoVuoto));
+            this.add(new Label("Paragrafo vuoto posizionato " + (paragrafoVuotoInCoda ? "in coda" : "in testa")));
+        }// end of if cycle
+        this.add(new Label((usaRigheRaggruppate ? "Usa righe raggruppate" : "Usa righe singole")));
     }// end of method
+
+
+    /**
+     * Costruisce il corpo della pagina <br>
+     */
+    protected void creaBody() {
+        String testo = "";
+
+        if (usaSuddivisioneParagrafi) {
+            if (usaRigheRaggruppate) {
+                testo = listaService.paragrafoConRigheRaggruppate(mappaComplessa);
+            } else {
+                testo = listaService.paragrafoConRigheSemplici(mappaComplessa);
+            }// end of if/else cycle
+        } else {
+            if (usaRigheRaggruppate) {
+                testo = listaService.righeRaggruppate(mappaSemplice);
+            } else {
+                testo = listaService.righeSemplici(mappaSemplice);
+            }// end of if/else cycle
+        }// end of if/else cycle
+
+        area.setValue(testo);
+    }// end of method
+
 
 }// end of class
