@@ -311,8 +311,6 @@ public class ADateService extends AbstractService {
      * Not using leading zeroes in day <br>
      * Two numbers for year <b>
      *
-     * @param localDate da rappresentare
-     *
      * @return la data sotto forma di stringa
      */
     public String getDataCompleta() {
