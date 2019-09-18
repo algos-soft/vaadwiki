@@ -13,7 +13,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * <p>
  * Crea le liste dei nati o dei morti nel anno
  */
-public abstract class ListaAnni extends Lista {
+public abstract class ListaAnni extends ListaGiorniAnni {
 
 
     //--property

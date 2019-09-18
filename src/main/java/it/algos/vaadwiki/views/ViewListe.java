@@ -189,7 +189,7 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
             if (usaRigheRaggruppate) {
                 testo = listaService.paragrafoConRigheRaggruppate(mappaComplessa);
             } else {
-                testo = listaService.paragrafoConRigheSemplici(mappaComplessa);
+                testo = listaService.paragrafoConRigheRaggruppate(mappaComplessa);
             }// end of if/else cycle
         } else {
             if (usaRigheRaggruppate) {

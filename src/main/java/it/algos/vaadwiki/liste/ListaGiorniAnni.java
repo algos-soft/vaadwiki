@@ -1,11 +1,6 @@
 package it.algos.vaadwiki.liste;
 
-import it.algos.vaadflow.modules.anno.AnnoService;
-import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
-import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.vaadwiki.modules.genere.GenereService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
@@ -13,12 +8,10 @@ import java.util.ArrayList;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: Fri, 14-Jun-2019
- * Time: 18:38
- * <p>
- * Crea la lista delle persone col nome o col cognome indicati <br>
+ * Date: lun, 16-set-2019
+ * Time: 08:06
  */
-public abstract class ListaNomiCognomi extends Lista {
+public abstract class ListaGiorniAnni extends Lista {
 
     /**
      * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
@@ -30,7 +23,6 @@ public abstract class ListaNomiCognomi extends Lista {
      */
     protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
         if (usaSuddivisioneParagrafi) {
-            usaParagrafoSize=false;
             mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, usaParagrafoSize, paragrafoVuotoInCoda);
         } else {
             mappaSemplice = listaService.creaMappa(listaDidascalie);

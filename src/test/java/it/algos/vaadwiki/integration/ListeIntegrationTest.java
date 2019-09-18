@@ -5,9 +5,11 @@ import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadwiki.ATest;
+import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.liste.*;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import org.junit.Assert;
@@ -47,6 +49,9 @@ public class ListeIntegrationTest extends ATest {
     protected List<String> listaDidascalieText;
 
     @Autowired
+    protected BioService bioService;
+
+    @Autowired
     protected NomeService nomeService;
 
     @Autowired
@@ -76,6 +81,7 @@ public class ListeIntegrationTest extends ATest {
     private ApplicationContext appContext;
 
     private String annoText = "2005";
+
     private String giornoText = "3 marzo";
 
     private String nomeText = "Violeta";
@@ -110,14 +116,19 @@ public class ListeIntegrationTest extends ATest {
         listaNome = appContext.getBean(ListaNomi.class, nomeEntity);
         Assert.assertNotNull(listaNome);
 
-        anno();
+//        anno();
 //        giorno();
         nome();
     }// end of single test
 
 
     public void anno() {
-        mappaSemplice = listaAnno.mappaSemplice;
+        //--costruisco qui la mappa semplice perché listaAnno ha la preferenza usaSuddivisioneParagrafi=true
+        //--se cambio la preferenza nel mongoDb, devo cambiare anche qui
+        ArrayList<Bio> listaGrezzaBio = bioService.findAllByAnnoNascita(annoEntity);
+        ArrayList<WrapDidascalia> listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.annoNato);
+        mappaSemplice = listaService.creaMappa(listaDidascalie);
+        //--end
         Assert.assertNotNull(mappaSemplice);
         mappaComplessa = listaAnno.mappaComplessa;
         Assert.assertNotNull(mappaComplessa);
@@ -175,7 +186,12 @@ public class ListeIntegrationTest extends ATest {
 
 
     public void nome() {
-        mappaSemplice = listaService.getMappaNomi(nomeText);
+        //--costruisco qui la mappa semplice perché listaAnno ha la preferenza usaSuddivisioneParagrafi=true
+        //--se cambio la preferenza nel mongoDb, devo cambiare anche qui
+        ArrayList<Bio> listaGrezzaBio = bioService.findAllByNome(nomeText);
+        ArrayList<WrapDidascalia> listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.listaNomi);
+        mappaSemplice = listaService.creaMappa(listaDidascalie);
+        //--end
         mappaComplessa = listaService.getMappaNome(nomeText);
         Assert.assertNotNull(mappaSemplice);
         Assert.assertNotNull(mappaComplessa);
@@ -209,7 +225,16 @@ public class ListeIntegrationTest extends ATest {
         System.out.println("Mappa complessa - Paragrafo con righe semplici (altra ipotesi)");
         System.out.println("valido");
         System.out.println("*************");
-        testo = listaService.paragrafoConRigheSemplici(mappaComplessa);
+        testo = listaService.paragrafoAttivita(mappaComplessa);
+        System.out.println(testo);
+        System.out.println("");
+
+
+        System.out.println("*************");
+        System.out.println("Mappa complessa - Paragrafo con righe semplici e sottopagina");
+        System.out.println("valido");
+        System.out.println("*************");
+        testo = listaService.paragrafoSottopaginato(mappaComplessa, "Persone di nome Violeta", "Attrici", 2);
         System.out.println(testo);
         System.out.println("");
 

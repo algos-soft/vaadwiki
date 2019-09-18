@@ -268,6 +268,7 @@ public class WrapDidascalia {
         chiaveUno = text.primaMaiuscola(linkPaginaProfessione) + sep + text.primaMaiuscola(attivitaPlurale);
         chiaveUno = LibWiki.setQuadre(chiaveUno);
 
+        chiaveUno = text.primaMaiuscola(attivitaPlurale); //@todo PROVVISORIO  PROVA
         return chiaveUno;
     }// end of method
 

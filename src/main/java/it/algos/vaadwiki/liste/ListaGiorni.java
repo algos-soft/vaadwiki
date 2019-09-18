@@ -1,6 +1,9 @@
 package it.algos.vaadwiki.liste;
 
 import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadwiki.didascalia.WrapDidascalia;
+
+import java.util.ArrayList;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -14,7 +17,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * <p>
  * Crea le liste dei nati o dei morti nel giorno
  */
-public abstract class ListaGiorni extends Lista {
+public abstract class ListaGiorni extends ListaGiorniAnni {
 
 
     //--property
@@ -56,5 +59,7 @@ public abstract class ListaGiorni extends Lista {
         super.usaRigheRaggruppate = pref.isBool(USA_RIGHE_RAGGRUPPATE_GIORNI);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
     }// end of method
+
+
 
 }// end of class

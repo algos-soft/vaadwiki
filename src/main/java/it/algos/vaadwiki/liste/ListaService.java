@@ -673,6 +673,7 @@ public class ListaService extends ABioService {
         return mappa;
     }// end of method
 
+
     /**
      * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
      * La mappa è composta da una chiave (ordinata) e da una LinkedHashMap <br>
@@ -846,9 +847,11 @@ public class ListaService extends ABioService {
 
     /**
      * Righe suddivise per paragrafi <br>
+     * Titolo del paragrafo con wikiLink <br>
+     * Titolo del paragrafo con dimensione (secondo flag) <br>
      * All'interno dei paragrafi usa righeSemplici <br>
      */
-    public String paragrafoConRigheSemplici(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa) {
+    public String paragrafoAttivita(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa) {
         StringBuilder testo = new StringBuilder(VUOTA);
         LinkedHashMap<String, ArrayList<String>> mappaParagrafo;
 
@@ -863,6 +866,50 @@ public class ListaService extends ABioService {
 
         return testo.toString();
     }// end of method
+
+
+    /**
+     * Righe suddivise per paragrafi <br>
+     * All'interno dei paragrafi usa righeSemplici <br>
+     */
+    public String paragrafoSottopaginato(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa, String rinvio, String sottoTitolo, int soglia) {
+        StringBuilder testo = new StringBuilder(VUOTA);
+        LinkedHashMap<String, ArrayList<String>> mappaParagrafo;
+        Object[] arraySet = null;
+        int numSet = 0;
+        int numVoci = 0;
+
+        if (mappa != null) {
+            for (String keyUno : mappa.keySet()) {
+                testo.append(PARAGRAFO).append(keyUno).append(PARAGRAFO);
+                mappaParagrafo = mappa.get(keyUno);
+
+                //--controllo sottoparagrafo
+                arraySet = mappaParagrafo.keySet().toArray();
+                if (arraySet.length == 1) {
+                    numVoci = mappaParagrafo.get(arraySet[0]).size();
+                }// end of if cycle
+
+                if (numVoci > soglia) {
+                    testo.append(A_CAPO);
+                    testo.append("{{Vedi anche|");
+                    testo.append(rinvio);
+                    testo.append("/");
+                    testo.append(sottoTitolo);
+                    testo.append("}}");
+                    testo.append(A_CAPO);
+                    //lancia sottopagina
+                } else {
+                    testo.append(contenutoParagrafoSemplice(mappaParagrafo));
+                }// end of if/else cycle
+
+                testo.append(A_CAPO);
+            }// end of for cycle
+        }// end of if cycle
+
+        return testo.toString();
+    }// end of method
+
 
     /**
      * Righe suddivise per paragrafi <br>
@@ -936,6 +983,8 @@ public class ListaService extends ABioService {
 
         return testo.toString();
     }// end of method
+
+
     /**
      * Righe suddivise per paragrafi <br>
      * All'interno dei paragrafi usa righeRaggruppate <br>
@@ -987,7 +1036,6 @@ public class ListaService extends ABioService {
 
         return testo.toString();
     }// end of method
-
 
 
     /**
