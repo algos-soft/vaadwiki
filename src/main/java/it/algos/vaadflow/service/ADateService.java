@@ -324,7 +324,6 @@ public class ADateService extends AbstractService {
      * Restituisce la data e l'ora attuali nella forma del pattern completo
      * <p>
      * Returns a string representation of the date <br>
-     * Not using leading zeroes in day <br>
      * Two numbers for year <b>
      *
      * @return la data sotto forma di stringa
