@@ -3,13 +3,12 @@ package it.algos.vaadflow.service;
 import it.algos.vaadflow.enumeration.EATime;
 import it.algos.vaadflow.modules.mese.EAMese;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
@@ -200,6 +199,66 @@ public class ADateService extends AbstractService {
 
 
     /**
+     * Convert java.util.Date to java.time.LocalTime
+     * Estrae la sola parte di Time
+     * Date HA anni, giorni, ore, minuti e secondi
+     * LocalTime NON ha anni e giorni
+     * Si perdono quindi gli anni ed i giorni di Date
+     *
+     * @param data da convertire
+     *
+     * @return time senza ilgiorno
+     */
+    public LocalTime dateToLocalTime(Date data) {
+        return LocalTime.of(data.getHours(), data.getMinutes());
+    }// end of method
+
+
+    /**
+     * Costruisce una data da una stringa in formato ISO 8601
+     *
+     * @param isoStringa da leggere
+     *
+     * @return data costruita
+     */
+    public Date dateFromISO(String isoStringa) {
+        Date data = null;
+        DateFormat format = new SimpleDateFormat(EATime.iso8601.getPattern());
+        try { // prova ad eseguire il codice
+            data = format.parse(isoStringa);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }// fine del blocco try-catch
+
+        return data;
+    }// end of method
+
+
+    /**
+     * Costruisce una localData da una stringa in formato ISO 8601
+     * ATTENZIONE: si perdono ore, minuti e secondi (se ci sono)
+     *
+     * @param isoStringa da leggere
+     *
+     * @return localData costruita
+     */
+    public LocalDate localDateFromISO(String isoStringa) {
+        return dateToLocalDate(dateFromISO(isoStringa));
+    }// end of method
+
+
+    /**
+     * Costruisce una localDateTime da una stringa in formato ISO 8601
+     *
+     * @param isoStringa da leggere
+     *
+     * @return localDateTime costruita
+     */
+    public LocalDateTime localDateTimeFromISO(String isoStringa) {
+        return dateToLocalDateTime(dateFromISO(isoStringa));
+    }// end of method
+
+
+    /**
      * Restituisce la data attuale nella forma del pattern standard
      * <p>
      * Returns a string representation of the date <br>
@@ -209,7 +268,7 @@ public class ADateService extends AbstractService {
      * @return la data sotto forma di stringa
      */
     public String get() {
-        return get(LocalDate.now(), EATime.standard.getPattern());
+        return get(LocalDate.now());
     }// end of method
 
 
@@ -240,8 +299,38 @@ public class ADateService extends AbstractService {
      *
      * @return la data sotto forma di stringa
      */
-    public String getCompleta(LocalDate localDate) {
+    public String getDataCompleta(LocalDate localDate) {
         return get(localDate, EATime.completa.getPattern());
+    }// end of method
+
+
+    /**
+     * Restituisce la data attuale nella forma del pattern completo
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDate da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getDataCompleta() {
+        return getDataCompleta(LocalDate.now());
+    }// end of method
+
+
+    /**
+     * Restituisce la data e l'ora attuali nella forma del pattern completo
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getDataOraComplete() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(EATime.completaOrario.getPattern(), LOCALE));
     }// end of method
 
 
@@ -280,7 +369,21 @@ public class ADateService extends AbstractService {
 
 
     /**
+     * Restituisce l'anno corrente
+     * <p>
+     * 2019
+     *
+     * @return anno corrente
+     */
+    public int getAnnoCorrente() {
+        return LocalDate.now().getYear();
+    }// end of method
+
+
+    /**
      * Restituisce il giorno della settimana in forma estesa
+     * <p>
+     * domenica 5
      * <p>
      * Returns a string representation of the date <br>
      * Not using leading zeroes in day <br>
@@ -301,6 +404,8 @@ public class ADateService extends AbstractService {
     /**
      * Restituisce il giorno della settimana in forma estesa
      * <p>
+     * domenica 5
+     * <p>
      * Returns a string representation of the date <br>
      * Not using leading zeroes in day <br>
      * Two numbers for year <b>
@@ -318,6 +423,8 @@ public class ADateService extends AbstractService {
 
     /**
      * Restituisce la data (senza tempo) in forma breve
+     * <p>
+     * 05-04-14
      * <p>
      * Returns a string representation of the date <br>
      * Not using leading zeroes in day <br>
@@ -337,6 +444,8 @@ public class ADateService extends AbstractService {
     /**
      * Restituisce la data (senza tempo) in forma normale
      * <p>
+     * 5-ott-14
+     * <p>
      * Returns a string representation of the date <br>
      * Not using leading zeroes in day <br>
      * Two numbers for year <b>
@@ -352,6 +461,8 @@ public class ADateService extends AbstractService {
 
     /**
      * Restituisce la data (senza tempo) in forma normale
+     * <p>
+     * 5-ott-14
      * <p>
      * Returns a string representation of the date <br>
      * Not using leading zeroes in day <br>
@@ -377,6 +488,8 @@ public class ADateService extends AbstractService {
     /**
      * Restituisce la data attuale completa di tempo
      * <p>
+     * 5-ott-14 7:04
+     * <p>
      * Returns a string representation of the date <br>
      * Not using leading zeroes in day <br>
      * Two numbers for year <b>
@@ -391,7 +504,9 @@ public class ADateService extends AbstractService {
     /**
      * Restituisce la data completa di tempo
      * <p>
-     * Returns a string representation of the date <br>
+     * 5-ott-14 7:04
+     * <p>
+     * Returns a string representation of the date
      * Not using leading zeroes in day <br>
      * Two numbers for year <b>
      *
@@ -406,6 +521,8 @@ public class ADateService extends AbstractService {
 
     /**
      * Restituisce ora e minuti
+     * <p>
+     * 7:04
      *
      * @param localDateTime da rappresentare
      *
@@ -429,7 +546,36 @@ public class ADateService extends AbstractService {
 
 
     /**
+     * Restituisce ora e minuti
+     * <p>
+     * 7:04
+     *
+     * @param localTime da rappresentare
+     *
+     * @return l'orario sotto forma di stringa
+     */
+    public String getOrario(LocalTime localTime) {
+        String testo = "";
+        int minuti;
+        String tag = "0";
+
+        testo += localTime.getHour();
+        testo += ":";
+        minuti = localTime.getMinute();
+        if (minuti < 10) {
+            testo += tag;
+        }// end of if cycle
+        testo += minuti;
+
+        return testo;
+    }// end of method
+
+
+    /**
      * Ritorna il numero della settimana dell'anno di una data fornita.
+     * <p>
+     * 43
+     * <p>
      * Usa Calendar
      *
      * @param data fornita
@@ -445,6 +591,9 @@ public class ADateService extends AbstractService {
 
     /**
      * Ritorna il numero della settimana del mese di una data fornita.
+     * <p>
+     * 3
+     * <p>
      * Usa Calendar
      *
      * @param data fornita
@@ -460,6 +609,9 @@ public class ADateService extends AbstractService {
 
     /**
      * Ritorna il numero del giorno dell'anno di una data fornita.
+     * <p>
+     * 294
+     * <p>
      * Usa LocalDate internamente, perché Date è deprecato
      *
      * @param data fornita
@@ -474,6 +626,9 @@ public class ADateService extends AbstractService {
 
     /**
      * Ritorna il numero del giorno del mese di una data fornita.
+     * <p>
+     * 21
+     * <p>
      * Usa LocalDate internamente, perché Date è deprecato
      *
      * @param data fornita
@@ -488,6 +643,9 @@ public class ADateService extends AbstractService {
 
     /**
      * Ritorna il numero del giorno della settimana di una data fornita.
+     * <p>
+     * 4
+     * <p>
      * Usa Calendar
      *
      * @param data fornita
@@ -503,6 +661,8 @@ public class ADateService extends AbstractService {
 
     /**
      * Ritorna il giorno (testo) della settimana di una data fornita.
+     * <p>
+     * sab
      *
      * @param localDateTime fornita
      *
@@ -514,7 +674,37 @@ public class ADateService extends AbstractService {
 
 
     /**
+     * Ritorna il giorno (testo) della settimana ed il giorno (numero) del mese di una data fornita.
+     * <p>
+     * sab 23
+     *
+     * @param localDate fornita
+     *
+     * @return il giorno della settimana in forma breve
+     */
+    public String getWeekShort(LocalDate localDate) {
+        return get(localDate, EATime.weekShort);
+    }// end of method
+
+
+    /**
+     * Ritorna il giorno (testo) della settimana ed il giorno (numero) del mese ed il nome del mese di una data fornita.
+     * <p>
+     * sab 23 apr
+     *
+     * @param localDate fornita
+     *
+     * @return il giorno della settimana in forma breve
+     */
+    public String getWeekShortMese(LocalDate localDate) {
+        return get(localDate, EATime.weekShortMese);
+    }// end of method
+
+
+    /**
      * Ritorna il giorno (testo) della settimana di una data fornita.
+     * <p>
+     * sab
      *
      * @param localDate fornita
      *
@@ -527,6 +717,9 @@ public class ADateService extends AbstractService {
 
     /**
      * Ritorna il giorno (testo) della settimana di una data fornita.
+     * <p>
+     * sab
+     * <p>
      * Usa LocalDate internamente, perché Date è deprecato
      *
      * @param data fornita
@@ -541,6 +734,8 @@ public class ADateService extends AbstractService {
 
     /**
      * Ritorna il giorno (testo) della settimana di una data fornita.
+     * <p>
+     * martedì
      *
      * @param localDate fornita
      *
@@ -552,7 +747,58 @@ public class ADateService extends AbstractService {
 
 
     /**
+     * Trasforma la data nel formato standard ISO 8601.
+     * <p>
+     * 2017-02-16T21:00:00
+     * Unsupported field: OffsetSeconds
+     * Dovrebbe essere 2017-02-16T21:00:00.000+01:00 per essere completa
+     *
+     * @param localDateTime fornito
+     *
+     * @return testo standard ISO senza OffsetSeconds
+     */
+    public String getISO(LocalDateTime localDateTime) {
+        return localDateTime.format(DateTimeFormatter.ofPattern(EATime.iso8601.getPattern(), LOCALE));
+    }// end of method
+
+
+    /**
+     * Trasforma la data nel formato standard ISO 8601.
+     * <p>
+     * 2017-02-16T21:00:00
+     * Unsupported field: OffsetSeconds
+     * Dovrebbe essere 2017-02-16T21:00:00.000+01:00 per essere completa
+     *
+     * @param localDate fornita
+     *
+     * @return testo standard ISO senza OffsetSeconds
+     */
+    public String getISO(LocalDate localDate) {
+        return getISO(localDateToLocalDateTime(localDate));
+    }// end of method
+
+
+    /**
+     * Trasforma la data nel formato standard ISO 8601.
+     * <p>
+     * 2017-02-16T21:00:00
+     * Unsupported field: OffsetSeconds
+     * Dovrebbe essere 2017-02-16T21:00:00.000+01:00 per essere completa
+     *
+     * @param data fornita
+     *
+     * @return testo standard ISO senza OffsetSeconds
+     */
+    public String getISO(Date data) {
+        return getISO(dateToLocalDateTime(data));
+    }// end of method
+
+
+    /**
      * Ritorna il giorno (testo) della settimana di una data fornita.
+     * <p>
+     * martedì
+     * <p>
      * Usa LocalDate internamente, perché Date è deprecato
      *
      * @param data fornita
@@ -567,6 +813,9 @@ public class ADateService extends AbstractService {
 
     /**
      * Ritorna il numero delle ore di una data fornita.
+     * <p>
+     * 7
+     * <p>
      * Usa LocalDateTime internamente, perché Date è deprecato
      *
      * @param data fornita
@@ -581,6 +830,9 @@ public class ADateService extends AbstractService {
 
     /**
      * Ritorna il numero dei minuti di una data fornita.
+     * <p>
+     * 43
+     * <p>
      * Usa LocalDateTime internamente, perché Date è deprecato
      *
      * @param data fornita
@@ -595,6 +847,9 @@ public class ADateService extends AbstractService {
 
     /**
      * Ritorna il numero dei secondi di una data fornita.
+     * <p>
+     * 38
+     * <p>
      * Usa LocalDateTime internamente, perché Date è deprecato
      *
      * @param data fornita
@@ -609,6 +864,9 @@ public class ADateService extends AbstractService {
 
     /**
      * Ritorna il numero dell'anno di una data fornita.
+     * <p>
+     * 2014
+     * <p>
      * Usa LocalDate internamente, perché Date è deprecato
      *
      * @return il numero dell'anno
@@ -620,24 +878,46 @@ public class ADateService extends AbstractService {
 
 
     /**
-     * Costruisce la data per il 1° gennaio dell'anno corrente.
-     *
-     * @return primo gennaio dell'anno
-     */
-    public LocalDate getPrimoGennaio() {
-        return getPrimoGennaio(LocalDate.now().getYear());
-    }// end of method
-
-
-    /**
      * Costruisce la data per il 1° gennaio dell'anno indicato.
      *
      * @param anno di riferimento
      *
-     * @return primo gennaio dell'anno
+     * @return primo gennaio dell'anno indicato
      */
-    public LocalDate getPrimoGennaio(int anno) {
+    public LocalDate primoGennaio(int anno) {
         return LocalDate.of(anno, 1, 1);
+    }// end of method
+
+
+    /**
+     * Costruisce la data per il 1° gennaio dell'anno corrente.
+     *
+     * @return primo gennaio dell'anno corrente
+     */
+    public LocalDate primoGennaio() {
+        return primoGennaio(LocalDate.now().getYear());
+    }// end of method
+
+
+    /**
+     * Costruisce la data per il 31° dicembre dell'anno indicato.
+     *
+     * @param anno di riferimento
+     *
+     * @return ultimo giorno dell'anno indicato
+     */
+    public LocalDate trentunDicembre(int anno) {
+        return LocalDate.of(anno, 12, 31);
+    }// end of method
+
+
+    /**
+     * Costruisce la data per il 31° dicembre dell'anno corrente.
+     *
+     * @return ultimo giorno dell'anno corrente
+     */
+    public LocalDate trentunDicembre() {
+        return trentunDicembre(LocalDate.now().getYear());
     }// end of method
 
 
@@ -651,20 +931,6 @@ public class ADateService extends AbstractService {
     public LocalDate getLocalDateByDay(int giorno) {
         return LocalDate.ofYearDay(LocalDate.now().getYear(), giorno);
     }// end of single test
-
-
-    /**
-     * Costruisce la data per il 31° dicembre dell'anno indicato.
-     * <p>
-     *
-     * @param anno di riferimento
-     *
-     * @return ultimo dell'anno
-     */
-    public Date getTrentunoDicembre(int anno) {
-        Date data = creaData(31, 12, anno);
-        return lastTime(data);
-    }// end of method
 
 
     /**
@@ -988,6 +1254,7 @@ public class ADateService extends AbstractService {
     /**
      * Durata tra due momenti individuati da ora e minuti <br>
      */
+    @Deprecated
     public int getDurata(int oraFine, int oraIni, int minFine, int minIni) {
         int durata = 0;
         int ore = 0;
@@ -1000,6 +1267,162 @@ public class ADateService extends AbstractService {
         durata += minuti;
 
         return durata;
+    }// end of method
+
+
+    /**
+     * Differenza (in giorni) tra due date (LocalDate) <br>
+     *
+     * @param giornoFine   data iniziale
+     * @param giornoInizio data finale
+     *
+     * @return giorni di differenza
+     */
+    public int differenza(LocalDate giornoFine, LocalDate giornoInizio) {
+        int differenza = 0;
+        long fine = 0;
+        long inizio = 0;
+        Long delta;
+
+        if (giornoFine != null && giornoInizio != null) {
+            fine = localDateToDate(giornoFine).getTime();
+            inizio = localDateToDate(giornoInizio).getTime();
+            delta = fine - inizio;
+            delta = delta / 1000;
+            delta = delta / 60;
+            delta = delta / 60;
+            delta = delta / 24;
+            differenza = delta.intValue();
+        }// end of if cycle
+
+        return differenza;
+    }// end of method
+
+
+    /**
+     * Differenza (in ore) tra due orari (LocalTime) <br>
+     * Arrotondamento matematico
+     *
+     * @param orarioInizio orario iniziale
+     * @param orarioFine   orario finale
+     *
+     * @return minuti di differenza
+     */
+    public int differenza(LocalTime orarioFine, LocalTime orarioInizio) {
+        int differenza = 0;
+        int minutiFine = 0;
+        int minutiInizio = 0;
+        int minuti = 60;
+        int ore = 24;
+        int resto = 0;
+
+        if (isValid(orarioFine) && isValid(orarioInizio)) {
+            if (orarioFine.isAfter(orarioInizio)) {
+                minutiFine = orarioFine.getHour() * minuti + orarioFine.getMinute();
+                minutiInizio = orarioInizio.getHour() * minuti + orarioInizio.getMinute();
+                differenza = minutiFine - minutiInizio;
+                resto = differenza % minuti;
+                differenza = differenza / minuti;
+                if (resto > minuti / 2) {
+                    differenza++;
+                }// end of if cycle
+            } else {
+                minutiFine = orarioFine.getHour() * minuti + orarioFine.getMinute();
+                minutiInizio = (ore - orarioInizio.getHour()) * minuti;
+                if (orarioInizio.getMinute() > minuti / 2) {
+                    minutiInizio = minutiInizio - orarioInizio.getMinute();
+                }// end of if cycle
+                differenza = minutiFine + minutiInizio;
+                resto = differenza % minuti;
+                differenza = differenza / minuti;
+                if (resto > minuti / 2) {
+                    differenza++;
+                }// end of if cycle
+            }// end of if/else cycle
+        }// end of if cycle
+
+        return differenza;
+    }// end of method
+
+
+    /**
+     * Differenza (in minuti) tra due orari (LocalTime) <br>
+     *
+     * @param orarioInizio orario iniziale
+     * @param orarioFine   orario finale
+     *
+     * @return minuti di differenza
+     */
+    public int durata(LocalTime orarioFine, LocalTime orarioInizio) {
+        int durata = 0;
+        int minutiFine = 0;
+        int minutiInizio = 0;
+
+        if (orarioFine != null && orarioInizio != null) {
+            minutiFine = orarioFine.getHour() * 60 + orarioFine.getMinute();
+            minutiInizio = orarioInizio.getHour() * 60 + orarioInizio.getMinute();
+            durata = minutiFine - minutiInizio;
+        }// end of if cycle
+
+        return durata;
+    }// end of method
+
+
+    /**
+     * Controlla la validità del localTime
+     * Deve esistere (not null)
+     * Deve avere valori delle ore o dei minuti
+     *
+     * @param localTime in ingresso da controllare
+     *
+     * @return vero se il localTime soddisfa le condizioni previste
+     */
+    public boolean isValid(LocalTime localTime) {
+        boolean status = false;
+
+        if (localTime != null) {
+            if (localTime.getHour() > 0 || localTime.getMinute() > 0) {
+                status = true;
+            }// end of if cycle
+        }// end of if cycle
+
+        return status;
+    }// end of method
+
+
+    /**
+     * Distanza tra due orari
+     * Deve esistere (not null)
+     * Deve avere valori delle ore o dei minuti
+     *
+     * @param orarioInizio orario iniziale
+     * @param orarioFine   orario finale
+     *
+     * @return LocalTime di differenza
+     */
+    public LocalTime periodo(LocalTime orarioFine, LocalTime orarioInizio) {
+        LocalTime periodo = null;
+        int durata = 0;
+        int minuti = 60;
+        int ore = 0;
+        int resto = 0;
+
+        if (orarioFine != null && orarioInizio != null) {
+            durata = durata(orarioFine, orarioInizio);
+            if (durata == 0) {
+                periodo = LocalTime.of(0, 0);
+            } else {
+                if (durata >= minuti) {
+                    ore = durata / minuti;
+                    resto = durata % minuti;
+                    periodo = LocalTime.of(ore, resto);
+                } else {
+                    periodo = LocalTime.of(0, durata);
+                }// end of if/else cycle
+            }// end of if/else cycle
+        }// end of if cycle
+
+        return periodo;
     }// end of method
 
 }// end of class

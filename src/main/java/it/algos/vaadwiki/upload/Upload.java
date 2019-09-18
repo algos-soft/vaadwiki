@@ -262,7 +262,8 @@ public abstract class Upload {
 //
 //    protected boolean usaBodySottopagine;
 //
-    protected boolean usaBodyRigheMultiple;
+    //--property
+    public boolean usaRigheRaggruppate;
 
     //--property
     protected Lista lista;
@@ -319,7 +320,7 @@ public abstract class Upload {
 //        usaSuddivisioneParagrafi = false;
 //        usaOrdineAlfabeticoParagrafi = false;
 //        usaBodySottopagine = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
-        usaBodyRigheMultiple = true; //--normalmente true. Sovrascrivibile da preferenze
+        usaRigheRaggruppate = true; //--normalmente true. Sovrascrivibile da preferenze
         usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         usaBodyTemplate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
     }// end of method
@@ -563,7 +564,7 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected String elaboraBody() {
-        testoLista = lista.testo;
+        String testoLista = getTestoLista(lista);
         numVoci = lista.size;
         int maxRigheColonne = 10;//@todo mettere la preferenza
 
@@ -581,13 +582,33 @@ public abstract class Upload {
             if (!pref.isBool(USA_DEBUG)) {
                 testoLista = elaboraTemplate(testoLista);
             }// end of if cycle
-
-
         }// end of if cycle
 
         return testoLista;
     }// fine del metodo
 
+    /**
+     * Costruisce il corpo della pagina <br>
+     */
+    protected String getTestoLista(Lista lista) {
+        String testoLista = "";
+
+        if (usaSuddivisioneParagrafi) {
+            if (usaRigheRaggruppate) {
+                testoLista = listaService.paragrafoConRigheRaggruppate(lista.mappaComplessa);
+            } else {
+                testoLista = listaService.paragrafoConRigheRaggruppate(lista.mappaComplessa);
+            }// end of if/else cycle
+        } else {
+            if (usaRigheRaggruppate) {
+                testoLista = listaService.righeRaggruppate(lista.mappaSemplice);
+            } else {
+                testoLista = listaService.righeSemplici(lista.mappaSemplice);
+            }// end of if/else cycle
+        }// end of if/else cycle
+
+        return testoLista;
+    }// end of method
 
     /**
      * Incapsula il testo come parametro di un (eventuale) template

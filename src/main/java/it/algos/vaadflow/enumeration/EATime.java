@@ -35,6 +35,11 @@ public enum EATime {
      */
     weekShort("weekShort", "EEE d", "dom 5"),
     /**
+     * Pattern: EEE d MMM <br>
+     * Esempio: dom 5 apr <br>
+     */
+    weekShortMese("weekShortMese", "EEE d MMM", "dom 5 apr"),
+    /**
      * Pattern: d MMMM <br>
      * Esempio: 5 ottobre <br>
      */
@@ -69,16 +74,29 @@ public enum EATime {
      * Esempio: 20 gen 2019 <br>
      */
     standard("standard", "d MMM yyyy", "20 gen 2019"),
+    /**
+     * ISO8601: yyyy-MM-dd'T'HH:mm:ss.SSSXXX <br>
+     * Pattern: yyyy-MM-dd'T'HH:mm:ss <br>
+     * Esempio: 2017-02-16T21:00:00.000+01:00 <br>
+     */
+    iso8601("iso8601", "yyyy-MM-dd'T'HH:mm:ss", "2017-02-16T21:00:00"),
+    /**
+     * Pattern: EEEE, d-MMMM-yyy 'alle' HH:mm <br>
+     * Esempio: domenica, 5-ottobre-2014 alle 13:45<br>
+     */
+    completaOrario("completa", "EEEE, d-MMMM-yyy 'alle' HH:mm", "domenica, 5-ottobre-2014 alle 13:45"),
     ;
 
     private String tag;
 
     private String pattern;
+    private String esempio;
 
 
-    EATime(String tag, String pattern, String nonUsato) {
+    EATime(String tag, String pattern, String esempio) {
         this.tag = tag;
         this.pattern = pattern;
+        this.esempio = esempio;
     }// end of constructor
 
 
@@ -101,4 +119,13 @@ public enum EATime {
         this.pattern = pattern;
     }// end of method
 
+
+    public String getEsempio() {
+        return esempio;
+    }// end of method
+
+
+    public void setEsempio(String esempio) {
+        this.esempio = esempio;
+    }// end of method
 }// end of enumeration

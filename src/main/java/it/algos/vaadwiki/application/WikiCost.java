@@ -178,6 +178,8 @@ public class WikiCost {
 
     public final static String SEND_MAIL_CICLO = "sendMailCiclo";
 
+    public final static String SEND_MAIL_RESTART = "sendMailRestart";
+
 //    public final static String USA_UPLOAD_DURANTE_DOWNLOAD = "usaUploadDuranteDownload";
 
     public static final String PAGES = "pages";

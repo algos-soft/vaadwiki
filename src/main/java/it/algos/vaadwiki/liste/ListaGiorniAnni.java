@@ -24,8 +24,10 @@ public abstract class ListaGiorniAnni extends Lista {
     protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
         if (usaSuddivisioneParagrafi) {
             mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, usaParagrafoSize, paragrafoVuotoInCoda);
+            this.size = listaService.getMappaDueSize(mappaComplessa);
         } else {
             mappaSemplice = listaService.creaMappa(listaDidascalie);
+            this.size = listaService.getMappaSize(mappaSemplice);
         }// end of if/else cycle
     }// fine del metodo
 

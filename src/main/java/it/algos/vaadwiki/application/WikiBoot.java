@@ -7,6 +7,8 @@ import it.algos.vaadflow.boot.ABoot;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.modules.utente.UtenteService;
+import it.algos.vaadflow.service.ADateService;
+import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadwiki.didascalia.ViewDidascalie;
 import it.algos.vaadwiki.modules.attivita.AttivitaViewList;
 import it.algos.vaadwiki.modules.bio.BioViewList;
@@ -20,6 +22,7 @@ import it.algos.vaadwiki.modules.wiki.WikiGiornoViewList;
 import it.algos.vaadwiki.views.UtilityView;
 import it.algos.wiki.web.AQueryLogin;
 import it.algos.wiki.web.WLogin;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -27,9 +30,11 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContextEvent;
+import java.net.InetAddress;
 import java.time.LocalDate;
 
 import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadwiki.application.WikiCost.SEND_MAIL_RESTART;
 
 /**
  * Project vaadwiki
@@ -51,16 +56,28 @@ import static it.algos.vaadflow.application.FlowCost.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovrascrivibile = false)
+@Slf4j
 public class WikiBoot extends ABoot {
 
     public final static String DEMO_COMPANY_CODE = "demo";
 
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    public ADateService date;
 
     @Autowired
     protected ApplicationContext appContext;
 
     @Autowired
     protected WLogin wLogin;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected AMailService mailService;
 
     @Autowired
     private UtenteService utenteService;
@@ -146,11 +163,39 @@ public class WikiBoot extends ABoot {
      */
     protected void regolaInfo() {
         PROJECT_NAME = "vaadwiki";
-        PROJECT_VERSION = "3.9";
-        PROJECT_DATE = LocalDate.of(2019, 9, 10);
+        PROJECT_VERSION = "4.0";
+        PROJECT_DATE = LocalDate.of(2019, 9, 18);
 
         if (wLogin != null) {
             PROJECT_NOTE = "- loggato come " + wLogin.getLgusername();
+        }// end of if cycl
+
+        mailRestart();
+    }// end of method
+
+
+    /**
+     * Mail di controllo
+     */
+    protected void mailRestart() {
+        InetAddress inetAddress = null;
+        String server = "";
+        String tag = "Mini-di-Guido";
+
+        if (pref.isBool(SEND_MAIL_RESTART)) {
+            try { // prova ad eseguire il codice
+                inetAddress = InetAddress.getLocalHost();
+                if (inetAddress != null) {
+                    server = inetAddress.getHostName();
+                }// end of if cycle
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
+
+            if (text.isValid(server) && server.equals(tag)) {
+                String message = date.getDataOraComplete();
+                mailService.send("Restart", "Applicazione vaadwiki che gira sul server " + server + " riavviata " + message);
+            }// end of if cycle
         }// end of if cycle
     }// end of method
 
