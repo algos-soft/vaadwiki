@@ -566,7 +566,7 @@ public abstract class Upload {
     protected String elaboraBody() {
         String testoLista = getTestoLista(lista);
         numVoci = lista.size;
-        int maxRigheColonne = 10;//@todo mettere la preferenza
+        int maxRigheColonne = 10; //@todo mettere la preferenza
 
         //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
         if (usaBodyDoppiaColonna && (numVoci > maxRigheColonne)) {
