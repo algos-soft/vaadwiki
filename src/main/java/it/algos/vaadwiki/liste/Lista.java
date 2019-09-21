@@ -171,6 +171,8 @@ public abstract class Lista {
 
         //--Ordina la lista di didascalie specifiche
         listaDidascalie = this.ordinaListaDidascalie(listaDidascalie);
+
+        this.size = listaDidascalie.size();
     }// end of method
 
 

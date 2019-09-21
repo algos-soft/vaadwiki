@@ -9,7 +9,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -47,6 +46,8 @@ public class ListaNomi extends ListaNomiCognomi {
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(ListaNomi.class, nome) <br>
+     * Non rimanda al costruttore della superclasse. Regola qui solo alcune property. <br>
+     * La superclasse usa poi il metodo @PostConstruct inizia() per proseguire dopo l'init del costruttore <br>
      *
      * @param nome di cui costruire la pagina sul server wiki
      */
@@ -80,6 +81,7 @@ public class ListaNomi extends ListaNomiCognomi {
     public ArrayList<Bio> listaBio() {
         return bioService.findAllByNome(nome.nome);
     }// fine del metodo
+
 
     /**
      * Ordina la lista di didascalie specifiche <br>

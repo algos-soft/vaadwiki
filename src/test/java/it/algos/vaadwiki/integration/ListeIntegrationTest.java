@@ -99,7 +99,6 @@ public class ListeIntegrationTest extends ATest {
     }// end of method
 
 
-    @Test
     public void testUnico() {
         annoEntity = annoService.findByKeyUnica(annoText);
         Assert.assertNotNull(annoEntity);
@@ -185,7 +184,13 @@ public class ListeIntegrationTest extends ATest {
     }// end of single test
 
 
+    @Test
     public void nome() {
+        nomeEntity = nomeService.findByKeyUnica(nomeText);
+        Assert.assertNotNull(nomeEntity);
+        listaNome = appContext.getBean(ListaNomi.class, nomeEntity);
+        Assert.assertNotNull(listaNome);
+
         //--costruisco qui la mappa semplice perché listaAnno ha la preferenza usaSuddivisioneParagrafi=true
         //--se cambio la preferenza nel mongoDb, devo cambiare anche qui
         ArrayList<Bio> listaGrezzaBio = bioService.findAllByNome(nomeText);
@@ -195,9 +200,19 @@ public class ListeIntegrationTest extends ATest {
         mappaComplessa = listaService.getMappaNome(nomeText);
         Assert.assertNotNull(mappaSemplice);
         Assert.assertNotNull(mappaComplessa);
+
         String key;
         List<String> value;
         int k = 0;
+
+        System.out.println("*************");
+        System.out.println("Controllo dimensioni");
+        System.out.println("*************");
+        previstoIntero = 10;
+        ottenutoIntero = listaNome.size;
+        Assert.assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println("Le biografie che hanno il nome " + nomeText + " sono " + ottenutoIntero);
+        System.out.println("");
 
         System.out.println("*************");
         System.out.println("Mappa semplice - Righe semplici (escluso per i nomi)");
