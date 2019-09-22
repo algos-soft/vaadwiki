@@ -1,11 +1,6 @@
 package it.algos.vaadwiki.liste;
 
-import it.algos.vaadflow.modules.anno.AnnoService;
-import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
-import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.vaadwiki.modules.genere.GenereService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
@@ -21,6 +16,20 @@ import java.util.ArrayList;
 public abstract class ListaNomiCognomi extends Lista {
 
     /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
+        super.usaSuddivisioneParagrafi = true;
+        super.usaRigheRaggruppate = false;
+    }// end of method
+
+
+    /**
      * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
      * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
      * Ogni chiave della mappa è uno dei giorni/anni/nomi/cognomi in cui suddividere la pagina <br>
@@ -28,10 +37,10 @@ public abstract class ListaNomiCognomi extends Lista {
      *
      * @param listaDidascalie
      */
-    protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
+    protected void creaMappaNo(ArrayList<WrapDidascalia> listaDidascalie) {
         if (usaSuddivisioneParagrafi) {
-            usaParagrafoSize=false;
-            mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, usaParagrafoSize, paragrafoVuotoInCoda);
+            usaParagrafoSize = false;
+            mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
         } else {
             mappaSemplice = listaService.creaMappa(listaDidascalie);
         }// end of if/else cycle

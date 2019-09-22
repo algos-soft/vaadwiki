@@ -86,6 +86,8 @@ public class UploadNome extends Upload {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.usaSuddivisioneParagrafi = true;
+        super.usaRigheRaggruppate = false;
         super.titoloPagina = uploadService.getTitoloNome(nome);
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_NOMI);
         super.usaHeadIncipit = true;

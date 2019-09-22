@@ -350,6 +350,7 @@ public abstract class Upload {
 
         //body
         //a capo, ma senza senza righe di separazione
+        testoPagina += A_CAPO;
         testoPagina += this.elaboraBody();
 
         //footer
@@ -597,7 +598,7 @@ public abstract class Upload {
             if (usaRigheRaggruppate) {
                 testoLista = listaService.paragrafoConRigheRaggruppate(lista.mappaComplessa);
             } else {
-                testoLista = listaService.paragrafoConRigheRaggruppate(lista.mappaComplessa);
+                testoLista = listaService.paragrafoAttivita(lista.mappaComplessa);
             }// end of if/else cycle
         } else {
             if (usaRigheRaggruppate) {

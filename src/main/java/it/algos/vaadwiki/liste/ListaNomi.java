@@ -65,6 +65,7 @@ public class ListaNomi extends ListaNomiCognomi {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_NOMI_IN_CODA);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_NOMI);

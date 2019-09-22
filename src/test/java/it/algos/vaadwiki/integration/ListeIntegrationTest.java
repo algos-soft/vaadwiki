@@ -42,6 +42,8 @@ public class ListeIntegrationTest extends ATest {
 
     public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaComplessa;
 
+    private static String NOME_BIO_UNO = "Ron Clarke";
+
     protected List<Bio> listaBio;
 
     protected List<WrapDidascalia> listaWrap;
@@ -117,9 +119,14 @@ public class ListeIntegrationTest extends ATest {
 
 //        anno();
 //        giorno();
-        nome();
+//        nome();
     }// end of single test
 
+//    @Test
+    public void titoloParagrafo() {
+        Bio bio = bioService.findByKeyUnica(NOME_BIO_UNO);
+        ottenuto= listaService.getTitoloParagrafo(bio, "pippoz");
+    }// end of single test
 
     public void anno() {
         //--costruisco qui la mappa semplice perché listaAnno ha la preferenza usaSuddivisioneParagrafi=true
@@ -155,7 +162,13 @@ public class ListeIntegrationTest extends ATest {
     }// end of single test
 
 
+//    @Test
     public void giorno() {
+        giornoEntity = giornoService.findByKeyUnica(giornoText);
+        Assert.assertNotNull(giornoEntity);
+        listaGiorno = appContext.getBean(ListaGiornoNato.class, giornoEntity);
+        Assert.assertNotNull(listaGiorno);
+
         mappaSemplice = listaGiorno.mappaSemplice;
         Assert.assertNotNull(mappaSemplice);
         mappaComplessa = listaGiorno.mappaComplessa;

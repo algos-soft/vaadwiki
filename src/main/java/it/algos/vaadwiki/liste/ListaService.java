@@ -231,11 +231,11 @@ public class ListaService extends ABioService {
         LinkedHashMap<String, ArrayList<String>> mappa = new LinkedHashMap<>();
         ArrayList<String> lista = null;
         String chiave;
+        String titoloParagrafo = "";
 
         for (WrapDidascalia wrap : listaDisordinata) {
             chiave = wrap.getChiave();
-            chiave = text.isValid(chiave) ? LibWiki.setQuadre(chiave) : "";
-
+            titoloParagrafo = getTitoloParagrafo(wrap.bio, "");
             if (mappa.get(chiave) == null) {
                 lista = new ArrayList<String>();
                 mappa.put(chiave, lista);
@@ -278,7 +278,7 @@ public class ListaService extends ABioService {
      * @listaOrdinata di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
      */
     public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> creaMappaChiaveUno(ArrayList<WrapDidascalia> listaGrezza, String titoloParagrafoVuoto) {
-        return creaMappaChiaveUno(listaGrezza, titoloParagrafoVuoto, false, true);
+        return creaMappaChiaveUno(listaGrezza, titoloParagrafoVuoto, true);
     }// fine del metodo
 
 
@@ -296,7 +296,6 @@ public class ListaService extends ABioService {
     public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> creaMappaChiaveUno(
             ArrayList<WrapDidascalia> listaGrezza,
             String titoloParagrafoVuoto,
-            boolean usaParagrafoSize,
             boolean paragrafoVuotoInCoda) {
         LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaGenerale = new LinkedHashMap<>();
         LinkedHashMap<String, ArrayList<WrapDidascalia>> mappaParagrafi = new LinkedHashMap<>();
@@ -325,12 +324,12 @@ public class ListaService extends ABioService {
             boolean cambia = false;
             mappaChiaveDue = creaMappaChiaveDue(mappaParagrafi.get(titoloParagrafo));
 
-            if (usaParagrafoSize) {
-                cambia = titoloParagrafo.equals(paragrafoVuoto);
-                size = mappaChiaveDue.get("").size();
-                titoloParagrafo += " <small><small>(" + size + ")</small></small>";
-                paragrafoVuoto = cambia ? titoloParagrafo : paragrafoVuoto;
-            }// end of if cycle
+//            if (usaParagrafoSize) {
+//                cambia = titoloParagrafo.equals(paragrafoVuoto);
+//                size = mappaChiaveDue.get("").size();
+//                titoloParagrafo += " <small><small>(" + size + ")</small></small>";
+//                paragrafoVuoto = cambia ? titoloParagrafo : paragrafoVuoto;
+//            }// end of if cycle
             mappaGenerale.put(titoloParagrafo, mappaChiaveDue);
         }// end of for cycle
 
@@ -431,7 +430,7 @@ public class ListaService extends ABioService {
      * Professione.pagina
      * Genere.plurale
      */
-    protected String getTitoloParagrafo(Bio bio, String tagParagrafoNullo) {
+    public String getTitoloParagrafo(Bio bio, String tagParagrafoNullo) {
         String titoloParagrafo = tagParagrafoNullo;
         Professione professione = null;
         String professioneTxt;
@@ -854,12 +853,23 @@ public class ListaService extends ABioService {
     public String paragrafoAttivita(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa) {
         StringBuilder testo = new StringBuilder(VUOTA);
         LinkedHashMap<String, ArrayList<String>> mappaParagrafo;
+        boolean usaParagrafoSize = true; //@todo eventualmente potrebbe essere passato come parametro
+        int size = 0;
+        String titoloParagrafo = "";
 
         if (mappa != null) {
             for (String keyUno : mappa.keySet()) {
-                testo.append(PARAGRAFO).append(keyUno).append(PARAGRAFO);
+                titoloParagrafo = keyUno;
+                titoloParagrafo = LibWiki.setQuadre(titoloParagrafo);
                 mappaParagrafo = mappa.get(keyUno);
-                testo.append(contenutoParagrafoSemplice(mappaParagrafo));
+
+                if (usaParagrafoSize) {
+                    size = mappaParagrafo.get("").size();
+                    titoloParagrafo += " <small><small>(" + size + ")</small></small>";
+                }// end of if cycle
+
+                testo.append(PARAGRAFO).append(titoloParagrafo).append(PARAGRAFO);
+                testo.append(contenutoParagrafoRaggruppato(mappaParagrafo));
                 testo.append(A_CAPO);
             }// end of for cycle
         }// end of if cycle
@@ -918,11 +928,22 @@ public class ListaService extends ABioService {
     public String paragrafoConRigheRaggruppate(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa) {
         StringBuilder testo = new StringBuilder(VUOTA);
         LinkedHashMap<String, ArrayList<String>> mappaParagrafo;
+        boolean usaParagrafoSize = true; //@todo eventualmente potrebbe essere passato come parametro
+        int size = 0;
+        String titoloParagrafo = "";
 
         if (mappa != null) {
             for (String keyUno : mappa.keySet()) {
-                testo.append(PARAGRAFO).append(keyUno).append(PARAGRAFO);
+                titoloParagrafo = keyUno;
+                titoloParagrafo = LibWiki.setQuadre(titoloParagrafo);
                 mappaParagrafo = mappa.get(keyUno);
+
+                if (usaParagrafoSize) {
+                    size = mappaParagrafo.size();
+                    titoloParagrafo += " <small><small>(" + size + ")</small></small>";
+                }// end of if cycle
+
+                testo.append(PARAGRAFO).append(titoloParagrafo).append(PARAGRAFO);
                 testo.append(contenutoParagrafoRaggruppato(mappaParagrafo));
                 testo.append(A_CAPO);
             }// end of for cycle

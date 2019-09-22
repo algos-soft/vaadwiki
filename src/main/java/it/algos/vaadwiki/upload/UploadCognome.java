@@ -85,6 +85,8 @@ public class UploadCognome extends Upload {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.usaSuddivisioneParagrafi = true;
+        super.usaRigheRaggruppate = false;
         super.titoloPagina = uploadService.getTitoloCognome(cognome);
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_COGNOMI);
         super.usaHeadIncipit = true;

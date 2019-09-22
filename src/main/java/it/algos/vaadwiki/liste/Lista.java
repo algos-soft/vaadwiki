@@ -185,13 +185,15 @@ public abstract class Lista {
      * @param listaDidascalie
      */
     protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
-        if (usaSuddivisioneParagrafi) {
-            creaMappaConParagrafi(listaDidascalie);
-            creaTestoConParagrafi();
-            mappaSemplice = listaService.creaMappa(listaDidascalie);//todo IN PROVA
-        } else {
-            creaTestoSenzaParagrafi(listaDidascalie);
-        }// end of if/else cycle
+        mappaSemplice = listaService.creaMappa(listaDidascalie);//todo IN PROVA
+        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
+//        if (usaSuddivisioneParagrafi) {
+//            creaMappaConParagrafi(listaDidascalie);
+//            creaTestoConParagrafi();
+//            mappaSemplice = listaService.creaMappa(listaDidascalie);//todo IN PROVA
+//        } else {
+//            creaTestoSenzaParagrafi(listaDidascalie);
+//        }// end of if/else cycle
     }// fine del metodo
 
 
@@ -201,7 +203,7 @@ public abstract class Lista {
     protected void creaMappaConParagrafi(ArrayList<WrapDidascalia> listaDidascalie) {
 
         //--Costruisce la mappa completa
-        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, usaParagrafoSize, paragrafoVuotoInCoda);
+        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
 
 //        if (paragrafoVuotoInCoda) {
 //            listaService.fixPosizioneParagrafoVuoto(mappaComplessa, titoloParagrafoVuoto);
@@ -209,29 +211,29 @@ public abstract class Lista {
     }// end of method
 
 
-    /**
-     * Costruisce il testo dalla mappa <br>
-     */
-    protected void creaTestoConParagrafi() {
-        this.testo = listaService.righeParagrafo(mappaComplessa);
-        this.size = listaService.getMappaDueSize(mappaComplessa);
-    }// end of method
+//    /**
+//     * Costruisce il testo dalla mappa <br>
+//     */
+//    protected void creaTestoConParagrafi() {
+//        this.testo = listaService.righeParagrafo(mappaComplessa);
+//        this.size = listaService.getMappaDueSize(mappaComplessa);
+//    }// end of method
 
 
-    /**
-     * Costruisce il testo dalla mappa <br>
-     */
-    protected void creaTestoSenzaParagrafi(ArrayList<WrapDidascalia> listaDidascalie) {
-        //--Costruisce la mappa completa
-        mappaSemplice = listaService.creaMappa(listaDidascalie);
-
-        if (usaRigheRaggruppate) {
-            this.testo = listaService.righeRaggruppate(mappaSemplice);
-        } else {
-            this.testo = listaService.righeSemplici(mappaSemplice);
-        }// end of if/else cycle
-        this.size = listaService.getMappaSize(mappaSemplice);
-    }// end of method
+//    /**
+//     * Costruisce il testo dalla mappa <br>
+//     */
+//    protected void creaTestoSenzaParagrafi(ArrayList<WrapDidascalia> listaDidascalie) {
+//        //--Costruisce la mappa completa
+//        mappaSemplice = listaService.creaMappa(listaDidascalie);
+//
+//        if (usaRigheRaggruppate) {
+//            this.testo = listaService.righeRaggruppate(mappaSemplice);
+//        } else {
+//            this.testo = listaService.righeSemplici(mappaSemplice);
+//        }// end of if/else cycle
+//        this.size = listaService.getMappaSize(mappaSemplice);
+//    }// end of method
 
 
     /**
