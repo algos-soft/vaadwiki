@@ -236,11 +236,12 @@ public class ListaService extends ABioService {
         for (WrapDidascalia wrap : listaDisordinata) {
             chiave = wrap.getChiave();
             titoloParagrafo = getTitoloParagrafo(wrap.bio, "");
-            if (mappa.get(chiave) == null) {
+
+            if (mappa.get(titoloParagrafo) == null) {
                 lista = new ArrayList<String>();
-                mappa.put(chiave, lista);
+                mappa.put(titoloParagrafo, lista);
             } else {
-                lista = (ArrayList<String>) mappa.get(chiave);
+                lista = (ArrayList<String>) mappa.get(titoloParagrafo);
             }// end of if/else cycle
             lista.add(wrap.getTestoSenza()); //@todo rimettere
 
@@ -295,7 +296,7 @@ public class ListaService extends ABioService {
      */
     public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> creaMappaChiaveUno(
             ArrayList<WrapDidascalia> listaGrezza,
-            String titoloParagrafoVuoto,
+            String paragrafoVuoto,
             boolean paragrafoVuotoInCoda) {
         LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaGenerale = new LinkedHashMap<>();
         LinkedHashMap<String, ArrayList<WrapDidascalia>> mappaParagrafi = new LinkedHashMap<>();
@@ -304,18 +305,19 @@ public class ListaService extends ABioService {
         String chiaveUno;
         String titoloParagrafo;
         int size = 0;
-        String paragrafoVuoto = titoloParagrafoVuoto;
+//        String paragrafoVuoto = titoloParagrafoVuoto;
 
         for (WrapDidascalia wrap : listaGrezza) {
             chiaveUno = text.isValid(wrap.chiaveUno) ? wrap.chiaveUno : paragrafoVuoto;
+            titoloParagrafo = getTitoloParagrafo(wrap.bio, paragrafoVuoto);
 
-            if (mappaParagrafi.get(chiaveUno) == null) {
+            if (mappaParagrafi.get(titoloParagrafo) == null) {
                 listaChiaveDue = new ArrayList<WrapDidascalia>();
             } else {
-                listaChiaveDue = (ArrayList<WrapDidascalia>) mappaParagrafi.get(chiaveUno);
+                listaChiaveDue = (ArrayList<WrapDidascalia>) mappaParagrafi.get(titoloParagrafo);
             }// end of if/else cycle
             listaChiaveDue.add(wrap);
-            mappaParagrafi.put(chiaveUno, listaChiaveDue);
+            mappaParagrafi.put(titoloParagrafo, listaChiaveDue);
         }// end of for cycle
 
         for (String key : mappaParagrafi.keySet()) {
@@ -443,15 +445,13 @@ public class ListaService extends ABioService {
         if (bio == null) {
             return VUOTA;
         }// end of if cycle
-
-        if (bio.getWikiTitle().equals("Ferdinando Ughelli")) {
-            int a = 87;
+        if (bio.getAttivita() == null) {
+            return titoloParagrafo;
         }// end of if cycle
 
         attivitaSingolare = bio.getAttivita().singolare;
         professione = professioneService.findByKeyUnica(attivitaSingolare);
         genere = genereService.findByKeyUnica(attivitaSingolare);
-//        }// end of if cycle
 
         if (professione != null) {
             professioneTxt = professione.getPagina();
@@ -860,7 +860,6 @@ public class ListaService extends ABioService {
         if (mappa != null) {
             for (String keyUno : mappa.keySet()) {
                 titoloParagrafo = keyUno;
-                titoloParagrafo = LibWiki.setQuadre(titoloParagrafo);
                 mappaParagrafo = mappa.get(keyUno);
 
                 if (usaParagrafoSize) {

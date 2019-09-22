@@ -4,6 +4,7 @@ import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
+import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadwiki.ATest;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
@@ -38,11 +39,11 @@ import java.util.List;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ListeIntegrationTest extends ATest {
 
+    private static String NOME_BIO_UNO = "Ron Clarke";
+
     public LinkedHashMap<String, ArrayList<String>> mappaSemplice;
 
     public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaComplessa;
-
-    private static String NOME_BIO_UNO = "Ron Clarke";
 
     protected List<Bio> listaBio;
 
@@ -65,6 +66,9 @@ public class ListeIntegrationTest extends ATest {
     @Autowired
     protected ListaService listaService;
 
+    @Autowired
+    protected ADateService dateService;
+
     protected Anno annoEntity;
 
     protected Giorno giornoEntity;
@@ -86,7 +90,9 @@ public class ListeIntegrationTest extends ATest {
 
     private String giornoText = "3 marzo";
 
-    private String nomeText = "Violeta";
+    private String nomeTextCorto = "Rita";
+
+    private String nomeTextLungo = "Giovanni";
 
     private int posIni = 35;
 
@@ -112,7 +118,7 @@ public class ListeIntegrationTest extends ATest {
         listaGiorno = appContext.getBean(ListaGiornoNato.class, giornoEntity);
         Assert.assertNotNull(listaGiorno);
 
-        nomeEntity = nomeService.findByKeyUnica(nomeText);
+        nomeEntity = nomeService.findByKeyUnica(nomeTextCorto);
         Assert.assertNotNull(nomeEntity);
         listaNome = appContext.getBean(ListaNomi.class, nomeEntity);
         Assert.assertNotNull(listaNome);
@@ -122,11 +128,29 @@ public class ListeIntegrationTest extends ATest {
 //        nome();
     }// end of single test
 
-//    @Test
+
+    //    @Test
     public void titoloParagrafo() {
         Bio bio = bioService.findByKeyUnica(NOME_BIO_UNO);
-        ottenuto= listaService.getTitoloParagrafo(bio, "pippoz");
+        ottenuto = listaService.getTitoloParagrafo(bio, "pippoz");
     }// end of single test
+
+
+//    @Test
+    public void timingTitoloParagrafo() {
+        long inizio;
+        ArrayList<Bio> listaGrezzaBio = bioService.findAllByNome(nomeTextLungo);
+        ArrayList<WrapDidascalia> listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.listaNomi);
+
+         inizio = System.currentTimeMillis();
+        mappaSemplice = listaService.creaMappa(listaDidascalie);
+        System.out.println("Mappa semplice tempo impiegato: " + dateService.deltaText(inizio));
+
+         inizio = System.currentTimeMillis();
+        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie);
+        System.out.println("Mappa complessa tempo impiegato: " + dateService.deltaText(inizio));
+    }// end of single test
+
 
     public void anno() {
         //--costruisco qui la mappa semplice perché listaAnno ha la preferenza usaSuddivisioneParagrafi=true
@@ -162,7 +186,7 @@ public class ListeIntegrationTest extends ATest {
     }// end of single test
 
 
-//    @Test
+    //    @Test
     public void giorno() {
         giornoEntity = giornoService.findByKeyUnica(giornoText);
         Assert.assertNotNull(giornoEntity);
@@ -199,18 +223,18 @@ public class ListeIntegrationTest extends ATest {
 
     @Test
     public void nome() {
-        nomeEntity = nomeService.findByKeyUnica(nomeText);
+        nomeEntity = nomeService.findByKeyUnica(nomeTextCorto);
         Assert.assertNotNull(nomeEntity);
         listaNome = appContext.getBean(ListaNomi.class, nomeEntity);
         Assert.assertNotNull(listaNome);
 
         //--costruisco qui la mappa semplice perché listaAnno ha la preferenza usaSuddivisioneParagrafi=true
         //--se cambio la preferenza nel mongoDb, devo cambiare anche qui
-        ArrayList<Bio> listaGrezzaBio = bioService.findAllByNome(nomeText);
+        ArrayList<Bio> listaGrezzaBio = bioService.findAllByNome(nomeTextCorto);
         ArrayList<WrapDidascalia> listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.listaNomi);
         mappaSemplice = listaService.creaMappa(listaDidascalie);
         //--end
-        mappaComplessa = listaService.getMappaNome(nomeText);
+        mappaComplessa = listaService.getMappaNome(nomeTextCorto);
         Assert.assertNotNull(mappaSemplice);
         Assert.assertNotNull(mappaComplessa);
 
@@ -221,10 +245,10 @@ public class ListeIntegrationTest extends ATest {
         System.out.println("*************");
         System.out.println("Controllo dimensioni");
         System.out.println("*************");
-        previstoIntero = 10;
+        previstoIntero = 77;
         ottenutoIntero = listaNome.size;
         Assert.assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println("Le biografie che hanno il nome " + nomeText + " sono " + ottenutoIntero);
+        System.out.println("Le biografie che hanno il nome " + nomeTextCorto + " sono " + ottenutoIntero);
         System.out.println("");
 
         System.out.println("*************");
