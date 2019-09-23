@@ -280,38 +280,38 @@ public class ListeIntegrationTest extends ATest {
     }// end of single test
 
 
-    /**
-     * Lista degli anni.
-     * Può usare i paragrafi oppure no.
-     * Test con paragrafi
-     * Test con titolo del paragrafo senza anno di nascita = "Pippoz"
-     * Test col paragrafo senza titolo in coda
-     * Test con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
-     * <p>
-     * Regola le preferenze da usare nella Lista.
-     * I valori attuali del mongoDB in produzione vengono alterati.
-     * Se tutto va bene, vengono ripristinati al termine del test.
-     * In caso di uscita dal test per errore, vanno controllati.
-     */
-    @Test
-    public void listaAnniConParagrafi() {
-        listaGiorno = fixGiornoConParagrafi();
-
-        mappaSemplice = listaAnno.mappaSemplice;
-        Assert.assertNotNull(mappaSemplice);
-        mappaComplessa = listaAnno.mappaComplessa;
-        Assert.assertNull(mappaComplessa);
-
-        System.out.println("*************");
-        System.out.println("listaService.paragrafoSenzaSize");
-        System.out.println("Lista dei primi " + listaAnno.size + " nati nell'anno " + annoText + " - Con paragrafi, righe raggruppate, titolo vuoto 'Diabolik' in coda");
-        System.out.println("*************");
-        testo = listaService.paragrafoSenzaSize(mappaComplessa);
-        System.out.println(testo);
-        System.out.println("");
-
-        resetPreferenzeGiorno();
-    }// end of single test
+//    /**
+//     * Lista degli anni.
+//     * Può usare i paragrafi oppure no.
+//     * Test con paragrafi
+//     * Test con titolo del paragrafo senza anno di nascita = "Pippoz"
+//     * Test col paragrafo senza titolo in coda
+//     * Test con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
+//     * <p>
+//     * Regola le preferenze da usare nella Lista.
+//     * I valori attuali del mongoDB in produzione vengono alterati.
+//     * Se tutto va bene, vengono ripristinati al termine del test.
+//     * In caso di uscita dal test per errore, vanno controllati.
+//     */
+//    @Test
+//    public void listaAnniConParagrafi() {
+//        listaGiorno = fixGiornoConParagrafi();
+//
+//        mappaSemplice = listaAnno.mappaSemplice;
+//        Assert.assertNotNull(mappaSemplice);
+//        mappaComplessa = listaAnno.mappaComplessa;
+//        Assert.assertNull(mappaComplessa);
+//
+//        System.out.println("*************");
+//        System.out.println("listaService.paragrafoSenzaSize");
+//        System.out.println("Lista dei primi " + listaAnno.size + " nati nell'anno " + annoText + " - Con paragrafi, righe raggruppate, titolo vuoto 'Diabolik' in coda");
+//        System.out.println("*************");
+//        testo = listaService.paragrafoSenzaSize(mappaComplessa);
+//        System.out.println(testo);
+//        System.out.println("");
+//
+//        resetPreferenzeGiorno();
+//    }// end of single test
 
 //        public void anno() {
 //        //--costruisco qui la mappa semplice perché listaAnno ha la preferenza usaSuddivisioneParagrafi=true
