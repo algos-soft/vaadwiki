@@ -101,6 +101,10 @@ public abstract class Lista {
 
     public LinkedHashMap<String, ArrayList<String>> mappaSemplice;
 
+
+    /**
+     * Mappa unica <br>
+     */
     public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaComplessa;
 
     //--property
