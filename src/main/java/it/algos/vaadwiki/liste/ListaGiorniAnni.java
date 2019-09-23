@@ -25,7 +25,6 @@ public abstract class ListaGiorniAnni extends Lista {
         if (usaSuddivisioneParagrafi) {
             mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
         } else {
-//            mappaSemplice = listaService.creaMappaQuadre(listaDidascalie);
         }// end of if/else cycle
     }// fine del metodo
 
