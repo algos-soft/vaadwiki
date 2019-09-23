@@ -596,13 +596,13 @@ public abstract class Upload {
 
         if (usaSuddivisioneParagrafi) {
             if (usaRigheRaggruppate) {
-                testoLista = listaService.paragrafoConRigheRaggruppate(lista.mappaComplessa);
+                testoLista = listaService.paragrafoSenzaSize(lista.mappaComplessa);
             } else {
                 testoLista = listaService.paragrafoAttivita(lista.mappaComplessa);
             }// end of if/else cycle
         } else {
             if (usaRigheRaggruppate) {
-                testoLista = listaService.righeRaggruppate(lista.mappaSemplice);
+                testoLista = listaService.senzaParagrafi(lista.mappaSemplice);
             } else {
                 testoLista = listaService.righeSemplici(lista.mappaSemplice);
             }// end of if/else cycle

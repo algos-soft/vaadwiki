@@ -37,12 +37,11 @@ public abstract class ListaNomiCognomi extends Lista {
      *
      * @param listaDidascalie
      */
-    protected void creaMappaNo(ArrayList<WrapDidascalia> listaDidascalie) {
+    protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
         if (usaSuddivisioneParagrafi) {
-            usaParagrafoSize = false;
             mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
         } else {
-            mappaSemplice = listaService.creaMappa(listaDidascalie);
+            mappaSemplice = listaService.creaMappaQuadre(listaDidascalie);
         }// end of if/else cycle
     }// fine del metodo
 

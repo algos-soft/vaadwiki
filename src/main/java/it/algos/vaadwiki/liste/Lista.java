@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Project vaadwiki
@@ -172,6 +173,10 @@ public abstract class Lista {
         //--Ordina la lista di didascalie specifiche
         listaDidascalie = this.ordinaListaDidascalie(listaDidascalie);
 
+        //@todo ASSOLUTAMENTE PROVVISORIO
+        listaDidascalie = new ArrayList<>(listaDidascalie.subList(0, 50));
+        //@todo ASSOLUTAMENTE PROVVISORIO
+
         this.size = listaDidascalie.size();
     }// end of method
 
@@ -185,7 +190,7 @@ public abstract class Lista {
      * @param listaDidascalie
      */
     protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
-        mappaSemplice = listaService.creaMappa(listaDidascalie);//todo IN PROVA
+        mappaSemplice = listaService.creaMappaQuadre(listaDidascalie);//todo IN PROVA
         mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
 //        if (usaSuddivisioneParagrafi) {
 //            creaMappaConParagrafi(listaDidascalie);

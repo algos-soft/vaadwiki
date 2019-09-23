@@ -220,28 +220,27 @@ public class ListaService extends ABioService {
      * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
      * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
      * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+     * La chiave è comprensiva di parentesi quadre per avere il link alla pagina wiki <br>
      * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
-     * Sovrascritto nella sottoclasse concreta <br>
+     *
+     * @param listaOrdinata di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
      *
      * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
-     *
-     * @listaOrdinata di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
      */
-    public LinkedHashMap<String, ArrayList<String>> creaMappa(ArrayList<WrapDidascalia> listaDisordinata) {
+    public LinkedHashMap<String, ArrayList<String>> creaMappaQuadre(ArrayList<WrapDidascalia> listaOrdinata) {
         LinkedHashMap<String, ArrayList<String>> mappa = new LinkedHashMap<>();
         ArrayList<String> lista = null;
         String chiave;
-        String titoloParagrafo = "";
 
-        for (WrapDidascalia wrap : listaDisordinata) {
+        for (WrapDidascalia wrap : listaOrdinata) {
             chiave = wrap.getChiave();
-            titoloParagrafo = getTitoloParagrafo(wrap.bio, "");
+            chiave = LibWiki.setQuadre(chiave);
 
-            if (mappa.get(titoloParagrafo) == null) {
+            if (mappa.get(chiave) == null) {
                 lista = new ArrayList<String>();
-                mappa.put(titoloParagrafo, lista);
+                mappa.put(chiave, lista);
             } else {
-                lista = (ArrayList<String>) mappa.get(titoloParagrafo);
+                lista = (ArrayList<String>) mappa.get(chiave);
             }// end of if/else cycle
             lista.add(wrap.getTestoSenza()); //@todo rimettere
 
@@ -924,10 +923,9 @@ public class ListaService extends ABioService {
      * Righe suddivise per paragrafi <br>
      * All'interno dei paragrafi usa righe righeRaggruppate <br>
      */
-    public String paragrafoConRigheRaggruppate(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa) {
+    public String paragrafoBase(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa, boolean usaParagrafoSize) {
         StringBuilder testo = new StringBuilder(VUOTA);
         LinkedHashMap<String, ArrayList<String>> mappaParagrafo;
-        boolean usaParagrafoSize = true; //@todo eventualmente potrebbe essere passato come parametro
         int size = 0;
         String titoloParagrafo = "";
 
@@ -949,6 +947,24 @@ public class ListaService extends ABioService {
         }// end of if cycle
 
         return testo.toString();
+    }// end of method
+
+
+    /**
+     * Righe suddivise per paragrafi <br>
+     * All'interno dei paragrafi usa righe righeRaggruppate <br>
+     */
+    public String paragrafoSenzaSize(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa) {
+        return paragrafoBase(mappa, false);
+    }// end of method
+
+
+    /**
+     * Righe suddivise per paragrafi <br>
+     * All'interno dei paragrafi usa righe righeRaggruppate <br>
+     */
+    public String paragrafoConSize(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappa) {
+        return paragrafoBase(mappa, true);
     }// end of method
 
 
@@ -1089,7 +1105,7 @@ public class ListaService extends ABioService {
     /**
      * Righe raggruppate per anno/giorno
      */
-    public String righeRaggruppate(LinkedHashMap<String, ArrayList<String>> mappaDidascalie) {
+    public String senzaParagrafi(LinkedHashMap<String, ArrayList<String>> mappaDidascalie) {
         StringBuilder testo = new StringBuilder(VUOTA);
         ArrayList<String> listaDidascalie;
 
@@ -1118,6 +1134,7 @@ public class ListaService extends ABioService {
     }// fine del metodo
 
 
+    @Deprecated
     public int getMappaSize(LinkedHashMap<String, ArrayList<String>> mappaGenerale) {
         int numVoci = 0;
 
@@ -1129,6 +1146,7 @@ public class ListaService extends ABioService {
     }// end of method
 
 
+    @Deprecated
     public int getMappaDueSize(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaGenerale) {
         int numVoci = 0;
 

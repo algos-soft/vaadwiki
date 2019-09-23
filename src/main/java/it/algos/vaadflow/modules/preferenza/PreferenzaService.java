@@ -438,6 +438,7 @@ public class PreferenzaService extends AService {
      *
      * @return la nuova entity appena regolata (non salvata)
      */
+    @Deprecated
     public Preferenza setValue(String keyCode, Object value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
@@ -457,6 +458,7 @@ public class PreferenzaService extends AService {
      *
      * @return la nuova entity appena regolata (non salvata)
      */
+    @Deprecated
     public Preferenza setBool(String keyCode, boolean value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
@@ -476,6 +478,7 @@ public class PreferenzaService extends AService {
      *
      * @return la nuova entity appena regolata (non salvata)
      */
+    @Deprecated
     public Preferenza setInt(String keyCode, int value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
@@ -495,6 +498,7 @@ public class PreferenzaService extends AService {
      *
      * @return la nuova entity appena regolata (non salvata)
      */
+    @Deprecated
     public Preferenza setDate(String keyCode, LocalDateTime value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
