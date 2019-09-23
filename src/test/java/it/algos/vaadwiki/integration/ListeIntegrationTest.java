@@ -263,8 +263,8 @@ public class ListeIntegrationTest extends ATest {
     public void listaAnniSenzaParagrafi() {
         listaAnno = fixAnnoSenzaParagrafi();
 
-        mappaSemplice = listaAnno.mappaSemplice;
-        Assert.assertNotNull(mappaSemplice);
+//        mappaSemplice = listaAnno.mappaSemplice;
+//        Assert.assertNotNull(mappaSemplice);
         mappaComplessa = listaAnno.mappaComplessa;
         Assert.assertNull(mappaComplessa);
 
@@ -297,8 +297,8 @@ public class ListeIntegrationTest extends ATest {
     public void listaAnniConParagrafi() {
         listaGiorno = fixGiornoConParagrafi();
 
-        mappaSemplice = listaAnno.mappaSemplice;
-        Assert.assertNotNull(mappaSemplice);
+//        mappaSemplice = listaAnno.mappaSemplice;
+//        Assert.assertNotNull(mappaSemplice);
         mappaComplessa = listaAnno.mappaComplessa;
         Assert.assertNull(mappaComplessa);
 
@@ -428,8 +428,8 @@ public class ListeIntegrationTest extends ATest {
     public void listaGiorniSenzaParagrafi() {
         listaGiorno = fixGiornoSenzaParagrafi();
 
-        mappaSemplice = listaGiorno.mappaSemplice;
-        Assert.assertNotNull(mappaSemplice);
+//        mappaSemplice = listaGiorno.mappaSemplice;
+//        Assert.assertNotNull(mappaSemplice);
         mappaComplessa = listaGiorno.mappaComplessa;
         Assert.assertNull(mappaComplessa);
         System.out.println("*************");
@@ -461,8 +461,8 @@ public class ListeIntegrationTest extends ATest {
     public void listaGiorniConParagrafi() {
         listaGiorno = fixGiornoConParagrafi();
 
-        mappaSemplice = listaGiorno.mappaSemplice;
-        Assert.assertNull(mappaSemplice);
+//        mappaSemplice = listaGiorno.mappaSemplice;
+//        Assert.assertNull(mappaSemplice);
         mappaComplessa = listaGiorno.mappaComplessa;
         Assert.assertNotNull(mappaComplessa);
 
@@ -532,8 +532,8 @@ public class ListeIntegrationTest extends ATest {
     public void listaNomiSenzaSize() {
         listaNome = fixNomiSenzaSize();
 
-        mappaSemplice = listaNome.mappaSemplice;
-        Assert.assertNull(mappaSemplice);
+//        mappaSemplice = listaNome.mappaSemplice;
+//        Assert.assertNull(mappaSemplice);
         mappaComplessa = listaNome.mappaComplessa;
         Assert.assertNotNull(mappaComplessa);
         System.out.println("*************");
@@ -621,8 +621,8 @@ public class ListeIntegrationTest extends ATest {
     public void listaNomiConSize() {
         listaNome = fixNomiConSize();
 
-        mappaSemplice = listaNome.mappaSemplice;
-        Assert.assertNull(mappaSemplice);
+//        mappaSemplice = listaNome.mappaSemplice;
+//        Assert.assertNull(mappaSemplice);
         mappaComplessa = listaNome.mappaComplessa;
         Assert.assertNotNull(mappaComplessa);
         System.out.println("*************");

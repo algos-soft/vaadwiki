@@ -602,9 +602,9 @@ public abstract class Upload {
             }// end of if/else cycle
         } else {
             if (usaRigheRaggruppate) {
-                testoLista = listaService.senzaParagrafi(lista.mappaSemplice);
+//                testoLista = listaService.senzaParagrafi(lista.mappaSemplice);
             } else {
-                testoLista = listaService.righeSemplici(lista.mappaSemplice);
+//                testoLista = listaService.righeSemplici(lista.mappaSemplice);
             }// end of if/else cycle
         }// end of if/else cycle
 

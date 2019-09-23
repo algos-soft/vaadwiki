@@ -253,7 +253,7 @@ public class ViewDidascalie extends ALayoutViewList {
         String message = "";
 
         if (bioDidascalia != null) {
-            didascalia = didascaliaService.getBiografieCon(bioDidascalia);
+            didascalia = didascaliaService.getBiografie(bioDidascalia);
             message = "Incipit della biografia " + " -> " + didascalia;
             label.setText(message);
         }// end of if cycle

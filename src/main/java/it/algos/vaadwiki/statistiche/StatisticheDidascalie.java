@@ -233,7 +233,7 @@ public class StatisticheDidascalie extends Statistiche {
         if (bio != null) {
             title = bio.getWikiTitle();
             if (text.isValid(title)) {
-                didascalia = didascaliaService.getBiografieCon(bio);
+                didascalia = didascaliaService.getBiografie(bio);
                 linkPagina = LibWiki.setQuadre(title);
                 testo += "Nell'incipit della pagina biografica " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
             }// end of if cycle

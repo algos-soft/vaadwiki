@@ -515,23 +515,23 @@ public class ListaService extends ABioService {
     }// fine del metodo
 
 
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
-     *
-     * @param giorno di riferimento per la lista
-     *
-     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
-     */
-    public LinkedHashMap<String, ArrayList<String>> getMappaGiornoNato(Giorno giorno) {
-        LinkedHashMap<String, ArrayList<String>> mappa = null;
-        ListaGiornoNato listaGiornoNato;
-
-        listaGiornoNato = appContext.getBean(ListaGiornoNato.class, giorno);
-        return listaGiornoNato.mappaSemplice;
-    }// end of method
+//    /**
+//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+//     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+//     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+//     *
+//     * @param giorno di riferimento per la lista
+//     *
+//     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+//     */
+//    public LinkedHashMap<String, ArrayList<String>> getMappaGiornoNato(Giorno giorno) {
+//        LinkedHashMap<String, ArrayList<String>> mappa = null;
+//        ListaGiornoNato listaGiornoNato;
+//
+//        listaGiornoNato = appContext.getBean(ListaGiornoNato.class, giorno);
+//        return listaGiornoNato.mappaSemplice;
+//    }// end of method
 
 
     /**
@@ -572,104 +572,104 @@ public class ListaService extends ABioService {
     }// end of method
 
 
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
-     *
-     * @param giorno di riferimento per la lista
-     *
-     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
-     */
-    public LinkedHashMap<String, ArrayList<String>> getMappaGiornoMorto(Giorno giorno) {
-        LinkedHashMap<String, ArrayList<String>> mappa = null;
-        ListaGiornoMorto listaGiornoMorto;
-
-        listaGiornoMorto = appContext.getBean(ListaGiornoMorto.class, giorno);
-        return listaGiornoMorto.mappaSemplice;
-    }// end of method
-
-
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
-     *
-     * @param anno di riferimento per la lista
-     *
-     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
-     */
-    public LinkedHashMap<String, ArrayList<String>> getMappaAnnoNato(Anno anno) {
-        LinkedHashMap<String, ArrayList<String>> mappa = null;
-        ListaAnnoNato listaAnnoNato;
-
-        listaAnnoNato = appContext.getBean(ListaAnnoNato.class, anno);
-        return listaAnnoNato.mappaSemplice;
-    }// end of method
+//    /**
+//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+//     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+//     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+//     *
+//     * @param giorno di riferimento per la lista
+//     *
+//     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+//     */
+//    public LinkedHashMap<String, ArrayList<String>> getMappaGiornoMorto(Giorno giorno) {
+//        LinkedHashMap<String, ArrayList<String>> mappa = null;
+//        ListaGiornoMorto listaGiornoMorto;
+//
+//        listaGiornoMorto = appContext.getBean(ListaGiornoMorto.class, giorno);
+//        return listaGiornoMorto.mappaSemplice;
+//    }// end of method
 
 
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
-     *
-     * @param anno di riferimento per la lista
-     *
-     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
-     */
-    public LinkedHashMap<String, ArrayList<String>> getMappaAnnoMorto(Anno anno) {
-        LinkedHashMap<String, ArrayList<String>> mappa = null;
-        ListaAnnoMorto listaAnnoMorto;
-
-        listaAnnoMorto = appContext.getBean(ListaAnnoMorto.class, anno);
-        return listaAnnoMorto.mappaSemplice;
-    }// end of method
-
-
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una delle attività in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
-     *
-     * @param nome di riferimento per la lista
-     *
-     * @return mappa ordinata delle didascalie ordinate per nomi (key) e poi per cognome (value)
-     */
-    @Deprecated
-    public LinkedHashMap<String, ArrayList<String>> getMappaNomi(Nome nome) {
-        LinkedHashMap<String, ArrayList<String>> mappa = null;
-        ListaNomi listaNomi;
-
-        listaNomi = appContext.getBean(ListaNomi.class, nome);
-        return listaNomi.mappaSemplice;
-    }// end of method
+//    /**
+//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+//     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+//     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+//     *
+//     * @param anno di riferimento per la lista
+//     *
+//     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+//     */
+//    public LinkedHashMap<String, ArrayList<String>> getMappaAnnoNato(Anno anno) {
+//        LinkedHashMap<String, ArrayList<String>> mappa = null;
+//        ListaAnnoNato listaAnnoNato;
+//
+//        listaAnnoNato = appContext.getBean(ListaAnnoNato.class, anno);
+//        return listaAnnoNato.mappaSemplice;
+//    }// end of method
 
 
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una delle attività in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
-     *
-     * @param nomeText di riferimento per la lista
-     *
-     * @return mappa ordinata delle didascalie ordinate per nomi (key) e poi per cognome (value)
-     */
-    @Deprecated
-    public LinkedHashMap<String, ArrayList<String>> getMappaNomi(String nomeText) {
-        LinkedHashMap<String, ArrayList<String>> mappa = null;
-        Nome nomeEntity = nomeService.findByKeyUnica(nomeText);
+//    /**
+//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+//     * Ogni chiave della mappa è una dei giorni/anni in cui suddividere la pagina <br>
+//     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+//     *
+//     * @param anno di riferimento per la lista
+//     *
+//     * @return mappa ordinata delle didascalie ordinate per giorno/anno (key) e poi per cognome (value)
+//     */
+//    public LinkedHashMap<String, ArrayList<String>> getMappaAnnoMorto(Anno anno) {
+//        LinkedHashMap<String, ArrayList<String>> mappa = null;
+//        ListaAnnoMorto listaAnnoMorto;
+//
+//        listaAnnoMorto = appContext.getBean(ListaAnnoMorto.class, anno);
+//        return listaAnnoMorto.mappaSemplice;
+//    }// end of method
 
-        if (nomeEntity != null) {
-            mappa = getMappaNomi(nomeEntity);
-        }// end of if cycle
 
-        return mappa;
-    }// end of method
+//    /**
+//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
+//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+//     * Ogni chiave della mappa è una delle attività in cui suddividere la pagina <br>
+//     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+//     *
+//     * @param nome di riferimento per la lista
+//     *
+//     * @return mappa ordinata delle didascalie ordinate per nomi (key) e poi per cognome (value)
+//     */
+//    @Deprecated
+//    public LinkedHashMap<String, ArrayList<String>> getMappaNomi(Nome nome) {
+//        LinkedHashMap<String, ArrayList<String>> mappa = null;
+//        ListaNomi listaNomi;
+//
+//        listaNomi = appContext.getBean(ListaNomi.class, nome);
+//        return listaNomi.mappaSemplice;
+//    }// end of method
+
+
+//    /**
+//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
+//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+//     * Ogni chiave della mappa è una delle attività in cui suddividere la pagina <br>
+//     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+//     *
+//     * @param nomeText di riferimento per la lista
+//     *
+//     * @return mappa ordinata delle didascalie ordinate per nomi (key) e poi per cognome (value)
+//     */
+//    @Deprecated
+//    public LinkedHashMap<String, ArrayList<String>> getMappaNomi(String nomeText) {
+//        LinkedHashMap<String, ArrayList<String>> mappa = null;
+//        Nome nomeEntity = nomeService.findByKeyUnica(nomeText);
+//
+//        if (nomeEntity != null) {
+//            mappa = getMappaNomi(nomeEntity);
+//        }// end of if cycle
+//
+//        return mappa;
+//    }// end of method
 
 
     /**
@@ -713,23 +713,23 @@ public class ListaService extends ABioService {
     }// end of method
 
 
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è una dei nomi/cognomi in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br> //@todo Forse
-     *
-     * @param cognome di riferimento per la lista
-     *
-     * @return mappa ordinata delle didascalie ordinate per nomi/cognomi (key) e poi per cognome (value)//@todo Forse
-     */
-    public LinkedHashMap<String, ArrayList<String>> getMappaCognomi(Cognome cognome) {
-        LinkedHashMap<String, ArrayList<String>> mappa = null;
-        ListaCognomi listaCognomi;
-
-        listaCognomi = appContext.getBean(ListaCognomi.class, cognome);
-        return listaCognomi.mappaSemplice;
-    }// end of method
+//    /**
+//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la property specifica <br>
+//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+//     * Ogni chiave della mappa è una dei nomi/cognomi in cui suddividere la pagina <br>
+//     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br> //@todo Forse
+//     *
+//     * @param cognome di riferimento per la lista
+//     *
+//     * @return mappa ordinata delle didascalie ordinate per nomi/cognomi (key) e poi per cognome (value)//@todo Forse
+//     */
+//    public LinkedHashMap<String, ArrayList<String>> getMappaCognomi(Cognome cognome) {
+//        LinkedHashMap<String, ArrayList<String>> mappa = null;
+//        ListaCognomi listaCognomi;
+//
+//        listaCognomi = appContext.getBean(ListaCognomi.class, cognome);
+//        return listaCognomi.mappaSemplice;
+//    }// end of method
 
 
     /**

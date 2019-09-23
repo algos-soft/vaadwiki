@@ -99,7 +99,7 @@ public abstract class Lista {
 
     public ArrayList<WrapDidascalia> listaDidascalie;
 
-    public LinkedHashMap<String, ArrayList<String>> mappaSemplice;
+    private LinkedHashMap<String, ArrayList<String>> mappaSemplice;
 
 
     /**
@@ -194,7 +194,7 @@ public abstract class Lista {
      * @param listaDidascalie
      */
     protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
-        mappaSemplice = listaService.creaMappaQuadre(listaDidascalie);//todo IN PROVA
+//        mappaSemplice = listaService.creaMappaQuadre(listaDidascalie);//todo IN PROVA
         mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
 //        if (usaSuddivisioneParagrafi) {
 //            creaMappaConParagrafi(listaDidascalie);
@@ -206,18 +206,18 @@ public abstract class Lista {
     }// fine del metodo
 
 
-    /**
-     * Costruisce la mappa <br>
-     */
-    protected void creaMappaConParagrafi(ArrayList<WrapDidascalia> listaDidascalie) {
-
-        //--Costruisce la mappa completa
-        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
-
-//        if (paragrafoVuotoInCoda) {
-//            listaService.fixPosizioneParagrafoVuoto(mappaComplessa, titoloParagrafoVuoto);
-//        }// end of if cycle
-    }// end of method
+//    /**
+//     * Costruisce la mappa <br>
+//     */
+//    protected void creaMappaConParagrafi(ArrayList<WrapDidascalia> listaDidascalie) {
+//
+//        //--Costruisce la mappa completa
+//        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
+//
+////        if (paragrafoVuotoInCoda) {
+////            listaService.fixPosizioneParagrafoVuoto(mappaComplessa, titoloParagrafoVuoto);
+////        }// end of if cycle
+//    }// end of method
 
 
 //    /**
