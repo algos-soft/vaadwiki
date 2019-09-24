@@ -247,6 +247,14 @@ public class WikiCost {
 
     public final static String USA_RIGHE_RAGGRUPPATE_ANNI = "usaRigheRaggruppateAnni";
 
+    public final static String SOGLIA_SOTTOPAGINA_GIORNI_ANNI = "sogliaSottopaginaGiorniAnni";
+
+    public final static String SOGLIA_SOTTOPAGINA_NOMI_COGNOMI = "sogliaSottopaginaNomiCognomi";
+
+    public final static String USA_SOTTOPAGINE_GIORNI_ANNI = "usaSottopagineGiorniAnni";
+
+    public final static String USA_SOTTOPAGINE_NOMI_COGNOMI = "usaSottopagineNomiCognomi";
+
     public final static String TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI = "tagParagrafoVuotoNomi";
 
     public final static String USA_FORCETOC_NOMI = "usaForcetocNomi";
@@ -256,6 +264,10 @@ public class WikiCost {
     public final static String IS_PARAGRAFO_VUOTO_NOMI_IN_CODA = "isParagrafoVuotoNomiInCoda";
 
     public final static String IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA = "isParagrafoVuotoCognomiInCoda";
+
+    public final static String USA_PARAGRAFO_SIZE_GIORNI = "usaParagrafoSizeGiorni";
+
+    public final static String USA_PARAGRAFO_SIZE_ANNI = "usaParagrafoSizeAnni";
 
     public final static String USA_PARAGRAFO_SIZE_NOMI = "usaParagrafoSizeNomi";
 

@@ -149,7 +149,7 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
         this.paragrafoVuotoInCoda = lista.paragrafoVuotoInCoda;
         this.usaRigheRaggruppate = lista.usaRigheRaggruppate;
 //        this.mappaSemplice = lista.mappaSemplice;
-        this.mappaComplessa = lista.mappa;
+        this.mappaComplessa = lista.getMappa();
     }// end of method
 
 

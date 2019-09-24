@@ -565,7 +565,8 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected String elaboraBody() {
-        String testoLista = getTestoLista(lista);
+//        String testoLista = getTestoLista(lista);
+        String testoLista = lista.getTesto();
         numVoci = lista.size;
         int maxRigheColonne = 10; //@todo mettere la preferenza
 
@@ -596,9 +597,9 @@ public abstract class Upload {
 
         if (usaSuddivisioneParagrafi) {
             if (usaRigheRaggruppate) {
-                testoLista = listaService.righeSenzaParagrafo(lista.mappa);
+                testoLista = listaService.righeSenzaParagrafo(lista.getMappa());
             } else {
-                testoLista = listaService.righeSenzaParagrafo(lista.mappa);
+                testoLista = listaService.righeSenzaParagrafo(lista.getMappa());
             }// end of if/else cycle
         } else {
             if (usaRigheRaggruppate) {

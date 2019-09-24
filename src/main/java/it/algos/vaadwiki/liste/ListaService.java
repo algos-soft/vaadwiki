@@ -19,11 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
 
-import static it.algos.vaadflow.application.FlowCost.*;
-import static it.algos.vaadwiki.application.WikiCost.*;
-import static it.algos.vaadwiki.didascalia.Didascalia.TAG_SEP;
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import static it.algos.vaadwiki.application.WikiCost.AST;
 import static it.algos.wiki.LibWiki.PARAGRAFO;
 
 /**
@@ -288,12 +291,12 @@ public class ListaService extends ABioService {
      * La chiaveDue è un anno, un giorno (a seconda del tipo di didascalia) <br>
      * Le didascalie sono ordinate per cognome <br>
      *
-     * @param listaDidascalie      da raggruppare
+     * @param listaDidascalie da raggruppare
      *
      * @return mappa complessa
      */
     public LinkedHashMap<String, LinkedHashMap<String, List<String>>> creaMappa(List<WrapDidascalia> listaDidascalie) {
-        return creaMappa(listaDidascalie, "", false);
+        return creaMappa(listaDidascalie, "", false, false);
     }// fine del metodo
 
 
@@ -317,7 +320,8 @@ public class ListaService extends ABioService {
     public LinkedHashMap<String, LinkedHashMap<String, List<String>>> creaMappa(
             List<WrapDidascalia> listaDidascalie,
             String titoloParagrafoVuoto,
-            boolean paragrafoVuotoInCoda) {
+            boolean paragrafoVuotoInCoda,
+            boolean usaLinkAttivita) {
         LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale = new LinkedHashMap<>();
         LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafi = new LinkedHashMap<>();
         LinkedHashMap<String, List<String>> mappaChiaveDue;
@@ -326,6 +330,14 @@ public class ListaService extends ABioService {
 
         for (WrapDidascalia wrap : listaDidascalie) {
             chiaveUno = wrap.chiaveUno;
+            if (text.isValid(chiaveUno)) {
+                if (usaLinkAttivita) {
+                    chiaveUno = getTitoloParagrafo(wrap.bio); //@todo NON FUNZIONA - DA SIUSTEMARE
+                }// end of if cycle
+                chiaveUno = LibWiki.setQuadre(chiaveUno);
+            } else {
+                chiaveUno = titoloParagrafoVuoto;
+            }// end of if/else cycle
 
             if (mappaParagrafi.get(chiaveUno) == null) {
                 listaChiaveDue = new ArrayList<WrapDidascalia>();
@@ -340,6 +352,14 @@ public class ListaService extends ABioService {
             mappaChiaveDue = creaMappaInterna(mappaParagrafi.get(key));
             mappaGenerale.put(key, mappaChiaveDue);
         }// end of for cycle
+
+        if (paragrafoVuotoInCoda) {
+            if (mappaGenerale.containsKey(titoloParagrafoVuoto)) {
+                mappaChiaveDue = mappaGenerale.get(titoloParagrafoVuoto);
+                mappaGenerale.remove(titoloParagrafoVuoto);
+                mappaGenerale.put(titoloParagrafoVuoto, mappaChiaveDue);
+            }// end of if cycle
+        }// end of if cycle
 
         return mappaGenerale;
     }// fine del metodo
@@ -496,6 +516,7 @@ public class ListaService extends ABioService {
      * Professione.pagina
      * Genere.plurale
      */
+    @Deprecated
     public String getTitoloParagrafo(Bio bio, String tagParagrafoNullo) {
         String titoloParagrafo = tagParagrafoNullo;
         Professione professione = null;
@@ -548,6 +569,83 @@ public class ListaService extends ABioService {
 
         return titoloParagrafo;
     }// fine del metodo
+
+
+    public String getTitoloParagrafo(Bio bio) {
+        String titoloParagrafo = "";
+        String paginaWiki = VUOTA;
+        String linkVisibile = VUOTA;
+
+        paginaWiki = getProfessioneDaAttivitaSingolare(bio.getAttivita().singolare);
+        linkVisibile = getGenereDaAttivitaSingolare(bio.getAttivita().singolare, bio.getSesso());
+
+        if (text.isValid(paginaWiki) && text.isValid(linkVisibile)) {
+            titoloParagrafo = costruisceTitolo(paginaWiki, linkVisibile, "");
+        }// end of if cycle
+
+        return titoloParagrafo;
+    }// fine del metodo
+
+
+    /**
+     * Restituisce il titolo della pagina wiki associata all'attività indicata <br>
+     *
+     * @param attivitaSingolare
+     *
+     * @return nome della pagina wiki da linkare come riferimento
+     */
+    public String getProfessioneDaAttivitaSingolare(String attivitaSingolare) {
+        String professioneTxt = "";
+        Professione professione;
+
+        professione = professioneService.findByKeyUnica(attivitaSingolare.toLowerCase());
+
+        if (professione != null) {
+            professioneTxt = professione.getPagina();
+        } else {
+            professioneTxt = attivitaSingolare;
+        }// end of if/else cycle
+
+        if (text.isValid(professioneTxt)) {
+            professioneTxt = text.primaMaiuscola(professioneTxt);
+        }// end of if cycle
+
+        return professioneTxt;
+    }// end of single test
+
+
+    /**
+     * Restituisce il titolo plurale visibile associato all'attività indicata <br>
+     *
+     * @param attivitaSingolare
+     *
+     * @return nome della pagina wiki da linkare come riferimento
+     */
+    public String getGenereDaAttivitaSingolare(String attivitaSingolare, String sesso) {
+        String linkVisibile = VUOTA;
+        String genereTxt = "";
+        Genere genere;
+
+        genere = genereService.findByKeyUnica(attivitaSingolare);
+
+        if (genere != null) {
+            if (sesso.equals("M")) {
+                genereTxt = genere.getPluraleMaschile();
+            } else {
+                if (sesso.equals("F")) {
+                    genereTxt = genere.getPluraleFemminile();
+                } else {
+                    //@todo errore
+                }// end of if/else cycle
+            }// end of if/else cycle
+
+            if (text.isValid(genereTxt)) {
+                linkVisibile = text.primaMaiuscola(genereTxt);
+            }// end of if cycle
+        }// end of if cycle
+
+        return linkVisibile;
+    }// end of single test
 
 
     /**
@@ -871,7 +969,7 @@ public class ListaService extends ABioService {
                     testo.append(A_CAPO);
                     testo.append(A_CAPO);
                     if (usaParagrafoSize) {
-                        size = mappaGenerale.get(keyUno).size();
+                        size = getMappaSize(mappaGenerale.get(keyUno));
                         titoloParagrafo += " <small><small>(" + size + ")</small></small>";
                     }// end of if cycle
                     testo.append(PARAGRAFO).append(titoloParagrafo).append(PARAGRAFO);
@@ -1251,16 +1349,16 @@ public class ListaService extends ABioService {
 //    }// fine del metodo
 
 
-//    @Deprecated
-//    public int getMappaSize(LinkedHashMap<String, ArrayList<String>> mappaGenerale) {
-//        int numVoci = 0;
-//
-//        for (ArrayList<String> lista : mappaGenerale.values()) {
-//            numVoci += lista.size();
-//        }// end of for cycle
-//
-//        return numVoci;
-//    }// end of method
+    @Deprecated
+    public int getMappaSize(LinkedHashMap<String, List<String>> mappaGenerale) {
+        int numVoci = 0;
+
+        for (List<String> lista : mappaGenerale.values()) {
+            numVoci += lista.size();
+        }// end of for cycle
+
+        return numVoci;
+    }// end of method
 
 
 //    @Deprecated
