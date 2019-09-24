@@ -59,6 +59,7 @@ public class ListaGiornoMorto extends ListaGiorni {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_GIORNI_MORTE);
     }// end of method
 
@@ -75,16 +76,5 @@ public class ListaGiornoMorto extends ListaGiorni {
     }// fine del metodo
 
 
-//    /**
-//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-//     * Ogni chiave della mappa è uno dei giorni/anni/nomi/cognomi in cui suddividere la pagina <br>
-//     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
-//     *
-//     * @param listaDidascalie
-//     */
-//    protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
-//        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
-//    }// fine del metodo
 
 }// end of class

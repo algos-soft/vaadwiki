@@ -58,6 +58,7 @@ public class ListaAnnoNato extends ListaAnni {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_ANNI_NASCITA);
     }// end of method
 
