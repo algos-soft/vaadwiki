@@ -182,7 +182,7 @@ public class ViewDidascalie extends ALayoutViewList {
         String message = "";
 
         if (bioDidascalia != null) {
-            giornoMorto = bioDidascalia.getGiornoMorte().titolo;
+            giornoMorto = bioDidascalia.getGiornoMorte()!=null?bioDidascalia.getGiornoMorte().titolo:"";
             if (text.isValid(giornoMorto)) {
                 didascalia = didascaliaService.getGiornoMortoCon(bioDidascalia);
                 message = "Morti il " + giornoMorto + " -> " + didascalia;
@@ -220,7 +220,7 @@ public class ViewDidascalie extends ALayoutViewList {
         String message = "";
 
         if (bioDidascalia != null) {
-            annoMorto = bioDidascalia.getAnnoMorte().titolo;
+            annoMorto = bioDidascalia.getAnnoMorte()!=null?bioDidascalia.getAnnoMorte().titolo:"";
             if (text.isValid(annoMorto)) {
                 didascalia = didascaliaService.getAnnoMortoCon(bioDidascalia);
                 message = "Morti nel " + annoMorto + " -> " + didascalia;
@@ -238,7 +238,7 @@ public class ViewDidascalie extends ALayoutViewList {
         String message = "";
 
         if (bioDidascalia != null) {
-            didascalia = didascaliaService.getListeCon(bioDidascalia);
+            didascalia = didascaliaService.getListeSenza(bioDidascalia);
             message = "Liste di nomi, cognomi " + " -> " + didascalia;
             label.setText(message);
         }// end of if cycle

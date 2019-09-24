@@ -596,9 +596,9 @@ public abstract class Upload {
 
         if (usaSuddivisioneParagrafi) {
             if (usaRigheRaggruppate) {
-                testoLista = listaService.paragrafoSenzaSize(lista.mappaComplessa);
+                testoLista = listaService.righeSenzaParagrafo(lista.mappa);
             } else {
-                testoLista = listaService.paragrafoAttivita(lista.mappaComplessa);
+                testoLista = listaService.righeSenzaParagrafo(lista.mappa);
             }// end of if/else cycle
         } else {
             if (usaRigheRaggruppate) {

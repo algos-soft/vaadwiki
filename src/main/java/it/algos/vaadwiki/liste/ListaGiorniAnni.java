@@ -3,6 +3,7 @@ package it.algos.vaadwiki.liste;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project vaadwiki
@@ -13,19 +14,19 @@ import java.util.ArrayList;
  */
 public abstract class ListaGiorniAnni extends Lista {
 
-    /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è uno dei giorni/anni/nomi/cognomi in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
-     *
-     * @param listaDidascalie
-     */
-    protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
-        if (usaSuddivisioneParagrafi) {
-            mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
-        } else {
-        }// end of if/else cycle
-    }// fine del metodo
+//    /**
+//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+//     * Ogni chiave della mappa è uno dei giorni/anni/nomi/cognomi in cui suddividere la pagina <br>
+//     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+//     *
+//     * @param listaDidascalie
+//     */
+//    protected void creaMappa(List<WrapDidascalia> listaDidascalie) {
+//        if (usaSuddivisioneParagrafi) {
+//            mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
+//        } else {
+//        }// end of if/else cycle
+//    }// fine del metodo
 
 }// end of class

@@ -3,12 +3,12 @@ package it.algos.vaadwiki.liste;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.didascalia.EADidascalia;
+import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA;
 
@@ -74,5 +74,17 @@ public class ListaGiornoNato extends ListaGiorni {
         return bioService.findAllByGiornoNascita(giorno);
     }// fine del metodo
 
+
+//    /**
+//     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
+//     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
+//     * Ogni chiave della mappa è uno dei giorni/anni/nomi/cognomi in cui suddividere la pagina <br>
+//     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+//     *
+//     * @param listaDidascalie
+//     */
+//    protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
+//        mappaComplessa = listaService.creaMappa(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
+//    }// fine del metodo
 
 }// end of class

@@ -99,13 +99,18 @@ public abstract class Lista {
 
     public ArrayList<WrapDidascalia> listaDidascalie;
 
-    private LinkedHashMap<String, ArrayList<String>> mappaSemplice;
-
-
     /**
-     * Mappa unica <br>
+     * Mappa delle didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiaveUno (ordinata) che corrisponde al titolo del paragrafo <br>
+     * La visualizzazione dei paragrafi può anche essere esclusa, ma questi sono comunque presenti <br>
+     * Ogni valore della mappa è costituito da una ulteriore LinkedHashMap <br>
+     * Questa mappa è composta da una chiaveDue e da un ArrayList di didascalie (testo) <br>
+     * La chiaveUno è un secolo, un mese, un'attività (a seconda del tipo di didascalia) <br>
+     * La chiaveUno è un link a pagina di wikipedia (escluso titoloParagrafoVuoto) con doppie quadre <br>
+     * La chiaveDue è un anno, un giorno (a seconda del tipo di didascalia) <br>
+     * Le didascalie sono ordinate per cognome <br>
      */
-    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaComplessa;
+    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
 
     //--property
     public boolean usaSuddivisioneParagrafi;
@@ -128,6 +133,8 @@ public abstract class Lista {
      */
     @Autowired
     protected ListaService listaService;
+
+    private LinkedHashMap<String, ArrayList<String>> mappaSemplice;
 
 
     /**
@@ -186,63 +193,21 @@ public abstract class Lista {
 
 
     /**
-     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
-     * Ogni chiave della mappa è uno dei giorni/anni/nomi/cognomi in cui suddividere la pagina <br>
-     * Ogni elemento della mappa contiene un ArrayList di didascalie ordinate per cognome <br>
+     * Mappa delle didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiaveUno (ordinata) che corrisponde al titolo del paragrafo <br>
+     * La visualizzazione dei paragrafi può anche essere esclusa, ma questi sono comunque presenti <br>
+     * Ogni valore della mappa è costituito da una ulteriore LinkedHashMap <br>
+     * Questa mappa è composta da una chiaveDue e da un ArrayList di didascalie (testo) <br>
+     * La chiaveUno è un secolo, un mese, un'attività (a seconda del tipo di didascalia) <br>
+     * La chiaveUno è un link a pagina di wikipedia (escluso titoloParagrafoVuoto) con doppie quadre <br>
+     * La chiaveDue è un anno, un giorno (a seconda del tipo di didascalia) <br>
+     * Le didascalie sono ordinate per cognome <br>
      *
-     * @param listaDidascalie
+     * @param listaDidascalie da raggruppare
      */
     protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
-//        mappaSemplice = listaService.creaMappaQuadre(listaDidascalie);//todo IN PROVA
-        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
-//        if (usaSuddivisioneParagrafi) {
-//            creaMappaConParagrafi(listaDidascalie);
-//            creaTestoConParagrafi();
-//            mappaSemplice = listaService.creaMappa(listaDidascalie);//todo IN PROVA
-//        } else {
-//            creaTestoSenzaParagrafi(listaDidascalie);
-//        }// end of if/else cycle
+        mappa = listaService.creaMappa(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
     }// fine del metodo
-
-
-//    /**
-//     * Costruisce la mappa <br>
-//     */
-//    protected void creaMappaConParagrafi(ArrayList<WrapDidascalia> listaDidascalie) {
-//
-//        //--Costruisce la mappa completa
-//        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda);
-//
-////        if (paragrafoVuotoInCoda) {
-////            listaService.fixPosizioneParagrafoVuoto(mappaComplessa, titoloParagrafoVuoto);
-////        }// end of if cycle
-//    }// end of method
-
-
-//    /**
-//     * Costruisce il testo dalla mappa <br>
-//     */
-//    protected void creaTestoConParagrafi() {
-//        this.testo = listaService.righeParagrafo(mappaComplessa);
-//        this.size = listaService.getMappaDueSize(mappaComplessa);
-//    }// end of method
-
-
-//    /**
-//     * Costruisce il testo dalla mappa <br>
-//     */
-//    protected void creaTestoSenzaParagrafi(ArrayList<WrapDidascalia> listaDidascalie) {
-//        //--Costruisce la mappa completa
-//        mappaSemplice = listaService.creaMappa(listaDidascalie);
-//
-//        if (usaRigheRaggruppate) {
-//            this.testo = listaService.righeRaggruppate(mappaSemplice);
-//        } else {
-//            this.testo = listaService.righeSemplici(mappaSemplice);
-//        }// end of if/else cycle
-//        this.size = listaService.getMappaSize(mappaSemplice);
-//    }// end of method
 
 
     /**

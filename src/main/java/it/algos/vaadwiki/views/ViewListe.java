@@ -20,6 +20,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Project vaadwiki
@@ -88,9 +89,9 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
     @Autowired
     protected ADateService date;
 
-    protected LinkedHashMap<String, ArrayList<String>> mappaSemplice;
+    protected LinkedHashMap<String, List<String>> mappaSemplice;
     //--property
-    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaComplessa;
+    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaComplessa;
 
     //--property
     protected boolean usaSuddivisioneParagrafi;
@@ -148,7 +149,7 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
         this.paragrafoVuotoInCoda = lista.paragrafoVuotoInCoda;
         this.usaRigheRaggruppate = lista.usaRigheRaggruppate;
 //        this.mappaSemplice = lista.mappaSemplice;
-        this.mappaComplessa = lista.mappaComplessa;
+        this.mappaComplessa = lista.mappa;
     }// end of method
 
 
@@ -187,15 +188,15 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
         if (usaSuddivisioneParagrafi) {
             if (usaRigheRaggruppate) {
-                testo = listaService.paragrafoSenzaSize(mappaComplessa);
+                testo = listaService.righeConParagrafoSize(mappaComplessa);
             } else {
-                testo = listaService.paragrafoAttivita(mappaComplessa);
+                testo = listaService.righeConParagrafoSize(mappaComplessa);
             }// end of if/else cycle
         } else {
             if (usaRigheRaggruppate) {
-                testo = listaService.senzaParagrafi(mappaSemplice);
+                testo = listaService.righeSenzaParagrafo(mappaComplessa);
             } else {
-                testo = listaService.righeSemplici(mappaSemplice);
+                testo = listaService.righeSenzaParagrafo(mappaComplessa);
             }// end of if/else cycle
         }// end of if/else cycle
 
