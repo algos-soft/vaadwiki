@@ -46,7 +46,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static it.algos.vaadflow.application.FlowCost.*;
-import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
+import static it.algos.vaadwiki.application.WikiCost.TAG_UTI;
 
 /**
  * Project vaadwiki
@@ -179,6 +180,7 @@ public class UtilityView extends VerticalLayout {
 
     @Autowired
     private ATextService text;
+
     @Autowired
     private LibBio libBio;
 
@@ -254,23 +256,24 @@ public class UtilityView extends VerticalLayout {
         layout.setMargin(false);
         layout.setSpacing(true);
 
-        Button buttonTest = new Button("Test", new Icon(VaadinIcon.REFRESH));
+        Button buttonTest = new Button("Test console", new Icon(VaadinIcon.LIST));
         buttonTest.getElement().setAttribute("theme", "secondary");
-        buttonTest.addClickListener(e -> esegueTestDidascalie());
+        buttonTest.addClickListener(e -> esegueTestDidascalieConsole());
 
-        Button buttonUploadTest = new Button("WikiTest", new Icon(VaadinIcon.REFRESH));
+        Button buttonUploadTest = new Button("Test debug", new Icon(VaadinIcon.MODAL));
         buttonUploadTest.getElement().setAttribute("theme", "secondary");
         buttonUploadTest.addClickListener(e -> esegueUploadTest());
 
-        Button buttonUpload = new Button("Upload", new Icon(VaadinIcon.REFRESH));
+        Button buttonView = new Button("Wiki view", new Icon(VaadinIcon.SERVER));
+        buttonView.getElement().setAttribute("theme", "primary");
+        buttonView.addClickListener(e -> mostraPaginaWiki());
+
+        Button buttonUpload = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
         buttonUpload.getElement().setAttribute("theme", "error");
         buttonUpload.addClickListener(e -> esegueUpload());
 
-        Button buttonView = new Button("View", new Icon(VaadinIcon.REFRESH));
-        buttonView.getElement().setAttribute("theme", "primary");
-        buttonView.addClickListener(e -> esegueView());
 
-        layout.add(buttonTest, buttonUploadTest, buttonUpload, buttonView);
+        layout.add(buttonTest, buttonUploadTest, buttonView, buttonUpload);
         pageDidascalie.add(layout);
         pageDidascalie.setVisible(false);
     }// end of method
@@ -341,7 +344,8 @@ public class UtilityView extends VerticalLayout {
     /**
      * Test con uscita sul terminale di Idea
      */
-    public void esegueTestDidascalie() {
+    public void esegueTestDidascalieConsole() {
+        String ottenuto="";
         log.info("");
         log.info("Algos");
         log.info("");
@@ -349,9 +353,14 @@ public class UtilityView extends VerticalLayout {
         log.info("Esempio '" + wikiTitle + "'");
         log.info("");
         Bio bio = api.leggeBio(wikiTitle);
-        for (EADidascalia dida : EADidascalia.values()) {
-//            log.info(dida.name() + ": " + didascalia.esegue(bio, dida));
+
+        for (EADidascalia type : EADidascalia.values()) {
+            ottenuto = didascaliaService.getBaseCon(bio, type);
+            if (text.isValid(ottenuto)) {
+                log.info(type.name() + ": " + ottenuto);
+            }// end of if cycle
         }// end of for cycle
+
         log.info("");
     }// end of method
 
@@ -382,7 +391,8 @@ public class UtilityView extends VerticalLayout {
     }// end of method
 
 
-    public void esegueView() {
+
+    public void mostraPaginaWiki() {
         String link = "\"" + PATH_WIKI + wikiPagineDidascalie + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
@@ -730,7 +740,7 @@ public class UtilityView extends VerticalLayout {
         buttonUpload.getElement().setAttribute("theme", "error");
         buttonUpload.addClickListener(e -> esegueFixSesso(wikiTitle, genere));
 
-        pageSessoResult.add(new HorizontalLayout(new Label(nome), buttonMongo, buttonWikiShow,buttonWikiEdit, buttonTest, buttonUpload));
+        pageSessoResult.add(new HorizontalLayout(new Label(nome), buttonMongo, buttonWikiShow, buttonWikiEdit, buttonTest, buttonUpload));
     }// end of method
 
 

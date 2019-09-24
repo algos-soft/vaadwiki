@@ -54,6 +54,7 @@ public class ListeIntegrationTest extends ATest {
 
     private static boolean USA_RIGHE_RAGGRUPPATE_GIORNI;
 
+    private static boolean USA_PARAGRAFO_SIZE_GIORNI;
 
     private static boolean USA_PARAGRAFI_ANNI;
 
@@ -63,6 +64,7 @@ public class ListeIntegrationTest extends ATest {
 
     private static boolean USA_RIGHE_RAGGRUPPATE_ANNI;
 
+    private static boolean USA_PARAGRAFO_SIZE_ANNI;
 
     private static String TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI;
 
@@ -70,9 +72,8 @@ public class ListeIntegrationTest extends ATest {
 
     private static boolean USA_PARAGRAFO_SIZE_NOMI;
 
-    public LinkedHashMap<String, ArrayList<String>> mappaSemplice;
 
-    public LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> mappaComplessa;
+    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
 
     protected List<Bio> listaBio;
 
@@ -175,12 +176,203 @@ public class ListeIntegrationTest extends ATest {
         ArrayList<WrapDidascalia> listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.listaNomi);
 
         inizio = System.currentTimeMillis();
-        mappaSemplice = listaService.creaMappaQuadre(listaDidascalie);
-        System.out.println("Mappa semplice tempo impiegato: " + dateService.deltaText(inizio));
-
-        inizio = System.currentTimeMillis();
-        mappaComplessa = listaService.creaMappaChiaveUno(listaDidascalie);
+        mappa = listaService.creaMappa(listaDidascalie);
         System.out.println("Mappa complessa tempo impiegato: " + dateService.deltaText(inizio));
+    }// end of single test
+
+
+    private ListaGiornoNato getGiorno() {
+        giornoEntity = giornoService.findByKeyUnica(giornoText);
+        Assert.assertNotNull(giornoEntity);
+        listaGiorno = appContext.getBean(ListaGiornoNato.class, giornoEntity);
+        Assert.assertNotNull(listaGiorno);
+
+        return listaGiorno;
+    }// end of method
+
+
+    private ListaGiornoNato fixGiornoSenzaParagrafi() {
+        previstoBooleano = false;
+        USA_PARAGRAFI_GIORNI = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
+        prefService.saveValue(WikiCost.USA_PARAGRAFI_GIORNI, previstoBooleano);
+        ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
+        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+
+        previstoBooleano = true;
+        USA_RIGHE_RAGGRUPPATE_GIORNI = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
+        prefService.saveValue(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI, previstoBooleano);
+        ottenutoBooleano = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
+        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+
+        TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
+        IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
+        USA_PARAGRAFO_SIZE_GIORNI = prefService.isBool(WikiCost.USA_PARAGRAFO_SIZE_GIORNI);
+
+        return getGiorno();
+    }// end of method
+
+
+    private ListaGiornoNato fixGiornoConParagrafi() {
+        previstoBooleano = true;
+        USA_PARAGRAFI_GIORNI = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
+        prefService.saveValue(WikiCost.USA_PARAGRAFI_GIORNI, previstoBooleano);
+        ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
+        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+
+        previstoBooleano = true;
+        USA_RIGHE_RAGGRUPPATE_GIORNI = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
+        prefService.saveValue(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI, previstoBooleano);
+        ottenutoBooleano = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
+        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+
+        previsto = "Senza anno di nascita conosciuto";
+        TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
+        prefService.saveValue(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA, previsto);
+        ottenuto = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
+        Assert.assertEquals(ottenuto, previsto);
+
+        previstoBooleano = false;
+        IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
+        prefService.saveValue(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA, previstoBooleano);
+        ottenutoBooleano = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
+        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+
+        previstoBooleano = true;
+        USA_PARAGRAFO_SIZE_GIORNI = prefService.isBool(WikiCost.USA_PARAGRAFO_SIZE_GIORNI);
+        prefService.saveValue(WikiCost.USA_PARAGRAFO_SIZE_GIORNI, previstoBooleano);
+        ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFO_SIZE_GIORNI);
+        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+
+        return getGiorno();
+    }// end of method
+
+
+    private void resetPreferenzeGiorno() {
+        prefService.saveValue(WikiCost.USA_PARAGRAFI_GIORNI, USA_PARAGRAFI_GIORNI);
+        prefService.saveValue(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI, USA_RIGHE_RAGGRUPPATE_GIORNI);
+        prefService.saveValue(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA, TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
+        prefService.saveValue(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA, IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
+        prefService.saveValue(WikiCost.USA_PARAGRAFO_SIZE_GIORNI, USA_PARAGRAFO_SIZE_GIORNI);
+    }// end of method
+
+
+    /**
+     * Lista dei giorni.
+     * Può usare i paragrafi oppure no.
+     * Senza paragrafi e con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
+     * <p>
+     * Regola le preferenze da usare nella Lista.
+     * I valori attuali del mongoDB in produzione vengono alterati.
+     * Se tutto va bene, vengono ripristinati al termine del test.
+     * In caso di uscita dal test per errore, vanno controllati.
+     */
+//    @Test
+    public void listaGiorniSenzaParagrafi() {
+        listaGiorno = fixGiornoSenzaParagrafi();
+
+        mappa = listaGiorno.getMappa();
+        Assert.assertNotNull(mappa);
+
+        System.out.println("*************");
+        System.out.println("listaService.righeSenzaParagrafo");
+        System.out.println("Lista dei primi " + listaGiorno.size + " nati il giorno " + giornoText + " - Senza paragrafi e con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili)");
+        System.out.println("*************");
+        testo = listaService.righeSenzaParagrafo(mappa);
+        System.out.println(testo);
+        System.out.println("");
+
+        resetPreferenzeGiorno();
+    }// end of single test
+
+
+    /**
+     * Lista dei giorni.
+     * Può usare i paragrafi oppure no.
+     * Test con paragrafi
+     * Test con titolo del paragrafo senza anno di nascita = "Pippoz"
+     * Test col paragrafo senza titolo in coda
+     * Test con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
+     * Test senza dimensioni del paragrafo indicate
+     * <p>
+     * Regola le preferenze da usare nella Lista.
+     * I valori attuali del mongoDB in produzione vengono alterati.
+     * Se tutto va bene, vengono ripristinati al termine del test.
+     * In caso di uscita dal test per errore, vanno controllati.
+     */
+//    @Test
+    public void listaGiorniConParagrafi() {
+        listaGiorno = fixGiornoConParagrafi();
+
+        mappa = listaGiorno.getMappa();
+        Assert.assertNotNull(mappa);
+
+        System.out.println("*************");
+        System.out.println("listaService.righeConParagrafo");
+        System.out.println("Lista dei primi " + listaGiorno.size + " nati il giorno " + giornoText + " - Con paragrafi, righe raggruppate, titolo vuoto 'Pippoz' in coda");
+        System.out.println("*************");
+        testo = listaService.righeConParagrafo(mappa);
+        System.out.println(testo);
+        System.out.println("");
+
+        resetPreferenzeGiorno();
+    }// end of single test
+
+
+    /**
+     * Lista dei giorni.
+     * Può usare i paragrafi oppure no.
+     * Test con paragrafi
+     * Test con titolo del paragrafo senza anno di nascita = "Pippoz"
+     * Test col paragrafo senza titolo in coda
+     * Test con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
+     * Test con le dimensioni del paragrafo indicate
+     * <p>
+     * Regola le preferenze da usare nella Lista.
+     * I valori attuali del mongoDB in produzione vengono alterati.
+     * Se tutto va bene, vengono ripristinati al termine del test.
+     * In caso di uscita dal test per errore, vanno controllati.
+     */
+//    @Test
+    public void listaGiorniConParagrafiSize() {
+        listaGiorno = fixGiornoConParagrafi();
+
+        mappa = listaGiorno.getMappa();
+        Assert.assertNotNull(mappa);
+
+        System.out.println("*************");
+        System.out.println("listaService.righeConParagrafoSize");
+        System.out.println("Lista dei primi " + listaGiorno.size + " nati il giorno " + giornoText + " - Con paragrafi, righe raggruppate, titolo vuoto 'Pippoz' in coda, dimensioni del paragrafo");
+        System.out.println("*************");
+        testo = listaService.righeConParagrafoSize(mappa);
+        System.out.println(testo);
+        System.out.println("");
+
+        resetPreferenzeGiorno();
+    }// end of single test
+
+
+    /**
+     * Lista dei giorni attiva da preferenze della lista.
+     * Senza paragrafi e con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
+     * <p>
+     * Regola le preferenze da usare nella Lista.
+     * I valori attuali del mongoDB in produzione vengono alterati.
+     * Se tutto va bene, vengono ripristinati al termine del test.
+     * In caso di uscita dal test per errore, vanno controllati.
+     */
+//    @Test
+    public void listaGiorniInUso() {
+        listaGiorno = fixGiornoConParagrafi();
+
+        System.out.println("*************");
+        System.out.println("listaGiorno.getTesto");
+        System.out.println("Lista dei primi " + listaGiorno.size + " nati il giorno " + giornoText + " come da preferenze correnti");
+        System.out.println("*************");
+        testo = listaGiorno.getTesto();
+        System.out.println(testo);
+        System.out.println("");
+
+        resetPreferenzeGiorno();
     }// end of single test
 
 
@@ -213,6 +405,7 @@ public class ListeIntegrationTest extends ATest {
         return getAnno();
     }// end of method
 
+
     private ListaAnnoNato fixAnnoConParagrafi() {
         previstoBooleano = false;
         USA_PARAGRAFI_ANNI = prefService.isBool(WikiCost.USA_PARAGRAFI_ANNI);
@@ -241,6 +434,7 @@ public class ListeIntegrationTest extends ATest {
         return getAnno();
     }// end of method
 
+
     private void resetPreferenzeAnno() {
         prefService.saveValue(WikiCost.USA_PARAGRAFI_ANNI, USA_PARAGRAFI_ANNI);
         prefService.saveValue(WikiCost.USA_RIGHE_RAGGRUPPATE_ANNI, USA_RIGHE_RAGGRUPPATE_ANNI);
@@ -259,20 +453,20 @@ public class ListeIntegrationTest extends ATest {
      * Se tutto va bene, vengono ripristinati al termine del test.
      * In caso di uscita dal test per errore, vanno controllati.
      */
-    @Test
+//    @Test
     public void listaAnniSenzaParagrafi() {
         listaAnno = fixAnnoSenzaParagrafi();
 
-        mappaSemplice = listaAnno.mappaSemplice;
-        Assert.assertNotNull(mappaSemplice);
-        mappaComplessa = listaAnno.mappaComplessa;
-        Assert.assertNull(mappaComplessa);
+//        mappaSemplice = listaAnno.mappaSemplice;
+//        Assert.assertNotNull(mappaSemplice);
+        mappa = listaAnno.getMappa();
+        Assert.assertNull(mappa);
 
         System.out.println("*************");
         System.out.println("listaService.senzaParagrafi");
         System.out.println("Lista dei primi " + listaAnno.size + " nati nell'anno " + annoText + " - Senza paragrafi e con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili)");
         System.out.println("*************");
-        testo = listaService.senzaParagrafi(mappaSemplice);
+        testo = listaService.righeSenzaParagrafo(mappa);
         System.out.println(testo);
         System.out.println("");
 
@@ -280,38 +474,38 @@ public class ListeIntegrationTest extends ATest {
     }// end of single test
 
 
-//    /**
-//     * Lista degli anni.
-//     * Può usare i paragrafi oppure no.
-//     * Test con paragrafi
-//     * Test con titolo del paragrafo senza anno di nascita = "Pippoz"
-//     * Test col paragrafo senza titolo in coda
-//     * Test con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
-//     * <p>
-//     * Regola le preferenze da usare nella Lista.
-//     * I valori attuali del mongoDB in produzione vengono alterati.
-//     * Se tutto va bene, vengono ripristinati al termine del test.
-//     * In caso di uscita dal test per errore, vanno controllati.
-//     */
+    /**
+     * Lista degli anni.
+     * Può usare i paragrafi oppure no.
+     * Test con paragrafi
+     * Test con titolo del paragrafo senza anno di nascita = "Pippoz"
+     * Test col paragrafo senza titolo in coda
+     * Test con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
+     * <p>
+     * Regola le preferenze da usare nella Lista.
+     * I valori attuali del mongoDB in produzione vengono alterati.
+     * Se tutto va bene, vengono ripristinati al termine del test.
+     * In caso di uscita dal test per errore, vanno controllati.
+     */
 //    @Test
-//    public void listaAnniConParagrafi() {
-//        listaGiorno = fixGiornoConParagrafi();
-//
+    public void listaAnniConParagrafi() {
+        listaGiorno = fixGiornoConParagrafi();
+
 //        mappaSemplice = listaAnno.mappaSemplice;
 //        Assert.assertNotNull(mappaSemplice);
 //        mappaComplessa = listaAnno.mappaComplessa;
-//        Assert.assertNull(mappaComplessa);
-//
-//        System.out.println("*************");
-//        System.out.println("listaService.paragrafoSenzaSize");
-//        System.out.println("Lista dei primi " + listaAnno.size + " nati nell'anno " + annoText + " - Con paragrafi, righe raggruppate, titolo vuoto 'Diabolik' in coda");
-//        System.out.println("*************");
-//        testo = listaService.paragrafoSenzaSize(mappaComplessa);
-//        System.out.println(testo);
-//        System.out.println("");
-//
-//        resetPreferenzeGiorno();
-//    }// end of single test
+        Assert.assertNull(mappa);
+
+        System.out.println("*************");
+        System.out.println("listaService.paragrafoSenzaSize");
+        System.out.println("Lista dei primi " + listaAnno.size + " nati nell'anno " + annoText + " - Con paragrafi, righe raggruppate, titolo vuoto 'Diabolik' in coda");
+        System.out.println("*************");
+        testo = listaService.righeSenzaParagrafo(mappa);
+        System.out.println(testo);
+        System.out.println("");
+
+        resetPreferenzeGiorno();
+    }// end of single test
 
 //        public void anno() {
 //        //--costruisco qui la mappa semplice perché listaAnno ha la preferenza usaSuddivisioneParagrafi=true
@@ -347,137 +541,6 @@ public class ListeIntegrationTest extends ATest {
 //    }// end of single test
 
 
-    private ListaGiornoNato getGiorno() {
-        giornoEntity = giornoService.findByKeyUnica(giornoText);
-        Assert.assertNotNull(giornoEntity);
-        listaGiorno = appContext.getBean(ListaGiornoNato.class, giornoEntity);
-        Assert.assertNotNull(listaGiorno);
-
-        return listaGiorno;
-    }// end of method
-
-
-    private ListaGiornoNato fixGiornoSenzaParagrafi() {
-        previstoBooleano = false;
-        USA_PARAGRAFI_GIORNI = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
-        prefService.saveValue(WikiCost.USA_PARAGRAFI_GIORNI, previstoBooleano);
-        ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
-
-        previstoBooleano = true;
-        USA_RIGHE_RAGGRUPPATE_GIORNI = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
-        prefService.saveValue(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI, previstoBooleano);
-        ottenutoBooleano = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
-
-        TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
-        IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
-
-        return getGiorno();
-    }// end of method
-
-
-    private ListaGiornoNato fixGiornoConParagrafi() {
-        previstoBooleano = true;
-        USA_PARAGRAFI_GIORNI = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
-        prefService.saveValue(WikiCost.USA_PARAGRAFI_GIORNI, previstoBooleano);
-        ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
-
-        previstoBooleano = true;
-        USA_RIGHE_RAGGRUPPATE_GIORNI = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
-        prefService.saveValue(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI, previstoBooleano);
-        ottenutoBooleano = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
-
-        previsto = "Pippoz";
-        TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
-        prefService.saveValue(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA, previsto);
-        ottenuto = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
-        Assert.assertEquals(ottenuto, previsto);
-
-        previstoBooleano = false;
-        IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
-        prefService.saveValue(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA, previstoBooleano);
-        ottenutoBooleano = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
-
-        return getGiorno();
-    }// end of method
-
-
-    private void resetPreferenzeGiorno() {
-        prefService.saveValue(WikiCost.USA_PARAGRAFI_GIORNI, USA_PARAGRAFI_GIORNI);
-        prefService.saveValue(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI, USA_RIGHE_RAGGRUPPATE_GIORNI);
-        prefService.saveValue(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA, TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
-        prefService.saveValue(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA, IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
-    }// end of method
-
-
-    /**
-     * Lista dei giorni.
-     * Può usare i paragrafi oppure no.
-     * Senza paragrafi e con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
-     * <p>
-     * Regola le preferenze da usare nella Lista.
-     * I valori attuali del mongoDB in produzione vengono alterati.
-     * Se tutto va bene, vengono ripristinati al termine del test.
-     * In caso di uscita dal test per errore, vanno controllati.
-     */
-    @Test
-    public void listaGiorniSenzaParagrafi() {
-        listaGiorno = fixGiornoSenzaParagrafi();
-
-        mappaSemplice = listaGiorno.mappaSemplice;
-        Assert.assertNotNull(mappaSemplice);
-        mappaComplessa = listaGiorno.mappaComplessa;
-        Assert.assertNull(mappaComplessa);
-        System.out.println("*************");
-        System.out.println("listaService.senzaParagrafi");
-        System.out.println("Lista dei primi " + listaGiorno.size + " nati il giorno " + giornoText + " - Senza paragrafi e con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili)");
-        System.out.println("*************");
-        testo = listaService.senzaParagrafi(mappaSemplice);
-        System.out.println(testo);
-        System.out.println("");
-
-        resetPreferenzeGiorno();
-    }// end of single test
-
-
-    /**
-     * Lista dei giorni.
-     * Può usare i paragrafi oppure no.
-     * Test con paragrafi
-     * Test con titolo del paragrafo senza anno di nascita = "Pippoz"
-     * Test col paragrafo senza titolo in coda
-     * Test con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
-     * <p>
-     * Regola le preferenze da usare nella Lista.
-     * I valori attuali del mongoDB in produzione vengono alterati.
-     * Se tutto va bene, vengono ripristinati al termine del test.
-     * In caso di uscita dal test per errore, vanno controllati.
-     */
-    @Test
-    public void listaGiorniConParagrafi() {
-        listaGiorno = fixGiornoConParagrafi();
-
-        mappaSemplice = listaGiorno.mappaSemplice;
-        Assert.assertNull(mappaSemplice);
-        mappaComplessa = listaGiorno.mappaComplessa;
-        Assert.assertNotNull(mappaComplessa);
-
-        System.out.println("*************");
-        System.out.println("listaService.paragrafoSenzaSize");
-        System.out.println("Lista dei primi " + listaGiorno.size + " nati il giorno " + giornoText + " - Con paragrafi, righe raggruppate, titolo vuoto 'Pippoz' in coda");
-        System.out.println("*************");
-        testo = listaService.paragrafoSenzaSize(mappaComplessa);
-        System.out.println(testo);
-        System.out.println("");
-
-        resetPreferenzeGiorno();
-    }// end of single test
-
-
     public ListaNomi getNome() {
         nomeEntity = nomeService.findByKeyUnica(nomeTextCorto);
         Assert.assertNotNull(nomeEntity);
@@ -488,7 +551,7 @@ public class ListeIntegrationTest extends ATest {
     }// end of method
 
 
-    private void fixNomi(boolean conSize) {
+    private ListaNomi fixNomi() {
         previsto = "Pippoz";
         TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
         prefService.saveValue(WikiCost.TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI, previsto);
@@ -501,22 +564,12 @@ public class ListeIntegrationTest extends ATest {
         ottenutoBooleano = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_NOMI_IN_CODA);
         Assert.assertEquals(ottenutoBooleano, previstoBooleano);
 
-        previstoBooleano = conSize;
+        previstoBooleano = true;
         USA_PARAGRAFO_SIZE_NOMI = prefService.isBool(WikiCost.USA_PARAGRAFO_SIZE_NOMI);
         prefService.saveValue(WikiCost.USA_PARAGRAFO_SIZE_NOMI, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFO_SIZE_NOMI);
         Assert.assertEquals(ottenutoBooleano, previstoBooleano);
-    }// end of method
 
-
-    private ListaNomi fixNomiSenzaSize() {
-        fixNomi(true);
-        return getNome();
-    }// end of method
-
-
-    private ListaNomi fixNomiConSize() {
-        fixNomi(false);
         return getNome();
     }// end of method
 
@@ -528,112 +581,110 @@ public class ListeIntegrationTest extends ATest {
     }// end of method
 
 
+    /**
+     * Lista dei nomi.
+     * Può usare i paragrafi oppure no.
+     * Test con paragrafi
+     * Test con titolo del paragrafo senza attività = "Pippoz"
+     * Test col paragrafo senza titolo in coda
+     * Test con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
+     * Test con le dimensioni del paragrafo indicate
+     * <p>
+     * Regola le preferenze da usare nella Lista.
+     * I valori attuali del mongoDB in produzione vengono alterati.
+     * Se tutto va bene, vengono ripristinati al termine del test.
+     * In caso di uscita dal test per errore, vanno controllati.
+     */
     @Test
-    public void listaNomiSenzaSize() {
-        listaNome = fixNomiSenzaSize();
+    public void listaNomi() {
+        listaNome = fixNomi();
 
-        mappaSemplice = listaNome.mappaSemplice;
-        Assert.assertNull(mappaSemplice);
-        mappaComplessa = listaNome.mappaComplessa;
-        Assert.assertNotNull(mappaComplessa);
+        mappa = listaNome.getMappa();
+        Assert.assertNotNull(mappa);
+
         System.out.println("*************");
-        System.out.println("listaService.paragrafoSenzaSize");
-        System.out.println("Lista dei " + listaNome.size + " biografati di nome " + nomeTextCorto + " - Con paragrafi e senza dimensioni nel titolo del paragrafo");
+        System.out.println("listaService.righeConParagrafoSize");
+        System.out.println("Lista dei " + listaNome.size + " biografati di nome " + nomeTextCorto + " - Con paragrafi e con le dimensioni nel titolo del paragrafo");
         System.out.println("*************");
-        testo = listaService.paragrafoSenzaSize(mappaComplessa);
+        testo = listaService.righeConParagrafoSize(mappa);
         System.out.println(testo);
         System.out.println("");
 
         resetPreferenzeNome();
-
-//        nomeEntity = nomeService.findByKeyUnica(nomeTextCorto);
-//        Assert.assertNotNull(nomeEntity);
-//        listaNome = appContext.getBean(ListaNomi.class, nomeEntity);
-//        Assert.assertNotNull(listaNome);
-
-//        //--costruisco qui la mappa semplice perché listaAnno ha la preferenza usaSuddivisioneParagrafi=true
-//        //--se cambio la preferenza nel mongoDb, devo cambiare anche qui
-//        ArrayList<Bio> listaGrezzaBio = bioService.findAllByNome(nomeTextCorto);
-//        ArrayList<WrapDidascalia> listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.listaNomi);
-//        mappaSemplice = listaService.creaMappaQuadre(listaDidascalie);
-//        //--end
-//        mappaComplessa = listaService.getMappaNome(nomeTextCorto);
-//        Assert.assertNotNull(mappaSemplice);
-//        Assert.assertNotNull(mappaComplessa);
-
-
-//        String key;
-//        List<String> value;
-//        int k = 0;
-//
-//        System.out.println("*************");
-//        System.out.println("Controllo dimensioni");
-//        System.out.println("*************");
-//        previstoIntero = 77;
-//        ottenutoIntero = listaNome.size;
-//        Assert.assertEquals(previstoIntero, ottenutoIntero);
-//        System.out.println("Le biografie che hanno il nome " + nomeTextCorto + " sono " + ottenutoIntero);
-//        System.out.println("");
-//
-//        System.out.println("*************");
-//        System.out.println("Mappa semplice - Righe semplici (escluso per i nomi)");
-//        System.out.println("*************");
-//        testo = listaService.righeSemplici(mappaSemplice);
-//        System.out.println(testo);
-//        System.out.println("");
-//
-//        System.out.println("*************");
-//        System.out.println("Mappa semplice - Righe raggruppate (opzione poco probabile per i nomi)");
-//        System.out.println("*************");
-//        testo = listaService.righeRaggruppate(mappaSemplice);
-//        System.out.println(testo);
-//        System.out.println("");
-//
-//        System.out.println("*************");
-//        System.out.println("Mappa complessa - Paragrafo con righe semplici (opzione valida per i nomi)");
-//        System.out.println("deprecated");
-//        System.out.println("*************");
-//        testo = listaService.righeParagrafo(mappaComplessa);
-//        System.out.println(testo);
-//        System.out.println("");
-//
-//        System.out.println("*************");
-//        System.out.println("Mappa complessa - Paragrafo con righe semplici (altra ipotesi)");
-//        System.out.println("valido");
-//        System.out.println("*************");
-//        testo = listaService.paragrafoAttivita(mappaComplessa);
-//        System.out.println(testo);
-//        System.out.println("");
-//
-//
-//        System.out.println("*************");
-//        System.out.println("Mappa complessa - Paragrafo con righe semplici e sottopagina");
-//        System.out.println("valido");
-//        System.out.println("*************");
-//        testo = listaService.paragrafoSottopaginato(mappaComplessa, "Persone di nome Violeta", "Attrici", 2);
-//        System.out.println(testo);
-//        System.out.println("");
-
     }// end of single test
 
 
+    /**
+     * Lista dei nomi attiva da preferenze della lista.
+     * Con paragrafi e con le dimensioni nel titolo.
+     * <p>
+     * Regola le preferenze da usare nella Lista.
+     * I valori attuali del mongoDB in produzione vengono alterati.
+     * Se tutto va bene, vengono ripristinati al termine del test.
+     * In caso di uscita dal test per errore, vanno controllati.
+     */
     @Test
-    public void listaNomiConSize() {
-        listaNome = fixNomiConSize();
+    public void listaNomiInUso() {
+        listaNome = fixNomi();
 
-        mappaSemplice = listaNome.mappaSemplice;
-        Assert.assertNull(mappaSemplice);
-        mappaComplessa = listaNome.mappaComplessa;
-        Assert.assertNotNull(mappaComplessa);
         System.out.println("*************");
-        System.out.println("listaService.paragrafoConSize");
-        System.out.println("Lista dei " + listaNome.size + " biografati di nome " + nomeTextCorto + " - Con paragrafi e con le dimensioni nel titolo del paragrafo");
+        System.out.println("listaNome.getTesto");
+        System.out.println("Lista dei " + listaNome.size + " biografati di nome " + nomeTextCorto + " come da preferenze correnti");
         System.out.println("*************");
-        testo = listaService.paragrafoConSize(mappaComplessa);
+        testo = listaNome.getTesto();
         System.out.println(testo);
         System.out.println("");
 
         resetPreferenzeNome();
+    }// end of single test
+
+
+    /**
+     * Costruisce il titolo del paragrafo
+     * <p>
+     * Questo deve essere composto da:
+     * Professione.pagina
+     * Genere.plurale
+     */
+    @Test
+    public void getProfessioneDaAttivita() {
+        previsto = "Attivismo";
+
+        sorgente = "attivista";
+        ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
+        Assert.assertEquals(ottenuto, previsto);
+
+        sorgente = "Attivista";
+        ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
+        Assert.assertEquals(ottenuto, previsto);
+
+        previsto = "Accademico";
+        sorgente = "Accademica";
+        ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
+        Assert.assertEquals(ottenuto, previsto);
+        sorgente = "Accademico";
+        ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
+//        Assert.assertEquals(ottenuto, previsto);
+//        sorgente = "Professore universitario";
+//        ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
+//        Assert.assertEquals(ottenuto, previsto);
+//        sorgente = "Professoressa universitaria";
+//        ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
+//        Assert.assertEquals(ottenuto, previsto);
+//        sorgente = "accademica";
+//        ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
+//        Assert.assertEquals(ottenuto, previsto);
+//        sorgente = "accademico";
+//        ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
+//        Assert.assertEquals(ottenuto, previsto);
+//        sorgente = "professore universitario";
+//        ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
+//        Assert.assertEquals(ottenuto, previsto);
+//        sorgente = "professoressa universitaria";
+//        ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
+//        Assert.assertEquals(ottenuto, previsto);
+
+
     }// end of single test
 
 }// end of class

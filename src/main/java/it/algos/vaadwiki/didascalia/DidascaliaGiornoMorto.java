@@ -83,7 +83,9 @@ public class DidascaliaGiornoMorto extends Didascalia {
             testoCon += LibWiki.setQuadre(annoMorto);
             testoCon += TAG_SEP;
             testoCon += testoSenza;
-        }// end of if cycle
+        } else {
+            testoCon = testoSenza;
+        }// end of if/else cycle
 
     }// end of method
 

@@ -156,4 +156,25 @@ public class DidascaliaListe extends Didascalia {
         return testo;
     }// end of method
 
+
+    /**
+     * Costruisce il testo della didascalia <br>
+     * Sovrascritto <br>
+     */
+    protected void regolaDidascalia() {
+        super.regolaDidascalia();
+        testoCon = VUOTA;
+        String mortoTxt;
+
+        //--chiave per il paragrafo
+        //--attività (potrebbe non esserci)
+        //--inserita all'inizio del testo
+        if (text.isValid(attivita)) {
+            testoCon += attivita;
+            testoCon += TAG_SEP;
+            testoCon += testoSenza;
+        }// end of if cycle
+
+    }// end of method
+
 }// end of class

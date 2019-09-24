@@ -58,6 +58,7 @@ public abstract class ListaGiorni extends ListaGiorniAnni {
         super.usaSuddivisioneParagrafi = pref.isBool(USA_PARAGRAFI_GIORNI);
         super.usaRigheRaggruppate = pref.isBool(USA_RIGHE_RAGGRUPPATE_GIORNI);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
+        super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_GIORNI);
     }// end of method
 
 

@@ -205,6 +205,10 @@ public class WikiVers extends AVers {
         if (installa(++k)) {
             creaPrefBool(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza anno specificato", true);
         }// fine del blocco if
+        // --creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_PARAGRAFO_SIZE_GIORNI, "Dimensione del paragrafo nei titoli dei mesi per i giorni", true);
+        }// fine del blocco if
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefBool(USA_RIGHE_RAGGRUPPATE_GIORNI, "Usa righe raggruppate per anno nella liste dei giorni", true);
@@ -231,9 +235,21 @@ public class WikiVers extends AVers {
         if (installa(++k)) {
             creaPrefBool(IS_PARAGRAFO_VUOTO_ANNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza giorno specificato", true);
         }// fine del blocco if
+        // --creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_PARAGRAFO_SIZE_ANNI, "Dimensione del paragrafo nei titoli dei secoli per gli anni", true);
+        }// fine del blocco if
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefBool(USA_RIGHE_RAGGRUPPATE_ANNI, "Usa righe raggruppate per giorno nella liste degli anni", true);
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefInt(SOGLIA_SOTTOPAGINA_GIORNI_ANNI, "Soglia per sottopaginare i paragrafi di giorni ed anni", 50);
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_SOTTOPAGINE_GIORNI_ANNI, "Usa sottopagine se i paragrafi nella liste dei giorni e degli anni superano SOGLIA_SOTTOPAGINA_GIORNI_ANNI", false);
         }// fine del blocco if
 
 
@@ -303,6 +319,14 @@ public class WikiVers extends AVers {
             creaPrefDate(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi");
         }// fine del blocco if
 
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI, "Soglia per sottopaginare i paragrafi di nomi e cognomi", 50);
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_SOTTOPAGINE_NOMI_COGNOMI, "Usa sottopagine se i paragrafi nella liste di nomi e cognomi superano SOGLIA_SOTTOPAGINA_NOMI_COGNOMI", false);
+        }// fine del blocco if
 
         return k;
     }// end of method

@@ -99,30 +99,14 @@ public class DidascaliaIntegrationTest extends ATest {
     }// end of method
 
 
-    @Test
     public void metodoPerOrdinareTuttiTest() {
-        type();
-        giornoNato();
-//        giornoMorto();
-//        annoNato();
-//        annoMorto();
-        liste();
-//        biografie();
     }// end of single test
 
 
-    public void type() {
+    @Test
+    public void tipiPossibiliDidascalie() {
         System.out.println("*************");
         System.out.println("Tipi possibili di didascalie per " + NOME_BIO_UNO);
-        System.out.println("*************");
-        System.out.println("Con chiave");
-        System.out.println("*************");
-        for (EADidascalia type : EADidascalia.values()) {
-            ottenuto = didascaliaService.getBaseCon(bioUno, type);
-            if (text.isValid(ottenuto)) {
-                System.out.println(type.name() + ": " + ottenuto);
-            }// end of if cycle
-        }// end of for cycle
         System.out.println("*************");
         System.out.println("Senza chiave");
         System.out.println("*************");
@@ -130,119 +114,329 @@ public class DidascaliaIntegrationTest extends ATest {
             ottenuto = didascaliaService.getBaseSenza(bioUno, type);
             if (text.isValid(ottenuto)) {
                 System.out.println(type.name() + ": " + ottenuto);
-            }// end of if cycle
+            } else {
+                System.out.println(type.name() + ": Manca");
+            }// end of if/else cycle
+        }// end of for cycle
+        System.out.println("*************");
+        System.out.println("Con chiave");
+        System.out.println("*************");
+        for (EADidascalia type : EADidascalia.values()) {
+            ottenuto = didascaliaService.getBaseCon(bioUno, type);
+            if (text.isValid(ottenuto)) {
+                System.out.println(type.name() + ": " + ottenuto);
+            } else {
+                System.out.println(type.name() + ": Manca");
+            }// end of if/else cycle
+        }// end of for cycle
+        System.out.println("*************");
+
+        System.out.println("");
+
+        System.out.println("*************");
+        System.out.println("Tipi possibili di didascalie per " + NOME_BIO_DUE);
+        System.out.println("*************");
+        System.out.println("Senza chiave");
+        System.out.println("*************");
+        for (EADidascalia type : EADidascalia.values()) {
+            ottenuto = didascaliaService.getBaseSenza(bioDue, type);
+            if (text.isValid(ottenuto)) {
+                System.out.println(type.name() + ": " + ottenuto);
+            } else {
+                System.out.println(type.name() + ": Manca");
+            }// end of if/else cycle
+        }// end of for cycle
+        System.out.println("*************");
+        System.out.println("Con chiave");
+        System.out.println("*************");
+        for (EADidascalia type : EADidascalia.values()) {
+            ottenuto = didascaliaService.getBaseCon(bioDue, type);
+            if (text.isValid(ottenuto)) {
+                System.out.println(type.name() + ": " + ottenuto);
+            } else {
+                System.out.println(type.name() + ": Manca");
+            }// end of if/else cycle
         }// end of for cycle
         System.out.println("*************");
     }// end of single test
 
 
+    @Test
     public void giornoNato() {
-        previsto = "[[1937]] - [[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
+        System.out.println("*************");
+        System.out.println("Didascalia per giornoNato (21 febbraio) di " + NOME_BIO_UNO + " : " + didascaliaService.getBiografie(bioUno));
+        System.out.println("*************");
         didascalia = didascaliaService.getDidascaliaGiornoNato(bioUno);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testoCon);
-        ottenuto = didascaliaService.getGiornoNatoCon(bioUno);
-        assertTrue(text.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
 
         previsto = "[[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
-        didascalia = didascaliaService.getDidascaliaGiornoNato(bioUno);
-        Assert.assertNotNull(didascalia);
         assertEquals(previsto, didascalia.testoSenza);
         ottenuto = didascaliaService.getGiornoNatoSenza(bioUno);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
+        System.out.println("Senza chiave");
+        System.out.println(ottenuto);
+
+        previsto = "[[1937]] - [[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getGiornoNatoCon(bioUno);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Con chiave annoNato");
+        System.out.println(ottenuto);
+        System.out.println("*************");
+
+        System.out.println("");
+
+        System.out.println("*************");
+        System.out.println("Didascalia per giornoNato (manca) di " + NOME_BIO_DUE + " : " + didascaliaService.getBiografie(bioDue));
+        didascalia = didascaliaService.getDidascaliaGiornoNato(bioDue);
+        Assert.assertNotNull(didascalia);
+
+        previsto = "";
+        assertEquals(previsto, didascalia.testoSenza);
+        ottenuto = didascaliaService.getGiornoNatoSenza(bioDue);
+        assertTrue(text.isEmpty(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("*************");
+        System.out.println("Manca il giorno di nascita");
+        System.out.println("*************");
     }// end of method
 
 
+    @Test
     public void giornoMorto() {
-        previsto = "[[2015]] - [[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
+        System.out.println("*************");
+        System.out.println("Didascalia per giornoMorto (17 giugno) di " + NOME_BIO_UNO + " : " + didascaliaService.getBiografie(bioUno));
+        System.out.println("*************");
         didascalia = didascaliaService.getDidascaliaGiornoMorto(bioUno);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testoCon);
-        ottenuto = didascaliaService.getGiornoMortoCon(bioUno);
-        assertTrue(text.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
 
         previsto = "[[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
-        didascalia = didascaliaService.getDidascaliaGiornoMorto(bioUno);
-        Assert.assertNotNull(didascalia);
         assertEquals(previsto, didascalia.testoSenza);
         ottenuto = didascaliaService.getGiornoMortoSenza(bioUno);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
+        System.out.println("Senza chiave");
+        System.out.println(ottenuto);
+
+        previsto = "[[2015]] - [[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getGiornoMortoCon(bioUno);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Con chiave annoMorto");
+        System.out.println(ottenuto);
+        System.out.println("*************");
+
+        System.out.println("");
+
+        System.out.println("*************");
+        System.out.println("Didascalia per giornoMorto (14 ottobre) di " + NOME_BIO_DUE + " : " + didascaliaService.getBiografie(bioDue));
+        didascalia = didascaliaService.getDidascaliaGiornoMorto(bioDue);
+        Assert.assertNotNull(didascalia);
+
+        previsto = "[[Giovanni di Pacheco]], nobile e politico spagnolo (n. [[1419]])";
+        assertEquals(previsto, didascalia.testoSenza);
+        ottenuto = didascaliaService.getGiornoMortoSenza(bioDue);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Senza chiave");
+        System.out.println(ottenuto);
+
+        previsto = "[[1474]] - [[Giovanni di Pacheco]], nobile e politico spagnolo (n. [[1419]])";
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getGiornoMortoCon(bioDue);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Con chiave annoMorto");
+        System.out.println(ottenuto);
+        System.out.println("*************");
     }// end of method
 
 
+    @Test
     public void annoNato() {
-        previsto = "[[21 febbraio]] - [[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
+        System.out.println("*************");
+        System.out.println("Didascalia per annoNato (1937) di " + NOME_BIO_UNO + " : " + didascaliaService.getBiografie(bioUno));
+        System.out.println("*************");
         didascalia = didascaliaService.getDidascaliaAnnoNato(bioUno);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testoCon);
-        ottenuto = didascaliaService.getAnnoNatoCon(bioUno);
-        assertTrue(text.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
 
         previsto = "[[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
-        didascalia = didascaliaService.getDidascaliaAnnoNato(bioUno);
-        Assert.assertNotNull(didascalia);
         assertEquals(previsto, didascalia.testoSenza);
         ottenuto = didascaliaService.getAnnoNatoSenza(bioUno);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
+        System.out.println("Senza chiave");
+        System.out.println(ottenuto);
+
+        previsto = "[[21 febbraio]] - [[Ron Clarke]], mezzofondista e politico australiano († [[2015]])";
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getAnnoNatoCon(bioUno);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Con chiave giornoNato");
+        System.out.println(ottenuto);
+        System.out.println("*************");
+
+        System.out.println("");
+
+        System.out.println("*************");
+        System.out.println("Didascalia per annoNato (1419) di " + NOME_BIO_DUE + " : " + didascaliaService.getBiografie(bioDue));
+        didascalia = didascaliaService.getDidascaliaAnnoNato(bioDue);
+        Assert.assertNotNull(didascalia);
+
+        previsto = "[[Giovanni di Pacheco]], nobile e politico spagnolo († [[1474]])";
+        assertEquals(previsto, didascalia.testoSenza);
+        ottenuto = didascaliaService.getAnnoNatoSenza(bioDue);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Senza chiave");
+        System.out.println(ottenuto);
+
+        previsto = "[[Giovanni di Pacheco]], nobile e politico spagnolo († [[1474]])";
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getAnnoNatoCon(bioDue);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Con chiave giornoNato");
+        System.out.println(ottenuto);
+        System.out.println("*************");
     }// end of method
 
 
+    @Test
     public void annoMorto() {
-        previsto = "[[17 giugno]] - [[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
+        System.out.println("*************");
+        System.out.println("Didascalia per annoMorto (2015) di " + NOME_BIO_UNO + " : " + didascaliaService.getBiografie(bioUno));
+        System.out.println("*************");
         didascalia = didascaliaService.getDidascaliaAnnoMorto(bioUno);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testoCon);
-        ottenuto = didascaliaService.getAnnoMortoCon(bioUno);
-        assertTrue(text.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
 
         previsto = "[[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
-        didascalia = didascaliaService.getDidascaliaAnnoMorto(bioUno);
-        Assert.assertNotNull(didascalia);
         assertEquals(previsto, didascalia.testoSenza);
         ottenuto = didascaliaService.getAnnoMortoSenza(bioUno);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
+        System.out.println("Senza chiave");
+        System.out.println(ottenuto);
+
+        previsto = "[[17 giugno]] - [[Ron Clarke]], mezzofondista e politico australiano (n. [[1937]])";
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getAnnoMortoCon(bioUno);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Con chiave giornoMorto");
+        System.out.println(ottenuto);
+        System.out.println("*************");
+
+        System.out.println("");
+
+        System.out.println("*************");
+        System.out.println("Didascalia per annoMorto (1474) di " + NOME_BIO_DUE + " : " + didascaliaService.getBiografie(bioDue));
+        didascalia = didascaliaService.getDidascaliaAnnoMorto(bioDue);
+        Assert.assertNotNull(didascalia);
+
+        previsto = "[[Giovanni di Pacheco]], nobile e politico spagnolo (n. [[1419]])";
+        assertEquals(previsto, didascalia.testoSenza);
+        ottenuto = didascaliaService.getAnnoMortoSenza(bioDue);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Senza chiave");
+        System.out.println(ottenuto);
+
+        previsto = "[[4 ottobre]] - [[Giovanni di Pacheco]], nobile e politico spagnolo (n. [[1419]])";
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getAnnoMortoCon(bioDue);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Con chiave giornoMorto");
+        System.out.println(ottenuto);
+        System.out.println("*************");
     }// end of method
 
 
-    public void liste() {
-//        previsto = "[[Ron Clarke]], mezzofondista e politico australiano ([[Melbourne]], n.[[1937]] - [[Gold Coast]], †[[2015]])";
-        previsto = "[[Giovanni di Pacheco]], nobile e politico spagnolo ([[Belmonte (Spagna)|Belmonte]], n.[[1419]] - [[Santa Cruz de la Sierra (Spagna)|Santa Cruz de la Sierra]], †[[1474]])";
-        didascalia = didascaliaService.getDidascaliaListe(bioDue);
+    @Test
+    public void listeNomiCognomi() {
+        System.out.println("*************");
+        System.out.println("Didascalia per liste nomi/cognomi di " + NOME_BIO_UNO + " : " + didascaliaService.getBiografie(bioUno));
+        System.out.println("*************");
+        didascalia = didascaliaService.getDidascaliaListe(bioUno);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testoCon);
 
-        ottenuto = didascaliaService.getListeCon(bioDue);
+        previsto = "[[Ron Clarke]], mezzofondista e politico australiano ([[Melbourne]], n.[[1937]] - [[Gold Coast]], †[[2015]])";
+        assertEquals(previsto, didascalia.testoSenza);
+        ottenuto = didascaliaService.getListeSenza(bioUno);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
+        System.out.println("Senza chiave");
+        System.out.println(ottenuto);
 
+        previsto = "mezzofondista - [[Ron Clarke]], mezzofondista e politico australiano ([[Melbourne]], n.[[1937]] - [[Gold Coast]], †[[2015]])";
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getListeCon(bioUno);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Con chiave attività");
+        System.out.println(ottenuto);
+
+        System.out.println("");
+
+        System.out.println("*************");
+        System.out.println("Didascalia per liste nomi/cognomi di " + NOME_BIO_DUE + " : " + didascaliaService.getBiografie(bioDue));
+        System.out.println("*************");
+        didascalia = didascaliaService.getDidascaliaListe(bioDue);
+        Assert.assertNotNull(didascalia);
+
+        previsto = "[[Giovanni di Pacheco]], nobile e politico spagnolo ([[Belmonte (Spagna)|Belmonte]], n.[[1419]] - [[Santa Cruz de la Sierra (Spagna)|Santa Cruz de la Sierra]], †[[1474]])";
+        assertEquals(previsto, didascalia.testoSenza);
         ottenuto = didascaliaService.getListeSenza(bioDue);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
+        System.out.println("Senza chiave");
+        System.out.println(ottenuto);
 
+        previsto = "nobile - [[Giovanni di Pacheco]], nobile e politico spagnolo ([[Belmonte (Spagna)|Belmonte]], n.[[1419]] - [[Santa Cruz de la Sierra (Spagna)|Santa Cruz de la Sierra]], †[[1474]])";
+        assertEquals(previsto, didascalia.testoCon);
+        ottenuto = didascaliaService.getListeCon(bioDue);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println("Con chiave attività");
+        System.out.println(ottenuto);
     }// end of method
 
 
-    public void biografie() {
-        previsto = "[[Ron Clarke]] ([[Melbourne]], [[21 febbraio]][[1937]] - [[Gold Coast]], [[17 giugno]][[2015]]), mezzofondista e politico australiano";
+    @Test
+    public void biografieComplete() {
+        System.out.println("*************");
+        System.out.println("Didascalia per biografia completa di " + NOME_BIO_UNO + " : " + didascaliaService.getBiografie(bioUno));
+        System.out.println("*************");
         didascalia = didascaliaService.getDidascaliaBiografie(bioUno);
         Assert.assertNotNull(didascalia);
-        assertEquals(previsto, didascalia.testoCon);
 
-        ottenuto = didascaliaService.getBiografieCon(bioUno);
+        previsto = "[[Ron Clarke]] ([[Melbourne]], [[21 febbraio]][[1937]] - [[Gold Coast]], [[17 giugno]][[2015]]), mezzofondista e politico australiano";
+        assertEquals(previsto, didascalia.testoSenza);
+        ottenuto = didascaliaService.getBiografie(bioUno);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
 
-        ottenuto = didascaliaService.getBiografieSenza(bioUno);
+        System.out.println("");
+
+        System.out.println("*************");
+        System.out.println("Didascalia per biografia completa di " + NOME_BIO_DUE + " : " + didascaliaService.getBiografie(bioDue));
+        System.out.println("*************");
+        didascalia = didascaliaService.getDidascaliaBiografie(bioDue);
+        Assert.assertNotNull(didascalia);
+
+        previsto = "[[Giovanni di Pacheco]] ([[Belmonte|Belmonte (Spagna)]], n.[[1419]] - [[Santa Cruz de la Sierra|Santa Cruz de la Sierra (Spagna)]], [[4 ottobre]][[1474]]), nobile e politico spagnolo";
+        assertEquals(previsto, didascalia.testoSenza);
+        ottenuto = didascaliaService.getBiografie(bioDue);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
+
     }// end of method
 
 }// end of class

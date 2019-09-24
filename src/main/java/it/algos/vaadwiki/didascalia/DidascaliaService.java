@@ -255,11 +255,6 @@ public class DidascaliaService extends ABioService {
     }// end of method
 
 
-    public String getBiografieCon(Bio bio) {
-        return getBase(bio, EADidascalia.biografie, true);
-    }// end of method
-
-
     public String getGiornoNatoSenza(Bio bio) {
         return getBase(bio, EADidascalia.giornoNato, false);
     }// end of method
@@ -285,7 +280,7 @@ public class DidascaliaService extends ABioService {
     }// end of method
 
 
-    public String getBiografieSenza(Bio bio) {
+    public String getBiografie(Bio bio) {
         return getBase(bio, EADidascalia.biografie, false);
     }// end of method
 
