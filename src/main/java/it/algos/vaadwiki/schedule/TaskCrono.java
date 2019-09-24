@@ -19,5 +19,5 @@ import static it.algos.vaadwiki.application.WikiCost.TASK_CRO;
 @Slf4j
 public class TaskCrono extends ATask {
 
-
+//nulla
 }// end of class
