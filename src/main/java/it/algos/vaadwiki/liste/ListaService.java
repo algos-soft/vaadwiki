@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
@@ -164,6 +161,39 @@ public class ListaService extends ABioService {
                     return text.compareStr(w1ChiaveUno, w2ChiaveUno);
                 }// end of method
             });//end of lambda expressions and anonymous inner class
+        }// end of if cycle
+
+        return listaOrdinata;
+    }// fine del metodo
+
+
+    /**
+     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+     *
+     * @param listaDisordinata di didascalie
+     *
+     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    public ArrayList<WrapDidascalia> ordinaDidascalieNomi(ArrayList<WrapDidascalia> listaDisordinata) {
+        ArrayList<WrapDidascalia> listaOrdinata = listaDisordinata;
+        ArrayList<String> listaKey = new ArrayList();
+        HashMap<String, WrapDidascalia> mappa = new HashMap();
+        String chiave;
+
+        if (listaDisordinata != null) {
+            listaOrdinata = new ArrayList<>();
+
+            for (WrapDidascalia wrap : listaDisordinata) {
+                chiave = wrap.getChiave();
+                listaKey.add(chiave);
+                mappa.put(chiave, wrap);
+            }// end of for cycle
+
+            Collections.sort(listaKey);
+
+            for (String key : listaKey) {
+                listaOrdinata.add(mappa.get(key));
+            }// end of for cycle
         }// end of if cycle
 
         return listaOrdinata;

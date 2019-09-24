@@ -707,6 +707,37 @@ public class ListeIntegrationTest extends ATest {
             titolo = titolo.substring(titolo.indexOf(tag) + 1, titolo.length());
             System.out.println(titolo);
         }// end of for cycle
+    }// end of single test
+
+
+    /**
+     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+     *
+     * @param listaDisordinata di didascalie
+     *
+     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    @Test
+    public void ordinaDidascalieNomi() {
+        ArrayList<Bio> listaGrezzaBio = bioService.findAllByNome(nomeTextCorto);
+        ArrayList<WrapDidascalia> listaDidascalieNonOrdinate = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.listaNomi);
+        ArrayList<WrapDidascalia> listaDidascalieOrdinate;
+
+        System.out.println("*************");
+        System.out.println("Lista DISORDINATA di didascalie");
+        System.out.println("*************");
+        for (WrapDidascalia wrap : listaDidascalieNonOrdinate) {
+            System.out.println(wrap.getChiave());
+        }// end of for cycle
+
+        listaDidascalieOrdinate = listaService.ordinaDidascalieNomi(listaDidascalieNonOrdinate);
+
+        System.out.println("*************");
+        System.out.println("Lista ORDINATA di didascalie");
+        System.out.println("*************");
+        for (WrapDidascalia wrap : listaDidascalieOrdinate) {
+            System.out.println(wrap.getChiave());
+        }// end of for cycle
 
     }// end of single test
 
