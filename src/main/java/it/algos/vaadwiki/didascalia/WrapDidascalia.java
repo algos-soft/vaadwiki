@@ -216,11 +216,12 @@ public class WrapDidascalia {
             case listaNomi:
             case listaCognomi:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
-                this.chiave = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
+                chiave = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
 
                 chiaveUno = fixChiaveUno(chiave, sessoMaschile);
                 chiaveDue = "";
                 chiaveTre = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
+                chiave = chiaveUno.toLowerCase();
                 break;
             case biografie:
                 didascalia = didascaliaService.getDidascaliaBiografie(bio);

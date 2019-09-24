@@ -18,6 +18,7 @@ import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
+import it.algos.wiki.LibWiki;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -266,7 +267,7 @@ public class ListeIntegrationTest extends ATest {
      * Se tutto va bene, vengono ripristinati al termine del test.
      * In caso di uscita dal test per errore, vanno controllati.
      */
-//    @Test
+    @Test
     public void listaGiorniSenzaParagrafi() {
         listaGiorno = fixGiornoSenzaParagrafi();
 
@@ -299,7 +300,7 @@ public class ListeIntegrationTest extends ATest {
      * Se tutto va bene, vengono ripristinati al termine del test.
      * In caso di uscita dal test per errore, vanno controllati.
      */
-//    @Test
+    @Test
     public void listaGiorniConParagrafi() {
         listaGiorno = fixGiornoConParagrafi();
 
@@ -332,7 +333,7 @@ public class ListeIntegrationTest extends ATest {
      * Se tutto va bene, vengono ripristinati al termine del test.
      * In caso di uscita dal test per errore, vanno controllati.
      */
-//    @Test
+    @Test
     public void listaGiorniConParagrafiSize() {
         listaGiorno = fixGiornoConParagrafi();
 
@@ -360,7 +361,7 @@ public class ListeIntegrationTest extends ATest {
      * Se tutto va bene, vengono ripristinati al termine del test.
      * In caso di uscita dal test per errore, vanno controllati.
      */
-//    @Test
+    @Test
     public void listaGiorniInUso() {
         listaGiorno = fixGiornoConParagrafi();
 
@@ -684,6 +685,28 @@ public class ListeIntegrationTest extends ATest {
 //        ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
 //        Assert.assertEquals(ottenuto, previsto);
 
+    }// end of single test
+
+
+    @Test
+    public void ordineMappa() {
+        listaNome = getNome();
+        String tag = "|";
+        String titolo;
+
+        LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
+        mappa = listaNome.getMappa();
+        Assert.assertNotNull(mappa);
+
+        System.out.println("*************");
+        System.out.println("Titoli visibili dei paragrafi che DEVONO essere in ordine alfabetico");
+        System.out.println("*************");
+        for (String key : mappa.keySet()) {
+            titolo = key;
+            titolo = LibWiki.setNoQuadre(titolo);
+            titolo = titolo.substring(titolo.indexOf(tag) + 1, titolo.length());
+            System.out.println(titolo);
+        }// end of for cycle
 
     }// end of single test
 
