@@ -173,7 +173,7 @@ public abstract class Lista {
         //--Ordina la lista di didascalie specifiche
         listaDidascalie = this.ordinaListaDidascalie(listaDidascalie);
 
-//        //@todo ASSOLUTAMENTE PROVVISORIO
+//        //@todo ASSOLUTAMENTE PROVVISORIO DAVVERO
 //        listaDidascalie = new ArrayList<>(listaDidascalie.subList(0, 50));
 //        //@todo ASSOLUTAMENTE PROVVISORIO
 
