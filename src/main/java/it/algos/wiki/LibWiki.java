@@ -2857,7 +2857,7 @@ public abstract class LibWiki {
         String stringaOut = "";
 
         if (stringaIn != null && stringaIn.length() > 0) {
-            stringaOut = NO_WIKI_INI + stringaIn + NO_WIKI_END;
+            stringaOut = NO_WIKI_INI + stringaIn.trim() + NO_WIKI_END;
         }// fine del blocco if
 
         return stringaOut.trim();
@@ -3014,7 +3014,7 @@ public abstract class LibWiki {
         String stringaOut = stringaIn;
 
         if (stringaIn != null && stringaIn.length() > 0) {
-            stringaOut = setGraffe(COL_INI) + A_CAPO + stringaOut + setGraffe(COL_END);
+            stringaOut = setGraffe(COL_INI) + A_CAPO + stringaOut + A_CAPO + setGraffe(COL_END);
         }// fine del blocco if
 
         return stringaOut.trim();

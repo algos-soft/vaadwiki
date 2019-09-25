@@ -57,13 +57,20 @@ public abstract class Upload {
 
     protected final static String TAG_NO_INDICE = "__NOTOC__";
 
+    //
+//    protected boolean usaOrdineAlfabeticoParagrafi;
+//
+//    protected boolean usaBodySottopagine;
+//
+    //--property
+    public boolean usaRigheRaggruppate;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected ApplicationContext appContext;
-
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -227,7 +234,6 @@ public abstract class Upload {
     @Autowired
     protected LibBio libBio;
 
-
     protected boolean usaHeadTemplateAvviso; // uso del template StatBio
 
     protected String tagHeadTemplateAvviso; // template 'StatBio'
@@ -237,7 +243,6 @@ public abstract class Upload {
     protected LinkedHashMap<String, ArrayList<String>> mappaDidascalie;
 
     protected int numVoci = 0;
-
 
     protected boolean usaHeadNonScrivere;
 
@@ -256,14 +261,6 @@ public abstract class Upload {
     protected boolean usaBodyTemplate;
 
     protected boolean usaSuddivisioneParagrafi;
-
-    //
-//    protected boolean usaOrdineAlfabeticoParagrafi;
-//
-//    protected boolean usaBodySottopagine;
-//
-    //--property
-    public boolean usaRigheRaggruppate;
 
     //--property
     protected Lista lista;
@@ -350,11 +347,11 @@ public abstract class Upload {
 
         //body
         //a capo, ma senza senza righe di separazione
-        testoPagina += A_CAPO;
         testoPagina += this.elaboraBody();
 
         //footer
         //di fila nella stessa riga, senza ritorno a capo (se inizia con <include>)
+        testoPagina += A_CAPO;
         testoPagina += this.elaboraFooter();
 //        }// fine del blocco if
 
@@ -365,15 +362,15 @@ public abstract class Upload {
             if (pref.isBool(FlowCost.USA_DEBUG)) {
                 testoPagina = titoloPagina + A_CAPO + testoPagina;
                 titoloPagina = PAGINA_PROVA;
+            }// end of if cycle
+
+            if (checkPossoRegistrare(titoloPagina, testoPagina)) {
                 appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina);
+                log.info("Registrata la pagina: " + titoloPagina);
             } else {
-                if (checkPossoRegistrare(titoloPagina, testoPagina)) {
-                    appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina);
-                    log.info("Registrata la pagina: " + titoloPagina);
-                } else {
-                    log.info("Non modificata la pagina: " + titoloPagina);
-                }// end of if/else cycle
+                log.info("Non modificata la pagina: " + titoloPagina);
             }// end of if/else cycle
+
         }// fine del blocco if
 
     }// fine del metodo
@@ -589,6 +586,7 @@ public abstract class Upload {
         return testoLista;
     }// fine del metodo
 
+
     /**
      * Costruisce il corpo della pagina <br>
      */
@@ -611,6 +609,7 @@ public abstract class Upload {
 
         return testoLista;
     }// end of method
+
 
     /**
      * Incapsula il testo come parametro di un (eventuale) template

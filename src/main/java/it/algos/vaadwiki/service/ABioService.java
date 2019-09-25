@@ -6,10 +6,10 @@ import it.algos.vaadflow.service.*;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.BioService;
+import it.algos.vaadwiki.modules.genere.GenereService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.wiki.Api;
-import it.algos.wiki.WikiLoginOld;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -27,70 +27,17 @@ import org.springframework.context.ApplicationContext;
 public abstract class ABioService {
 
 
-    @Autowired
-    protected ApplicationContext appContext;
-
-//    /**
-//     * La injection viene fatta da SpringBoot in automatico <br>
-//     */
-//    @Autowired
-//    protected WikiLoginOld wikiLoginOld;
-
-
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected AttivitaService attivitaService;
-
-
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected NazionalitaService nazionalitaService;
-
-
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected ProfessioneService professioneService;
-
-
-//    /**
-//     * La injection viene fatta da SpringBoot in automatico <br>
-//     */
-//    @Autowired
-//    protected CategoriaService categoriaService;
-
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     public BioService bioService;
 
-
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected NewService newService;
-
-
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected DeleteService deleteService;
-
-
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    protected UpdateService updateService;
+//    /**
+//     * La injection viene fatta da SpringBoot in automatico <br>
+//     */
+//    @Autowired
+//    protected WikiLoginOld wikiLoginOld;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -108,6 +55,76 @@ public abstract class ABioService {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
+    public ADateService date;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    public Api api;
+
+
+//    /**
+//     * La injection viene fatta da SpringBoot in automatico <br>
+//     */
+//    @Autowired
+//    protected CategoriaService categoriaService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    public ATextService text;
+
+    @Autowired
+    protected ApplicationContext appContext;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected AttivitaService attivitaService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected NazionalitaService nazionalitaService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected ProfessioneService professioneService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected GenereService genereService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected NewService newService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected DeleteService deleteService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected UpdateService updateService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
     protected PageService pageService;
 
     /**
@@ -120,26 +137,7 @@ public abstract class ABioService {
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
-    public ADateService date;
-
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    public Api api;
-
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
     protected AMongoService mongo;
-
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    public ATextService text;
-
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

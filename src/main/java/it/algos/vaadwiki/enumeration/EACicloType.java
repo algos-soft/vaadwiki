@@ -24,7 +24,7 @@ public enum EACicloType {
             return testo;
         }// end of method
     },
-    update(EASchedule.oreQuattro.getNota()) {
+    update(EASchedule.giornoDecimoMinuto.getNota()) {
         @Override
         public String getEsegue() {
             String testo = "";

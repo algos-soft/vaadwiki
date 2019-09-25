@@ -68,7 +68,7 @@ public abstract class ALayoutViewList extends APrefViewList {
         if (pref.isBool(USA_DEBUG)) {
             this.getElement().getStyle().set("background-color", EAColor.yellow.getEsadecimale());
             topPlaceholder.getElement().getStyle().set("background-color", EAColor.lime.getEsadecimale());
-            alertPlacehorder.getElement().getStyle().set("background-color", EAColor.blue.getEsadecimale());
+            alertPlacehorder.getElement().getStyle().set("background-color", EAColor.lightgreen.getEsadecimale());
             gridPlaceholder.getElement().getStyle().set("background-color", EAColor.silver.getEsadecimale());
             bottomPlacehorder.getElement().getStyle().set("background-color", EAColor.lime.getEsadecimale());
         }// end of if cycle

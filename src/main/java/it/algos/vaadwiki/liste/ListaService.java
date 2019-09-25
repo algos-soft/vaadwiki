@@ -1006,7 +1006,7 @@ public class ListaService extends ABioService {
 //
 //        }// end of for cycle
 
-        return testo.toString();
+        return testo.toString().trim();
     }// fine del metodo
 
 

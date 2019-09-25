@@ -8,8 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import static it.algos.vaadflow.application.FlowCost.SPAZIO;
-import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import static it.algos.vaadflow.application.FlowCost.*;
 
 /**
  * Project vaadwiki
@@ -32,6 +31,7 @@ public abstract class UploadCrono extends Upload {
         cat = LibWiki.setCat(titoloPagina, SPAZIO);
         cat = nascosta ? LibWiki.setNowiki(cat) : cat;
         testo += cat;
+        testo += A_CAPO;
         testo = LibBio.setNoIncludeMultiRiga(testo);
 
         return testo;
