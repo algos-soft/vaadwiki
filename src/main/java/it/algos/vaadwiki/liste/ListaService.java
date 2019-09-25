@@ -144,59 +144,8 @@ public class ListaService extends ABioService {
      * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
      */
     public ArrayList<WrapDidascalia> ordinaListaDidascalieNomi(ArrayList<WrapDidascalia> listaDisordinata) {
-        ArrayList<WrapDidascalia> listaOrdinata = listaDisordinata;
-        if (listaDisordinata != null) {
-
-            listaDisordinata.sort(new Comparator<WrapDidascalia>() {
-
-                String w1ChiaveUno;
-
-                String w2ChiaveUno;
-
-
-                @Override
-                public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
-                    w1ChiaveUno = dida1.getChiave();
-                    w2ChiaveUno = dida2.getChiave();
-                    return text.compareStr(w1ChiaveUno, w2ChiaveUno);
-                }// end of method
-            });//end of lambda expressions and anonymous inner class
-        }// end of if cycle
-
-        return listaOrdinata;
-    }// fine del metodo
-
-
-    /**
-     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
-     *
-     * @param listaDisordinata di didascalie
-     *
-     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
-     */
-    public ArrayList<WrapDidascalia> ordinaDidascalieNomi(ArrayList<WrapDidascalia> listaDisordinata) {
-        ArrayList<WrapDidascalia> listaOrdinata = listaDisordinata;
-        ArrayList<String> listaKey = new ArrayList();
-        HashMap<String, WrapDidascalia> mappa = new HashMap();
-        String chiave;
-
-        if (listaDisordinata != null) {
-            listaOrdinata = new ArrayList<>();
-
-            for (WrapDidascalia wrap : listaDisordinata) {
-                chiave = wrap.getChiave();
-                listaKey.add(chiave);
-                mappa.put(chiave, wrap);
-            }// end of for cycle
-
-            Collections.sort(listaKey);
-
-            for (String key : listaKey) {
-                listaOrdinata.add(mappa.get(key));
-            }// end of for cycle
-        }// end of if cycle
-
-        return listaOrdinata;
+        Collections.sort(listaDisordinata);
+        return listaDisordinata;
     }// fine del metodo
 
 
@@ -208,39 +157,8 @@ public class ListaService extends ABioService {
      * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
      */
     public ArrayList<WrapDidascalia> ordinaListaDidascalieCognomi(ArrayList<WrapDidascalia> listaDisordinata) {
-        ArrayList<WrapDidascalia> listaOrdinata = new ArrayList<>();
-        LinkedHashMap<String, ArrayList<WrapDidascalia>> mappa = new LinkedHashMap<>();
-        ArrayList<String> listaKey = new ArrayList<>();
-        ArrayList<String> listaKeyOrdinata = new ArrayList<>();
-        String key = "";
-        ArrayList<WrapDidascalia> listaWrap;
-
-        if (listaDisordinata != null) {
-            for (WrapDidascalia wrap : listaDisordinata) {
-                key = wrap.chiaveUno;
-                if (!listaKey.contains(key)) {
-                    listaKey.add(key);
-                }// end of if cycle
-
-                if (mappa.containsKey(key)) {
-                    listaWrap = mappa.get(key);
-                } else {
-                    listaWrap = new ArrayList<>();
-                }// end of if/else cycle
-                listaWrap.add(wrap);
-                mappa.put(key, listaWrap);
-            }// end of for cycle
-
-            listaKeyOrdinata = array.sort(listaKey);
-            for (String keyOrdinata : listaKeyOrdinata) {
-                listaWrap = mappa.get(keyOrdinata);
-                for (WrapDidascalia wrap : listaWrap) {
-                    listaOrdinata.add(wrap);
-                }// end of for cycle
-            }// end of for cycle
-        }// end of if cycle
-
-        return listaOrdinata;
+        Collections.sort(listaDisordinata);
+        return listaDisordinata;
     }// fine del metodo
 
 
@@ -362,7 +280,7 @@ public class ListaService extends ABioService {
             chiaveUno = wrap.chiaveUno;
             if (text.isValid(chiaveUno)) {
                 if (usaLinkAttivita) {
-                    chiaveUno = getTitoloParagrafo(wrap.bio); //@todo NON FUNZIONA - DA SIUSTEMARE
+                    chiaveUno = getTitoloParagrafo(wrap.bio);
                 }// end of if cycle
                 chiaveUno = LibWiki.setQuadre(chiaveUno);
             } else {
@@ -657,6 +575,10 @@ public class ListaService extends ABioService {
         Genere genere;
 
         genere = genereService.findByKeyUnica(attivitaSingolare);
+
+        if (text.isEmpty(sesso)) {
+            sesso = "M";
+        }// end of if cycle
 
         if (genere != null) {
             if (sesso.equals("M")) {

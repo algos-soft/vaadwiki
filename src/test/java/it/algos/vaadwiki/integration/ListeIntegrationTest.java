@@ -122,6 +122,8 @@ public class ListeIntegrationTest extends ATest {
 
     private String annoText = "1924";
 
+    private String annoTextSecondo = "2005";
+
     private String giornoText = "3 marzo";
 
     private String nomeTextCorto = "Rita";
@@ -730,7 +732,39 @@ public class ListeIntegrationTest extends ATest {
             System.out.println(wrap.getChiave());
         }// end of for cycle
 
-        listaDidascalieOrdinate = listaService.ordinaDidascalieNomi(listaDidascalieNonOrdinate);
+        listaDidascalieOrdinate = listaService.ordinaListaDidascalieNomi(listaDidascalieNonOrdinate);
+
+        System.out.println("*************");
+        System.out.println("Lista ORDINATA di didascalie");
+        System.out.println("*************");
+        for (WrapDidascalia wrap : listaDidascalieOrdinate) {
+            System.out.println(wrap.getChiave());
+        }// end of for cycle
+
+    }// end of single test
+
+
+    /**
+     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+     *
+     * @param listaDisordinata di didascalie
+     *
+     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    @Test
+    public void ordinaDidascalieAnni() {
+        ArrayList<Bio> listaGrezzaBio = bioService.findAllByAnnoNascita(annoTextSecondo);
+        ArrayList<WrapDidascalia> listaDidascalieNonOrdinate = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.annoNato);
+        ArrayList<WrapDidascalia> listaDidascalieOrdinate;
+
+        System.out.println("*************");
+        System.out.println("Lista DISORDINATA di didascalie");
+        System.out.println("*************");
+        for (WrapDidascalia wrap : listaDidascalieNonOrdinate) {
+            System.out.println(wrap.getChiave());
+        }// end of for cycle
+
+        listaDidascalieOrdinate = listaService.ordinaListaDidascalie(listaDidascalieNonOrdinate);
 
         System.out.println("*************");
         System.out.println("Lista ORDINATA di didascalie");

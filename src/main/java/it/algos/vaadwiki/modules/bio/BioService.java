@@ -8,6 +8,7 @@ import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadwiki.download.ElaboraService;
@@ -85,6 +86,12 @@ public class BioService extends AttNazProfCatService {
      */
     @Autowired
     private GiornoService giornoService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private AnnoService annoService;
 
     /**
      * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
@@ -299,9 +306,31 @@ public class BioService extends AttNazProfCatService {
      *
      * @return all ordered entities
      */
+    public ArrayList<Bio> findAllByGiornoNascita(String giornTxt) {
+        Giorno giorno = giornoService.findByKeyUnica(giornTxt);
+        return giorno != null ? findAllByGiornoNascita(giorno) : null;
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
     public ArrayList<Bio> findAllByGiornoMorte(Giorno giornoMorte) {
         Sort sort = new Sort(Sort.Direction.ASC, "annoMorte.ord", "cognome");
         return (ArrayList) repository.findAllByGiornoMorte(giornoMorte, sort);
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<Bio> findAllByGiornoMorte(String giornTxt) {
+        Giorno giorno = giornoService.findByKeyUnica(giornTxt);
+        return giorno != null ? findAllByGiornoMorte(giorno) : null;
     }// end of method
 
 
@@ -321,9 +350,31 @@ public class BioService extends AttNazProfCatService {
      *
      * @return all ordered entities
      */
+    public ArrayList<Bio> findAllByAnnoNascita(String annoText) {
+        Anno anno = annoService.findByKeyUnica(annoText);
+        return anno != null ? findAllByAnnoNascita(anno) : null;
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
     public ArrayList<Bio> findAllByAnnoMorte(Anno annoMorte) {
         Sort sort = new Sort(Sort.Direction.ASC, "giornoMorte.ord", "cognome");
         return (ArrayList) repository.findAllByAnnoMorte(annoMorte, sort);
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<Bio> findAllByAnnoMorte(String annoText) {
+        Anno anno = annoService.findByKeyUnica(annoText);
+        return anno != null ? findAllByAnnoMorte(anno) : null;
     }// end of method
 
 
@@ -337,8 +388,9 @@ public class BioService extends AttNazProfCatService {
         return (ArrayList) repository.findAllByNome(nome, sort);
     }// end of method
 
+
     /**
-    /**
+     * /**
      * Returns all entities of the type <br>
      *
      * @return all ordered entities
