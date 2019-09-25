@@ -346,7 +346,6 @@ public abstract class Upload {
         testoPagina += this.elaboraHead();
 
         //body
-        //a capo, ma senza senza righe di separazione
         testoPagina += this.elaboraBody();
 
         //footer
@@ -538,6 +537,7 @@ public abstract class Upload {
 
         if (usaHeadIncipit) {
             testo += elaboraIncipitSpecifico();
+            testo += A_CAPO;
         }// fine del blocco if
 
         return testo;
@@ -626,7 +626,7 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected String elaboraFooter() {
-        String testo = VUOTA;
+        String testo = A_CAPO;
         boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
         String cat;
 

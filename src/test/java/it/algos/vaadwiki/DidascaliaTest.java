@@ -1,19 +1,22 @@
 package it.algos.vaadwiki;
 
+import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
+import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.AReflectionService;
 import it.algos.vaadwiki.didascalia.*;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.download.PageService;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
-import it.algos.vaadwiki.didascalia.DidascaliaService;
+import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
-import lombok.extern.slf4j.Slf4j;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -22,9 +25,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Project vaadwiki
@@ -78,6 +80,9 @@ public class DidascaliaTest extends ATest {
     public DidascaliaBiografie completa;
 
     @InjectMocks
+    public GiornoService giornoService;
+
+    @InjectMocks
     public AnnoService annoService;
 
     @InjectMocks
@@ -104,7 +109,13 @@ public class DidascaliaTest extends ATest {
     @InjectMocks
     protected ADateService date;
 
+    @InjectMocks
+    protected AMongoService mongoService;
+
+
     private String wikiTitle = "Adone Asinari";
+
+    private String wikiTitleDue = "Sonia Todd";
 
     private String textPage;
 
@@ -119,11 +130,11 @@ public class DidascaliaTest extends ATest {
         MockitoAnnotations.initMocks(bioService);
         MockitoAnnotations.initMocks(elaboraService);
         MockitoAnnotations.initMocks(annoService);
+        MockitoAnnotations.initMocks(giornoService);
         MockitoAnnotations.initMocks(libBio);
         MockitoAnnotations.initMocks(giorno);
         MockitoAnnotations.initMocks(reflection);
-//        MockitoAnnotations.initMocks(mongoOperations);
-//        MockitoAnnotations.initMocks(mongoService);
+        MockitoAnnotations.initMocks(mongoService);
         MockitoAnnotations.initMocks(text);
 //        MockitoAnnotations.initMocks(didascalia);
         MockitoAnnotations.initMocks(giornoNato);
@@ -144,7 +155,8 @@ public class DidascaliaTest extends ATest {
         elaboraService.text = text;
         elaboraService.libBio = libBio;
         libBio.giorno = giorno;
-//        libBio.mongo = mongoService;
+        bioService.text = text;
+        libBio.mongo = mongoService;
 //        mongoService.mongoOp = mongoOperations;
 //        mongoService.reflection = reflection;
 //        mongoService.text = text;
@@ -171,7 +183,64 @@ public class DidascaliaTest extends ATest {
     }// end of method
 
 
-    @Test
+    private Giorno creaGiorno(String giornoText) {
+        Giorno giorno = null;
+        giorno = new Giorno();
+        giorno.titolo = giornoText;
+        return giorno;
+    }// end of method
+
+
+    private Anno creaAnno(int annoInt) {
+        Anno anno = null;
+        anno = new Anno();
+        anno.titolo = "" + annoInt;
+        return anno;
+    }// end of method
+
+
+    private Attivita creaAttivita(String attivitaText) {
+        Attivita attivita = null;
+        attivita = new Attivita();
+        attivita.singolare = attivitaText;
+        return attivita;
+    }// end of method
+
+
+    private Nazionalita creaNazionalita(String nazionalitaText) {
+        Nazionalita nazionalita = null;
+        nazionalita = new Nazionalita();
+        nazionalita.singolare = nazionalitaText;
+        return nazionalita;
+    }// end of method
+
+
+    private Bio creaBio() {
+        Bio entity = null;
+        Giorno giorno = null;
+        Anno anno = creaAnno(1963);
+        Attivita attivita = creaAttivita("attrice");
+        Nazionalita nazionalita = creaNazionalita("australiana");
+
+        entity = Bio.builderBio()
+                .pageid(29999)
+                .wikiTitle(wikiTitle)
+                .nome("Sonia")
+                .cognome("Todd")
+                .sesso("F")
+                .luogoNato("Adelaide")
+                .luogoNatoLink("Adelaide (Australia)")
+                .giornoNascita(giorno)
+                .annoNascita(anno)
+                .attivita(attivita)
+                .nazionalita(nazionalita)
+                .build();
+
+        return entity;
+    }// end of method
+
+
+    //    @Test
     public void download() {
         System.out.println("*************");
         System.out.println("Tipi possibili di didascalie per " + wikiTitle);
@@ -196,7 +265,7 @@ public class DidascaliaTest extends ATest {
     /**
      * Test con uscita sul terminale di Idea
      */
-    @Test
+//    @Test
     public void esegueTestDidascalie() {
         System.out.println("");
         System.out.println("Algos");
@@ -204,9 +273,14 @@ public class DidascaliaTest extends ATest {
         System.out.println("Tipi possibili di discalie");
         System.out.println("Esempio '" + wikiTitle + "'");
         System.out.println("");
-        Bio bio = api.leggeBio(wikiTitle);
-        for (EADidascalia dida : EADidascalia.values()) {
-//            System.out.println(dida.name() + ": " + didascalia.esegue(bio, dida));
+        Bio bio = creaBio();
+        for (EADidascalia type : EADidascalia.values()) {
+            ottenuto = didascaliaService.getBaseSenza(bio, type);
+            if (text.isValid(ottenuto)) {
+                System.out.println(type.name() + ": " + ottenuto);
+            } else {
+                System.out.println(type.name() + ": Manca");
+            }// end of if/else cycle
         }// end of for cycle
         System.out.println("");
     }// end of single test

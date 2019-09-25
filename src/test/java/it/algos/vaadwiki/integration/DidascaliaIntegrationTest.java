@@ -48,6 +48,8 @@ public class DidascaliaIntegrationTest extends ATest {
 
     private static String NOME_BIO_DUE = "Giovanni di Pacheco";
 
+    private static String NOME_BIO_TRE = "Sonia Todd";
+
     @Autowired
     public MongoOperations mongoOp;
 
@@ -81,6 +83,7 @@ public class DidascaliaIntegrationTest extends ATest {
     private Bio bioUno;
 
     private Bio bioDue;
+    private Bio bioTre;
 
     private Didascalia didascalia;
 
@@ -96,6 +99,8 @@ public class DidascaliaIntegrationTest extends ATest {
         Assert.assertNotNull(bioUno);
         bioDue = bioService.findByKeyUnica(NOME_BIO_DUE);
         Assert.assertNotNull(bioDue);
+        bioTre = bioService.findByKeyUnica(NOME_BIO_TRE);
+        Assert.assertNotNull(bioTre);
     }// end of method
 
 
@@ -104,7 +109,8 @@ public class DidascaliaIntegrationTest extends ATest {
 
 
     @Test
-    public void tipiPossibiliDidascalie() {
+    public void tipiPossibiliDidascalieClarke() {
+        System.out.println("");
         System.out.println("*************");
         System.out.println("Tipi possibili di didascalie per " + NOME_BIO_UNO);
         System.out.println("*************");
@@ -130,9 +136,12 @@ public class DidascaliaIntegrationTest extends ATest {
             }// end of if/else cycle
         }// end of for cycle
         System.out.println("*************");
+    }// end of single test
 
+
+    @Test
+    public void tipiPossibiliDidascaliePacheco() {
         System.out.println("");
-
         System.out.println("*************");
         System.out.println("Tipi possibili di didascalie per " + NOME_BIO_DUE);
         System.out.println("*************");
@@ -151,6 +160,37 @@ public class DidascaliaIntegrationTest extends ATest {
         System.out.println("*************");
         for (EADidascalia type : EADidascalia.values()) {
             ottenuto = didascaliaService.getBaseCon(bioDue, type);
+            if (text.isValid(ottenuto)) {
+                System.out.println(type.name() + ": " + ottenuto);
+            } else {
+                System.out.println(type.name() + ": Manca");
+            }// end of if/else cycle
+        }// end of for cycle
+        System.out.println("*************");
+    }// end of single test
+
+
+    @Test
+    public void tipiPossibiliDidascalieTodd() {
+        System.out.println("");
+        System.out.println("*************");
+        System.out.println("Tipi possibili di didascalie per " + NOME_BIO_TRE);
+        System.out.println("*************");
+        System.out.println("Senza chiave");
+        System.out.println("*************");
+        for (EADidascalia type : EADidascalia.values()) {
+            ottenuto = didascaliaService.getBaseSenza(bioTre, type);
+            if (text.isValid(ottenuto)) {
+                System.out.println(type.name() + ": " + ottenuto);
+            } else {
+                System.out.println(type.name() + ": Manca");
+            }// end of if/else cycle
+        }// end of for cycle
+        System.out.println("*************");
+        System.out.println("Con chiave");
+        System.out.println("*************");
+        for (EADidascalia type : EADidascalia.values()) {
+            ottenuto = didascaliaService.getBaseCon(bioTre, type);
             if (text.isValid(ottenuto)) {
                 System.out.println(type.name() + ": " + ottenuto);
             } else {

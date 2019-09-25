@@ -36,7 +36,6 @@ import java.util.*;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 import static it.algos.vaadwiki.application.WikiCost.*;
-import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI_EDIT_POST;
 
 
 /**
