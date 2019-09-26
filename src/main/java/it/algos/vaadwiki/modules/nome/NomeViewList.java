@@ -15,7 +15,6 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadwiki.modules.wiki.WikiViewList;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
@@ -118,7 +117,6 @@ public class NomeViewList extends WikiViewList {
     }// end of method
 
 
-
     /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
      * Normalmente ad uso esclusivo del developer
@@ -161,6 +159,7 @@ public class NomeViewList extends WikiViewList {
     protected void addColumnsGridPaginata() {
         fixColumn(Nome::getNome, "nome");
         fixColumn(Nome::getVoci, "voci");
+        fixColumn(Nome::isValido, "valido");
     }// end of method
 
 
@@ -228,7 +227,7 @@ public class NomeViewList extends WikiViewList {
 
 
     protected Component createUploaButton(Nome entityBean) {
-        if (entityBean != null && entityBean.voci >= sogliaWiki) {
+        if (entityBean != null && entityBean.voci >= sogliaWiki && entityBean.valido) {
             Button uploadOneNatoButton = new Button(entityBean.nome, new Icon(VaadinIcon.UPLOAD));
             uploadOneNatoButton.getElement().setAttribute("theme", "error");
             uploadOneNatoButton.addClickListener(e -> uploadService.uploadNome(entityBean));
@@ -248,6 +247,7 @@ public class NomeViewList extends WikiViewList {
         String link = "\"" + PATH_WIKI + uploadService.getTitoloNome(nome) + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
+
 
     /**
      * Opens the confirmation dialog before deleting the current item.

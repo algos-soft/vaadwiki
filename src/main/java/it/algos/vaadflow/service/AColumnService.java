@@ -152,6 +152,32 @@ public class AColumnService extends AbstractService {
 //                    return combo;
 //                }));
                 break;
+            case yesno:
+                colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    Field field = reflection.getField(entityClazz, propertyName);
+                    Label label = new Label();
+                    String testo = "";
+                    boolean status = false;
+
+                    try { // prova ad eseguire il codice
+                        status = field.getBoolean(entity);
+                        testo = status ? "si" : "no";
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
+
+                    if (text.isValid(testo)) {
+                        label.setText(testo);
+                        if (status) {
+                            label.getStyle().set("color", "green");
+                        } else {
+                            label.getStyle().set("color", "red");
+                        }// end of if/else cycle
+                    }// end of if cycle
+
+                    return label;
+                }));//end of lambda expressions and anonymous inner class
+                break;
             case weekdate:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                     LocalDate data;

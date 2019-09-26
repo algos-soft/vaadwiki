@@ -259,6 +259,7 @@ public class NomeService extends NomeCognomeService {
 
     /**
      * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
+     * Controlla che nome sia valido <br>
      */
     public void update() {
         long inizio = System.currentTimeMillis();

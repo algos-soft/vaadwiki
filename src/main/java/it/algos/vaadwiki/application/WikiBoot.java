@@ -16,6 +16,7 @@ import it.algos.vaadwiki.modules.cognome.CognomeViewList;
 import it.algos.vaadwiki.modules.genere.GenereViewList;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaViewList;
 import it.algos.vaadwiki.modules.nome.NomeViewList;
+import it.algos.vaadwiki.modules.doppinomi.DoppinomiViewList;
 import it.algos.vaadwiki.modules.professione.ProfessioneViewList;
 import it.algos.vaadwiki.modules.wiki.WikiAnnoViewList;
 import it.algos.vaadwiki.modules.wiki.WikiGiornoViewList;
@@ -229,7 +230,8 @@ public class WikiBoot extends ABoot {
         FlowCost.MENU_CLAZZ_LIST.add(WikiAnnoViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(NomeViewList.class);
         FlowCost.MENU_CLAZZ_LIST.add(CognomeViewList.class);
-    }// end of method
+    	FlowCost.MENU_CLAZZ_LIST.add(DoppinomiViewList.class);
+	}// end of method
 
 
 }// end of boot class
