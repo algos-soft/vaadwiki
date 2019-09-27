@@ -4,10 +4,9 @@ import com.mongodb.client.DistinctIterable;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.service.AMongoService;
-import it.algos.vaadflow.service.AService;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.doppinomi.DoppinomiService;
 import it.algos.vaadwiki.modules.wiki.NomeCognomeService;
-import it.algos.vaadwiki.service.LibBio;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +19,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -64,6 +62,9 @@ public class NomeService extends NomeCognomeService {
 
     @Autowired
     private AMongoService mongo;
+
+    @Autowired
+    private DoppinomiService doppinomiService;
 
 
     /**
@@ -173,6 +174,7 @@ public class NomeService extends NomeCognomeService {
         entity = Nome.builderNome()
                 .nome(text.isValid(nome) ? nome : null)
                 .voci(voci != 0 ? voci : this.getNewOrdine())
+                .valido(true)
                 .build();
 
         return (Nome) creaIdKeySpecifica(entity);
@@ -242,14 +244,18 @@ public class NomeService extends NomeCognomeService {
     public void crea() {
         long inizio = System.currentTimeMillis();
         int cont = 0;
-        log.info("Creazione completa nomi delle biografie. Circa 10 minuti.");
+        log.info("Creazione completa nomi delle biografie. Circa 11 minuti.");
+        List<String> listaDoppi = doppinomiService.findAllCode();
         deleteAll();
 
-        //@Field("nome")
         DistinctIterable<String> listaNomiDistinti = mongo.mongoOp.getCollection("bio").distinct("nome", String.class);
         for (String nome : listaNomiDistinti) {
             cont++;
-            saveNumVoci(nome);
+            if (listaDoppi.contains(nome)) {
+                saveNome(nome, true);
+            } else {
+                saveNome(nome, false);
+            }// end of if/else cycle
         }// end of for cycle
 
         pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
@@ -264,9 +270,14 @@ public class NomeService extends NomeCognomeService {
     public void update() {
         long inizio = System.currentTimeMillis();
         log.info("Elaborazione nomi delle biografie. Circa 5 minuti.");
+        List<String> listaDoppi = doppinomiService.findAllCode();
 
         for (Nome nome : findAll()) {
-            saveNumVoci(nome);
+            fixVociNelNome(nome);
+            if (listaDoppi.contains(nome)) {
+                nome.valido = false;
+                save(nome);
+            }// end of if/else cycle
         }// end of for cycle
 
         pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
@@ -277,15 +288,20 @@ public class NomeService extends NomeCognomeService {
     /**
      * Registra il numero di voci biografiche che hanno il nome indicato <br>
      */
-    public void saveNumVoci(String nome) {
+    public void saveNome(String nomeTxt, boolean nomeDoppio) {
         //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
         int sogliaMongo = pref.getInt(SOGLIA_NOMI_MONGO, 10);
+        Nome nome = null;
         int numVoci = 0;
         Query query = new Query();
-        query.addCriteria(Criteria.where("nome").is(nome));
+        query.addCriteria(Criteria.where("nome").is(nomeTxt));
         numVoci = ((List) mongo.mongoOp.find(query, Bio.class)).size();
-        if (numVoci >= sogliaMongo && text.isValid(nome)) {
-            this.findOrCrea(nome, numVoci);
+        if (numVoci >= sogliaMongo && text.isValid(nomeTxt)) {
+            nome = this.findOrCrea(nomeTxt, numVoci);
+        }// end of if cycle
+        if (nomeDoppio && nome != null) {
+            nome.valido = false;
+            save(nome);
         }// end of if cycle
     }// end of method
 
@@ -293,7 +309,7 @@ public class NomeService extends NomeCognomeService {
     /**
      * Registra il numero di voci biografiche che hanno il nome indicato <br>
      */
-    public void saveNumVoci(Nome nome) {
+    public void fixVociNelNome(Nome nome) {
         int numVoci = 0;
         Query query = new Query();
         query.addCriteria(Criteria.where("nome").is(nome.nome));

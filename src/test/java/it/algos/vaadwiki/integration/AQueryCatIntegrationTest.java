@@ -132,10 +132,10 @@ public class AQueryCatIntegrationTest extends ATest {
         Assert.assertNotNull(ottenutoLongList);
         Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
 
-        previstoIntero = 371000;
-        ArrayList<Long> ottenutoList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_GRANDE).listaPageid;
-        Assert.assertNotNull(ottenutoList);
-        Assert.assertEquals(Math.min(previstoIntero, ottenutoList.size()), previstoIntero);
+//        previstoIntero = 371000;
+//        ArrayList<Long> ottenutoList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_GRANDE).listaPageid;
+//        Assert.assertNotNull(ottenutoList);
+//        Assert.assertEquals(Math.min(previstoIntero, ottenutoList.size()), previstoIntero);
     }// end of method
 
 

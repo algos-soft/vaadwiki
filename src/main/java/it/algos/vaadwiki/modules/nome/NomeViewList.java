@@ -179,7 +179,7 @@ public class NomeViewList extends WikiViewList {
      * Sovrascritto
      */
     protected void addSpecificColumnsAfter() {
-        String lar = "9em";
+        String lar = "12em";
         ComponentRenderer renderer;
         Grid.Column colonna;
 

@@ -1,20 +1,18 @@
 package it.algos.vaadwiki.modules.doppinomi;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
-import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.service.AService;
 import lombok.extern.slf4j.Slf4j;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static it.algos.vaadwiki.application.WikiCost.TAG_DOP;
 
 /**
@@ -70,7 +68,8 @@ public class DoppinomiService extends AService {
         super(repository);
         super.entityClass = Doppinomi.class;
         this.repository = (DoppinomiRepository) repository;
-   }// end of Spring constructor
+    }// end of Spring constructor
+
 
     /**
      * Ricerca di una entity (la crea se non la trova) <br>
@@ -89,6 +88,7 @@ public class DoppinomiService extends AService {
         return entity;
     }// end of method
 
+
     /**
      * Crea una entity e la registra <br>
      *
@@ -97,46 +97,65 @@ public class DoppinomiService extends AService {
      * @return la entity appena creata
      */
     public Doppinomi crea(String code) {
-         return (Doppinomi)save(newEntity(code));
+        return (Doppinomi) save(newEntity(code));
     }// end of method
 
-     /**
-      * Creazione in memoria di una nuova entity che NON viene salvata
-      * Eventuali regolazioni iniziali delle property
-      * Senza properties per compatibilità con la superclasse
-      *
-      * @return la nuova entity appena creata (non salvata)
-      */
-     @Override
-     public Doppinomi newEntity() {
-         return newEntity("");
-     }// end of method
 
-
-     /**
-      * Creazione in memoria di una nuova entity che NON viene salvata <br>
-      * Eventuali regolazioni iniziali delle property <br>
-      * All properties <br>
-      * Utilizza, eventualmente, la newEntity() della superclasse, per le property della superclasse <br>
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata
+     * Eventuali regolazioni iniziali delle property
+     * Senza properties per compatibilità con la superclasse
      *
-      * @param code        codice di riferimento (obbligatorio)
-      *
-      * @return la nuova entity appena creata (non salvata)
-      */
-     public Doppinomi newEntity(String code) {
-         Doppinomi entity = null;
+     * @return la nuova entity appena creata (non salvata)
+     */
+    @Override
+    public Doppinomi newEntity() {
+        return newEntity("");
+    }// end of method
 
-         entity = findByKeyUnica(code);
-		if (entity != null) {
-			return findByKeyUnica(code);
-		}// end of if cycle
-		
-         entity = Doppinomi.builderDoppinomi()
-				.code(text.isValid(code) ? code : null)
-				.build();
 
-         return (Doppinomi)creaIdKeySpecifica(entity);
-     }// end of method
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
+     * Utilizza, eventualmente, la newEntity() della superclasse, per le property della superclasse <br>
+     *
+     * @param code codice di riferimento (obbligatorio)
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Doppinomi newEntity(String code) {
+        Doppinomi entity = null;
+
+        entity = findByKeyUnica(code);
+        if (entity != null) {
+            return findByKeyUnica(code);
+        }// end of if cycle
+
+        entity = Doppinomi.builderDoppinomi()
+                .code(text.isValid(code) ? code : null)
+                .build();
+
+        return (Doppinomi) creaIdKeySpecifica(entity);
+    }// end of method
+
+
+    /**
+     * Costruisce una lista della property 'code' di tutte le entities <br>
+     */
+    public List<String> findAllCode() {
+        List<String> listaCode = new ArrayList();
+        List<Doppinomi> listaEntity = (List<Doppinomi>) findAll();
+
+        if (array.isValid(listaEntity)) {
+            listaCode = new ArrayList<>();
+            for (Doppinomi doppio : listaEntity) {
+                listaCode.add(doppio.code);
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaCode;
+    }// end of method
 
 
     /**
@@ -150,6 +169,5 @@ public class DoppinomiService extends AService {
         return repository.findByCode(code);
     }// end of method
 
-    
 
 }// end of class

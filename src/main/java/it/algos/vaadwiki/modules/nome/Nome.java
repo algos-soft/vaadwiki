@@ -78,7 +78,7 @@ public class Nome extends AEntity {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 2)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(widthEM = 20)
+    @AIColumn(widthEM = 18)
     public String nome;
 
     /**

@@ -1,28 +1,25 @@
 package it.algos.vaadwiki.modules.doppinomi;
 
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.HeaderRow;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.selection.SingleSelectionEvent;
-import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.list.AGridViewList;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
-import it.algos.vaadwiki.schedule.TaskProfessione;
+import it.algos.wiki.web.AQueryVoce;
+import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.vaadin.klaudeta.PaginatedGrid;
 
-import static it.algos.vaadwiki.application.WikiCost.*;
+import java.util.List;
+
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
+import static it.algos.vaadwiki.application.WikiCost.TAG_DOP;
 
 /**
  * Project vaadwiki <br>
@@ -52,6 +49,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Slf4j
 @AIScript(sovrascrivibile = false)
 public class DoppinomiViewList extends AGridViewList {
+
     /**
      * Icona visibile nel menu (facoltativa)
      * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
@@ -59,6 +57,7 @@ public class DoppinomiViewList extends AGridViewList {
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
+    private static String PAGINA_WIKI = "Utente:Biobot/NomiDoppi";
 
 
     /**
@@ -75,6 +74,7 @@ public class DoppinomiViewList extends AGridViewList {
         ((DoppinomiViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
+
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
@@ -85,6 +85,71 @@ public class DoppinomiViewList extends AGridViewList {
         super.fixPreferenze();
 
         super.usaPagination = false;
+    }// end of method
+
+
+    /**
+     * Placeholder (eventuale, presente di default) SOPRA la Grid
+     * - con o senza campo edit search, regolato da preferenza o da parametro
+     * - con o senza bottone New, regolato da preferenza o da parametro
+     * - con eventuali altri bottoni specifici
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void creaTopLayout() {
+        super.creaTopLayout();
+
+        Button showModuloButton = new Button("Download wiki", new Icon(VaadinIcon.DOWNLOAD));
+        showModuloButton.addClassName("view-toolbar__button");
+        showModuloButton.addClickListener(e -> download());
+        topPlaceholder.add(showModuloButton);
+
+        Button uploadStatisticheButton = new Button("Upload wiki", new Icon(VaadinIcon.UPLOAD));
+        uploadStatisticheButton.addClassName("view-toolbar__button");
+        uploadStatisticheButton.addClickListener(e -> upload());
+        topPlaceholder.add(uploadStatisticheButton);
+    }// end of method
+
+
+    /**
+     * Legge server wiki una lista di valori da inserire nel mongoDB (cancellando i precedenti) <br>
+     */
+    protected void download() {
+        String[] righe;
+        String tag = "\\*";
+        String testo = ((AQueryVoce) appContext.getBean("AQueryVoce", PAGINA_WIKI)).urlRequest();
+
+        righe = testo.split(tag);
+        if (righe != null && righe.length > 1) {
+            service.deleteAll();
+            for (int k = 1; k < righe.length; k++) {
+                ((DoppinomiService) service).findOrCrea(righe[k].trim());;
+            }// end of for cycle
+        }// end of if cycle
+
+    }// end of method
+
+
+    /**
+     * Scrive sul server wiki una lista dei valori del mongoDB <br>
+     */
+    protected void upload() {
+        String testo = "";
+        List<String> lista = ((DoppinomiService) service).findAllCode();
+
+        testo += "Pagina di servizio con la lista dei '''nomi doppi''' da escludere nella creazione delle pagine '''Persone di nome...'''";
+        testo += A_CAPO;
+        testo += A_CAPO;
+
+        for (String stringa : lista) {
+            testo += "*";
+            testo += stringa;
+            testo += A_CAPO;
+        }// end of for cycle
+        testo = text.levaCoda(testo, A_CAPO);
+
+        appContext.getBean(AQueryWrite.class, PAGINA_WIKI, testo);
     }// end of method
 
 }// end of class
