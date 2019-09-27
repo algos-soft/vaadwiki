@@ -136,13 +136,14 @@ public class WikiGiornoViewList extends WikiViewList {
     /**
      * Eventuale caption sopra la grid
      */
-    protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastDownload) {
+    protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastUpload) {
         Label label = null;
         String testo = "";
         String tag = "Upload automatico: ";
         String nota = task != null ? task.getNota() : "";
-
-        LocalDateTime lastDownload = pref.getDate(flagLastDownload);
+        int durata = pref.getInt(DURATA_UPLOAD_GIORNI);
+        String message = "";
+        LocalDateTime lastUpload = pref.getDate(flagLastUpload);
         testo = tag;
 
         if (pref.isBool(flagDaemon)) {
@@ -151,16 +152,17 @@ public class WikiGiornoViewList extends WikiViewList {
             testo += "disattivato.";
         }// end of if/else cycle
 
-        if (lastDownload != null) {
-            label = new Label(testo + " Ultimo upload il " + date.getTime(lastDownload));
+        if (lastUpload != null) {
+            message += testo + " Ultimo upload il " + date.getTime(lastUpload);
+            message += ", in circa " + durata + " minuti";
         } else {
             if (pref.isBool(flagDaemon)) {
-                label = new Label(tag + nota + " Non ancora effettuato.");
+                message = tag + nota + " Non ancora effettuato.";
             } else {
-                label = new Label(testo);
+                message = testo;
             }// end of if/else cycle
         }// end of if/else cycle
-
+        label = new Label(message);
 
         return label;
     }// end of method
