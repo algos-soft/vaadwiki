@@ -44,6 +44,14 @@ public abstract class AttNazProfCatService extends AService {
 
     public String titoloPaginaStatisticheNazionalita = PATH_PROGETTO + NAZ;
 
+    public String titoloPaginaStatisticheGiorni = PATH_PROGETTO + GIORNI;
+
+    public String titoloPaginaStatisticheAnni = PATH_PROGETTO + ANNI;
+
+    public String titoloPaginaStatisticheNomi = PATH_PROGETTO + NOME;
+
+    public String titoloPaginaStatisticheCognomi = PATH_PROGETTO + COGNOME;
+
     protected String titoloModulo;
 
     protected String codeLastDownload;

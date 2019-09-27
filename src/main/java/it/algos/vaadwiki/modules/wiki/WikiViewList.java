@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.modules.wiki;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -11,15 +12,20 @@ import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.dialog.AConfirmDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.list.AGridViewList;
-import it.algos.vaadwiki.modules.nome.NomeService;
+import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.Set;
+
+import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
+import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
+import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
 /**
  * Project vaadwiki
@@ -41,6 +47,9 @@ public abstract class WikiViewList extends AGridViewList {
      */
     @Autowired
     protected UploadService uploadService;
+    @Autowired
+    @Qualifier(TAG_BIO)
+    protected AttNazProfCatService attNazProfCatService;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -59,6 +68,8 @@ public abstract class WikiViewList extends AGridViewList {
     protected Button updateButton;
 
     protected Button uploadAllButton;
+    protected Button statisticheButton;
+    protected String titoloPaginaStatistiche;
 
     /**
      * Flag di preferenza per usare il bottone creaButton situato nella topLayout. Normalmente false. <br>
@@ -74,6 +85,11 @@ public abstract class WikiViewList extends AGridViewList {
      * Flag di preferenza per usare il bottone uploadAllButton situato nella topLayout. Normalmente true. <br>
      */
     protected boolean usaUploadAllButton;
+
+    /**
+     * Flag di preferenza per usare il bottone usaStatisticheButton situato nella topLayout. Normalmente true. <br>
+     */
+    protected boolean usaStatisticheButton;
 
 
     /**
@@ -105,6 +121,7 @@ public abstract class WikiViewList extends AGridViewList {
         this.usaCreaButton = false;
         this.usaUpdateButton = false;
         this.usaUploadAllButton = true;
+        this.usaStatisticheButton = true;
     }// end of method
 
 
@@ -148,6 +165,13 @@ public abstract class WikiViewList extends AGridViewList {
             uploadAllButton.getElement().setAttribute("theme", "error");
             uploadAllButton.addClickListener(e -> uploadEffettivo());
             topPlaceholder.add(uploadAllButton);
+        }// end of if cycle
+
+        if (usaStatisticheButton) {
+            statisticheButton = new Button("View statistiche", new Icon(VaadinIcon.TABLE));
+            statisticheButton.addClassName("view-toolbar__button");
+            statisticheButton.addClickListener(e -> showWikiStatistiche());
+            topPlaceholder.add(statisticheButton);
         }// end of if cycle
 
         sincroBottoniMenu(false);
@@ -219,5 +243,9 @@ public abstract class WikiViewList extends AGridViewList {
         }// end of if cycle
     }// end of method
 
+    protected void showWikiStatistiche() {
+        String link = "\"" + PATH_WIKI + titoloPaginaStatistiche + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
 
 }// end of class

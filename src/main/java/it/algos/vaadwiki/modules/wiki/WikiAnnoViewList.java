@@ -90,6 +90,17 @@ public class WikiAnnoViewList extends WikiViewList {
 
 
     /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+        super.titoloPaginaStatistiche = attNazProfCatService.titoloPaginaStatisticheAnni;
+    }// end of method
+
+    /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid
      * - con o senza campo edit search, regolato da preferenza o da parametro
      * - con o senza bottone New, regolato da preferenza o da parametro

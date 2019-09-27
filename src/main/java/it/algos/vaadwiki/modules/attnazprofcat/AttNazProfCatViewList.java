@@ -10,7 +10,6 @@ import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.list.AGridViewList;
-import it.algos.vaadflow.ui.list.AViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -18,7 +17,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 
@@ -109,6 +107,7 @@ public class AttNazProfCatViewList extends AGridViewList {
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = false;
         super.isEntityModificabile = false;
+        super.usaBottoneDeleteAll = true;
     }// end of method
 
 
@@ -124,20 +123,17 @@ public class AttNazProfCatViewList extends AGridViewList {
     protected void creaTopLayout() {
         super.creaTopLayout();
 
-        if (usaBottoneDeleteMongo) {
-            deleteMongoButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
-            deleteMongoButton.getElement().setAttribute("theme", "error");
-            deleteMongoButton.addClickListener(e -> openConfirmDialog());
-            topPlaceholder.add(deleteMongoButton);
-        }// end of if cycle
+//        if (usaBottoneDeleteMongo) {
+//            deleteMongoButton = new Button("Delete all", new Icon(VaadinIcon.CLOSE_CIRCLE));
+//            deleteMongoButton.getElement().setAttribute("theme", "error");
+//            deleteMongoButton.addClickListener(e -> openConfirmDialog());
+//            topPlaceholder.add(deleteMongoButton);
+//        }// end of if cycle
 
         if (usaBottoneDownload) {
             donwloadMongoButton = new Button("Download", new Icon(VaadinIcon.DOWNLOAD));
             donwloadMongoButton.getElement().setAttribute("theme", "primary");
-            donwloadMongoButton.addClickListener(e -> {
-                service.download();
-                updateView();
-            });//end of lambda expressions and anonymous inner class
+            donwloadMongoButton.addClickListener(e -> download());
             topPlaceholder.add(donwloadMongoButton);
         }// end of if cycle
 
@@ -171,6 +167,7 @@ public class AttNazProfCatViewList extends AGridViewList {
         }// end of if cycle
     }// end of method
 
+
     /**
      * Opens the confirmation dialog before deleting all items.
      * <p>
@@ -187,11 +184,19 @@ public class AttNazProfCatViewList extends AGridViewList {
 
     protected void deleteMongo() {
         this.service.deleteAll();
+        updateItems();
         updateView();
     }// end of method
 
 
     protected void findOrCrea(String singolare, String plurale) {
+    }// end of method
+
+
+    protected void download() {
+        service.download();
+        updateItems();
+        updateView();
     }// end of method
 
 
@@ -236,7 +241,7 @@ public class AttNazProfCatViewList extends AGridViewList {
     protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastDownload) {
         Label label = null;
         String testo = "";
-        String tag = "Aggiornamento automatico: ";
+        String tag = "Download automatico: ";
         String nota = task != null ? task.getNota() : "";
 
         LocalDateTime lastDownload = pref.getDate(flagLastDownload);

@@ -8,6 +8,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import it.algos.vaadflow.annotation.FlowVar;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.enumeration.EAColor;
@@ -137,22 +138,19 @@ public abstract class ALayoutViewList extends APrefViewList {
         boolean isDeveloper = login.isDeveloper();
         boolean isAdmin = login.isAdmin();
 
-        if (usaBottoneDeleteAll && isDeveloper) {
-            deleteAllButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
+        if ((!FlowVar.usaSecurity && usaBottoneDeleteAll) || (isDeveloper && usaBottoneDeleteAll)) {
+            deleteAllButton = new Button("Delete all", new Icon(VaadinIcon.CLOSE_CIRCLE));
             deleteAllButton.getElement().setAttribute("theme", "error");
             deleteAllButton.addClassName("view-toolbar__button");
             deleteAllButton.addClickListener(e -> openConfirmDialogDelete());
             topPlaceholder.add(deleteAllButton);
         }// end of if cycle
 
-        if (usaBottoneReset && isDeveloper) {
+        if ((!FlowVar.usaSecurity && usaBottoneReset) || (isDeveloper && usaBottoneReset)) {
             resetButton = new Button("Reset", new Icon(VaadinIcon.CLOSE_CIRCLE));
             resetButton.getElement().setAttribute("theme", "error");
             resetButton.addClassName("view-toolbar__button");
-            resetButton.addClickListener(e -> {
-                service.reset();
-                updateView();
-            });
+            resetButton.addClickListener(e -> reset());
             topPlaceholder.add(resetButton);
         }// end of if cycle
 

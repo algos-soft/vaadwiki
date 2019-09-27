@@ -197,7 +197,7 @@ public class BioViewList extends AttNazProfCatViewList {
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = true;
         super.usaBottoneDeleteMongo = true;
-        super.usaBottoneDownload = false;
+        super.usaBottoneDownload = true;
         super.usaBottoneUpload = false;
         super.usaBottoneStatistiche = false;
         super.usaBottoneModulo = false;
@@ -221,27 +221,27 @@ public class BioViewList extends AttNazProfCatViewList {
      */
     @Override
     protected void creaTopLayout() {
-        //--cancella il database
-        deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
-        deleteButton.getElement().setAttribute("theme", "error");
-        deleteButton.addClickListener(e -> openConfirmDeleteDialog());
-        topPlaceholder.add(deleteButton);
-
+//        //--cancella il database
+//        deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
+//        deleteButton.getElement().setAttribute("theme", "error");
+//        deleteButton.addClickListener(e -> openConfirmDeleteDialog());
+//        topPlaceholder.add(deleteButton);
+//
         //-- bottoni 'Ricerca' e 'New'
         super.creaTopLayout();
         newButton.getElement().setAttribute("theme", "secondary");
 
-        //--download iniziale
-        downloadButton = new Button("Reset", new Icon(VaadinIcon.DOWNLOAD));
-        downloadButton.getElement().setAttribute("theme", "error");
-        downloadButton.addClickListener(e -> openConfirmResetDialog());
-        topPlaceholder.add(downloadButton);
+//        //--download iniziale
+//        downloadButton = new Button("Reset", new Icon(VaadinIcon.DOWNLOAD));
+//        downloadButton.getElement().setAttribute("theme", "error");
+//        downloadButton.addClickListener(e -> openConfirmResetDialog());
+//        topPlaceholder.add(downloadButton);
 
-        //--ciclo upodate corrente
-        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
-        updateButton.getElement().setAttribute("theme", "primary");
-        updateButton.addClickListener(e -> esegueUpdate());
-        topPlaceholder.add(updateButton);
+//        //--ciclo upodate corrente
+//        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
+//        updateButton.getElement().setAttribute("theme", "primary");
+//        updateButton.addClickListener(e -> download());
+//        topPlaceholder.add(updateButton);
 
 //        //--ri-elabora tutte le biografie
 //        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
@@ -270,7 +270,7 @@ public class BioViewList extends AttNazProfCatViewList {
 
 //        topPlaceholder.add(creaPopup());
 
-        sincroBottoniMenu(false);
+//        sincroBottoniMenu(false);
     }// end of method
 
 
@@ -325,8 +325,7 @@ public class BioViewList extends AttNazProfCatViewList {
 //
 //    }// end of method
 
-
-    protected void esegueUpdate() {
+    protected void download() {
         DownloadResult result;
         int numRec = service.count();
         long inizio = System.currentTimeMillis();

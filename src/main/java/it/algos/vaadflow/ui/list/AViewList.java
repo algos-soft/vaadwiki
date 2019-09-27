@@ -259,6 +259,7 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
         return "";
     }// end of method
 
+
     /**
      * Navigazione verso un altra pagina
      */
@@ -390,8 +391,16 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
     }// end of method
 
 
+    protected void reset() {
+        service.reset();
+        updateItems();
+        updateView();
+    }// end of method
+
+
     protected void deleteCollection() {
         service.deleteAll();
+        updateItems();
         updateView();
     }// end of method
 

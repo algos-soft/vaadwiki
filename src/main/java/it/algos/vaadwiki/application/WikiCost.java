@@ -22,7 +22,8 @@ import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovrascrivibile = false)
 public class WikiCost {
-	public final static String TAG_DOP = "doppinomi";
+
+    public final static String TAG_DOP = "doppinomi";
 
     public final static String TAG_GEN = "genere";
 
@@ -80,6 +81,10 @@ public class WikiCost {
     public final static String CAT = "Categoria:";
 
     public final static String GEN = "Genere:";
+
+    public final static String GIORNI = "Giorni";
+
+    public final static String ANNI = "Anni";
 
     public final static String NOME = "Nome:";
 

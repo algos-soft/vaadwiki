@@ -2,6 +2,7 @@ package it.algos.vaadwiki.application;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.annotation.FlowVar;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.boot.ABoot;
 import it.algos.vaadflow.modules.role.EARole;
@@ -170,6 +171,14 @@ public class WikiBoot extends ABoot {
         if (wLogin != null) {
             PROJECT_NOTE = "- loggato come " + wLogin.getLgusername();
         }// end of if cycl
+
+        /**
+         * Controlla se l'applicazione usa il login oppure no <br>
+         * Se si usa il login, occorre la classe SecurityConfiguration <br>
+         * Se non si usa il login, occorre disabilitare l'Annotation @EnableWebSecurity di SecurityConfiguration <br>
+         * Di defaul (per sicurezza) uguale a true <br>
+         */
+        FlowVar.usaSecurity = false;
 
         mailRestart();
     }// end of method
