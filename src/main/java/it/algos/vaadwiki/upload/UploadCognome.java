@@ -31,7 +31,7 @@ import static it.algos.vaadwiki.service.LibBio.PIPE;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-public class UploadCognome extends Upload {
+public class UploadCognome extends UploadNomiCognomi {
 
     //--property
     protected Cognome cognome;

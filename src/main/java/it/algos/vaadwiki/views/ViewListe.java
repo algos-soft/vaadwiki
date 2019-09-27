@@ -14,13 +14,15 @@ import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.liste.Lista;
 import it.algos.vaadwiki.liste.ListaService;
+import it.algos.vaadwiki.liste.ListaSottopagina;
 import it.algos.vaadwiki.upload.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import static it.algos.vaadwiki.application.WikiCost.SOGLIA_SOTTOPAGINA_NOMI_COGNOMI;
 
 /**
  * Project vaadwiki
@@ -42,6 +44,9 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
     //--property
     public boolean usaRigheRaggruppate;
+
+    //--property
+    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaComplessa;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -90,8 +95,6 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
     protected ADateService date;
 
     protected LinkedHashMap<String, List<String>> mappaSemplice;
-    //--property
-    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaComplessa;
 
     //--property
     protected boolean usaSuddivisioneParagrafi;
@@ -101,6 +104,9 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
     //--property
     protected boolean paragrafoVuotoInCoda;
+
+    //--property
+    protected boolean usaBodySottopagine;
 
     protected TextArea area = new TextArea();
 
@@ -148,6 +154,7 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
         this.titoloParagrafoVuoto = lista.titoloParagrafoVuoto;
         this.paragrafoVuotoInCoda = lista.paragrafoVuotoInCoda;
         this.usaRigheRaggruppate = lista.usaRigheRaggruppate;
+        this.usaBodySottopagine = lista.usaBodySottopagine;
 //        this.mappaSemplice = lista.mappaSemplice;
         this.mappaComplessa = lista.getMappa();
     }// end of method
@@ -177,6 +184,7 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
             this.add(new Label("Paragrafo vuoto posizionato " + (paragrafoVuotoInCoda ? "in coda" : "in testa")));
         }// end of if cycle
         this.add(new Label((usaRigheRaggruppate ? "Usa righe raggruppate" : "Usa righe singole")));
+        this.add(new Label((usaBodySottopagine ? "Usa sottopagine con taglio a " + pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI) : "Non usa sottopagine")));
     }// end of method
 
 
@@ -184,23 +192,17 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
      * Costruisce il corpo della pagina <br>
      */
     protected void creaBody() {
-        String testo = "";
+        String testoLista = "";
+        ListaSottopagina listaSottopagina;
 
-        if (usaSuddivisioneParagrafi) {
-            if (usaRigheRaggruppate) {
-                testo = listaService.righeConParagrafoSize(mappaComplessa);
-            } else {
-                testo = listaService.righeConParagrafoSize(mappaComplessa);
-            }// end of if/else cycle
+        if (usaBodySottopagine) {
+            listaSottopagina = lista.getSottopagina();
+            testoLista = listaSottopagina.getTesto();
         } else {
-            if (usaRigheRaggruppate) {
-                testo = listaService.righeSenzaParagrafo(mappaComplessa);
-            } else {
-                testo = listaService.righeSenzaParagrafo(mappaComplessa);
-            }// end of if/else cycle
+            testoLista = lista.getTesto();
         }// end of if/else cycle
 
-        area.setValue(testo);
+        area.setValue(testoLista);
     }// end of method
 
 

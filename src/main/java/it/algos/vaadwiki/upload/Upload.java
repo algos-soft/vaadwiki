@@ -59,11 +59,12 @@ public abstract class Upload {
 
     //
 //    protected boolean usaOrdineAlfabeticoParagrafi;
-//
-//    protected boolean usaBodySottopagine;
-//
+
     //--property
     public boolean usaRigheRaggruppate;
+
+    //--property
+    protected boolean usaBodySottopagine;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -316,7 +317,7 @@ public abstract class Upload {
         // body
 //        usaSuddivisioneParagrafi = false;
 //        usaOrdineAlfabeticoParagrafi = false;
-//        usaBodySottopagine = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
+        usaBodySottopagine = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
         usaRigheRaggruppate = true; //--normalmente true. Sovrascrivibile da preferenze
         usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         usaBodyTemplate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
@@ -563,7 +564,14 @@ public abstract class Upload {
      */
     protected String elaboraBody() {
 //        String testoLista = getTestoLista(lista);
-        String testoLista = lista.getTesto();
+        String testoLista = "";
+
+        if (usaBodySottopagine) {
+            testoLista = lista.getSottopagina().getTesto();
+        } else {
+            testoLista = lista.getTesto();
+        }// end of if/else cycle
+
         numVoci = lista.size;
         int maxRigheColonne = 10; //@todo mettere la preferenza
 

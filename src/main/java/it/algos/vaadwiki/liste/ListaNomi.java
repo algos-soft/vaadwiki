@@ -92,4 +92,9 @@ public class ListaNomi extends ListaNomiCognomi {
         return listaService.ordinaListaDidascalieNomi(listaDisordinata);
     }// fine del metodo
 
+
+    public ListaSottopagina getSottopagina() {
+        return listaService.sottopagina(mappa, pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI), "Persone di nome " + nome.nome);
+    }// fine del metodo
+
 }// end of class

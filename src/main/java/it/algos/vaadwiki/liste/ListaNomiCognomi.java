@@ -27,6 +27,7 @@ public abstract class ListaNomiCognomi extends Lista {
         super.usaSuddivisioneParagrafi = true;
         super.usaRigheRaggruppate = false;
         super.usaLinkAttivita = true;
+        super.usaBodySottopagine = true;
     }// end of method
 
 }// end of class

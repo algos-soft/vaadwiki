@@ -1010,6 +1010,159 @@ public class ListaService extends ABioService {
     }// fine del metodo
 
 
+    /**
+     * Elabora la mappa di didascalie e costruisce il testo della pagina <br>
+     * I paragrafi ci sono sempre <br>
+     * Il titolo del paragrafo vuoto arriva già deciso dalla mappa <br>
+     * Il posizionamento (testa/coda) del paragrafo vuoto arriva già deciso dalla mappa <br>
+     * Gli eventuali link (doppie quadre) nel titolo del paragrafo arrivano già decisi dalla mappa <br>
+     * Le dimensioni del paragrafo sono sempre indicate <br>
+     * Le righe sono sempre raggruppate (chiaveDue) <br>
+     * La soglia di taglio arriva come parametro <br>
+     * Il nome della sottopagina viene composto dal titoloPagina passato come parametro più il titolo visibile del paragrafo <br>
+     */
+    public ListaSottopagina sottopagina(LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale, int soglia, String titoloPagina) {
+        ListaSottopagina sottopagina = null;
+        StringBuilder builder = new StringBuilder(VUOTA);
+        LinkedHashMap<String, List<String>> mappaParagrafi;
+        LinkedHashMap<String, List<String>> mappaSottopagine = new LinkedHashMap<String, List<String>>();
+//        List<String> listaDidascalie = null;
+        String titoloParagrafo = "";
+        int size = 0;
+        String titoloVisibile;
+        String titoloSottopagina;
+
+        if (mappaGenerale != null) {
+            for (String keyUno : mappaGenerale.keySet()) {
+
+                titoloParagrafo = keyUno;
+                builder.append(A_CAPO).append(A_CAPO);
+                size = getMappaSize(mappaGenerale.get(keyUno));
+                titoloParagrafo += " <small><small>(" + size + ")</small></small>";
+                builder.append(PARAGRAFO).append(titoloParagrafo).append(PARAGRAFO);
+
+                mappaParagrafi = mappaGenerale.get(keyUno);
+
+                if (mappaParagrafi != null) {
+                    if (size > soglia) {
+                        builder.append(A_CAPO);
+                        titoloVisibile = estraeVisibile(keyUno);
+                        titoloSottopagina = titoloPagina + "/" + titoloVisibile;
+                        builder.append("{{Vedi anche|").append(titoloSottopagina).append("}}");
+                        mappaSottopagine.put(titoloVisibile,mappaParagrafi.get(""));
+                    } else {
+                        builder.append(contenutoParagrafoNormale(mappaParagrafi));
+                    }// end of if/else cycle
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+
+//        for (Map.Entry<String, HashMap> mappaTmp : mappaDidascalie.entrySet()) {
+//            testo += CostBio.A_CAPO;
+//
+//            mappa = mappaTmp.getValue();
+//
+//            if (usaOrdineAlfabeticoParagrafi) {
+//                titoloParagrafo = (String) mappa.get(KEY_MAP_PARAGRAFO_TITOLO);
+//            } else {
+//                titoloParagrafo = (String) mappa.get(KEY_MAP_PARAGRAFO_LINK);
+//            }// end of if/else cycle
+//
+//            titoloVisibile = (String) mappa.get(KEY_MAP_PARAGRAFO_TITOLO);
+//            lista = (List<Bio>) mappa.get(KEY_MAP_LISTA);
+//            numVociParagrafo = lista.size();
+//
+////            titoloParagrafo = costruisceTitolo(paginaLinkata, titoloVisibile);
+//            if (Pref.getBool(CostBio.USA_NUMERI_PARAGRAFO, false)) {
+//                testo += LibWiki.setParagrafo(titoloParagrafo, numVociParagrafo);
+//            } else {
+//                testo += LibWiki.setParagrafo(titoloParagrafo);
+//            }// end of if/else cycle
+//
+//            testo += CostBio.A_CAPO;
+//
+//            if (usaSottopagine && numVociParagrafo > maxVociParagrafo) {
+//                titoloSottopagina = titoloPagina + "/" + titoloVisibile;
+//                testo += "{{Vedi anche|" + titoloSottopagina + "}}";
+//                creaSottopagina(mappa);
+//            } else {
+//                for (Bio bio : lista) {
+//                    testo += CostBio.ASTERISCO;
+//                    testo += bio.getDidascaliaListe();
+//                    testo += CostBio.A_CAPO;
+//                }// end of for cycle
+//            }// end of if/else cycle
+//
+//        }// end of for cycle
+
+
+        sottopagina = appContext.getBean(ListaSottopagina.class, builder.toString().trim(), mappaSottopagine);
+        return sottopagina;
+    }// fine del metodo
+
+
+    public String estraeVisibile(String titoloParagrafo) {
+        String titoloVisibile = titoloParagrafo;
+        String tag = "|";
+
+        titoloVisibile = LibWiki.setNoQuadre(titoloVisibile);
+        if (titoloVisibile.contains(tag)) {
+            titoloVisibile = titoloVisibile.substring(titoloVisibile.indexOf(tag)+1);
+        }// end of if cycle
+
+        return titoloVisibile;
+    }// fine del metodo
+
+
+    /**
+     * Righe suddivise per paragrafi <br>
+     * All'interno dei paragrafi usa righeSemplici <br>
+     */
+    public String contenutoParagrafoNormale(LinkedHashMap<String, List<String>> mappaParagrafo) {
+        StringBuilder testo = new StringBuilder(VUOTA);
+        List<String> listaDidascalie = null;
+
+        if (mappaParagrafo != null) {
+            for (String keyDue : mappaParagrafo.keySet()) {
+                listaDidascalie = mappaParagrafo.get(keyDue);
+
+                if (array.isValid(listaDidascalie)) {
+                    if (listaDidascalie.size() == 1) {
+                        testo.append(A_CAPO);
+                        testo.append(AST);
+                        if (text.isValid(keyDue)) {
+                            testo.append(LibWiki.setQuadre(keyDue));
+                            testo.append(WikiCost.TAG_SEP);
+                        }// end of if cycle
+                        testo.append(listaDidascalie.get(0));
+                    } else {
+                        if (text.isValid(keyDue)) {
+                            testo.append(A_CAPO);
+                            testo.append(AST);
+                            testo.append(LibWiki.setQuadre(keyDue));
+                            for (String stringa : listaDidascalie) {
+                                testo.append(A_CAPO);
+                                testo.append(AST);
+                                testo.append(AST);
+                                testo.append(stringa);
+                            }// end of for cycle
+                        } else {
+                            for (String stringa : listaDidascalie) {
+                                testo.append(A_CAPO);
+                                testo.append(AST);
+                                testo.append(stringa);
+                            }// end of for cycle
+                        }// end of if/else cycle
+                    }// end of if/else cycle
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return testo.toString();
+    }// end of method
+
+
 //    /**
 //     * Righe suddivise per paragrafi <br>
 //     * Titolo del paragrafo con wikiLink <br>
@@ -1132,59 +1285,6 @@ public class ListaService extends ABioService {
 //     */
 //    public String paragrafoConSize(LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa) {
 //        return paragrafoBase(mappa, true);
-//    }// end of method
-
-
-//    /**
-//     * Righe suddivise per paragrafi <br>
-//     * All'interno dei paragrafi usa righeSemplici <br>
-//     */
-//    public String contenutoParagrafoSemplice(LinkedHashMap<String, List<String>> mappaParagrafo) {
-//        StringBuilder testo = new StringBuilder(VUOTA);
-//        List<String> listaDidascalie = null;
-//
-//        if (mappaParagrafo != null) {
-//            for (String keyDue : mappaParagrafo.keySet()) {
-//                listaDidascalie = mappaParagrafo.get(keyDue);
-//
-//                if (array.isValid(listaDidascalie)) {
-//                    if (listaDidascalie.size() == 1) {
-//                        testo.append(A_CAPO);
-//                        testo.append(AST);
-//                        if (text.isValid(keyDue)) {
-//                            testo.append(LibWiki.setQuadre(keyDue));
-//                            testo.append(WikiCost.TAG_SEP);
-//                        }// end of if cycle
-//                        testo.append(listaDidascalie.get(0));
-//                    } else {
-//                        if (text.isValid(keyDue)) {
-//                            testo.append(A_CAPO);
-//                            testo.append(AST);
-//                            testo.append(LibWiki.setQuadre(keyDue));
-//                            for (String stringa : listaDidascalie) {
-//                                testo.append(A_CAPO);
-//                                testo.append(AST);
-//                                testo.append(AST);
-//                                testo.append(stringa);
-//                            }// end of for cycle
-//                        } else {
-//                            for (String stringa : listaDidascalie) {
-//                                testo.append(A_CAPO);
-//                                testo.append(AST);
-//                                testo.append(stringa);
-//                            }// end of for cycle
-//                        }// end of if/else cycle
-//
-//                    }// end of if/else cycle
-//
-//                }// end of if cycle
-//
-//            }// end of for cycle
-//
-//        }// end of if cycle
-//        testo.append(A_CAPO);
-//
-//        return testo.toString();
 //    }// end of method
 
 

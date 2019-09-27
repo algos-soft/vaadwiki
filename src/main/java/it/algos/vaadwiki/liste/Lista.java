@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static it.algos.vaadwiki.application.WikiCost.SOGLIA_SOTTOPAGINA_NOMI_COGNOMI;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -106,6 +108,9 @@ public abstract class Lista {
     //--property
     public boolean usaLinkAttivita;
 
+    //--property
+    public boolean usaBodySottopagine;
+
     /**
      * Testo finale disponibile <br>
      * Costruito secondo i flag:
@@ -182,6 +187,7 @@ public abstract class Lista {
         this.paragrafoVuotoInCoda = true;
         this.usaParagrafoSize = false;
         this.usaLinkAttivita = false;
+        this.usaBodySottopagine = false;
     }// end of method
 
 
@@ -245,6 +251,13 @@ public abstract class Lista {
         }// end of if/else cycle
 
         return testo;
+    }// fine del metodo
+
+
+
+
+    public ListaSottopagina getSottopagina() {
+        return null;
     }// fine del metodo
 
 
