@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.SPAZIO;
@@ -80,12 +81,15 @@ public class UploadService extends ABioService {
      * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
      */
     public void uploadAllGiorni() {
+        long inizio = System.currentTimeMillis();
         List<Giorno> listaGiorni = giornoService.findAll();
 
-        for (Giorno giorno : listaGiorni) {
-            uploadGiornoNato(giorno);
-            uploadGiornoMorto(giorno);
-        }// end of for cycle
+//        for (Giorno giorno : listaGiorni) {
+//            uploadGiornoNato(giorno);
+//            uploadGiornoMorto(giorno);
+//        }// end of for cycle
+
+        setLastUpload(inizio, LAST_UPLOAD_GIORNI, DURATA_UPLOAD_GIORNI);
     }// end of method
 
 
@@ -381,5 +385,26 @@ public class UploadService extends ABioService {
     public String getTitoloCognome(Cognome cognome) {
         return getTitoloCognome(cognome.getCognome());
     }// fine del metodo
+
+
+    /**
+     * Registra nelle preferenze la data dell'ultimo upload effettuato <br>
+     * Registra nelle preferenze la durata dell'ultimo upload effettuato <br>
+     */
+    protected void setLastUpload(long inizio, String codeLastUpload, String durataLastUpload) {
+        int delta = 1000;
+        LocalDateTime lastUpload = LocalDateTime.now();
+        pref.saveValue(codeLastUpload, lastUpload);
+
+        long fine = System.currentTimeMillis();
+        long durata = fine - inizio;
+        int value = 0;
+        if (durata > delta) {
+            value = (int) durata / delta;
+        } else {
+            value = 1;
+        }// end of if/else cycle
+        pref.saveValue(durataLastUpload, value);
+    }// end of method
 
 }// end of class

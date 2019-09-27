@@ -70,6 +70,9 @@ public abstract class WikiViewList extends AGridViewList {
     protected Button uploadAllButton;
     protected Button statisticheButton;
     protected String titoloPaginaStatistiche;
+    protected String codeLastUpload;
+
+    protected String durataLastUpload;
 
     /**
      * Flag di preferenza per usare il bottone creaButton situato nella topLayout. Normalmente false. <br>
@@ -113,7 +116,6 @@ public abstract class WikiViewList extends AGridViewList {
 
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = false;
-        super.isEntityDeveloper = true;
 
         super.testoBottoneEdit = SHOW_NAME;
         super.usaPagination = true;

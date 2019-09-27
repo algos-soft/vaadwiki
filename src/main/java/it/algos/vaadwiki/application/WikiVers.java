@@ -92,6 +92,16 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
+            creaPrefBool(USA_DAEMON_GIORNI, "Crono per download giorni, extra-ciclo", false);
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefBool(USA_DAEMON_ANNI, "Crono per download anni, extra-ciclo", false);
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
             creaPrefDate(LAST_DOWNLOAD_ATTIVITA, "Ultimo download del modulo attività");
         }// fine del blocco if
 
@@ -137,18 +147,19 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefInt(DURATA_DOWNLOAD_CATEGORIA, "Durata in secondi dell'ultimo download delle pagine della categoria BioBot");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(DURATA_DOWNLOAD_BIO, "Durata in secondi dell'ultimo update delle pagine della categoria BioBot");
+            creaPrefInt(DURATA_DOWNLOAD_CATEGORIA, "Durata in minuti dell'ultimo download delle pagine della categoria BioBot");
         }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefInt(DURATA_DOWNLOAD_GENERE, "Durata in secondi dell'ultimo download del modulo genere (plurali)");
         }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefInt(DURATA_DOWNLOAD_BIO, "Durata in minuti dell'ultimo update delle pagine della categoria BioBot");
+        }// fine del blocco if
+
 
         //--creata una nuova preferenza
         if (installa(++k)) {
@@ -213,6 +224,14 @@ public class WikiVers extends AVers {
         if (installa(++k)) {
             creaPrefBool(USA_RIGHE_RAGGRUPPATE_GIORNI, "Usa righe raggruppate per anno nella liste dei giorni", true);
         }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefDate(LAST_UPLOAD_GIORNI, "Ultimo upload dei giorni");
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefInt(DURATA_UPLOAD_GIORNI, "Durata in minuti dell'ultimo upload dei giorni");
+        }// fine del blocco if
 
 
         //--creata una nuova preferenza
@@ -250,6 +269,14 @@ public class WikiVers extends AVers {
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefBool(USA_SOTTOPAGINE_GIORNI_ANNI, "Usa sottopagine se i paragrafi nella liste dei giorni e degli anni superano SOGLIA_SOTTOPAGINA_GIORNI_ANNI", false);
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefDate(LAST_UPLOAD_ANNI, "Ultimo upload degli anni");
+        }// fine del blocco if
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefInt(DURATA_UPLOAD_ANNI, "Durata in minuti dell'ultimo upload degli anni");
         }// fine del blocco if
 
 

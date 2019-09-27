@@ -90,7 +90,8 @@ public class WikiCost {
 
     public final static String COGNOME = "Cognome:";
 
-    public final static String CODE = "lastDownload";
+    public final static String CODE_DOWNLOAD = "lastDownload";
+    public final static String CODE_UPLOAD = "lastUpload";
 
     public final static String DURATA = "durataDownload";
 
@@ -117,6 +118,10 @@ public class WikiCost {
 
     public final static String USA_DAEMON_GENERE = DAEMON + GEN;
 
+    public final static String USA_DAEMON_GIORNI = DAEMON + GIORNI;
+
+    public final static String USA_DAEMON_ANNI = DAEMON + ANNI;
+
     public final static String USA_DAEMON_NOMI = DAEMON + "Nomi";
 
     public final static String USA_DAEMON_COGNOMI = DAEMON + "Cognomi";
@@ -124,21 +129,25 @@ public class WikiCost {
     public final static String USA_DAEMON_LOCALITA = DAEMON + "Localita";
 
     //--localdatetime dell'ultimo download
-    public final static String LAST_DOWNLOAD_ATTIVITA = CODE + ATT;
+    public final static String LAST_DOWNLOAD_ATTIVITA = CODE_DOWNLOAD + ATT;
 
-    public final static String LAST_DOWNLOAD_NAZIONALITA = CODE + NAZ;
+    public final static String LAST_DOWNLOAD_NAZIONALITA = CODE_DOWNLOAD + NAZ;
 
-    public final static String LAST_DOWNLOAD_PROFESSIONE = CODE + PROF;
+    public final static String LAST_DOWNLOAD_PROFESSIONE = CODE_DOWNLOAD + PROF;
 
-    public final static String LAST_DOWNLOAD_CATEGORIA = CODE + CAT;
+    public final static String LAST_DOWNLOAD_CATEGORIA = CODE_DOWNLOAD + CAT;
 
-    public final static String LAST_DOWNLOAD_GENERE = CODE + GEN;
+    public final static String LAST_DOWNLOAD_GENERE = CODE_DOWNLOAD + GEN;
 
-    public final static String LAST_DOWNLOAD_BIO = CODE + BIO;
+    public final static String LAST_DOWNLOAD_BIO = CODE_DOWNLOAD + BIO;
 
-    public final static String LAST_ELABORA_NOME = CODE + NOME;
+    public final static String LAST_ELABORA_NOME = CODE_DOWNLOAD + NOME;
 
-    public final static String LAST_ELABORA_COGNOME = CODE + COGNOME;
+    public final static String LAST_ELABORA_COGNOME = CODE_DOWNLOAD + COGNOME;
+
+    public final static String LAST_UPLOAD_GIORNI = CODE_UPLOAD + GIORNI;
+
+    public final static String LAST_UPLOAD_ANNI = CODE_UPLOAD + ANNI;
 
     //--tempo impiegato per l'ultimo download, in secondi
     public final static String DURATA_DOWNLOAD_ATTIVITA = DURATA + ATT;
@@ -152,6 +161,10 @@ public class WikiCost {
     public final static String DURATA_DOWNLOAD_GENERE = DURATA + GEN;
 
     public final static String DURATA_DOWNLOAD_BIO = DURATA + BIO;
+
+    public final static String DURATA_UPLOAD_GIORNI = DURATA + GIORNI;
+
+    public final static String DURATA_UPLOAD_ANNI = DURATA + ANNI;
 
     //--path di varie pagine wiki
     public final static String PATH_WIKI = "https://it.wikipedia.org/wiki/";
@@ -173,6 +186,10 @@ public class WikiCost {
     public final static String TASK_UPD = "taskUpdate";
 
     public final static String TASK_CRO = "taskCrono";
+
+    public final static String TASK_GIO = "taskGiorni";
+
+    public final static String TASK_ANN = "taskAnni";
 
     public final static String TASK_ATT = "taskAttivita";
 

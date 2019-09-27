@@ -3,6 +3,7 @@ package it.algos.vaadwiki.modules.wiki;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -15,12 +16,15 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoViewDialog;
 import it.algos.vaadflow.presenter.IAPresenter;
+import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
+
+import java.time.LocalDateTime;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -63,6 +67,10 @@ public class WikiGiornoViewList extends WikiViewList {
 
     public static final String MENU_NAME = "Giorno";
 
+    @Autowired
+    @Qualifier(TASK_GIO)
+    protected ATask task;
+
 
     /**
      * Costruttore @Autowired <br>
@@ -87,7 +95,10 @@ public class WikiGiornoViewList extends WikiViewList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
         super.titoloPaginaStatistiche = attNazProfCatService.titoloPaginaStatisticheGiorni;
+        super.codeLastUpload = LAST_UPLOAD_GIORNI;
+        super.durataLastUpload = DURATA_UPLOAD_GIORNI;
     }// end of method
 
 
@@ -105,6 +116,53 @@ public class WikiGiornoViewList extends WikiViewList {
 
         uploadAllButton.addClickListener(e -> openUploadDialog("dei giorni"));
         sincroBottoniMenu(false);
+    }// end of method
+
+
+    /**
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+
+        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_GIORNI, LAST_UPLOAD_GIORNI));
+    }// end of method
+
+
+    /**
+     * Eventuale caption sopra la grid
+     */
+    protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastDownload) {
+        Label label = null;
+        String testo = "";
+        String tag = "Upload automatico: ";
+        String nota = task != null ? task.getNota() : "";
+
+        LocalDateTime lastDownload = pref.getDate(flagLastDownload);
+        testo = tag;
+
+        if (pref.isBool(flagDaemon)) {
+            testo += nota;
+        } else {
+            testo += "disattivato.";
+        }// end of if/else cycle
+
+        if (lastDownload != null) {
+            label = new Label(testo + " Ultimo upload il " + date.getTime(lastDownload));
+        } else {
+            if (pref.isBool(flagDaemon)) {
+                label = new Label(tag + nota + " Non ancora effettuato.");
+            } else {
+                label = new Label(testo);
+            }// end of if/else cycle
+        }// end of if/else cycle
+
+
+        return label;
     }// end of method
 
 
