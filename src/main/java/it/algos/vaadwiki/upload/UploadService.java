@@ -84,10 +84,10 @@ public class UploadService extends ABioService {
         long inizio = System.currentTimeMillis();
         List<Giorno> listaGiorni = giornoService.findAll();
 
-//        for (Giorno giorno : listaGiorni) {
-//            uploadGiornoNato(giorno);
-//            uploadGiornoMorto(giorno);
-//        }// end of for cycle
+        for (Giorno giorno : listaGiorni) {
+            uploadGiornoNato(giorno);
+            uploadGiornoMorto(giorno);
+        }// end of for cycle
 
         setLastUpload(inizio, LAST_UPLOAD_GIORNI, DURATA_UPLOAD_GIORNI);
     }// end of method
