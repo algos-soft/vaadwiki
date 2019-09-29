@@ -10,6 +10,7 @@ import it.algos.vaadflow.service.*;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.liste.Lista;
 import it.algos.vaadwiki.liste.ListaService;
+import it.algos.vaadwiki.liste.ListaSottopagina;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
@@ -22,9 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 
@@ -263,6 +264,8 @@ public abstract class Upload {
 
     protected boolean usaSuddivisioneParagrafi;
 
+    protected boolean isSottoPagina;
+
     //--property
     protected Lista lista;
 
@@ -290,7 +293,7 @@ public abstract class Upload {
      * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
      * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
      */
-    @PostConstruct
+//    @PostConstruct
     protected void inizia() {
         this.fixPreferenze();
         this.elaboraPagina();
@@ -321,6 +324,7 @@ public abstract class Upload {
         usaRigheRaggruppate = true; //--normalmente true. Sovrascrivibile da preferenze
         usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         usaBodyTemplate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
+        isSottoPagina = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
     }// end of method
 
 
@@ -338,9 +342,12 @@ public abstract class Upload {
         String summary = LibWiki.getSummary();
         testoPagina = VUOTA;
 
-        if (lista == null || lista.size == 0) {
-            log.info("La pagina: " + titoloPagina + " non aveva nessuna biografia");
-            return;
+        //--nelle sottopagine la lista è comunque vuota (perchè usa una mappa diversa)
+        if (!isSottoPagina) {
+            if (lista == null || lista.size == 0) {
+                log.info("La pagina: " + titoloPagina + " non aveva nessuna biografia");
+                return;
+            }// end of if cycle
         }// end of if cycle
 
         //header
@@ -364,13 +371,13 @@ public abstract class Upload {
                 titoloPagina = PAGINA_PROVA;
             }// end of if cycle
 
-            if (checkPossoRegistrare(titoloPagina, testoPagina)) {
+            //--nelle sottopagine non eseguo il controllo e le registro sempre (per adesso)
+            if (checkPossoRegistrare(titoloPagina, testoPagina) || isSottoPagina) {
                 appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina);
                 log.info("Registrata la pagina: " + titoloPagina);
             } else {
                 log.info("Non modificata la pagina: " + titoloPagina);
             }// end of if/else cycle
-
         }// fine del blocco if
 
     }// fine del metodo
@@ -491,10 +498,15 @@ public abstract class Upload {
      * Non sovrascrivibile <br>
      * Parametrizzato (nelle sottoclassi) il nome del template da usare <br>
      */
-    private String elaboraTemplateAvviso() {
+    protected String elaboraTemplateAvviso() {
         String testo = VUOTA;
         String dataCorrente = date.get();
-        String personeTxt = text.format(lista.size);
+        String personeTxt = "";
+        if (isSottoPagina) {
+            personeTxt = "87";
+        } else {
+            personeTxt = text.format(lista.size);
+        }// end of if/else cycle
 
         if (usaHeadTemplateAvviso) {
             testo += tagHeadTemplateAvviso;
@@ -563,11 +575,13 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected String elaboraBody() {
-//        String testoLista = getTestoLista(lista);
+        ListaSottopagina sottoPagina;
         String testoLista = "";
 
         if (usaBodySottopagine) {
-            testoLista = lista.getSottopagina().getTesto();
+            sottoPagina = lista.getSottopagina();
+            testoLista = sottoPagina.getTesto();
+            uploadSottoPagine(sottoPagina.getMappa());
         } else {
             testoLista = lista.getTesto();
         }// end of if/else cycle
@@ -593,6 +607,25 @@ public abstract class Upload {
 
         return testoLista;
     }// fine del metodo
+
+
+    /**
+     * Esegue l'upload delle sottopagine <br>
+     */
+    protected void uploadSottoPagine(LinkedHashMap<String, List<String>> mappa) {
+        for (String key : mappa.keySet()) {
+            uploadSingolaSottoPagina(key, mappa.get(key));
+        }// end of for cycle
+    }// end of method
+
+
+    /**
+     * Esegue l'upload della singola sottopagina <br>
+     */
+    protected void uploadSingolaSottoPagina(String suffixTitolo, List<String> listaDidascalie) {
+        String titoloSottoPagina = titoloPagina + "/" + suffixTitolo;
+        appContext.getBean(UploadSottoPagina.class, titoloSottoPagina, listaDidascalie);
+    }// end of method
 
 
     /**
