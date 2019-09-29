@@ -3,6 +3,7 @@ package it.algos.vaadwiki.modules.wiki;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -15,6 +16,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoViewDialog;
 import it.algos.vaadflow.presenter.IAPresenter;
+import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.upload.UploadAnnoMorto;
@@ -23,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
+
+import java.time.LocalDateTime;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -66,6 +70,9 @@ public class WikiAnnoViewList extends WikiViewList {
 
     public static final String MENU_NAME = "Anno";
 
+    @Autowired
+    @Qualifier(TASK_ANN)
+    protected ATask task;
 
     //    @Autowired
     private UploadAnnoNato uploadAnnoNato;
@@ -97,7 +104,10 @@ public class WikiAnnoViewList extends WikiViewList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
         super.titoloPaginaStatistiche = attNazProfCatService.titoloPaginaStatisticheAnni;
+        super.codeLastUpload = LAST_UPLOAD_ANNI;
+        super.durataLastUpload = DURATA_UPLOAD_ANNI;
     }// end of method
 
     /**
@@ -116,6 +126,54 @@ public class WikiAnnoViewList extends WikiViewList {
         sincroBottoniMenu(false);
     }// end of method
 
+
+    /**
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+
+        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_ANNI, LAST_UPLOAD_ANNI));
+    }// end of method
+
+
+    /**
+     * Eventuale caption sopra la grid
+     */
+    protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastUpload) {
+        Label label = null;
+        String testo = "";
+        String tag = "Upload automatico: ";
+        String nota = task != null ? task.getNota() : "";
+        int durata = pref.getInt(DURATA_UPLOAD_ANNI);
+        String message = "";
+        LocalDateTime lastUpload = pref.getDate(flagLastUpload);
+        testo = tag;
+
+        if (pref.isBool(flagDaemon)) {
+            testo += nota;
+        } else {
+            testo += "disattivato.";
+        }// end of if/else cycle
+
+        if (lastUpload != null) {
+            message += testo + " Ultimo upload il " + date.getTime(lastUpload);
+            message += ", in circa " + durata + " minuti";
+        } else {
+            if (pref.isBool(flagDaemon)) {
+                message = tag + nota + " Non ancora effettuato.";
+            } else {
+                message = testo;
+            }// end of if/else cycle
+        }// end of if/else cycle
+        label = new Label(message);
+
+        return label;
+    }// end of method
 
     /**
      * Crea la GridPaginata <br>

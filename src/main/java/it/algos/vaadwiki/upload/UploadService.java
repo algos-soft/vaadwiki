@@ -97,12 +97,15 @@ public class UploadService extends ABioService {
      * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
      */
     public void uploadAllAnni() {
+        long inizio = System.currentTimeMillis();
         List<Anno> listaAnni = annoService.findAll();
 
-        for (Anno anno : listaAnni) {
-            uploadAnnoNato(anno);
-            uploadAnnoMorto(anno);
-        }// end of for cycle
+//        for (Anno anno : listaAnni) {
+//            uploadAnnoNato(anno);
+//            uploadAnnoMorto(anno);
+//        }// end of for cycle
+
+        setLastUpload(inizio, LAST_UPLOAD_ANNI, DURATA_UPLOAD_ANNI);
     }// end of method
 
 
@@ -390,9 +393,10 @@ public class UploadService extends ABioService {
     /**
      * Registra nelle preferenze la data dell'ultimo upload effettuato <br>
      * Registra nelle preferenze la durata dell'ultimo upload effettuato <br>
+     * Valore registrato in minuti <br>
      */
     protected void setLastUpload(long inizio, String codeLastUpload, String durataLastUpload) {
-        int delta = 1000;
+        int delta = 1000*60;
         LocalDateTime lastUpload = LocalDateTime.now();
         pref.saveValue(codeLastUpload, lastUpload);
 
