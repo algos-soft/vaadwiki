@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -241,8 +240,6 @@ public abstract class Upload {
     protected String tagHeadTemplateAvviso; // template 'StatBio'
 
     protected String tagHeadTemplateProgetto;
-
-    protected LinkedHashMap<String, ArrayList<String>> mappaDidascalie;
 
     protected int numVoci = 0;
 
@@ -624,7 +621,7 @@ public abstract class Upload {
      */
     protected void uploadSingolaSottoPagina(String suffixTitolo, List<String> listaDidascalie) {
         String titoloSottoPagina = titoloPagina + "/" + suffixTitolo;
-        appContext.getBean(UploadSottoPagina.class, titoloSottoPagina, listaDidascalie);
+        appContext.getBean(UploadSottoPagina.class, "Pioppo", titoloSottoPagina, null);
     }// end of method
 
 

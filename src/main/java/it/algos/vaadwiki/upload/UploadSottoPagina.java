@@ -8,10 +8,12 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.USA_DEBUG;
 import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_NOMI;
+import static it.algos.wiki.LibWiki.PARAGRAFO;
 
 /**
  * Project vaadwiki
@@ -27,10 +29,16 @@ public class UploadSottoPagina extends Upload {
 
 
     //--property
-    protected String titoloSottoPagina;
+    protected String titoloBrevePaginaPrincipale;
 
     //--property
-    protected List<String> listaDidascalie;
+    protected String titoloBreveSottoPagina;
+
+    //--property
+    protected String titoloCompletoSottoPagina;
+
+    //--property
+    protected LinkedHashMap<String, List<String>> mappaAlfabetica;
 
 
     /**
@@ -45,14 +53,18 @@ public class UploadSottoPagina extends Upload {
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(UploadSottoPagina.class, titoloSottoPagina, listaDidascalie) <br>
+     * Usa: appContext.getBean(UploadSottoPagina.class, titoloBrevePaginaPrincipale, titoloCompletoSottoPagina, mappaAlfabetica) <br>
      *
-     * @param titoloSottoPagina completo
-     * @param listaDidascalie   completa
+     * @param titoloBrevePaginaPrincipale solo il nome/cognome per le categorie
+     * @param titoloBreveSottoPagina      solo l'attività della sottopagina per le categorie
+     * @param titoloCompletoSottoPagina   da registrare sul servere wiki
+     * @param mappaAlfabetica             lista delle didascalie suddivise per iniziale alfabetica del cognome
      */
-    public UploadSottoPagina(String titoloSottoPagina, List<String> listaDidascalie) {
-        this.titoloSottoPagina = titoloSottoPagina;
-        this.listaDidascalie = listaDidascalie;
+    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, String titoloCompletoSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
+        this.titoloBrevePaginaPrincipale = titoloBrevePaginaPrincipale;
+        this.titoloBreveSottoPagina = titoloBreveSottoPagina;
+        this.titoloCompletoSottoPagina = titoloCompletoSottoPagina;
+        this.mappaAlfabetica = mappaAlfabetica;
     }// end of constructor
 
 
@@ -85,11 +97,13 @@ public class UploadSottoPagina extends Upload {
         super.isSottoPagina = true;
         super.usaSuddivisioneParagrafi = false;
         super.usaRigheRaggruppate = false;
-        super.titoloPagina = titoloSottoPagina;
+        super.titoloPagina = titoloCompletoSottoPagina;
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_NOMI);
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
-//        super.tagCategoria = LibWiki.setCat("Liste di persone per nome", nome.getNome());
+
+        String nomeCat = titoloBrevePaginaPrincipale + "/" + titoloBreveSottoPagina;
+        super.tagCategoria = LibWiki.setCat("Liste di persone per nome", nomeCat);
     }// end of method
 
 
@@ -103,8 +117,8 @@ public class UploadSottoPagina extends Upload {
         ListaSottopagina sottoPagina;
         String testoLista = "";
 
-        testoLista = mettereInService(listaDidascalie);
-        numVoci = listaDidascalie.size();
+        testoLista = mettereInService(mappaAlfabetica);
+        numVoci = 87;
         int maxRigheColonne = 10; //@todo mettere la preferenza
 
         //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
@@ -127,12 +141,15 @@ public class UploadSottoPagina extends Upload {
     }// fine del metodo
 
 
-    protected String mettereInService(List<String> listaDidascalie) {
+    protected String mettereInService(LinkedHashMap<String, List<String>> mappaAlfabetica) {
         StringBuilder testoLista = new StringBuilder();
 
-        if (array.isValid(listaDidascalie)) {
-            for (String didascalia : listaDidascalie) {
-                testoLista.append(didascalia).append("\n*");
+        if (mappaAlfabetica != null) {
+            for (String titoloParagrafo : mappaAlfabetica.keySet()) {
+                testoLista.append(PARAGRAFO).append(titoloParagrafo).append(PARAGRAFO);
+                for (String didascalia : mappaAlfabetica.get(titoloParagrafo)) {
+                    testoLista.append("*").append(didascalia).append("\n");
+                }// end of for cycle
             }// end of for cycle
         }// end of if cycle
 

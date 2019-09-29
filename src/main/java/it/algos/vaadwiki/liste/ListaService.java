@@ -1118,6 +1118,7 @@ public class ListaService extends ABioService {
     /**
      * Righe suddivise per paragrafi <br>
      * All'interno dei paragrafi usa righeSemplici <br>
+     * Igfnora la chiaveDue (prima lettera alfabetica del cognome) che viene utilizzata solo per le sottopagine <br>
      */
     public String contenutoParagrafoNormale(LinkedHashMap<String, List<String>> mappaParagrafo) {
         StringBuilder testo = new StringBuilder(VUOTA);
