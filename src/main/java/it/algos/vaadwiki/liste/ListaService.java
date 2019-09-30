@@ -1025,7 +1025,7 @@ public class ListaService extends ABioService {
         ListaSottopagina sottopagina = null;
         StringBuilder builder = new StringBuilder(VUOTA);
         LinkedHashMap<String, List<String>> mappaParagrafi;
-        LinkedHashMap<String, List<String>> mappaSottopagine = new LinkedHashMap<String, List<String>>();
+        LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaSottopagine = new LinkedHashMap<String, LinkedHashMap<String, List<String>>>();
 //        List<String> listaDidascalie = null;
         String titoloParagrafo = "";
         int size = 0;
@@ -1049,7 +1049,7 @@ public class ListaService extends ABioService {
                         titoloVisibile = estraeVisibile(keyUno);
                         titoloSottopagina = titoloPagina + "/" + titoloVisibile;
                         builder.append("{{Vedi anche|").append(titoloSottopagina).append("}}");
-                        mappaSottopagine.put(titoloVisibile,mappaParagrafi.get(""));
+                        mappaSottopagine.put(titoloVisibile, mappaParagrafi);
                     } else {
                         builder.append(contenutoParagrafoNormale(mappaParagrafi));
                     }// end of if/else cycle
@@ -1108,7 +1108,7 @@ public class ListaService extends ABioService {
 
         titoloVisibile = LibWiki.setNoQuadre(titoloVisibile);
         if (titoloVisibile.contains(tag)) {
-            titoloVisibile = titoloVisibile.substring(titoloVisibile.indexOf(tag)+1);
+            titoloVisibile = titoloVisibile.substring(titoloVisibile.indexOf(tag) + 1);
         }// end of if cycle
 
         return titoloVisibile;
@@ -1118,7 +1118,7 @@ public class ListaService extends ABioService {
     /**
      * Righe suddivise per paragrafi <br>
      * All'interno dei paragrafi usa righeSemplici <br>
-     * Igfnora la chiaveDue (prima lettera alfabetica del cognome) che viene utilizzata solo per le sottopagine <br>
+     * Ignora la chiaveDue (prima lettera alfabetica del cognome) che viene utilizzata solo per le sottopagine <br>
      */
     public String contenutoParagrafoNormale(LinkedHashMap<String, List<String>> mappaParagrafo) {
         StringBuilder testo = new StringBuilder(VUOTA);
@@ -1127,35 +1127,10 @@ public class ListaService extends ABioService {
         if (mappaParagrafo != null) {
             for (String keyDue : mappaParagrafo.keySet()) {
                 listaDidascalie = mappaParagrafo.get(keyDue);
-
                 if (array.isValid(listaDidascalie)) {
-                    if (listaDidascalie.size() == 1) {
-                        testo.append(A_CAPO);
-                        testo.append(AST);
-                        if (text.isValid(keyDue)) {
-                            testo.append(LibWiki.setQuadre(keyDue));
-                            testo.append(WikiCost.TAG_SEP);
-                        }// end of if cycle
-                        testo.append(listaDidascalie.get(0));
-                    } else {
-                        if (text.isValid(keyDue)) {
-                            testo.append(A_CAPO);
-                            testo.append(AST);
-                            testo.append(LibWiki.setQuadre(keyDue));
-                            for (String stringa : listaDidascalie) {
-                                testo.append(A_CAPO);
-                                testo.append(AST);
-                                testo.append(AST);
-                                testo.append(stringa);
-                            }// end of for cycle
-                        } else {
-                            for (String stringa : listaDidascalie) {
-                                testo.append(A_CAPO);
-                                testo.append(AST);
-                                testo.append(stringa);
-                            }// end of for cycle
-                        }// end of if/else cycle
-                    }// end of if/else cycle
+                    for (String didascalia : listaDidascalie) {
+                        testo.append(A_CAPO).append(AST).append(didascalia);
+                    }// end of for cycle
                 }// end of if cycle
             }// end of for cycle
         }// end of if cycle

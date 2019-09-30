@@ -21,9 +21,11 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ListaSottopagina {
 
+    //--property
     private String testo;
 
-    private LinkedHashMap<String, List<String>> mappa;
+    //--property
+    private LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
 
 
     /**
@@ -43,7 +45,7 @@ public class ListaSottopagina {
      * @param testo della pagina wiki da comporre
      * @param mappa delle sottopagine da creare
      */
-    public ListaSottopagina(String testo, LinkedHashMap<String, List<String>> mappa) {
+    public ListaSottopagina(String testo, LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa) {
         this.testo = testo;
         this.mappa = mappa;
     }// end of constructor
@@ -54,7 +56,7 @@ public class ListaSottopagina {
     }// end of method
 
 
-    public LinkedHashMap<String, List<String>> getMappa() {
+    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> getMappa() {
         return mappa;
     }// end of method
 

@@ -118,6 +118,23 @@ public class NomeViewList extends WikiViewList {
 
 
     /**
+     * Placeholder (eventuale, presente di default) SOPRA la Grid
+     * - con o senza campo edit search, regolato da preferenza o da parametro
+     * - con o senza bottone New, regolato da preferenza o da parametro
+     * - con eventuali altri bottoni specifici
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void creaTopLayout() {
+        super.creaTopLayout();
+
+        uploadAllButton.addClickListener(e -> openUploadDialog("dei nomi"));
+        sincroBottoniMenu(false);
+    }// end of method
+
+
+    /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
      * Normalmente ad uso esclusivo del developer
      * Può essere sovrascritto, per aggiungere informazioni

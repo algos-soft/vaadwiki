@@ -165,7 +165,7 @@ public abstract class WikiViewList extends AGridViewList {
         if (usaUploadAllButton) {
             uploadAllButton = new Button("Upload all", new Icon(VaadinIcon.UPLOAD));
             uploadAllButton.getElement().setAttribute("theme", "error");
-            uploadAllButton.addClickListener(e -> uploadEffettivo());
+//            uploadAllButton.addClickListener(e -> uploadEffettivo()); //@todo nelle sottoclassi specifiche
             topPlaceholder.add(uploadAllButton);
         }// end of if cycle
 

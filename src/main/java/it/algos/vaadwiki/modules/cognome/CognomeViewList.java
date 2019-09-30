@@ -119,37 +119,22 @@ public class CognomeViewList extends WikiViewList {
         this.usaUpdateButton = true;
     }// end of method
 
+    /**
+     * Placeholder (eventuale, presente di default) SOPRA la Grid
+     * - con o senza campo edit search, regolato da preferenza o da parametro
+     * - con o senza bottone New, regolato da preferenza o da parametro
+     * - con eventuali altri bottoni specifici
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void creaTopLayout() {
+        super.creaTopLayout();
 
-//    /**
-//     * Placeholder (eventuale, presente di default) SOPRA la Grid
-//     * - con o senza campo edit search, regolato da preferenza o da parametro
-//     * - con o senza bottone New, regolato da preferenza o da parametro
-//     * - con eventuali altri bottoni specifici
-//     * Può essere sovrascritto, per aggiungere informazioni
-//     * Invocare PRIMA il metodo della superclasse
-//     */
-//    @Override
-//    protected void creaTopLayout() {
-//        super.creaTopLayout();
-//
-//        Button creaButton = new Button("Crea all", new Icon(VaadinIcon.LIST));
-//        creaButton.addClassName("view-toolbar__button");
-//        creaButton.addClickListener(e -> {
-//            ((CognomeService) service).crea();
-//            updateItems();
-//            updateView();
-//        });//end of lambda expressions and anonymous inner class
-//        topPlaceholder.add(creaButton);
-//
-//        Button updateButton = new Button("Elabora", new Icon(VaadinIcon.LIST));
-//        updateButton.addClassName("view-toolbar__button");
-//        updateButton.addClickListener(e -> {
-//            ((CognomeService) service).update();
-//            updateItems();
-//            updateView();
-//        });//end of lambda expressions and anonymous inner class
-//        topPlaceholder.add(updateButton);
-//    }// end of method
+        uploadAllButton.addClickListener(e -> openUploadDialog("dei cognomi"));
+        sincroBottoniMenu(false);
+    }// end of method
+
 
     /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi

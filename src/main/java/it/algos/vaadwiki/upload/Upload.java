@@ -278,6 +278,9 @@ public abstract class Upload {
     //--property
     protected String testoPagina;
 
+    //--property
+    protected String soggetto;
+
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -469,7 +472,7 @@ public abstract class Upload {
         String titoloPaginaMadre = getTitoloPaginaMadre();
 
         if (usaHeadRitorno) {
-            if (!titoloPaginaMadre.equals(VUOTA)) {
+            if (text.isValid(titoloPaginaMadre)) {
                 testo += "Torna a|" + titoloPaginaMadre;
                 testo = LibWiki.setGraffe(testo);
             }// fine del blocco if
@@ -609,9 +612,9 @@ public abstract class Upload {
     /**
      * Esegue l'upload delle sottopagine <br>
      */
-    protected void uploadSottoPagine(LinkedHashMap<String, List<String>> mappa) {
-        for (String key : mappa.keySet()) {
-            uploadSingolaSottoPagina(key, mappa.get(key));
+    protected void uploadSottoPagine(LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaDiTutteLeSottoPagine) {
+        for (String attivita : mappaDiTutteLeSottoPagine.keySet()) {
+            uploadSingolaSottoPagina(attivita, mappaDiTutteLeSottoPagine.get(attivita));
         }// end of for cycle
     }// end of method
 
@@ -619,9 +622,9 @@ public abstract class Upload {
     /**
      * Esegue l'upload della singola sottopagina <br>
      */
-    protected void uploadSingolaSottoPagina(String suffixTitolo, List<String> listaDidascalie) {
+    protected void uploadSingolaSottoPagina(String suffixTitolo, LinkedHashMap<String, List<String>> mappaSingolaSottoPagina) {
         String titoloSottoPagina = titoloPagina + "/" + suffixTitolo;
-        appContext.getBean(UploadSottoPagina.class, "Pioppo", titoloSottoPagina, null);
+        appContext.getBean(UploadSottoPagina.class, soggetto, suffixTitolo, titoloSottoPagina, mappaSingolaSottoPagina);
     }// end of method
 
 

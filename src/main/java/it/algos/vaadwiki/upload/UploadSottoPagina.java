@@ -11,8 +11,8 @@ import javax.annotation.PostConstruct;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadflow.application.FlowCost.USA_DEBUG;
-import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_NOMI;
 import static it.algos.wiki.LibWiki.PARAGRAFO;
 
 /**
@@ -57,8 +57,8 @@ public class UploadSottoPagina extends Upload {
      *
      * @param titoloBrevePaginaPrincipale solo il nome/cognome per le categorie
      * @param titoloBreveSottoPagina      solo l'attività della sottopagina per le categorie
-     * @param titoloCompletoSottoPagina   da registrare sul servere wiki
-     * @param mappaAlfabetica             lista delle didascalie suddivise per iniziale alfabetica del cognome
+     * @param titoloCompletoSottoPagina   da registrare sul server wiki
+     * @param mappaAlfabetica             mappa delle didascalie suddivise per iniziale alfabetica del cognome
      */
     public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, String titoloCompletoSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
         this.titoloBrevePaginaPrincipale = titoloBrevePaginaPrincipale;
@@ -98,7 +98,7 @@ public class UploadSottoPagina extends Upload {
         super.usaSuddivisioneParagrafi = false;
         super.usaRigheRaggruppate = false;
         super.titoloPagina = titoloCompletoSottoPagina;
-        super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_NOMI);
+        super.usaHeadTocIndice = false;
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
 
@@ -141,12 +141,22 @@ public class UploadSottoPagina extends Upload {
     }// fine del metodo
 
 
+    /**
+     * Titolo della pagina 'madre'
+     * <p>
+     * Sovrascritto
+     */
+    protected String getTitoloPaginaMadre() {
+        return "Persone di nome " + titoloBrevePaginaPrincipale;//@todo ERRATO
+    }// fine del metodo
+
+
     protected String mettereInService(LinkedHashMap<String, List<String>> mappaAlfabetica) {
         StringBuilder testoLista = new StringBuilder();
 
         if (mappaAlfabetica != null) {
             for (String titoloParagrafo : mappaAlfabetica.keySet()) {
-                testoLista.append(PARAGRAFO).append(titoloParagrafo).append(PARAGRAFO);
+                testoLista.append(PARAGRAFO).append(titoloParagrafo).append(PARAGRAFO).append(A_CAPO);
                 for (String didascalia : mappaAlfabetica.get(titoloParagrafo)) {
                     testoLista.append("*").append(didascalia).append("\n");
                 }// end of for cycle
