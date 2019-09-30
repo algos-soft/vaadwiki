@@ -100,10 +100,10 @@ public class UploadService extends ABioService {
         long inizio = System.currentTimeMillis();
         List<Anno> listaAnni = annoService.findAll();
 
-//        for (Anno anno : listaAnni) {
-//            uploadAnnoNato(anno);
-//            uploadAnnoMorto(anno);
-//        }// end of for cycle
+        for (Anno anno : listaAnni) {
+            uploadAnnoNato(anno);
+            uploadAnnoMorto(anno);
+        }// end of for cycle
 
         setLastUpload(inizio, LAST_UPLOAD_ANNI, DURATA_UPLOAD_ANNI);
     }// end of method
