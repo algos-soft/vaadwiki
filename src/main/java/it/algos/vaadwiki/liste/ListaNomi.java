@@ -66,7 +66,6 @@ public class ListaNomi extends ListaNomiCognomi {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_NOMI_IN_CODA);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_NOMI);
     }// end of method
@@ -94,7 +93,7 @@ public class ListaNomi extends ListaNomiCognomi {
 
 
     public ListaSottopagina getSottopagina() {
-        return listaService.sottopagina(mappa, pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI), "Persone di nome " + nome.nome);
+        return listaService.sottopagina(mappa, pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI), "Persone di nome " + nome.nome, titoloParagrafoVuoto, titoloSottoPaginaVuota);
     }// fine del metodo
 
 }// end of class

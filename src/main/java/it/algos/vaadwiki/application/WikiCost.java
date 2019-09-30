@@ -91,6 +91,7 @@ public class WikiCost {
     public final static String COGNOME = "Cognome:";
 
     public final static String CODE_DOWNLOAD = "lastDownload";
+
     public final static String CODE_UPLOAD = "lastUpload";
 
     public final static String DURATA = "durataDownload";
@@ -279,6 +280,8 @@ public class WikiCost {
     public final static String USA_SOTTOPAGINE_NOMI_COGNOMI = "usaSottopagineNomiCognomi";
 
     public final static String TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI = "tagParagrafoVuotoNomi";
+
+    public final static String TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI = "tagSottoPaginaVuotaNomi";
 
     public final static String USA_FORCETOC_NOMI = "usaForcetocNomi";
 

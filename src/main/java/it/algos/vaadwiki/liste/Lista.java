@@ -100,6 +100,9 @@ public abstract class Lista {
     public String titoloParagrafoVuoto;
 
     //--property
+    public String titoloSottoPaginaVuota;
+
+    //--property
     public boolean paragrafoVuotoInCoda;
 
     //--property
@@ -184,6 +187,7 @@ public abstract class Lista {
     protected void fixPreferenze() {
         this.usaSuddivisioneParagrafi = true;
         this.titoloParagrafoVuoto = "";
+        this.titoloSottoPaginaVuota = "";
         this.paragrafoVuotoInCoda = true;
         this.usaParagrafoSize = false;
         this.usaLinkAttivita = false;

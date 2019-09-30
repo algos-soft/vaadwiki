@@ -4,6 +4,9 @@ import it.algos.vaadwiki.didascalia.WrapDidascalia;
 
 import java.util.ArrayList;
 
+import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI;
+import static it.algos.vaadwiki.application.WikiCost.TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -25,6 +28,8 @@ public abstract class ListaNomiCognomi extends Lista {
         super.fixPreferenze();
 
         super.usaSuddivisioneParagrafi = true;
+        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
+        super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
         super.usaRigheRaggruppate = false;
         super.usaLinkAttivita = true;
         super.usaBodySottopagine = true;

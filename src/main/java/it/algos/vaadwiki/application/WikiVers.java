@@ -287,6 +287,11 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
+            creaPrefTxt(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI, "Titolo della sottopagina per le biografie senza attività specificata", "Altre...");
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
             creaPrefInt(SOGLIA_NOMI_MONGO, "Soglia minima per creare una entity nella collezione Nomi sul mongoDB", 30);
         }// fine del blocco if
 

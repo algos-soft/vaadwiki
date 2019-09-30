@@ -1020,13 +1020,19 @@ public class ListaService extends ABioService {
      * Le righe sono sempre raggruppate (chiaveDue) <br>
      * La soglia di taglio arriva come parametro <br>
      * Il nome della sottopagina viene composto dal titoloPagina passato come parametro più il titolo visibile del paragrafo <br>
+     * Se esiste un paragrafo dal titolo titoloParagrafoVuoto, questo rimane come titolo del paragrafo ma la sottoPagina si chiama titoloSottoPaginaVuota <br>
+     *
+     * @param mappaGenerale          di tutta una pagina che deve implementare le sottopagine per alcuni paragrafi (se ci sono)
+     * @param soglia                 di voci biografiche per far scattare la sottopagina
+     * @param titoloPagina           principale da passare alla sottopagina da costruire (UploadSottoPagina)
+     * @param titoloParagrafoVuoto   da controllare
+     * @param titoloSottoPaginaVuota al posto del titoloParagrafoVuoto
      */
-    public ListaSottopagina sottopagina(LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale, int soglia, String titoloPagina) {
+    public ListaSottopagina sottopagina(LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale, int soglia, String titoloPagina, String titoloParagrafoVuoto, String titoloSottoPaginaVuota) {
         ListaSottopagina sottopagina = null;
         StringBuilder builder = new StringBuilder(VUOTA);
         LinkedHashMap<String, List<String>> mappaParagrafi;
         LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaSottopagine = new LinkedHashMap<String, LinkedHashMap<String, List<String>>>();
-//        List<String> listaDidascalie = null;
         String titoloParagrafo = "";
         int size = 0;
         String titoloVisibile;
@@ -1047,9 +1053,11 @@ public class ListaService extends ABioService {
                     if (size > soglia) {
                         builder.append(A_CAPO);
                         titoloVisibile = estraeVisibile(keyUno);
+                        titoloVisibile = titoloVisibile.equals(titoloParagrafoVuoto) ? titoloSottoPaginaVuota : titoloVisibile;
                         titoloSottopagina = titoloPagina + "/" + titoloVisibile;
+
                         builder.append("{{Vedi anche|").append(titoloSottopagina).append("}}");
-                        mappaSottopagine.put(titoloVisibile, mappaParagrafi);
+                        mappaSottopagine.put(titoloSottopagina, mappaParagrafi);
                     } else {
                         builder.append(contenutoParagrafoNormale(mappaParagrafi));
                     }// end of if/else cycle
