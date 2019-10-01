@@ -27,15 +27,13 @@ import static it.algos.wiki.LibWiki.PARAGRAFO;
 @Slf4j
 public class UploadSottoPagina extends Upload {
 
+    protected final static String PREFIX_TITOLO = "Persone di nome ";
 
     //--property
     protected String titoloBrevePaginaPrincipale;
 
     //--property
     protected String titoloBreveSottoPagina;
-
-    //--property
-    protected String titoloCompletoSottoPagina;
 
     //--property
     protected LinkedHashMap<String, List<String>> mappaAlfabetica;
@@ -55,15 +53,13 @@ public class UploadSottoPagina extends Upload {
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(UploadSottoPagina.class, titoloBrevePaginaPrincipale, titoloCompletoSottoPagina, mappaAlfabetica) <br>
      *
-     * @param titoloBrevePaginaPrincipale solo il nome/cognome per le categorie
-     * @param titoloBreveSottoPagina      solo l'attività della sottopagina per le categorie
-     * @param titoloCompletoSottoPagina   da registrare sul server wiki
+     * @param titoloBrevePaginaPrincipale solo il nome/cognome per la costruzione del titolo e per le categorie
+     * @param titoloBreveSottoPagina      attività della sottopagina per l'incipit (eventuale) e per le categorie
      * @param mappaAlfabetica             mappa delle didascalie suddivise per iniziale alfabetica del cognome
      */
-    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, String titoloCompletoSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
+    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
         this.titoloBrevePaginaPrincipale = titoloBrevePaginaPrincipale;
         this.titoloBreveSottoPagina = titoloBreveSottoPagina;
-        this.titoloCompletoSottoPagina = titoloCompletoSottoPagina;
         this.mappaAlfabetica = mappaAlfabetica;
     }// end of constructor
 
@@ -97,7 +93,7 @@ public class UploadSottoPagina extends Upload {
         super.isSottoPagina = true;
         super.usaSuddivisioneParagrafi = false;
         super.usaRigheRaggruppate = false;
-        super.titoloPagina = titoloCompletoSottoPagina;
+        super.titoloPagina = PREFIX_TITOLO + titoloBrevePaginaPrincipale + "/" + titoloBreveSottoPagina;
         super.usaHeadTocIndice = false;
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
@@ -147,7 +143,7 @@ public class UploadSottoPagina extends Upload {
      * Sovrascritto
      */
     protected String getTitoloPaginaMadre() {
-        return "Persone di nome " + titoloBrevePaginaPrincipale;//@todo ERRATO
+        return PREFIX_TITOLO + titoloBrevePaginaPrincipale;//@todo controllare
     }// fine del metodo
 
 

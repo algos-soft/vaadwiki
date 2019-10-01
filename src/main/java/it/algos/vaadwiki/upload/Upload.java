@@ -372,7 +372,7 @@ public abstract class Upload {
             }// end of if cycle
 
             //--nelle sottopagine non eseguo il controllo e le registro sempre (per adesso)
-            if (checkPossoRegistrare(titoloPagina, testoPagina) || isSottoPagina) {
+            if (checkPossoRegistrare(titoloPagina, testoPagina) || isSottoPagina || pref.isBool(FlowCost.USA_DEBUG)) {
                 appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina);
                 log.info("Registrata la pagina: " + titoloPagina);
             } else {
@@ -623,8 +623,8 @@ public abstract class Upload {
      * Esegue l'upload della singola sottopagina <br>
      */
     protected void uploadSingolaSottoPagina(String suffixTitolo, LinkedHashMap<String, List<String>> mappaSingolaSottoPagina) {
-        String titoloSottoPagina = titoloPagina + "/" + suffixTitolo;
-        appContext.getBean(UploadSottoPagina.class, soggetto, suffixTitolo, titoloSottoPagina, mappaSingolaSottoPagina);
+//        String titoloSottoPagina = titoloPagina + "/" + suffixTitolo;
+        appContext.getBean(UploadSottoPagina.class, soggetto, suffixTitolo, mappaSingolaSottoPagina);
     }// end of method
 
 

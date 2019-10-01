@@ -60,6 +60,8 @@ public class ListaService extends ABioService {
     @Autowired
     protected NomeService nomeService;
 
+    LinkedHashMap<String, List<String>> mappaChiaveDue;
+
 
     /**
      * Costruisce una lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
@@ -149,19 +151,6 @@ public class ListaService extends ABioService {
     }// fine del metodo
 
 
-    /**
-     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
-     *
-     * @param listaDisordinata di didascalie
-     *
-     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
-     */
-    public ArrayList<WrapDidascalia> ordinaListaDidascalieCognomi(ArrayList<WrapDidascalia> listaDisordinata) {
-        Collections.sort(listaDisordinata);
-        return listaDisordinata;
-    }// fine del metodo
-
-
 //    /**
 //     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
 //     * La mappa è composta da una chiave (ordinata) e da un ArrayList di didascalie (testo) <br>
@@ -226,6 +215,19 @@ public class ListaService extends ABioService {
 //    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> creaMappaChiaveUno(ArrayList<WrapDidascalia> listaGrezza, String titoloParagrafoVuoto) {
 //        return creaMappaChiaveUno(listaGrezza, titoloParagrafoVuoto, true);
 //    }// fine del metodo
+
+
+    /**
+     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+     *
+     * @param listaDisordinata di didascalie
+     *
+     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    public ArrayList<WrapDidascalia> ordinaListaDidascalieCognomi(ArrayList<WrapDidascalia> listaDisordinata) {
+        Collections.sort(listaDisordinata);
+        return listaDisordinata;
+    }// fine del metodo
 
 
     /**
@@ -298,6 +300,7 @@ public class ListaService extends ABioService {
 
         for (String key : mappaParagrafi.keySet()) {
             mappaChiaveDue = creaMappaInterna(mappaParagrafi.get(key));
+            mappaChiaveDue = ordinaMappaAlfabetica(mappaChiaveDue);
             mappaGenerale.put(key, mappaChiaveDue);
         }// end of for cycle
 
@@ -333,6 +336,23 @@ public class ListaService extends ABioService {
         return mappa;
     }// fine del metodo
 
+
+    public LinkedHashMap<String, List<String>> ordinaMappaAlfabetica(LinkedHashMap<String, List<String>> mappaDisordinata) {
+        LinkedHashMap<String, List<String>> mappaOrdinata = new LinkedHashMap<String, List<String>>();
+        List<String> listaKey = new ArrayList();
+
+        for (String key : mappaDisordinata.keySet()) {
+            listaKey.add(key);
+        }// end of for cycle
+
+        Collections.sort(listaKey);
+
+        for (String orderedKey : listaKey) {
+            mappaOrdinata.put(orderedKey, mappaDisordinata.get(orderedKey));
+        }// end of for cycle
+
+        return mappaOrdinata;
+    }// fine del metodo
 
 //    /**
 //     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
@@ -1024,11 +1044,12 @@ public class ListaService extends ABioService {
      *
      * @param mappaGenerale          di tutta una pagina che deve implementare le sottopagine per alcuni paragrafi (se ci sono)
      * @param soglia                 di voci biografiche per far scattare la sottopagina
-     * @param titoloPagina           principale da passare alla sottopagina da costruire (UploadSottoPagina)
+     * @param titoloCompletoPagina   principale da passare alla sottopagina da costruire (UploadSottoPagina)
+     * @param soggetto               della lista
      * @param titoloParagrafoVuoto   da controllare
      * @param titoloSottoPaginaVuota al posto del titoloParagrafoVuoto
      */
-    public ListaSottopagina sottopagina(LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale, int soglia, String titoloPagina, String titoloParagrafoVuoto, String titoloSottoPaginaVuota) {
+    public ListaSottopagina sottopagina(LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale, int soglia, String titoloCompletoPagina, String titoloParagrafoVuoto, String titoloSottoPaginaVuota) {
         ListaSottopagina sottopagina = null;
         StringBuilder builder = new StringBuilder(VUOTA);
         LinkedHashMap<String, List<String>> mappaParagrafi;
@@ -1054,10 +1075,10 @@ public class ListaService extends ABioService {
                         builder.append(A_CAPO);
                         titoloVisibile = estraeVisibile(keyUno);
                         titoloVisibile = titoloVisibile.equals(titoloParagrafoVuoto) ? titoloSottoPaginaVuota : titoloVisibile;
-                        titoloSottopagina = titoloPagina + "/" + titoloVisibile;
+                        titoloSottopagina = titoloCompletoPagina + "/" + titoloVisibile;
 
                         builder.append("{{Vedi anche|").append(titoloSottopagina).append("}}");
-                        mappaSottopagine.put(titoloSottopagina, mappaParagrafi);
+                        mappaSottopagine.put(titoloVisibile, mappaParagrafi);
                     } else {
                         builder.append(contenutoParagrafoNormale(mappaParagrafi));
                     }// end of if/else cycle

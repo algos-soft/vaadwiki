@@ -4,8 +4,7 @@ import it.algos.vaadwiki.didascalia.WrapDidascalia;
 
 import java.util.ArrayList;
 
-import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI;
-import static it.algos.vaadwiki.application.WikiCost.TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
@@ -32,7 +31,7 @@ public abstract class ListaNomiCognomi extends Lista {
         super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
         super.usaRigheRaggruppate = false;
         super.usaLinkAttivita = true;
-        super.usaBodySottopagine = true;
+        super.usaBodySottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
     }// end of method
 
 }// end of class
