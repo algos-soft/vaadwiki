@@ -246,7 +246,7 @@ public class ListaService extends ABioService {
      * @return mappa complessa
      */
     public LinkedHashMap<String, LinkedHashMap<String, List<String>>> creaMappa(List<WrapDidascalia> listaDidascalie) {
-        return creaMappa(listaDidascalie, "", false, false);
+        return creaMappa(listaDidascalie, "", false, false,false);
     }// fine del metodo
 
 
@@ -271,7 +271,8 @@ public class ListaService extends ABioService {
             List<WrapDidascalia> listaDidascalie,
             String titoloParagrafoVuoto,
             boolean paragrafoVuotoInCoda,
-            boolean usaLinkAttivita) {
+            boolean usaLinkAttivita,
+            boolean usaOrdineAlfabetico) {
         LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale = new LinkedHashMap<>();
         LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafi = new LinkedHashMap<>();
         LinkedHashMap<String, List<String>> mappaChiaveDue;
@@ -300,7 +301,9 @@ public class ListaService extends ABioService {
 
         for (String key : mappaParagrafi.keySet()) {
             mappaChiaveDue = creaMappaInterna(mappaParagrafi.get(key));
-            mappaChiaveDue = ordinaMappaAlfabetica(mappaChiaveDue);
+            if (usaOrdineAlfabetico) {
+                mappaChiaveDue = ordinaMappaAlfabetica(mappaChiaveDue);
+            }// end of if cycle
             mappaGenerale.put(key, mappaChiaveDue);
         }// end of for cycle
 
@@ -350,6 +353,22 @@ public class ListaService extends ABioService {
         for (String orderedKey : listaKey) {
             mappaOrdinata.put(orderedKey, mappaDisordinata.get(orderedKey));
         }// end of for cycle
+
+        return mappaOrdinata;
+    }// fine del metodo
+
+
+    public LinkedHashMap<String, List<String>> ordinaMappaCronologica(LinkedHashMap<String, List<String>> mappaDisordinata) {
+        LinkedHashMap<String, List<String>> mappaOrdinata = new LinkedHashMap<String, List<String>>();
+        List<Integer> listaKey = new ArrayList();
+        List lista;
+
+        for (String key : mappaDisordinata.keySet()) {
+            lista = mappaDisordinata.get(key);
+        }// end of for cycle
+
+        Collections.sort(listaKey);
+
 
         return mappaOrdinata;
     }// fine del metodo
