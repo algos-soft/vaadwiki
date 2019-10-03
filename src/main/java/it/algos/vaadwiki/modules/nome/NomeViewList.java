@@ -113,7 +113,7 @@ public class NomeViewList extends WikiViewList {
         this.sogliaWiki = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI, 50);
 
         this.usaCreaButton = true;
-        this.usaUpdateButton = true;
+        this.usaUpdateButton = false;
     }// end of method
 
 
