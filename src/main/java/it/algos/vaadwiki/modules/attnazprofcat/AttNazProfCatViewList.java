@@ -59,17 +59,17 @@ public class AttNazProfCatViewList extends AGridViewList {
 
     protected String durataLastDownload;
 
-    protected boolean usaBottoneUpload = true;
+    protected boolean usaBottoneUpload;
 
-    protected boolean usaBottoneCategoria = false;
+    protected boolean usaBottoneCategoria;
 
-    protected boolean usaBottoneDeleteMongo = true;
+    protected boolean usaBottoneDeleteMongo;
 
-    protected boolean usaBottoneDownload = true;
+    protected boolean usaBottoneDownload;
 
-    protected boolean usaBottoneModulo = true;
+    protected boolean usaBottoneModulo;
 
-    protected boolean usaBottoneStatistiche = true;
+    protected boolean usaBottoneStatistiche;
 
     /**
      * Il service (singleton) viene recuperato dal presenter <br>
@@ -104,6 +104,13 @@ public class AttNazProfCatViewList extends AGridViewList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        this.usaBottoneUpload = true;
+        this.usaBottoneCategoria = false;
+        this.usaBottoneDeleteMongo = true;
+        this.usaBottoneDownload = true;
+        this.usaBottoneModulo = true;
+        this.usaBottoneStatistiche = true;
+
         super.usaSearchTextField = false;
         super.usaSearchBottoneNew = false;
         super.isEntityModificabile = false;
@@ -122,13 +129,6 @@ public class AttNazProfCatViewList extends AGridViewList {
     @Override
     protected void creaTopLayout() {
         super.creaTopLayout();
-
-//        if (usaBottoneDeleteMongo) {
-//            deleteMongoButton = new Button("Delete all", new Icon(VaadinIcon.CLOSE_CIRCLE));
-//            deleteMongoButton.getElement().setAttribute("theme", "error");
-//            deleteMongoButton.addClickListener(e -> openConfirmDialog());
-//            topPlaceholder.add(deleteMongoButton);
-//        }// end of if cycle
 
         if (usaBottoneDownload) {
             donwloadMongoButton = new Button("Download", new Icon(VaadinIcon.DOWNLOAD));

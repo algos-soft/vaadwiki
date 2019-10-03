@@ -281,6 +281,8 @@ public abstract class Upload {
     //--property
     protected String soggetto;
 
+    //--property
+    protected LinkedHashMap<String, List<String>> mappaAlfabetica;
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -349,6 +351,15 @@ public abstract class Upload {
                 return;
             }// end of if cycle
         }// end of if cycle
+        if (isSottoPagina) {
+            numVoci = listaService.getMappaSize(mappaAlfabetica);
+        } else {
+            numVoci = lista.size;
+            if (lista == null || lista.size == 0) {
+                log.info("La pagina: " + titoloPagina + " non aveva nessuna biografia");
+                return;
+            }// end of if cycle
+        }// end of if/else cycle
 
         //header
         testoPagina += this.elaboraHead();
@@ -502,11 +513,7 @@ public abstract class Upload {
         String testo = VUOTA;
         String dataCorrente = date.get();
         String personeTxt = "";
-        if (isSottoPagina) {
-            personeTxt = "87";
-        } else {
-            personeTxt = text.format(lista.size);
-        }// end of if/else cycle
+        personeTxt = text.format(numVoci);
 
         if (usaHeadTemplateAvviso) {
             testo += tagHeadTemplateAvviso;

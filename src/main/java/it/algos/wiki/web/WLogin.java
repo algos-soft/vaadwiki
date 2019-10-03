@@ -93,4 +93,9 @@ public class WLogin  {
         this.cookies = cookies;
     } // fine del metodo
 
+
+    public boolean isBot() {
+        return isBot;
+    } // fine del metodo
+
 }// end of class

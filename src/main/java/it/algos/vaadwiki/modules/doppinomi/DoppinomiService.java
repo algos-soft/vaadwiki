@@ -1,7 +1,9 @@
 package it.algos.vaadwiki.modules.doppinomi;
 
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.service.AService;
+import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.wiki.web.AQueryVoce;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadwiki.application.WikiCost.TAG_DOP;
 
 /**
@@ -38,7 +41,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_DOP;
 @Qualifier(TAG_DOP)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class DoppinomiService extends AService {
+public class DoppinomiService extends AttNazProfCatService {
 
 
     /**
@@ -169,5 +172,57 @@ public class DoppinomiService extends AService {
         return repository.findByCode(code);
     }// end of method
 
+
+    /**
+     * Download completo del modulo da Wiki <br>
+     * Cancella tutte le precedenti entities <br>
+     * Registra su Mongo DB tutte le occorrenze di attività/nazionalità <br>
+     */
+    public void download() {
+        String tag = A_CAPO + "\\*";
+        long inizio = System.currentTimeMillis();
+        String testo = "";
+        String[] righe = null;
+        String message = "";
+        String nome;
+
+        //--legge la pagina wiki
+        testo = ((AQueryVoce) appContext.getBean("AQueryVoce", titoloModuloDoppiNomi)).urlRequest();
+        if (text.isValid(testo)) {
+            righe = testo.split(tag);
+        }// end of if cycle
+
+        if (array.isValid(righe)) {
+            this.deleteAll();
+
+            //--il primo va eliminato (non pertinente)
+            for (int k = 1; k < righe.length; k++) {
+                nome = righe[k];
+
+                //--l'ultimo va troncato
+                if (k == righe.length - 1) {
+                    nome = nome.substring(0, nome.indexOf("\n\n"));
+                }// end of if cycle
+
+                this.findOrCrea(nome);
+            }// end of for cycle
+
+            setLastDownload(inizio);
+            if (pref.isBool(FlowCost.USA_DEBUG)) {
+                message += "Download modulo ";
+                message += entityClass.getSimpleName();
+                message += " (";
+                message += text.format(righe.length);
+                message += " elementi in ";
+                message += date.deltaText(inizio);
+                message += "), con AQueryVoce, senza login, senza cookies, urlRequest di tipo GET";
+
+                log.debug(message);
+                logger.debug(message);
+            }// end of if cycle
+        } else {
+            logger.error(entityClass.getSimpleName() + " - Qualcosa non ha funzionato");
+        }// end of if/else cycle
+    }// end of method
 
 }// end of class

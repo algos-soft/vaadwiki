@@ -150,7 +150,7 @@ public class TemplateBioIntegrationTest extends ATest {
         creaTemplateMerged();
         creaTemplateMerged2();
         creaTemplateMerged3();
-        uploadBio();
+//        uploadBio();
     }// end of single test
 
 

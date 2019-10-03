@@ -8,8 +8,10 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadwiki.liste.ListaNomi;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
 import it.algos.vaadwiki.schedule.TaskAttivita;
+import it.algos.vaadwiki.statistiche.StatisticheAttivita;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -130,8 +132,8 @@ public class AttivitaViewList extends AttNazProfCatViewList {
     }// end of method
 
 
-    //@todo Da sviluppare
     protected void uploadStatistiche() {
+        appContext.getBean(StatisticheAttivita.class);
     }// end of method
 
 }// end of class

@@ -137,6 +137,12 @@ public class AQueryBot extends AQueryGet {
         } else {
             isUrlResponseValida = false;
             mappa = LibWiki.creaMappaError(urlResponse);
+
+            if (mappa == null) {
+                log.info("AQueryBot - Nessuna risposta. Forse manca la linea.");
+                return urlResponse;
+            }// end of if cycle
+
             if (mappa.get(CODE) != null && mappa.get(CODE).equals(CODE_FAILED)) {
                 log.info("AQueryBot - " + CODE_FAILED);
                 return urlResponse;

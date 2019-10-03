@@ -10,9 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import static it.algos.wiki.Pagina.count;
 
 /**
  * Project vaadbio2
@@ -51,6 +57,32 @@ public class ElaboraService extends ABioService {
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
      */
     public void esegueAll() {
+        long inizio = System.currentTimeMillis();
+        int size = 1000;
+        int totale = bioService.count();
+        Sort sort = new Sort(Sort.Direction.ASC, "pageid");
+        List<Bio> lista = null;
+        int tot = 0;
+
+        for (int k = 0; k < array.numCicli(totale, size); k++) {
+            lista = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Bio.class);
+            for (Bio bio : lista) {
+                esegueSave(bio);
+                tot++;
+            }// end of for cycle
+            log.info("ELABORA - Elaborate " + text.format(tot) + " voci biografiche su " + text.format(totale) + " in " + date.deltaText(inizio));
+        }// end of for cycle
+
+    }// end of method
+
+
+    /**
+     * Elabora le pagine biografiche <br>
+     * Parte dal tmplBioServer e costruisce tutti parametri significativi <br>
+     * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
+     * Quello che resta è affidabile ed utilizzabile per le liste <br>
+     */
+    public void esegueAllOld() {
         ArrayList<String> lista = bioService.findAllTitles();
 
         if (array.isValid(lista)) {

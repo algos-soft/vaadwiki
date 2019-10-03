@@ -24,6 +24,8 @@ import it.algos.vaadwiki.schedule.TaskUpdate;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;
 import it.algos.wiki.DownloadResult;
+import it.algos.wiki.web.AQueryBot;
+import it.algos.wiki.web.WLogin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -156,6 +158,9 @@ public class BioViewList extends AttNazProfCatViewList {
     @Autowired
     private TaskUpdate taskUpdate;
 
+    @Autowired
+    private WLogin wLogin;
+
 //    @Autowired
 //    private Upload upload;
 //
@@ -210,7 +215,6 @@ public class BioViewList extends AttNazProfCatViewList {
     }// end of method
 
 
-
     /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid
      * - con o senza campo edit search, regolato da preferenza o da parametro
@@ -243,10 +247,10 @@ public class BioViewList extends AttNazProfCatViewList {
 //        updateButton.addClickListener(e -> download());
 //        topPlaceholder.add(updateButton);
 
-//        //--ri-elabora tutte le biografie
-//        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
-//        elaboraButton.addClickListener(e -> elaboraService.esegue());
-//        topPlaceholder.add(elaboraButton);
+        //--ri-elabora tutte le biografie
+        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
+        elaboraButton.addClickListener(e -> elaboraService.esegue());
+        topPlaceholder.add(elaboraButton);
 
 //        //--upload le pagine cronologiche (giorni ed anni)
 //        uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
@@ -325,20 +329,24 @@ public class BioViewList extends AttNazProfCatViewList {
 //
 //    }// end of method
 
+
     protected void download() {
         DownloadResult result;
         int numRec = service.count();
-        long inizio = System.currentTimeMillis();
+        String message;
 
-        if (numRec == 0) {
-            result = cicloDownload.esegue();
+        if (appContext.getBean(AQueryBot.class).isBot()) {
+            if (numRec == 0) {
+                result = cicloDownload.esegue();
+            } else {
+                result = cicloUpdate.esegue();
+            }// end of if/else cycle
         } else {
-            result = cicloUpdate.esegue();
+            message = "Non riesco a leggere le pagine dal server. Forse non sono loggato come bot";
+            log.warn(message);
+            logger.warning("Download - " + message);
         }// end of if/else cycle
 
-        if (result != null) {
-//            sendMail(result);
-        }// end of if cycle
 
         updateView();
     }// end of method

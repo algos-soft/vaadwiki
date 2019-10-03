@@ -40,6 +40,8 @@ public abstract class AttNazProfCatService extends AService {
 
     public String titoloModuloGenere = titoloModuloAttivita + " genere";
 
+    public String titoloModuloDoppiNomi = "Progetto:Antroponimi/Nomi_doppi";
+
     public String titoloPaginaStatisticheAttivita = PATH_PROGETTO + ATT;
 
     public String titoloPaginaStatisticheNazionalita = PATH_PROGETTO + NAZ;

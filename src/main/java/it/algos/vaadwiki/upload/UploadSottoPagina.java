@@ -35,8 +35,6 @@ public class UploadSottoPagina extends Upload {
     //--property
     protected String titoloBreveSottoPagina;
 
-    //--property
-    protected LinkedHashMap<String, List<String>> mappaAlfabetica;
 
 
     /**

@@ -269,7 +269,7 @@ public class NomeService extends NomeCognomeService {
      */
     public void update() {
         long inizio = System.currentTimeMillis();
-        log.info("Elaborazione nomi delle biografie. Circa 5 minuti.");
+        log.info("Elaborazione nomi delle biografie. Meno di 1 minuto.");
         List<String> listaDoppi = doppinomiService.findAllCode();
 
         for (Nome nome : findAll()) {
@@ -290,14 +290,14 @@ public class NomeService extends NomeCognomeService {
      */
     public void saveNome(String nomeTxt, boolean nomeDoppio) {
         //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
-        int sogliaMongo = pref.getInt(SOGLIA_NOMI_MONGO, 10);
+        int sogliaMongo = pref.getInt(SOGLIA_NOMI_MONGO, 40);
         Nome nome = null;
-        int numVoci = 0;
+        long numVoci = 0;
         Query query = new Query();
         query.addCriteria(Criteria.where("nome").is(nomeTxt));
-        numVoci = ((List) mongo.mongoOp.find(query, Bio.class)).size();
+        numVoci = mongo.mongoOp.count(query, Bio.class);
         if (numVoci >= sogliaMongo && text.isValid(nomeTxt)) {
-            nome = this.findOrCrea(nomeTxt, numVoci);
+            nome = this.findOrCrea(nomeTxt, (int) numVoci);
         }// end of if cycle
         if (nomeDoppio && nome != null) {
             nome.valido = false;

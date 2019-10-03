@@ -65,7 +65,7 @@ public class StatisticheDidascalie extends Statistiche {
      * Usa: appContext.getBean(StatisticheDidascalie.class) <br>
      */
     public StatisticheDidascalie() {
-    }// end of constructor
+    }// end of Spring constructor
 
 
     /**

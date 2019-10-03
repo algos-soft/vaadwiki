@@ -9,7 +9,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
 import it.algos.wiki.web.AQueryVoce;
 import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_DOP;
 @Qualifier(TAG_DOP)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class DoppinomiViewList extends AGridViewList {
+public class DoppinomiViewList extends AttNazProfCatViewList {
 
     /**
      * Icona visibile nel menu (facoltativa)
@@ -84,38 +84,49 @@ public class DoppinomiViewList extends AGridViewList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.usaSearchTextField = false;
+        super.usaSearchTextDialog = false;
+        super.usaAllButton = false;
+        super.usaSearchBottoneNew = false;
+
+        super.usaBottoneUpload = false;
+        super.usaBottoneCategoria = false;
+        super.usaBottoneDeleteMongo = false;
+        super.usaBottoneStatistiche = false;
+
+        super.titoloModulo = service.titoloModuloDoppiNomi;
         super.usaPagination = false;
     }// end of method
 
 
-    /**
-     * Placeholder (eventuale, presente di default) SOPRA la Grid
-     * - con o senza campo edit search, regolato da preferenza o da parametro
-     * - con o senza bottone New, regolato da preferenza o da parametro
-     * - con eventuali altri bottoni specifici
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
-     */
-    @Override
-    protected void creaTopLayout() {
-        super.creaTopLayout();
-
-        Button showModuloButton = new Button("Download wiki", new Icon(VaadinIcon.DOWNLOAD));
-        showModuloButton.addClassName("view-toolbar__button");
-        showModuloButton.addClickListener(e -> download());
-        topPlaceholder.add(showModuloButton);
-
-        Button uploadStatisticheButton = new Button("Upload wiki", new Icon(VaadinIcon.UPLOAD));
-        uploadStatisticheButton.addClassName("view-toolbar__button");
-        uploadStatisticheButton.addClickListener(e -> upload());
-        topPlaceholder.add(uploadStatisticheButton);
-    }// end of method
+//    /**
+//     * Placeholder (eventuale, presente di default) SOPRA la Grid
+//     * - con o senza campo edit search, regolato da preferenza o da parametro
+//     * - con o senza bottone New, regolato da preferenza o da parametro
+//     * - con eventuali altri bottoni specifici
+//     * Può essere sovrascritto, per aggiungere informazioni
+//     * Invocare PRIMA il metodo della superclasse
+//     */
+//    @Override
+//    protected void creaTopLayout() {
+//        super.creaTopLayout();
+//
+//        Button showModuloButton = new Button("Download wiki", new Icon(VaadinIcon.DOWNLOAD));
+//        showModuloButton.addClassName("view-toolbar__button");
+//        showModuloButton.addClickListener(e -> download());
+//        topPlaceholder.add(showModuloButton);
+//
+//        Button uploadStatisticheButton = new Button("Upload wiki", new Icon(VaadinIcon.UPLOAD));
+//        uploadStatisticheButton.addClassName("view-toolbar__button");
+//        uploadStatisticheButton.addClickListener(e -> upload());
+//        topPlaceholder.add(uploadStatisticheButton);
+//    }// end of method
 
 
     /**
      * Legge server wiki una lista di valori da inserire nel mongoDB (cancellando i precedenti) <br>
      */
-    protected void download() {
+    protected void downloadOld() {
         String[] righe;
         String tag = "\\*";
         String testo = ((AQueryVoce) appContext.getBean("AQueryVoce", PAGINA_WIKI)).urlRequest();
@@ -124,32 +135,33 @@ public class DoppinomiViewList extends AGridViewList {
         if (righe != null && righe.length > 1) {
             service.deleteAll();
             for (int k = 1; k < righe.length; k++) {
-                ((DoppinomiService) service).findOrCrea(righe[k].trim());;
+                ((DoppinomiService) service).findOrCrea(righe[k].trim());
+                ;
             }// end of for cycle
         }// end of if cycle
 
     }// end of method
 
 
-    /**
-     * Scrive sul server wiki una lista dei valori del mongoDB <br>
-     */
-    protected void upload() {
-        String testo = "";
-        List<String> lista = ((DoppinomiService) service).findAllCode();
-
-        testo += "Pagina di servizio con la lista dei '''nomi doppi''' da escludere nella creazione delle pagine '''Persone di nome...'''";
-        testo += A_CAPO;
-        testo += A_CAPO;
-
-        for (String stringa : lista) {
-            testo += "*";
-            testo += stringa;
-            testo += A_CAPO;
-        }// end of for cycle
-        testo = text.levaCoda(testo, A_CAPO);
-
-        appContext.getBean(AQueryWrite.class, PAGINA_WIKI, testo);
-    }// end of method
+//    /**
+//     * Scrive sul server wiki una lista dei valori del mongoDB <br>
+//     */
+//    protected void upload() {
+//        String testo = "";
+//        List<String> lista = ((DoppinomiService) service).findAllCode();
+//
+//        testo += "Pagina di servizio con la lista dei '''nomi doppi''' da escludere nella creazione delle pagine '''Persone di nome...'''";
+//        testo += A_CAPO;
+//        testo += A_CAPO;
+//
+//        for (String stringa : lista) {
+//            testo += "*";
+//            testo += stringa;
+//            testo += A_CAPO;
+//        }// end of for cycle
+//        testo = text.levaCoda(testo, A_CAPO);
+//
+//        appContext.getBean(AQueryWrite.class, PAGINA_WIKI, testo);
+//    }// end of method
 
 }// end of class
