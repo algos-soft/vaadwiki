@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.modules.nome;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -15,6 +16,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
+import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadwiki.modules.wiki.WikiViewList;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
@@ -24,6 +26,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -64,6 +68,12 @@ public class NomeViewList extends WikiViewList {
      */
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
+    private final static String DIM = "Dimensioni";
+
+    private final static String ALF = "Alfabetico";
+
+    private final static String DOP = "Nomi doppi";
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
@@ -78,6 +88,8 @@ public class NomeViewList extends WikiViewList {
      */
     @Autowired
     protected UploadService uploadService;
+
+    private AComboBox<String> comboFiltro; //@todo da modificare dopo l'upgrade del programma con vaadflow
 
     //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
     //--Soglia minima per creare una pagina di un nome sul server wiki
@@ -129,8 +141,51 @@ public class NomeViewList extends WikiViewList {
     protected void creaTopLayout() {
         super.creaTopLayout();
 
+        topPlaceholder.add(creaPopup());
+
+        Button testButton = new Button("Test", new Icon(VaadinIcon.SEARCH));
+        testButton.addClassName("view-toolbar__button");
+        testButton.addClickListener(e -> test());
+        topPlaceholder.add(testButton);
+
         uploadAllButton.addClickListener(e -> openUploadDialog("dei nomi"));
         sincroBottoniMenu(false);
+    }// end of method
+
+
+    private Component creaPopup() {
+        ArrayList<String> items = new ArrayList<>();
+        items.add(DIM);
+        items.add(ALF);
+        items.add(DOP);
+        comboFiltro = new AComboBox();
+        comboFiltro.setWidth("10em");
+        comboFiltro.setItems(items);
+        comboFiltro.setValue(DIM);
+        comboFiltro.addValueChangeListener(event -> modificaFiltro(event));
+
+        return comboFiltro;
+    }// end of method
+
+
+    private void modificaFiltro(HasValue.ValueChangeEvent event) {
+        String value = (String) event.getValue();
+
+        switch (value) {
+            case DIM:
+                items = ((NomeService) service).findAllDimensioni();
+                break;
+            case ALF:
+                items = ((NomeService) service).findAllAlfabetico();
+                break;
+            case DOP:
+                items = ((NomeService) service).findAllNomiDoppi();
+                break;
+            default:
+                log.warn("Switch - caso non definito");
+                break;
+        } // end of switch statement
+        updateView();
     }// end of method
 
 
@@ -177,6 +232,7 @@ public class NomeViewList extends WikiViewList {
         fixColumn(Nome::getNome, "nome");
         fixColumn(Nome::getVoci, "voci");
         fixColumn(Nome::isValido, "valido");
+        fixColumn(Nome::isDoppio, "doppio");
     }// end of method
 
 
@@ -223,20 +279,30 @@ public class NomeViewList extends WikiViewList {
     }// end of method
 
 
-    protected Button createViewButton(Nome nome) {
-        Button viewButton = new Button(nome.nome, new Icon(VaadinIcon.LIST));
-        viewButton.getElement().setAttribute("theme", "secondary");
-        viewButton.addClickListener(e -> viewNome(nome));
+    protected Button createViewButton(Nome entityBean) {
+        Button viewButton = new Button(entityBean.nome, new Icon(VaadinIcon.LIST));
+
+        if (entityBean.nome.contains(" ") && entityBean.doppio == false) {
+            viewButton.getElement().setAttribute("theme", "error");
+        } else {
+            viewButton.getElement().setAttribute("theme", "secondary");
+        }// end of if/else cycle
+
+        viewButton.addClickListener(e -> viewNome(entityBean));
         return viewButton;
     }// end of method
 
 
     protected Component createWikiButton(Nome entityBean) {
         if (entityBean != null && entityBean.voci >= sogliaWiki) {
-            Button uploadOneNatoButton = new Button(entityBean.nome, new Icon(VaadinIcon.SERVER));
-            uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
-            uploadOneNatoButton.addClickListener(e -> wikiPage(entityBean));
-            return uploadOneNatoButton;
+            Button wikiButton = new Button(entityBean.nome, new Icon(VaadinIcon.SERVER));
+            if (entityBean.nome.contains(" ") && entityBean.doppio == false) {
+                wikiButton.getElement().setAttribute("theme", "error");
+            } else {
+                wikiButton.getElement().setAttribute("theme", "secondary");
+            }// end of if/else cycle
+            wikiButton.addClickListener(e -> wikiPage(entityBean));
+            return wikiButton;
         } else {
             return new Label("");
         }// end of if/else cycle
@@ -274,6 +340,33 @@ public class NomeViewList extends WikiViewList {
      */
     protected void uploadEffettivo() {
         uploadService.uploadAllNomi();
+    }// end of method
+
+
+    /**
+     * Stampa nella console la lista di tutti i nomi, nell'ordine selezionato <br>
+     */
+    public void test() {
+        String ordine = comboFiltro.getValore();
+
+        if (items != null) {
+            switch (ordine) {
+                case DIM:
+                    for (Nome nome : (List<Nome>) items) {
+                        System.out.println(nome.voci + " - " + nome.nome);
+                    }// end of for cycle
+                    break;
+                case ALF:
+                case DOP:
+                    for (Nome nome : (List<Nome>) items) {
+                        System.out.println(nome.nome + " - " + nome.voci);
+                    }// end of for cycle
+                    break;
+                default:
+                    log.warn("Switch - caso non definito");
+                    break;
+            } // end of switch statement
+        }// end of if cycle
     }// end of method
 
 }// end of class

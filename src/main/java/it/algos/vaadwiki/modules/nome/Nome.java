@@ -9,6 +9,7 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
@@ -59,8 +60,8 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderNome")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"nome", "voci", "valido"})
-@AIForm(fields = {"nome", "voci", "valido"})
+@AIList(fields = {"nome", "voci", "valido", "doppio"})
+@AIForm(fields = {"nome", "voci", "valido", "doppio"})
 @AIScript(sovrascrivibile = false)
 public class Nome extends AEntity {
 
@@ -93,9 +94,18 @@ public class Nome extends AEntity {
     /**
      * booleano
      */
+    @Field("ok")
     @AIField(type = EAFieldType.yesno)
-    @AIColumn(name = "ok", widthEM = 5)
+    @AIColumn(name = "ok")
     public boolean valido;
+
+    /**
+     * booleano
+     */
+    @Field("due")
+    @AIField(type = EAFieldType.yesno)
+    @AIColumn(name = "nd")
+    public boolean doppio;
 
 
     /**

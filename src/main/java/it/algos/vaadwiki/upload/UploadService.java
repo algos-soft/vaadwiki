@@ -6,6 +6,7 @@ import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
+import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.cognome.CognomeService;
@@ -76,11 +77,23 @@ public class UploadService extends ABioService {
     @Autowired
     protected CognomeService cognomeService;
 
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected AMailService mailService;
+
 
     /**
-     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
+     * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno <br>
+     * Controlla che il mongoDb delle voci biografiche non sia vuoto <br>
      */
     public void uploadAllGiorni() {
+        if (checkBioScarso()) {
+            mailService.send("Upload giorni", "Abortito l'upload dei giorni perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+            return;
+        }// end of if cycle
+
         long inizio = System.currentTimeMillis();
         List<Giorno> listaGiorni = giornoService.findAll();
 
@@ -97,6 +110,11 @@ public class UploadService extends ABioService {
      * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
      */
     public void uploadAllAnni() {
+        if (checkBioScarso()) {
+            mailService.send("Upload anni", "Abortito l'upload degli anni perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+            return;
+        }// end of if cycle
+
         long inizio = System.currentTimeMillis();
         List<Anno> listaAnni = annoService.findAll();
 
@@ -113,6 +131,11 @@ public class UploadService extends ABioService {
      * Esegue un ciclo di creazione (UPLOAD) delle liste persone per ogni nome superiore alla soglia fissata
      */
     public void uploadAllNomi() {
+        if (checkBioScarso()) {
+            mailService.send("Upload nomi", "Abortito l'upload dei nomi perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+            return;
+        }// end of if cycle
+
         List<Nome> listaNomi = nomeService.findAll();
 
         for (Nome nome : listaNomi) {
@@ -127,6 +150,11 @@ public class UploadService extends ABioService {
      * Esegue un ciclo di creazione (UPLOAD) delle liste persone per ogni cognome superiore alla soglia fissata
      */
     public void uploadAllCognomi() {
+        if (checkBioScarso()) {
+            mailService.send("Upload cognomi", "Abortito l'upload dei cognomi perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+            return;
+        }// end of if cycle
+
         List<Cognome> listaCognomi = cognomeService.findAll();
 
         for (Cognome cognome : listaCognomi) {
@@ -244,6 +272,18 @@ public class UploadService extends ABioService {
 
         return status;
     } // fine del metodo
+
+
+    /**
+     * Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile <br>
+     * Per evitare di 'sparare' sul server pagine con biografie 'mancanti' <br>
+     */
+    private boolean checkBioScarso() {
+        int minimo = BIO_NEEDED_MINUMUM_SIZE;
+        int numVoci = bioService.count();
+
+        return numVoci < minimo;
+    }// end of method
 
 
     public UploadGiornoNato uploadGiornoNato(Giorno giorno) {
@@ -396,7 +436,7 @@ public class UploadService extends ABioService {
      * Valore registrato in minuti <br>
      */
     protected void setLastUpload(long inizio, String codeLastUpload, String durataLastUpload) {
-        int delta = 1000*60;
+        int delta = 1000 * 60;
         LocalDateTime lastUpload = LocalDateTime.now();
         pref.saveValue(codeLastUpload, lastUpload);
 

@@ -91,23 +91,45 @@ public class NomeService extends NomeCognomeService {
      * @return la entity trovata o appena creata
      */
     public Nome findOrCrea(String nome) {
-        return findOrCrea(nome, 0);
+        return findOrCrea(nome, 0, false, false);
     }// end of method
 
 
     /**
      * Ricerca di una entity (la crea se non la trova) <br>
      *
-     * @param nome di riferimento (obbligatorio ed unico)
-     * @param voci biografiche con questo nome <br>
+     * @param nome   di riferimento (obbligatorio ed unico)
+     * @param voci   biografiche con questo nome <br>
+     * @param valido se supera la soglia minima per creare una pagina sul server wiki <br>
      *
      * @return la entity trovata o appena creata
      */
-    public Nome findOrCrea(String nome, int voci) {
+    public Nome findOrCrea(String nome, int voci, boolean valido) {
         Nome entity = findByKeyUnica(nome);
 
         if (entity == null) {
-            entity = crea(nome, voci);
+            entity = crea(nome, voci, valido);
+        }// end of if cycle
+
+        return entity;
+    }// end of method
+
+
+    /**
+     * Ricerca di una entity (la crea se non la trova) <br>
+     *
+     * @param nome   di riferimento (obbligatorio ed unico)
+     * @param voci   biografiche con questo nome <br>
+     * @param valido se supera la soglia minima per creare una pagina sul server wiki <br>
+     * @param doppio se proviene dalla lista di nomi doppi <br>
+     *
+     * @return la entity trovata o appena creata
+     */
+    public Nome findOrCrea(String nome, int voci, boolean valido, boolean doppio) {
+        Nome entity = findByKeyUnica(nome);
+
+        if (entity == null) {
+            entity = crea(nome, voci, valido, doppio);
         }// end of if cycle
 
         return entity;
@@ -122,20 +144,36 @@ public class NomeService extends NomeCognomeService {
      * @return la entity appena creata
      */
     public Nome crea(String nome) {
-        return crea(nome, 0);
+        return crea(nome, 0, false, false);
     }// end of method
 
 
     /**
      * Crea una entity e la registra <br>
      *
-     * @param nome di riferimento (obbligatorio ed unico)
-     * @param voci biografiche con questo nome <br>
+     * @param nome   di riferimento (obbligatorio ed unico)
+     * @param voci   biografiche con questo nome <br>
+     * @param valido se supera la soglia minima per creare una pagina sul server wiki <br>
      *
      * @return la entity appena creata
      */
-    public Nome crea(String nome, int voci) {
-        return (Nome) save(newEntity(nome, voci));
+    public Nome crea(String nome, int voci, boolean valido) {
+        return (Nome) save(newEntity(nome, voci, valido));
+    }// end of method
+
+
+    /**
+     * Crea una entity e la registra <br>
+     *
+     * @param nome   di riferimento (obbligatorio ed unico)
+     * @param voci   biografiche con questo nome <br>
+     * @param valido se supera la soglia minima per creare una pagina sul server wiki <br>
+     * @param doppio se proviene dalla lista di nomi doppi <br>
+     *
+     * @return la entity appena creata
+     */
+    public Nome crea(String nome, int voci, boolean valido, boolean doppio) {
+        return (Nome) save(newEntity(nome, voci, valido, doppio));
     }// end of method
 
 
@@ -148,7 +186,7 @@ public class NomeService extends NomeCognomeService {
      */
     @Override
     public Nome newEntity() {
-        return newEntity("", 0);
+        return newEntity("", 0, false, false);
     }// end of method
 
 
@@ -158,12 +196,31 @@ public class NomeService extends NomeCognomeService {
      * All properties <br>
      * Utilizza, eventualmente, la newEntity() della superclasse, per le property della superclasse <br>
      *
-     * @param nome di riferimento (obbligatorio ed unico)
-     * @param voci biografiche con questo nome <br>
+     * @param nome   di riferimento (obbligatorio ed unico)
+     * @param voci   biografiche con questo nome <br>
+     * @param valido se supera la soglia minima per creare una pagina sul server wiki <br>
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Nome newEntity(String nome, int voci) {
+    public Nome newEntity(String nome, int voci, boolean valido) {
+        return newEntity(nome, voci, valido, false);
+    }// end of method
+
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
+     * Utilizza, eventualmente, la newEntity() della superclasse, per le property della superclasse <br>
+     *
+     * @param nome   di riferimento (obbligatorio ed unico)
+     * @param voci   biografiche con questo nome <br>
+     * @param valido se supera la soglia minima per creare una pagina sul server wiki <br>
+     * @param doppio se proviene dalla lista di nomi doppi <br>
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Nome newEntity(String nome, int voci, boolean valido, boolean doppio) {
         Nome entity = null;
 
         entity = findByKeyUnica(nome);
@@ -174,7 +231,8 @@ public class NomeService extends NomeCognomeService {
         entity = Nome.builderNome()
                 .nome(text.isValid(nome) ? nome : null)
                 .voci(voci != 0 ? voci : this.getNewOrdine())
-                .valido(true)
+                .valido(valido)
+                .doppio(doppio)
                 .build();
 
         return (Nome) creaIdKeySpecifica(entity);
@@ -230,7 +288,25 @@ public class NomeService extends NomeCognomeService {
      */
     @Override
     public List<Nome> findAll() {
+        return (List<Nome>) super.findAll();
+    }// end of method
+
+
+    List<Nome> findAllDimensioni() {
+        List<Nome> lista = (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "voci"));
         return (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "voci"));
+    }// end of method
+
+
+    List<Nome> findAllAlfabetico() {
+        List<Nome> lista = (List<Nome>) super.findAll(new Sort(Sort.Direction.ASC, "nome"));
+        return (List<Nome>) super.findAll(new Sort(Sort.Direction.ASC, "nome"));
+    }// end of method
+
+
+    List<Nome> findAllNomiDoppi() {
+        List<Nome> lista = (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "doppio"));
+        return (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "doppio"));
     }// end of method
 
 
@@ -240,83 +316,107 @@ public class NomeService extends NomeCognomeService {
      * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
      * Registra la entity <br>
      * Non registra la entity col nome mancante <br>
+     * Aggiunge (se già non ci sono) i nomi doppi <br>
      */
     public void crea() {
         long inizio = System.currentTimeMillis();
+        int tot = 0;
         int cont = 0;
-        log.info("Creazione completa nomi delle biografie. Circa 11 minuti.");
+        Nome nome = null;
+        String tagSpazio = " ";
+        log.info("Creazione completa nomi delle biografie. Circa 2 minuti.");
         List<String> listaDoppi = doppinomiService.findAllCode();
         deleteAll();
 
         DistinctIterable<String> listaNomiDistinti = mongo.mongoOp.getCollection("bio").distinct("nome", String.class);
-        for (String nome : listaNomiDistinti) {
-            cont++;
-            if (listaDoppi.contains(nome)) {
-                saveNome(nome, true);
-            } else {
-                saveNome(nome, false);
-            }// end of if/else cycle
+        for (String nomeTxt : listaNomiDistinti) {
+            tot++;
+
+            //--Nome 'semplici'. Quelli 'doppi' vengono inseriti dopo da apposita lista
+            if (text.isValid(nomeTxt) && !nomeTxt.contains(tagSpazio)) {
+                if (saveNome(nomeTxt) != null) {
+                    cont++;
+                }// end of if cycle
+            }// end of if cycle
+
         }// end of for cycle
 
+        //--Nome 'doppi' inseriti da apposita lista
+        if (array.isValid(listaDoppi)) {
+            for (String nomeTxt : listaDoppi) {
+                nome = saveNome(nomeTxt);
+                if (nome != null) {
+                    nome.doppio = true;
+                    save(nome);
+                    cont++;
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
         pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
-        log.info("Creazione completa di " + cont + " nomi. Tempo impiegato: " + date.deltaText(inizio));
+        log.info("Creazione di " + text.format(cont) + " nomi su un totale di " + text.format(tot) + " nomi distinti. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 
-    /**
-     * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
-     * Controlla che nome sia valido <br>
-     */
-    public void update() {
-        long inizio = System.currentTimeMillis();
-        log.info("Elaborazione nomi delle biografie. Meno di 1 minuto.");
-        List<String> listaDoppi = doppinomiService.findAllCode();
-
-        for (Nome nome : findAll()) {
-            fixVociNelNome(nome);
-            if (listaDoppi.contains(nome)) {
-                nome.valido = false;
-                save(nome);
-            }// end of if/else cycle
-        }// end of for cycle
-
-        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
-        log.info("Elaborazione completa dei nomi. Tempo impiegato: " + date.deltaText(inizio));
-    }// end of method
+//    /**
+//     * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
+//     * Controlla che nome sia valido <br>
+//     */
+//    public void update() {
+//        long inizio = System.currentTimeMillis();
+//        log.info("Elaborazione nomi delle biografie. Meno di 1 minuto.");
+//        List<String> listaDoppi = doppinomiService.findAllCode();
+//
+//        for (Nome nome : findAll()) {
+//            fixVociNelNome(nome);
+//            if (listaDoppi.contains(nome)) {
+//                nome.valido = false;
+//                save(nome);
+//            }// end of if/else cycle
+//        }// end of for cycle
+//
+//        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
+//        log.info("Elaborazione completa dei nomi. Tempo impiegato: " + date.deltaText(inizio));
+//    }// end of method
 
 
     /**
      * Registra il numero di voci biografiche che hanno il nome indicato <br>
+     * Sono validi i nome 'semplici' oppure quelli dell'apposita collection 'doppinomi' <br>
      */
-    public void saveNome(String nomeTxt, boolean nomeDoppio) {
+    public Nome saveNome(String nomeTxt) {
+        Nome nome = null;
         //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
         int sogliaMongo = pref.getInt(SOGLIA_NOMI_MONGO, 40);
-        Nome nome = null;
+        //--Soglia minima per creare una pagina sul server wiki
+        int sogliaWiki = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI, 50);
+        boolean valido;
         long numVoci = 0;
         Query query = new Query();
+
         query.addCriteria(Criteria.where("nome").is(nomeTxt));
         numVoci = mongo.mongoOp.count(query, Bio.class);
+        valido = numVoci > sogliaWiki;
+
         if (numVoci >= sogliaMongo && text.isValid(nomeTxt)) {
-            nome = this.findOrCrea(nomeTxt, (int) numVoci);
+            nome = findOrCrea(nomeTxt, (int) numVoci, valido);
         }// end of if cycle
-        if (nomeDoppio && nome != null) {
-            nome.valido = false;
-            save(nome);
-        }// end of if cycle
+
+        return nome;
     }// end of method
 
 
-    /**
-     * Registra il numero di voci biografiche che hanno il nome indicato <br>
-     */
-    public void fixVociNelNome(Nome nome) {
-        int numVoci = 0;
-        Query query = new Query();
-        query.addCriteria(Criteria.where("nome").is(nome.nome));
-        numVoci = ((List) mongo.mongoOp.find(query, Bio.class)).size();
-        nome.voci = numVoci;
-        save(nome);
-    }// end of method
+//    /**
+//     * Registra il numero di voci biografiche che hanno il nome indicato <br>
+//     */
+//    public void fixVociNelNome(Nome nome) {
+//        int numVoci = 0;
+//        Query query = new Query();
+//        query.addCriteria(Criteria.where("nome").is(nome.nome));
+//        numVoci = ((List) mongo.mongoOp.find(query, Bio.class)).size();
+//        nome.voci = numVoci;
+//        save(nome);
+//    }// end of method
 
 
 }// end of class
