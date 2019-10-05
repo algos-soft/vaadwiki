@@ -19,6 +19,9 @@ import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadwiki.modules.wiki.WikiViewList;
 import it.algos.vaadwiki.service.LibBio;
+import it.algos.vaadwiki.statistiche.StatisticheAttivita;
+import it.algos.vaadwiki.statistiche.StatisticheNomiA;
+import it.algos.vaadwiki.statistiche.StatisticheNomiB;
 import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +129,11 @@ public class NomeViewList extends WikiViewList {
 
         this.usaCreaButton = true;
         this.usaUpdateButton = false;
+        this.usaStatistiche2Button = true;
+        super.titoloPaginaStatistiche = ((NomeService) service).TITOLO_PAGINA_WIKI;
+        super.titoloPaginaStatistiche2 = ((NomeService) service).TITOLO_PAGINA_WIKI_2;
+        super.usaBottoneUpload = true;
+
     }// end of method
 
 
@@ -340,6 +348,12 @@ public class NomeViewList extends WikiViewList {
      */
     protected void uploadEffettivo() {
         uploadService.uploadAllNomi();
+    }// end of method
+
+
+    protected void uploadStatistiche() {
+        appContext.getBean(StatisticheNomiA.class);
+        appContext.getBean(StatisticheNomiB.class);
     }// end of method
 
 

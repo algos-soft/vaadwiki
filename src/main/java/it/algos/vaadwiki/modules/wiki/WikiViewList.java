@@ -14,6 +14,7 @@ import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.service.LibBio;
+import it.algos.vaadwiki.statistiche.StatisticheAttivita;
 import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,6 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.Set;
 
-import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
 import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
@@ -47,6 +47,7 @@ public abstract class WikiViewList extends AGridViewList {
      */
     @Autowired
     protected UploadService uploadService;
+
     @Autowired
     @Qualifier(TAG_BIO)
     protected AttNazProfCatService attNazProfCatService;
@@ -68,8 +69,17 @@ public abstract class WikiViewList extends AGridViewList {
     protected Button updateButton;
 
     protected Button uploadAllButton;
+
     protected Button statisticheButton;
+
+    protected Button statistiche2Button;
+
+    protected Button uploadStatisticheButton;
+
     protected String titoloPaginaStatistiche;
+
+    protected String titoloPaginaStatistiche2;
+
     protected String codeLastUpload;
 
     protected String durataLastUpload;
@@ -93,6 +103,13 @@ public abstract class WikiViewList extends AGridViewList {
      * Flag di preferenza per usare il bottone usaStatisticheButton situato nella topLayout. Normalmente true. <br>
      */
     protected boolean usaStatisticheButton;
+
+    /**
+     * Flag di preferenza per usare il bottone usaStatisticheButton situato nella topLayout. Normalmente true. <br>
+     */
+    protected boolean usaStatistiche2Button;
+
+    protected boolean usaBottoneUpload;
 
 
     /**
@@ -124,6 +141,7 @@ public abstract class WikiViewList extends AGridViewList {
         this.usaUpdateButton = false;
         this.usaUploadAllButton = true;
         this.usaStatisticheButton = true;
+        this.usaBottoneUpload = false;
     }// end of method
 
 
@@ -174,6 +192,21 @@ public abstract class WikiViewList extends AGridViewList {
             statisticheButton.addClassName("view-toolbar__button");
             statisticheButton.addClickListener(e -> showWikiStatistiche());
             topPlaceholder.add(statisticheButton);
+        }// end of if cycle
+
+        if (usaStatistiche2Button) {
+            statistiche2Button = new Button("View statistiche 2", new Icon(VaadinIcon.TABLE));
+            statistiche2Button.addClassName("view-toolbar__button");
+            statistiche2Button.addClickListener(e -> showWikiStatistiche2());
+            topPlaceholder.add(statistiche2Button);
+        }// end of if cycle
+
+        if (usaBottoneUpload) {
+            uploadStatisticheButton = new Button("Upload statistiche", new Icon(VaadinIcon.UPLOAD));
+            uploadStatisticheButton.getElement().setAttribute("theme", "error");
+            uploadStatisticheButton.addClassName("view-toolbar__button");
+            uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
+            topPlaceholder.add(uploadStatisticheButton);
         }// end of if cycle
 
         sincroBottoniMenu(false);
@@ -245,9 +278,19 @@ public abstract class WikiViewList extends AGridViewList {
         }// end of if cycle
     }// end of method
 
+
     protected void showWikiStatistiche() {
         String link = "\"" + PATH_WIKI + titoloPaginaStatistiche + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
+    protected void showWikiStatistiche2() {
+        String link = "\"" + PATH_WIKI + titoloPaginaStatistiche2 + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+    protected void uploadStatistiche() {
     }// end of method
 
 }// end of class

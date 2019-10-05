@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
-import static it.algos.vaadwiki.application.WikiCost.TAG_DOP;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki <br>
@@ -71,6 +71,7 @@ public class DoppinomiService extends AttNazProfCatService {
         super(repository);
         super.entityClass = Doppinomi.class;
         this.repository = (DoppinomiRepository) repository;
+        super.codeLastDownload = LAST_DOWNLOAD_DOPPI_NOMI;
     }// end of Spring constructor
 
 

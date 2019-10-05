@@ -292,7 +292,7 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefInt(SOGLIA_NOMI_MONGO, "Soglia minima per creare una entity nella collezione Nomi sul mongoDB", 40);
+            creaPrefInt(SOGLIA_NOMI_MONGO, "Soglia minima per creare una entity nella collezione Nomi sul mongoDB", 30);
         }// fine del blocco if
 
         //--creata una nuova preferenza
@@ -323,7 +323,7 @@ public class WikiVers extends AVers {
 
         //--creata una nuova preferenza
         if (installa(++k)) {
-            creaPrefInt(SOGLIA_COGNOMI_MONGO, "Soglia minima per creare una entity nella collezione Cognomi sul mongoDB", 40);
+            creaPrefInt(SOGLIA_COGNOMI_MONGO, "Soglia minima per creare una entity nella collezione Cognomi sul mongoDB", 30);
         }// fine del blocco if
 
         //--creata una nuova preferenza
@@ -358,6 +358,11 @@ public class WikiVers extends AVers {
         //--creata una nuova preferenza
         if (installa(++k)) {
             creaPrefBool(USA_SOTTOPAGINE_NOMI_COGNOMI, "Usa sottopagine se i paragrafi nella liste di nomi e cognomi superano SOGLIA_SOTTOPAGINA_NOMI_COGNOMI", false);
+        }// fine del blocco if
+
+        //--creata una nuova preferenza
+        if (installa(++k)) {
+            creaPrefDate(LAST_DOWNLOAD_DOPPI_NOMI, "Ultima elaborazione dei doppi nomi");
         }// fine del blocco if
 
         return k;

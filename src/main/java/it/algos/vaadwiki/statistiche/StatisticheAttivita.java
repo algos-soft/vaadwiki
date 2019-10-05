@@ -1,12 +1,12 @@
 package it.algos.vaadwiki.statistiche;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
@@ -25,8 +25,10 @@ import static it.algos.vaadwiki.didascalia.DidascaliaService.TITOLO_PAGINA_WIKI;
 @Slf4j
 public class StatisticheAttivita extends Statistiche {
 
-    private String testoPagina;
     private static String TAG_HEAD_TEMPLATE_AVVISO = "StatBio";
+
+    private String testoPagina;
+
 
     /**
      * Costruttore base senza parametri <br>
@@ -105,6 +107,7 @@ public class StatisticheAttivita extends Statistiche {
         testoPagina += testo.trim();
     }// fine del metodo
 
+
     /**
      * Costruisce il template di avviso
      */
@@ -119,6 +122,7 @@ public class StatisticheAttivita extends Statistiche {
 
         return testo;
     }// fine del metodo
+
 
     /**
      * Incorpora il testo iniziale nel tag 'include'
@@ -148,7 +152,7 @@ public class StatisticheAttivita extends Statistiche {
 //        testo += " Le didascalie sono di diversi tipi:";
 
 
-        testo +="Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' elenco]] utilizzato dal [[template:Bio|template Bio]]</ref> '''effettivamente utilizzate''' nelle  '''[[:Categoria:BioBot|351.787]]'''<ref>La '''differenza''' tra le voci della categoria e quelle utilizzate è dovuta allo specifico utilizzo del [[template:Bio|template Bio]] ed in particolare all'uso del parametro Categorie=NO</ref> voci biografiche che usano il [[template:Bio|template Bio]].";
+        testo += "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' elenco]] utilizzato dal [[template:Bio|template Bio]]</ref> '''effettivamente utilizzate''' nelle  '''[[:Categoria:BioBot|351.787]]'''<ref>La '''differenza''' tra le voci della categoria e quelle utilizzate è dovuta allo specifico utilizzo del [[template:Bio|template Bio]] ed in particolare all'uso del parametro Categorie=NO</ref> voci biografiche che usano il [[template:Bio|template Bio]].";
 
 
         //--fine tabella
@@ -156,6 +160,7 @@ public class StatisticheAttivita extends Statistiche {
 
         testoPagina += testo.trim();
     }// fine del metodo
+
 
     /**
      * Costruisce il testo finale della pagina
@@ -169,6 +174,7 @@ public class StatisticheAttivita extends Statistiche {
 
         testoPagina += testo.trim();
     }// fine del metodo
+
 
     /**
      * Registra la pagina sul server wiki <br>

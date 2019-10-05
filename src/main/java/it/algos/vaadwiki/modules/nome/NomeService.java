@@ -46,6 +46,11 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @AIScript(sovrascrivibile = false)
 public class NomeService extends NomeCognomeService {
 
+    //--titolo della pagina di statistiche sul server wiki
+    public static final String TITOLO_PAGINA_WIKI = "Progetto:Antroponimi/Nomi";
+
+    //--titolo della pagina di statistiche sul server wiki
+    public static final String TITOLO_PAGINA_WIKI_2 = "Progetto:Antroponimi/Liste nomi";
 
     /**
      * versione della classe per la serializzazione
@@ -292,40 +297,59 @@ public class NomeService extends NomeCognomeService {
     }// end of method
 
 
-    List<Nome> findAllDimensioni() {
+    public List<Nome> findAllDimensioni() {
         List<Nome> lista = (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "voci"));
         return (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "voci"));
     }// end of method
 
 
-    List<Nome> findAllAlfabetico() {
+    public List<Nome> findAllAlfabetico() {
         List<Nome> lista = (List<Nome>) super.findAll(new Sort(Sort.Direction.ASC, "nome"));
         return (List<Nome>) super.findAll(new Sort(Sort.Direction.ASC, "nome"));
     }// end of method
 
 
-    List<Nome> findAllNomiDoppi() {
+    public List<Nome> findAllNomiDoppi() {
         List<Nome> lista = (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "doppio"));
         return (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "doppio"));
     }// end of method
 
 
+    public int countValidi() {
+        return repository.countAllByValido(true);
+    }// end of method
+
+
+    public List<Nome> findValidi() {
+        return repository.findAllByValidoOrderByNomeAsc(true);
+    }// end of method
+
+
     /**
-     * Cancella i nomi esistenti <br>
-     * Crea tutti i nomi <br>
-     * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
-     * Registra la entity <br>
-     * Non registra la entity col nome mancante <br>
-     * Aggiunge (se già non ci sono) i nomi doppi <br>
+     * Creazione di tutti i nomi 'singoli' e 'doppi' esistenti come property nelle voci biografiche <br>
+     * <p>
+     * Ricrea al volo (per sicurezza di aggiornamento) tutta la collezione mongoDb dei 'doppinomi' <br>
+     * Cancella tutte le entities della collezione <br>
+     * Estrae tutti i nomi 'distinti' (differenti) dalla colelzione Bio <br>
+     * Elimina tutti i nomi 'doppi' composti da più nomi e che contengomno uno 'spazio vuoto' <br>
+     * Registra i nomi che hanno più di n ricorrenze nelle voci biografiche <br>
+     * Recupera una lista di 'nomi doppi' speciali ed ammessi <br>
+     * Aggiunge (se già non ci sono) i nomi doppi speciali <br>
      */
     public void crea() {
         long inizio = System.currentTimeMillis();
+        List<String> listaDoppi = null;
         int tot = 0;
         int cont = 0;
         Nome nome = null;
         String tagSpazio = " ";
         log.info("Creazione completa nomi delle biografie. Circa 2 minuti.");
-        List<String> listaDoppi = doppinomiService.findAllCode();
+
+        //--Ricrea al volo (per sicurezza di aggiornamento) tutta la collezione mongoDb dei doppinomi
+        doppinomiService.download();
+        listaDoppi = doppinomiService.findAllCode();
+
+        //--Cancella tutte le entities della collezione
         deleteAll();
 
         DistinctIterable<String> listaNomiDistinti = mongo.mongoOp.getCollection("bio").distinct("nome", String.class);
@@ -358,28 +382,6 @@ public class NomeService extends NomeCognomeService {
     }// end of method
 
 
-//    /**
-//     * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
-//     * Controlla che nome sia valido <br>
-//     */
-//    public void update() {
-//        long inizio = System.currentTimeMillis();
-//        log.info("Elaborazione nomi delle biografie. Meno di 1 minuto.");
-//        List<String> listaDoppi = doppinomiService.findAllCode();
-//
-//        for (Nome nome : findAll()) {
-//            fixVociNelNome(nome);
-//            if (listaDoppi.contains(nome)) {
-//                nome.valido = false;
-//                save(nome);
-//            }// end of if/else cycle
-//        }// end of for cycle
-//
-//        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
-//        log.info("Elaborazione completa dei nomi. Tempo impiegato: " + date.deltaText(inizio));
-//    }// end of method
-
-
     /**
      * Registra il numero di voci biografiche che hanno il nome indicato <br>
      * Sono validi i nome 'semplici' oppure quelli dell'apposita collection 'doppinomi' <br>
@@ -405,18 +407,6 @@ public class NomeService extends NomeCognomeService {
         return nome;
     }// end of method
 
-
-//    /**
-//     * Registra il numero di voci biografiche che hanno il nome indicato <br>
-//     */
-//    public void fixVociNelNome(Nome nome) {
-//        int numVoci = 0;
-//        Query query = new Query();
-//        query.addCriteria(Criteria.where("nome").is(nome.nome));
-//        numVoci = ((List) mongo.mongoOp.find(query, Bio.class)).size();
-//        nome.voci = numVoci;
-//        save(nome);
-//    }// end of method
 
 
 }// end of class

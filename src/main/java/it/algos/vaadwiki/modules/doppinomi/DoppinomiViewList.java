@@ -1,7 +1,5 @@
 package it.algos.vaadwiki.modules.doppinomi;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -11,14 +9,11 @@ import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatViewList;
 import it.algos.wiki.web.AQueryVoce;
-import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.List;
-
-import static it.algos.vaadflow.application.FlowCost.A_CAPO;
+import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_DOPPI_NOMI;
 import static it.algos.vaadwiki.application.WikiCost.TAG_DOP;
 
 /**
@@ -88,6 +83,7 @@ public class DoppinomiViewList extends AttNazProfCatViewList {
         super.usaSearchTextDialog = false;
         super.usaAllButton = false;
         super.usaSearchBottoneNew = false;
+        super.isEntityModificabile = false;
 
         super.usaBottoneUpload = false;
         super.usaBottoneCategoria = false;
@@ -95,6 +91,7 @@ public class DoppinomiViewList extends AttNazProfCatViewList {
         super.usaBottoneStatistiche = false;
 
         super.titoloModulo = service.titoloModuloDoppiNomi;
+        super.codeLastDownload = LAST_DOWNLOAD_DOPPI_NOMI;
         super.usaPagination = false;
     }// end of method
 

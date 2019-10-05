@@ -128,15 +128,21 @@ public class UploadService extends ABioService {
 
 
     /**
-     * Esegue un ciclo di creazione (UPLOAD) delle liste persone per ogni nome superiore alla soglia fissata
+     * Esegue un ciclo di creazione (UPLOAD) delle liste persone per ogni nome superiore alla soglia fissata <br>
+     * Ricrea al volo (per sicurezza di aggiornamento) tutta la collezione mongoDb dei nomi <br>
      */
     public void uploadAllNomi() {
+        List<Nome> listaNomi=null;
+
+        //--Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile, altrimenti non esegue
         if (checkBioScarso()) {
             mailService.send("Upload nomi", "Abortito l'upload dei nomi perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
             return;
         }// end of if cycle
 
-        List<Nome> listaNomi = nomeService.findAll();
+        //--Ricrea al volo (per sicurezza di aggiornamento) tutta la collezione mongoDb dei nomi (circa due minuti)
+        nomeService.crea();
+        listaNomi = nomeService.findAll();
 
         for (Nome nome : listaNomi) {
             if (nome.voci > pref.getInt(SOGLIA_NOMI_PAGINA_WIKI)) {

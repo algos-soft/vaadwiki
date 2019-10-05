@@ -69,7 +69,7 @@ public abstract class APrefViewList extends AViewList {
         usaBottoneEdit = true;
 
         //--Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'.
-        testoBottoneEdit = EDIT_NAME;
+        testoBottoneEdit =  EDIT_NAME;
 
         //--Flag di preferenza per usare il placeholder di botoni ggiuntivi sotto la Grid. Normalmente false.
         usaBottomLayout = false;

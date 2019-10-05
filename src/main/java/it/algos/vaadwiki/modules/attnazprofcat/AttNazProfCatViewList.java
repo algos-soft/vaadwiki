@@ -240,29 +240,29 @@ public class AttNazProfCatViewList extends AGridViewList {
      */
     protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastDownload) {
         Label label = null;
-        String testo = "";
-        String tag = "Download automatico: ";
-        String nota = task != null ? task.getNota() : "";
-
+        String testo;
+        String tag = "Download automatico";
         LocalDateTime lastDownload = pref.getDate(flagLastDownload);
-        testo = tag;
 
-        if (pref.isBool(flagDaemon)) {
-            testo += nota;
+        if (task == null) {
+            testo = tag + " non previsto.";
         } else {
-            testo += "disattivato.";
+            if (pref.isBool(flagDaemon)) {
+                testo = tag + ": " + task.getNota();
+            } else {
+                testo = tag + " disattivato.";
+            }// end of if/else cycle
         }// end of if/else cycle
 
         if (lastDownload != null) {
             label = new Label(testo + " Ultimo import il " + date.getTime(lastDownload));
         } else {
             if (pref.isBool(flagDaemon)) {
-                label = new Label(tag + nota + " Non ancora effettuato.");
+                label = new Label(tag + ": " + task.getNota() + " Non ancora effettuato.");
             } else {
                 label = new Label(testo);
             }// end of if/else cycle
         }// end of if/else cycle
-
 
         return label;
     }// end of method

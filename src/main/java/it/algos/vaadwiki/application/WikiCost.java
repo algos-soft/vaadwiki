@@ -144,6 +144,7 @@ public class WikiCost {
     public final static String LAST_DOWNLOAD_GENERE = CODE_DOWNLOAD + GEN;
 
     public final static String LAST_DOWNLOAD_BIO = CODE_DOWNLOAD + BIO;
+    public final static String LAST_DOWNLOAD_DOPPI_NOMI = CODE_DOWNLOAD + "DoppiNomi";
 
     public final static String LAST_ELABORA_NOME = CODE_DOWNLOAD + NOME;
 

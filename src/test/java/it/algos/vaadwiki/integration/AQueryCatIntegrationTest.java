@@ -45,7 +45,7 @@ public class AQueryCatIntegrationTest extends ATest {
 
     private final static String TITOLO_CAT_GRANDE = "BioBot";
 
-    private final static int NUM_VOCI = 1202;
+    private final static int NUM_VOCI = 1203;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

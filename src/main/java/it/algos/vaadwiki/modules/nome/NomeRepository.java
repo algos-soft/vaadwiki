@@ -1,13 +1,14 @@
 package it.algos.vaadwiki.modules.nome;
 
-import java.util.List;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.List;
+
 import static it.algos.vaadwiki.application.WikiCost.TAG_NOM;
 
 /**
@@ -31,6 +32,11 @@ public interface NomeRepository extends MongoRepository<Nome, String> {
 
     public Nome findByNome(String nome);
 
-	public List<Nome> findAllByOrderByVociAsc();
+    public List<Nome> findAllByOrderByVociAsc();
+
+    public List<Nome> findAllByValidoOrderByVociAsc();
+
+    public List<Nome> findAllByValidoOrderByNomeAsc(boolean valido);
+    public int countAllByValido(boolean valido);
 
 }// end of class

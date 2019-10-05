@@ -270,7 +270,7 @@ public abstract class AGridViewList extends ALayoutViewList {
 
 
     protected Button createEditButton(AEntity entityBean) {
-        Button edit = new Button(testoBottoneEdit, event -> dialog.open(entityBean, EAOperation.edit, context));
+        Button edit = new Button(isEntityModificabile ? EDIT_NAME : SHOW_NAME, event -> dialog.open(entityBean, isEntityModificabile ? EAOperation.edit : EAOperation.showOnly, context));
         edit.setIcon(new Icon("lumo", "edit"));
         edit.addClassName("review__edit");
         edit.getElement().setAttribute("theme", "tertiary");
