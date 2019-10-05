@@ -31,11 +31,11 @@ import static it.algos.vaadwiki.didascalia.DidascaliaService.TITOLO_PAGINA_WIKI;
  */
 public abstract class Statistiche {
 
-    protected static String TAG_HEAD_TEMPLATE_AVVISO = "StatBio";
-
     protected final static String INIZIO_RIGA = "\n|-\n|";
 
     protected final static String SEP = "||";
+
+    protected static String TAG_HEAD_TEMPLATE_AVVISO = "StatBio";
 
     protected static String PAGINA_PROVA = "Utente:Biobot/2";
 
@@ -97,6 +97,7 @@ public abstract class Statistiche {
      */
     @Autowired
     protected NomeService nomeService;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
@@ -107,6 +108,7 @@ public abstract class Statistiche {
     //--property
     protected String testoPagina;
 
+    protected String templateCorrelate;
 
 
     /**
@@ -122,6 +124,9 @@ public abstract class Statistiche {
     protected void inizia() {
         testoPagina = VUOTA;
 
+        //--preferenze
+        fixPreferenze();
+
         //--header
         this.elaboraHead();
 
@@ -136,6 +141,16 @@ public abstract class Statistiche {
         this.elaboraFooter();
 
         registraPagina();
+    }// fine del metodo
+
+
+    /**
+     * Preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        this.templateCorrelate = "BioCorrelate";
     }// fine del metodo
 
 
@@ -198,7 +213,7 @@ public abstract class Statistiche {
     protected void elaboraFooter() {
         String testo = VUOTA;
 
-        testo += "{{BioCorrelate}}";
+        testo += LibWiki.setGraffe(templateCorrelate);
         testo += A_CAPO;
         testo += LibBio.setNoIncludeMultiRiga("[[Categoria:Progetto Biografie|{{PAGENAME}}]]");
 

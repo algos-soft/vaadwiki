@@ -46,6 +46,15 @@ public class StatisticheNomiA extends Statistiche {
         super.inizia();
     }// end of method
 
+    /**
+     * Preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+        this.templateCorrelate = "AntroponimiCorrelate";
+    }// fine del metodo
 
     /**
      * Corpo della pagina <br>
