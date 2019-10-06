@@ -2,6 +2,9 @@ package it.algos.vaadflow.footer;
 
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
@@ -19,6 +22,7 @@ import org.springframework.context.annotation.Scope;
 import javax.annotation.PostConstruct;
 
 import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadflow.application.FlowVar.*;
 
 /**
  * Created by gac on 12/06/17
@@ -37,7 +41,7 @@ import static it.algos.vaadflow.application.FlowCost.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AFooter extends VerticalLayout {
+public class AFooter extends VerticalLayout implements BeforeEnterObserver {
 
 
     /**
@@ -69,17 +73,8 @@ public class AFooter extends VerticalLayout {
     private PreferenzaService pref;
 
 
-    /**
-     * Metodo invocato subito DOPO il costruttore
-     * <p>
-     * Performing the initialization in a constructor is not suggested
-     * as the state of the UI is not properly set up when the constructor is invoked.
-     * <p>
-     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
-     * ma l'ordine con cui vengono chiamati NON è garantito
-     */
-    @PostConstruct
-    protected void inizia() {
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.setMargin(false);
         this.setSpacing(false);
         this.setPadding(false);
@@ -87,7 +82,7 @@ public class AFooter extends VerticalLayout {
         //--Context e login della sessione
         //--Recuperato dalla sessione, quando la @route fa partire la UI. <br>
         //--Viene regolato nel service specifico (AVaadinService) <br>
-        AContext context = vaadinService.fixLoginAndContext();
+        AContext context = vaadinService.getSessionContext();
         ALogin login = context.getLogin();
 
         String message = "";
@@ -119,13 +114,13 @@ public class AFooter extends VerticalLayout {
             }// end of if/else cycle
         }// end of if/else cycle
 
-        message = DEVELOPER_COMPANY + sep + PROJECT_NAME;
+        message = DEVELOPER_COMPANY + sep + projectName;
         message += spazio;
-        message += PROJECT_VERSION;
+        message += projectVersion;
         message += " del ";
-        message += date.get(PROJECT_DATE, EATime.normal);
-        if (text.isValid(PROJECT_NOTE)) {
-            message += " " + PROJECT_NOTE;
+        message += date.get(versionDate, EATime.normal);
+        if (text.isValid(projectNote)) {
+            message += " " + projectNote;
         }// end of if cycle
         if (text.isValid(companyName)) {
             message += sep;

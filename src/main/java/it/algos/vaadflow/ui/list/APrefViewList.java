@@ -1,8 +1,13 @@
 package it.algos.vaadflow.ui.list;
 
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.presenter.IAPresenter;
+import it.algos.vaadflow.service.IAService;
+import it.algos.vaadflow.ui.IAView;
 import it.algos.vaadflow.ui.dialog.IADialog;
+
+import static it.algos.vaadflow.application.FlowCost.USA_EDIT_BUTTON;
 
 /**
  * Project vaadflow
@@ -19,42 +24,57 @@ import it.algos.vaadflow.ui.dialog.IADialog;
  */
 public abstract class APrefViewList extends AViewList {
 
+
     /**
-     * Costruttore <br>
+     * Costruttore @Autowired <br>
+     * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+     * Nella sottoclasse concreta si usa un @Qualifier(), per avere la sottoclasse specifica <br>
+     * Nella sottoclasse concreta si usa una costante statica, per scrivere sempre uguali i riferimenti <br>
+     * Passa nella superclasse anche la entityClazz che viene definita qui (specifica di questo mopdulo) <br>
      *
-     * @param presenter per gestire la business logic del package
-     * @param dialog    per visualizzare i fields
+     * @param service business class e layer di collegamento per la Repository
+     * @param entityClazz modello-dati specifico di questo modulo
      */
-    public APrefViewList(IAPresenter presenter, IADialog dialog) {
-        super(presenter, dialog);
-    }// end of Spring constructor
+    public APrefViewList(IAService service, Class<? extends AEntity> entityClazz) {
+        super(service, entityClazz);
+    }// end of Vaadin/@Route constructor
+
 
 
     /**
-     * Le preferenze standard
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
-     * Le preferenze vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
+     * Preferenze standard <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     * Le preferenze vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse <br>
      */
     protected void fixPreferenze() {
 
         /**
-         * Flag di preferenza per usare il campo-testo di ricerca e selezione nella barra dei menu.
-         * Facoltativo ed alternativo a usaSearchTextDialog. Normalmente false.
+         * Flag di preferenza per usare la ricerca e selezione nella barra dei menu. <br>
+         * Se è true, un altro flag seleziona il textField o il textDialog <br>
+         * Se è true, il bottone usaAllButton è sempre presente <br>
+         * Normalmente true. <br>
          */
-        usaSearchTextField = false;
+        usaSearch = false;
+
 
         /**
-         * Flag di preferenza per usare il campo-testo di ricerca e selezione nella barra dei menu.
-         * Facoltativo ed alternativo a usaSearchTextField. Normalmente true.
+         * Flag di preferenza per selezionare la ricerca:
+         * true per aprire un dialogo di ricerca e selezione su diverse properties <br>
+         * false per presentare un textEdit predisposto per la ricerca su un unica property <br>
+         * Normalmente true.
          */
-        usaSearchTextDialog = true;
+        usaSearchDialog = true;
 
-        //--Flag di preferenza per usare il bottone all situato nella searchBar. Normalmente true
-        usaAllButton = true;
+        /**
+         * Flag di preferenza per usare il popup di selezione, filtro e ordinamento situato nella searchBar.
+         * Normalmente false <br>
+         */
+        usaPopupFiltro = false;
 
-        //--Flag di preferenza per usare il bottone new situato nella searchBar. Normalmente true.
-        usaSearchBottoneNew = true;
+
+        //--Flag di preferenza per usare il bottone new situato nella barra topLayout. Normalmente true.
+        usaBottoneNew = true;
 
         //--Flag di preferenza per usare il placeholder di informazioni specifiche sopra la Grid. Normalmente false.
         usaTopAlert = false;
@@ -66,10 +86,9 @@ public abstract class APrefViewList extends AViewList {
         isEntityModificabile = true;
 
         //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
-        usaBottoneEdit = true;
-
-        //--Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'.
-        testoBottoneEdit =  EDIT_NAME;
+        //--Di norma fissato nelle preferenze per avere omogeneità di funzionamento del programma
+        //--Può comunque essere modificato nella sottoclasse specifica
+        usaBottoneEdit = pref.isBool(USA_EDIT_BUTTON);
 
         //--Flag di preferenza per usare il placeholder di botoni ggiuntivi sotto la Grid. Normalmente false.
         usaBottomLayout = false;
@@ -95,8 +114,16 @@ public abstract class APrefViewList extends AViewList {
         //--Flag di preferenza per un refresh dopo aggiunta/modifica/cancellazione di una entity. Normalmente true.
         usaRefresh = true;
 
-        //--Flag di preferenza per selezionare il numero di righe visibili della Grid. Normalmente limit = pref.getInt(FlowCost.MAX_RIGHE_GRID) .
-        limit = pref.getInt(FlowCost.MAX_RIGHE_GRID);
+        //--Flag di preferenza per la soglia di elementi che fanno scattare la pagination della Grid.
+        //--Normalmente limit = pref.getInt(FlowCost.MAX_RIGHE_GRID) .
+        //--Specifico di ogni ViewList. Se non specificato è uguale alla preferenza. Default 15
+        //--Se non usa il bottone Edit: limit = pref.getInt(FlowCost.maxRigheGridClick) .
+        //--Specifico di ogni ViewList. Se non specificato è uguale alla preferenza. Default 20
+        if (pref.isBool(USA_EDIT_BUTTON)) {
+            limit = pref.getInt(FlowCost.MAX_RIGHE_GRID);
+        } else {
+            limit = pref.getInt(FlowCost.MAX_RIGHE_GRID_CLICK);
+        }// end of if/else cycle
 
         //--Flag di preferenza per usare una route view come detail della singola istanza. Normalmente true.
         //--In alternativa si può usare un Dialog.
@@ -105,12 +132,17 @@ public abstract class APrefViewList extends AViewList {
         //--Flag di preferenza per limitare le righe della Grid e mostrarle a gruppi (pagine). Normalmente true.
         usaPagination = true;
 
-        //--Flag di preferenza per la soglia di elementi che fanno scattare la pagination.
-        //--Specifico di ogni ViewList. Se non specificato è uguale alla preferenza. Default 50
-        sogliaPagination = pref.getInt(FlowCost.SOGLIA_PAGINATION, 50);
+        //--controllo della paginazione
+        isPaginata = usaPagination && service.count() > limit;
 
-        //--Flag per la larghezza della Grid. Default a 75. Espressa come numero per comodità; poi viene convertita in "em".
-        gridWith = 75;
+        //--Flag per la larghezza della Grid. Default a 80.
+        //--Espressa come numero per comodità; poi viene convertita in "em".
+        gridWith = 90;
+
+        //--property per la ricerca con searchField.
+        //--Viene letta da una @Annotation.
+        //--Può essere sovrascritta in fixPreferenze() della sottoclasse specifica
+        searchProperty = annotation.getSearchPropertyName(this.getClass());
     }// end of method
 
 }// end of class

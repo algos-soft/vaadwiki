@@ -21,7 +21,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 26-ott-2018 9.59.58 <br>
+ * Fix date: 21-set-2019 8.28.35 <br>
  * <br>
  * Business class. Layer di collegamento per la Repository. <br>
  * <br>
@@ -32,6 +32,8 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
  * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
+ * - la documentazione precedente a questo tag viene SEMPRE riscritta <br>
+ * - se occorre preservare delle @Annotation con valori specifici, spostarle DOPO @AIScript <br>
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -269,18 +271,19 @@ public class PreferenzaService extends AService {
      */
     @Override
     public int reset() {
-        int numRec = 0;
+        int numRec = super.reset();
+//        int numRec = 0;
         int numPref = count();
 
         for (EAPreferenza eaPref : EAPreferenza.values()) {
             numRec = creaIfNotExist(eaPref) ? numRec + 1 : numRec;
         }// end of for cycle
 
-        if (numRec == 0) {
-            log.info("Algos - Data. Le preferenze sono già presenti (" + numPref + ") e non ne sono state aggiunte di nuove");
-        } else {
-            log.warn("Algos - Data. Sono state aggiunte: " + numRec + " nuove preferenze");
-        }// end of if/else cycle
+//        if (numRec == 0) {
+//            log.info("Algos - Data. Le preferenze sono già presenti (" + numPref + ") e non ne sono state aggiunte di nuove");
+//        } else {
+//            log.warn("Algos - Data. Sono state aggiunte: " + numRec + " nuove preferenze");
+//        }// end of if/else cycle
 
         return numRec;
     }// end of method
@@ -390,7 +393,7 @@ public class PreferenzaService extends AService {
 
 
     public int getInt(String keyCode) {
-        return getInt(keyCode,0);
+        return getInt(keyCode, 0);
     } // end of method
 
 
@@ -414,14 +417,30 @@ public class PreferenzaService extends AService {
 
     public String getStr(String keyCode) {
         String valoreTesto = "";
-        Object value = getValue(keyCode);
+        Object value = null;
+        Preferenza pref = findByKeyUnica(keyCode);
 
-        if (value != null) {
-            if (value instanceof String) {
+        if (pref.type == EAPrefType.enumeration) {
+            valoreTesto = getEnumStr(keyCode);
+        } else {
+            value = getValue(keyCode);
+            if (value != null && value instanceof String) {
                 valoreTesto = (String) value;
             } else {
                 log.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
             }// end of if/else cycle
+        }// end of if/else cycle
+
+        return valoreTesto;
+    } // end of method
+
+
+    public String getEnumStr(String keyCode) {
+        String valoreTesto = "";
+        String rawValue = (String) getValue(keyCode);
+
+        if (text.isValid(rawValue)) {
+            valoreTesto = enumService.convertToPresentation(rawValue);
         } else {
             log.warn("Algos - Preferenze. Non esiste la preferenza: " + keyCode);
         }// end of if/else cycle
@@ -438,7 +457,6 @@ public class PreferenzaService extends AService {
      *
      * @return la nuova entity appena regolata (non salvata)
      */
-    @Deprecated
     public Preferenza setValue(String keyCode, Object value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
@@ -458,7 +476,6 @@ public class PreferenzaService extends AService {
      *
      * @return la nuova entity appena regolata (non salvata)
      */
-    @Deprecated
     public Preferenza setBool(String keyCode, boolean value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
@@ -478,7 +495,6 @@ public class PreferenzaService extends AService {
      *
      * @return la nuova entity appena regolata (non salvata)
      */
-    @Deprecated
     public Preferenza setInt(String keyCode, int value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
@@ -498,7 +514,6 @@ public class PreferenzaService extends AService {
      *
      * @return la nuova entity appena regolata (non salvata)
      */
-    @Deprecated
     public Preferenza setDate(String keyCode, LocalDateTime value) {
         Preferenza pref = findByKeyUnica(keyCode);
 

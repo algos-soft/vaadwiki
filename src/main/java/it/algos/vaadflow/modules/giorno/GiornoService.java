@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,7 @@ import static it.algos.vaadflow.application.FlowCost.*;
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 26-ott-2018 9.59.58 <br>
+ * Fix date: 20-set-2019 18.39.35 <br>
  * <br>
  * Business class. Layer di collegamento per la Repository. <br>
  * <br>
@@ -202,8 +204,20 @@ public class GiornoService extends AService {
      *
      * @return all ordered entities
      */
-    public List<Giorno> findAll() {
-        return  repository.findAllByOrderByOrdineAsc();
+    public ArrayList<Giorno> findAll() {
+        return (ArrayList) repository.findAllByOrderByOrdineAsc();
+    }// end of method
+
+
+    public List<Giorno> findAllByMese(Mese mese) {
+        Query query = new Query();
+        String meseField = "mese";
+
+        if (mese != null) {
+            query.addCriteria(Criteria.where(meseField).is(mese));
+        }// end of if cycle
+
+        return mongo.mongoOp.find(query, Giorno.class);
     }// end of method
 
 

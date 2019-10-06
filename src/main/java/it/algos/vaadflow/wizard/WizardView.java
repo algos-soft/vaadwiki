@@ -53,7 +53,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_WIZ;
 @UIScope
 @Route(value = TAG_WIZ, layout = MainLayout.class)
 @Qualifier(TAG_WIZ)
-@AIView(roleTypeVisibility = EARoleType.developer)
+@AIView(vaadflow = true, roleTypeVisibility = EARoleType.developer)
 @Slf4j
 public class WizardView extends VerticalLayout {
 

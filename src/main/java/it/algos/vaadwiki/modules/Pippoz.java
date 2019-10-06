@@ -2,21 +2,14 @@ package it.algos.vaadwiki.modules;
 
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.application.StaticContextAccessor;
-import it.algos.vaadflow.modules.role.EARole;
-import it.algos.vaadflow.ui.IAView;
 import it.algos.vaadflow.ui.list.AViewList;
 import it.algos.vaadflow.ui.menu.APopupMenu;
 import it.algos.vaadwiki.WikiLayout;
-import it.algos.vaadwiki.modules.attivita.AttivitaViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Project vaadwiki

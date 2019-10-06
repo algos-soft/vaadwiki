@@ -2,25 +2,24 @@ package it.algos.vaadwiki.application;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.annotation.FlowVar;
-import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.application.FlowVar;
 import it.algos.vaadflow.boot.ABoot;
+import it.algos.vaadwiki.modules.attivita.AttivitaList;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.modules.utente.UtenteService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadwiki.didascalia.ViewDidascalie;
-import it.algos.vaadwiki.modules.attivita.AttivitaViewList;
-import it.algos.vaadwiki.modules.bio.BioViewList;
-import it.algos.vaadwiki.modules.cognome.CognomeViewList;
-import it.algos.vaadwiki.modules.genere.GenereViewList;
-import it.algos.vaadwiki.modules.nazionalita.NazionalitaViewList;
-import it.algos.vaadwiki.modules.nome.NomeViewList;
-import it.algos.vaadwiki.modules.doppinomi.DoppinomiViewList;
-import it.algos.vaadwiki.modules.professione.ProfessioneViewList;
-import it.algos.vaadwiki.modules.wiki.WikiAnnoViewList;
-import it.algos.vaadwiki.modules.wiki.WikiGiornoViewList;
+import it.algos.vaadwiki.modules.bio.BioList;
+import it.algos.vaadwiki.modules.cognome.CognomeList;
+import it.algos.vaadwiki.modules.genere.GenereList;
+import it.algos.vaadwiki.modules.nazionalita.NazionalitaList;
+import it.algos.vaadwiki.modules.nome.NomeList;
+import it.algos.vaadwiki.modules.doppinomi.DoppinomiList;
+import it.algos.vaadwiki.modules.professione.ProfessioneList;
+import it.algos.vaadwiki.modules.wiki.WikiAnnoList;
+import it.algos.vaadwiki.modules.wiki.WikiGiornoList;
 import it.algos.vaadwiki.views.UtilityView;
 import it.algos.wiki.web.AQueryLogin;
 import it.algos.wiki.web.WLogin;
@@ -35,7 +34,6 @@ import javax.servlet.ServletContextEvent;
 import java.net.InetAddress;
 import java.time.LocalDate;
 
-import static it.algos.vaadflow.application.FlowCost.*;
 import static it.algos.vaadwiki.application.WikiCost.SEND_MAIL_RESTART;
 
 /**
@@ -135,6 +133,13 @@ public class WikiBoot extends ABoot {
         appContext.getBean(AQueryLogin.class);
     }// end of method
 
+    /**
+     * Regola alcune preferenze iniziali
+     * Se non esistono, le crea
+     * Se esistono, sostituisce i valori esistenti con quelli indicati qui
+     */
+    protected void regolaPreferenze() {
+    }// end of method
 
     /**
      * Inizializzazione dei dati di alcune collections specifiche sul DB Mongo
@@ -164,14 +169,6 @@ public class WikiBoot extends ABoot {
      * Regola alcune informazioni dell'applicazione
      */
     protected void regolaInfo() {
-        PROJECT_NAME = "vaadwiki";
-        PROJECT_VERSION = "5.6";
-        PROJECT_DATE = LocalDate.of(2019, 10, 5);
-
-        if (wLogin != null) {
-            PROJECT_NOTE = "- loggato come " + wLogin.getLgusername();
-        }// end of if cycl
-
         /**
          * Controlla se l'applicazione usa il login oppure no <br>
          * Se si usa il login, occorre la classe SecurityConfiguration <br>
@@ -179,6 +176,36 @@ public class WikiBoot extends ABoot {
          * Di defaul (per sicurezza) uguale a true <br>
          */
         FlowVar.usaSecurity = false;
+
+        /**
+         * Controlla se l'applicazione è multi-company oppure no <br>
+         * Di defaul (per sicurezza) uguale a true <br>
+         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+         */
+        FlowVar.usaCompany = false;
+
+
+        /**
+         * Nome identificativo dell'applicazione <br>
+         * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
+         */
+        FlowVar.projectName = "vaadwiki";
+
+        /**
+         * Versione dell'applicazione <br>
+         * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
+         */
+        FlowVar.projectVersion = 5.6;
+
+        /**
+         * Data della versione dell'applicazione <br>
+         * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
+         */
+        FlowVar.versionDate = LocalDate.of(2019, 10, 5);
+
+        if (wLogin != null) {
+            FlowVar.projectNote = "- loggato come " + wLogin.getLgusername();
+        }// end of if cycl
 
         mailRestart();
     }// end of method
@@ -210,15 +237,6 @@ public class WikiBoot extends ABoot {
     }// end of method
 
 
-    /**
-     * Regola alcune preferenze iniziali
-     * Se non esistono, le crea
-     * Se esistono, sostituisce i valori esistenti con quelli indicati qui
-     */
-    protected void regolaPreferenze() {
-        pref.setBool(USA_COMPANY, false);
-        pref.setBool(USA_SECURITY, false);
-    }// end of method
 
 
     /**
@@ -228,18 +246,19 @@ public class WikiBoot extends ABoot {
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
     protected void addRouteSpecifiche() {
-        FlowCost.MENU_CLAZZ_LIST.add(ViewDidascalie.class);
-        FlowCost.MENU_CLAZZ_LIST.add(UtilityView.class);
-        FlowCost.MENU_CLAZZ_LIST.add(AttivitaViewList.class);
-        FlowCost.MENU_CLAZZ_LIST.add(NazionalitaViewList.class);
-        FlowCost.MENU_CLAZZ_LIST.add(ProfessioneViewList.class);
-        FlowCost.MENU_CLAZZ_LIST.add(GenereViewList.class);
-        FlowCost.MENU_CLAZZ_LIST.add(BioViewList.class);
-        FlowCost.MENU_CLAZZ_LIST.add(WikiGiornoViewList.class);
-        FlowCost.MENU_CLAZZ_LIST.add(WikiAnnoViewList.class);
-        FlowCost.MENU_CLAZZ_LIST.add(NomeViewList.class);
-        FlowCost.MENU_CLAZZ_LIST.add(CognomeViewList.class);
-    	FlowCost.MENU_CLAZZ_LIST.add(DoppinomiViewList.class);
+        FlowVar.menuClazzList.add(ViewDidascalie.class);
+        FlowVar.menuClazzList.add(UtilityView.class);
+        FlowVar.menuClazzList.add(AttivitaList.class);
+        FlowVar.menuClazzList.add(NazionalitaList.class);
+        FlowVar.menuClazzList.add(ProfessioneList.class);
+        FlowVar.menuClazzList.add(GenereList.class);
+        FlowVar.menuClazzList.add(BioList.class);
+        FlowVar.menuClazzList.add(WikiGiornoList.class);
+        FlowVar.menuClazzList.add(WikiAnnoList.class);
+        FlowVar.menuClazzList.add(NomeList.class);
+        FlowVar.menuClazzList.add(CognomeList.class);
+        FlowVar.menuClazzList.add(DoppinomiList.class);
+		FlowVar.menuClazzList.add(AttivitaList.class);
 	}// end of method
 
 

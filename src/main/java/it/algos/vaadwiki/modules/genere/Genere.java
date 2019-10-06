@@ -89,7 +89,7 @@ public class Genere extends AEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, widthEM = 12)
-    @AIColumn(width = 10)
+    @AIColumn(widthEM = 10)
     public String pluraleMaschile;
 
     /**
@@ -99,7 +99,7 @@ public class Genere extends AEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, widthEM = 12)
-    @AIColumn(width = 10)
+    @AIColumn(widthEM = 10)
     public String pluraleFemminile;
 
 

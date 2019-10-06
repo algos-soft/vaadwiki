@@ -7,8 +7,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.ui.LoadMode;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.ui.list.AViewList;
 import it.algos.vaadflow.ui.fields.AComboBox;
+import it.algos.vaadflow.ui.list.AViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -102,9 +102,9 @@ public class APopupMenu extends AMenu {
     protected Object creaItem(Class<? extends AViewList> viewClazz) {
         String menuName = annotation.getMenuName(viewClazz);
         VaadinIcon icon = reflection.getIconView(viewClazz);
-        String linkRoute = annotation.getQualifierName(viewClazz);
+        String linkRoute = annotation.getRouteName(viewClazz);
 
-        return new Button(menuName, icon.create(), e -> goTo(linkRoute));
+        return new Button(menuName, icon != null ? icon.create() : null, e -> goTo(linkRoute));
     }// end of method
 
 
@@ -116,7 +116,7 @@ public class APopupMenu extends AMenu {
         }// end of if cycle
 
         if (viewClazz != null) {
-            goTo(annotation.getQualifierName(viewClazz));
+            goTo(annotation.getRouteName(viewClazz));
         }// end of if cycle
 
     }// end of method

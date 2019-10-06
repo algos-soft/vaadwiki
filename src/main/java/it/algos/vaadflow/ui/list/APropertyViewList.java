@@ -1,6 +1,6 @@
 package it.algos.vaadflow.ui.list;
 
-import com.vaadin.flow.component.applayout.AppLayoutMenuItem;
+//import com.vaadin.flow.component.applayout.AppLayoutMenuItem;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
@@ -18,10 +18,11 @@ import it.algos.vaadflow.service.*;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.ASearchDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadflow.ui.fields.ATextField;
+import it.algos.vaadflow.ui.fields.AComboBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.vaadin.klaudeta.PaginatedGrid;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,10 +42,6 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOGIN;
  */
 public abstract class APropertyViewList extends VerticalLayout {
 
-
-    protected final static String EDIT_NAME = "Edit";
-
-    protected final static String SHOW_NAME = "Show";
 
     /**
      * Service (pattern SINGLETON) recuperato come istanza dalla classe <br>
@@ -141,8 +138,6 @@ public abstract class APropertyViewList extends VerticalLayout {
     @Autowired
     protected PreferenzaService pref;
 
-    //--property
-    protected TextField searchField;
 
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
@@ -159,6 +154,20 @@ public abstract class APropertyViewList extends VerticalLayout {
     //--property
     protected ASearchDialog searchDialog;
 
+    //--property
+    protected TextField searchField;
+
+    //--property
+    protected String searchProperty;
+
+    protected Button deleteAllButton;
+
+    protected Button resetButton;
+
+    protected Button clearFilterButton;
+
+    protected Button searchButton;
+
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
      * Il service viene recuperato dal presenter, <br>
@@ -167,15 +176,21 @@ public abstract class APropertyViewList extends VerticalLayout {
     protected IAService service;
 
     /**
-     * Il modello-dati specifico viene recuperato dal presenter <br>
+     * Modello-dati specifico <br>
      */
     protected Class<? extends AEntity> entityClazz;
 
     /**
      * Placeholder SOPRA la Grid <br>
      * Contenuto eventuale, presente di default <br>
-     * - con o senza campo edit search, regolato da preferenza o da parametro <br>
-     * - con o senza bottone New, regolato da preferenza o da parametro <br>
+     * - con o senza un bottone per cancellare tutta la collezione
+     * - con o senza un bottone di reset per ripristinare (se previsto in automatico) la collezione
+     * - con o senza gruppo di ricerca:
+     * -    campo EditSearch predisposto su un unica property, oppure (in alternativa)
+     * -    bottone per aprire un DialogSearch con diverse property selezionabili
+     * -    bottone per annullare la ricerca e riselezionare tutta la collezione
+     * -    eventuale Popup di selezione, filtro e ordinamento
+     * - con o senza bottone New, con testo regolato da preferenza o da parametro <br>
      * - con eventuali altri bottoni specifici <br>
      */
     protected HorizontalLayout topPlaceholder;
@@ -195,12 +210,13 @@ public abstract class APropertyViewList extends VerticalLayout {
 
     /**
      * Placeholder per la Grid dichiarata nella superclasse oppure <br>
-     * per la griglia con paginazione che deve essere dichiarata nella sottoclasse specifica <br>
+     * per la PaginatedGrid che deve essere dichiarata nella sottoclasse specifica <br>
+     * Esiste o una o l'altra (a seconda del flag della sottoclasse) <br>
      */
     protected VerticalLayout gridPlaceholder;
 
     /**
-     * Griglia principale con o senza senza paginazione <br>
+     * Griglia principale SENZA paginazione <br>
      * Alcune regolazioni da preferenza o da parametro (bottone Edit, ad esempio) <br>
      */
     protected Grid grid;
@@ -211,44 +227,52 @@ public abstract class APropertyViewList extends VerticalLayout {
      */
     protected HorizontalLayout bottomPlacehorder;
 
+    /**
+     * Flag di preferenza per usare la ricerca e selezione nella barra dei menu. <br>
+     * Se è true, un altro flag seleziona il textField o il textDialog <br>
+     * Se è true, il bottone usaAllButton è sempre presente <br>
+     * Se è true, un altro flag seleziona la presenza o meno del Popup di filtro <br>
+     * Normalmente true. <br>
+     */
+    protected boolean usaSearch;
 
     /**
-     * Flag di preferenza per usare il campo-testo di ricerca e selezione nella barra dei menu. <br>
-     * Facoltativo ed alternativo a usaSearchTextDialog. Normalmente false. <br>
+     * Flag di preferenza per selezionare la ricerca:
+     * true per aprire un dialogo di ricerca e selezione su diverse properties <br>
+     * false per presentare un textEdit predisposto per la ricerca su un unica property <br>
+     * Normalmente true.
      */
-    protected boolean usaSearchTextField;
+    protected boolean usaSearchDialog;
 
     /**
-     * Flag di preferenza per aprire un dialogo di ricerca e selezione. <br>
-     * Facoltativo ed alternativo a usaSearchTextField. Normalmente true.
+     * Flag di preferenza per usare il popup di selezione, filtro e ordinamento situato nella searchBar.
+     * Normalmente false <br>
      */
-    protected boolean usaSearchTextDialog;
-
-    /**
-     * Flag di preferenza per usare il bottone all situato nella searchBar. Normalmente true <br>
-     */
-    protected boolean usaAllButton;
+    protected boolean usaPopupFiltro;
 
     /**
      * Flag di preferenza per limitare le righe della Grid e mostrarle a gruppi (pagine). Normalmente true. <br>
      */
     protected boolean usaPagination;
 
-    /**
-     * Flag di preferenza per la soglia di elementi che fanno scattare la pagination. <br>
-     * Specifico di ogni ViewList. Se non specificato è uguale alla preferenza. Default 50 <br>
-     */
-    protected int sogliaPagination;
+//    /**
+//     * Flag di preferenza per la soglia di elementi che fanno scattare la pagination. <br>
+//     * Specifico di ogni ViewList. Se non specificato è uguale alla preferenza. Default 50 <br>
+//     */
+//    protected int sogliaPagination;
 
     /**
-     * Flag per costruire una Grid normale o una PaginatedGrid. Viene regolato da codice. <br>
+     * Flag per costruire una Grid normale o una PaginatedGrid. <br>
+     * Viene regolato da codice. <br>
      */
-    protected boolean usaGridPaginata;
+    protected boolean isPaginata;
 
     /**
      * Flag di preferenza per usare il bottone new situato nella topLayout. Normalmente true. <br>
      */
-    protected boolean usaSearchBottoneNew;
+    protected boolean usaBottoneNew;
+
+    protected AComboBox filtroComboBox;
 
     protected Button newButton;
 
@@ -274,12 +298,7 @@ public abstract class APropertyViewList extends VerticalLayout {
     protected boolean usaBottoneEdit;
 
     /**
-     * Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'. <br>
-     */
-    protected String testoBottoneEdit;
-
-    /**
-     * Flag di preferenza per usare il placeholder di bottoni ggiuntivi sotto la Grid. Normalmente false. <br>
+     * Flag di preferenza per usare il placeholder di bottoni aggiuntivi sotto la Grid. Normalmente false. <br>
      */
     protected boolean usaBottomLayout;
 
@@ -330,7 +349,7 @@ public abstract class APropertyViewList extends VerticalLayout {
     protected int limit;
 
     /**
-     * Flag per la larghezza della Grid. Default a 75. Espressa come numero per comodità; poi viene convertita in "em". <br>
+     * Flag per la larghezza della Grid. Default a 100. Espressa come numero per comodità; poi viene convertita in "em". <br>
      */
     protected int gridWith;
 
@@ -349,13 +368,13 @@ public abstract class APropertyViewList extends VerticalLayout {
 
     protected int offset;
 
-    protected boolean isPagination;
+//    protected boolean isPagination;
 
     protected Collection items;
 
     protected ADeleteDialog deleteDialog;
 
-    protected ArrayList<AppLayoutMenuItem> specificMenuItems = new ArrayList<AppLayoutMenuItem>();
+//    protected ArrayList<AppLayoutMenuItem> specificMenuItems = new ArrayList<AppLayoutMenuItem>();
 
     /**
      * Flag di preferenza per usare una route view come detail della singola istanza. Normalmente true. <br>

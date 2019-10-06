@@ -130,7 +130,7 @@ public class AButtonMenu extends AMenu {
     protected Object creaItem(Class<? extends AViewList> viewClazz) {
         String menuName = annotation.getMenuName(viewClazz);
         VaadinIcon icon = reflection.getIconView(viewClazz);
-        String linkRoute = annotation.getQualifierName(viewClazz);
+        String linkRoute = annotation.getRouteName(viewClazz);
 
         return new Button(menuName, icon.create(), e -> goTo(linkRoute));
     }// end of method

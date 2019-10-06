@@ -2532,7 +2532,8 @@ public class LibBio {
      * @return riga di testo
      */
     public String creaRigaTemplate(String parBioText, String value) {
-        return PIPE + parBioText + UGUALE_SPAZIATO + value + A_CAPO;
+//        return PIPE + parBioText + UGUALE_SPAZIATO + value + A_CAPO;
+        return PIPE + parBioText + "=" + value + A_CAPO;//@todo versione 14
     } // fine del metodo
 
 

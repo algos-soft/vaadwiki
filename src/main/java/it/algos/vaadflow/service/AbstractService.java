@@ -75,6 +75,11 @@ public abstract class AbstractService {
      */
     public ATextService text;
 
+    /**
+     * Service (pattern SINGLETON) recuperato come istanza dalla classe <br>
+     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+     */
+    public AEnumerationService enumService;
 
     @PostConstruct
     protected void postConstruct() {
@@ -87,6 +92,7 @@ public abstract class AbstractService {
         this.mongo = appContext.getBean(AMongoService.class);
         this.reflection = AReflectionService.getInstance();
         this.text = ATextService.getInstance();
+        this.enumService = AEnumerationService.getInstance();
 
         fixIncrociati();
     }// end of constructor

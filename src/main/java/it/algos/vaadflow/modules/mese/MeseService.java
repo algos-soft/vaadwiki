@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static it.algos.vaadflow.application.FlowCost.TAG_MES;
 
 
@@ -20,7 +22,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_MES;
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 26-ott-2018 9.59.58 <br>
+ * Fix date: 20-set-2019 19.27.41 <br>
  * <br>
  * Business class. Layer di collegamento per la Repository. <br>
  * <br>
@@ -161,6 +163,23 @@ public class MeseService extends AService {
      */
     public Mese findByKeyUnica(String titolo) {
         return repository.findByTitoloLungo(titolo);
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
+     * <p>
+     * Se esiste la property 'ordine', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'code', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'descrizione', ordinate secondo questa property <br>
+     * Altrimenti, ordinate secondo il metodo sovrascritto nella sottoclasse concreta <br>
+     * Altrimenti, ordinate in ordine di inserimento nel DB mongo <br>
+     *
+     * @return all ordered entities
+     */
+    @Override
+    public List<? extends AEntity> findAll() {
+        return (List<Mese>)super.findAll();
     }// end of method
 
 

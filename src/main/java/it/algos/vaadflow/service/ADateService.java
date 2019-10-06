@@ -311,6 +311,8 @@ public class ADateService extends AbstractService {
      * Not using leading zeroes in day <br>
      * Two numbers for year <b>
      *
+     * @param localDate da rappresentare
+     *
      * @return la data sotto forma di stringa
      */
     public String getDataCompleta() {
@@ -322,6 +324,7 @@ public class ADateService extends AbstractService {
      * Restituisce la data e l'ora attuali nella forma del pattern completo
      * <p>
      * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
      * Two numbers for year <b>
      *
      * @return la data sotto forma di stringa
@@ -1162,7 +1165,7 @@ public class ADateService extends AbstractService {
         EAMese mese = EAMese.getMese(numMese);
         nomeMese = EAMese.getLong(numMese);
         giorniDelMese = EAMese.getGiorni(numMese, 2016);
-        final int taglioBisestile = 60;
+        final int taglioBisestile = 59;
         String tag;
         String tagUno;
 

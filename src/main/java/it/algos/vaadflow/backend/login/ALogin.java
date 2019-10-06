@@ -26,9 +26,9 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOGIN;
 @Qualifier(TAG_LOGIN)
 public class ALogin {
 
-    private Utente utente;
+    protected Utente utente;
 
-    private Company company;
+    protected Company company;
 
     private EARoleType roleType;
 
@@ -37,6 +37,30 @@ public class ALogin {
      */
     @Autowired
     private UtenteService utenteService;
+
+
+    /**
+     * Costruttore base senza parametri <br>
+     */
+    public ALogin() {
+    }// end of constructor
+
+
+    public ALogin(EARoleType roleType) {
+        this.roleType = roleType;
+    }// end of constructor
+
+    public ALogin(Utente utente, Company company) {
+        this.utente = utente;
+        this.company = company;
+    }
+
+
+    public ALogin(Utente utente, Company company, EARoleType roleType) {
+        this.utente = utente;
+        this.company = company;
+        this.roleType = roleType;
+    }
 
 
     public Utente getUtente() {

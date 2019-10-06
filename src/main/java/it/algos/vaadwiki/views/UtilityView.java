@@ -14,8 +14,6 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIView;
-import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
@@ -25,7 +23,7 @@ import it.algos.vaadwiki.didascalia.DidascaliaService;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
-import it.algos.vaadwiki.modules.bio.BioViewDialog;
+import it.algos.vaadwiki.modules.bio.BioDialog;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.vaadwiki.upload.UploadService;
@@ -158,7 +156,7 @@ public class UtilityView extends VerticalLayout {
     protected BioService bioService;
 
     @Autowired
-    protected BioViewDialog dialog;
+    protected BioDialog dialog;
 
     //    @Autowired
     private WikiLoginOld wikiLoginOld;
@@ -746,7 +744,7 @@ public class UtilityView extends VerticalLayout {
 
     public void apreDialogo(String wikiTitle) {
         Bio bio = bioService.findByKeyUnica(wikiTitle);
-        dialog.open((AEntity) bio, EAOperation.showOnly, null);
+//        dialog.open((AEntity) bio, EAOperation.showOnly, null);  //@todo versione 14
     }// end of method
 
 

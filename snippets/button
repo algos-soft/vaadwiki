@@ -28,3 +28,4 @@ quietButton.addStyleName("quiet");
 A native button that uses the browser’s look:
     NativeButton nativeButton = new NativeButton("Native Button");
     buttonLayout.addComponent(nativeButton);
+

@@ -1,3 +1,11 @@
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring in automatico <br>
@@ -110,8 +118,9 @@
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
      * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
-     * Disponibile SOLO DOPO @PostConstruct <br>
+     * Disponibile SOLO DOPO @PostConstruct o comunque dopo l'init (anche implicito) del costruttore <br>
      */
+    @Autowired
 
 
     /**
@@ -124,7 +133,7 @@
 
     //--Classe che parte da @Route
     /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Istanza (@Scope = 'singleton') inietta da @Route <br>
      * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
      * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */

@@ -87,7 +87,7 @@ public class Nazionalita extends AEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, widthEM = 12)
-    @AIColumn(width = 100)
+    @AIColumn(widthEM = 100)
     public String plurale;
 
 

@@ -5,6 +5,7 @@ import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.shared.ui.LoadMode;
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.application.FlowVar;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadwiki.modules.Pippoz;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +53,7 @@ public class WikiLayout extends MainLayout {
      * Creazione iniziale del menu
      */
     protected void creaVaadindMenu() {
-        FlowCost.MENU_CLAZZ_LIST.add(Pippoz.class);
+        FlowVar.menuClazzList.add(Pippoz.class);
         super.creaVaadindMenu();
 //        appLayout.setToolbarIconButtons(new MenuItem("Logout", "exit-to-app", () -> UI.getCurrent().getPage().executeJavaScript("location.assign('logout')")));
     }// end of method

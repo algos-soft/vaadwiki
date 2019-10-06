@@ -136,6 +136,20 @@ public class AArrayService extends AbstractService {
 
 
     /**
+     * Controlla la validità della mappa
+     * Deve esistere (not null)
+     * Deve avere degli elementi (size > 0)
+     *
+     * @param array (List) in ingresso da controllare
+     *
+     * @return vero se l'array soddisfa le condizioni previste
+     */
+    public boolean isValid(final Map array) {
+        return array != null && array.size() > 0;
+    }// end of method
+
+
+    /**
      * Controlla che l'array sia nullo o vuoto
      * Non deve esistere (null)
      * Se esiste, non deve avere elementi (size = 0)
@@ -349,9 +363,26 @@ public class AArrayService extends AbstractService {
         for (int var4 = 0; var4 < var3; ++var4) {
             Long lungo = var2[var4];
             longList.add(lungo);
-        }
+        } // fine del ciclo for-each
 
         return longList;
+    }// end of method
+
+
+    public List<String> getList(String testo) {
+        List<String> lista = null;
+        String tag = ",";
+        String[] parti = null;
+
+        if (text.isValid(testo) && testo.contains(tag)) {
+            parti = testo.split(tag);
+        }// end of if cycle
+
+        if (parti != null && parti.length > 0) {
+            lista = Arrays.asList(parti);
+        }// end of if cycle
+
+        return lista;
     }// end of method
 
 
@@ -532,7 +563,7 @@ public class AArrayService extends AbstractService {
     /**
      * Differenza tra due array di Long
      *
-     * @param listaUno   array
+     * @param listaUno array
      * @param listaDue array
      *
      * @return differenza
@@ -552,7 +583,6 @@ public class AArrayService extends AbstractService {
         hashA.removeAll(hashB);
         return new ArrayList<Long>(hashA);
     } // fine del metodo
-
 
 
 //    /**
@@ -591,5 +621,77 @@ public class AArrayService extends AbstractService {
 //
 //        return new ArrayList<String>(hashB);
 //    } // fine del metodo
+
+
+    /**
+     * Converte una lista di oggetti in una lista di stringhe
+     */
+    public List<String> toString(List listaOggetti) {
+        List<String> listaStringhe = null;
+
+        if (isValid(listaOggetti)) {
+            listaStringhe = new ArrayList<>();
+            for (Object obj : listaOggetti) {
+                listaStringhe.add(obj.toString());
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaStringhe;
+    }// end of method
+
+
+    /**
+     * Converte una lista di oggetti in una lista di stringhe
+     */
+    public List<String> toString(Object[] listaOggetti) {
+        List<String> listaStringhe = null;
+
+        if (listaOggetti != null && listaOggetti.length > 0) {
+            listaStringhe = new ArrayList<>();
+            for (Object obj : listaOggetti) {
+                listaStringhe.add(obj.toString());
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaStringhe;
+    }// end of method
+
+    /**
+     * Controlla se la mappa può essere semplicficata
+     * La mappa prevede delle liste di valori per ogni key, quindi Map<String, List<String>>
+     * Se tutte le lisye hanno un singolo valore, si può usare una mappa più semplice Map<String, String>
+     */
+    public boolean isMappaSemplificabile(Map<String, List<String>> mappaConListe) {
+        boolean status = true;
+
+        for (Map.Entry<String, List<String>> entry : mappaConListe.entrySet()) {
+            if (entry.getValue().size() > 1) {
+                status = false;
+            }// end of if cycle
+        }// end of for cycle
+
+        return status;
+    }// end of method
+
+    /**
+     * Semplifica la mappa
+     * Questa prevede delle liste di valori per ogni key, quindi Map<String, List<String>>
+     * Spesso basta un valore.
+     * Se tutte le keys hanno un solo valore, si usa una mappa più semplice Map<String, String>
+     */
+    public Map<String, String> semplificaMappa(Map<String, List<String>> mappaConListe) {
+        Map<String, String> mappaSemplice = new HashMap<>();
+
+        for (Map.Entry<String, List<String>> entry : mappaConListe.entrySet()) {
+            if (entry.getValue().size() == 1) {
+                mappaSemplice.put(entry.getKey(), entry.getValue().get(0));
+            } else {
+                log.error("Qualcosa non ha funzionato");
+                System.out.println("Qualcosa non ha funzionato");
+            }// end of if/else cycle
+        }// end of for cycle
+
+        return mappaSemplice;
+    }// end of method
 
 }// end of singleton class

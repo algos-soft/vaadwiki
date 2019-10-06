@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 
-import static it.algos.vaadflow.application.FlowCost.PROJECT_NAME;
+import static it.algos.vaadflow.application.FlowVar.projectName;
 
 /**
  * Project vaadbio2
@@ -70,7 +70,7 @@ public abstract class AVers {
         //--prima installazione del programma
         //--non fa nulla, solo informativo
         if (installa(++k)) {
-            crea("Setup", "Installazione iniziale di " + PROJECT_NAME);
+            crea("Setup", "Installazione iniziale di " + projectName);
         }// fine del blocco if
 
         //--crea le preferenze standard

@@ -16,6 +16,7 @@ import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.backend.login.ALogin;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.service.AVaadinService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * Project vaadflow
@@ -37,6 +39,41 @@ import javax.annotation.PostConstruct;
  * I parametri (variabili) vengono passati nel metodo open() <br>
  * Se si costruisce l'istanza con StaticContextAccessor.getBean(ADialog.class), non si possono passare i Consumer <br>
  * diventa quindi indispensabile usare un metodo successivo 'open()' per questi parametri <br>
+ * <p>
+ * A confirmation dialog is a simple dialog that asks the user to confirm an action.
+ * They are commonly used in situations where triggering an action prematurely would lead to diminished user experience or execute an irreversible application functionality.
+ * Typical examples are actions that result in additional work for the end user when triggered by accident like logging out of the application or storing wrong/incomplete user data.
+ * To avoid annoying the user, confirmation dialogs should not be overused.
+ * Actions that are easily reversible should therefore not require confirmation dialogs.
+ * An excellent example of this would be actions that trigger navigation events.
+ * <p>
+ * Confirmation dialogs usually consist of the same three parts as most other dialogs.
+ * A header section, a content, and a footer section.
+ * The header contains the title of the dialog and most often a button to close the dialog.
+ * The content section typically contains the confirmation question.
+ * This can be a simple "Are you sure?" or provide more specifics about the action in question.
+ * This section sometimes also contains a summary of the data related to the action.
+ * The footer part comprises two buttons, one to confirm and one to cancel the operation.
+ * This is an example of what a confirmation dialog might look like:
+ * <p>
+ * Due to the simplicity of confirmation dialogs, they are highly reusable and should be implemented as such.
+ * Only three things change for different confirmation dialogs:
+ * 1- The title in the header section
+ * 2- The confirmation question in the content section
+ * 3- The action that gets triggered once the confirm button in the footer section is pressed.
+ * <p>
+ * The default constructor shown here creates the three different sections of the dialog and introduces some basic styling for the dialog itself.
+ * In this case, this is just setting the width and the height of the dialog.
+ * The title, confirmation question and confirm button are class variables which values/actions can be set either by using a second constructor or by setting them directly using public setter methods.
+ * <p>
+ * In this example, the header is a horizontal layout which contains the title label as well as a close button.
+ * To close the dialog simply calls the close() method.
+ * This helper method also introduces some styling to the section like setting the background color and then adds the container component to the dialog.
+ * The content and footer sections are created the same way.
+ * <p>
+ * The confirm button also closes the dialog since confirming and action also resolves the confirmation process and the dialog is no longer needed.
+ * <p>
+ * To attach the dialog to the UI and show it to the user simply calls the open() method of the dialog.
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -50,10 +87,22 @@ public class ADialog extends Dialog implements IADialog {
     protected final Div extraMessageLabel = new Div();
 
     /**
-     * Service (pattern SINGLETON) recuperato come istanza dalla classe <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
+    @Autowired
     public ATextService text = ATextService.getInstance();
+
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    public PreferenzaService pref ;
 
     public Runnable cancelHandler;
 
@@ -154,8 +203,8 @@ public class ADialog extends Dialog implements IADialog {
         this.getElement().getClassList().add("confirm-dialog");
 
         //--Login and context della sessione
-        context = vaadinService.fixLoginAndContext();
-        login = context.getLogin();
+        context = vaadinService.getSessionContext();
+        login = context != null ? context.getLogin() : null;
 
         //--preferenze standard. Possono essere modificate anche selezionando la firma di open(...)
         fixPreferenze();
@@ -199,13 +248,19 @@ public class ADialog extends Dialog implements IADialog {
     }// end of method
 
 
+//    /**
+//     * Apre un dialogo di 'avviso' <br>
+//     * Il title è già stato regolato dal costruttore <br>
+//     */
+//    public void open() {
+////        this.usaCancelButton = false;
+//        this.open("", "", (Runnable) null, (Runnable) null);
+//    }// end of method
     /**
-     * Apre un dialogo di 'avviso' <br>
-     * Il title è già stato regolato dal costruttore <br>
+     * Rimanda alla superclasse <br>
      */
     public void open() {
-//        this.usaCancelButton = false;
-        this.open("", "", (Runnable) null, (Runnable) null);
+        super.open();
     }// end of method
 
 
@@ -232,6 +287,8 @@ public class ADialog extends Dialog implements IADialog {
         this.usaCancelButton = false;
         this.open(message, additionalMessage, (Runnable) null, (Runnable) null);
     }// end of method
+
+
 
 
     /**
@@ -317,6 +374,22 @@ public class ADialog extends Dialog implements IADialog {
 
         super.open();
     }// end of method
+
+
+    /**
+     * Opens the given item for editing in the dialog.
+     * Crea i fields e visualizza il dialogo <br>
+     *
+     * @param entityBean  The item to edit; it may be an existing or a newly created instance
+     * @param operation   The operation being performed on the item (addNew, edit, editNoDelete, editDaLink, showOnly)
+     * @param itemSaver   funzione associata al bottone 'accetta' ('registra', 'conferma')
+     * @param itemDeleter funzione associata al bottone 'delete'
+     */
+    public void open(AEntity entityBean, EAOperation operation, BiConsumer itemSaver, Consumer itemDeleter) {
+
+    }
+    public void open(String message, Consumer itemSaver) {
+    }
 
 
     /**
@@ -412,29 +485,29 @@ public class ADialog extends Dialog implements IADialog {
     }// end of method
 
 
-    /**
-     * Opens the given item for editing in the dialog.
-     *
-     * @param item      The item to edit; it may be an existing or a newly created instance
-     * @param operation The operation being performed on the item
-     * @param context   legato alla sessione
-     */
-    @Override
-    public void open(AEntity item, EAOperation operation, AContext context) {
-    }
-
-
-    /**
-     * Opens the given item for editing in the dialog.
-     *
-     * @param item      The item to edit; it may be an existing or a newly created instance
-     * @param operation The operation being performed on the item
-     * @param context   legato alla sessione
-     * @param title     of the window dialog
-     */
-    @Override
-    public void open(AEntity item, EAOperation operation, AContext context, String title) {
-    }
+//    /**
+//     * Opens the given item for editing in the dialog.
+//     *
+//     * @param item      The item to edit; it may be an existing or a newly created instance
+//     * @param operation The operation being performed on the item
+//     * @param context   legato alla sessione
+//     */
+//    @Override
+//    public void open(AEntity item, EAOperation operation, AContext context) {
+//    }
+//
+//
+//    /**
+//     * Opens the given item for editing in the dialog.
+//     *
+//     * @param item      The item to edit; it may be an existing or a newly created instance
+//     * @param operation The operation being performed on the item
+//     * @param context   legato alla sessione
+//     * @param title     of the window dialog
+//     */
+//    @Override
+//    public void open(AEntity item, EAOperation operation, AContext context, String title) {
+//    }
 
 
 //    /**
