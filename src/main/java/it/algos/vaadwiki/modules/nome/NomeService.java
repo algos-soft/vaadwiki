@@ -298,19 +298,16 @@ public class NomeService extends NomeCognomeService {
 
 
     public List<Nome> findAllDimensioni() {
-        List<Nome> lista = (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "voci"));
         return (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "voci"));
     }// end of method
 
 
     public List<Nome> findAllAlfabetico() {
-        List<Nome> lista = (List<Nome>) super.findAll(new Sort(Sort.Direction.ASC, "nome"));
         return (List<Nome>) super.findAll(new Sort(Sort.Direction.ASC, "nome"));
     }// end of method
 
 
     public List<Nome> findAllNomiDoppi() {
-        List<Nome> lista = (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "doppio"));
         return (List<Nome>) super.findAll(new Sort(Sort.Direction.DESC, "doppio"));
     }// end of method
 

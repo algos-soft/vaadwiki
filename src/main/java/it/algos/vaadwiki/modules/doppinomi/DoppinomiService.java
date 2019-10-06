@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
-import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_DOPPI_NOMI;
+import static it.algos.vaadwiki.application.WikiCost.TAG_DOP;
 
 /**
  * Project vaadwiki <br>
@@ -86,35 +87,10 @@ public class DoppinomiService extends AttNazProfCatService {
         Doppinomi entity = findByKeyUnica(code);
 
         if (entity == null) {
-            entity = crea(code);
+            entity = (Doppinomi) save(newEntity(code));
         }// end of if cycle
 
         return entity;
-    }// end of method
-
-
-    /**
-     * Crea una entity e la registra <br>
-     *
-     * @param code di riferimento (obbligatorio ed unico)
-     *
-     * @return la entity appena creata
-     */
-    public Doppinomi crea(String code) {
-        return (Doppinomi) save(newEntity(code));
-    }// end of method
-
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Senza properties per compatibilità con la superclasse
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    @Override
-    public Doppinomi newEntity() {
-        return newEntity("");
     }// end of method
 
 
@@ -133,7 +109,7 @@ public class DoppinomiService extends AttNazProfCatService {
 
         entity = findByKeyUnica(code);
         if (entity != null) {
-            return findByKeyUnica(code);
+            return entity;
         }// end of if cycle
 
         entity = Doppinomi.builderDoppinomi()
