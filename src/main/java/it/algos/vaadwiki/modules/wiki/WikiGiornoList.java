@@ -19,6 +19,8 @@ import it.algos.vaadflow.modules.giorno.GiornoDialog;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.MainLayout14;
+import it.algos.vaadwiki.modules.nazionalita.NazionalitaDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -52,7 +54,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_WGIO, layout = MainLayout.class)
+@Route(value = TAG_WGIO, layout = MainLayout14.class)
 @Qualifier(TAG_WGIO)
 @Slf4j
 @AIScript(sovrascrivibile = false)
@@ -182,18 +184,6 @@ public class WikiGiornoList extends WikiList {
     }// end of method
 
 
-//    /**
-//     * Crea la GridPaginata <br>
-//     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-//     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-//     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
-//     */
-//    protected void creaGridPaginata() {
-//        PaginatedGrid<Giorno> gridPaginated = new PaginatedGrid<Giorno>();
-//        super.grid = gridPaginated;
-//        super.creaGridPaginata();
-//    }// end of method
-
     /**
      * Crea la GridPaginata <br>
      * Per usare una GridPaginata occorre:
@@ -208,26 +198,6 @@ public class WikiGiornoList extends WikiList {
         super.creaGridPaginata();
     }// end of method
 
-//    /**
-//     * Aggiunge le colonne alla PaginatedGrid <br>
-//     * Sovrascritto (obbligatorio) <br>
-//     */
-//    protected void addColumnsGridPaginata() {
-//        fixColumn(Giorno::getOrdine, "ordine");
-//        fixColumn(Giorno::getMese, "mese");
-//        fixColumn(Giorno::getTitolo, "titolo");
-//    }// end of method
-
-
-//    /**
-//     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
-//     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
-//     */
-//    protected void fixColumn(ValueProvider<Giorno, ?> valueProvider, String propertyName) {
-//        Grid.Column singleColumn;
-//        singleColumn = ((PaginatedGrid<Giorno>) grid).addColumn(valueProvider);
-//        columnService.fixColumn(singleColumn, Giorno.class, propertyName);
-//    }// end of method
 
 
     /**
@@ -240,37 +210,37 @@ public class WikiGiornoList extends WikiList {
         Grid.Column colonna;
 
         renderer = new ComponentRenderer<>(this::createViewNatoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Test");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createViewMortoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Test");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createWikiNatoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Wiki");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createWikiMortoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Wiki");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createUploadNatoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Upload");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createUploadMortoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Upload");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
@@ -365,7 +335,7 @@ public class WikiGiornoList extends WikiList {
      */
     @Override
     protected void openDialog(AEntity entityBean) {
-        appContext.getBean(GiornoDialog.class, service, entityClazz).open(entityBean, EAOperation.edit, this::save, this::delete);
+        appContext.getBean(GiornoDialog.class, service, entityClazz).open(entityBean, isEntityModificabile ? EAOperation.edit : EAOperation.showOnly, this::save, this::delete);
     }// end of method
 
     /**

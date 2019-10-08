@@ -110,7 +110,7 @@ public class Anno extends AEntity {
     @Size(min = 3)
     @Field("tit")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(flexGrow = true)
+    @AIColumn(widthEM = 10)
     public String titolo;
 
 

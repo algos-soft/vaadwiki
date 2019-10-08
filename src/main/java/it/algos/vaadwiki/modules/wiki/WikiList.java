@@ -8,14 +8,10 @@ import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
-import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadflow.ui.dialog.IADialog;
-import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadflow.ui.list.APaginatedGridViewList;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.service.LibBio;
-import it.algos.vaadwiki.statistiche.StatisticheAttivita;
 import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,7 +116,7 @@ public abstract class WikiList extends APaginatedGridViewList {
      * Nella sottoclasse concreta si usa una costante statica, per scrivere sempre uguali i riferimenti <br>
      * Passa nella superclasse anche la entityClazz che viene definita qui (specifica di questo mopdulo) <br>
      *
-     * @param service business class e layer di collegamento per la Repository
+     * @param service     business class e layer di collegamento per la Repository
      * @param entityClazz modello-dati specifico di questo modulo
      */
     public WikiList(IAService service, Class<? extends AEntity> entityClazz) { //@todo versione 14
@@ -140,7 +136,8 @@ public abstract class WikiList extends APaginatedGridViewList {
         super.usaSearch = false;
         super.usaBottoneNew = false;
 
-//        super.testoBottoneEdit = SHOW_NAME; //@todo versione 14
+        super.isEntityModificabile = false;
+        super.usaBottoneEdit = true;
         super.usaPagination = true;
 
         this.usaCreaButton = false;
@@ -295,6 +292,7 @@ public abstract class WikiList extends APaginatedGridViewList {
         String link = "\"" + PATH_WIKI + titoloPaginaStatistiche2 + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
+
 
     protected void uploadStatistiche() {
     }// end of method

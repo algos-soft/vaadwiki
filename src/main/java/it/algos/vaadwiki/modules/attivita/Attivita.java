@@ -95,7 +95,7 @@ public class Attivita extends AEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, widthEM = 12)
-    @AIColumn(widthEM = 20)
+    @AIColumn(flexGrow = true)
     public String plurale;
 
 

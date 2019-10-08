@@ -19,6 +19,7 @@ import it.algos.vaadflow.modules.anno.AnnoDialog;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.upload.UploadAnnoMorto;
 import it.algos.vaadwiki.upload.UploadAnnoNato;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +56,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_WANN, layout = MainLayout.class)
+@Route(value = TAG_WANN, layout = MainLayout14.class)
 @Qualifier(TAG_WANN)
 @Slf4j
 @AIScript(sovrascrivibile = false)
@@ -236,37 +237,37 @@ public class WikiAnnoList extends WikiList {
         Grid.Column colonna;
 
         renderer = new ComponentRenderer<>(this::createViewNatoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Test");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createViewMortoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Test");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createWikiNatoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Wiki");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createWikiMortoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Wiki");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createUploadNatoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Upload");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createUploadMortoButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Upload");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);

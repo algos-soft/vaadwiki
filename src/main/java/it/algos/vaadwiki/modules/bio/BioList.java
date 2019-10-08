@@ -14,6 +14,7 @@ import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.fields.ATextField;
@@ -52,7 +53,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Route(value = TAG_BIO, layout = MainLayout.class)
+@Route(value = TAG_BIO, layout = MainLayout14.class)
 @Qualifier(TAG_BIO)
 @Slf4j
 @AIScript(sovrascrivibile = false)

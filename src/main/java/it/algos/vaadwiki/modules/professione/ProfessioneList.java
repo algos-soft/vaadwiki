@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
 import it.algos.vaadwiki.schedule.TaskProfessione;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_PRO, layout = MainLayout.class)
+@Route(value = TAG_PRO, layout = MainLayout14.class)
 @Qualifier(TAG_PRO)
 @Slf4j
 @AIScript(sovrascrivibile = false)
@@ -61,20 +62,6 @@ public class ProfessioneList extends AttNazProfCatList {
 
 
 
-//    /**
-//     * Costruttore @Autowired <br>
-//     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-//     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-//     *
-//     * @param presenter per gestire la business logic del package
-//     * @param dialog    per visualizzare i fields
-//     */
-//    @Autowired
-//    public ProfessioneViewList(@Qualifier(TAG_PRO) IAPresenter presenter, @Qualifier(TAG_PRO) IADialog dialog) {
-//        super(presenter, dialog);
-//        ((ProfessioneViewDialog) dialog).fixFunzioni(this::save, this::delete);
-//    }// end of Spring constructor
-
     /**
      * Costruttore @Autowired <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
@@ -89,6 +76,7 @@ public class ProfessioneList extends AttNazProfCatList {
     public ProfessioneList(@Qualifier(TAG_PRO) IAService service) {
         super(service, Professione.class);
     }// end of Vaadin/@Route constructor
+
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
@@ -123,71 +111,5 @@ public class ProfessioneList extends AttNazProfCatList {
         paginatedGrid = new PaginatedGrid<Professione>();
         super.creaGridPaginata();
     }// end of method
-
-//    /**
-//     * Crea la GridPaginata <br>
-//     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-//     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-//     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
-//     */
-//    protected void creaGridPaginata() {
-//        PaginatedGrid<Professione> gridPaginated = new PaginatedGrid<Professione>();
-//        super.grid = gridPaginated;
-//        super.creaGridPaginata();
-//    }// end of method
-
-
-//    /**
-//     * Aggiunge le colonne alla PaginatedGrid <br>
-//     * Sovrascritto (obbligatorio) <br>
-//     */
-//    protected void addColumnsGridPaginata() {
-//        fixColumn(Professione::getSingolare, "singolare");
-//        fixColumn(Professione::getPagina, "pagina");
-//    }// end of method
-//
-//
-//    /**
-//     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
-//     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
-//     */
-//    protected void fixColumn(ValueProvider<Professione, ?> valueProvider, String propertyName) {
-//        Grid.Column singleColumn;
-//        singleColumn = ((PaginatedGrid<Professione>) grid).addColumn(valueProvider);
-//        columnService.fixColumn(singleColumn, Professione.class, propertyName);
-//    }// end of method
-
-
-//    /**
-//     * Apre il dialog di detail
-//     */
-//    protected void addDetailDialog() {
-//        //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
-//        if (usaBottoneEdit) {
-//            ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
-//            Grid.Column colonna = gridPaginated.addColumn(renderer);
-//            colonna.setWidth("6em");
-//            colonna.setFlexGrow(0);
-//        } else {
-//            EAOperation operation = isEntityModificabile ? EAOperation.edit : EAOperation.showOnly;
-//            grid.addSelectionListener(evento -> apreDialogo((SingleSelectionEvent) evento, operation));
-//        }// end of if/else cycle
-//    }// end of method
-//
-//
-//    /**
-//     * Eventuale header text
-//     */
-//    protected void fixGridHeader(String messaggio) {
-//        try { // prova ad eseguire il codice
-//            HeaderRow topRow = gridPaginated.prependHeaderRow();
-//            Grid.Column[] matrix = array.getColumnArray(gridPaginated);
-//            HeaderRow.HeaderCell informationCell = topRow.join(matrix);
-//            Label testo = new Label(messaggio);
-//            informationCell.setComponent(testo);
-//        } catch (Exception unErrore) { // intercetta l'errore
-//            log.error(unErrore.toString());
-//        }// fine del blocco try-catch
-//    }// end of method
 
 }// end of class

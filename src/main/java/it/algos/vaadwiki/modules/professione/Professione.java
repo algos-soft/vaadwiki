@@ -87,7 +87,7 @@ public class Professione extends AEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, widthEM = 12)
-    @AIColumn(widthEM = 100)
+    @AIColumn(flexGrow = true)
     public String pagina;
 
     /**

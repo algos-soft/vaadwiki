@@ -8,7 +8,9 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
+import it.algos.vaadwiki.modules.professione.Professione;
 import it.algos.vaadwiki.schedule.TaskGenere;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_GEN, layout = MainLayout.class)
+@Route(value = TAG_GEN, layout = MainLayout14.class)
 @Qualifier(TAG_GEN)
 @Slf4j
 @AIScript(sovrascrivibile = true)
@@ -62,19 +64,6 @@ public class GenereList extends AttNazProfCatList {
     private TaskGenere taskGenere;
 
 
-//    /**
-//     * Costruttore @Autowired <br>
-//     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-//     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-//     *
-//     * @param presenter per gestire la business logic del package
-//     * @param dialog    per visualizzare i fields
-//     */
-//    @Autowired
-//    public GenereViewList(@Qualifier(TAG_GEN) IAPresenter presenter, @Qualifier(TAG_GEN) IADialog dialog) {
-//        super(presenter, dialog);
-//        ((GenereViewDialog) dialog).fixFunzioni(this::save, this::delete);
-//    }// end of Spring constructor
 
     /**
      * Costruttore @Autowired <br>
@@ -92,6 +81,7 @@ public class GenereList extends AttNazProfCatList {
     }// end of Vaadin/@Route constructor
 
     /**
+     *
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
      * Invocare PRIMA il metodo della superclasse
@@ -113,36 +103,17 @@ public class GenereList extends AttNazProfCatList {
 
     /**
      * Crea la GridPaginata <br>
-     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
+     * Per usare una GridPaginata occorre:
+     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
+     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
+     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
+     * 4) il metodo sovrascritto deve invocare DOPO questo stesso superMetodo in APaginatedGridViewList <br>
      */
+    @Override
     protected void creaGridPaginata() {
-        PaginatedGrid<Genere> gridPaginated = new PaginatedGrid<Genere>();
-        super.grid = gridPaginated;
+        paginatedGrid = new PaginatedGrid<Genere>();
         super.creaGridPaginata();
     }// end of method
 
-
-    /**
-     * Aggiunge le colonne alla PaginatedGrid <br>
-     * Sovrascritto (obbligatorio) <br>
-     */
-    protected void addColumnsGridPaginata() {
-        fixColumn(Genere::getSingolare, "singolare");
-        fixColumn(Genere::getPluraleMaschile, "pluraleMaschile");
-        fixColumn(Genere::getPluraleFemminile, "pluraleFemminile");
-    }// end of method
-
-
-    /**
-     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
-     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
-     */
-    protected void fixColumn(ValueProvider<Genere, ?> valueProvider, String propertyName) {
-        Grid.Column singleColumn;
-        singleColumn = ((PaginatedGrid<Genere>) grid).addColumn(valueProvider);
-        columnService.fixColumn(singleColumn, Genere.class, propertyName);
-    }// end of method
 
 }// end of class

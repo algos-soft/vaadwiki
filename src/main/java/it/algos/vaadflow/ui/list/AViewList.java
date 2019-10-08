@@ -383,6 +383,7 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
     protected void openDialog(AEntity entityBean) {
     }// end of method
 
+
     public void updateDopoDialog(AEntity entityBean) {
         this.updateItems();
         this.updateView();

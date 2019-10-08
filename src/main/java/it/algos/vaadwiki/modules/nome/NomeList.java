@@ -16,6 +16,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.fields.AComboBox;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.wiki.WikiList;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.statistiche.StatisticheNomiA;
@@ -231,41 +232,55 @@ public class NomeList extends WikiList {
     }// end of method
 
 
+//    /**
+//     * Crea la GridPaginata <br>
+//     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+//     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+//     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
+//     */
+//    protected void creaGridPaginata() {
+//        PaginatedGrid<Nome> gridPaginated = new PaginatedGrid<Nome>();
+//        super.grid = gridPaginated;
+//        super.creaGridPaginata();
+//    }// end of method
+//
+//
+//    /**
+//     * Aggiunge le colonne alla PaginatedGrid <br>
+//     * Sovrascritto (obbligatorio) <br>
+//     */
+//    protected void addColumnsGridPaginata() {
+//        fixColumn(Nome::getNome, "nome");
+//        fixColumn(Nome::getVoci, "voci");
+//        fixColumn(Nome::isValido, "valido");
+//        fixColumn(Nome::isDoppio, "doppio");
+//    }// end of method
+//
+//
+//    /**
+//     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
+//     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
+//     */
+//    protected void fixColumn(ValueProvider<Nome, ?> valueProvider, String propertyName) {
+//        Grid.Column singleColumn;
+//        singleColumn = ((PaginatedGrid<Nome>) grid).addColumn(valueProvider);
+//        columnService.fixColumn(singleColumn, Nome.class, propertyName);
+//    }// end of method
+
+
     /**
      * Crea la GridPaginata <br>
-     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
+     * Per usare una GridPaginata occorre:
+     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
+     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
+     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
+     * 4) il metodo sovrascritto deve invocare DOPO questo stesso superMetodo in APaginatedGridViewList <br>
      */
+    @Override
     protected void creaGridPaginata() {
-        PaginatedGrid<Nome> gridPaginated = new PaginatedGrid<Nome>();
-        super.grid = gridPaginated;
+        paginatedGrid = new PaginatedGrid<Nome>();
         super.creaGridPaginata();
     }// end of method
-
-
-    /**
-     * Aggiunge le colonne alla PaginatedGrid <br>
-     * Sovrascritto (obbligatorio) <br>
-     */
-    protected void addColumnsGridPaginata() {
-        fixColumn(Nome::getNome, "nome");
-        fixColumn(Nome::getVoci, "voci");
-        fixColumn(Nome::isValido, "valido");
-        fixColumn(Nome::isDoppio, "doppio");
-    }// end of method
-
-
-    /**
-     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
-     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
-     */
-    protected void fixColumn(ValueProvider<Nome, ?> valueProvider, String propertyName) {
-        Grid.Column singleColumn;
-        singleColumn = ((PaginatedGrid<Nome>) grid).addColumn(valueProvider);
-        columnService.fixColumn(singleColumn, Nome.class, propertyName);
-    }// end of method
-
 
     /**
      * Eventuali colonne calcolate aggiunte DOPO quelle automatiche
@@ -277,21 +292,21 @@ public class NomeList extends WikiList {
         Grid.Column colonna;
 
         renderer = new ComponentRenderer<>(this::createViewButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Test");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
 
         renderer = new ComponentRenderer<>(this::createWikiButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Wiki");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
 
         renderer = new ComponentRenderer<>(this::createUploaButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Upload");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);

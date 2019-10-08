@@ -10,6 +10,7 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attivita.AttivitaDialog;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
@@ -44,10 +45,10 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_NAZ, layout = MainLayout.class)
+@Route(value = TAG_NAZ, layout = MainLayout14.class)
 @Qualifier(TAG_NAZ)
 @Slf4j
-@AIScript(sovrascrivibile = true)
+@AIScript(sovrascrivibile = false)
 public class NazionalitaList extends AttNazProfCatList {
 
 
@@ -63,21 +64,6 @@ public class NazionalitaList extends AttNazProfCatList {
      */
     @Autowired
     private TaskNazionalita taskNazionalita;
-
-
-//    /**
-//     * Costruttore @Autowired <br>
-//     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-//     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-//     *
-//     * @param presenter per gestire la business logic del package
-//     * @param dialog    per visualizzare i fields
-//     */
-//    @Autowired
-//    public NazionalitaViewList(@Qualifier(TAG_NAZ) IAPresenter presenter, @Qualifier(TAG_NAZ) IADialog dialog) {
-//        super(presenter, dialog);
-//        ((NazionalitaViewDialog) dialog).fixFunzioni(this::save, this::delete);
-//    }// end of Spring constructor
 
     /**
      * Costruttore @Autowired <br>
