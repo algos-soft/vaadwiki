@@ -51,7 +51,7 @@ public class TaskNomi extends ATask {
      */
     @PostConstruct
     protected void inizia() {
-        super.eaSchedule = EASchedule.oreOtto;
+        super.eaSchedule = EASchedule.oreNove;
         super.usaDaemon = pref.isBool(USA_DAEMON_NOMI);
     }// end of method
 
