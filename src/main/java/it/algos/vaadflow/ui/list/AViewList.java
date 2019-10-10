@@ -20,6 +20,7 @@ import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.AResetDialog;
 import it.algos.vaadflow.ui.dialog.ASearchDialog;
+import it.algos.vaadflow.ui.dialog.AViewDialog;
 import it.algos.vaadflow.ui.fields.AIntegerField;
 import it.algos.vaadflow.ui.fields.ATextArea;
 import it.algos.vaadflow.ui.fields.ATextField;
@@ -96,7 +97,6 @@ import static it.algos.vaadflow.application.FlowCost.FLAG_TEXT_SHOW;
 @HtmlImport(value = "styles/algos-styles.html", loadMode = LoadMode.INLINE)
 @Slf4j
 public abstract class AViewList extends APropertyViewList implements IAView, BeforeEnterObserver, BeforeLeaveObserver {
-
 
     /**
      * Costruttore @Autowired <br>

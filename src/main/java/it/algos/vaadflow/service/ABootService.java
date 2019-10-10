@@ -15,7 +15,7 @@ import it.algos.vaadflow.modules.person.PersonList;
 import it.algos.vaadflow.modules.secolo.SecoloList;
 import it.algos.vaadflow.modules.logtype.LogtypeList;
 import it.algos.vaadflow.developer.DeveloperView;
-import it.algos.vaadflow.modules.preferenza.EAPreferenza;
+import it.algos.vaadflow.enumeration.EAPreferenza;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.wizard.WizardView;
 import lombok.extern.slf4j.Slf4j;

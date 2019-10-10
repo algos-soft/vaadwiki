@@ -5,6 +5,7 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.IAView;
+import it.algos.vaadflow.ui.dialog.AViewDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 
 import static it.algos.vaadflow.application.FlowCost.USA_EDIT_BUTTON;

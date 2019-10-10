@@ -154,7 +154,7 @@ public class UtenteService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Utente newEntity() {
-        return newEntity((Company) null, "", "", (List<Role>) null, "", false);
+        return newEntity((Company) null, "", "", (List<Role>) null, "", true);
     }// end of method
 
 

@@ -16,7 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
@@ -60,9 +59,9 @@ import java.util.List;
  * -The property name (i.e. 'descrizione') would be used as the field key if this annotation was not included.
  * -Remember that field keys are repeated for every document so using a smaller key name will reduce the required space.
  * Le property non primitive, di default sono EMBEDDED con un riferimento statico
- *      (EAFieldType.link e XxxPresenter.class)
+ * (EAFieldType.link e XxxPresenter.class)
  * Le singole property possono essere annotate con @DBRef per un riferimento DINAMICO (not embedded)
- *      (EAFieldType.combo e XXService.class, con inserimento automatico nel ViewDialog)
+ * (EAFieldType.combo e XXService.class, con inserimento automatico nel ViewDialog)
  * Una (e una sola) property deve avere @AIColumn(flexGrow = true) per fissare la larghezza della Grid <br>
  */
 
@@ -80,7 +79,7 @@ import java.util.List;
 @Builder(builderMethodName = "builderUtente")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(recordName = "utente", company = EACompanyRequired.obbligatoria)
-@AIList(fields = {"company", "username", "password", "ruoli","enabled", "mail"})
+@AIList(fields = {"company", "username", "password", "ruoli", "enabled", "mail"})
 @AIForm(fields = {"company", "username", "password", "ruoli", "enabled", "mail"})
 @AIScript(sovrascrivibile = false)
 public class Utente extends ACEntity implements UserDetails {
@@ -147,7 +146,7 @@ public class Utente extends ACEntity implements UserDetails {
     @Field("ena")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(name = "attivo", type = EAFieldType.checkbox)
-    @AIColumn( headerIcon = VaadinIcon.USER)
+    @AIColumn(headerIcon = VaadinIcon.USER)
     public boolean enabled;
 
 

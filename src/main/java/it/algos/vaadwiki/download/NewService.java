@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDateTime;
 
-import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_BIO;
+import static it.algos.vaadwiki.application.WikiCost.LAST_UPDATE_BIO;
 
 /**
  * Project vaadbio2
@@ -43,7 +43,7 @@ public class NewService extends ABioService {
 
         if (array.isValid(result.getVociDaCreare())) {
             result = pageService.downloadPagine(result);
-            pref.saveValue(LAST_DOWNLOAD_BIO, LocalDateTime.now());
+            pref.saveValue(LAST_UPDATE_BIO, LocalDateTime.now());
 
             if (result.getNumVociCreate() > 0) {
                 logger.info("NEW - download di nuove pagine e creazione in mongoDB Bio (" + text.format(result.getNumVociCreate()) + " pagine) in " + date.deltaText(inizio));

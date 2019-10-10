@@ -1,7 +1,9 @@
-package it.algos.vaadflow.modules.preferenza;
+package it.algos.vaadflow.enumeration;
 
 
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.modules.preferenza.EAPrefType;
+import it.algos.vaadflow.modules.preferenza.IAPreferenza;
 
 /**
  * Project it.algos.vaadflow
@@ -10,7 +12,7 @@ import it.algos.vaadflow.application.FlowCost;
  * Date: mer, 30-mag-2018
  * Time: 07:27
  */
-public enum EAPreferenza {
+public enum EAPreferenza implements IAPreferenza {
 
     usaDebug(FlowCost.USA_DEBUG, "Flag generale di debug (ce ne possono essere di specifici, validi solo se questo è vero)", EAPrefType.bool, false),
     usaLogDebug(FlowCost.USA_LOG_DEBUG, "Uso del log di registrazione per il livello debug. Di default false.", EAPrefType.bool, false),

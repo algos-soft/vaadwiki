@@ -60,75 +60,85 @@ public class WikiVers extends AVers {
         int k = super.inizia();
         codeProject = CODE_PROJECT;
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_BIO, "Crono per ciclo bio completo", true);
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_BIO, "Crono per ciclo bio completo", true);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_GENERE, "Crono per download genere, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_GIORNI, "Crono per download giorni, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_ANNI, "Crono per download anni, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_NOMI, "Crono per download nomi, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_COGNOMI, "Crono per download cognomi, extra-ciclo", false);
+//        }// fine del blocco if
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_GENERE, "Crono per download genere, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_GIORNI, "Crono per download giorni, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_ANNI, "Crono per download anni, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_ATTIVITA, "Ultimo download del modulo attività");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_NAZIONALITA, "Ultimo download del modulo nazionalità");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_PROFESSIONE, "Ultimo download del modulo professione");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_GENERE, "Ultimo download del modulo genere (plurali)");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_CATEGORIA, "Ultimo controllo di tutte le pagine esistenti nella categoria BioBot");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_BIO, "Ultimo update delle pagine della categoria BioBot");
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_ATTIVITA, "Ultimo download del modulo attività");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_NAZIONALITA, "Ultimo download del modulo nazionalità");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_PROFESSIONE, "Ultimo download del modulo professione");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_GENERE, "Ultimo download del modulo genere (plurali)");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_CATEGORIA, "Ultimo controllo di tutte le pagine esistenti nella categoria BioBot");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_BIO, "Ultimo update delle pagine della categoria BioBot");
+//        }// fine del blocco if
 
         //--creata una nuova preferenza
         if (installa(++k)) {
@@ -365,6 +375,7 @@ public class WikiVers extends AVers {
         if (installa(++k)) {
             creaPrefBool(USA_SOTTOPAGINE_NOMI_COGNOMI, "Usa sottopagine se i paragrafi nella liste di nomi e cognomi superano SOGLIA_SOTTOPAGINA_NOMI_COGNOMI", false);
         }// fine del blocco if
+
 
         return k;
     }// end of method

@@ -234,10 +234,16 @@ public class AFieldService extends AbstractService {
                 }// end of if cycle
                 break;
             case email:
+                message = "L'indirizzo eMail non è valido";
+                EmailValidator eMailValidator = new EmailValidator(message);
                 field = new EmailField(caption);
                 ((EmailField) field).setClearButtonVisible(true);
                 if (binder != null) {
-                    binder.forField(field).withValidator(new EmailValidator("L'indirizzo eMail non è valido")).bind(fieldName);
+                    if (required) {
+                        binder.forField(field).withValidator(nullValidator).withValidator(eMailValidator).bind(fieldName);
+                    } else {
+                        binder.forField(field).withNullRepresentation("").withValidator(eMailValidator).bind(fieldName);
+                    }// end of if/else cycle
                 }// end of if cycle
                 break;
             case textarea:

@@ -10,10 +10,11 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.fields.AComboBox;
@@ -29,7 +30,6 @@ import it.algos.wiki.web.WLogin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.vaadin.klaudeta.PaginatedGrid;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -173,21 +173,6 @@ public class BioList extends AttNazProfCatList {
     private AComboBox<Upload> comboUpload;
 
 
-
-//    /**
-//     * Costruttore @Autowired <br>
-//     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-//     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-//     *
-//     * @param presenter per gestire la business logic del package
-//     * @param dialog    per visualizzare i fields
-//     */
-//    @Autowired
-//    public BioViewList(@Qualifier(TAG_BIO) IAPresenter presenter, @Qualifier(TAG_BIO) IADialog dialog) {
-//        super(presenter, dialog);
-//        ((BioViewDialog) dialog).fixFunzioni(this::save, this::delete);
-//    }// end of Spring constructor
-
     /**
      * Costruttore @Autowired <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
@@ -203,6 +188,7 @@ public class BioList extends AttNazProfCatList {
         super(service, Bio.class);
     }// end of Vaadin/@Route constructor
 
+
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
@@ -212,18 +198,19 @@ public class BioList extends AttNazProfCatList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaSearch = false;
+        super.usaSearch = true;
         super.usaBottoneNew = true;
         super.usaBottoneDeleteMongo = true;
         super.usaBottoneDownload = true;
         super.usaBottoneUpload = false;
         super.usaBottoneStatistiche = false;
         super.usaBottoneModulo = false;
+        super.isEntityModificabile = true;
         super.usaBottoneEdit = true;
         super.task = taskUpdate;
         super.usaPagination = false;
         super.codeFlagDownload = USA_DAEMON_BIO;
-        super.codeLastDownload = LAST_DOWNLOAD_BIO;
+        super.codeLastDownload = LAST_UPDATE_BIO;
         super.durataLastDownload = DURATA_DOWNLOAD_BIO;
     }// end of method
 
@@ -525,5 +512,22 @@ public class BioList extends AttNazProfCatList {
 //        }// end of if cycle
 //    }// end of method
 
+
+    /**
+     * Creazione ed apertura del dialogo per una nuova entity oppure per una esistente <br>
+     * Il dialogo è PROTOTYPE e viene creato esclusivamente da appContext.getBean(... <br>
+     * Nella creazione vengono regolati il service e la entityClazz di riferimento <br>
+     * Contestualmente alla creazione, il dialogo viene aperto con l'item corrente (ricevuto come parametro) <br>
+     * Se entityBean è null, nella superclasse AViewDialog viene modificato il flag a EAOperation.addNew <br>
+     * Si passano al dialogo anche i metodi locali (di questa classe AViewList) <br>
+     * come ritorno dalle azioni save e delete al click dei rispettivi bottoni <br>
+     * Il metodo DEVE essere sovrascritto <br>
+     *
+     * @param entityBean item corrente, null se nuova entity
+     */
+    @Override
+    protected void openDialog(AEntity entityBean) {
+        appContext.getBean(BioDialog.class, service, entityClazz).open(entityBean, isEntityModificabile ? EAOperation.edit : EAOperation.showOnly, this::save, this::delete);
+    }// end of method
 
 }// end of class

@@ -206,6 +206,11 @@ public abstract class APaginatedGridViewList extends AGridViewList {
      */
     @Override
     public void updateView() {
+        if (!usaPagination) {
+            super.updateView();
+            return;
+        }// end of if cycle
+
         if (items != null) {
             try { // prova ad eseguire il codice
                 paginatedGrid.deselectAll();

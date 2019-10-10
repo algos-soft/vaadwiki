@@ -18,6 +18,7 @@ import it.algos.vaadflow.enumeration.EAColor;
 import it.algos.vaadflow.enumeration.EAMenu;
 import it.algos.vaadflow.presenter.IAPresenter;
 import it.algos.vaadflow.service.IAService;
+import it.algos.vaadflow.ui.dialog.AViewDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.menu.AButtonMenu;

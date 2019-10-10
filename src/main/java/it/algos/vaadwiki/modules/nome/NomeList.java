@@ -15,6 +15,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.wiki.WikiList;
@@ -56,7 +57,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_NOM, layout = MainLayout.class)
+@Route(value = TAG_NOM, layout = MainLayout14.class)
 @Qualifier(TAG_NOM)
 @Slf4j
 @AIScript(sovrascrivibile = true)
@@ -97,20 +98,6 @@ public class NomeList extends WikiList {
     //--Soglia minima per creare una pagina di un nome sul server wiki
     private int sogliaWiki;
 
-
-//    /**
-//     * Costruttore @Autowired <br>
-//     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-//     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-//     *
-//     * @param presenter per gestire la business logic del package
-//     * @param dialog    per visualizzare i fields
-//     */
-//    @Autowired
-//    public NomeViewList(@Qualifier(TAG_NOM) IAPresenter presenter, @Qualifier(TAG_NOM) IADialog dialog) {
-//        super(presenter, dialog);
-//        ((NomeViewDialog) dialog).fixFunzioni(this::save, this::delete);
-//    }// end of Spring constructor
 
     /**
      * Costruttore @Autowired <br>
@@ -231,41 +218,6 @@ public class NomeList extends WikiList {
         alertPlacehorder.add(label);
     }// end of method
 
-
-//    /**
-//     * Crea la GridPaginata <br>
-//     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-//     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-//     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
-//     */
-//    protected void creaGridPaginata() {
-//        PaginatedGrid<Nome> gridPaginated = new PaginatedGrid<Nome>();
-//        super.grid = gridPaginated;
-//        super.creaGridPaginata();
-//    }// end of method
-//
-//
-//    /**
-//     * Aggiunge le colonne alla PaginatedGrid <br>
-//     * Sovrascritto (obbligatorio) <br>
-//     */
-//    protected void addColumnsGridPaginata() {
-//        fixColumn(Nome::getNome, "nome");
-//        fixColumn(Nome::getVoci, "voci");
-//        fixColumn(Nome::isValido, "valido");
-//        fixColumn(Nome::isDoppio, "doppio");
-//    }// end of method
-//
-//
-//    /**
-//     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
-//     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
-//     */
-//    protected void fixColumn(ValueProvider<Nome, ?> valueProvider, String propertyName) {
-//        Grid.Column singleColumn;
-//        singleColumn = ((PaginatedGrid<Nome>) grid).addColumn(valueProvider);
-//        columnService.fixColumn(singleColumn, Nome.class, propertyName);
-//    }// end of method
 
 
     /**
