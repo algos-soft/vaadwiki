@@ -186,7 +186,7 @@ public abstract class WikiList extends APaginatedGridViewList {
         if (usaUploadAllButton) {
             uploadAllButton = new Button("Upload all", new Icon(VaadinIcon.UPLOAD));
             uploadAllButton.getElement().setAttribute("theme", "error");
-//            uploadAllButton.addClickListener(e -> uploadEffettivo()); //@todo nelle sottoclassi specifiche
+            uploadAllButton.addClickListener(e -> uploadEffettivo());
             topPlaceholder.add(uploadAllButton);
         }// end of if cycle
 
