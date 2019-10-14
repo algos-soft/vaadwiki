@@ -2265,6 +2265,17 @@ public class LibBio {
         return fixPropertyBase(testoGrezzo);
     } // // end of method
 
+    /**
+     * Regola questo campo
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public String fixLuogoValido(String testoGrezzo) {
+        return fixPropertyBase(testoGrezzo);
+    } // // end of method
+
 
     /**
      * Regola questo campo
