@@ -242,13 +242,13 @@ public class WikiBoot extends ABoot {
          * Versione dell'applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
          */
-        FlowVar.projectVersion = 5.8;
+        FlowVar.projectVersion = 5.9;
 
         /**
          * Data della versione dell'applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
          */
-        FlowVar.versionDate = LocalDate.of(2019, 10, 14);
+        FlowVar.versionDate = LocalDate.of(2019, 10, 22);
 
         if (wLogin != null) {
             FlowVar.projectNote = "- loggato come " + wLogin.getLgusername();

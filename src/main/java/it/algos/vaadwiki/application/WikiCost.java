@@ -94,6 +94,7 @@ public class WikiCost {
     public final static String COGNOME = "Cognome:";
 
     public final static String CODE_DOWNLOAD = "lastDownload";
+
     public final static String CODE_UPDATE = "lastUpdate";
 
     public final static String CODE_UPLOAD = "lastUpload";
@@ -145,6 +146,7 @@ public class WikiCost {
     public final static String LAST_DOWNLOAD_GENERE = CODE_DOWNLOAD + GEN;
 
     public final static String LAST_UPDATE_BIO = CODE_UPDATE + BIO;
+
     public final static String LAST_DOWNLOAD_DOPPI_NOMI = CODE_DOWNLOAD + "DoppiNomi";
 
     public final static String LAST_ELABORA_NOME = CODE_DOWNLOAD + NOME;
@@ -201,9 +203,9 @@ public class WikiCost {
 
     public final static String TASK_NAZ = "taskNazionalita";
 
-    public final static String TASK_COG = "taskCognomi";
-
     public final static String TASK_NOM = "taskNomi";
+
+    public final static String TASK_COG = "taskCognomi";
 
     public final static String SEND_MAIL_CICLO = "sendMailCiclo";
 
