@@ -161,6 +161,7 @@ public class AReflectionService extends AbstractService {
      *
      * @param viewClazz classe view su cui operare la riflessione
      */
+    @Deprecated
     public VaadinIcon getIconView(final Class<?> viewClazz) {
         VaadinIcon icon = null;
         String iconNameProperty = "VIEW_ICON";
@@ -172,6 +173,8 @@ public class AReflectionService extends AbstractService {
 
         return icon;
     }// end of method
+
+
 
 
     /**
@@ -444,7 +447,7 @@ public class AReflectionService extends AbstractService {
      *
      * @return lista di fields visibili nella Grid
      */
-    public ArrayList<Field> getListFields(Class<? extends AEntity> entityClazz, ArrayList<String> listaNomi) {
+    public ArrayList<Field> getListFields(Class<? extends AEntity> entityClazz, List<String> listaNomi) {
         ArrayList<Field> fieldsList = new ArrayList<>();
         Class<?> clazz = entityClazz;
         ArrayList<Field> fieldsTmp = new ArrayList<>();

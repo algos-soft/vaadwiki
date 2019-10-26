@@ -60,310 +60,322 @@ public class WikiVers extends AVers {
         int k = super.inizia();
         codeProject = CODE_PROJECT;
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_BIO, "Crono per ciclo bio completo", true);
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_BIO, "Crono per ciclo bio completo", true);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_GENERE, "Crono per download genere, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_GIORNI, "Crono per download giorni, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_ANNI, "Crono per download anni, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_NOMI, "Crono per download nomi, extra-ciclo", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_DAEMON_COGNOMI, "Crono per download cognomi, extra-ciclo", false);
+//        }// fine del blocco if
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo", false);
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_ATTIVITA, "Ultimo download del modulo attività");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_NAZIONALITA, "Ultimo download del modulo nazionalità");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_PROFESSIONE, "Ultimo download del modulo professione");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_GENERE, "Ultimo download del modulo genere (plurali)");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_CATEGORIA, "Ultimo controllo di tutte le pagine esistenti nella categoria BioBot");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_BIO, "Ultimo update delle pagine della categoria BioBot");
+//        }// fine del blocco if
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_GENERE, "Crono per download genere, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_GIORNI, "Crono per download giorni, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_DAEMON_ANNI, "Crono per download anni, extra-ciclo", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_ATTIVITA, "Ultimo download del modulo attività");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_NAZIONALITA, "Ultimo download del modulo nazionalità");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_PROFESSIONE, "Ultimo download del modulo professione");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_GENERE, "Ultimo download del modulo genere (plurali)");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_CATEGORIA, "Ultimo controllo di tutte le pagine esistenti nella categoria BioBot");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_BIO, "Ultimo update delle pagine della categoria BioBot");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(DURATA_DOWNLOAD_ATTIVITA, "Durata in secondi dell'ultimo download del modulo attività");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(DURATA_DOWNLOAD_NAZIONALITA, "Durata in secondi dell'ultimo download del modulo nazionalità");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(DURATA_DOWNLOAD_PROFESSIONE, "Durata in secondi dell'ultimo download del modulo professione");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(DURATA_DOWNLOAD_CATEGORIA, "Durata in minuti dell'ultimo download delle pagine della categoria BioBot");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(DURATA_DOWNLOAD_GENERE, "Durata in secondi dell'ultimo download del modulo genere (plurali)");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(DURATA_DOWNLOAD_BIO, "Durata in minuti dell'ultimo update delle pagine della categoria BioBot");
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(DURATA_DOWNLOAD_ATTIVITA, "Durata in secondi dell'ultimo download del modulo attività");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(DURATA_DOWNLOAD_NAZIONALITA, "Durata in secondi dell'ultimo download del modulo nazionalità");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(DURATA_DOWNLOAD_PROFESSIONE, "Durata in secondi dell'ultimo download del modulo professione");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(DURATA_DOWNLOAD_CATEGORIA, "Durata in minuti dell'ultimo download delle pagine della categoria BioBot");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(DURATA_DOWNLOAD_GENERE, "Durata in secondi dell'ultimo download del modulo genere (plurali)");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(DURATA_DOWNLOAD_BIO, "Durata in minuti dell'ultimo update delle pagine della categoria BioBot");
+//        }// fine del blocco if
 
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(CAT_BIO, "Categoria attiva", "BioBot");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(WIKI_PAGE_LIMIT, "Numero di pagine wiki da controllare nel blocco", 250);
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefTxt(CAT_BIO, "Categoria attiva", "BioBot");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(WIKI_PAGE_LIMIT, "Numero di pagine wiki da controllare nel blocco", 250);
+//        }// fine del blocco if
 
 //        //--creata una nuova preferenza
 //        if (installa(++k)) {
 //            creaPrefBool(USA_CHECK_LISTE_PAGEID, "Controllo di sicurezza delle liste di pageid tra Categoria server e mongoDB", true);
 //        }// fine del blocco if
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(SEND_MAIL_CICLO, "Mail di conferma e controllo del ciclo giornaliero", true);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(SEND_MAIL_RESTART, "Mail per il restart dell'applicazione", true);
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(SEND_MAIL_CICLO, "Mail di conferma e controllo del ciclo giornaliero", true);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(SEND_MAIL_RESTART, "Mail per il restart dell'applicazione", true);
+//        }// fine del blocco if
 
 //        //--creata una nuova preferenza
 //        if (installa(++k)) {
 //            creaPrefBool(USA_UPLOAD_DURANTE_DOWNLOAD, "Corregge sul wiki la voce durante il download", false);
 //        }// fine del blocco if
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_REGISTRA_SEMPRE_CRONO, "Registra sempre le pagine di giorni ed anni", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_PARAGRAFI_GIORNI, "Paragrafi dei secoli nelle liste dei giorni", false);
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA, "Titolo del paragrafo per le biografie senza anno di nascita specificato", "Senza anno di nascita");
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_PARAGRAFO_VUOTO_GIORNI_MORTE, "Titolo del paragrafo per le biografie senza anno di morte specificato", "Senza anno di morte");
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_FORCETOC_GIORNI, "Usa l'indice dei paragrafi nelle liste dei giorni", false);
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza anno specificato", true);
-        }// fine del blocco if
-        // --creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_PARAGRAFO_SIZE_GIORNI, "Dimensione del paragrafo nei titoli dei mesi per i giorni", true);
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_RIGHE_RAGGRUPPATE_GIORNI, "Usa righe raggruppate per anno nella liste dei giorni", true);
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_UPLOAD_GIORNI, "Ultimo upload dei giorni");
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(DURATA_UPLOAD_GIORNI, "Durata in minuti dell'ultimo upload dei giorni");
-        }// fine del blocco if
-
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_PARAGRAFI_ANNI, "Paragrafi dei mesi nelle liste degli anni", false);
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_PARAGRAFO_VUOTO_ANNI_NASCITA, "Titolo del paragrafo per le biografie senza giorno di nascita specificato", "Senza giorno di nascita");
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_PARAGRAFO_VUOTO_ANNI_MORTE, "Titolo del paragrafo per le biografie senza giorno di morte specificato", "Senza giorno di morte");
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_FORCETOC_ANNI, "Usa l'indice dei paragrafi nelle liste degli anni", false);
-        }// fine del blocco if
-        // --creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(IS_PARAGRAFO_VUOTO_ANNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza giorno specificato", true);
-        }// fine del blocco if
-        // --creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_PARAGRAFO_SIZE_ANNI, "Dimensione del paragrafo nei titoli dei secoli per gli anni", true);
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_RIGHE_RAGGRUPPATE_ANNI, "Usa righe raggruppate per giorno nella liste degli anni", true);
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(SOGLIA_SOTTOPAGINA_GIORNI_ANNI, "Soglia per sottopaginare i paragrafi di giorni ed anni", 50);
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_SOTTOPAGINE_GIORNI_ANNI, "Usa sottopagine se i paragrafi nella liste dei giorni e degli anni superano SOGLIA_SOTTOPAGINA_GIORNI_ANNI", false);
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_UPLOAD_ANNI, "Ultimo upload degli anni");
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(DURATA_UPLOAD_ANNI, "Durata in minuti dell'ultimo upload degli anni");
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_REGISTRA_SEMPRE_CRONO, "Registra sempre le pagine di giorni ed anni", false);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_PARAGRAFI_GIORNI, "Paragrafi dei secoli nelle liste dei giorni", false);
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefTxt(TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA, "Titolo del paragrafo per le biografie senza anno di nascita specificato", "Senza anno di nascita");
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefTxt(TAG_PARAGRAFO_VUOTO_GIORNI_MORTE, "Titolo del paragrafo per le biografie senza anno di morte specificato", "Senza anno di morte");
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_FORCETOC_GIORNI, "Usa l'indice dei paragrafi nelle liste dei giorni", false);
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza anno specificato", true);
+//        }// fine del blocco if
+//        // --creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_PARAGRAFO_SIZE_GIORNI, "Dimensione del paragrafo nei titoli dei mesi per i giorni", true);
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_RIGHE_RAGGRUPPATE_GIORNI, "Usa righe raggruppate per anno nella liste dei giorni", true);
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_UPLOAD_GIORNI, "Ultimo upload dei giorni");
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(DURATA_UPLOAD_GIORNI, "Durata in minuti dell'ultimo upload dei giorni");
+//        }// fine del blocco if
 
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI, "Titolo del paragrafo per le biografie senza attività specificata", "Senza attività specificata");
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_PARAGRAFI_ANNI, "Paragrafi dei mesi nelle liste degli anni", false);
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefTxt(TAG_PARAGRAFO_VUOTO_ANNI_NASCITA, "Titolo del paragrafo per le biografie senza giorno di nascita specificato", "Senza giorno di nascita");
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefTxt(TAG_PARAGRAFO_VUOTO_ANNI_MORTE, "Titolo del paragrafo per le biografie senza giorno di morte specificato", "Senza giorno di morte");
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_FORCETOC_ANNI, "Usa l'indice dei paragrafi nelle liste degli anni", false);
+//        }// fine del blocco if
+//        // --creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(IS_PARAGRAFO_VUOTO_ANNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza giorno specificato", true);
+//        }// fine del blocco if
+//        // --creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_PARAGRAFO_SIZE_ANNI, "Dimensione del paragrafo nei titoli dei secoli per gli anni", true);
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_RIGHE_RAGGRUPPATE_ANNI, "Usa righe raggruppate per giorno nella liste degli anni", true);
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(SOGLIA_SOTTOPAGINA_GIORNI_ANNI, "Soglia per sottopaginare i paragrafi di giorni ed anni", 50);
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_SOTTOPAGINE_GIORNI_ANNI, "Usa sottopagine se i paragrafi nella liste dei giorni e degli anni superano SOGLIA_SOTTOPAGINA_GIORNI_ANNI", false);
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_UPLOAD_ANNI, "Ultimo upload degli anni");
+//        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(DURATA_UPLOAD_ANNI, "Durata in minuti dell'ultimo upload degli anni");
+//        }// fine del blocco if
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefTxt(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI, "Titolo della sottopagina per le biografie senza attività specificata", "Altre...");
-        }// fine del blocco if
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(SOGLIA_NOMI_MONGO, "Soglia minima per creare una entity nella collezione Nomi sul mongoDB", 30);
-        }// fine del blocco if
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefTxt(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI, "Titolo del paragrafo per le biografie senza attività specificata", "Senza attività specificata");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefTxt(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI, "Titolo della sottopagina per le biografie senza attività specificata", "Altre...");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(SOGLIA_NOMI_MONGO, "Soglia minima per creare una entity nella collezione Nomi sul mongoDB", 30);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(SOGLIA_NOMI_PAGINA_WIKI, "Soglia minima per creare una pagina di un nome sul server wiki", 50);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_FORCETOC_NOMI, "Usa l'indice dei paragrafi nelle liste dei nomi", true);
+//        }// fine del blocco if
+//
+//        // --creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(IS_PARAGRAFO_VUOTO_NOMI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza attività specificata", true);
+//        }// fine del blocco if
+//
+//        // --creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_PARAGRAFO_SIZE_NOMI, "Dimensione del paragrafo nel titolo per i nomi", true);
+//        }// fine del blocco if
+//
+//        // --creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_ELABORA_NOME, "Ultima elaborazione dei nomi");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_DOWNLOAD_DOPPI_NOMI, "Ultima elaborazione dei doppi nomi");
+//        }// fine del blocco if
+//
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(SOGLIA_COGNOMI_MONGO, "Soglia minima per creare una entity nella collezione Cognomi sul mongoDB", 30);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(SOGLIA_COGNOMI_PAGINA_WIKI, "Soglia minima per creare una pagina di un cognome sul server wiki", 50);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_FORCETOC_COGNOMI, "Usa l'indice dei paragrafi nelle liste dei cognomi", true);
+//        }// fine del blocco if
+//
+//        // --creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza attività specificata", true);
+//        }// fine del blocco if
+//
+//        // --creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_PARAGRAFO_SIZE_COGNOMI, "Dimensione del paragrafo nel titolo per i cognomi", true);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefDate(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi");
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI, "Soglia per sottopaginare i paragrafi di nomi e cognomi", 50);
+//        }// fine del blocco if
+//
+//        //--creata una nuova preferenza
+//        if (installa(++k)) {
+//            creaPrefBool(USA_SOTTOPAGINE_NOMI_COGNOMI, "Usa sottopagine se i paragrafi nella liste di nomi e cognomi superano SOGLIA_SOTTOPAGINA_NOMI_COGNOMI", false);
+//        }// fine del blocco if
 
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(SOGLIA_NOMI_PAGINA_WIKI, "Soglia minima per creare una pagina di un nome sul server wiki", 50);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_FORCETOC_NOMI, "Usa l'indice dei paragrafi nelle liste dei nomi", true);
-        }// fine del blocco if
-
-        // --creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(IS_PARAGRAFO_VUOTO_NOMI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza attività specificata", true);
-        }// fine del blocco if
-
-        // --creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_PARAGRAFO_SIZE_NOMI, "Dimensione del paragrafo nel titolo per i nomi", true);
-        }// fine del blocco if
-
-        // --creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_ELABORA_NOME, "Ultima elaborazione dei nomi");
-        }// fine del blocco if
-
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(SOGLIA_COGNOMI_MONGO, "Soglia minima per creare una entity nella collezione Cognomi sul mongoDB", 30);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(SOGLIA_COGNOMI_PAGINA_WIKI, "Soglia minima per creare una pagina di un cognome sul server wiki", 50);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_FORCETOC_COGNOMI, "Usa l'indice dei paragrafi nelle liste dei cognomi", true);
-        }// fine del blocco if
-
-        // --creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza attività specificata", true);
-        }// fine del blocco if
-
-        // --creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_PARAGRAFO_SIZE_COGNOMI, "Dimensione del paragrafo nel titolo per i cognomi", true);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi");
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI, "Soglia per sottopaginare i paragrafi di nomi e cognomi", 50);
-        }// fine del blocco if
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefBool(USA_SOTTOPAGINE_NOMI_COGNOMI, "Usa sottopagine se i paragrafi nella liste di nomi e cognomi superano SOGLIA_SOTTOPAGINA_NOMI_COGNOMI", false);
-        }// fine del blocco if
-
-        //--creata una nuova preferenza
-        if (installa(++k)) {
-            creaPrefDate(LAST_DOWNLOAD_DOPPI_NOMI, "Ultima elaborazione dei doppi nomi");
-        }// fine del blocco if
 
         return k;
     }// end of method

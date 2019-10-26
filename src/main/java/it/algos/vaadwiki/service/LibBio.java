@@ -2265,6 +2265,17 @@ public class LibBio {
         return fixPropertyBase(testoGrezzo);
     } // // end of method
 
+    /**
+     * Regola questo campo
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public String fixLuogoValido(String testoGrezzo) {
+        return fixPropertyBase(testoGrezzo);
+    } // // end of method
+
 
     /**
      * Regola questo campo
@@ -2532,7 +2543,8 @@ public class LibBio {
      * @return riga di testo
      */
     public String creaRigaTemplate(String parBioText, String value) {
-        return PIPE + parBioText + UGUALE_SPAZIATO + value + A_CAPO;
+//        return PIPE + parBioText + UGUALE_SPAZIATO + value + A_CAPO;
+        return PIPE + parBioText + "=" + value + A_CAPO;//@todo versione 14
     } // fine del metodo
 
 

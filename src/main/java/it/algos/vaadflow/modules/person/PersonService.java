@@ -2,19 +2,16 @@ package it.algos.vaadflow.modules.person;
 
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.AContext;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.address.Address;
 import it.algos.vaadflow.modules.address.AddressService;
 import it.algos.vaadflow.modules.address.EAAddress;
 import it.algos.vaadflow.modules.company.Company;
-import it.algos.vaadflow.modules.preferenza.EAPreferenza;
 import it.algos.vaadflow.modules.role.Role;
 import it.algos.vaadflow.modules.utente.Utente;
 import it.algos.vaadflow.modules.utente.UtenteService;
 import it.algos.vaadflow.service.AService;
-import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,12 +24,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_PER;
+import static it.algos.vaadflow.application.FlowVar.usaSecurity;
 
 /**
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 26-ott-2018 9.59.58 <br>
+ * Fix date: 21-set-2019 7.14.53 <br>
  * <br>
  * Business class. Layer di collegamento per la Repository. <br>
  * <br>
@@ -57,10 +55,10 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PER;
 public class PersonService extends AService {
 
     public final static List<String> PROPERTIES_SECURED =
-            Arrays.asList("userName", "passwordInChiaro", "locked", "nome", "cognome", "telefono", "mail", "indirizzo");
+            Arrays.asList("userName", "passwordInChiaro", "locked", "nome", "cognome", "telefono", "indirizzo", "mail");
 
     public final static List<String> PROPERTIES_NOT_SECURED =
-            Arrays.asList("nome", "cognome", "telefono",  "indirizzo");
+            Arrays.asList("nome", "cognome", "telefono", "indirizzo", "mail");
 
     /**
      * versione della classe per la serializzazione
@@ -189,7 +187,7 @@ public class PersonService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Person newEntity(String nome, String cognome, String telefono, Address indirizzo, String mail) {
-        return newEntity((Company) null, nome, cognome, telefono, indirizzo, "", "", (List<Role>) null, "", false, false);
+        return newEntity((Company) null, nome, cognome, telefono, indirizzo, "", "", (List<Role>) null, mail, false, false);
     }// end of method
 
 
@@ -238,7 +236,7 @@ public class PersonService extends AService {
         //--poi vengono ricopiati i valori in Persona
         //--poi vengono aggiunte le property specifiche di Persona
         //--se non usa la security, utilizza il metodo builderPerson
-        if (usaSuperClasse && pref.isBool(EAPreferenza.usaSecurity.getCode())) {
+        if (usaSuperClasse && usaSecurity) {
             //--prima viene creata una entity di Utente, usando le regolazioni automatiche di quella superclasse.
             entityDellaSuperClasseUtente = utenteService.newEntity(company, userName, passwordInChiaro, ruoli, mail, enabled);
 
@@ -248,6 +246,7 @@ public class PersonService extends AService {
             entity.usaSuperClasse = true;
         } else {
             entity = Person.builderPerson().build();
+            entity.setMail(text.isValid(mail) ? mail : null);
             entity.usaSuperClasse = false;
         }// end of if/else cycle
 
@@ -271,7 +270,7 @@ public class PersonService extends AService {
         String nome = persona.nome != null ? persona.nome : "";
         String cognome = persona.cognome != null ? persona.cognome : "";
 
-        return pref.isBool(FlowCost.USA_SECURITY) ? utenteService.getPropertyUnica(entityBean) : nome + cognome;
+        return usaSecurity ? utenteService.getPropertyUnica(entityBean) : nome + cognome;
     }// end of method
 
 
@@ -356,7 +355,7 @@ public class PersonService extends AService {
      */
     @Override
     public List<String> getGridPropertyNamesList(AContext context) {
-        return pref.isBool(FlowCost.USA_SECURITY) ? PROPERTIES_SECURED : PROPERTIES_NOT_SECURED;
+        return usaSecurity ? PROPERTIES_SECURED : PROPERTIES_NOT_SECURED;
     }// end of method
 
 //

@@ -72,6 +72,18 @@ public class WikiScheduler extends Scheduler {
     @Autowired
     protected TaskAnni anni;
 
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected TaskNomi nomi;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected TaskCognomi cognomi;
+
 
     @PostConstruct
     public void startBio() throws IllegalStateException {
@@ -86,6 +98,7 @@ public class WikiScheduler extends Scheduler {
             this.task(update);
             this.task(giorni);
             this.task(anni);
+            this.task(nomi);
 
         }// fine del blocco if
     }// end of method

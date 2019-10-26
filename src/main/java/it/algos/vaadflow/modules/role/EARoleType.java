@@ -8,7 +8,7 @@ package it.algos.vaadflow.modules.role;
  * Time: 09:01
  */
 public enum EARoleType {
-    nobody, developer, admin, user, guest, asEntity;
+    nobody, developer, admin, user, guest, asEntity, noSecurity;
 
 
     public static EARoleType getType(String code) {

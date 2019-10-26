@@ -44,6 +44,11 @@ public enum EAColor {
     yellowgreen("Yellowgreen", "#9acd32"),
     wheat("Wheat", "#f5deb3"),
     turquoise("Turquoise", "#40e0d0"),
+    grigio1("grigio1", "#eeeeee"),
+    grigio2("grigio2", "#dddddd"),
+    grigio3("grigio3", "#cccccc"),
+    grigio4("grigio4", "#bbbbbb"),
+    grigio5("grigio5", "#aaaaaa"),
     ;
 
     private String tag;

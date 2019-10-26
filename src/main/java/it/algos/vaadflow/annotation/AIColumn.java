@@ -1,11 +1,14 @@
 package it.algos.vaadflow.annotation;
 
+import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow.enumeration.EAFieldType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static it.algos.vaadflow.application.FlowCost.VAADIN_ICON_DA_NON_USARE;
 
 /**
  * Created by gac on 05 ott 2016.
@@ -26,25 +29,18 @@ public @interface AIColumn {
      * Se manca (valore di default), prende quello indicato in AIField
      * Se manca anche in AIField, prende il valore di default di AIField
      */
-    EAFieldType type() default EAFieldType.ugualeAlField;
+    EAFieldType type() default EAFieldType.ugualeAlForm;
 
 
     /**
-     * (Optional) The name of the field.
+     * (Optional) The name of the column header.
      * Defaults to the property or field name.
      */
     String name() default "";
 
 
     /**
-     * (Optional) The width of the field.
-     * Defaults to 0
-     * Viene regolato in AColumnService.add()
-     */
-    int width() default 0;
-
-    /**
-     * (Optional) The width of the field.
+     * (Optional) The width of the column.
      * Expressed in int, to be converted in String ending with "em"
      * Defaults to 0.
      */
@@ -52,30 +48,48 @@ public @interface AIColumn {
 
 
     /**
-     * (Optional) The width of the field.
-     * Expressed in int, to be converted in String ending with "px"
-     * Defaults to 0.
-     */
-    int widthPX() default 0;
-
-//    /**
-//     * (Optional) Visibilità a secondo del ruolo dell'User collegato
-//     * Defaults to guest.
-//     */
-//    EARoleType roleTypeVisibility() default EARoleType.guest;
-
-    /**
      * (Optional) color of the component
      * Defaults to "".
      */
-    String color() default "";
+    String color() default "blue";
 
 
     /**
-     * (Optional) field that expand the maximum
+     * (Optional) column that expand the maximum
      * Only one for list
      * Defaults to false.
      */
     boolean flexGrow() default false;
+
+    /**
+     * (Optional) column sortable
+     * Defaults to false.
+     */
+    boolean sortable() default false;
+
+    /**
+     * (Optional) icon
+     * Defaults to false.
+     */
+    VaadinIcon headerIcon() default VaadinIcon.YOUTUBE;
+
+    /**
+     * (Optional) icon
+     * Defaults to 15.
+     */
+    int headerIconSizePX() default 20;
+
+    /**
+     * (Optional) icon
+     * Defaults to blue.
+     */
+    String headerIconColor() default "blue";
+
+
+    /**
+     * (Optional) method name for reflection
+     * Defaults to blue.
+     */
+    String methodName() default "";
 
 }// end of interface annotation

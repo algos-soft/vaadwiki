@@ -1,13 +1,16 @@
 package it.algos.vaadflow.service;
 
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.converter.StringToLongConverter;
+import com.vaadin.flow.data.validator.EmailValidator;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadflow.annotation.AIField;
 import it.algos.vaadflow.application.StaticContextAccessor;
+import it.algos.vaadflow.converter.AConverterComboBox;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import it.algos.vaadflow.ui.fields.*;
 import it.algos.vaadflow.validator.AIntegerZeroValidator;
@@ -17,8 +20,10 @@ import it.algos.vaadflow.validator.AUniqueValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.vaadin.gatanaso.MultiselectComboBox;
 
 import java.lang.reflect.Field;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -139,7 +144,11 @@ public class AFieldService extends AbstractService {
         boolean required = annotation.isRequired(reflectionJavaField);
         boolean focus = annotation.isFocus(reflectionJavaField);
 //        boolean enabled = annotation.isFieldEnabled(reflectedJavaField, nuovaEntity);
-        Class targetClazz = annotation.getComboClass(reflectionJavaField);
+//        Class targetClazz = annotation.getComboClass(reflectionJavaField);
+        Class enumClazz = annotation.getEnumClass(reflectionJavaField);
+        Class serviceClazz = annotation.getServiceClass(reflectionJavaField);
+        Class linkClazz = annotation.getLinkClass(reflectionJavaField);
+        List<String> enumItems = annotation.getEnumItems(reflectionJavaField);
         AStringNullValidator nullValidator = new AStringNullValidator(messageNotNull);
         AIntegerZeroValidator integerZeroValidator = new AIntegerZeroValidator();
         ALongZeroValidator longZeroValidator = new ALongZeroValidator();
@@ -225,9 +234,16 @@ public class AFieldService extends AbstractService {
                 }// end of if cycle
                 break;
             case email:
-                field = new ATextField(caption);
+                message = "L'indirizzo eMail non è valido";
+                EmailValidator eMailValidator = new EmailValidator(message);
+                field = new EmailField(caption);
+                ((EmailField) field).setClearButtonVisible(true);
                 if (binder != null) {
-                    binder.forField(field).bind(fieldName);
+                    if (required) {
+                        binder.forField(field).withValidator(nullValidator).withValidator(eMailValidator).bind(fieldName);
+                    } else {
+                        binder.forField(field).withNullRepresentation("").withValidator(eMailValidator).bind(fieldName);
+                    }// end of if/else cycle
                 }// end of if cycle
                 break;
             case textarea:
@@ -267,6 +283,24 @@ public class AFieldService extends AbstractService {
                     ((AIntegerField) field).focus();
                 }// end of if cycle
                 break;
+            case multicombo:
+                field = new MultiselectComboBox();
+                ((MultiselectComboBox) field).setLabel(caption);
+
+//                if (clazz != null) {
+//                    IAService service = (IAService) StaticContextAccessor.getBean(clazz);
+//                    List items = ((IAService) service).findAll();
+//                    if (items != null) {
+//                        ((MultiselectComboBox) field).setItems(items);
+//                    }// end of if cycle
+//                }// end of if cycle
+
+                if (binder != null) {
+                    binder.forField(field)
+                            .withConverter(new AConverterComboBox())
+                            .bind(fieldName);
+                }// end of if cycle
+                break;
             case combo:
                 field = new AComboBox(caption);
                 if (clazz != null) {
@@ -281,24 +315,45 @@ public class AFieldService extends AbstractService {
                     binder.forField(field).bind(fieldName);
                 }// end of if cycle
                 break;
+            /**
+             * Prima cerca i valori nella @Annotation items=... dell'interfaccia AIField
+             * Poi cerca i valori di una classe enumeration definita in enumClazz=... dell'interfaccia AIField
+             * Poi cerca i valori di una collection definita con serviceClazz=...dell'interfaccia AIField
+             */
             case enumeration:
                 field = new AComboBox(caption);
-                if (clazz != null) {
-                    Object[] items = clazz.getEnumConstants();
-                    if (items != null) {
-                        ((AComboBox) field).setItems(items);
-                    }// end of if cycle
-                }// end of if cycle
+                if (array.isValid(enumItems)) {
+                    ((AComboBox) field).setItems(enumItems);
+                } else {
+                    if (enumClazz != null) {
+                        Object[] items = enumClazz.getEnumConstants();
+                        if (items != null) {
+//                            ((AComboBox) field).setItems(array.toString(items));
+                            ((AComboBox) field).setItems(items);
+                        }// end of if cycle
+                    } else {
+                        if (serviceClazz != null) {
+                            IAService service = (IAService) StaticContextAccessor.getBean(serviceClazz);
+                            List items = ((IAService) service).findAll();
+                            if (items != null) {
+//                                ((AComboBox) field).setItems(array.toString(items));
+                                ((AComboBox) field).setItems(items);
+                            }// end of if cycle
+                        }// end of if cycle
+                    }// end of if/else cycle
+                }// end of if/else cycle
+
+//                if (clazz != null) {
+//                    Object[] items = clazz.getEnumConstants();
+//                    if (items != null) {
+//                        ((AComboBox) field).setItems(items);
+//                    }// end of if cycle
+//                }// end of if cycle
                 if (binder != null) {
                     binder.forField(field).bind(fieldName);
                 }// end of if cycle
                 break;
             case checkbox:
-                field = new Checkbox(caption);
-                if (binder != null) {
-                    binder.forField(field).bind(fieldName);
-                }// end of if cycle
-                break;
             case yesno:
                 field = new ACheckBox(caption);
                 if (binder != null) {
@@ -312,10 +367,15 @@ public class AFieldService extends AbstractService {
                 }// end of if cycle
                 break;
             case localdatetime:
-                //@todo andrà inserito quando ci sarà un DatePicker che accetti i LocalDateTime
-//                field = new ADatePicker(caption);
+                //@todo andrà modificato quando ci sarà un DatePicker che accetti i LocalDateTime
+                field = new ADatePicker(caption);
 //                field = new ATextField(caption);
 //                binder.forField(field).bind(fieldName);
+                break;
+            case localtime:
+                field = new TimePicker(caption);
+                ((TimePicker) field).setStep(Duration.ofHours(1)); //standard
+                binder.forField(field).bind(fieldName);
                 break;
             case vaadinIcon:
                 break;
@@ -325,6 +385,10 @@ public class AFieldService extends AbstractService {
             case pref:
 //                field = new ATextField(caption);
 //                binder.forField(field).withConverter(prefConverter).bind(fieldName);
+                break;
+            case custom:
+                field = appContext.getBean(AIndirizzo.class);
+                binder.forField(field).bind(fieldName);
                 break;
             case noBinder:
                 field = new ATextField(caption);
@@ -336,5 +400,6 @@ public class AFieldService extends AbstractService {
 
         return field;
     }// end of method
+
 
 }// end of class

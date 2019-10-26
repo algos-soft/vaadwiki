@@ -45,7 +45,6 @@ public enum EACicloType {
 
     private String esegue;
 
-
     EACicloType(String schedule) {
         this.schedule = schedule;
     }//end of constructor

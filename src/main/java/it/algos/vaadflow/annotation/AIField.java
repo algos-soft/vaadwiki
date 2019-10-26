@@ -22,9 +22,28 @@ public @interface AIField {
 
     /**
      * (Optional) Classe della property.
-     * Utilizzato nei Combo, nei Link e nelle Enumeration.
+     * Utilizzato nei Link.
      */
-    Class<? extends Object> clazz() default Object.class;
+    Class<? extends Object> linkClazz() default Object.class;
+
+    /**
+     * (Optional) Classe della property.
+     * Utilizzato nelle Enumeration.
+     */
+    Class<? extends Object> enumClazz() default Object.class;
+
+    /**
+     * (Optional) Classe della property.
+     * Utilizzato nei Combo.
+     */
+    Class<? extends Object> serviceClazz() default Object.class;
+
+
+    /**
+     * (Optional) valori (items) della enumeration
+     * Defaults to "".
+     */
+    String items() default "";
 
 
     /**
@@ -166,5 +185,6 @@ public @interface AIField {
      * Defaults to "".
      */
     String color() default "";
+
 
 }// end of interface annotation

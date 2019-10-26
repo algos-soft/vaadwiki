@@ -73,7 +73,7 @@ public enum ParBio {
     luogoNascita("LuogoNascita", true, true, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setLuogoNato(value.equals("") ? null : value);
+            bio.setLuogoNato(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
 
@@ -85,7 +85,7 @@ public enum ParBio {
     luogoNascitaLink("LuogoNascitaLink", true, false, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setLuogoNatoLink(value.equals("") ? null : value);
+            bio.setLuogoNatoLink(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
 
@@ -127,7 +127,7 @@ public enum ParBio {
     luogoMorte("LuogoMorte", true, true, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setLuogoMorto(value.equals("") ? null : value);
+            bio.setLuogoMorto(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
 
@@ -139,7 +139,7 @@ public enum ParBio {
     luogoMorteLink("LuogoMorteLink", true, false, true, false, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setLuogoMortoLink(value.equals("") ? null : value);
+            bio.setLuogoMortoLink(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
 

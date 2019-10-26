@@ -132,7 +132,7 @@ public class UploadService extends ABioService {
      * Ricrea al volo (per sicurezza di aggiornamento) tutta la collezione mongoDb dei nomi <br>
      */
     public void uploadAllNomi() {
-        List<Nome> listaNomi=null;
+        List<Nome> listaNomi = null;
 
         //--Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile, altrimenti non esegue
         if (checkBioScarso()) {

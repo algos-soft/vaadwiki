@@ -45,9 +45,6 @@ public class WebWikiTest extends ATest {
     @InjectMocks
     protected AQueryLogin aQueryLogin;
 
-    @InjectMocks
-    protected GenericApplicationContext appContext;
-
 
     @BeforeAll
     public void setUp() {
@@ -60,7 +57,6 @@ public class WebWikiTest extends ATest {
         MockitoAnnotations.initMocks(aQueryVoce);
         MockitoAnnotations.initMocks(aQueryBio);
         MockitoAnnotations.initMocks(aQueryLogin);
-        MockitoAnnotations.initMocks(appContext);
     }// end of method
 
 

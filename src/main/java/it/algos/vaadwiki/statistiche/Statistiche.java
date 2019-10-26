@@ -232,9 +232,9 @@ public abstract class Statistiche {
 
             if (pref.isBool(USA_DEBUG)) {
                 titolo = PAGINA_PROVA;
-                testoPagina = TITOLO_PAGINA_WIKI + A_CAPO + testoPagina;
+                testoPagina = titoloPagina + A_CAPO + testoPagina;
             } else {
-                titolo = TITOLO_PAGINA_WIKI;
+                titolo = titoloPagina;
             }// fine del blocco if-else
 
             appContext.getBean(AQueryWrite.class, titolo, testoPagina);

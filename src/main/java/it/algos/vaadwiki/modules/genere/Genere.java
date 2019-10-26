@@ -59,8 +59,8 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderGenere")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"code", "descrizione"})
-@AIForm(fields = {"code", "descrizione"})
+@AIList(fields = {"singolare", "pluraleMaschile", "pluraleFemminile"})
+@AIForm(fields = {"singolare", "pluraleMaschile", "pluraleFemminile"})
 @AIScript(sovrascrivibile = false)
 public class Genere extends AEntity {
 
@@ -89,7 +89,7 @@ public class Genere extends AEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, widthEM = 12)
-    @AIColumn(width = 10)
+    @AIColumn(name = "Plurale maschile", widthEM = 20)
     public String pluraleMaschile;
 
     /**
@@ -99,7 +99,7 @@ public class Genere extends AEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, widthEM = 12)
-    @AIColumn(width = 10)
+    @AIColumn(name = "Plurale femminile", flexGrow = true)
     public String pluraleFemminile;
 
 

@@ -4,7 +4,7 @@ package it.algos.vaadwiki;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import it.algos.vaadflow.modules.role.Role;
-import it.algos.vaadflow.modules.role.RoleViewList;
+import it.algos.vaadflow.modules.role.RoleList;
 import it.algos.vaadflow.service.AAnnotationService;
 import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.AReflectionService;
@@ -89,7 +89,7 @@ public class ATest {
 
     protected static Field FIELD_ROLE;
 
-    protected static Class<? extends IAView> ROLE_VIEW_CLASS = RoleViewList.class;
+    protected static Class<? extends IAView> ROLE_VIEW_CLASS = RoleList.class;
 
     protected static Class<? extends AEntity> ROLE_ENTITY_CLASS = Role.class;
 

@@ -126,7 +126,7 @@ public class Bio extends AEntity {
      */
     @DBRef
     @Field("gnato")
-    @AIField(type = EAFieldType.combo, clazz = GiornoService.class, help = "Giorno nato")
+    @AIField(type = EAFieldType.combo, serviceClazz = GiornoService.class, help = "Giorno nato")
     @AIColumn(name = "giornoNascita", widthEM = 8)
     public Giorno giornoNascita;
 
@@ -136,7 +136,7 @@ public class Bio extends AEntity {
      */
     @DBRef
     @Field("gmorto")
-    @AIField(type = EAFieldType.combo, clazz = GiornoService.class, help = "Giorno morto")
+    @AIField(type = EAFieldType.combo, serviceClazz = GiornoService.class, help = "Giorno morto")
     @AIColumn(name = "giornoMorte", widthEM = 8)
     public Giorno giornoMorte;
 
@@ -146,7 +146,7 @@ public class Bio extends AEntity {
      */
     @DBRef
     @Field("anato")
-    @AIField(type = EAFieldType.combo, clazz = AnnoService.class, help = "Anno nato")
+    @AIField(type = EAFieldType.combo, serviceClazz = AnnoService.class, help = "Anno nato")
     @AIColumn(name = "annoNascita", widthEM = 8)
     public Anno annoNascita;
 
@@ -156,7 +156,7 @@ public class Bio extends AEntity {
      */
     @DBRef
     @Field("amorto")
-    @AIField(type = EAFieldType.combo, clazz = AnnoService.class, help = "Anno morto")
+    @AIField(type = EAFieldType.combo, serviceClazz = AnnoService.class, help = "Anno morto")
     @AIColumn(name = "annoMorte", widthEM = 8)
     public Anno annoMorte;
 
@@ -207,7 +207,7 @@ public class Bio extends AEntity {
      */
     @DBRef
     @Field("att")
-    @AIField(type = EAFieldType.combo, clazz = AttivitaService.class, help = "Attività")
+    @AIField(type = EAFieldType.combo, serviceClazz = AttivitaService.class, help = "Attività")
     @AIColumn(name = "attivita", widthEM = 8)
     private Attivita attivita;
 
@@ -217,7 +217,7 @@ public class Bio extends AEntity {
      */
     @DBRef
     @Field("att2")
-    @AIField(type = EAFieldType.combo, clazz = AttivitaService.class, help = "Attività2")
+    @AIField(type = EAFieldType.combo, serviceClazz = AttivitaService.class, help = "Attività2")
     @AIColumn(name = "attivita2", widthEM = 8)
     private Attivita attivita2;
 
@@ -227,7 +227,7 @@ public class Bio extends AEntity {
      */
     @DBRef
     @Field("att3")
-    @AIField(type = EAFieldType.combo, clazz = AttivitaService.class, help = "Attività3")
+    @AIField(type = EAFieldType.combo, serviceClazz = AttivitaService.class, help = "Attività3")
     @AIColumn(name = "attivita3", widthEM = 8)
     private Attivita attivita3;
 
@@ -237,7 +237,7 @@ public class Bio extends AEntity {
      */
     @DBRef
     @Field("naz")
-    @AIField(type = EAFieldType.combo, clazz = NazionalitaService.class, help = "Nazionalità")
+    @AIField(type = EAFieldType.combo, serviceClazz = NazionalitaService.class, help = "Nazionalità")
     @AIColumn(name = "nazionalita", widthEM = 8)
     private Nazionalita nazionalita;
 

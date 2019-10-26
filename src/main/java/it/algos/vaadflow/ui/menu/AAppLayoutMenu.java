@@ -1,8 +1,8 @@
 package it.algos.vaadflow.ui.menu;
 
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.applayout.AppLayoutMenu;
-import com.vaadin.flow.component.applayout.AppLayoutMenuItem;
+//import com.vaadin.flow.component.applayout.AppLayoutMenu;
+//import com.vaadin.flow.component.applayout.AppLayoutMenuItem;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.ui.list.AViewList;
@@ -25,7 +25,7 @@ public class AAppLayoutMenu extends AMenu {
 
     private AppLayout appLayout;
 
-    private AppLayoutMenu appMenu;
+//    private AppLayoutMenu appMenu;
 
 
     /**
@@ -44,7 +44,7 @@ public class AAppLayoutMenu extends AMenu {
     @Override
     protected void inizia() {
         appLayout = new AppLayout();
-        appMenu = appLayout.createMenu();
+//        appMenu = appLayout.createMenu();
 //        this.add(appLayout);
     }// end of method
 
@@ -68,12 +68,12 @@ public class AAppLayoutMenu extends AMenu {
         String menuName;
         VaadinIcon icon;
 
-        linkRoute = annotation.getQualifierName(viewClazz);
         menuName = annotation.getMenuName(viewClazz);
         menuName = text.primaMaiuscola(menuName);
         icon = reflection.getIconView(viewClazz);
+        linkRoute = annotation.getRouteName(viewClazz);
 
-        appMenu.addMenuItem(new AppLayoutMenuItem(icon.create(), menuName, linkRoute));
+//        appMenu.addMenuItem(new AppLayoutMenuItem(icon.create(), menuName, linkRoute));
     }// end of method
 
 
@@ -85,12 +85,12 @@ public class AAppLayoutMenu extends AMenu {
         String menuName;
         VaadinIcon icon;
 
-        linkRoute = annotation.getQualifierName(viewClazz);
         menuName = annotation.getMenuName(viewClazz);
         menuName = text.primaMaiuscola(menuName);
         icon = reflection.getIconView(viewClazz);
+        linkRoute = annotation.getRouteName(viewClazz);
 
-        appMenu.addMenuItem(new AppLayoutMenuItem(icon.create(), menuName, linkRoute));
+//        appMenu.addMenuItem(new AppLayoutMenuItem(icon.create(), menuName, linkRoute));
     }// end of method
 
 

@@ -13,10 +13,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
@@ -26,10 +27,10 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * Project vaadflow <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Fix date: 26-ott-2018 9.59.58 <br>
- * <p>
+ * Fix date: 20-set-2019 18.19.24 <br>
+ * <br>
  * Business class. Layer di collegamento per la Repository. <br>
- * <p>
+ * <br>
  * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
@@ -207,7 +208,7 @@ public class AnnoService extends AService {
      * @return all ordered entities
      */
     public List<Anno> findAll() {
-        return repository.findAllByOrderByOrdineDesc();
+        return (List) repository.findAllByOrderByOrdineDesc();
     }// end of method
 
 
@@ -229,6 +230,18 @@ public class AnnoService extends AService {
     public List<? extends AEntity> findAll(int offset, int size) {
         Sort sort = new Sort(Sort.Direction.DESC, "ordine");
         return findAll(offset, size, sort);
+    }// end of method
+
+
+    public List<Anno> findAllBySecolo(Secolo secolo) {
+        Query query = new Query();
+        String secoloField = "secolo";
+
+        if (secolo != null) {
+            query.addCriteria(Criteria.where(secoloField).is(secolo));
+        }// end of if cycle
+
+        return mongo.mongoOp.find(query, Anno.class);
     }// end of method
 
 
