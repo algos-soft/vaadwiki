@@ -5,6 +5,7 @@ import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.enumeration.EAPreferenza;
 import it.algos.vaadflow.modules.preferenza.EAPrefType;
 import it.algos.vaadflow.modules.preferenza.IAPreferenza;
+import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadwiki.application.WikiCost;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -97,13 +98,6 @@ public enum EAPreferenzaWiki implements IAPreferenza {
 
 
 
-
-
-
-
-
-
-
     private String code;
 
     private String desc;
@@ -158,6 +152,16 @@ public enum EAPreferenzaWiki implements IAPreferenza {
 
     public void setValue(Object value) {
         this.value = value;
+    }// end of method
+
+    public EARole getShow() {
+        return null;
+    }// end of method
+
+
+    @Override
+    public boolean isCompanySpecifica() {
+        return false;
     }// end of method
 
 } // end of enumeration

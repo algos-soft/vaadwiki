@@ -1,22 +1,29 @@
 package it.algos.vaadflow.modules.anno;
 
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.company.Company;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.modules.secolo.Secolo;
 import it.algos.vaadflow.modules.secolo.SecoloService;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadflow.ui.list.ACronoViewList;
 import it.algos.vaadflow.ui.MainLayout14;
+import it.algos.vaadflow.ui.list.APaginatedGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.security.access.annotation.Secured;
 import org.vaadin.klaudeta.PaginatedGrid;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
 
@@ -46,12 +53,10 @@ import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
 @Route(value = TAG_ANN, layout = MainLayout14.class)
 @Qualifier(TAG_ANN)
 @Slf4j
+@Secured("developer")
 @AIScript(sovrascrivibile = false)
-@AIView(vaadflow = true, menuName = "anni", searchProperty = "secolo", roleTypeVisibility = EARoleType.developer)
-public class AnnoList extends ACronoViewList {
-
-
-    public static final String IRON_ICON = "today";
+@AIView(vaadflow = true, menuName = "anni", menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", roleTypeVisibility = EARoleType.developer)
+public class AnnoList extends APaginatedGridViewList {
 
 
     /**
@@ -69,7 +74,8 @@ public class AnnoList extends ACronoViewList {
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      * Nella sottoclasse concreta si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Nella sottoclasse concreta si usa una costante statica, per scrivere sempre uguali i riferimenti <br>
-     * Passa nella superclasse anche la entityClazz che viene definita qui (specifica di questo mopdulo) <br>
+     * Passa alla superclasse il service iniettato qui da Vaadin/@Route <br>
+     * Passa alla superclasse anche la entityClazz che viene definita qui (specifica di questo modulo) <br>
      *
      * @param service business class e layer di collegamento per la Repository
      */
@@ -80,20 +86,31 @@ public class AnnoList extends ACronoViewList {
 
 
     /**
-     * Preferenze standard <br>
-     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Preferenze specifiche di questa view <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse APrefViewList <br>
+     * Può essere sovrascritto, per modificare le preferenze standard <br>
      * Invocare PRIMA il metodo della superclasse <br>
-     * Le preferenze vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse <br>
      */
+    @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
+        super.limit = 25;
+        super.usaPopupFiltro = true;
+        super.usaBottoneDeleteAll = true;
+        super.usaBottoneReset = true;
+        super.isEntityDeveloper = true;
+        super.usaBottoneNew = false;
         super.usaBottoneEdit = false;
-        super.grid = new PaginatedGrid<Anno>();
     }// end of method
 
+
     /**
-     * Placeholder (eventuale) per informazioni aggiuntive alla grid ed alla lista di elementi <br>
-     * Normalmente ad uso esclusivo del developer <br>
+     * Eventuali messaggi di avviso specifici di questa view ed inseriti in 'alertPlacehorder' <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse ALayoutViewList <br>
+     * Normalmente ad uso esclusivo del developer (eventualmente dell'admin) <br>
      * Può essere sovrascritto, per aggiungere informazioni <br>
      * Invocare PRIMA il metodo della superclasse <br>
      */
@@ -103,36 +120,77 @@ public class AnnoList extends ACronoViewList {
         alertPlacehorder.add(new Label("Sono considerati gli anni da 1.000 a.c. a 2030 d.c. Non si possono cancellare ne aggiungere elementi."));
     }// end of method
 
+
     /**
      * Crea un (eventuale) Popup di selezione, filtro e ordinamento <br>
      * DEVE essere sovrascritto, per regolare il contenuto (items) <br>
      * Invocare PRIMA il metodo della superclasse <br>
      */
+    @Override
     protected void creaPopupFiltro() {
         super.creaPopupFiltro();
 
         filtroComboBox.setWidth("12em");
+        filtroComboBox.setPlaceholder("secolo ...");
         filtroComboBox.setItems(secoloService.findAll());
-        filtroComboBox.addValueChangeListener(e -> {
-            updateItems();
-            updateView();
-        });
     }// end of method
 
 
-    public void updateItems() {
-        Secolo secolo = (Secolo) filtroComboBox.getValue();
-        items = ((AnnoService) service).findAllBySecolo(secolo);
-    }// end of method
-
+//    public void updateFiltri() {
+//        Secolo secolo = (Secolo) filtroComboBox.getValue();
+//        items = ((AnnoService) service).findAllBySecolo(secolo);
+//    }// end of method
 
     /**
-     * Apertura del dialogo per una entity esistente oppure nuova <br>
-     * Sovrascritto <br>
+     * Crea la GridPaginata <br>
+     * Per usare una GridPaginata occorre:
+     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
+     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
+     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
+     * 4) il metodo sovrascritto DOPO deve invocare questo stesso superMetodo in APaginatedGridViewList <br>
      */
+    @Override
+    protected void creaGridPaginata() {
+        super.paginatedGrid = new PaginatedGrid<Anno>();
+        super.creaGridPaginata();
+    }// end of method
+
+    /**
+     * Crea la lista dei filtri della Grid alla prima visualizzazione della view <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse AGridViewList <br>
+     * Chiamato SOLO alla creazione della view. Successive modifiche ai filtri sono gestite in updateFiltri() <br>
+     * Può essere sovrascritto, per modificare la selezione dei filtri <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void creaFiltri() {
+        super.creaFiltri();
+        Secolo secolo = null;
+//        v = (Secolo) filtroComboBox.getValue();
+//        items = ((AnnoService) service).findAllBySecolo(secolo);
+
+        if (filtroComboBox != null && filtroComboBox.getValue() != null) {
+            secolo = (Secolo) filtroComboBox.getValue();
+            filtri.add(Criteria.where("secolo").is(secolo));
+        }// end of if cycle
+    }// end of method
+
+    /**
+     * Creazione ed apertura del dialogo per una nuova entity oppure per una esistente <br>
+     * Il dialogo è PROTOTYPE e viene creato esclusivamente da appContext.getBean(... <br>
+     * Nella creazione vengono regolati il service e la entityClazz di riferimento <br>
+     * Contestualmente alla creazione, il dialogo viene aperto con l'item corrente (ricevuto come parametro) <br>
+     * Se entityBean è null, nella superclasse AViewDialog viene modificato il flag a EAOperation.addNew <br>
+     * Si passano al dialogo anche i metodi locali (di questa classe AViewList) <br>
+     * come ritorno dalle azioni save e delete al click dei rispettivi bottoni <br>
+     * Il metodo DEVE essere sovrascritto <br>
+     *
+     * @param entityBean item corrente, null se nuova entity
+     */
+    @Override
     protected void openDialog(AEntity entityBean) {
-        AnnoDialog dialog = appContext.getBean(AnnoDialog.class, service, entityClazz);
-        dialog.open(entityBean, EAOperation.showOnly, this::save, this::delete);
+        appContext.getBean(AnnoDialog.class, service, entityClazz).open(entityBean, isEntityModificabile ? EAOperation.edit : EAOperation.showOnly, this::save, this::delete);
     }// end of method
 
 }// end of class

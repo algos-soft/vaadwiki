@@ -133,7 +133,6 @@ public abstract class WikiList extends APaginatedGridViewList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaSearch = false;
         super.usaBottoneNew = false;
 
         super.isEntityModificabile = false;
@@ -165,8 +164,8 @@ public abstract class WikiList extends APaginatedGridViewList {
             creaButton.addClassName("view-toolbar__button");
             creaButton.addClickListener(e -> {
                 ((NomeCognomeService) service).crea();
-                updateItems();
-                updateView();
+                updateFiltri();
+                updateGrid();
             });//end of lambda expressions and anonymous inner class
             topPlaceholder.add(creaButton);
         }// end of if cycle
@@ -176,8 +175,8 @@ public abstract class WikiList extends APaginatedGridViewList {
             updateButton.addClassName("view-toolbar__button");
             updateButton.addClickListener(e -> {
                 ((NomeCognomeService) service).update();
-                updateItems();
-                updateView();
+                updateFiltri();
+                updateGrid();
             });//end of lambda expressions and anonymous inner class
             topPlaceholder.add(updateButton);
         }// end of if cycle

@@ -318,6 +318,22 @@ public class AColumnService extends AbstractService {
                     return new Label(testo);
                 }));//end of lambda expressions and anonymous inner class
                 break;
+            case monthdate:
+                colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    Field field = reflection.getField(entityClazz, propertyName);
+                    LocalDate data;
+                    String testo = "";
+
+                    try { // prova ad eseguire il codice
+                        data = (LocalDate) field.get(entity);
+                        testo = date.getMonthLong(data);
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
+
+                    return new Label(testo);
+                }));//end of lambda expressions and anonymous inner class
+                break;
             case weekdate:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                     Field field = reflection.getField(entityClazz, propertyName);
@@ -418,8 +434,7 @@ public class AColumnService extends AbstractService {
                     Label label = new Label();
                     String htmlCode = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                     label.getElement().setProperty("innerHTML", htmlCode);
-                    label.getElement().getStyle().set("background-color", colorColumnName);
-                    label.getElement().getStyle().set("color", colorColumnName);
+                    label.getElement().getStyle().set("background-color", (String)reflection.getPropertyValue(entity,propertyName));
 
                     return label;
                 }));//end of lambda expressions and anonymous inner class
@@ -568,6 +583,12 @@ public class AColumnService extends AbstractService {
                 break;
             case combo:
                 break;
+            case monthdate:
+                //--larghezza di default per un data = 6em
+                //--vale per la formattazione standard della data
+                //--per modificare, inserire widthEM = ... nell'annotation @AIColumn della Entity
+                width = text.isValid(width) ? width : "6em";
+                break;
             case weekdate:
             case localdate:
                 //--larghezza di default per un data = 7em
@@ -643,6 +664,7 @@ public class AColumnService extends AbstractService {
 
             if (isFlexGrow) {
                 colonna.setFlexGrow(1);
+                colonna.setWidth(width);
             } else {
                 if (text.isValid(width)) {
                     colonna.setWidth(width);

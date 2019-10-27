@@ -1,6 +1,7 @@
 package it.algos.vaadflow.ui.list;
 
 //import com.vaadin.flow.component.applayout.AppLayoutMenuItem;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
@@ -10,6 +11,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.backend.login.ALogin;
+import it.algos.vaadflow.enumeration.EASearch;
+import it.algos.vaadflow.modules.company.CompanyService;
 import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.modules.utente.UtenteService;
@@ -22,10 +25,11 @@ import it.algos.vaadflow.ui.fields.AComboBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
-import org.vaadin.klaudeta.PaginatedGrid;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_LOGIN;
 
@@ -35,6 +39,17 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOGIN;
  * User: gac
  * Date: Mon, 20-May-2019
  * Time: 07:06
+ * <p>
+ * Classe astratta per visualizzare la Grid <br>
+ * La classe viene divisa verticalmente in alcune classi astratte, per 'leggerla' meglio (era troppo grossa) <br>
+ * Nell'ordine (dall'alto):
+ * - 1 APropertyViewList (che estende la classe Vaadin VerticalLayout) per elencare tutte le property usate <br>
+ * - 2 AViewList con la business logic principale <br>
+ * - 3 APrefViewList per regolare le preferenze ed i flags <br>
+ * - 4 ALayoutViewList per regolare il layout <br>
+ * - 5 AGridViewList per gestire la Grid <br>
+ * - 6 APaginatedGridViewList (opzionale) per gestire una Grid specializzata (add-on) che usa le Pagine <br>
+ * L'utilizzo pratico per il programmatore è come se fosse una classe sola <br>
  * <p>
  * Superclasse di servizio per separare le property di AViewList in una classe 'dedicata' <br>
  * Alleggerisce la 'lettura' della sottoclasse principale <br>
@@ -94,7 +109,7 @@ public abstract class APropertyViewList extends VerticalLayout {
     public AMongoService mongo;
 
     /**
-     * Istanza unica di una classe di servizio: <br>
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
      * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
      * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
      * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
@@ -138,6 +153,15 @@ public abstract class APropertyViewList extends VerticalLayout {
     @Autowired
     protected PreferenzaService pref;
 
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected CompanyService companyService;
+
 
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
@@ -157,8 +181,6 @@ public abstract class APropertyViewList extends VerticalLayout {
     //--property
     protected TextField searchField;
 
-    //--property
-    protected String searchProperty;
 
     protected Button deleteAllButton;
 
@@ -228,21 +250,35 @@ public abstract class APropertyViewList extends VerticalLayout {
     protected HorizontalLayout bottomPlacehorder;
 
     /**
-     * Flag di preferenza per usare la ricerca e selezione nella barra dei menu. <br>
-     * Se è true, un altro flag seleziona il textField o il textDialog <br>
-     * Se è true, il bottone usaAllButton è sempre presente <br>
-     * Se è true, un altro flag seleziona la presenza o meno del Popup di filtro <br>
-     * Normalmente true. <br>
+     * Flag di preferenza per selezionare la ricerca testuale:
+     * 1) nessuna
+     * 2) campo editText di selezione per una property specificata in searchProperty
+     * 3) dialogo di selezione
      */
-    protected boolean usaSearch;
+    protected EASearch searchType;
 
     /**
-     * Flag di preferenza per selezionare la ricerca:
-     * true per aprire un dialogo di ricerca e selezione su diverse properties <br>
-     * false per presentare un textEdit predisposto per la ricerca su un unica property <br>
-     * Normalmente true.
+     * Flag di preferenza per specificare la property della entity su cui effettuare la ricerca <br>
+     * Ha senso solo se searchType=EASearch.editField
      */
-    protected boolean usaSearchDialog;
+    protected String searchProperty;
+
+//    /**
+//     * Flag di preferenza per usare la ricerca e selezione nella barra dei menu. <br>
+//     * Se è true, un altro flag seleziona il textField o il textDialog <br>
+//     * Se è true, il bottone usaAllButton è sempre presente <br>
+//     * Se è true, un altro flag seleziona la presenza o meno del Popup di filtro <br>
+//     * Normalmente true. <br>
+//     */
+//    protected boolean usaSearch;
+//
+//    /**
+//     * Flag di preferenza per selezionare la ricerca:
+//     * true per aprire un dialogo di ricerca e selezione su diverse properties <br>
+//     * false per presentare un textEdit predisposto per la ricerca su un unica property <br>
+//     * Normalmente true.
+//     */
+//    protected boolean usaSearchDialog;
 
     /**
      * Flag di preferenza per usare il popup di selezione, filtro e ordinamento situato nella searchBar.
@@ -272,7 +308,16 @@ public abstract class APropertyViewList extends VerticalLayout {
      */
     protected boolean usaBottoneNew;
 
+    /**
+     * Popup di selezione della Company, se usata. Faccoltativo. <br>
+     */
+    protected AComboBox filtroCompany;
+
+    /**
+     * Popup di selezione per un filtro costruibile nella sottoclasse concreta. Esiste se usaPopupFiltro=true <br>
+     */
     protected AComboBox filtroComboBox;
+
 
     protected Button newButton;
 
@@ -343,6 +388,11 @@ public abstract class APropertyViewList extends VerticalLayout {
     protected boolean usaRefresh;
 
     /**
+     * Flag di preferenza per filtrare la mcompany. Normalmente true. Elaborato in APrefViewList.postPreferenze() <br>
+     */
+    protected boolean usaFiltroCompany;
+
+    /**
      * Flag di preferenza per selezionare il numero di righe visibili della Grid. <br>
      * Normalmente limit = pref.getInt(FlowCost.MAX_RIGHE_GRID). <br>
      */
@@ -372,6 +422,8 @@ public abstract class APropertyViewList extends VerticalLayout {
 
     protected Collection items;
 
+    protected List<CriteriaDefinition> filtri;
+
     protected ADeleteDialog deleteDialog;
 
 //    protected ArrayList<AppLayoutMenuItem> specificMenuItems = new ArrayList<AppLayoutMenuItem>();
@@ -386,5 +438,26 @@ public abstract class APropertyViewList extends VerticalLayout {
      * Nome della route per la location della pagina di modifica (standard) del Form <br>
      */
     protected String routeNameFormEdit;
+
+
+    /**
+     * Singolo parametro (opzionale) in ingresso nella chiamata del browser (da @Route oppure diretta) <br>
+     * Si recupera nel metodo AViewList.setParameter(), chiamato dall'interfaccia HasUrlParameter <br>
+     */
+    protected String singleParameter;
+
+
+    /**
+     * Mappa chiave-valore di un singolo parametro (opzionale) in ingresso nella chiamata del browser (da @Route oppure diretta) <br>
+     * Si recupera nel metodo AViewList.setParameter(), chiamato dall'interfaccia HasUrlParameter <br>
+     */
+    protected Map<String, String> parametersMap = null;
+
+
+    /**
+     * Mappa chiave-valore di alcuni parametri (opzionali) in ingresso nella chiamata del browser (da @Route oppure diretta) <br>
+     * Si recupera nel metodo AViewList.setParameter(), chiamato dall'interfaccia HasUrlParameter <br>
+     */
+    protected Map<String, List<String>> multiParametersMap = null;
 
 }// end of class

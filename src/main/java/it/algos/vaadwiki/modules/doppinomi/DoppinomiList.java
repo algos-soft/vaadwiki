@@ -92,7 +92,6 @@ public class DoppinomiList extends AttNazProfCatList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaSearch = false;
 //        super.usaSearchTextDialog = false;//@todo versione 14
 //        super.usaAllButton = false;//@todo versione 14
 //        super.usaSearchBottoneNew = false; //@todo versione 14

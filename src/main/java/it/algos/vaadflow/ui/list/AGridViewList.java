@@ -4,17 +4,14 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
-import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EASearch;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
@@ -30,6 +27,17 @@ import static it.algos.vaadflow.application.FlowCost.USA_SEARCH_CASE_SENSITIVE;
  * User: gac
  * Date: Mon, 20-May-2019
  * Time: 08:24
+ * <p>
+ * Classe astratta per visualizzare la Grid <br>
+ * La classe viene divisa verticalmente in alcune classi astratte, per 'leggerla' meglio (era troppo grossa) <br>
+ * Nell'ordine (dall'alto):
+ * - 1 APropertyViewList (che estende la classe Vaadin VerticalLayout) per elencare tutte le property usate <br>
+ * - 2 AViewList con la business logic principale <br>
+ * - 3 APrefViewList per regolare le preferenze ed i flags <br>
+ * - 4 ALayoutViewList per regolare il layout <br>
+ * - 5 AGridViewList per gestire la Grid <br>
+ * - 6 APaginatedGridViewList (opzionale) per gestire una Grid specializzata (add-on) che usa le Pagine <br>
+ * L'utilizzo pratico per il programmatore è come se fosse una classe sola <br>
  * <p>
  * Sottoclasse di servizio per gestire la Grid di AViewList in una classe 'dedicata' <br>
  * Alleggerisce la 'lettura' della classe principale <br>
@@ -70,20 +78,21 @@ public abstract class AGridViewList extends ALayoutViewList {
      * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto) <br>
      */
     protected void creaBody() {
+        this.add(gridPlaceholder);
         gridPlaceholder.setMargin(false);
         gridPlaceholder.setSpacing(false);
         gridPlaceholder.setPadding(false);
-        FlexLayout layout = new FlexLayout();
 
         //--Costruisce una lista di nomi delle properties della Grid
         List<String> gridPropertyNamesList = getGridPropertyNamesList();
 
         gridPlaceholder.add(creaGrid(gridPropertyNamesList));
+        gridPlaceholder.setFlexGrow(0);
 
         //--Regolazioni di larghezza
-        gridPlaceholder.setWidth(gridWith + "em");
-        gridPlaceholder.setFlexGrow(0);
-        gridPlaceholder.getElement().getStyle().set("background-color", "#ffaabb");//rosa
+        //gridPlaceholder.setWidth(gridWith + "em");
+        //gridPlaceholder.setFlexGrow(0);
+        //gridPlaceholder.getElement().getStyle().set("background-color", "#ffaabb");//rosa
 
         //--eventuale barra di bottoni sotto la grid
         creaGridBottomLayout();
@@ -133,7 +142,6 @@ public abstract class AGridViewList extends ALayoutViewList {
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
         grid.setPageSize(limit);
         grid.setHeightByRows(true);
-        grid.setWidth(gridWith + "em");
         grid.getElement().getStyle().set("background-color", "#aabbcc");
 
         fixGridHeader();
@@ -225,7 +233,7 @@ public abstract class AGridViewList extends ALayoutViewList {
             if (pref.isBool(FlowCost.USA_TEXT_EDIT_BUTTON)) {
                 int lar = pref.getStr(FlowCost.FLAG_TEXT_EDIT).length();
                 lar += 1;
-                colonna.setWidth(lar + "em");
+                colonna.setWidth(lar + ".5em");
             } else {
                 colonna.setWidth("3em");
             }// end of if/else cycle
@@ -288,39 +296,67 @@ public abstract class AGridViewList extends ALayoutViewList {
     }// end of method
 
 
-    protected void updateItems() {
-        List<AEntity> lista = null;
-        ArrayList<CriteriaDefinition> listaCriteriaDefinitionRegex = new ArrayList();
+    /**
+     * Crea la lista dei SOLI filtri necessari alla Grid per la prima visualizzazione della view <br>
+     * I filtri normali vanno in updateFiltri() <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse AGridViewList <br>
+     * Chiamato SOLO alla creazione della view. Successive modifiche ai filtri sono gestite in updateFiltri() <br>
+     * Può essere sovrascritto SOLO se ci sono dei filtri che devono essere attivi già alla partenza della Grid <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void creaFiltri() {
+        filtri = new ArrayList<CriteriaDefinition>();
 
-        if (usaSearch) {
-            if (!usaSearchDialog && searchField != null && text.isEmpty(searchField.getValue())) {
-                items = service != null ? service.findAll() : null;
-            } else {
-                if (searchField != null) {
-                    if (pref.isBool(USA_SEARCH_CASE_SENSITIVE)) {
-                        listaCriteriaDefinitionRegex.add(Criteria.where(searchProperty).regex("^" + searchField.getValue()));
-                    } else {
-                        listaCriteriaDefinitionRegex.add(Criteria.where(searchProperty).regex("^" + searchField.getValue(), "i"));
-                    }// end of if/else cycle
-                    lista = mongo.findAllByProperty(entityClazz, listaCriteriaDefinitionRegex.stream().toArray(CriteriaDefinition[]::new));
-                } else {
-                    items = service != null ? service.findAll() : null;
-                }// end of if/else cycle
-
-                if (array.isValid(lista)) {
-                    items = lista;
-                }// end of if cycle
-            }// end of if/else cycle
-        } else {
-            items = service != null ? service.findAll() : null;
-        }// end of if/else cycle
+        if (usaFiltroCompany && filtroCompany != null && filtroCompany.getValue() != null) {
+            if (filtroCompany.getValue() != null) {
+                filtri.add(Criteria.where("company").is(filtroCompany.getValue()));
+            }// end of if cycle
+        }// end of if cycle
     }// end of method
 
 
     /**
+     * Aggiorna la lista dei filtri della Grid. Modificati per: popup, newEntity, deleteEntity, ecc... <br>
+     * Normalmente tutti i filtri  vanno qui <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse AGridViewList <br>
+     * Alla prima visualizzazione della view usa SOLO creaFiltri() e non questo metodo <br>
+     * Può essere sovrascritto, per costruire i filtri specifici dei combobox, popup, ecc. <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void updateFiltri() {
+        this.creaFiltri();
+
+        //--ricerca iniziale
+        if (searchType == EASearch.editField && searchField != null) {
+            if (pref.isBool(USA_SEARCH_CASE_SENSITIVE)) {
+                filtri.add(Criteria.where(searchProperty).regex("^" + searchField.getValue()));
+            } else {
+                filtri.add(Criteria.where(searchProperty).regex("^" + searchField.getValue(), "i"));
+            }// end of if/else cycle
+        }// end of if cycle
+
+    }// end of method
+
+
+    /**
+     * Aggiorna gli items della Grid, utilizzando i filtri. <br>
+     * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
+     * <p>
+     * Sviluppato nella sottoclasse AGridViewList, oppure APaginatedGridViewList <br>
      * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>
      */
-    public void updateView() {
+    @Override
+    public void updateGrid() {
+        if (array.isValid(filtri)) {
+            items = mongo.findAllByProperty(entityClazz, filtri);
+        } else {
+            items = service != null ? service.findAll() : null;
+        }// end of if/else cycle
+
         if (items != null) {
             try { // prova ad eseguire il codice
                 grid.deselectAll();

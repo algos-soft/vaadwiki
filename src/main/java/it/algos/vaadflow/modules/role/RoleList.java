@@ -1,17 +1,20 @@
 package it.algos.vaadflow.modules.role;
 
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EASearch;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadflow.ui.list.AGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.annotation.Secured;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_ROL;
 
@@ -40,12 +43,10 @@ import static it.algos.vaadflow.application.FlowCost.TAG_ROL;
 @Route(value = TAG_ROL, layout = MainLayout14.class)
 @Qualifier(TAG_ROL)
 @Slf4j
+@Secured("developer")
 @AIScript(sovrascrivibile = false)
-@AIView(vaadflow = true, menuName = "ruoli", roleTypeVisibility = EARoleType.developer)
+@AIView(vaadflow = true, menuName = "ruoli", menuIcon = VaadinIcon.USER, roleTypeVisibility = EARoleType.developer)
 public class RoleList extends AGridViewList {
-
-
-    public static final String IRON_ICON = "menu";
 
 
     /**
@@ -72,6 +73,7 @@ public class RoleList extends AGridViewList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.searchType = EASearch.editField;
         super.isEntityDeveloper = true;
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;

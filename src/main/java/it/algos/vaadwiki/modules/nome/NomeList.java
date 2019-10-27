@@ -193,7 +193,7 @@ public class NomeList extends WikiList {
                 log.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
-        updateView();
+        updateGrid();
     }// end of method
 
 

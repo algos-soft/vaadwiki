@@ -95,9 +95,11 @@ public abstract class AttNazProfCatList extends APaginatedGridViewList {
 
 
     /**
-     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
+     * Preferenze specifiche di questa view <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse APrefViewList <br>
+     * Può essere sovrascritto, per modificare le preferenze standard <br>
+     * Invocare PRIMA il metodo della superclasse <br>
      */
     @Override
     protected void fixPreferenze() {
@@ -110,7 +112,6 @@ public abstract class AttNazProfCatList extends APaginatedGridViewList {
         this.usaBottoneModulo = true;
         this.usaBottoneStatistiche = true;
 
-        super.usaSearch = true;
         super.usaBottoneNew = false;
 //        super.usaSearchBottoneNew = false; //@todo versione 14
         super.usaBottoneEdit = true;
@@ -185,8 +186,8 @@ public abstract class AttNazProfCatList extends APaginatedGridViewList {
 
     protected void deleteMongo() {
         this.service.deleteAll();
-        updateItems();
-        updateView();
+        updateFiltri();
+        updateGrid();
     }// end of method
 
 
@@ -196,8 +197,8 @@ public abstract class AttNazProfCatList extends APaginatedGridViewList {
 
     protected void download() {
         serviceWiki.download();
-        updateItems();
-        updateView();
+        updateFiltri();
+        updateGrid();
     }// end of method
 
 

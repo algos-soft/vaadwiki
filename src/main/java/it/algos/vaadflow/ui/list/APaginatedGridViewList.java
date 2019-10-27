@@ -21,6 +21,18 @@ import java.util.List;
  * User: gac
  * Date: mer, 25-set-2019
  * Time: 18:39
+ * <p>
+ * Classe astratta per visualizzare la Grid <br>
+ * La classe viene divisa verticalmente in alcune classi astratte, per 'leggerla' meglio (era troppo grossa) <br>
+ * Nell'ordine (dall'alto):
+ * - 1 APropertyViewList (che estende la classe Vaadin VerticalLayout) per elencare tutte le property usate <br>
+ * - 2 AViewList con la business logic principale <br>
+ * - 3 APrefViewList per regolare le preferenze ed i flags <br>
+ * - 4 ALayoutViewList per regolare il layout <br>
+ * - 5 AGridViewList per gestire la Grid <br>
+ * - 6 APaginatedGridViewList (opzionale) per gestire una Grid specializzata (add-on) che usa le Pagine <br>
+ * L'utilizzo pratico per il programmatore è come se fosse una classe sola <br>
+ * <p>
  */
 @Slf4j
 public abstract class APaginatedGridViewList extends AGridViewList {
@@ -48,11 +60,13 @@ public abstract class APaginatedGridViewList extends AGridViewList {
 
 
     /**
-     * Preferenze standard <br>
-     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Preferenze specifiche di questa view <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse APrefViewList <br>
+     * Può essere sovrascritto, per modificare le preferenze standard <br>
      * Invocare PRIMA il metodo della superclasse <br>
-     * Le preferenze vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse <br>
      */
+    @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
         super.usaBottoneEdit = false;
@@ -91,7 +105,6 @@ public abstract class APaginatedGridViewList extends AGridViewList {
         paginatedGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         paginatedGrid.setPageSize(limit);
         paginatedGrid.setHeightByRows(true);
-        paginatedGrid.setWidth(gridWith + "em");
         paginatedGrid.getElement().getStyle().set("background-color", "#aabbcc");
 
         fixGridHeader();
@@ -202,14 +215,24 @@ public abstract class APaginatedGridViewList extends AGridViewList {
 
 
     /**
+     * Aggiorna gli items della Grid, utilizzando i filtri. <br>
+     * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
+     * <p>
+     * Sviluppato nella sottoclasse AGridViewList, oppure APaginatedGridViewList <br>
      * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>
      */
     @Override
-    public void updateView() {
+    public void updateGrid() {
         if (!usaPagination) {
-            super.updateView();
+            super.updateGrid();
             return;
         }// end of if cycle
+
+        if (array.isValid(filtri)) {
+            items = mongo.findAllByProperty(entityClazz, filtri);
+        } else {
+            items = service != null ? service.findAll() : null;
+        }// end of if/else cycle
 
         if (items != null) {
             try { // prova ad eseguire il codice

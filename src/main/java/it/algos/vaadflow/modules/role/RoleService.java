@@ -5,7 +5,6 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.utente.Utente;
 import it.algos.vaadflow.service.AService;
-import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -228,6 +227,14 @@ public class RoleService extends AService {
         return repository.findByCode(EARole.developer.name());
     }// end of method
 
+    /**
+     * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<Role> findAll() {
+        return (ArrayList) repository.findAllByOrderByOrdineAsc();
+    }// end of method
 
     /**
      * Guest roles

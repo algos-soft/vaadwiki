@@ -76,7 +76,7 @@ public class ViewDidascalie extends ALayoutViewList {
     public void beforeEnter(BeforeEnterEvent event) {
         this.setMargin(true);
         this.setSpacing(true);
-        updateView();
+        updateGrid();
     }// end of method
 
 
@@ -109,7 +109,7 @@ public class ViewDidascalie extends ALayoutViewList {
         searchField.addClassName("view-toolbar__search-field");
         searchField.setValueChangeMode(ValueChangeMode.ON_CHANGE);
         searchField.setValue(bioIniziale);
-        searchField.addValueChangeListener(e -> updateView());
+        searchField.addValueChangeListener(e -> updateGrid());
 
         topPlaceholder.add(searchField);
 
@@ -127,7 +127,7 @@ public class ViewDidascalie extends ALayoutViewList {
 
 
     @Override
-    public void updateView() {
+    public void updateGrid() {
         String bioSelezionataTxt = "";
 
         if (searchField != null) {

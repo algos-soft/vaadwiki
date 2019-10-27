@@ -121,7 +121,7 @@ public enum EASchedule {
     /**
      * Descrizione: ogni giorno alle ore 8 del mattino
      */
-    prova("15 8 * * 3", "mercoledì alle 8:15."),
+    prova("5 8 * * *", "mercoledì alle 8."),
     ;
 
     /**

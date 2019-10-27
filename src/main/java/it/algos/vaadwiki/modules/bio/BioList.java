@@ -198,7 +198,6 @@ public class BioList extends AttNazProfCatList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaSearch = true;
         super.usaBottoneNew = true;
         super.usaBottoneDeleteMongo = true;
         super.usaBottoneDownload = true;
@@ -347,8 +346,7 @@ public class BioList extends AttNazProfCatList {
             logger.warning("Download - " + message);
         }// end of if/else cycle
 
-
-        updateView();
+        updateGrid();
     }// end of method
 
 
@@ -397,7 +395,7 @@ public class BioList extends AttNazProfCatList {
         DownloadResult result;
         deleteMongo();
         result = cicloDownload.esegue();
-        updateView();
+        updateGrid();
     }// end of method
 
 

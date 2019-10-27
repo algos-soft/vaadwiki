@@ -30,7 +30,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
  * Project vaadflow <br>
  * Created by Algos
  * User: Gac
- * Fix date: 21-set-2019 8.28.35 <br>
+ * Fix date: 14-ott-2019 18.44.27 <br>
  * <p>
  * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * Necessario per la tipizzazione del binder <br>
@@ -84,6 +84,7 @@ public class PreferenzaDialog extends AViewDialog<Preferenza> {
 
     /**
      * Costruttore base con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * L'istanza DEVE essere creata con appContext.getBean(PreferenzaDialog.class, service, entityClazz); <br>
      *
      * @param service     business class e layer di collegamento per la Repository

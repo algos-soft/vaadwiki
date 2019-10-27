@@ -10,11 +10,12 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadflow.ui.MainLayout14;
+import it.algos.vaadflow.ui.list.AGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_UTE;
@@ -45,10 +46,10 @@ import static it.algos.vaadflow.application.FlowCost.TAG_UTE;
 @Route(value = TAG_UTE, layout = MainLayout14.class)
 @Qualifier(TAG_UTE)
 @Slf4j
+@Secured("developer")
 @AIScript(sovrascrivibile = false)
-@AIView(vaadflow = true, menuName = "utenti", searchProperty = "username", roleTypeVisibility = EARoleType.developer)
+@AIView(vaadflow = true, menuName = TAG_UTE, searchProperty = "username", menuIcon = VaadinIcon.USERS, roleTypeVisibility = EARoleType.developer)
 public class UtenteList extends AGridViewList {
-
 
     public static final String IRON_ICON = "account-circle";
 
@@ -79,8 +80,6 @@ public class UtenteList extends AGridViewList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaSearch = true;
-        super.usaSearchDialog = false;
         super.isEntityDeveloper = true;
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;

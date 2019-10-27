@@ -50,9 +50,5 @@ public class Pippoz extends AViewList {
     }
 
 
-    @Override
-    public void updateView() {
-
-    }
 
 }// end of class

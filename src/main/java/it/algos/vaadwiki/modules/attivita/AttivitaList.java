@@ -87,9 +87,11 @@ public class AttivitaList extends AttNazProfCatList {
 
 
     /**
-     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
+     * Preferenze specifiche di questa view <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse APrefViewList <br>
+     * Può essere sovrascritto, per modificare le preferenze standard <br>
+     * Invocare PRIMA il metodo della superclasse <br>
      */
     @Override
     protected void fixPreferenze() {
@@ -111,11 +113,11 @@ public class AttivitaList extends AttNazProfCatList {
      * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
      * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
      * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
-     * 4) il metodo sovrascritto deve invocare DOPO questo stesso superMetodo in APaginatedGridViewList <br>
+     * 4) il metodo sovrascritto DOPO deve invocare questo stesso superMetodo in APaginatedGridViewList <br>
      */
     @Override
     protected void creaGridPaginata() {
-        paginatedGrid = new PaginatedGrid<Attivita>();
+        super.paginatedGrid = new PaginatedGrid<Attivita>();
         super.creaGridPaginata();
     }// end of method
 
