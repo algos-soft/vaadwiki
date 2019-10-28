@@ -58,8 +58,8 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderCognome")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"code", "descrizione"})
-@AIForm(fields = {"code", "descrizione"})
+@AIList(fields = {"cognome", "voci"})
+@AIForm(fields = {"cognome", "voci"})
 @AIScript(sovrascrivibile = false)
 public class Cognome extends AEntity {
 
@@ -77,7 +77,7 @@ public class Cognome extends AEntity {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 2)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(widthEM = 20)
+    @AIColumn(flexGrow = true)
     public String cognome;
 
     /**

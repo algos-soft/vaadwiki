@@ -4,6 +4,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
@@ -74,19 +75,58 @@ public abstract class APaginatedGridViewList extends AGridViewList {
 
 
     /**
+     * Crea il corpo centrale della view <br>
+     * Componente grafico obbligatorio <br>
+     * Alcune regolazioni vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse <br>
+     * Costruisce la Grid con le colonne. Gli items vengono caricati in updateItems() <br>
+     * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto) <br>
+     */
+    protected void creaBody() {
+        gridPlaceholder = new VerticalLayout();
+        gridPlaceholder.setMargin(false);
+        gridPlaceholder.setSpacing(false);
+        gridPlaceholder.setPadding(false);
+
+        //--Costruisce una lista di nomi delle properties della Grid
+        List<String> gridPropertyNamesList = getGridPropertyNamesList();
+
+        PaginatedGrid local = creaGrid(gridPropertyNamesList);
+        Object alfa = local;
+        gridPlaceholder.add(local);
+        gridPlaceholder.setFlexGrow(0);
+
+        //--Regolazioni di larghezza
+        //gridPlaceholder.setWidth(gridWith + "em");
+        //gridPlaceholder.setFlexGrow(0);
+        //gridPlaceholder.getElement().getStyle().set("background-color", "#ffaabb");//rosa
+
+        //--eventuale barra di bottoni sotto la grid
+        creaGridBottomLayout();
+    }// end of method
+
+
+    /**
      * Crea la grid <br>
      * Alcune regolazioni vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse <br>
      * Costruisce la Grid con le colonne. Gli items vengono caricati in updateItems() <br>
      * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto) <br>
      * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto <br>
      */
-    protected Grid creaGrid(List<String> gridPropertyNamesList) {
-        if (!usaPagination) {
-            return super.creaGrid(gridPropertyNamesList);
-        }// end of if cycle
+    protected PaginatedGrid creaGrid(List<String> gridPropertyNamesList) {
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            try { // prova ad eseguire il codice
+                //--Costruisce la Grid SENZA creare automaticamente le colonne
+                //--Si possono così inserire colonne manuali prima e dopo di quelle automatiche
+                creaGridPaginata();
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+                return null;
+            }// fine del blocco try-catch
+        } else {
+            paginatedGrid = new PaginatedGrid();
+        }// end of if/else cycle
 
         //--regola la gridPaginated in fixPreferenze() della sottoclasse
-        creaGridPaginata();
 
         //--Apre il dialog di detail
         //--Eventuale inserimento (se previsto nelle preferenze) del bottone Edit come prima colonna
@@ -184,7 +224,7 @@ public abstract class APaginatedGridViewList extends AGridViewList {
         if (paginatedGrid != null) {
             if (gridPropertyNamesList != null) {
                 for (String propertyName : gridPropertyNamesList) {
-                    columnService.create(appContext, paginatedGrid, entityClazz, propertyName);
+                    columnService.create(paginatedGrid, entityClazz, propertyName, searchProperty);
                 }// end of for cycle
             }// end of if cycle
         }// end of if cycle

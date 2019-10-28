@@ -327,8 +327,8 @@ public class NomeService extends NomeCognomeService {
      * <p>
      * Ricrea al volo (per sicurezza di aggiornamento) tutta la collezione mongoDb dei 'doppinomi' <br>
      * Cancella tutte le entities della collezione <br>
-     * Estrae tutti i nomi 'distinti' (differenti) dalla colelzione Bio <br>
-     * Elimina tutti i nomi 'doppi' composti da più nomi e che contengomno uno 'spazio vuoto' <br>
+     * Estrae tutti i nomi 'distinti' (differenti) dalla collezione Bio <br>
+     * Elimina tutti i nomi 'doppi' composti da più nomi e che contengono uno 'spazio vuoto' <br>
      * Registra i nomi che hanno più di n ricorrenze nelle voci biografiche <br>
      * Recupera una lista di 'nomi doppi' speciali ed ammessi <br>
      * Aggiunge (se già non ci sono) i nomi doppi speciali <br>

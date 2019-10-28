@@ -9,6 +9,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.service.IAService;
+import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.list.APaginatedGridViewList;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.service.LibBio;
@@ -55,6 +56,12 @@ public abstract class WikiList extends APaginatedGridViewList {
      */
     @Autowired
     protected LibBio libBio;
+
+
+
+    //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
+    //--Soglia minima per creare una pagina di un nome sul server wiki
+    protected int sogliaWiki;
 
 
     protected Button uploadOneNatoButton;

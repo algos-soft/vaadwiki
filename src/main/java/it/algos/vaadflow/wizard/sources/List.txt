@@ -103,7 +103,7 @@ import javax.annotation.PostConstruct;
  * Annotated with @AIView (facoltativo Algos) per il menu-name, l'icona-menu, la property-search e la visibilità <br>
  * Se serve una Grid paginata estende APaginatedGridViewList altrimenti AGridViewList <br>
  * Se si usa APaginatedGridViewList è obbligatorio creare la PaginatedGrid
- * 'tipizzata' con la entityClazz (Collection) specifica nel metodo creaGridPaginata <br>
+ * 'tipizzata' con la entityClazz (Collection) specifica nel metodo creaGridPaginata() <br>
  */
 @UIScope
 @Route(value = @QUALIFIER@, layout = MainLayout14.class)

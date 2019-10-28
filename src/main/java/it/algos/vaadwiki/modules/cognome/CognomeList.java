@@ -12,9 +12,13 @@ import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.annotation.AIView;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.modules.nome.Nome;
+import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.modules.wiki.WikiList;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
@@ -50,54 +54,14 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_COG, layout = MainLayout.class)
+@Route(value = TAG_COG, layout = MainLayout14.class)
 @Qualifier(TAG_COG)
 @Slf4j
-@AIScript(sovrascrivibile = true)
+@AIScript(sovrascrivibile = false)
+@AIView(vaadflow = false, menuName = "cognome", menuIcon = VaadinIcon.BOAT, searchProperty = "cognome", roleTypeVisibility = EARoleType.developer)
 public class CognomeList extends WikiList {
 
 
-    /**
-     * Icona visibile nel menu (facoltativa)
-     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
-     * Se manca il MENU_NAME, di default usa il 'name' della view
-     */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
-
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected LibBio libBio;
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected UploadService uploadService;
-
-    //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
-    //--Soglia minima per creare una pagina di un nome sul server wiki
-    private int sogliaWiki;
-
-
-//    /**
-//     * Costruttore @Autowired <br>
-//     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-//     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-//     *
-//     * @param presenter per gestire la business logic del package
-//     * @param dialog    per visualizzare i fields
-//     */
-//    @Autowired
-//    public CognomeViewList(@Qualifier(TAG_COG) IAPresenter presenter, @Qualifier(TAG_COG) IADialog dialog) {
-//        super(presenter, dialog);
-//        ((CognomeViewDialog) dialog).fixFunzioni(this::save, this::delete);
-//    }// end of Spring constructor
 
     /**
      * Costruttore @Autowired <br>
@@ -115,6 +79,21 @@ public class CognomeList extends WikiList {
     }// end of Vaadin/@Route constructor
 
     /**
+     * Crea la GridPaginata <br>
+     * Per usare una GridPaginata occorre:
+     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
+     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
+     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
+     * 4) il metodo sovrascritto deve invocare DOPO questo stesso superMetodo in APaginatedGridViewList <br>
+     */
+    @Override
+    protected void creaGridPaginata() {
+        paginatedGrid = new PaginatedGrid<Cognome>();
+        super.creaGridPaginata();
+    }// end of method
+
+
+    /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
      * Invocare PRIMA il metodo della superclasse
@@ -123,12 +102,14 @@ public class CognomeList extends WikiList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-//        super.usaSearchBottoneNew = false; //@todo versione 14
         super.usaBottoneDeleteAll = true;
         this.sogliaWiki = pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI, 50);
 
         this.usaCreaButton = true;
-        this.usaUpdateButton = true;
+        this.usaStatistiche2Button = true;
+        super.titoloPaginaStatistiche = ((CognomeService) service).TITOLO_PAGINA_WIKI;
+        super.titoloPaginaStatistiche2 = ((CognomeService) service).TITOLO_PAGINA_WIKI_2;
+        super.usaBottoneUpload = true;
     }// end of method
 
     /**
@@ -169,30 +150,6 @@ public class CognomeList extends WikiList {
         alertPlacehorder.add(label);
     }// end of method
 
-
-    /**
-     * Crea la GridPaginata <br>
-     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-     * Oppure queste possono essere fatte nella sottoclasse , se non sono standard <br>
-     */
-    protected void creaGridPaginata() {
-        PaginatedGrid<Nome> gridPaginated = new PaginatedGrid<Nome>();
-        super.grid = gridPaginated;
-        super.creaGridPaginata();
-    }// end of method
-
-
-    /**
-     * Aggiunge le colonne alla PaginatedGrid <br>
-     * Sovrascritto (obbligatorio) <br>
-     */
-    protected void addColumnsGridPaginata() {
-        fixColumn(Cognome::getCognome, "cognome");
-        fixColumn(Cognome::getVoci, "voci");
-    }// end of method
-
-
     /**
      * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
      * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
@@ -214,21 +171,21 @@ public class CognomeList extends WikiList {
         Grid.Column colonna;
 
         renderer = new ComponentRenderer<>(this::createViewButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Test");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
 
         renderer = new ComponentRenderer<>(this::createWikiButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Wiki");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
 
         renderer = new ComponentRenderer<>(this::createUploaButton);
-        colonna = grid.addColumn(renderer);
+        colonna = paginatedGrid.addColumn(renderer);
         colonna.setHeader("Upload");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);

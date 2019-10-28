@@ -89,4 +89,8 @@ public class ListaCognomi extends ListaNomiCognomi {
         return listaService.ordinaListaDidascalieCognomi(listaDisordinata);
     }// fine del metodo
 
+    public ListaSottopagina getSottopagina() {
+        return listaService.sottopagina(mappa, pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI), "Persone di cognome " + cognome.cognome, titoloParagrafoVuoto, titoloSottoPaginaVuota);
+    }// fine del metodo
+
 }// end of class

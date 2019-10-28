@@ -10,8 +10,10 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadflow.service.IAService;
@@ -19,8 +21,8 @@ import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.fields.ATextField;
+import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadwiki.download.*;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
 import it.algos.vaadwiki.schedule.TaskUpdate;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;
@@ -30,8 +32,9 @@ import it.algos.wiki.web.WLogin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.mongodb.core.query.Criteria;
 
-import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
 
 /**
@@ -57,7 +60,8 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_BIO)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class BioList extends AttNazProfCatList {
+@AIView(vaadflow = false, menuName = "bio", menuIcon = VaadinIcon.BOAT, searchProperty = "wikiTitle", roleTypeVisibility = EARoleType.developer)
+public class BioList extends AGridViewList {
 
     /**
      * Icona visibile nel menu (facoltativa)
@@ -199,19 +203,34 @@ public class BioList extends AttNazProfCatList {
         super.fixPreferenze();
 
         super.usaBottoneNew = true;
-        super.usaBottoneDeleteMongo = true;
-        super.usaBottoneDownload = true;
-        super.usaBottoneUpload = false;
-        super.usaBottoneStatistiche = false;
-        super.usaBottoneModulo = false;
+//        super.usaBottoneDeleteMongo = true;
+//        super.usaBottoneDownload = true;
+//        super.usaBottoneUpload = false;
+//        super.usaBottoneStatistiche = false;
+//        super.usaBottoneModulo = false;
         super.isEntityModificabile = true;
         super.usaBottoneEdit = true;
-        super.task = taskUpdate;
-        super.usaPagination = false;
-        super.codeFlagDownload = USA_DAEMON_BIO;
-        super.codeLastDownload = LAST_UPDATE_BIO;
-        super.durataLastDownload = DURATA_DOWNLOAD_BIO;
+//        super.task = taskUpdate;
+        super.usaPagination = true;
+//        super.codeFlagDownload = USA_DAEMON_BIO;
+//        super.codeLastDownload = LAST_UPDATE_BIO;
+//        super.durataLastDownload = DURATA_DOWNLOAD_BIO;
     }// end of method
+
+
+//    /**
+//     * Crea la GridPaginata <br>
+//     * Per usare una GridPaginata occorre:
+//     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
+//     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
+//     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
+//     * 4) il metodo sovrascritto DOPO deve invocare questo stesso superMetodo in APaginatedGridViewList <br>
+//     */
+//    @Override
+//    protected void creaGridPaginata() {
+//        super.paginatedGrid = new PaginatedGrid<Bio>();
+//        super.creaGridPaginata();
+//    }// end of method
 
 
     /**
@@ -372,8 +391,8 @@ public class BioList extends AttNazProfCatList {
      */
     protected void openSecondConfirmDeleteDialog() {
         String message = "SEI ASSOLUTAMENTE SICURO ?";
-        ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
-        dialog.open(message, this::deleteMongo);
+//        ADeleteDialog dialog = appContext.getBean(ADeleteDialog.class);
+//        dialog.open(message, this::deleteMongo);
     }// end of method
 
 
@@ -393,7 +412,9 @@ public class BioList extends AttNazProfCatList {
 
     protected void esegueDownload() {
         DownloadResult result;
-        deleteMongo();
+        this.service.deleteAll();
+        updateFiltri();
+        updateGrid();
         result = cicloDownload.esegue();
         updateGrid();
     }// end of method
@@ -509,6 +530,56 @@ public class BioList extends AttNazProfCatList {
 //            mailService.send("Ciclo update", testo);
 //        }// end of if cycle
 //    }// end of method
+
+
+    /**
+     * Aggiorna la lista dei filtri della Grid. Modificati per: popup, newEntity, deleteEntity, ecc... <br>
+     * Normalmente tutti i filtri  vanno qui <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse AGridViewList <br>
+     * Alla prima visualizzazione della view usa SOLO creaFiltri() e non questo metodo <br>
+     * Può essere sovrascritto, per costruire i filtri specifici dei combobox, popup, ecc. <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void updateFiltri() {
+        this.creaFiltri();
+        String value = searchField.getValue();
+
+        if (text.isValid(value) && value.length() > 3) {
+            filtri.add(Criteria.where(searchProperty).regex("^" + value, "i"));
+        }// end of if cycle
+
+    }// end of method
+
+
+    /**
+     * Aggiorna gli items della Grid, utilizzando i filtri. <br>
+     * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
+     * <p>
+     * Sviluppato nella sottoclasse AGridViewList, oppure APaginatedGridViewList <br>
+     * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>
+     */
+    @Override
+    public void updateGrid() {
+        if (array.isValid(filtri)) {
+            items = mongo.findAllByProperty(entityClazz, filtri);
+        }// end of if cycle
+
+        if (items != null) {
+            if (items.size() < 100) {
+                try { // prova ad eseguire il codice
+                    grid.deselectAll();
+                    grid.setItems(items);
+                    headerGridHolder.setText(getGridHeaderText());
+                } catch (Exception unErrore) { // intercetta l'errore
+                    log.error(unErrore.toString());
+                }// fine del blocco try-catch
+            }// end of if cycle
+        }// end of if cycle
+
+        creaAlertLayout();
+    }// end of method
 
 
     /**

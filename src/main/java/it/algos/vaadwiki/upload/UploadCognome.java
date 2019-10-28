@@ -72,6 +72,7 @@ public class UploadCognome extends UploadNomiCognomi {
     @PostConstruct
     protected void inizia() {
         lista = appContext.getBean(ListaCognomi.class, cognome);
+        super.soggetto = cognome.cognome;
         super.inizia();
     }// end of method
 

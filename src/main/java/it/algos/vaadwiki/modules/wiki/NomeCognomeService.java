@@ -58,6 +58,7 @@ public class NomeCognomeService extends AService {
     /**
      * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
      */
+    @Deprecated
     public void update() {
     }// end of method
 

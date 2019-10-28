@@ -12,10 +12,12 @@ import com.vaadin.flow.dom.ElementFactory;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoDialog;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
@@ -58,16 +60,10 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_WGIO)
 @Slf4j
 @AIScript(sovrascrivibile = false)
+@AIView(vaadflow = false, menuName = "giorno", menuIcon = VaadinIcon.BOAT, searchProperty = "ordine", roleTypeVisibility = EARoleType.developer)
 public class WikiGiornoList extends WikiList {
 
-    /**
-     * Icona visibile nel menu (facoltativa)
-     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
-     * Se manca il MENU_NAME, di default usa il 'name' della view
-     */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
-    public static final String MENU_NAME = "Giorno";
 
     @Autowired
     @Qualifier(TASK_GIO)

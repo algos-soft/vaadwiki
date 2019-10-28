@@ -9,6 +9,7 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
+import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadflow.ui.list.APaginatedGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
  * Date: mar, 10-lug-2018
  * Time: 07:04
  */
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public abstract class AttNazProfCatList extends APaginatedGridViewList {
 
@@ -113,7 +113,6 @@ public abstract class AttNazProfCatList extends APaginatedGridViewList {
         this.usaBottoneStatistiche = true;
 
         super.usaBottoneNew = false;
-//        super.usaSearchBottoneNew = false; //@todo versione 14
         super.usaBottoneEdit = true;
         super.isEntityModificabile = false;
         super.usaBottoneDeleteAll = true;

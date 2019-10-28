@@ -3,7 +3,6 @@ package it.algos.vaadwiki.modules.cognome;
 import com.mongodb.client.DistinctIterable;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.service.AService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.wiki.NomeCognomeService;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +44,11 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @AIScript(sovrascrivibile = false)
 public class CognomeService extends NomeCognomeService {
 
+    //--titolo della pagina di statistiche sul server wiki
+    public static final String TITOLO_PAGINA_WIKI = "Progetto:Antroponimi/Cognomi";
+
+    //--titolo della pagina di statistiche sul server wiki
+    public static final String TITOLO_PAGINA_WIKI_2 = "Progetto:Antroponimi/Liste cognomi";
 
     /**
      * versione della classe per la serializzazione
@@ -241,25 +245,32 @@ public class CognomeService extends NomeCognomeService {
      */
     public void crea() {
         long inizio = System.currentTimeMillis();
+        int tot = 0;
         int cont = 0;
-        log.info("Creazione completa cognomi delle biografie. Circa 12 minuti.");
+        log.info("Creazione completa cognomi delle biografie. Circa 4 minuti.");
+
+        //--Cancella tutte le entities della collezione
         deleteAll();
 
         //@Field("cogn")
         DistinctIterable<String> listaCognomiDistinti = mongo.mongoOp.getCollection("bio").distinct("cogn", String.class);
-        for (String cognome : listaCognomiDistinti) {
-            cont++;
-            saveNumVoci(cognome);
+        for (String cognomeTxt : listaCognomiDistinti) {
+            tot++;
+
+            if (saveCognome(cognomeTxt) != null) {
+                cont++;
+            }// end of if cycle
         }// end of for cycle
 
         pref.saveValue(LAST_ELABORA_COGNOME, LocalDateTime.now());
-        log.info("Creazione completa di " + cont + " cognomi. Tempo impiegato: " + date.deltaText(inizio));
+        log.info("Creazione di " + text.format(cont) + " cognomi su un totale di " + text.format(tot) + " cognomi distinti. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 
     /**
      * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
      */
+    @Deprecated
     public void update() {
         long inizio = System.currentTimeMillis();
         log.info("Elaborazione cognomi delle biografie. Circa 1 minuto.");
@@ -274,18 +285,25 @@ public class CognomeService extends NomeCognomeService {
 
 
     /**
-     * Registra il numero di voci biografiche che hanno il nome indicato <br>
+     * Registra il numero di voci biografiche che hanno il cognome indicato <br>
      */
-    public void saveNumVoci(String cognome) {
-        //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
-        int sogliaMongo = pref.getInt(SOGLIA_COGNOMI_MONGO, 10);
-        int numVoci = 0;
+    public Cognome saveCognome(String cognomeTxt) {
+        Cognome cognome = null;
+        //--Soglia minima per creare una entity nella collezione Cognomi sul mongoDB
+        int sogliaMongo = pref.getInt(SOGLIA_COGNOMI_MONGO, 40);
+        //--Soglia minima per creare una pagina sul server wiki
+        int sogliaWiki = pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI, 50);
+        long numVoci = 0;
         Query query = new Query();
-        query.addCriteria(Criteria.where("cognome").is(cognome));
-        numVoci = ((List) mongo.mongoOp.find(query, Bio.class)).size();
-        if (numVoci >= sogliaMongo && text.isValid(cognome)) {
-            this.findOrCrea(cognome, numVoci);
+
+        query.addCriteria(Criteria.where("cognome").is(cognomeTxt));
+        numVoci = mongo.mongoOp.count(query, Bio.class);
+
+        if (numVoci >= sogliaMongo && text.isValid(cognomeTxt)) {
+            cognome = findOrCrea(cognomeTxt, (int) numVoci);
         }// end of if cycle
+
+        return cognome;
     }// end of method
 
 

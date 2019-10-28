@@ -10,6 +10,7 @@ import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.selection.SelectionListener;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAFieldType;
 import it.algos.vaadflow.enumeration.EASearch;
 import it.algos.vaadflow.service.IAService;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +79,7 @@ public abstract class AGridViewList extends ALayoutViewList {
      * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto) <br>
      */
     protected void creaBody() {
-        this.add(gridPlaceholder);
+        gridPlaceholder.removeAll();
         gridPlaceholder.setMargin(false);
         gridPlaceholder.setSpacing(false);
         gridPlaceholder.setPadding(false);
@@ -107,20 +108,18 @@ public abstract class AGridViewList extends ALayoutViewList {
      * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto <br>
      */
     protected Grid creaGrid(List<String> gridPropertyNamesList) {
-        if (grid == null) {
-            if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
-                try { // prova ad eseguire il codice
-                    //--Costruisce la Grid SENZA creare automaticamente le colonne
-                    //--Si possono così inserire colonne manuali prima e dopo di quelle automatiche
-                    grid = new Grid(entityClazz, false);
-                } catch (Exception unErrore) { // intercetta l'errore
-                    log.error(unErrore.toString());
-                    return null;
-                }// fine del blocco try-catch
-            } else {
-                grid = new Grid();
-            }// end of if/else cycle
-        }// end of if cycle
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            try { // prova ad eseguire il codice
+                //--Costruisce la Grid SENZA creare automaticamente le colonne
+                //--Si possono così inserire colonne manuali prima e dopo di quelle automatiche
+                grid = new Grid(entityClazz, false);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+                return null;
+            }// fine del blocco try-catch
+        } else {
+            grid = new Grid();
+        }// end of if/else cycle
 
         //        //--regolazioni eventuali se la Grid è paginata in fixPreferenze() della sottoclasse
 //        fixGridPaginata();
@@ -188,7 +187,7 @@ public abstract class AGridViewList extends ALayoutViewList {
         if (grid != null) {
             if (gridPropertyNamesList != null) {
                 for (String propertyName : gridPropertyNamesList) {
-                    columnService.create(appContext, grid, entityClazz, propertyName);
+                    columnService.create(grid, entityClazz, propertyName, searchProperty);
                 }// end of for cycle
             }// end of if cycle
         }// end of if cycle
@@ -329,14 +328,36 @@ public abstract class AGridViewList extends ALayoutViewList {
     @Override
     protected void updateFiltri() {
         this.creaFiltri();
+        EAFieldType type;
+        int intValue;
 
         //--ricerca iniziale
         if (searchType == EASearch.editField && searchField != null) {
-            if (pref.isBool(USA_SEARCH_CASE_SENSITIVE)) {
-                filtri.add(Criteria.where(searchProperty).regex("^" + searchField.getValue()));
-            } else {
-                filtri.add(Criteria.where(searchProperty).regex("^" + searchField.getValue(), "i"));
-            }// end of if/else cycle
+            type = annotation.getFormType(entityClazz, searchProperty);
+
+            switch (type) {
+                case text:
+                    if (pref.isBool(USA_SEARCH_CASE_SENSITIVE)) {
+                        filtri.add(Criteria.where(searchProperty).regex("^" + searchField.getValue()));
+                    } else {
+                        filtri.add(Criteria.where(searchProperty).regex("^" + searchField.getValue(), "i"));
+                    }// end of if/else cycle
+
+                    break;
+                case integer:
+                    try { // prova ad eseguire il codice
+                        intValue = Integer.decode(searchField.getValue());
+                        filtri.add(Criteria.where(searchProperty).is(intValue));
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
+
+                    break;
+                default:
+                    log.warn("Switch - caso non definito");
+                    break;
+            } // end of switch statement
+
         }// end of if cycle
 
     }// end of method

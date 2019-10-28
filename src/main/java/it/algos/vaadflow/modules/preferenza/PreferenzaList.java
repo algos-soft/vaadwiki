@@ -13,6 +13,7 @@ import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadflow.ui.list.APaginatedGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -93,7 +94,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
  * Annotated with @AIView (facoltativo Algos) per il menu-name, l'icona-menu, la property-search e la visibilità <br>
  * Se serve una Grid paginata estende APaginatedGridViewList altrimenti AGridViewList <br>
  * Se si usa APaginatedGridViewList è obbligatorio creare la PaginatedGrid
- * 'tipizzata' con la entityClazz (Collection) specifica nel metodo creaGridPaginata <br>
+ * 'tipizzata' con la entityClazz (Collection) specifica nel metodo creaGridPaginata() <br>
  */
 @UIScope
 @Route(value = TAG_PRE, layout = MainLayout14.class)
@@ -102,7 +103,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
 @Secured("developer")
 @AIScript(sovrascrivibile = false)
 @AIView(vaadflow = true, menuName = "preferenze", menuIcon = VaadinIcon.SCREWDRIVER, searchProperty = "code", roleTypeVisibility = EARoleType.developer)
-public class PreferenzaList extends AGridViewList {
+public class PreferenzaList extends APaginatedGridViewList {
 
 
     public static final String IRON_ICON = "menu";
@@ -140,8 +141,21 @@ public class PreferenzaList extends AGridViewList {
         super.usaBottoneNew = false;
         super.isEntityDeveloper = true;
         super.usaPagination = true;
+    }// end of method
 
-        super.grid = new PaginatedGrid<Preferenza>();
+
+    /**
+     * Crea la GridPaginata <br>
+     * Per usare una GridPaginata occorre:
+     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
+     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
+     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
+     * 4) il metodo sovrascritto DOPO deve invocare questo stesso superMetodo in APaginatedGridViewList <br>
+     */
+    @Override
+    protected void creaGridPaginata() {
+        super.paginatedGrid = new PaginatedGrid<Preferenza>();
+        super.creaGridPaginata();
     }// end of method
 
 

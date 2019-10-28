@@ -6,6 +6,8 @@ import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.annotation.AIView;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
@@ -46,15 +48,9 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_GEN)
 @Slf4j
 @AIScript(sovrascrivibile = true)
+@AIView(vaadflow = false, menuName = "genere", menuIcon = VaadinIcon.BOAT, searchProperty = "singolare", roleTypeVisibility = EARoleType.developer)
 public class GenereList extends AttNazProfCatList {
 
-
-    /**
-     * Icona visibile nel menu (facoltativa)
-     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
-     * Se manca il MENU_NAME, di default usa il 'name' della view
-     */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>

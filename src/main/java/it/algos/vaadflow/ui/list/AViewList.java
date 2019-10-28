@@ -193,9 +193,9 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
      * Qui va tutta la logica inizale della view <br>
      */
     protected void initView() {
+        this.removeAll();
         this.setMargin(false);
         this.setSpacing(false);
-        this.removeAll();
 
         //--Login and context della sessione
         this.mongo = appContext.getBean(AMongoService.class);
@@ -232,6 +232,9 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
         //--body con la Grid
         //--seleziona quale grid usare e la aggiunge al layout
         this.creaBody();
+        if (gridPlaceholder.getComponentCount() > 0) {
+            this.add(gridPlaceholder);
+        }// end of if cycle
 
         //--aggiunge il footer standard
         this.add(appContext.getBean(AFooter.class));

@@ -4,21 +4,20 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowVar;
 import it.algos.vaadflow.boot.ABoot;
-import it.algos.vaadflow.modules.preferenza.EAPrefType;
-import it.algos.vaadwiki.enumeration.EAPreferenzaWiki;
-import it.algos.vaadwiki.modules.attivita.AttivitaList;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.modules.utente.UtenteService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadwiki.didascalia.ViewDidascalie;
+import it.algos.vaadwiki.enumeration.EAPreferenzaWiki;
+import it.algos.vaadwiki.modules.attivita.AttivitaList;
 import it.algos.vaadwiki.modules.bio.BioList;
 import it.algos.vaadwiki.modules.cognome.CognomeList;
+import it.algos.vaadwiki.modules.doppinomi.DoppinomiList;
 import it.algos.vaadwiki.modules.genere.GenereList;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaList;
 import it.algos.vaadwiki.modules.nome.NomeList;
-import it.algos.vaadwiki.modules.doppinomi.DoppinomiList;
 import it.algos.vaadwiki.modules.professione.ProfessioneList;
 import it.algos.vaadwiki.modules.wiki.WikiAnnoList;
 import it.algos.vaadwiki.modules.wiki.WikiGiornoList;
@@ -62,6 +61,14 @@ import static it.algos.vaadwiki.application.WikiCost.SEND_MAIL_RESTART;
 public class WikiBoot extends ABoot {
 
     public final static String DEMO_COMPANY_CODE = "demo";
+
+    private final static String PROJECT_NAME = "vaadwiki";
+
+    private final static double PROJECT_VERSION = 6.1;
+
+    private final static LocalDate VERSION_DATE = LocalDate.of(2019, 10, 28);
+
+    private final static String PATH_LOGO = "frontend/images/Emblem-wiki-blue.svg.png";
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -160,7 +167,6 @@ public class WikiBoot extends ABoot {
     }// end of method
 
 
-
     /**
      * Riferimento alla sottoclasse specifica di ABoot per utilizzare il metodo sovrascritto resetPreferenze() <br>
      * Il metodo DEVE essere sovrascritto nella sottoclasse specifica <br>
@@ -212,6 +218,7 @@ public class WikiBoot extends ABoot {
         return numPref;
     }// end of method
 
+
     /**
      * Regola alcune informazioni dell'applicazione
      */
@@ -236,19 +243,33 @@ public class WikiBoot extends ABoot {
          * Nome identificativo dell'applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
          */
-        FlowVar.projectName = "vaadwiki";
+        FlowVar.projectName = PROJECT_NAME;
 
         /**
          * Versione dell'applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
          */
-        FlowVar.projectVersion = 5.9;
+        FlowVar.projectVersion = PROJECT_VERSION;
 
         /**
          * Data della versione dell'applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
          */
-        FlowVar.versionDate = LocalDate.of(2019, 10, 26);
+        FlowVar.versionDate = VERSION_DATE;
+
+        /**
+         * Derscrizione completa dell'applicazione <br>
+         * Usato (eventualmente) nella barra di menu in testa pagina <br>
+         * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
+         */
+        FlowVar.projectBanner = "Biobot per wikipedia";
+
+        /**
+         * Path per recuperare dalle risorse un'immagine da inserire nella barra di menu di MainLayout14 <br>
+         * Ogni applicazione può modificarla <br>
+         * Deve essere regolata in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+         */
+        FlowVar.pathLogo = PATH_LOGO;
 
         if (wLogin != null) {
             FlowVar.projectNote = "- loggato come " + wLogin.getLgusername();
@@ -284,8 +305,6 @@ public class WikiBoot extends ABoot {
     }// end of method
 
 
-
-
     /**
      * Aggiunge le @Route (view) specifiche di questa applicazione
      * Le @Route vengono aggiunte ad una Lista statica mantenuta in FlowCost
@@ -295,18 +314,17 @@ public class WikiBoot extends ABoot {
     protected void addRouteSpecifiche() {
         FlowVar.menuClazzList.add(ViewDidascalie.class);
         FlowVar.menuClazzList.add(UtilityView.class);
+        FlowVar.menuClazzList.add(BioList.class);
         FlowVar.menuClazzList.add(AttivitaList.class);
         FlowVar.menuClazzList.add(NazionalitaList.class);
         FlowVar.menuClazzList.add(ProfessioneList.class);
         FlowVar.menuClazzList.add(GenereList.class);
-        FlowVar.menuClazzList.add(BioList.class);
         FlowVar.menuClazzList.add(WikiGiornoList.class);
         FlowVar.menuClazzList.add(WikiAnnoList.class);
         FlowVar.menuClazzList.add(NomeList.class);
         FlowVar.menuClazzList.add(CognomeList.class);
         FlowVar.menuClazzList.add(DoppinomiList.class);
-		FlowVar.menuClazzList.add(AttivitaList.class);
-	}// end of method
+    }// end of method
 
 
 }// end of boot class

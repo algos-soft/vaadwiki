@@ -2265,6 +2265,7 @@ public class LibBio {
         return fixPropertyBase(testoGrezzo);
     } // // end of method
 
+
     /**
      * Regola questo campo
      *
@@ -2444,6 +2445,8 @@ public class LibBio {
      */
     public String fixAttivitaValida(String testoGrezzo) {
         String testoValido = fixPropertyBase(testoGrezzo).toLowerCase();
+        String tag1 = "ex ";
+        String tag2 = "ex-";
 
         if (text.isEmpty(testoValido)) {
             return VUOTA;
@@ -2452,7 +2455,18 @@ public class LibBio {
         if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
             return testoValido.trim();
         } else {
-            return VUOTA;
+            if (testoValido.contains(tag1)) {
+                testoValido = testoValido.substring(testoValido.indexOf(tag1) + tag1.length()).trim();
+            }// end of if cycle
+            if (testoValido.contains(tag2)) {
+                testoValido = testoValido.substring(testoValido.indexOf(tag2) + tag2.length()).trim();
+            }// end of if cycle
+            if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
+                return testoValido.trim();
+            } else {
+                return VUOTA;
+            }// end of if/else cycle
+
         }// end of if/else cycle
     } // fine del metodo
 

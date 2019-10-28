@@ -13,6 +13,8 @@ import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.annotation.AIView;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
@@ -60,16 +62,11 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Route(value = TAG_NOM, layout = MainLayout14.class)
 @Qualifier(TAG_NOM)
 @Slf4j
-@AIScript(sovrascrivibile = true)
+@AIScript(sovrascrivibile = false)
+@AIView(vaadflow = false, menuName = "nome", menuIcon = VaadinIcon.BOAT, searchProperty = "nome", roleTypeVisibility = EARoleType.developer)
 public class NomeList extends WikiList {
 
 
-    /**
-     * Icona visibile nel menu (facoltativa)
-     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
-     * Se manca il MENU_NAME, di default usa il 'name' della view
-     */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
     private final static String DIM = "Dimensioni";
 
@@ -77,26 +74,7 @@ public class NomeList extends WikiList {
 
     private final static String DOP = "Nomi doppi";
 
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected LibBio libBio;
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected UploadService uploadService;
-
     private AComboBox<String> comboFiltro; //@todo da modificare dopo l'upgrade del programma con vaadflow
-
-    //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
-    //--Soglia minima per creare una pagina di un nome sul server wiki
-    private int sogliaWiki;
 
 
     /**
@@ -115,6 +93,21 @@ public class NomeList extends WikiList {
     }// end of Vaadin/@Route constructor
 
     /**
+     * Crea la GridPaginata <br>
+     * Per usare una GridPaginata occorre:
+     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
+     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
+     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
+     * 4) il metodo sovrascritto deve invocare DOPO questo stesso superMetodo in APaginatedGridViewList <br>
+     */
+    @Override
+    protected void creaGridPaginata() {
+        paginatedGrid = new PaginatedGrid<Nome>();
+        super.creaGridPaginata();
+    }// end of method
+
+
+    /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
      * Invocare PRIMA il metodo della superclasse
@@ -123,12 +116,10 @@ public class NomeList extends WikiList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-//        super.usaSearchBottoneNew = false; //@todo versione 14
         super.usaBottoneDeleteAll = true;
         this.sogliaWiki = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI, 50);
 
         this.usaCreaButton = true;
-        this.usaUpdateButton = false;
         this.usaStatistiche2Button = true;
         super.titoloPaginaStatistiche = ((NomeService) service).TITOLO_PAGINA_WIKI;
         super.titoloPaginaStatistiche2 = ((NomeService) service).TITOLO_PAGINA_WIKI_2;
@@ -220,19 +211,6 @@ public class NomeList extends WikiList {
 
 
 
-    /**
-     * Crea la GridPaginata <br>
-     * Per usare una GridPaginata occorre:
-     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
-     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
-     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
-     * 4) il metodo sovrascritto deve invocare DOPO questo stesso superMetodo in APaginatedGridViewList <br>
-     */
-    @Override
-    protected void creaGridPaginata() {
-        paginatedGrid = new PaginatedGrid<Nome>();
-        super.creaGridPaginata();
-    }// end of method
 
     /**
      * Eventuali colonne calcolate aggiunte DOPO quelle automatiche

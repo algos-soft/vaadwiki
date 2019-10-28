@@ -99,6 +99,7 @@ public class WikiScheduler extends Scheduler {
             this.task(giorni);
             this.task(anni);
             this.task(nomi);
+            this.task(cognomi);
 
         }// fine del blocco if
     }// end of method
