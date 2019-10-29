@@ -43,7 +43,7 @@ public class TDialogoPackage extends TDialogo {
     public final static boolean DEFAULT_USA_DESCRIZIONE = false;
     public final static boolean DEFAULT_USA_KEY_CODE_SPECIFICA = false;
     public final static boolean DEFAULT_USA_COMPANY = false;
-    public final static boolean DEFAULT_USA_PAGINATED_GRID = false;
+    public final static boolean DEFAULT_USA_PAGINATED_GRID = true;
     public final static boolean DEFAULT_USA_LIST_ESTESA = true;
     public final static boolean DEFAULT_USA_SOVRASCRIVE = false;
     public final static boolean DEFAULT_USA_ALL_PACKAGE = false;

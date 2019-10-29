@@ -17,6 +17,7 @@ import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.modules.wiki.WikiList;
@@ -78,19 +79,6 @@ public class CognomeList extends WikiList {
         super(service, Cognome.class);
     }// end of Vaadin/@Route constructor
 
-    /**
-     * Crea la GridPaginata <br>
-     * Per usare una GridPaginata occorre:
-     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
-     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
-     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
-     * 4) il metodo sovrascritto deve invocare DOPO questo stesso superMetodo in APaginatedGridViewList <br>
-     */
-    @Override
-    protected void creaGridPaginata() {
-        paginatedGrid = new PaginatedGrid<Cognome>();
-        super.creaGridPaginata();
-    }// end of method
 
 
     /**
@@ -110,6 +98,20 @@ public class CognomeList extends WikiList {
         super.titoloPaginaStatistiche = ((CognomeService) service).TITOLO_PAGINA_WIKI;
         super.titoloPaginaStatistiche2 = ((CognomeService) service).TITOLO_PAGINA_WIKI_2;
         super.usaBottoneUpload = true;
+    }// end of method
+
+
+    /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Cognome>();
     }// end of method
 
     /**
@@ -171,21 +173,21 @@ public class CognomeList extends WikiList {
         Grid.Column colonna;
 
         renderer = new ComponentRenderer<>(this::createViewButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Test");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
 
         renderer = new ComponentRenderer<>(this::createWikiButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Wiki");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
 
         renderer = new ComponentRenderer<>(this::createUploaButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Upload");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);

@@ -10,7 +10,6 @@ import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.list.AGridViewList;
-import it.algos.vaadflow.ui.list.APaginatedGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -29,7 +28,7 @@ import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
  * Time: 07:04
  */
 @Slf4j
-public abstract class AttNazProfCatList extends APaginatedGridViewList {
+public abstract class AttNazProfCatList extends AGridViewList {
 
 
     @Autowired

@@ -10,7 +10,7 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.fields.AComboBox;
-import it.algos.vaadflow.ui.list.APaginatedGridViewList;
+import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
@@ -35,7 +35,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public abstract class WikiList extends APaginatedGridViewList {
+public abstract class WikiList extends AGridViewList {
 
 
     /**

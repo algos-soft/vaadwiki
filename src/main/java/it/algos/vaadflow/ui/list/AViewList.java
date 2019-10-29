@@ -4,6 +4,7 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.HtmlImport;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
@@ -321,11 +322,26 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
     /**
      * Crea il corpo centrale della view inserito in 'gridPlaceholder' <br>
      * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse ALayoutViewList <br>
      * Componente grafico obbligatorio <br>
      * Seleziona quale grid usare e la aggiunge al layout <br>
      * Eventuale barra di bottoni sotto la grid <br>
      */
     protected void creaBody() {
+    }// end of method
+
+
+    /**
+     * Crea la grid <br>
+     * <p>
+     * Chiamato da ALayoutViewList.creaBody() e sviluppato nella sottoclasse AGridViewList <br>
+     * Alcune regolazioni vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse <br>
+     * Costruisce la Grid con le colonne. Gli items vengono calcolati in updateFiltri() e caricati in updateGrid() <br>
+     * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto) <br>
+     * Se si usa una PaginatedGrid, questa DEVE essere costruita (tipizzata) nella sottoclasse specifica <br>
+     */
+    protected Grid creaGrid() {
+        return null;
     }// end of method
 
 

@@ -66,6 +66,7 @@ public class ListaCognomi extends ListaNomiCognomi {
 
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_COGNOMI);
+        super.usaBodySottopagine = false;
     }// end of method
 
 

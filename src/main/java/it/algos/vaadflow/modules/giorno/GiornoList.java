@@ -1,5 +1,6 @@
 package it.algos.vaadflow.modules.giorno;
 
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
@@ -8,12 +9,13 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.mese.Mese;
 import it.algos.vaadflow.modules.mese.MeseService;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
-import it.algos.vaadflow.ui.list.APaginatedGridViewList;
+import it.algos.vaadflow.ui.list.AGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,7 +53,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
 @Secured("developer")
 @AIScript(sovrascrivibile = false)
 @AIView(vaadflow = true, menuName = "giorni", menuIcon = VaadinIcon.CALENDAR, searchProperty = "mese", roleTypeVisibility = EARoleType.developer)
-public class GiornoList extends APaginatedGridViewList {
+public class GiornoList extends AGridViewList {
 
 
     /**
@@ -80,6 +82,19 @@ public class GiornoList extends APaginatedGridViewList {
 
 
     /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Giorno>();
+    }// end of method
+
+    /**
      * Preferenze standard <br>
      * Può essere sovrascritto, per aggiungere informazioni <br>
      * Invocare PRIMA il metodo della superclasse <br>
@@ -95,8 +110,6 @@ public class GiornoList extends APaginatedGridViewList {
         super.isEntityDeveloper = true;
         super.usaBottoneNew = false;
         super.usaBottoneEdit = false;
-
-        super.paginatedGrid = new PaginatedGrid<Giorno>();
     }// end of method
 
 

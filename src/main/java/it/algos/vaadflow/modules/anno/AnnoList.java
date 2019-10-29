@@ -1,5 +1,6 @@
 package it.algos.vaadflow.modules.anno;
 
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
@@ -14,7 +15,7 @@ import it.algos.vaadflow.modules.secolo.Secolo;
 import it.algos.vaadflow.modules.secolo.SecoloService;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
-import it.algos.vaadflow.ui.list.APaginatedGridViewList;
+import it.algos.vaadflow.ui.list.AGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,7 +57,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
 @Secured("developer")
 @AIScript(sovrascrivibile = false)
 @AIView(vaadflow = true, menuName = "anni", menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", roleTypeVisibility = EARoleType.developer)
-public class AnnoList extends APaginatedGridViewList {
+public class AnnoList extends AGridViewList {
 
 
     /**
@@ -84,6 +85,19 @@ public class AnnoList extends APaginatedGridViewList {
         super(service, Anno.class);
     }// end of Vaadin/@Route constructor
 
+
+    /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Anno>();
+    }// end of method
 
     /**
      * Preferenze specifiche di questa view <br>
@@ -141,19 +155,6 @@ public class AnnoList extends APaginatedGridViewList {
 //        items = ((AnnoService) service).findAllBySecolo(secolo);
 //    }// end of method
 
-    /**
-     * Crea la GridPaginata <br>
-     * Per usare una GridPaginata occorre:
-     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
-     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
-     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
-     * 4) il metodo sovrascritto DOPO deve invocare questo stesso superMetodo in APaginatedGridViewList <br>
-     */
-    @Override
-    protected void creaGridPaginata() {
-        super.paginatedGrid = new PaginatedGrid<Anno>();
-        super.creaGridPaginata();
-    }// end of method
 
     /**
      * Crea la lista dei filtri della Grid alla prima visualizzazione della view <br>

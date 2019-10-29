@@ -72,57 +72,28 @@ public abstract class AGridViewList extends ALayoutViewList {
 
 
     /**
-     * Crea il corpo centrale della view <br>
-     * Componente grafico obbligatorio <br>
+     * Crea la grid <br>
+     * <p>
+     * Chiamato da ALayoutViewList.creaBody() e sviluppato nella sottoclasse AGridViewList <br>
      * Alcune regolazioni vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse <br>
-     * Costruisce la Grid con le colonne. Gli items vengono caricati in updateItems() <br>
+     * Costruisce la Grid con le colonne. Gli items vengono calcolati in updateFiltri() e caricati in updateGrid() <br>
      * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto) <br>
+     * Se si usa una PaginatedGrid, questa DEVE essere costruita (tipizzata) nella sottoclasse specifica <br>
      */
-    protected void creaBody() {
-        gridPlaceholder.removeAll();
-        gridPlaceholder.setMargin(false);
-        gridPlaceholder.setSpacing(false);
-        gridPlaceholder.setPadding(false);
+    protected Grid creaGrid() {
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            //--Crea effettivamente il Component Grid
+            if (isPaginata) {
+                grid = creaGridComponent();
+            } else {
+                grid = new Grid(entityClazz, false);
+            }// end of if/else cycle
+        } else {
+            return null;
+        }// end of if/else cycle
 
         //--Costruisce una lista di nomi delle properties della Grid
         List<String> gridPropertyNamesList = getGridPropertyNamesList();
-
-        gridPlaceholder.add(creaGrid(gridPropertyNamesList));
-        gridPlaceholder.setFlexGrow(0);
-
-        //--Regolazioni di larghezza
-        //gridPlaceholder.setWidth(gridWith + "em");
-        //gridPlaceholder.setFlexGrow(0);
-        //gridPlaceholder.getElement().getStyle().set("background-color", "#ffaabb");//rosa
-
-        //--eventuale barra di bottoni sotto la grid
-        creaGridBottomLayout();
-    }// end of method
-
-
-    /**
-     * Crea la grid <br>
-     * Alcune regolazioni vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse <br>
-     * Costruisce la Grid con le colonne. Gli items vengono caricati in updateItems() <br>
-     * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto) <br>
-     * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto <br>
-     */
-    protected Grid creaGrid(List<String> gridPropertyNamesList) {
-        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
-            try { // prova ad eseguire il codice
-                //--Costruisce la Grid SENZA creare automaticamente le colonne
-                //--Si possono così inserire colonne manuali prima e dopo di quelle automatiche
-                grid = new Grid(entityClazz, false);
-            } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
-                return null;
-            }// fine del blocco try-catch
-        } else {
-            grid = new Grid();
-        }// end of if/else cycle
-
-        //        //--regolazioni eventuali se la Grid è paginata in fixPreferenze() della sottoclasse
-//        fixGridPaginata();
 
         //--Apre il dialog di detail
         //--Eventuale inserimento (se previsto nelle preferenze) del bottone Edit come prima colonna
@@ -155,6 +126,21 @@ public abstract class AGridViewList extends ALayoutViewList {
         });//end of lambda expressions and anonymous inner class
 
         return grid;
+    }// end of method
+
+
+    /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    protected Grid creaGridComponent() {
+        //--Costruisce la Grid SENZA creare automaticamente le colonne
+        //--Si possono così inserire colonne manuali prima e dopo quelle automatiche
+        return new Grid(entityClazz, false);
     }// end of method
 
 

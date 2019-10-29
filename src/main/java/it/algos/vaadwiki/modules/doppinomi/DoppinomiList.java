@@ -1,16 +1,22 @@
 package it.algos.vaadwiki.modules.doppinomi;
 
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.annotation.AIView;
+import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
+import it.algos.vaadflow.ui.MainLayout14;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
 import it.algos.wiki.web.AQueryVoce;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.vaadin.klaudeta.PaginatedGrid;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -37,35 +43,15 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @UIScope
-@Route(value = TAG_DOP, layout = MainLayout.class)
+@Route(value = TAG_DOP, layout = MainLayout14.class)
 @Qualifier(TAG_DOP)
 @Slf4j
 @AIScript(sovrascrivibile = false)
+@AIView(vaadflow = false, menuName = "nomi doppi", menuIcon = VaadinIcon.BOAT, searchProperty = "code", roleTypeVisibility = EARoleType.developer)
 public class DoppinomiList extends AttNazProfCatList {
 
-    /**
-     * Icona visibile nel menu (facoltativa)
-     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
-     * Se manca il MENU_NAME, di default usa il 'name' della view
-     */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
     private static String PAGINA_WIKI = "Utente:Biobot/NomiDoppi";
-
-
-//    /**
-//     * Costruttore @Autowired <br>
-//     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-//     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-//     *
-//     * @param presenter per gestire la business logic del package
-//     * @param dialog    per visualizzare i fields
-//     */
-//    @Autowired
-//    public DoppinomiViewList(@Qualifier(TAG_DOP) IAPresenter presenter, @Qualifier(TAG_DOP) IADialog dialog) {
-//        super(presenter, dialog);
-//        ((DoppinomiViewDialog) dialog).fixFunzioni(this::save, this::delete);
-//    }// end of Spring constructor
 
 
     /**
@@ -83,6 +69,7 @@ public class DoppinomiList extends AttNazProfCatList {
         super(service, Doppinomi.class);
     }// end of Vaadin/@Route constructor
 
+
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
@@ -92,11 +79,7 @@ public class DoppinomiList extends AttNazProfCatList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-//        super.usaSearchTextDialog = false;//@todo versione 14
-//        super.usaAllButton = false;//@todo versione 14
-//        super.usaSearchBottoneNew = false; //@todo versione 14
         super.isEntityModificabile = false;
-
         super.usaBottoneUpload = false;
         super.usaBottoneCategoria = false;
         super.usaBottoneDeleteMongo = false;
@@ -106,30 +89,6 @@ public class DoppinomiList extends AttNazProfCatList {
         super.codeLastDownload = LAST_DOWNLOAD_DOPPI_NOMI;
         super.usaPagination = false;
     }// end of method
-
-
-//    /**
-//     * Placeholder (eventuale, presente di default) SOPRA la Grid
-//     * - con o senza campo edit search, regolato da preferenza o da parametro
-//     * - con o senza bottone New, regolato da preferenza o da parametro
-//     * - con eventuali altri bottoni specifici
-//     * Può essere sovrascritto, per aggiungere informazioni
-//     * Invocare PRIMA il metodo della superclasse
-//     */
-//    @Override
-//    protected void creaTopLayout() {
-//        super.creaTopLayout();
-//
-//        Button showModuloButton = new Button("Download wiki", new Icon(VaadinIcon.DOWNLOAD));
-//        showModuloButton.addClassName("view-toolbar__button");
-//        showModuloButton.addClickListener(e -> download());
-//        topPlaceholder.add(showModuloButton);
-//
-//        Button uploadStatisticheButton = new Button("Upload wiki", new Icon(VaadinIcon.UPLOAD));
-//        uploadStatisticheButton.addClassName("view-toolbar__button");
-//        uploadStatisticheButton.addClickListener(e -> upload());
-//        topPlaceholder.add(uploadStatisticheButton);
-//    }// end of method
 
 
     /**
@@ -148,29 +107,7 @@ public class DoppinomiList extends AttNazProfCatList {
                 ;
             }// end of for cycle
         }// end of if cycle
-
     }// end of method
 
-
-//    /**
-//     * Scrive sul server wiki una lista dei valori del mongoDB <br>
-//     */
-//    protected void upload() {
-//        String testo = "";
-//        List<String> lista = ((DoppinomiService) service).findAllCode();
-//
-//        testo += "Pagina di servizio con la lista dei '''nomi doppi''' da escludere nella creazione delle pagine '''Persone di nome...'''";
-//        testo += A_CAPO;
-//        testo += A_CAPO;
-//
-//        for (String stringa : lista) {
-//            testo += "*";
-//            testo += stringa;
-//            testo += A_CAPO;
-//        }// end of for cycle
-//        testo = text.levaCoda(testo, A_CAPO);
-//
-//        appContext.getBean(AQueryWrite.class, PAGINA_WIKI, testo);
-//    }// end of method
 
 }// end of class

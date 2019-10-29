@@ -86,7 +86,7 @@ public class Giorno extends AEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @Field("ord")
     @AIField(type = EAFieldType.integer, widthEM = 3)
-    @AIColumn(name = "Day", widthEM = 5)
+    @AIColumn(name = "#", widthEM = 5)
     public int ordine;
 
 

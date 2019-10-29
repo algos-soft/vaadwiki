@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.modules.professione;
 
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -9,6 +10,7 @@ import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
 import it.algos.vaadwiki.schedule.TaskProfessione;
 import lombok.extern.slf4j.Slf4j;
@@ -94,17 +96,17 @@ public class ProfessioneList extends AttNazProfCatList {
 
 
     /**
-     * Crea la GridPaginata <br>
-     * Per usare una GridPaginata occorre:
-     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
-     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
-     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
-     * 4) il metodo sovrascritto deve invocare DOPO questo stesso superMetodo in APaginatedGridViewList <br>
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
      */
     @Override
-    protected void creaGridPaginata() {
-        paginatedGrid = new PaginatedGrid<Professione>();
-        super.creaGridPaginata();
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Professione>();
     }// end of method
+
 
 }// end of class

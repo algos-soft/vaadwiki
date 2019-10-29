@@ -1,5 +1,6 @@
 package it.algos.vaadflow.modules.preferenza;
 
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
@@ -13,7 +14,6 @@ import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadflow.ui.list.AGridViewList;
-import it.algos.vaadflow.ui.list.APaginatedGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -103,7 +103,7 @@ import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
 @Secured("developer")
 @AIScript(sovrascrivibile = false)
 @AIView(vaadflow = true, menuName = "preferenze", menuIcon = VaadinIcon.SCREWDRIVER, searchProperty = "code", roleTypeVisibility = EARoleType.developer)
-public class PreferenzaList extends APaginatedGridViewList {
+public class PreferenzaList extends AGridViewList {
 
 
     public static final String IRON_ICON = "menu";
@@ -125,6 +125,20 @@ public class PreferenzaList extends APaginatedGridViewList {
 
 
     /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Preferenza>();
+    }// end of method
+
+
+    /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
      * Invocare PRIMA il metodo della superclasse
@@ -138,24 +152,10 @@ public class PreferenzaList extends APaginatedGridViewList {
             super.usaBottoneReset = true;
         }// end of if cycle
 
+        super.usaBottoneEdit = false;
         super.usaBottoneNew = false;
         super.isEntityDeveloper = true;
         super.usaPagination = true;
-    }// end of method
-
-
-    /**
-     * Crea la GridPaginata <br>
-     * Per usare una GridPaginata occorre:
-     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
-     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
-     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
-     * 4) il metodo sovrascritto DOPO deve invocare questo stesso superMetodo in APaginatedGridViewList <br>
-     */
-    @Override
-    protected void creaGridPaginata() {
-        super.paginatedGrid = new PaginatedGrid<Preferenza>();
-        super.creaGridPaginata();
     }// end of method
 
 
@@ -170,7 +170,7 @@ public class PreferenzaList extends APaginatedGridViewList {
         super.creaAlertLayout();
         alertPlacehorder.add(new Label("Preferenze per regolare alcune funzionalità del programma"));
         alertPlacehorder.add(new Label("Reset cancella tutte le preferenze."));
-        alertPlacehorder.add(new Label("Se l'applicazione è multiCompany, le preferenze con companySpecifica=true vengono ricrete, col valore di default, per TUTTE le company esistenti."));
+        alertPlacehorder.add(new Label("Se l'applicazione è multiCompany, le preferenze con companySpecifica=true vengono ricreate, col valore di default, per TUTTE le company esistenti."));
     }// end of method
 
 

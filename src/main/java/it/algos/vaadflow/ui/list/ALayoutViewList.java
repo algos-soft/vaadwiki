@@ -3,6 +3,7 @@ package it.algos.vaadflow.ui.list;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyModifier;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -12,18 +13,14 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.application.FlowVar;
-import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAColor;
-import it.algos.vaadflow.enumeration.EAMenu;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.fields.AComboBox;
-import it.algos.vaadflow.ui.menu.AButtonMenu;
-import it.algos.vaadflow.ui.menu.APopupMenu;
-import it.algos.vaadflow.ui.menu.IAMenu;
 import lombok.extern.slf4j.Slf4j;
 
-import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadflow.application.FlowCost.USA_BUTTON_SHORTCUT;
+import static it.algos.vaadflow.application.FlowCost.USA_DEBUG;
 import static it.algos.vaadflow.application.FlowVar.usaCompany;
 import static it.algos.vaadflow.application.FlowVar.usaSecurity;
 
@@ -103,7 +100,6 @@ public abstract class ALayoutViewList extends APrefViewList {
         gridPlaceholder.setSpacing(false);
         gridPlaceholder.setPadding(false);
     }// end of method
-
 
 
     /**
@@ -364,6 +360,38 @@ public abstract class ALayoutViewList extends APrefViewList {
     protected void creaPopupFiltro() {
         filtroComboBox = new AComboBox();
         filtroComboBox.setWidth("10em");
+    }// end of method
+
+
+    /**
+     * Crea il corpo centrale della view inserito in 'gridPlaceholder' <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse ALayoutViewList <br>
+     * Componente grafico obbligatorio <br>
+     * Seleziona quale grid usare e la aggiunge al layout <br>
+     * Eventuale barra di bottoni sotto la grid <br>
+     */
+    @Override
+    protected void creaBody() {
+        gridPlaceholder.removeAll();
+        gridPlaceholder.setMargin(false);
+        gridPlaceholder.setSpacing(false);
+        gridPlaceholder.setPadding(false);
+
+        Grid grid = creaGrid();
+        if (grid != null) {
+            gridPlaceholder.add(grid);
+            gridPlaceholder.setFlexGrow(0);
+        }// end of if cycle
+
+
+        //--Regolazioni di larghezza
+        //gridPlaceholder.setWidth(gridWith + "em");
+        //gridPlaceholder.setFlexGrow(0);
+        //gridPlaceholder.getElement().getStyle().set("background-color", "#ffaabb");//rosa
+
+        //--eventuale barra di bottoni sotto la grid
+//        creaGridBottomLayout();
     }// end of method
 
 }// end of class

@@ -92,19 +92,6 @@ public class NomeList extends WikiList {
         super(service, Nome.class);
     }// end of Vaadin/@Route constructor
 
-    /**
-     * Crea la GridPaginata <br>
-     * Per usare una GridPaginata occorre:
-     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
-     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
-     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
-     * 4) il metodo sovrascritto deve invocare DOPO questo stesso superMetodo in APaginatedGridViewList <br>
-     */
-    @Override
-    protected void creaGridPaginata() {
-        paginatedGrid = new PaginatedGrid<Nome>();
-        super.creaGridPaginata();
-    }// end of method
 
 
     /**
@@ -124,9 +111,20 @@ public class NomeList extends WikiList {
         super.titoloPaginaStatistiche = ((NomeService) service).TITOLO_PAGINA_WIKI;
         super.titoloPaginaStatistiche2 = ((NomeService) service).TITOLO_PAGINA_WIKI_2;
         super.usaBottoneUpload = true;
-
     }// end of method
 
+    /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Nome>();
+    }// end of method
 
     /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid
@@ -222,21 +220,21 @@ public class NomeList extends WikiList {
         Grid.Column colonna;
 
         renderer = new ComponentRenderer<>(this::createViewButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Test");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
 
         renderer = new ComponentRenderer<>(this::createWikiButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Wiki");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
 
         renderer = new ComponentRenderer<>(this::createUploaButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Upload");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);

@@ -22,6 +22,7 @@ import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,6 +116,19 @@ public class WikiGiornoList extends WikiList {
 
 
     /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Giorno>();
+    }// end of method
+
+    /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid
      * - con o senza campo edit search, regolato da preferenza o da parametro
      * - con o senza bottone New, regolato da preferenza o da parametro
@@ -180,19 +194,6 @@ public class WikiGiornoList extends WikiList {
     }// end of method
 
 
-    /**
-     * Crea la GridPaginata <br>
-     * Per usare una GridPaginata occorre:
-     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
-     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
-     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
-     * 4) il metodo sovrascritto deve invocare DOPO questo stesso superMetodo in APaginatedGridViewList <br>
-     */
-    @Override
-    protected void creaGridPaginata() {
-        paginatedGrid = new PaginatedGrid<Giorno>();
-        super.creaGridPaginata();
-    }// end of method
 
 
 
@@ -206,37 +207,37 @@ public class WikiGiornoList extends WikiList {
         Grid.Column colonna;
 
         renderer = new ComponentRenderer<>(this::createViewNatoButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Test");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createViewMortoButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Test");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createWikiNatoButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Wiki");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createWikiMortoButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Wiki");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createUploadNatoButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Upload");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);
 
         renderer = new ComponentRenderer<>(this::createUploadMortoButton);
-        colonna = paginatedGrid.addColumn(renderer);
+        colonna = grid.addColumn(renderer);
         colonna.setHeader("Upload");
         colonna.setWidth(lar);
         colonna.setFlexGrow(0);

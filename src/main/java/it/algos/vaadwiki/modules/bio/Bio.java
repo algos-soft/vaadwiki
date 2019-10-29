@@ -164,42 +164,42 @@ public class Bio extends AEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(widthEM = 10)
-    private String nome;
+    public String nome;
 
     @Field("cogn")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(widthEM = 10)
-    private String cognome;
+    public String cognome;
 
     @Field("sex")
     @AIField(type = EAFieldType.text)
     @AIColumn(name = "X", widthEM = 2)
-    private String sesso;
+    public String sesso;
 
     @Field("locnato")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(name = "LuogoNato", widthEM = 8)
-    private String luogoNato;
+    public String luogoNato;
 
     @Field("locnatolink")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(name = "LuogoNato", widthEM = 8)
-    private String luogoNatoLink;
+    public String luogoNatoLink;
 
     @Field("locmorto")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(name = "LuogoMorto", widthEM = 8)
-    private String luogoMorto;
+    public String luogoMorto;
 
     @Field("locmortolink")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.text)
     @AIColumn(name = "LuogoMorto", widthEM = 8)
-    private String luogoMortoLink;
+    public String luogoMortoLink;
 
     /**
      * attività principale (facoltativo, non unica)
@@ -209,7 +209,7 @@ public class Bio extends AEntity {
     @Field("att")
     @AIField(type = EAFieldType.combo, serviceClazz = AttivitaService.class, help = "Attività")
     @AIColumn(name = "attivita", widthEM = 8)
-    private Attivita attivita;
+    public Attivita attivita;
 
     /**
      * seconda attività (facoltativo, non unica)
@@ -219,7 +219,7 @@ public class Bio extends AEntity {
     @Field("att2")
     @AIField(type = EAFieldType.combo, serviceClazz = AttivitaService.class, help = "Attività2")
     @AIColumn(name = "attivita2", widthEM = 8)
-    private Attivita attivita2;
+    public Attivita attivita2;
 
     /**
      * terza attività (facoltativo, non unica)
@@ -229,7 +229,7 @@ public class Bio extends AEntity {
     @Field("att3")
     @AIField(type = EAFieldType.combo, serviceClazz = AttivitaService.class, help = "Attività3")
     @AIColumn(name = "attivita3", widthEM = 8)
-    private Attivita attivita3;
+    public Attivita attivita3;
 
     /**
      * nazionalità (facoltativo, non unica)
@@ -239,7 +239,7 @@ public class Bio extends AEntity {
     @Field("naz")
     @AIField(type = EAFieldType.combo, serviceClazz = NazionalitaService.class, help = "Nazionalità")
     @AIColumn(name = "nazionalita", widthEM = 8)
-    private Nazionalita nazionalita;
+    public Nazionalita nazionalita;
 
 
     /**
