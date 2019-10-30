@@ -66,7 +66,6 @@ public class ListaCognomi extends ListaNomiCognomi {
 
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_COGNOMI);
-        super.usaBodySottopagine = false;
     }// end of method
 
 
@@ -89,6 +88,7 @@ public class ListaCognomi extends ListaNomiCognomi {
     public ArrayList<WrapDidascalia> ordinaListaDidascalie(ArrayList<WrapDidascalia> listaDisordinata) {
         return listaService.ordinaListaDidascalieCognomi(listaDisordinata);
     }// fine del metodo
+
 
     public ListaSottopagina getSottopagina() {
         return listaService.sottopagina(mappa, pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI), "Persone di cognome " + cognome.cognome, titoloParagrafoVuoto, titoloSottoPaginaVuota);
