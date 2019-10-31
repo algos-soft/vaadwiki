@@ -93,7 +93,6 @@ public class UploadCognome extends UploadNomiCognomi {
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
         super.tagCategoria = LibWiki.setCat("Liste di persone per cognome", cognome.getCognome());
-        super.usaBodySottopagine = false;
     }// fine del metodo
 
 

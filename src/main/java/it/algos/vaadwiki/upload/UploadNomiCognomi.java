@@ -1,13 +1,5 @@
 package it.algos.vaadwiki.upload;
 
-import it.algos.wiki.LibWiki;
-import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-
-import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_NOMI;
-
 /**
  * Project vaadwiki
  * Created by Algos
@@ -15,7 +7,7 @@ import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_NOMI;
  * Date: ven, 27-set-2019
  * Time: 07:56
  */
-public abstract class UploadNomiCognomi extends Upload{
+public abstract class UploadNomiCognomi extends Upload {
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
