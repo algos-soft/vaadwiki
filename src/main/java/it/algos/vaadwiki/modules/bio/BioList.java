@@ -259,11 +259,11 @@ public class BioList extends AGridViewList {
 //        downloadButton.addClickListener(e -> openConfirmResetDialog());
 //        topPlaceholder.add(downloadButton);
 
-//        //--ciclo upodate corrente
-//        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
-//        updateButton.getElement().setAttribute("theme", "primary");
-//        updateButton.addClickListener(e -> download());
-//        topPlaceholder.add(updateButton);
+        //--ciclo upodate corrente
+        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
+        updateButton.getElement().setAttribute("theme", "primary");
+        updateButton.addClickListener(e -> download());
+        topPlaceholder.add(updateButton);
 
         //--ri-elabora tutte le biografie
         elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
