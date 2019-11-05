@@ -15,6 +15,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.modules.role.EARoleType;
+import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
@@ -67,7 +68,6 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 public class NomeList extends WikiList {
 
 
-
     private final static String DIM = "Dimensioni";
 
     private final static String ALF = "Alfabetico";
@@ -75,6 +75,10 @@ public class NomeList extends WikiList {
     private final static String DOP = "Nomi doppi";
 
     private AComboBox<String> comboFiltro; //@todo da modificare dopo l'upgrade del programma con vaadflow
+
+    @Autowired
+    @Qualifier(TASK_NOM)
+    protected ATask task;
 
 
     /**
@@ -91,6 +95,20 @@ public class NomeList extends WikiList {
     public NomeList(@Qualifier(TAG_NOM) IAService service) {
         super(service, Nome.class);
     }// end of Vaadin/@Route constructor
+
+
+    /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Nome>();
+    }// end of method
 
 
 
@@ -113,18 +131,20 @@ public class NomeList extends WikiList {
         super.usaBottoneUpload = true;
     }// end of method
 
+
     /**
-     * Crea effettivamente il Component Grid <br>
-     * <p>
-     * Può essere Grid oppure PaginatedGrid <br>
-     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected Grid creaGridComponent() {
-        return new PaginatedGrid<Nome>();
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+
+        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_NOMI, LAST_ELABORA_NOME));
     }// end of method
+
 
     /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid
@@ -145,7 +165,6 @@ public class NomeList extends WikiList {
         testButton.addClickListener(e -> test());
         topPlaceholder.add(testButton);
 
-//        uploadAllButton.addClickListener(e -> openUploadDialog("dei nomi")); //@todo versione 14
         sincroBottoniMenu(false);
     }// end of method
 
@@ -185,27 +204,6 @@ public class NomeList extends WikiList {
         updateGrid();
     }// end of method
 
-
-    /**
-     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
-     * Normalmente ad uso esclusivo del developer
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
-     */
-    @Override
-    protected void creaAlertLayout() {
-        super.creaAlertLayout();
-
-        Label label = null;
-        LocalDateTime lastDownload = pref.getDate(LAST_ELABORA_NOME);
-        if (lastDownload != null) {
-            label = new Label("Ultimo aggiornamento dei nomi il " + date.getTime(lastDownload));
-        } else {
-            label = new Label("I nomi non sono aggiornati ");
-        }// end of if/else cycle
-
-        alertPlacehorder.add(label);
-    }// end of method
 
 
 

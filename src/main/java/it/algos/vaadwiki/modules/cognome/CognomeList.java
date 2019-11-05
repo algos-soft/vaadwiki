@@ -14,6 +14,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.modules.role.EARoleType;
+import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
@@ -63,6 +64,9 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 public class CognomeList extends WikiList {
 
 
+    @Autowired
+    @Qualifier(TASK_COG)
+    protected ATask task;
 
     /**
      * Costruttore @Autowired <br>
@@ -78,6 +82,20 @@ public class CognomeList extends WikiList {
     public CognomeList(@Qualifier(TAG_COG) IAService service) {
         super(service, Cognome.class);
     }// end of Vaadin/@Route constructor
+
+
+    /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Cognome>();
+    }// end of method
 
 
 
@@ -102,17 +120,18 @@ public class CognomeList extends WikiList {
 
 
     /**
-     * Crea effettivamente il Component Grid <br>
-     * <p>
-     * Può essere Grid oppure PaginatedGrid <br>
-     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
     @Override
-    protected Grid creaGridComponent() {
-        return new PaginatedGrid<Cognome>();
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+
+        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_COGNOMI, LAST_ELABORA_COGNOME));
     }// end of method
+
 
     /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid
@@ -126,41 +145,17 @@ public class CognomeList extends WikiList {
     protected void creaTopLayout() {
         super.creaTopLayout();
 
-//        uploadAllButton.addClickListener(e -> openUploadDialog("dei cognomi")); //@todo versione 14
+//        topPlaceholder.add(creaPopup());
+//
+//        Button testButton = new Button("Test", new Icon(VaadinIcon.SEARCH));
+//        testButton.addClassName("view-toolbar__button");
+//        testButton.addClickListener(e -> test());
+//        topPlaceholder.add(testButton);
+
         sincroBottoniMenu(false);
     }// end of method
 
 
-    /**
-     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
-     * Normalmente ad uso esclusivo del developer
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
-     */
-    @Override
-    protected void creaAlertLayout() {
-        super.creaAlertLayout();
-
-        Label label = null;
-        LocalDateTime lastDownload = pref.getDate(LAST_ELABORA_COGNOME);
-        if (lastDownload != null) {
-            label = new Label("Ultimo aggiornamento dei cognomi il " + date.getTime(lastDownload));
-        } else {
-            label = new Label("I cognomi non sono aggiornati ");
-        }// end of if/else cycle
-
-        alertPlacehorder.add(label);
-    }// end of method
-
-    /**
-     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
-     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
-     */
-    protected void fixColumn(ValueProvider<Cognome, ?> valueProvider, String propertyName) {
-        Grid.Column singleColumn;
-        singleColumn = ((PaginatedGrid<Cognome>) grid).addColumn(valueProvider);
-        columnService.fixColumn(singleColumn, Cognome.class, propertyName);
-    }// end of method
 
 
     /**

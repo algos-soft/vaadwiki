@@ -2,12 +2,14 @@ package it.algos.vaadwiki.modules.wiki;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.list.AGridViewList;
@@ -20,10 +22,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
-import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
-import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
@@ -153,6 +155,40 @@ public abstract class WikiList extends AGridViewList {
         this.usaBottoneUpload = false;
     }// end of method
 
+
+    /**
+     * Eventuale caption sopra la grid
+     */
+    protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastUpload) {
+        Label label = null;
+        String testo = "";
+        String tag = "Upload automatico: ";
+        String nota = task != null ? task.getNota() : "";
+        int durata = pref.getInt(DURATA_UPLOAD_ANNI);
+        String message = "";
+        LocalDateTime lastUpload = pref.getDate(flagLastUpload);
+        testo = tag;
+
+        if (pref.isBool(flagDaemon)) {
+            testo += nota;
+        } else {
+            testo += "disattivato.";
+        }// end of if/else cycle
+
+        if (lastUpload != null) {
+            message += testo + " Ultimo upload il " + date.getTime(lastUpload);
+            message += ", in circa " + durata + " minuti";
+        } else {
+            if (pref.isBool(flagDaemon)) {
+                message = tag + nota + " Non ancora effettuato.";
+            } else {
+                message = testo;
+            }// end of if/else cycle
+        }// end of if/else cycle
+        label = new Label(message);
+
+        return label;
+    }// end of method
 
     /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid

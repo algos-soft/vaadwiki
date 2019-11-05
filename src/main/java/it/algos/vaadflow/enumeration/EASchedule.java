@@ -105,11 +105,11 @@ public enum EASchedule {
     /**
      * Descrizione: ogni giorno alle ore 4 di notte, escluso l'1 ed il 15
      */
-    oreQuattro("5 4 * * *", "ogni giorno alle ore 4:5 di notte."),
+    oreQuattro("5 4 * * *", "ogni giorno alle ore 4:05 di notte."),
     /**
      * Descrizione: ogni giorno alle ore 8 del mattino
      */
-    oreSei("5 6 * * *", "ogni giorno alle ore 6:5 del mattino."),
+    oreSei("5 6 * * *", "ogni giorno alle ore 6:05 del mattino."),
     /**
      * Descrizione: ogni giorno alle ore 8 del mattino
      */

@@ -101,6 +101,20 @@ public class WikiGiornoList extends WikiList {
     }// end of Vaadin/@Route constructor
 
     /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Giorno>();
+    }// end of method
+
+
+    /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
      * Invocare PRIMA il metodo della superclasse
@@ -115,18 +129,6 @@ public class WikiGiornoList extends WikiList {
     }// end of method
 
 
-    /**
-     * Crea effettivamente il Component Grid <br>
-     * <p>
-     * Può essere Grid oppure PaginatedGrid <br>
-     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
-     */
-    @Override
-    protected Grid creaGridComponent() {
-        return new PaginatedGrid<Giorno>();
-    }// end of method
 
     /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid
@@ -157,43 +159,6 @@ public class WikiGiornoList extends WikiList {
 
         alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_GIORNI, LAST_UPLOAD_GIORNI));
     }// end of method
-
-
-    /**
-     * Eventuale caption sopra la grid
-     */
-    protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastUpload) {
-        Label label = null;
-        String testo = "";
-        String tag = "Upload automatico: ";
-        String nota = task != null ? task.getNota() : "";
-        int durata = pref.getInt(DURATA_UPLOAD_GIORNI);
-        String message = "";
-        LocalDateTime lastUpload = pref.getDate(flagLastUpload);
-        testo = tag;
-
-        if (pref.isBool(flagDaemon)) {
-            testo += nota;
-        } else {
-            testo += "disattivato.";
-        }// end of if/else cycle
-
-        if (lastUpload != null) {
-            message += testo + " Ultimo upload il " + date.getTime(lastUpload);
-            message += ", in circa " + durata + " minuti";
-        } else {
-            if (pref.isBool(flagDaemon)) {
-                message = tag + nota + " Non ancora effettuato.";
-            } else {
-                message = testo;
-            }// end of if/else cycle
-        }// end of if/else cycle
-        label = new Label(message);
-
-        return label;
-    }// end of method
-
-
 
 
 
