@@ -27,6 +27,7 @@ public abstract class ListaNomiCognomi extends Lista {
         super.fixPreferenze();
 
         super.usaSuddivisioneParagrafi = true;
+        super.usaOrdineAlfabetico = true;
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
         super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
         super.usaRigheRaggruppate = false;
