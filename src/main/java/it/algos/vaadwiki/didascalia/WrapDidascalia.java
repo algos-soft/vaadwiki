@@ -214,12 +214,20 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
                 chiaveTre = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 break;
             case listaNomi:
-            case listaCognomi:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
                 chiave = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
 
                 chiaveUno = fixChiaveUno(chiave, sessoMaschile);
                 chiaveTre = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
+                chiaveDue = text.isValid(chiaveTre) ? chiaveTre.substring(0, 1).toUpperCase() : "";
+                chiave = chiaveUno.toLowerCase();
+                break;
+            case listaCognomi:
+                didascalia = didascaliaService.getDidascaliaListe(bio);
+                chiave = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
+
+                chiaveUno = fixChiaveUno(chiave, sessoMaschile);
+                chiaveTre = text.isValid(bio.getNome()) ? bio.getNome() : bio.getWikiTitle();
                 chiaveDue = text.isValid(chiaveTre) ? chiaveTre.substring(0, 1).toUpperCase() : "";
                 chiave = chiaveUno.toLowerCase();
                 break;

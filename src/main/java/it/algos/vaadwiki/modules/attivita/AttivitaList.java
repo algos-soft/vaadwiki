@@ -87,6 +87,20 @@ public class AttivitaList extends AttNazProfCatList {
 
 
     /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Attivita>();
+    }// end of method
+
+
+    /**
      * Preferenze specifiche di questa view <br>
      * <p>
      * Chiamato da AViewList.initView() e sviluppato nella sottoclasse APrefViewList <br>
@@ -106,19 +120,6 @@ public class AttivitaList extends AttNazProfCatList {
         super.durataLastDownload = DURATA_DOWNLOAD_ATTIVITA;
     }// end of method
 
-
-    /**
-     * Crea effettivamente il Component Grid <br>
-     * <p>
-     * Può essere Grid oppure PaginatedGrid <br>
-     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
-     */
-    @Override
-    protected Grid creaGridComponent() {
-        return new PaginatedGrid<Attivita>();
-    }// end of method
 
 
     /**

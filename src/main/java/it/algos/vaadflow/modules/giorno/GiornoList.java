@@ -136,10 +136,6 @@ public class GiornoList extends AGridViewList {
 
         filtroComboBox.setWidth("10em");
         filtroComboBox.setItems(meseService.findAll());
-        filtroComboBox.addValueChangeListener(e -> {
-            updateFiltri();
-            updateGrid();
-        });
     }// end of method
 
 

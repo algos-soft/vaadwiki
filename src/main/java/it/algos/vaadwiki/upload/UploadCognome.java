@@ -9,6 +9,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_COGNOMI;
@@ -94,6 +96,14 @@ public class UploadCognome extends UploadNomiCognomi {
         super.usaBodyDoppiaColonna = false;
         super.tagCategoria = LibWiki.setCat("Liste di persone per cognome", cognome.getCognome());
     }// fine del metodo
+
+
+    /**
+     * Esegue l'upload della singola sottopagina <br>
+     */
+    protected void uploadSingolaSottoPagina(String suffixTitolo, LinkedHashMap<String, List<String>> mappaSingolaSottoPagina) {
+        appContext.getBean(UploadSottoPaginaCognomi.class, soggetto, suffixTitolo, mappaSingolaSottoPagina);
+    }// end of method
 
 
     /**

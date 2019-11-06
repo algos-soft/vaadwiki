@@ -71,21 +71,6 @@ public class WikiGiornoList extends WikiList {
     protected ATask task;
 
 
-//    /**
-//     * Costruttore @Autowired <br>
-//     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-//     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-//     *
-//     * @param presenter per gestire la business logic del package
-//     * @param dialog    per visualizzare i fields
-//     */
-//    @Autowired
-//    public WikiGiornoViewList(@Qualifier(TAG_GIO) IAPresenter presenter, @Qualifier(TAG_GIO) IADialog dialog) {
-//        super(presenter, dialog);
-//        ((GiornoViewDialog) dialog).fixFunzioni(this::save, this::delete);
-//    }// end of Spring constructor
-
-
     /**
      * Costruttore @Autowired <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
@@ -99,6 +84,7 @@ public class WikiGiornoList extends WikiList {
     public WikiGiornoList(@Qualifier(TAG_GIO) IAService service) {
         super(service, Giorno.class);
     }// end of Vaadin/@Route constructor
+
 
     /**
      * Crea effettivamente il Component Grid <br>

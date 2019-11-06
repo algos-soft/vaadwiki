@@ -27,14 +27,13 @@ import static it.algos.wiki.LibWiki.PARAGRAFO;
 @Slf4j
 public class UploadSottoPagina extends Upload {
 
-    protected final static String PREFIX_TITOLO = "Persone di nome ";
+    protected String prefixTitolo;
 
     //--property
     protected String titoloBrevePaginaPrincipale;
 
     //--property
     protected String titoloBreveSottoPagina;
-
 
 
     /**
@@ -55,7 +54,7 @@ public class UploadSottoPagina extends Upload {
      * @param titoloBreveSottoPagina      attività della sottopagina per l'incipit (eventuale) e per le categorie
      * @param mappaAlfabetica             mappa delle didascalie suddivise per iniziale alfabetica del cognome
      */
-    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
+    public UploadSottoPagina( String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
         this.titoloBrevePaginaPrincipale = titoloBrevePaginaPrincipale;
         this.titoloBreveSottoPagina = titoloBreveSottoPagina;
         this.mappaAlfabetica = mappaAlfabetica;
@@ -91,13 +90,9 @@ public class UploadSottoPagina extends Upload {
         super.isSottoPagina = true;
         super.usaSuddivisioneParagrafi = false;
         super.usaRigheRaggruppate = false;
-        super.titoloPagina = PREFIX_TITOLO + titoloBrevePaginaPrincipale + "/" + titoloBreveSottoPagina;
         super.usaHeadTocIndice = false;
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
-
-        String nomeCat = titoloBrevePaginaPrincipale + "/" + titoloBreveSottoPagina;
-        super.tagCategoria = LibWiki.setCat("Liste di persone per nome", nomeCat);
     }// end of method
 
 
@@ -141,7 +136,7 @@ public class UploadSottoPagina extends Upload {
      * Sovrascritto
      */
     protected String getTitoloPaginaMadre() {
-        return PREFIX_TITOLO + titoloBrevePaginaPrincipale;//@todo controllare
+        return prefixTitolo + titoloBrevePaginaPrincipale;//@todo controllare
     }// fine del metodo
 
 

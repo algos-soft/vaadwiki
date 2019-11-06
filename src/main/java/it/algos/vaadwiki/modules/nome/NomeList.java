@@ -1,7 +1,6 @@
 package it.algos.vaadwiki.modules.nome;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -9,7 +8,6 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
@@ -17,22 +15,15 @@ import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
-import it.algos.vaadflow.ui.fields.AComboBox;
-import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.wiki.WikiList;
-import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.statistiche.StatisticheNomiA;
 import it.algos.vaadwiki.statistiche.StatisticheNomiB;
-import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -67,14 +58,6 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @AIView(vaadflow = false, menuName = "nome", menuIcon = VaadinIcon.BOAT, searchProperty = "nome", roleTypeVisibility = EARoleType.developer)
 public class NomeList extends WikiList {
 
-
-    private final static String DIM = "Dimensioni";
-
-    private final static String ALF = "Alfabetico";
-
-    private final static String DOP = "Nomi doppi";
-
-    private AComboBox<String> comboFiltro; //@todo da modificare dopo l'upgrade del programma con vaadflow
 
     @Autowired
     @Qualifier(TASK_NOM)
@@ -111,7 +94,6 @@ public class NomeList extends WikiList {
     }// end of method
 
 
-
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
@@ -125,6 +107,7 @@ public class NomeList extends WikiList {
         this.sogliaWiki = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI, 50);
 
         this.usaCreaButton = true;
+        super.usaPopupFiltro = true;
         this.usaStatistiche2Button = true;
         super.titoloPaginaStatistiche = ((NomeService) service).TITOLO_PAGINA_WIKI;
         super.titoloPaginaStatistiche2 = ((NomeService) service).TITOLO_PAGINA_WIKI_2;
@@ -158,8 +141,6 @@ public class NomeList extends WikiList {
     protected void creaTopLayout() {
         super.creaTopLayout();
 
-        topPlaceholder.add(creaPopup());
-
         Button testButton = new Button("Test", new Icon(VaadinIcon.SEARCH));
         testButton.addClassName("view-toolbar__button");
         testButton.addClickListener(e -> test());
@@ -169,43 +150,48 @@ public class NomeList extends WikiList {
     }// end of method
 
 
-    private Component creaPopup() {
-        ArrayList<String> items = new ArrayList<>();
-        items.add(DIM);
-        items.add(ALF);
-        items.add(DOP);
-        comboFiltro = new AComboBox();
-        comboFiltro.setWidth("10em");
-        comboFiltro.setItems(items);
-        comboFiltro.setValue(DIM);
-        comboFiltro.addValueChangeListener(event -> modificaFiltro(event));
+    /**
+     * Crea un (eventuale) Popup di selezione, filtro e ordinamento <br>
+     * DEVE essere sovrascritto, per regolare il contenuto (items) <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void creaPopupFiltro() {
+        super.creaPopupFiltro();
 
-        return comboFiltro;
+        filtroComboBox.setItems(EASelezioneNomi.values());
+        filtroComboBox.setValue(EASelezioneNomi.dimensioni);
     }// end of method
 
 
-    private void modificaFiltro(HasValue.ValueChangeEvent event) {
-        String value = (String) event.getValue();
+    /**
+     * Aggiorna la lista dei filtri della Grid. Modificati per: popup, newEntity, deleteEntity, ecc... <br>
+     * Normalmente tutti i filtri  vanno qui <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse AGridViewList <br>
+     * Alla prima visualizzazione della view usa SOLO creaFiltri() e non questo metodo <br>
+     * Può essere sovrascritto, per costruire i filtri specifici dei combobox, popup, ecc. <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void updateFiltri() {
+        super.updateFiltri();
+        EASelezioneNomi selezione = (EASelezioneNomi) filtroComboBox.getValue();
 
-        switch (value) {
-            case DIM:
+        switch (selezione) {
+            case dimensioni:
                 items = ((NomeService) service).findAllDimensioni();
                 break;
-            case ALF:
+            case alfabetico:
                 items = ((NomeService) service).findAllAlfabetico();
                 break;
-            case DOP:
+            case nomiDoppi:
                 items = ((NomeService) service).findAllNomiDoppi();
                 break;
             default:
                 log.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
-        updateGrid();
     }// end of method
-
-
-
 
 
     /**
@@ -314,17 +300,20 @@ public class NomeList extends WikiList {
      * Stampa nella console la lista di tutti i nomi, nell'ordine selezionato <br>
      */
     public void test() {
-        String ordine = comboFiltro.getValore();
+        EASelezioneNomi selezione = (EASelezioneNomi) filtroComboBox.getValue();
 
-        if (items != null) {
-            switch (ordine) {
-                case DIM:
+        if (selezione != null) {
+
+            switch (selezione) {
+                case dimensioni:
                     for (Nome nome : (List<Nome>) items) {
                         System.out.println(nome.voci + " - " + nome.nome);
                     }// end of for cycle
                     break;
-                case ALF:
-                case DOP:
+                case alfabetico:
+                    items = ((NomeService) service).findAllAlfabetico();
+                    break;
+                case nomiDoppi:
                     for (Nome nome : (List<Nome>) items) {
                         System.out.println(nome.nome + " - " + nome.voci);
                     }// end of for cycle
@@ -334,6 +323,7 @@ public class NomeList extends WikiList {
                     break;
             } // end of switch statement
         }// end of if cycle
+
     }// end of method
 
 }// end of class
