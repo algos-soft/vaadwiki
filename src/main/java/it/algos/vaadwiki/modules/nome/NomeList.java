@@ -22,6 +22,7 @@ import it.algos.vaadwiki.statistiche.StatisticheNomiB;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import java.util.List;
@@ -158,6 +159,7 @@ public class NomeList extends WikiList {
     protected void creaPopupFiltro() {
         super.creaPopupFiltro();
 
+        filtroComboBox.setPlaceholder("Selezione ...");
         filtroComboBox.setItems(EASelezioneNomi.values());
         filtroComboBox.setValue(EASelezioneNomi.dimensioni);
     }// end of method
@@ -177,20 +179,23 @@ public class NomeList extends WikiList {
         super.updateFiltri();
         EASelezioneNomi selezione = (EASelezioneNomi) filtroComboBox.getValue();
 
-        switch (selezione) {
-            case dimensioni:
-                items = ((NomeService) service).findAllDimensioni();
-                break;
-            case alfabetico:
-                items = ((NomeService) service).findAllAlfabetico();
-                break;
-            case nomiDoppi:
-                items = ((NomeService) service).findAllNomiDoppi();
-                break;
-            default:
-                log.warn("Switch - caso non definito");
-                break;
-        } // end of switch statement
+        if (selezione!=null) {
+            switch (selezione) {
+                case dimensioni:
+//                items = ((NomeService) service).findAllDimensioni();
+                    break;
+                case alfabetico:
+//                items = ((NomeService) service).findAllAlfabetico();
+                    break;
+                case nomiDoppi:
+                    filtri.add(Criteria.where("doppio").is(true));
+                    break;
+                default:
+                    log.warn("Switch - caso non definito");
+                    break;
+            } // end of switch statement
+        }// end of if cycle
+
     }// end of method
 
 
@@ -303,7 +308,6 @@ public class NomeList extends WikiList {
         EASelezioneNomi selezione = (EASelezioneNomi) filtroComboBox.getValue();
 
         if (selezione != null) {
-
             switch (selezione) {
                 case dimensioni:
                     for (Nome nome : (List<Nome>) items) {

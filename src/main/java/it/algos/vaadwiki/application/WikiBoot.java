@@ -64,9 +64,9 @@ public class WikiBoot extends ABoot {
 
     private final static String PROJECT_NAME = "vaadwiki";
 
-    private final static double PROJECT_VERSION = 6.3;
+    private final static double PROJECT_VERSION = 6.4;
 
-    private final static LocalDate VERSION_DATE = LocalDate.of(2019, 11, 5);
+    private final static LocalDate VERSION_DATE = LocalDate.of(2019, 11, 6);
 
     private final static String PATH_LOGO = "frontend/images/Emblem-wiki-blue.svg.png";
 
@@ -112,18 +112,18 @@ public class WikiBoot extends ABoot {
     }// end of Spring constructor
 
 
-    /**
-     * Executed on container startup <br>
-     * Setup non-UI logic here <br>
-     * Viene sovrascritto in questa sottoclasse concreta che invoca il metodo super.inizia() <br>
-     * Nella superclasse vengono effettuate delle regolazioni standard; <br>
-     * questa sottoclasse concreta può singolarmente modificarle <br>
-     */
-    @Override
-    public void contextInitialized(ServletContextEvent servletContextEvent) {
-        super.inizia();
-//        WikiCost.WIKI_LOGIN = new WikiLogin("Gacbot@Gacbot", "tftgv0vhl16c0qnmfdqide3jqdp1i5m7");
-    }// end of method
+//    /**
+//     * Executed on container startup <br>
+//     * Setup non-UI logic here <br>
+//     * Viene sovrascritto in questa sottoclasse concreta che invoca il metodo super.inizia() <br>
+//     * Nella superclasse vengono effettuate delle regolazioni standard; <br>
+//     * questa sottoclasse concreta può singolarmente modificarle <br>
+//     */
+//    @Override
+//    public void contextInitialized(ServletContextEvent servletContextEvent) {
+//        super.inizia();
+////        WikiCost.WIKI_LOGIN = new WikiLogin("Gacbot@Gacbot", "tftgv0vhl16c0qnmfdqide3jqdp1i5m7");
+//    }// end of method
 
 
     /**
