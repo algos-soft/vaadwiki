@@ -1,8 +1,11 @@
 package it.algos.vaadwiki.integration;
 
+import it.algos.vaadflow.modules.anno.AnnoService;
+import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.ATest;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import org.junit.Assert;
 import org.junit.Before;
@@ -110,6 +113,15 @@ public class BioIntegrationTest extends ATest {
     @Autowired
     public MongoTemplate mongoTemplate;
 
+    @Autowired
+    public BioService bioService;
+
+    @Autowired
+    public AnnoService annoService;
+
+    @Autowired
+    public ATextService text;
+
     private List<Bio> listaMaschi;
 
     private List<Bio> listaFemmine;
@@ -127,6 +139,7 @@ public class BioIntegrationTest extends ATest {
         Assert.assertNotNull(text);
         Assert.assertNotNull(mongoOp);
         Assert.assertNotNull(mongoTemplate);
+        Assert.assertNotNull(bioService);
 
         if (lista == null) {
             Query query = new Query(Criteria.where("sesso").exists(false));
@@ -224,5 +237,107 @@ public class BioIntegrationTest extends ATest {
 
         return last;
     }// end of method
+
+
+    @Test
+    public void listaNatiNelGiorno() {
+        String giornoText = "14 gennaio";
+
+        lista = bioService.findAllByGiornoNascita(giornoText);
+        Assert.assertNotNull(lista);
+
+        System.out.println("****");
+        System.out.println("Ci sono " + text.format(lista.size()) + " persone nate il " + giornoText);
+        System.out.println("****");
+        for (Bio bio : lista) {
+            System.out.println(bio.getAnnoNascita() + " - " + bio.getCognome() + " - " + bio.getWikiTitle());
+        }// end of for cycle
+
+    }// end of single test
+
+
+    @Test
+    public void listaMortiNelGiorno() {
+        String giornoText = "3 marzo";
+
+        lista = bioService.findAllByGiornoMorte(giornoText);
+        Assert.assertNotNull(lista);
+
+        System.out.println("****");
+        System.out.println("Ci sono " + text.format(lista.size()) + " persone morte il " + giornoText);
+        System.out.println("****");
+        for (Bio bio : lista) {
+            System.out.println(bio.getAnnoMorte() + " - " + bio.getCognome() + " - " + bio.getWikiTitle());
+        }// end of for cycle
+
+    }// end of single test
+
+
+    @Test
+    public void listaNatiNelAnno() {
+        String annoText = "1638";
+
+        lista = bioService.findAllByAnnoNascita(annoText);
+        Assert.assertNotNull(lista);
+
+        System.out.println("****");
+        System.out.println("Ci sono " + text.format(lista.size()) + " persone nate nel " + annoText);
+        System.out.println("****");
+        for (Bio bio : lista) {
+            System.out.println(bio.getGiornoNascita() + " - " + bio.getCognome() + " - " + bio.getWikiTitle());
+        }// end of for cycle
+
+    }// end of single test
+
+
+    @Test
+    public void listaMortiNelAnno() {
+        String annoText = "1738";
+
+        lista = bioService.findAllByAnnoMorte(annoText);
+        Assert.assertNotNull(lista);
+
+        System.out.println("****");
+        System.out.println("Ci sono " + text.format(lista.size()) + " persone morte nel " + annoText);
+        System.out.println("****");
+        for (Bio bio : lista) {
+            System.out.println(bio.getGiornoMorte() + " - " + bio.getCognome() + " - " + bio.getWikiTitle());
+        }// end of for cycle
+
+    }// end of single test
+
+
+    @Test
+    public void listaNomi() {
+        String nomeTxt = "Victor";
+
+        lista = bioService.findAllByNome(nomeTxt);
+        Assert.assertNotNull(lista);
+
+        System.out.println("****");
+        System.out.println("Ci sono " + text.format(lista.size()) + " persone di nome " + nomeTxt);
+        System.out.println("****");
+        for (Bio bio : lista) {
+            System.out.println(bio.getAttivita() + " - " + bio.getCognome() + " - " + bio.getWikiTitle());
+        }// end of for cycle
+
+    }// end of single test
+
+
+    @Test
+    public void listaCognomi() {
+        String cognomeTxt = "Bianchi";
+
+        lista = bioService.findAllByCognome(cognomeTxt);
+        Assert.assertNotNull(lista);
+
+        System.out.println("****");
+        System.out.println("Ci sono " + text.format(lista.size()) + " persone di cognome " + cognomeTxt);
+        System.out.println("****");
+        for (Bio bio : lista) {
+            System.out.println(bio.getAttivita() + " - " + bio.getNome() + " - " + bio.getWikiTitle());
+        }// end of for cycle
+
+    }// end of single test
 
 }// end of class

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA;
 
@@ -71,7 +72,7 @@ public class ListaGiornoNato extends ListaGiorni {
      * @return lista delle istanze di Bio che usano questo istanza nella property appropriata
      */
     @Override
-    public ArrayList<Bio> listaBio() {
+    public List<Bio> listaBio() {
         return bioService.findAllByGiornoNascita(giorno);
     }// fine del metodo
 

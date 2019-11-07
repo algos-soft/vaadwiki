@@ -71,7 +71,7 @@ public class ListaService extends ABioService {
      *
      * @return lista NON ORDINATA di didascalie (Wrap)
      */
-    public ArrayList<WrapDidascalia> creaListaDidascalie(ArrayList<Bio> listaGrezzaBio, EADidascalia typeDidascalia) {
+    public ArrayList<WrapDidascalia> creaListaDidascalie(List<Bio> listaGrezzaBio, EADidascalia typeDidascalia) {
         ArrayList<WrapDidascalia> listaDidascalie = new ArrayList<WrapDidascalia>();
         WrapDidascalia wrap = null;
 
@@ -146,10 +146,59 @@ public class ListaService extends ABioService {
      * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
      */
     public ArrayList<WrapDidascalia> ordinaListaDidascalieNomi(ArrayList<WrapDidascalia> listaDisordinata) {
-        Collections.sort(listaDisordinata);
-        return listaDisordinata;
+//        Collections.sort(listaDisordinata);
+//        return listaDisordinata;
+//
+        return ordinaListaDidascalieChiaveTre(listaDisordinata);
     }// fine del metodo
 
+
+    /**
+     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+     *
+     * @param listaDisordinata di didascalie
+     *
+     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+     */
+    public ArrayList<WrapDidascalia> ordinaListaDidascalieCognomi(ArrayList<WrapDidascalia> listaDisordinata) {
+//        Collections.sort(listaDisordinata);
+//        return listaDisordinata;
+        return ordinaListaDidascalieChiaveTre(listaDisordinata);
+    }// fine del metodo
+
+
+    /**
+     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+     *
+     * @param listaDisordinata di didascalie
+     *
+     * @return lista di didascalie (Wrap) ordinate per 'chiaveTre'
+     */
+    public ArrayList<WrapDidascalia> ordinaListaDidascalieChiaveTre(List<WrapDidascalia> listaDisordinata) {
+        ArrayList<WrapDidascalia> listaOrdinata = null;
+        LinkedHashMap<String, WrapDidascalia> mappa = null;
+
+        if (array.isValid(listaDisordinata)) {
+            listaOrdinata = new ArrayList<>();
+            mappa = new LinkedHashMap<>();
+
+            for (WrapDidascalia wrap : listaDisordinata) {
+                mappa.put(wrap.chiaveTre, wrap);
+            }// end of for cycle
+
+            Set<String> listaChiavi = mappa.keySet();
+            String[] matrice = listaChiavi.toArray(new String[listaChiavi.size()]);
+            List<String> list = Arrays.asList(matrice);
+            Collections.sort(list);
+
+            for (String key : list) {
+                listaOrdinata.add(mappa.get(key));
+            }// end of for cycle
+
+        }// end of if cycle
+
+        return listaOrdinata;
+    }// fine del metodo
 
 //    /**
 //     * Costruisce una mappa di liste di didascalie che hanno una valore valido per la pagina specifica <br>
@@ -218,19 +267,6 @@ public class ListaService extends ABioService {
 
 
     /**
-     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
-     *
-     * @param listaDisordinata di didascalie
-     *
-     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
-     */
-    public ArrayList<WrapDidascalia> ordinaListaDidascalieCognomi(ArrayList<WrapDidascalia> listaDisordinata) {
-        Collections.sort(listaDisordinata);
-        return listaDisordinata;
-    }// fine del metodo
-
-
-    /**
      * Mappa delle didascalie che hanno una valore valido per la pagina specifica <br>
      * La mappa è composta da una chiaveUno (ordinata) che corrisponde al titolo del paragrafo <br>
      * La visualizzazione dei paragrafi può anche essere esclusa, ma questi sono comunque presenti <br>
@@ -246,7 +282,7 @@ public class ListaService extends ABioService {
      * @return mappa complessa
      */
     public LinkedHashMap<String, LinkedHashMap<String, List<String>>> creaMappa(List<WrapDidascalia> listaDidascalie) {
-        return creaMappa(listaDidascalie, "", false, false,false);
+        return creaMappa(listaDidascalie, "", false, false, false);
     }// fine del metodo
 
 

@@ -130,7 +130,7 @@ public abstract class Lista {
      * Lista grezza delle voci biografiche da inserire in questa lista <br>
      * Property della classe perché regolata nelle sottoclassi concrete <br>
      */
-    protected ArrayList<Bio> listaGrezzaBio;
+    protected List<Bio> listaGrezzaBio;
 
     /**
      * Lista delle didascalie da usare per costruire la mappa <br>
@@ -210,7 +210,7 @@ public abstract class Lista {
         listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, typeDidascalia);
 
         //--Ordina la lista di didascalie specifiche
-        listaDidascalie = this.ordinaListaDidascalie(listaDidascalie);
+//        listaDidascalie = this.ordinaListaDidascalie(listaDidascalie);
 
         this.size = listaDidascalie.size();
     }// end of method
@@ -272,7 +272,7 @@ public abstract class Lista {
      * @return lista delle istanze di Bio che usano questa istanza della property appropriata
      */
     @SuppressWarnings("all")
-    public ArrayList<Bio> listaBio() {
+    public List<Bio> listaBio() {
         return null;
     }// fine del metodo
 

@@ -175,7 +175,7 @@ public class ListeIntegrationTest extends ATest {
     //    @Test
     public void timingTitoloParagrafo() {
         long inizio;
-        ArrayList<Bio> listaGrezzaBio = bioService.findAllByNome(nomeTextLungo);
+        List<Bio> listaGrezzaBio = bioService.findAllByNome(nomeTextLungo);
         ArrayList<WrapDidascalia> listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.listaNomi);
 
         inizio = System.currentTimeMillis();
@@ -721,9 +721,9 @@ public class ListeIntegrationTest extends ATest {
      */
     @Test
     public void ordinaDidascalieNomi() {
-        ArrayList<Bio> listaGrezzaBio = bioService.findAllByNome(nomeTextCorto);
+        List<Bio> listaGrezzaBio = bioService.findAllByNome(nomeTextCorto);
         ArrayList<WrapDidascalia> listaDidascalieNonOrdinate = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.listaNomi);
-        ArrayList<WrapDidascalia> listaDidascalieOrdinate;
+        List<WrapDidascalia> listaDidascalieOrdinate;
 
         System.out.println("*************");
         System.out.println("Lista DISORDINATA di didascalie");
@@ -744,35 +744,35 @@ public class ListeIntegrationTest extends ATest {
     }// end of single test
 
 
-    /**
-     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
-     *
-     * @param listaDisordinata di didascalie
-     *
-     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
-     */
-    @Test
-    public void ordinaDidascalieAnni() {
-        ArrayList<Bio> listaGrezzaBio = bioService.findAllByAnnoNascita(annoTextSecondo);
-        ArrayList<WrapDidascalia> listaDidascalieNonOrdinate = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.annoNato);
-        ArrayList<WrapDidascalia> listaDidascalieOrdinate;
-
-        System.out.println("*************");
-        System.out.println("Lista DISORDINATA di didascalie");
-        System.out.println("*************");
-        for (WrapDidascalia wrap : listaDidascalieNonOrdinate) {
-            System.out.println(wrap.getChiave());
-        }// end of for cycle
-
-        listaDidascalieOrdinate = listaService.ordinaListaDidascalie(listaDidascalieNonOrdinate);
-
-        System.out.println("*************");
-        System.out.println("Lista ORDINATA di didascalie");
-        System.out.println("*************");
-        for (WrapDidascalia wrap : listaDidascalieOrdinate) {
-            System.out.println(wrap.getChiave());
-        }// end of for cycle
-
-    }// end of single test
+//    /**
+//     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
+//     *
+//     * @param listaDisordinata di didascalie
+//     *
+//     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
+//     */
+//    @Test
+//    public void ordinaDidascalieAnni() {
+//        ArrayList<Bio> listaGrezzaBio = bioService.findAllByAnnoNascita(annoTextSecondo);
+//        ArrayList<WrapDidascalia> listaDidascalieNonOrdinate = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.annoNato);
+//        ArrayList<WrapDidascalia> listaDidascalieOrdinate;
+//
+//        System.out.println("*************");
+//        System.out.println("Lista DISORDINATA di didascalie");
+//        System.out.println("*************");
+//        for (WrapDidascalia wrap : listaDidascalieNonOrdinate) {
+//            System.out.println(wrap.getChiave());
+//        }// end of for cycle
+//
+//        listaDidascalieOrdinate = listaService.ordinaListaDidascalie(listaDidascalieNonOrdinate);
+//
+//        System.out.println("*************");
+//        System.out.println("Lista ORDINATA di didascalie");
+//        System.out.println("*************");
+//        for (WrapDidascalia wrap : listaDidascalieOrdinate) {
+//            System.out.println(wrap.getChiave());
+//        }// end of for cycle
+//
+//    }// end of single test
 
 }// end of class

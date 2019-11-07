@@ -9,6 +9,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -76,8 +77,8 @@ public class ListaCognomi extends ListaNomiCognomi {
      * @return lista delle istanze di Bio che usano questo istanza nella property appropriata
      */
     @Override
-    public ArrayList<Bio> listaBio() {
-        return bioService.findAllByCognome(cognome.cognome);
+    public List<Bio> listaBio() {
+        return bioService.findAllByCognome(cognome);
     }// fine del metodo
 
 

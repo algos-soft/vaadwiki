@@ -8,6 +8,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_ANNI_NASCITA;
 
@@ -70,7 +71,7 @@ public class ListaAnnoNato extends ListaAnni {
      * @return lista delle istanze di Bio che usano questo istanza nella property appropriata
      */
     @Override
-    public ArrayList<Bio> listaBio() {
+    public List<Bio> listaBio() {
         return bioService.findAllByAnnoNascita(anno);
     }// fine del metodo
 

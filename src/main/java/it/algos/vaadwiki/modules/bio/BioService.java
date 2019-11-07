@@ -11,8 +11,13 @@ import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
+import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.vaadwiki.modules.cognome.Cognome;
+import it.algos.vaadwiki.modules.cognome.CognomeService;
+import it.algos.vaadwiki.modules.nome.Nome;
+import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
 import it.algos.wiki.WrapTime;
@@ -29,10 +34,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 import static it.algos.vaadflow.application.FlowCost.MONGO_PAGE_LIMIT;
 import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
@@ -92,6 +94,18 @@ public class BioService extends AttNazProfCatService {
      */
     @Autowired
     private AnnoService annoService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private NomeService nomeService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    private CognomeService cognomeService;
 
     /**
      * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
@@ -268,135 +282,353 @@ public class BioService extends AttNazProfCatService {
     }// end of method
 
 
-//    /**
-//     * Returns all entities of the type <br>
-//     * <p>
-//     *
-//     * @return all ordered entities
-//     */
-//    public ArrayList<Long> findPageids() {
-//        ArrayList<Long> lista = new ArrayList<>();
-//        long inizio = System.currentTimeMillis();
-//        List<Bio> listaBio = null;
-//
-//        listaBio = repository.findAllByOrderByWikiTitleAsc();
-//
-//        for (Bio bio : listaBio) {
-//            lista.add(bio.pageid);
-//        }// end of for cycle
-//
-//        logger.info("Recuperate " + text.format(lista.size()) + " pagine da bioService.findPageids() in " + date.deltaText(inizio));
-//        return lista;
-//    }// end of method
-
-
     /**
-     * Returns all entities of the type <br>
+     * Seleziona tutte le biografie delle persone nate in un certo giorno <br>
+     * La lista viene ordinata per anno di nascita <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
      *
-     * @return all ordered entities
+     * @param giornoNascita per la selezione
+     *
+     * @return ordered entities
      */
-    public ArrayList<Bio> findAllByGiornoNascita(Giorno giornoNascita) {
-        Sort sort = new Sort(Sort.Direction.ASC, "annoNascita.ord", "cognome");
-        return (ArrayList) repository.findAllByGiornoNascita(giornoNascita, sort);
+    public List<Bio> findAllByGiornoNascita(Giorno giornoNascita) {
+        return orderByGiornoAnnoAndCognome(repository.findAllByGiornoNascita(giornoNascita), EADidascalia.giornoNato);
     }// end of method
 
 
     /**
-     * Returns all entities of the type <br>
+     * Seleziona tutte le biografie delle persone nate in un certo giorno <br>
+     * La lista viene ordinata per anno di nascita <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
      *
-     * @return all ordered entities
+     * @param giornoTxt per la selezione
+     *
+     * @return ordered entities
      */
-    public ArrayList<Bio> findAllByGiornoNascita(String giornTxt) {
-        Giorno giorno = giornoService.findByKeyUnica(giornTxt);
-        return giorno != null ? findAllByGiornoNascita(giorno) : null;
+    public List<Bio> findAllByGiornoNascita(String giornoTxt) {
+        return giornoService != null ? findAllByGiornoNascita(giornoService.findByKeyUnica(giornoTxt)) : null;
     }// end of method
 
 
     /**
-     * Returns all entities of the type <br>
+     * Seleziona tutte le biografie delle persone morte in un certo giorno <br>
+     * La lista viene ordinata per anno di morte <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
      *
-     * @return all ordered entities
+     * @param giornoMorte per la selezione
+     *
+     * @return ordered entities
      */
-    public ArrayList<Bio> findAllByGiornoMorte(Giorno giornoMorte) {
-        Sort sort = new Sort(Sort.Direction.ASC, "annoMorte.ord", "cognome");
-        return (ArrayList) repository.findAllByGiornoMorte(giornoMorte, sort);
+    public List<Bio> findAllByGiornoMorte(Giorno giornoMorte) {
+        return orderByGiornoAnnoAndCognome(repository.findAllByGiornoMorte(giornoMorte), EADidascalia.giornoMorto);
     }// end of method
 
 
     /**
-     * Returns all entities of the type <br>
+     * Seleziona tutte le biografie delle persone morte in un certo giorno <br>
+     * La lista viene ordinata per anno di morte <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
      *
-     * @return all ordered entities
+     * @param giornoTxt per la selezione
+     *
+     * @return ordered entities
      */
-    public ArrayList<Bio> findAllByGiornoMorte(String giornTxt) {
-        Giorno giorno = giornoService.findByKeyUnica(giornTxt);
-        return giorno != null ? findAllByGiornoMorte(giorno) : null;
+    public List<Bio> findAllByGiornoMorte(String giornoTxt) {
+        return giornoService != null ? findAllByGiornoMorte(giornoService.findByKeyUnica(giornoTxt)) : null;
     }// end of method
 
 
     /**
-     * Returns all entities of the type <br>
+     * Seleziona tutte le biografie delle persone nate in un certo anno <br>
+     * La lista viene ordinata per giorno di nascita <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
      *
-     * @return all ordered entities
+     * @param annoNascita per la selezione
+     *
+     * @return ordered entities
      */
-    public ArrayList<Bio> findAllByAnnoNascita(Anno annoNascita) {
-        Sort sort = new Sort(Sort.Direction.ASC, "giornoNascita.ord", "cognome");
-        return (ArrayList) repository.findAllByAnnoNascita(annoNascita, sort);
+    public List<Bio> findAllByAnnoNascita(Anno annoNascita) {
+        return orderByGiornoAnnoAndCognome(repository.findAllByAnnoNascita(annoNascita), EADidascalia.annoNato);
     }// end of method
 
 
     /**
-     * Returns all entities of the type <br>
+     * Seleziona tutte le biografie delle persone nate in un certo anno <br>
+     * La lista viene ordinata per giorno di nascita <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
      *
-     * @return all ordered entities
+     * @param annoTxt per la selezione
+     *
+     * @return ordered entities
      */
-    public ArrayList<Bio> findAllByAnnoNascita(String annoText) {
-        Anno anno = annoService.findByKeyUnica(annoText);
-        return anno != null ? findAllByAnnoNascita(anno) : null;
+    public List<Bio> findAllByAnnoNascita(String annoTxt) {
+        return annoService != null ? findAllByAnnoNascita(annoService.findByKeyUnica(annoTxt)) : null;
     }// end of method
 
 
     /**
-     * Returns all entities of the type <br>
+     * Seleziona tutte le biografie delle persone morte in un certo anno <br>
+     * La lista viene ordinata per giorno di morte <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
      *
-     * @return all ordered entities
+     * @param annoMorte per la selezione
+     *
+     * @return ordered entities
      */
-    public ArrayList<Bio> findAllByAnnoMorte(Anno annoMorte) {
-        Sort sort = new Sort(Sort.Direction.ASC, "giornoMorte.ord", "cognome");
-        return (ArrayList) repository.findAllByAnnoMorte(annoMorte, sort);
+    public List<Bio> findAllByAnnoMorte(Anno annoMorte) {
+        return orderByGiornoAnnoAndCognome(repository.findAllByAnnoMorte(annoMorte), EADidascalia.annoMorto);
     }// end of method
 
 
     /**
-     * Returns all entities of the type <br>
+     * Seleziona tutte le biografie delle persone morte in un certo anno <br>
+     * La lista viene ordinata per giorno di morte <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
      *
-     * @return all ordered entities
+     * @param annoTxt per la selezione
+     *
+     * @return ordered entities
      */
-    public ArrayList<Bio> findAllByAnnoMorte(String annoText) {
-        Anno anno = annoService.findByKeyUnica(annoText);
-        return anno != null ? findAllByAnnoMorte(anno) : null;
+    public List<Bio> findAllByAnnoMorte(String annoTxt) {
+        return annoService != null ? findAllByAnnoMorte(annoService.findByKeyUnica(annoTxt)) : null;
     }// end of method
 
 
     /**
-     * Returns all entities of the type <br>
+     * Seleziona tutte le biografie delle persone di un certo nome <br>
+     * La lista viene ordinata per attività <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
      *
-     * @return all ordered entities
+     * @param nome per la selezione
+     *
+     * @return ordered entities
      */
-    public ArrayList<Bio> findAllByNome(String nome) {
-        Sort sort = new Sort(Sort.Direction.ASC, "attivita", "cognome");
-        return (ArrayList) repository.findAllByNome(nome, sort);
+    public List<Bio> findAllByNome(Nome nome) {
+        return orderByAttivitaAndNomeCognome(repository.findAllByNome(nome.nome), EADidascalia.listaNomi);
     }// end of method
 
 
     /**
-     * /**
-     * Returns all entities of the type <br>
+     * Seleziona tutte le biografie delle persone di un certo nome <br>
+     * La lista viene ordinata per attività <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
+     *
+     * @param nomeTxt per la selezione
+     *
+     * @return ordered entities
+     */
+    public List<Bio> findAllByNome(String nomeTxt) {
+        return nomeService != null ? findAllByNome(nomeService.findByKeyUnica(nomeTxt)) : null;
+    }// end of method
+
+
+    /**
+     * Seleziona tutte le biografie delle persone di un certo cognome <br>
+     * La lista viene ordinata per attività <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
+     *
+     * @param cognome per la selezione
+     *
+     * @return ordered entities
+     */
+    public List<Bio> findAllByCognome(Cognome cognome) {
+        return orderByAttivitaAndNomeCognome(repository.findAllByCognome(cognome.cognome), EADidascalia.listaCognomi);
+    }// end of method
+
+
+    /**
+     * Seleziona tutte le biografie delle persone di un certo cognome <br>
+     * La lista viene ordinata per attività <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
+     *
+     * @param cognomeTxt per la selezione
+     *
+     * @return ordered entities
+     */
+    public List<Bio> findAllByCognome(String cognomeTxt) {
+        return cognomeService != null ? findAllByCognome(cognomeService.findByKeyUnica(cognomeTxt)) : null;
+    }// end of method
+
+
+    /**
+     * Ordina la lista <br>
      *
      * @return all ordered entities
      */
-    public ArrayList<Bio> findAllByCognome(String cognome) {
-        return (ArrayList) repository.findAllByCognome(cognome);
+    public ArrayList<Bio> orderByGiornoAnnoAndCognome(List<Bio> listaGrezza, EADidascalia type) {
+        ArrayList lista = null;
+        List<Bio> listaTmp = null;
+        LinkedHashMap<Integer, List<Bio>> mappa;
+        int ordine;
+        List<Bio> listaCognomi;
+
+        if (listaGrezza != null) {
+            lista = new ArrayList<>();
+            mappa = new LinkedHashMap<>();
+
+            for (Bio bio : listaGrezza) {
+                ordine = getOrdine(bio, type);
+
+                if (mappa.containsKey(ordine)) {
+                    listaTmp = mappa.get(ordine);
+                } else {
+                    listaTmp = new ArrayList<>();
+                }// end of if/else cycle
+                listaTmp.add(bio);
+
+                mappa.put(ordine, listaTmp);
+            }// end of for cycle
+
+            Set<Integer> listaChiavi = mappa.keySet();
+            Integer[] matrice = listaChiavi.toArray(new Integer[listaChiavi.size()]);
+            List<Integer> list = Arrays.asList(matrice);
+            Collections.sort(list);
+
+            for (Integer key : list) {
+                listaCognomi = mappa.get(key);
+                listaCognomi = orderByNomeCognome(listaCognomi, EADidascalia.listaNomi);
+                for (Bio bio : listaCognomi) {
+                    lista.add(bio);
+                }// end of for cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Ordina la lista <br>
+     *
+     * @return all ordered entities
+     */
+    public ArrayList<Bio> orderByAttivitaAndNomeCognome(List<Bio> listaGrezza, EADidascalia type) {
+        ArrayList lista = null;
+        List<Bio> listaTmp = null;
+        LinkedHashMap<String, List<Bio>> mappa;
+        String attivita;
+        List<Bio> listaCognomi;
+
+        if (listaGrezza != null) {
+            lista = new ArrayList<>();
+            mappa = new LinkedHashMap<>();
+
+            for (Bio bio : listaGrezza) {
+                attivita = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
+
+                if (mappa.containsKey(attivita)) {
+                    listaTmp = mappa.get(attivita);
+                } else {
+                    listaTmp = new ArrayList<>();
+                }// end of if/else cycle
+                listaTmp.add(bio);
+
+                mappa.put(attivita, listaTmp);
+            }// end of for cycle
+
+            Set<String> listaChiavi = mappa.keySet();
+            String[] matrice = listaChiavi.toArray(new String[listaChiavi.size()]);
+            List<String> list = Arrays.asList(matrice);
+            Collections.sort(list);
+
+            for (String key : list) {
+                listaCognomi = mappa.get(key);
+                listaCognomi = orderByNomeCognome(listaCognomi, type);
+                for (Bio bio : listaCognomi) {
+                    lista.add(bio);
+                }// end of for cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return lista;
+    }// end of method
+
+
+    public int getOrdine(Bio bio, EADidascalia type) {
+        int ordine = 0;
+
+        if (bio != null && type != null) {
+            switch (type) {
+                case giornoNato:
+                    ordine = bio.annoNascita != null ? bio.annoNascita.ordine : 0;
+                    break;
+                case giornoMorto:
+                    ordine = bio.annoMorte != null ? bio.annoMorte.ordine : 0;
+                    break;
+                case annoNato:
+                    ordine = bio.giornoNascita != null ? bio.giornoNascita.ordine : 0;
+                    break;
+                case annoMorto:
+                    ordine = bio.giornoMorte != null ? bio.giornoMorte.ordine : 0;
+                    break;
+                default:
+                    log.warn("Switch - caso non definito");
+                    break;
+            } // end of switch statement
+        }// end of if cycle
+
+        return ordine;
+    }// end of method
+
+
+    public List<Bio> orderByNomeCognome(List<Bio> listaIn, EADidascalia type) {
+        List<Bio> listaOut = listaIn;
+        LinkedHashMap<String, List<Bio>> mappa;
+        String nomeCognome = "";
+        List<Bio> listaTmp = null;
+
+        if (array.isValid(listaIn)) {
+            listaOut = new ArrayList<>();
+            mappa = new LinkedHashMap<>();
+
+            for (Bio bio : listaIn) {
+                nomeCognome = getNomeCognome(bio, type);
+
+                if (mappa.containsKey(nomeCognome)) {
+                    listaTmp = mappa.get(nomeCognome);
+                } else {
+                    listaTmp = new ArrayList<>();
+                }// end of if/else cycle
+                listaTmp.add(bio);
+
+                mappa.put(nomeCognome, listaTmp);
+            }// end of for cycle
+
+            Set<String> listaChiavi = mappa.keySet();
+            String[] matrice = listaChiavi.toArray(new String[listaChiavi.size()]);
+            List<String> list = Arrays.asList(matrice);
+            Collections.sort(list);
+
+            for (String key : list) {
+                for (Bio bio : mappa.get(key)) {
+                    listaOut.add(bio);
+                }// end of for cycle
+            }// end of for cycle
+
+        }// end of if cycle
+
+        return listaOut;
+    }// end of method
+
+
+    public String getNomeCognome(Bio bio, EADidascalia type) {
+        String nomeCognome = "";
+
+        if (bio != null && type != null) {
+            switch (type) {
+                case listaNomi:
+                    nomeCognome = bio.cognome != null ? bio.cognome : "";
+                    break;
+                case listaCognomi:
+                    nomeCognome = bio.nome != null ? bio.nome : "";
+                    break;
+                default:
+                    log.warn("Switch - caso non definito");
+                    break;
+            } // end of switch statement
+        }// end of if cycle
+
+        return nomeCognome;
     }// end of method
 
 
