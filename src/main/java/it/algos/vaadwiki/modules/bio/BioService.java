@@ -514,7 +514,7 @@ public class BioService extends AttNazProfCatService {
             mappa = new LinkedHashMap<>();
 
             for (Bio bio : listaGrezza) {
-                attivita = bio.getAttivita() != null ? bio.getAttivita().plurale : "";
+                attivita = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
 
                 if (mappa.containsKey(attivita)) {
                     listaTmp = mappa.get(attivita);

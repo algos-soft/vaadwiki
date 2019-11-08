@@ -379,6 +379,7 @@ public class ListaService extends ABioService {
     public LinkedHashMap<String, List<String>> ordinaMappaAlfabetica(LinkedHashMap<String, List<String>> mappaDisordinata) {
         LinkedHashMap<String, List<String>> mappaOrdinata = new LinkedHashMap<String, List<String>>();
         List<String> listaKey = new ArrayList();
+        List<String> listaValue;
 
         for (String key : mappaDisordinata.keySet()) {
             listaKey.add(key);
