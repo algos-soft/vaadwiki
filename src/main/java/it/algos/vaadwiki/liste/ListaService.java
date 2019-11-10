@@ -355,38 +355,111 @@ public class ListaService extends ABioService {
     }// fine del metodo
 
 
+    /**
+     * Coistuisce una mappa basata sulla 'chiaveDue' <br>
+     * Ordina il contenuto (per cognome) <br>
+     * Estrae il testo della discalia <br>
+     */
     private LinkedHashMap<String, List<String>> creaMappaInterna(List<WrapDidascalia> listaDidascalieDellaChiaveUno) {
         LinkedHashMap<String, List<String>> mappa = new LinkedHashMap<>();
+        LinkedHashMap<String, List<WrapDidascalia>> mappaWrap = new LinkedHashMap<>();
+        List<WrapDidascalia> listaWrap = null;
+        List<WrapDidascalia> listaWrap2 = null;
+        List<String> listaChiaveDue = null;
         List<String> lista = null;
         String chiaveDue;
 
+        //--costruisce una mappa 'disordinata' usando la 'chiaveDue' (A, B, C, ...) (
         for (WrapDidascalia wrap : listaDidascalieDellaChiaveUno) {
             chiaveDue = wrap.chiaveDue;
 
-            if (mappa.get(chiaveDue) == null) {
-                lista = new ArrayList<String>();
+            if (mappaWrap.get(chiaveDue) == null) {
+                listaWrap = new ArrayList<>();
             } else {
-                lista = (ArrayList<String>) mappa.get(chiaveDue);
+                listaWrap = mappaWrap.get(chiaveDue);
             }// end of if/else cycle
-            lista.add(wrap.getTestoSenza());
-            mappa.put(chiaveDue, lista);
+            listaWrap.add(wrap);
+            mappaWrap.put(chiaveDue, listaWrap);
+        }// end of for cycle
+
+        //--ordina il contenuto per 'cognome'
+        for (String keyParagrafo : mappaWrap.keySet()) {
+            listaWrap2 = mappaWrap.get(keyParagrafo);
+            listaWrap2 = orderByCognome(listaWrap2);
+            mappaWrap.put(keyParagrafo, listaWrap2);
+        }// end of for cycle
+
+        Set<String> listaChiavi = mappa.keySet();
+        String[] matrice = listaChiavi.toArray(new String[listaChiavi.size()]);
+        List<String> list = Arrays.asList(matrice);
+        Collections.sort(list);
+
+        //--estrae il testo della discalia da WrapDidascalia
+        for (String keyParagrafo : mappaWrap.keySet()) {
+            listaWrap2 = mappaWrap.get(keyParagrafo);
+            lista = new ArrayList<>();
+            for (WrapDidascalia wrap : listaWrap2) {
+                lista.add(wrap.getTestoSenza());
+            }// end of for cycle
+            mappa.put(keyParagrafo, lista);
         }// end of for cycle
 
         return mappa;
     }// fine del metodo
 
 
+    public List<WrapDidascalia> orderByCognome(List<WrapDidascalia> listaIn) {
+        List<WrapDidascalia> listaOut = listaIn;
+        LinkedHashMap<String, List<WrapDidascalia>> mappa;
+        String cognome = "";
+        List<WrapDidascalia> listaTmp = null;
+
+        if (array.isValid(listaIn)) {
+            listaOut = new ArrayList<>();
+            mappa = new LinkedHashMap<>();
+
+            for (WrapDidascalia wrap : listaIn) {
+                cognome = wrap.chiaveTre;
+
+                if (mappa.containsKey(cognome)) {
+                    listaTmp = mappa.get(cognome);
+                } else {
+                    listaTmp = new ArrayList<>();
+                }// end of if/else cycle
+                listaTmp.add(wrap);
+
+                mappa.put(cognome, listaTmp);
+            }// end of for cycle
+
+            Set<String> listaChiavi = mappa.keySet();
+            String[] matrice = listaChiavi.toArray(new String[listaChiavi.size()]);
+            List<String> list = Arrays.asList(matrice);
+            Collections.sort(list);
+
+            for (String key : list) {
+                for (WrapDidascalia wrap : mappa.get(key)) {
+                    listaOut.add(wrap);
+                }// end of for cycle
+            }// end of for cycle
+
+        }// end of if cycle
+
+        return listaOut;
+    }// end of method
+
+
+    /**
+     * Ordina i paragrafi (A, B, C, ...) <br>
+     */
     public LinkedHashMap<String, List<String>> ordinaMappaAlfabetica(LinkedHashMap<String, List<String>> mappaDisordinata) {
         LinkedHashMap<String, List<String>> mappaOrdinata = new LinkedHashMap<String, List<String>>();
         List<String> listaKey = new ArrayList();
-        List<String> listaValue;
 
         for (String key : mappaDisordinata.keySet()) {
             listaKey.add(key);
         }// end of for cycle
 
         Collections.sort(listaKey);
-
         for (String orderedKey : listaKey) {
             mappaOrdinata.put(orderedKey, mappaDisordinata.get(orderedKey));
         }// end of for cycle
@@ -405,7 +478,6 @@ public class ListaService extends ABioService {
         }// end of for cycle
 
         Collections.sort(listaKey);
-
 
         return mappaOrdinata;
     }// fine del metodo

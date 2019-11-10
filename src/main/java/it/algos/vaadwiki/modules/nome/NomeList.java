@@ -12,6 +12,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
+import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
@@ -22,7 +23,11 @@ import it.algos.vaadwiki.statistiche.StatisticheNomiB;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
+import org.springframework.data.mongodb.core.query.Query;
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import java.util.List;
@@ -59,6 +64,9 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @AIView(vaadflow = false, menuName = "nome", menuIcon = VaadinIcon.BOAT, searchProperty = "nome", roleTypeVisibility = EARoleType.developer)
 public class NomeList extends WikiList {
 
+
+    @Autowired
+    public MongoOperations mongoOp;
 
     @Autowired
     @Qualifier(TASK_NOM)
@@ -179,13 +187,15 @@ public class NomeList extends WikiList {
         super.updateFiltri();
         EASelezioneNomi selezione = (EASelezioneNomi) filtroComboBox.getValue();
 
-        if (selezione!=null) {
+        if (selezione != null) {
             switch (selezione) {
                 case dimensioni:
 //                items = ((NomeService) service).findAllDimensioni();
+//                    filtri.add(Criteria.where("nome").exists(true));
                     break;
                 case alfabetico:
 //                items = ((NomeService) service).findAllAlfabetico();
+//                    filtri.add(Criteria.where("nome").exists(false));
                     break;
                 case nomiDoppi:
                     filtri.add(Criteria.where("doppio").is(true));
@@ -196,6 +206,76 @@ public class NomeList extends WikiList {
             } // end of switch statement
         }// end of if cycle
 
+    }// end of method
+
+
+    /**
+     * Aggiorna gli items della Grid, utilizzando i filtri. <br>
+     * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
+     * <p>
+     * Sviluppato nella sottoclasse AGridViewList, oppure APaginatedGridViewList <br>
+     * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>
+     */
+    @Override
+    public void updateGrid() {
+        super.updateGrid();
+        if (array.isValid(filtri)) {
+            items = findAllByProperty(entityClazz, filtri);
+        }// end of if cycle
+
+        if (items != null) {
+                try { // prova ad eseguire il codice
+                    grid.deselectAll();
+                    grid.setItems(items);
+                    headerGridHolder.setText(getGridHeaderText());
+                } catch (Exception unErrore) { // intercetta l'errore
+                    log.error(unErrore.toString());
+                }// fine del blocco try-catch
+        }// end of if cycle
+
+        creaAlertLayout();
+    }// end of method
+
+
+    /**
+     * Returns only the property of the type.
+     *
+     * @param clazz                   della collezione
+     * @param listaCriteriaDefinition per le selezioni di filtro
+     *
+     * @return entity
+     */
+    public List<AEntity> findAllByProperty(Class<? extends AEntity> clazz, List<CriteriaDefinition> listaCriteriaDefinition) {
+        List<AEntity> lista;
+        Query query = new Query();
+        EASelezioneNomi selezione = (EASelezioneNomi) filtroComboBox.getValue();
+
+        if (listaCriteriaDefinition != null && listaCriteriaDefinition.size() > 0) {
+            for (CriteriaDefinition criteria : listaCriteriaDefinition) {
+                query.addCriteria(criteria);
+            }// end of for cycle
+        }// end of if cycle
+
+        if (selezione != null) {
+            switch (selezione) {
+                case dimensioni:
+                    query.with(new Sort(Sort.Direction.DESC, "voci"));
+                    break;
+                case alfabetico:
+                    query.with(new Sort(Sort.Direction.ASC, "nome"));
+                    break;
+                case nomiDoppi:
+                    query.with(new Sort(Sort.Direction.ASC, "nome"));
+                    break;
+                default:
+                    log.warn("Switch - caso non definito");
+                    break;
+            } // end of switch statement
+        }// end of if cycle
+
+        lista = (List<AEntity>) mongoOp.find(query, clazz);
+
+        return lista;
     }// end of method
 
 

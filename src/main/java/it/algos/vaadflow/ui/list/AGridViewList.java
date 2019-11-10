@@ -14,10 +14,16 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import it.algos.vaadflow.enumeration.EASearch;
 import it.algos.vaadflow.service.IAService;
+import it.algos.vaadwiki.modules.nome.Nome;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
+import org.eclipse.persistence.internal.jpa.querydef.CriteriaBuilderImpl;
+import org.eclipse.persistence.internal.jpa.querydef.CriteriaQueryImpl;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.ArrayList;
 import java.util.List;
 
