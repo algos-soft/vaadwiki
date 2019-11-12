@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.modules.genere;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
@@ -95,6 +96,25 @@ public class GenereList extends AttNazProfCatList {
         super.codeFlagDownload = USA_DAEMON_GENERE;
         super.codeLastDownload = LAST_DOWNLOAD_GENERE;
         super.durataLastDownload = DURATA_DOWNLOAD_GENERE;
+    }// end of method
+
+    /**
+     * Eventuali messaggi di avviso specifici di questa view ed inseriti in 'alertPlacehorder' <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse ALayoutViewList <br>
+     * Normalmente ad uso esclusivo del developer (eventualmente dell'admin) <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+        alertPlacehorder.add(new Label("Modulo:Bio/Plurale attività genere. Modulo Lua di supporto a Biobot"));
+        alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3, da singolare maschile e femminile (usati nell'incipit) al plurale maschile e femminile, per le intestazioni dei paragrafi nelle liste di antroponimi previste nel Progetto:Antroponimi."));
+        alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
+        alertPlacehorder.add(new Label("[\"attivita singolare maschile\"] = \"attività plurale maschile\""));
+        alertPlacehorder.add(new Label("[\"attivita singolare femminile\"] = \"attività plurale femminile\""));
+        alertPlacehorder.add(new Label("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività e le pagine sono convertite in minuscolo."));
     }// end of method
 
     /**

@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.modules.professione;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -94,6 +95,28 @@ public class ProfessioneList extends AttNazProfCatList {
         super.durataLastDownload = DURATA_DOWNLOAD_PROFESSIONE;
     }// end of method
 
+    /**
+     * Eventuali messaggi di avviso specifici di questa view ed inseriti in 'alertPlacehorder' <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse ALayoutViewList <br>
+     * Normalmente ad uso esclusivo del developer (eventualmente dell'admin) <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+        alertPlacehorder.add(new Label("Modulo:Bio/Link attività. Modulo Lua di supporto a Modulo:Bio"));
+        alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3, dal nome dell'attività a quello della voce corrispondente, per creare dei piped wikilink."));
+        alertPlacehorder.add(new Label("Quando l'attività corrisponde già al titolo della voce di destinazione NON serve inserirla qui."));
+        alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
+        alertPlacehorder.add(new Label("[\"attivitaforma1\"] = \"voce di riferimento\""));
+        alertPlacehorder.add(new Label("[\"attivitaforma2\"] = \"voce di riferimento\""));
+        alertPlacehorder.add(new Label("Viene utilizzata principalmente per convertire le attività da femminile (che può essere usato nell'incipit) a maschile (usato nel wikilink) e per orfanizzare i redirect"));
+        alertPlacehorder.add(new Label("All'interno della tabella le attività sono in ordine alfabetico."));
+        alertPlacehorder.add(new Label("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle attività (maschili) che corrispondono alla pagina (non presenti nel Modulo su Wiki)."));
+        alertPlacehorder.add(new Label("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività e le pagine sono convertite in minuscolo."));
+    }// end of method
 
     /**
      * Crea effettivamente il Component Grid <br>

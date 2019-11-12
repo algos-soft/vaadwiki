@@ -1,13 +1,14 @@
 package it.algos.vaadwiki.modules.genere;
 
-import java.util.List;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.List;
+
 import static it.algos.vaadwiki.application.WikiCost.TAG_GEN;
 
 /**
@@ -30,5 +31,9 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_GEN;
 public interface GenereRepository extends MongoRepository<Genere, String> {
 
     public Genere findBySingolare(String singolare);
+
+    public List<Genere> findAllByPluraleMaschile(String pluraleMaschile);
+
+    public List<Genere> findAllByPluraleFemminile(String pluraleFemminile);
 
 }// end of class

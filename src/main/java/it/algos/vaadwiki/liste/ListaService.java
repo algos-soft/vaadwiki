@@ -303,7 +303,7 @@ public class ListaService extends ABioService {
      *
      * @return mappa complessa
      */
-    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> creaMappa(
+    public LinkedHashMap<String, LinkedHashMap<String, List<String>>>  creaMappa(
             List<WrapDidascalia> listaDidascalie,
             String titoloParagrafoVuoto,
             boolean paragrafoVuotoInCoda,
@@ -677,6 +677,43 @@ public class ListaService extends ABioService {
 
         if (text.isValid(paginaWiki) && text.isValid(linkVisibile)) {
             titoloParagrafo = costruisceTitolo(paginaWiki, linkVisibile, "");
+        }// end of if cycle
+
+        return titoloParagrafo;
+    }// fine del metodo
+
+//    public String getTitoloParagrafo2(Bio bio) {
+//        String titoloParagrafo = "";
+//        String paginaWiki = VUOTA;
+//        String linkVisibile = VUOTA;
+//
+//        paginaWiki = getProfessioneDaAttivitaSingolare(bio.getAttivita().singolare);
+//        linkVisibile = getGenereDaAttivitaSingolare(bio.getAttivita().singolare, bio.getSesso());
+//
+//        if (text.isValid(paginaWiki) && text.isValid(linkVisibile)) {
+//            titoloParagrafo = costruisceTitolo(paginaWiki, linkVisibile, "");
+//        }// end of if cycle
+//
+//        return titoloParagrafo;
+//    }// fine del metodo
+
+
+    public String getTitoloParagrafo(String linkVisibile) {
+        String titoloParagrafo = "";
+        String paginaWiki = VUOTA;
+        Genere genere = null;
+        Professione professione = null;
+
+//        genere = genereService.findByKeyUnica(linkVisibile);
+        if (genere != null) {
+            professione = professioneService.findByKeyUnica(genere.singolare);
+        }// end of if cycle
+        if (professione != null) {
+            paginaWiki = text.primaMaiuscola(professione.getPagina());
+        }// end of if cycle
+
+        if (text.isValid(paginaWiki) ) {
+            titoloParagrafo = costruisceTitolo(paginaWiki, text.primaMaiuscola(linkVisibile), "");
         }// end of if cycle
 
         return titoloParagrafo;

@@ -130,7 +130,7 @@ public abstract class AttNazProfCatService extends AService {
                     singolare = text.estrae(singolare, tagApi);
                     plurale = parti[1].trim();
                     plurale = text.estrae(plurale, tagApi);
-                    this.findOrCrea(singolare, plurale);
+                    this.findOrCrea(singolare.toLowerCase(), plurale.toLowerCase());
                 }// end of if cycle
             }// end of for cycle
 

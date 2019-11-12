@@ -16,6 +16,7 @@ import it.algos.vaadwiki.liste.ListaNomi;
 import it.algos.vaadwiki.liste.ListaService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
+import it.algos.vaadwiki.modules.genere.Genere;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.wiki.LibWiki;
@@ -73,7 +74,6 @@ public class ListeIntegrationTest extends ATest {
 
     private static boolean USA_PARAGRAFO_SIZE_NOMI;
 
-
     public LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
 
     protected List<Bio> listaBio;
@@ -117,6 +117,8 @@ public class ListeIntegrationTest extends ATest {
 
     protected String testo;
 
+    private Bio bio;
+
     @Autowired
     private ApplicationContext appContext;
 
@@ -133,6 +135,7 @@ public class ListeIntegrationTest extends ATest {
     private int posIni = 35;
 
     private int posEnd = 45;
+
 
 
     @Before
@@ -744,35 +747,36 @@ public class ListeIntegrationTest extends ATest {
     }// end of single test
 
 
-//    /**
-//     * Ordina la lista di didascalie (Wrap) che hanno una valore valido per la pagina specifica <br>
-//     *
-//     * @param listaDisordinata di didascalie
-//     *
-//     * @return lista di didascalie (Wrap) ordinate per giorno/anno (key) e poi per cognome (value)
-//     */
-//    @Test
-//    public void ordinaDidascalieAnni() {
-//        ArrayList<Bio> listaGrezzaBio = bioService.findAllByAnnoNascita(annoTextSecondo);
-//        ArrayList<WrapDidascalia> listaDidascalieNonOrdinate = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.annoNato);
-//        ArrayList<WrapDidascalia> listaDidascalieOrdinate;
-//
-//        System.out.println("*************");
-//        System.out.println("Lista DISORDINATA di didascalie");
-//        System.out.println("*************");
-//        for (WrapDidascalia wrap : listaDidascalieNonOrdinate) {
-//            System.out.println(wrap.getChiave());
-//        }// end of for cycle
-//
-//        listaDidascalieOrdinate = listaService.ordinaListaDidascalie(listaDidascalieNonOrdinate);
-//
-//        System.out.println("*************");
-//        System.out.println("Lista ORDINATA di didascalie");
-//        System.out.println("*************");
-//        for (WrapDidascalia wrap : listaDidascalieOrdinate) {
-//            System.out.println(wrap.getChiave());
-//        }// end of for cycle
-//
-//    }// end of single test
+
+
+    @Test
+    public void getTitoloParagrafo() {
+        previsto = "[[Allenatore|Allenatori di calcio]]";
+        sorgente = "allenatori di calcio";
+        ottenuto = listaService.getTitoloParagrafo(sorgente);
+        Assert.assertEquals(ottenuto, previsto);
+
+//        previsto = "[[Danzatori]]";
+//        sorgente = "danzatori";
+//        ottenuto = listaService.getTitoloParagrafo(sorgente);
+//        Assert.assertEquals(ottenuto, previsto);
+
+//        previsto = "[[Danzatori]]";
+//        bio = bioService.findByKeyUnica("Alessio Carbone");
+//        if (bio != null) {
+//            ottenuto = listaService.getTitoloParagrafo2(bio);
+//            Assert.assertEquals(ottenuto, previsto);
+//        } else {
+//            System.out.println("Manca la biografia");
+//        }// end of if/else cycle
+
+
+//        previsto = "[[Ballerina|Danzatori]]";
+//        sorgente = "danzatori";
+//        ottenuto = listaService.getTitoloParagrafo2(sorgente);
+//        Assert.assertEquals(ottenuto, previsto);
+
+
+    }// end of single test
 
 }// end of class

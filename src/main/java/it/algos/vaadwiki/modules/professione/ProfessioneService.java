@@ -5,7 +5,6 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
-import it.algos.vaadwiki.modules.genere.Genere;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -170,6 +169,23 @@ public class ProfessioneService extends AttNazProfCatService {
 
 
     /**
+     * Returns all entities of the type <br>
+     * <p>
+     * Se esiste la property 'ordine', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'code', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'descrizione', ordinate secondo questa property <br>
+     * Altrimenti, ordinate secondo il metodo sovrascritto nella sottoclasse concreta <br>
+     * Altrimenti, ordinate in ordine di inserimento nel DB mongo <br>
+     *
+     * @return all ordered entities
+     */
+    @Override
+    public List<Professione> findAll() {
+        return (List<Professione>) super.findAll();
+    }// end of method
+
+
+    /**
      * Costruisce una lista di nomi delle properties del Search nell'ordine:
      * 1) Sovrascrive la lista nella sottoclasse specifica di xxxService
      *
@@ -181,6 +197,7 @@ public class ProfessioneService extends AttNazProfCatService {
     public List<String> getSearchPropertyNamesList(AContext context) {
         return Arrays.asList("pagina");
     }// end of method
+
 
     /**
      * Pagina da linkare (se esiste).
@@ -194,6 +211,37 @@ public class ProfessioneService extends AttNazProfCatService {
         }// end of if cycle
 
         return pagina;
+    }// end of method
+
+
+    /**
+     * Download completo del modulo da Wiki <br>
+     * Cancella tutte le precedenti entities <br>
+     * Registra su Mongo DB tutte le occorrenze di attività/nazionalità <br>
+     */
+    @Override
+    public void download() {
+        super.download();
+        this.aggiunge();
+    }// end of method
+
+
+    /**
+     * Aggiunge le attività che NON corrispondono al titolo della pagina wiki di destinazione <br>
+     * Spazzola tutta la collezione <br>
+     * Per ogni professione legge la pagina e crea (se non esiste) una entity con lo stesso nome <br>
+     */
+    private void aggiunge() {
+        List<Professione> lista = findAll();
+        String pagina;
+
+        if (array.isValid(lista)) {
+            for (Professione professione : lista) {
+                pagina = professione.pagina;
+                findOrCrea(pagina, pagina);
+            }// end of for cycle
+        }// end of if cycle
+
     }// end of method
 
 }// end of class

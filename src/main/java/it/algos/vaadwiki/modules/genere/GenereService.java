@@ -14,6 +14,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -277,6 +280,86 @@ public class GenereService extends AttNazProfCatService {
      */
     public Genere findByKeyUnica(String singolare) {
         return repository.findBySingolare(singolare);
+    }// end of method
+
+
+    /**
+     * Recupera tutte le istanze della Entity usando la query della property specifica <br>
+     *
+     * @param genere maschile e femminile
+     *
+     * @return all entities
+     */
+    public List<Genere> findAllByPlurale(Genere genere) {
+        List<Genere> lista = new ArrayList<>();
+        List<Genere> listaM = null;
+        List<Genere> listaF = null;
+
+        if (genere != null) {
+            if (text.isValid(genere.pluraleMaschile)) {
+                listaM = findAllByPlurale(genere.pluraleMaschile);
+            }// end of if cycle
+            if (text.isValid(genere.pluraleFemminile)) {
+                listaF = findAllByPlurale(genere.pluraleFemminile);
+            }// end of if cycle
+
+            if (array.isValid(listaM)) {
+                lista.addAll(listaM);
+            }// end of if cycle
+            if (array.isValid(listaF)) {
+                lista.addAll(listaF);
+            }// end of if cycle
+        }// end of if cycle
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Recupera tutte le istanze della Entity usando la query della property specifica <br>
+     *
+     * @param plurale maschile o femminile
+     *
+     * @return all entities
+     */
+    public List<Genere> findAllByPlurale(String plurale) {
+        List<Genere> lista = new ArrayList<>();
+        List<Genere> listaM;
+        List<Genere> listaF;
+
+        if (text.isValid(plurale)) {
+            listaM = findAllByPluraleMaschile(plurale);
+            listaF = findAllByPluraleFemminile(plurale);
+
+            lista.addAll(listaM);
+            lista.addAll(listaF);
+        }// end of if cycle
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Recupera tutte le istanze della Entity usando la query della property specifica <br>
+     *
+     * @param pluraleMaschile
+     *
+     * @return all entities
+     */
+    public List<Genere> findAllByPluraleMaschile(String pluraleMaschile) {
+        return repository.findAllByPluraleMaschile(pluraleMaschile);
+    }// end of method
+
+
+    /**
+     * Recupera tutte le istanze della Entity usando la query della property specifica <br>
+     *
+     * @param pluraleFemminile
+     *
+     * @return all entities
+     */
+    public List<Genere> findAllByPluraleFemminile(String pluraleFemminile) {
+        return repository.findAllByPluraleFemminile(pluraleFemminile);
     }// end of method
 
 
