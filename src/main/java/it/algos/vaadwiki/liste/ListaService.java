@@ -60,7 +60,7 @@ public class ListaService extends ABioService {
     @Autowired
     protected NomeService nomeService;
 
-    LinkedHashMap<String, List<String>> mappaChiaveDue;
+//    LinkedHashMap<String, List<String>> mappaChiaveDue;
 
 
     /**
@@ -303,28 +303,44 @@ public class ListaService extends ABioService {
      *
      * @return mappa complessa
      */
-    public LinkedHashMap<String, LinkedHashMap<String, List<String>>>  creaMappa(
+    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> creaMappa(
             List<WrapDidascalia> listaDidascalie,
             String titoloParagrafoVuoto,
             boolean paragrafoVuotoInCoda,
             boolean usaLinkAttivita,
             boolean usaOrdineAlfabetico) {
-        LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale = new LinkedHashMap<>();
-        LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafi = new LinkedHashMap<>();
-        LinkedHashMap<String, List<String>> mappaChiaveDue;
-        ArrayList<WrapDidascalia> listaChiaveDue = null;
+        LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale;
+        LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafi;
+
+        //--creazione paragrafi con titolo='chiaveUno'
+        mappaParagrafi = creaParagrafi(listaDidascalie);
+
+        //--ordinamento alfabetico dei paragrafi
+        mappaParagrafi = array.sort(mappaParagrafi);
+
+        //--costruzione del titolo definitivo dei paragrafi
+        mappaParagrafi = titoloParagrafi(mappaParagrafi, usaLinkAttivita, titoloParagrafoVuoto);
+
+        //--creazione della mappa interna 'mappaChiaveDue'
+        mappaGenerale = creaMappaInterna(mappaParagrafi, usaOrdineAlfabetico);
+
+        //--spostamento in fondo del paragrafo dal titolo vuoto
+        this.spostaInFondo(mappaGenerale, paragrafoVuotoInCoda, titoloParagrafoVuoto);
+
+        return mappaGenerale;
+    }// fine del metodo
+
+
+    /**
+     * Creazione paragrafi con titolo='chiaveUno' <br>
+     */
+    public LinkedHashMap<String, List<WrapDidascalia>> creaParagrafi(List<WrapDidascalia> listaDidascalie) {
         String chiaveUno;
+        LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafi = new LinkedHashMap<>();
+        ArrayList<WrapDidascalia> listaChiaveDue = null;
 
         for (WrapDidascalia wrap : listaDidascalie) {
             chiaveUno = wrap.chiaveUno;
-            if (text.isValid(chiaveUno)) {
-                if (usaLinkAttivita) {
-                    chiaveUno = getTitoloParagrafo(wrap.bio);
-                }// end of if cycle
-                chiaveUno = LibWiki.setQuadre(chiaveUno);
-            } else {
-                chiaveUno = titoloParagrafoVuoto;
-            }// end of if/else cycle
 
             if (mappaParagrafi.get(chiaveUno) == null) {
                 listaChiaveDue = new ArrayList<WrapDidascalia>();
@@ -335,13 +351,81 @@ public class ListaService extends ABioService {
             mappaParagrafi.put(chiaveUno, listaChiaveDue);
         }// end of for cycle
 
+        return mappaParagrafi;
+    }// fine del metodo
+
+
+    /**
+     * Costruzione del titolo definitivo dei paragrafi <br>
+     * aggiunge il link alla pagina di wikipedia per la professione di riferimento <br>
+     * se le didascalie non sono omogenee (non puntano alla stessa pagina di link), non mette il link <br>
+     * aggiunge le parentesi quadre <br>
+     * se il titolo del paragrafo è vuoto, sostituisce col titolo previsto standard <br>
+     */
+    public LinkedHashMap<String, List<WrapDidascalia>> titoloParagrafi(LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafi, boolean usaLinkAttivita, String titoloParagrafoVuoto) {
+        LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafiTitolo = new LinkedHashMap<>();
+        String chiave = "";
+        List<String> listaChiavi;
+        List<WrapDidascalia> listaWrap;
+
+        if (usaLinkAttivita) {
+            for (String key : mappaParagrafi.keySet()) {
+                listaChiavi = new ArrayList();
+                for (WrapDidascalia wrap : mappaParagrafi.get(key)) {
+                    chiave = getTitoloParagrafo(wrap.bio);
+                    if (!listaChiavi.contains(chiave)) {
+                        listaChiavi.add(chiave);
+                    }// end of if cycle
+                }// end of for cycle
+
+                if (listaChiavi.size() == 1) {
+                    chiave = listaChiavi.get(0);
+                } else {
+                    chiave = key;
+                }// end of if/else cycle
+
+                chiave = text.isValid(chiave) ? chiave : titoloParagrafoVuoto;
+                mappaParagrafiTitolo.put(chiave, mappaParagrafi.get(key));
+            }// end of for cycle
+        } else {
+            for (String key : mappaParagrafi.keySet()) {
+                if (text.isValid(key)) {
+                    mappaParagrafiTitolo.put(key,mappaParagrafi.get(key));
+                } else {
+                    mappaParagrafiTitolo.put(titoloParagrafoVuoto,mappaParagrafi.get(key));
+                }// end of if/else cycle
+            }// end of for cycle
+        }// end of if/else cycle
+
+        return mappaParagrafiTitolo;
+    }// fine del metodo
+
+
+    /**
+     * Creazione della mappa interna 'mappaChiaveDue' <br>
+     */
+    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> creaMappaInterna(LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafi, boolean usaOrdineAlfabetico) {
+        LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale = new LinkedHashMap<>();
+        LinkedHashMap<String, List<String>> mappaChiaveDue;
+
         for (String key : mappaParagrafi.keySet()) {
             mappaChiaveDue = creaMappaInterna(mappaParagrafi.get(key));
+            //--ordinamento alfabetico della mappa interna 'mappaChiaveDue'
             if (usaOrdineAlfabetico) {
                 mappaChiaveDue = ordinaMappaAlfabetica(mappaChiaveDue);
             }// end of if cycle
             mappaGenerale.put(key, mappaChiaveDue);
         }// end of for cycle
+
+        return mappaGenerale;
+    }// fine del metodo
+
+
+    /**
+     * Spostamento (eventuale, dipende dal flag) in fondo del paragrafo senza titolo <br>
+     */
+    public void spostaInFondo(HashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale, boolean paragrafoVuotoInCoda, String titoloParagrafoVuoto) {
+        LinkedHashMap<String, List<String>> mappaChiaveDue;
 
         if (paragrafoVuotoInCoda) {
             if (mappaGenerale.containsKey(titoloParagrafoVuoto)) {
@@ -350,13 +434,11 @@ public class ListaService extends ABioService {
                 mappaGenerale.put(titoloParagrafoVuoto, mappaChiaveDue);
             }// end of if cycle
         }// end of if cycle
-
-        return mappaGenerale;
     }// fine del metodo
 
 
     /**
-     * Coistuisce una mappa basata sulla 'chiaveDue' <br>
+     * Costruisce una mappa basata sulla 'chiaveDue' <br>
      * Ordina il contenuto (per cognome) <br>
      * Estrae il testo della discalia <br>
      */
@@ -672,8 +754,14 @@ public class ListaService extends ABioService {
         String paginaWiki = VUOTA;
         String linkVisibile = VUOTA;
 
-        paginaWiki = getProfessioneDaAttivitaSingolare(bio.getAttivita().singolare);
-        linkVisibile = getGenereDaAttivitaSingolare(bio.getAttivita().singolare, bio.getSesso());
+        if (bio == null) {
+            return VUOTA;
+        }// end of if cycle
+
+        if (bio.getAttivita() != null) {
+            paginaWiki = getProfessioneDaAttivitaSingolare(bio.getAttivita().singolare);
+            linkVisibile = getGenereDaAttivitaSingolare(bio.getAttivita().singolare, bio.getSesso());
+        }// end of if cycle
 
         if (text.isValid(paginaWiki) && text.isValid(linkVisibile)) {
             titoloParagrafo = costruisceTitolo(paginaWiki, linkVisibile, "");
@@ -712,7 +800,7 @@ public class ListaService extends ABioService {
             paginaWiki = text.primaMaiuscola(professione.getPagina());
         }// end of if cycle
 
-        if (text.isValid(paginaWiki) ) {
+        if (text.isValid(paginaWiki)) {
             titoloParagrafo = costruisceTitolo(paginaWiki, text.primaMaiuscola(linkVisibile), "");
         }// end of if cycle
 
