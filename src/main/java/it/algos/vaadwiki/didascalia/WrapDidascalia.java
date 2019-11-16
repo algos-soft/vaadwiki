@@ -4,8 +4,10 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.service.ATextService;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.genere.GenereService;
+import it.algos.vaadwiki.modules.professione.Professione;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
@@ -46,18 +48,26 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
     /**
      * Chiave principale <br>
      * Di solito il paragrafo (che potrebbe anche non esserci) <br>
+     * Di solito l'attività plurale maschile o femminile (che potrebbe anche non esserci) <br>
      */
     public String chiaveUno;
 
     /**
      * Ulteriore chiave per la lista di discalie per ogni chiave <br>
+     * Di solito la prima lettera del cognome o del nome <br>
      */
     public String chiaveDue;
 
     /**
      * Composta dal cognome concatenato al titolo della pagina wikipedia (per essere sicuri che qualcosa esisista) <br>
+     * Di solito il cognome <br>
      */
     public String chiaveTre;
+
+    /**
+     * La pagina della professione linkata dal titolo del paragrafo (se esiste) <br>
+     */
+    public String chiaveQuattro;
 
 
     /**
@@ -221,6 +231,7 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
                 chiaveTre = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 chiaveDue = text.isValid(chiaveTre) ? chiaveTre.substring(0, 1).toUpperCase() : "";
                 chiave = chiaveUno.toLowerCase();
+                chiaveQuattro = getGenere(bio);
                 break;
             case listaCognomi:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
@@ -230,6 +241,7 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
                 chiaveTre = text.isValid(bio.getNome()) ? bio.getNome() : bio.getWikiTitle();
                 chiaveDue = text.isValid(chiaveTre) ? chiaveTre.substring(0, 1).toUpperCase() : "";
                 chiave = chiaveUno.toLowerCase();
+                chiaveQuattro = getGenere(bio);
                 break;
             case biografie:
                 didascalia = didascaliaService.getDidascaliaBiografie(bio);
@@ -279,6 +291,31 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
 
         chiaveUno = text.primaMaiuscola(attivitaPlurale); //@todo PROVVISORIO  PROVA
         return chiaveUno;
+    }// end of method
+
+
+    /**
+     * La pagina della professione linkata dal titolo del paragrafo (se esiste) <br>
+     */
+    public String getGenere(Bio bio) {
+        String chiaveQuattro = "";
+        Attivita attivita = bio.getAttivita();
+        String attivitaSingolare = "";
+        Professione professione = null;
+
+        if (attivita != null) {
+            attivitaSingolare = attivita.singolare;
+        }// end of if cycle
+
+        if (text.isValid(attivitaSingolare)) {
+            professione = professioneService.findByKeyUnica(attivitaSingolare);
+        }// end of if cycle
+
+        if (professione != null) {
+            chiaveQuattro = professione.pagina;
+        }// end of if cycle
+
+        return chiaveQuattro;
     }// end of method
 
 
