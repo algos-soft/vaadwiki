@@ -1,14 +1,16 @@
 package it.algos.vaadwiki.modules.attivita;
 
-import java.util.List;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+
+import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.TAG_ATT;
 
@@ -33,13 +35,18 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_ATT;
 @AIScript(sovrascrivibile = false)
 public interface AttivitaRepository extends MongoRepository<Attivita, String> {
 
-	public Attivita findBySingolare(String singolare);
+    public Attivita findBySingolare(String singolare);
 
-	public List<Attivita> findAllByOrderBySingolareAsc();
+    public List<Attivita> findAllByOrderBySingolareAsc();
 
-	public List<Attivita> findAllByOrderByPluraleAsc();
+    public List<Attivita> findAllByOrderByPluraleAsc();
 
-	@Query("{ state : 'ACTIVE' }")
-	public List<Attivita> findPage(Pageable pageable);
+    public List<Attivita> findAllByPlurale(String plurale);
+
+    @Query("{ state : 'ACTIVE' }")
+    public List<Attivita> findPage(Pageable pageable);
+
+    @Query("{ distinct : 'plurale'}")
+    JSONArray listDistinctPlurali();
 
 }// end of class

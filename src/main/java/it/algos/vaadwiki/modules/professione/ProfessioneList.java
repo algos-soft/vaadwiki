@@ -86,8 +86,8 @@ public class ProfessioneList extends AttNazProfCatList {
         super.fixPreferenze();
 
         super.titoloModulo = serviceWiki.titoloModuloProfessione;
-        super.usaBottoneUpload = false;
-        super.usaBottoneStatistiche = false;
+        this.usaBottoneViewStatistiche = false;
+        this.usaBottoneUploadStatistiche = false;
         super.usaPagination = true;
         super.task = taskProfessione;
         super.codeFlagDownload = USA_DAEMON_PROFESSIONE;

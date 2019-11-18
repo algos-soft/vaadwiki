@@ -2,8 +2,8 @@ package it.algos.vaadwiki.enumeration;
 
 
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.enumeration.EAPrefType;
 import it.algos.vaadflow.enumeration.EAPreferenza;
-import it.algos.vaadflow.modules.preferenza.EAPrefType;
 import it.algos.vaadflow.modules.preferenza.IAPreferenza;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadwiki.application.WikiCost;
@@ -37,6 +37,8 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     lastDownloadGenere(LAST_DOWNLOAD_GENERE, "Ultimo download del modulo genere (plurali)", EAPrefType.date, null),
     lastDownloadCategoria(LAST_DOWNLOAD_CATEGORIA, "Ultimo controllo di tutte le pagine esistenti nella categoria BioBot", EAPrefType.date, null),
     lastDownloadBio(LAST_UPDATE_BIO, "Ultimo update delle pagine della categoria BioBot", EAPrefType.date, null),
+    lastUploadAttivita(LAST_UPLOAD_STATISTICHE_ATTIVITA, "Ultimo upload delle pagine di statistiche delle attività", EAPrefType.date, null),
+    lastUploadNazionalita(LAST_UPLOAD_STATISTICHE_NAZIONALITA, "Ultimo upload delle pagine di statistiche delle nazionalità", EAPrefType.date, null),
 
     durataDownloadAttivita(DURATA_DOWNLOAD_ATTIVITA, "Durata in secondi dell'ultimo download del modulo attività", EAPrefType.integer, 0),
     durataDownloadNazionalita(DURATA_DOWNLOAD_NAZIONALITA, "Durata in secondi dell'ultimo download del modulo nazionalità", EAPrefType.integer, 0),
@@ -44,6 +46,8 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     durataDownloadCategoria(DURATA_DOWNLOAD_CATEGORIA, "Durata in secondi dell'ultimo download delle pagine della categoria BioBot", EAPrefType.integer, 0),
     durataDownloadGenere(DURATA_DOWNLOAD_GENERE, "Durata in secondi dell'ultimo download del modulo genere (plurali)", EAPrefType.integer, 0),
     durataDownloadBio(DURATA_DOWNLOAD_BIO, "Durata in minuti dell'ultimo update delle pagine della categoria BioBot", EAPrefType.integer, 0),
+    durataUploadStatisticheAttivita(DURATA_UPLOAD_STATISTICHE_ATTIVITA, "Durata in minuti dell'ultimo upload delle pagine di statistiche delle attività", EAPrefType.integer, 0L),
+    durataUploadStatisticheNazionalita(DURATA_UPLOAD_STATISTICHE_NAZIONALITA, "Durata in minuti dell'ultimo upload delle pagine di statistiche delle nazionalità", EAPrefType.integer, 0L),
 
     categoriaAttiva(CAT_BIO, "Categoria attiva", EAPrefType.string, "BioBot"),
     wikiPageLimit(WIKI_PAGE_LIMIT, "Numero di pagine wiki da controllare nel blocco", EAPrefType.integer, 250),

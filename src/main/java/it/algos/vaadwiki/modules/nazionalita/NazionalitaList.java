@@ -92,6 +92,7 @@ public class NazionalitaList extends AttNazProfCatList {
         super.codeFlagDownload = USA_DAEMON_NAZIONALITA;
         super.codeLastDownload = LAST_DOWNLOAD_NAZIONALITA;
         super.durataLastDownload = DURATA_DOWNLOAD_NAZIONALITA;
+        super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_NAZIONALITA;
     }// end of method
 
     /**

@@ -99,7 +99,11 @@ public class WikiCost {
 
     public final static String CODE_UPLOAD = "lastUpload";
 
+    public final static String CODE_STATISTICHE = CODE_UPLOAD + "Statistiche";
+
     public final static String DURATA = "durataDownload";
+
+    public final static String DURATA_UPLOAD = "durataUpload";
 
     public final static String PATH_PROGETTO = "Progetto:Biografie/";
 
@@ -157,6 +161,10 @@ public class WikiCost {
 
     public final static String LAST_UPLOAD_ANNI = CODE_UPLOAD + ANNI;
 
+    public final static String LAST_UPLOAD_STATISTICHE_ATTIVITA = CODE_STATISTICHE + ATT;
+
+    public final static String LAST_UPLOAD_STATISTICHE_NAZIONALITA = CODE_STATISTICHE + NAZ;
+
     //--tempo impiegato per l'ultimo download, in secondi
     public final static String DURATA_DOWNLOAD_ATTIVITA = DURATA + ATT;
 
@@ -173,6 +181,10 @@ public class WikiCost {
     public final static String DURATA_UPLOAD_GIORNI = DURATA + GIORNI;
 
     public final static String DURATA_UPLOAD_ANNI = DURATA + ANNI;
+
+    public final static String DURATA_UPLOAD_STATISTICHE_ATTIVITA = DURATA_UPLOAD + ATT;
+
+    public final static String DURATA_UPLOAD_STATISTICHE_NAZIONALITA = DURATA_UPLOAD + NAZ;
 
     //--path di varie pagine wiki
     public final static String PATH_WIKI = "https://it.wikipedia.org/wiki/";

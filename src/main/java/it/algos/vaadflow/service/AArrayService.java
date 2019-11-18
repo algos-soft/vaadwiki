@@ -67,7 +67,7 @@ public class AArrayService extends AbstractService {
      *
      * @return lista ordinata, null se listaDisordinata è null
      */
-    public ArrayList sort(ArrayList listaDisordinata) {
+    public ArrayList sort(List listaDisordinata) {
         ArrayList<Object> objList;
         Object[] objArray = listaDisordinata.toArray();
 

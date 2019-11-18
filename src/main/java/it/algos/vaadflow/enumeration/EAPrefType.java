@@ -1,9 +1,9 @@
-package it.algos.vaadflow.modules.preferenza;
+package it.algos.vaadflow.enumeration;
 
 
 import com.google.common.primitives.Longs;
-import it.algos.vaadflow.enumeration.EAFieldType;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -13,7 +13,6 @@ import java.time.ZoneOffset;
  * Enum dei tipi di preferenza supportati
  */
 public enum EAPrefType {
-
     string("string", EAFieldType.text) {
         @Override
         public byte[] objectToBytes(Object obj) {
@@ -103,6 +102,27 @@ public enum EAPrefType {
         @Override
         public Object bytesToObject(byte[] bytes) {
             return byteArrayToInt(bytes);
+        }// end of method
+    },// end of single enumeration
+
+    lungo("long", EAFieldType.lungo) {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof Long) {
+                long num = (Long) obj;
+                bytes = longToByteArray(num);
+            }// end of if cycle
+            if (obj instanceof String) {
+                bytes = longToByteArray(new Long((String) obj));
+            }// end of if cycle
+
+            return bytes;
+        }// end of method
+
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            return byteArrayToLong(bytes);
         }// end of method
     },// end of single enumeration
 
@@ -226,6 +246,7 @@ public enum EAPrefType {
 
 //    bytes("blog", EAFieldType.json);
 
+//    private static ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
     private String nome;
     private EAFieldType fieldType;
 
@@ -247,25 +268,39 @@ public enum EAPrefType {
         return valori;
     }// end of static method
 
-    public static byte[] intToByteArray(int a) {
+    public static byte[] intToByteArray(int x) {
         return new byte[]{
-                (byte) ((a >> 24) & 0xFF),
-                (byte) ((a >> 16) & 0xFF),
-                (byte) ((a >> 8) & 0xFF),
-                (byte) (a & 0xFF)
+                (byte) ((x >> 24) & 0xFF),
+                (byte) ((x >> 16) & 0xFF),
+                (byte) ((x >> 8) & 0xFF),
+                (byte) (x & 0xFF)
         };
     }// end of static method
 
-    public static int byteArrayToInt(byte[] b) {
+    public static int byteArrayToInt(byte[] bytes) {
         int num = 0;
-        if ((b != null) && (b.length > 0)) {
-            num = b[3] & 0xFF |
-                    (b[2] & 0xFF) << 8 |
-                    (b[1] & 0xFF) << 16 |
-                    (b[0] & 0xFF) << 24;
+        if ((bytes != null) && (bytes.length > 0)) {
+            num = bytes[3] & 0xFF |
+                    (bytes[2] & 0xFF) << 8 |
+                    (bytes[1] & 0xFF) << 16 |
+                    (bytes[0] & 0xFF) << 24;
         }
         return num;
     }// end of static method
+
+    public static byte[] longToByteArray(long x) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(0, x);
+        return buffer.array();
+    }// end of static method
+
+    public static long byteArrayToLong(byte[] bytes) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.put(bytes, 0, bytes.length);
+        buffer.flip();
+        return buffer.getLong();
+    }// end of static method
+
 
     /**
      * Converte un valore Object in ByteArray per questa preferenza.

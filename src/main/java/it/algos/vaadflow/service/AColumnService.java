@@ -8,7 +8,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAFieldType;
-import it.algos.vaadflow.modules.preferenza.EAPrefType;
+import it.algos.vaadflow.enumeration.EAPrefType;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.ui.fields.ACheckBox;
 import lombok.extern.slf4j.Slf4j;
@@ -510,11 +510,6 @@ public class AColumnService extends AbstractService {
                     Object serviceInstance = null;
                     String value = "";
 
-                    if (appContext == null) {
-                        log.error("Manca il valore di appContext");
-                        return label;
-                    }// end of if cycle
-
                     if (text.isEmpty(methodName)) {
                         log.error("Colonna calcolata '" + propertyName + "' - manca il methodName = ... nell'annotation @AIColumn della Entity " + entity.getClass().getSimpleName());
                         return label;
@@ -523,7 +518,7 @@ public class AColumnService extends AbstractService {
                     try { // prova ad eseguire il codice
                         //--il metodo DEVE avere un solo parametro e di tipo AEntity
                         metodo = serviceClazz.getDeclaredMethod(methodName, AEntity.class);
-                        serviceInstance = appContext.getBean(serviceClazz);
+                        serviceInstance = StaticContextAccessor.getBean(serviceClazz);
                         value = (String) metodo.invoke(serviceInstance, entity);
                         label.setText(value);
                     } catch (Exception unErrore) { // intercetta l'errore

@@ -3,7 +3,8 @@ package it.algos.vaadflow.modules.log;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
-import it.algos.vaadflow.modules.logtype.EALogType;
+import it.algos.vaadflow.enumeration.EALogLivello;
+import it.algos.vaadflow.enumeration.EALogType;
 import it.algos.vaadflow.modules.logtype.Logtype;
 import it.algos.vaadflow.modules.logtype.LogtypeService;
 import it.algos.vaadflow.service.AService;
@@ -109,7 +110,7 @@ public class LogService extends AService {
      *
      * @return la entity appena creata
      */
-    public Log crea(Livello livello, EALogType logType, String descrizione) {
+    public Log crea(EALogLivello livello, EALogType logType, String descrizione) {
         return crea(livello, logtype.findByKeyUnica(logType.getTag()), descrizione);
     }// end of method
 
@@ -123,7 +124,7 @@ public class LogService extends AService {
      *
      * @return la entity appena creata
      */
-    public Log crea(Livello livello, Logtype type, String descrizione) {
+    public Log crea(EALogLivello livello, Logtype type, String descrizione) {
         Log entity = newEntity(livello, type, descrizione);
         save(entity);
         return entity;
@@ -138,7 +139,7 @@ public class LogService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Log newEntity() {
-        return newEntity((Livello) null, (Logtype) null, "");
+        return newEntity((EALogLivello) null, (Logtype) null, "");
     }// end of method
 
 
@@ -152,7 +153,7 @@ public class LogService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Log newEntity(String descrizione) {
-        return newEntity((Livello) null, (Logtype) null, descrizione);
+        return newEntity((EALogLivello) null, (Logtype) null, descrizione);
     }// end of method
 
 
@@ -167,9 +168,9 @@ public class LogService extends AService {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Log newEntity(Livello livello, Logtype type, String descrizione) {
+    public Log newEntity(EALogLivello livello, Logtype type, String descrizione) {
         return Log.builderLog()
-                .livello(livello != null ? livello : Livello.info)
+                .livello(livello != null ? livello : EALogLivello.info)
                 .type(type != null ? type : logtype.getEdit())
                 .descrizione(text.isValid(descrizione) ? descrizione : null)
                 .evento(LocalDateTime.now())
@@ -243,7 +244,7 @@ public class LogService extends AService {
     }// end of method
 
 
-    public ArrayList<Log> findAllByLivello(Livello livello) {
+    public ArrayList<Log> findAllByLivello(EALogLivello livello) {
         ArrayList<Log> items = null;
         Query query = new Query();
         Sort sort = new Sort(Sort.Direction.DESC, SORT_FIELD);
@@ -253,16 +254,16 @@ public class LogService extends AService {
         if (livello != null) {
             switch (livello) {
                 case debug:
-                    query.addCriteria(Criteria.where(livelloField).is(Livello.debug));
+                    query.addCriteria(Criteria.where(livelloField).is(EALogLivello.debug));
                     break;
                 case info:
-                    query.addCriteria(Criteria.where(livelloField).is(Livello.info));
+                    query.addCriteria(Criteria.where(livelloField).is(EALogLivello.info));
                     break;
                 case warn:
-                    query.addCriteria(Criteria.where(livelloField).is(Livello.warn));
+                    query.addCriteria(Criteria.where(livelloField).is(EALogLivello.warn));
                     break;
                 case error:
-                    query.addCriteria(Criteria.where(livelloField).is(Livello.error));
+                    query.addCriteria(Criteria.where(livelloField).is(EALogLivello.error));
                     break;
                 default:
                     log.warn("Switch - caso non definito");
@@ -276,35 +277,35 @@ public class LogService extends AService {
 
     //--registra un avviso
     public void debug(String descrizione) {
-        crea(Livello.debug, EALogType.debug, descrizione);
+        crea(EALogLivello.debug, EALogType.debug, descrizione);
         log.debug(descrizione);
     }// fine del metodo
 
 
     //--registra un avviso
     public void info(String descrizione) {
-        crea(Livello.info, EALogType.info, descrizione);
+        crea(EALogLivello.info, EALogType.info, descrizione);
         log.info(descrizione);
     }// fine del metodo
 
 
     //--registra un avviso
     public void warning(String descrizione) {
-        crea(Livello.warn, EALogType.warn, descrizione);
+        crea(EALogLivello.warn, EALogType.warn, descrizione);
         log.warn(descrizione);
     }// fine del metodo
 
 
     //--registra un avviso
     public void error(String descrizione) {
-        crea(Livello.error, EALogType.error, descrizione);
+        crea(EALogLivello.error, EALogType.error, descrizione);
         log.error(descrizione);
     }// fine del metodo
 
 
     //--registra un avviso
     public void importo(String descrizione) {
-        crea(Livello.debug, logtype.getImport(), descrizione);
+        crea(EALogLivello.debug, logtype.getImport(), descrizione);
     }// fine del metodo
 
 

@@ -8,11 +8,13 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.shared.ui.LoadMode;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.footer.AFooter;
+import it.algos.vaadflow.modules.company.Company;
 import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.IAView;
@@ -236,6 +238,11 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
         if (gridPlaceholder.getComponentCount() > 0) {
             this.add(gridPlaceholder);
         }// end of if cycle
+        //--aggiunge al layout una (eventuale) legenda-componente di bottoni in basso sotto la grid
+        this.creaGridBottomLayout();
+        if (usaBottomLayout && bottomPlacehorder.getComponentCount() > 0) {
+            this.add(bottomPlacehorder);
+        }// end of if cycle
 
         //--aggiunge il footer standard
         this.add(appContext.getBean(AFooter.class));
@@ -344,6 +351,14 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
         return null;
     }// end of method
 
+    /**
+     * Costruisce un (eventuale) layout con bottoni aggiuntivi <br>
+     * Facoltativo (assente di default) <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void creaGridBottomLayout() {
+    }// end of method
 
     /**
      * Navigazione verso un altra pagina
@@ -442,6 +457,52 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
      * Invocare PRIMA il metodo della superclasse <br>
      */
     protected void addListeners() {
+    }// end of method
+
+
+    /**
+     * Sincronizza i filtri. <br>
+     * Chiamato dal listener di 'clearFilterButton' <br>
+     * <p>
+     * Può essere sovrascritto, per modificare la gestione dei filtri <br>
+     */
+    protected void actionSincroSearch() {
+        updateFiltri();
+        updateGrid();
+        if (clearFilterButton != null) {
+            clearFilterButton.setEnabled(false);
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Sincronizza la company in uso. <br>
+     * Chiamato dal listener di 'filtroCompany' <br>
+     * <p>
+     * Può essere sovrascritto, per modificare la gestione delle company <br>
+     */
+    protected void actionSincroCompany() {
+        Company companySelezionata = null;
+
+        if (filtroCompany != null) {
+            companySelezionata = (Company) filtroCompany.getValue();
+        }// end of if cycle
+        login.setCompany(companySelezionata);
+
+        updateFiltri();
+        updateGrid();
+    }// end of method
+
+
+    /**
+     * Sincronizza i filtri. <br>
+     * Chiamato dal listener di 'clearFilterButton' <br>
+     * <p>
+     * Può essere sovrascritto, per modificare la gestione dei filtri <br>
+     */
+    public void actionSincroCombo() {
+        updateFiltri();
+        updateGrid();
     }// end of method
 
 

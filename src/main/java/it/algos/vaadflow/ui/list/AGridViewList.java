@@ -14,16 +14,10 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAFieldType;
 import it.algos.vaadflow.enumeration.EASearch;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadwiki.modules.nome.Nome;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.Document;
-import org.eclipse.persistence.internal.jpa.querydef.CriteriaBuilderImpl;
-import org.eclipse.persistence.internal.jpa.querydef.CriteriaQueryImpl;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,6 +126,8 @@ public abstract class AGridViewList extends ALayoutViewList {
             }// end of inner method
         });//end of lambda expressions and anonymous inner class
 
+        creaGridBottomLayout();
+
         return grid;
     }// end of method
 
@@ -204,10 +200,6 @@ public abstract class AGridViewList extends ALayoutViewList {
     protected void creaGridBottomLayout() {
         bottomPlacehorder = new HorizontalLayout();
         bottomPlacehorder.addClassName("view-toolbar");
-
-        if (usaBottomLayout) {
-            this.add(bottomPlacehorder);
-        }// end of if cycle
     }// end of method
 
 

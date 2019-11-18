@@ -1,6 +1,5 @@
 package it.algos.vaadwiki.modules.attivita;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
@@ -11,6 +10,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -158,6 +159,38 @@ public class AttivitaService extends AttNazProfCatService {
 
 
     /**
+     * Returns all entities of the type <br>
+     * <p>
+     * Se esiste la property 'ordine', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'code', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'descrizione', ordinate secondo questa property <br>
+     * Altrimenti, ordinate secondo il metodo sovrascritto nella sottoclasse concreta <br>
+     * Altrimenti, ordinate in ordine di inserimento nel DB mongo <br>
+     *
+     * @return all ordered entities
+     */
+    @Override
+    public List<Attivita> findAll() {
+        return (List<Attivita>) super.findAll();
+    }// end of method
+
+
+    public List<String> findAllPlurali() {
+        List<String> listaAttivitaPlurali = null;
+
+        listaAttivitaPlurali = mongo.mongoOp.findDistinct("plurale", Attivita.class, String.class);
+        listaAttivitaPlurali = array.sort(listaAttivitaPlurali);
+
+        return listaAttivitaPlurali;
+    }// end of method
+
+
+    public List<Attivita> findAllByPlurale(String plurale) {
+        return repository.findAllByPlurale(plurale);
+    }// end of method
+
+
+    /**
      * Controlla l'esistenza di una Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
@@ -176,7 +209,6 @@ public class AttivitaService extends AttNazProfCatService {
     public String getPropertyUnica(AEntity entityBean) {
         return ((Attivita) entityBean).getSingolare();
     }// end of method
-
 
 
 }// end of class

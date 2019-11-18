@@ -80,10 +80,10 @@ public class DoppinomiList extends AttNazProfCatList {
         super.fixPreferenze();
 
         super.isEntityModificabile = false;
-        super.usaBottoneUpload = false;
         super.usaBottoneCategoria = false;
         super.usaBottoneDeleteMongo = false;
-        super.usaBottoneStatistiche = false;
+        super.usaBottoneViewStatistiche = false;
+        super.usaBottoneUploadStatistiche = false;
 
         super.titoloModulo = serviceWiki.titoloModuloDoppiNomi;
         super.codeLastDownload = LAST_DOWNLOAD_DOPPI_NOMI;

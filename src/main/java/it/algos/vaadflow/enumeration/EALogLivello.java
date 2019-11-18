@@ -1,8 +1,8 @@
-package it.algos.vaadflow.modules.log;
+package it.algos.vaadflow.enumeration;
 
 /**
  * Created by gac on 22 ago 2015.
  */
-public enum Livello {
+public enum EALogLivello {
     debug, info, warn, error
 } // fine della Enumeration

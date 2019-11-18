@@ -12,9 +12,7 @@ import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.list.AGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDateTime;
 
@@ -58,7 +56,9 @@ public abstract class AttNazProfCatList extends AGridViewList {
 
     protected String durataLastDownload;
 
-    protected boolean usaBottoneUpload;
+    protected String codeLastUploadStatistiche;
+
+    protected String durataLastUploadStatistiche;
 
     protected boolean usaBottoneCategoria;
 
@@ -68,7 +68,9 @@ public abstract class AttNazProfCatList extends AGridViewList {
 
     protected boolean usaBottoneModulo;
 
-    protected boolean usaBottoneStatistiche;
+    protected boolean usaBottoneViewStatistiche;
+
+    protected boolean usaBottoneUploadStatistiche;
 
     //    @Autowired
 //    @Qualifier(TAG_ATT)
@@ -104,17 +106,34 @@ public abstract class AttNazProfCatList extends AGridViewList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        this.usaBottoneUpload = true;
         this.usaBottoneCategoria = false;
         this.usaBottoneDeleteMongo = true;
         this.usaBottoneDownload = true;
         this.usaBottoneModulo = true;
-        this.usaBottoneStatistiche = true;
+        this.usaBottoneViewStatistiche = true;
+        this.usaBottoneUploadStatistiche = true;
 
         super.usaBottoneNew = false;
         super.usaBottoneEdit = true;
         super.isEntityModificabile = false;
         super.usaBottoneDeleteAll = true;
+    }// end of method
+
+
+    /**
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+        alertPlacehorder.add(creaInfoImport(task, codeFlagDownload, codeLastDownload));
+
+        if (text.isValid(codeLastUploadStatistiche) && text.isValid(durataLastUploadStatistiche)) {
+            alertPlacehorder.add(creaInfoUpload(codeLastUploadStatistiche, durataLastUploadStatistiche));
+        }// end of if cycle
     }// end of method
 
 
@@ -151,14 +170,14 @@ public abstract class AttNazProfCatList extends AGridViewList {
             topPlaceholder.add(showModuloButton);
         }// end of if cycle
 
-        if (usaBottoneStatistiche) {
+        if (usaBottoneViewStatistiche) {
             showStatisticheButton = new Button("View statistiche", new Icon(VaadinIcon.TABLE));
             showStatisticheButton.addClassName("view-toolbar__button");
             showStatisticheButton.addClickListener(e -> showWikiStatistiche());
             topPlaceholder.add(showStatisticheButton);
         }// end of if cycle
 
-        if (usaBottoneUpload) {
+        if (usaBottoneUploadStatistiche) {
             uploadStatisticheButton = new Button("Upload statistiche", new Icon(VaadinIcon.UPLOAD));
             uploadStatisticheButton.getElement().setAttribute("theme", "error");
             uploadStatisticheButton.addClassName("view-toolbar__button");
@@ -223,19 +242,6 @@ public abstract class AttNazProfCatList extends AGridViewList {
 
 
     /**
-     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
-     * Normalmente ad uso esclusivo del developer
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
-     */
-    @Override
-    protected void creaAlertLayout() {
-        super.creaAlertLayout();
-        alertPlacehorder.add(creaInfoImport(task, codeFlagDownload, codeLastDownload));
-    }// end of method
-
-
-    /**
      * Eventuale caption sopra la grid
      */
     protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastDownload) {
@@ -268,13 +274,23 @@ public abstract class AttNazProfCatList extends AGridViewList {
     }// end of method
 
 
-//    @Override
-//    public Collection updateItems() {
-//        Collection items = null;
-//        String filtro = searchField.getValue();
-//        items = service.findFilter(filtro);
-//
-//        return items;
-//    }// end of method
+    /**
+     * Eventuale caption sopra la grid
+     */
+    protected Label creaInfoUpload(String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
+        Label label = null;
+        LocalDateTime lastDownload = pref.getDate(flagLastUploadStatistiche);
+        int durata = pref.getInt(flagDurataLastUploadStatistiche);
+        long durata2 = pref.getInt(flagDurataLastUploadStatistiche);
+
+        if (lastDownload != null) {
+            label = new Label("Ultimo upload delle statistiche effettuato il " + date.getTime(lastDownload) + " in " + date.toTextMinuti(durata));
+        } else {
+            label = new Label("Upload delle statistiche non ancora effettuato");
+        }// end of if/else cycle
+
+        return label;
+    }// end of method
+
 
 }// end of class

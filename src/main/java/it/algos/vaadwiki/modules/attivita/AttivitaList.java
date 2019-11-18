@@ -3,7 +3,6 @@ package it.algos.vaadwiki.modules.attivita;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
@@ -11,7 +10,6 @@ import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
-import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
 import it.algos.vaadwiki.schedule.TaskAttivita;
 import it.algos.vaadwiki.statistiche.StatisticheAttivita;
@@ -59,7 +57,6 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @AIScript(sovrascrivibile = false)
 @AIView(vaadflow = false, menuName = "attivita", menuIcon = VaadinIcon.BOAT, searchProperty = "singolare", roleTypeVisibility = EARoleType.developer)
 public class AttivitaList extends AttNazProfCatList {
-
 
 
     /**
@@ -118,8 +115,9 @@ public class AttivitaList extends AttNazProfCatList {
         super.codeFlagDownload = USA_DAEMON_ATTIVITA;
         super.codeLastDownload = LAST_DOWNLOAD_ATTIVITA;
         super.durataLastDownload = DURATA_DOWNLOAD_ATTIVITA;
+        super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_ATTIVITA;
+        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_ATTIVITA;
     }// end of method
-
 
 
     /**
@@ -142,6 +140,7 @@ public class AttivitaList extends AttNazProfCatList {
 
     protected void uploadStatistiche() {
         appContext.getBean(StatisticheAttivita.class);
+        super.updateGrid();
     }// end of method
 
 }// end of class

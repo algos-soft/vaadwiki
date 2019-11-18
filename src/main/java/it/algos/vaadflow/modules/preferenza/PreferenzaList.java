@@ -17,8 +17,12 @@ import it.algos.vaadflow.ui.list.AGridViewList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.security.access.annotation.Secured;
 import org.vaadin.klaudeta.PaginatedGrid;
+
+import java.util.ArrayList;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_PRE;
 
@@ -175,24 +179,23 @@ public class PreferenzaList extends AGridViewList {
 
 
     /**
-     * Crea un Popup di selezione della company <br>
-     * Creato solo se develeper=true e usaCompany=true <br>
-     * Può essere sovrascritto, per caricare gli items da una sottoclasse di Company <br>
+     * Crea la lista dei SOLI filtri necessari alla Grid per la prima visualizzazione della view <br>
+     * I filtri normali vanno in updateFiltri() <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse AGridViewList <br>
+     * Chiamato SOLO alla creazione della view. Successive modifiche ai filtri sono gestite in updateFiltri() <br>
+     * Può essere sovrascritto SOLO se ci sono dei filtri che devono essere attivi già alla partenza della Grid <br>
      * Invocare PRIMA il metodo della superclasse <br>
      */
-    protected void creaCompanyFiltroNo() {
-        super.creaCompanyFiltro();
+    @Override
+    protected void creaFiltri() {
+        filtri = new ArrayList<CriteriaDefinition>();
 
-        IAService serviceCompany = (IAService) appContext.getBean(FlowVar.companyServiceClazz);
-
-        if (filtroCompany != null) {
-            filtroCompany.setItems(serviceCompany.findAll());
-            filtroCompany.addValueChangeListener(e -> {
-                updateFiltri();
-                updateGrid();
-            });//end of lambda expressions
+        if (usaFiltroCompany && filtroCompany != null && filtroCompany.getValue() != null) {
+            if (filtroCompany.getValue() != null) {
+                filtri.add(Criteria.where("company").is(filtroCompany.getValue()));
+            }// end of if cycle
         }// end of if cycle
-
     }// end of method
 
 

@@ -235,7 +235,7 @@ public class MainLayout14 extends AppLayout {
         VerticalLayout menuLayout = new VerticalLayout();
         Map<String, ArrayList<Class<? extends IAView>>> mappa = menuService.creaMappa();
 
-        if (usaSecurity) {
+        if (usaSecurity && context != null) {
             //--crea menu dello sviluppatore (se loggato)
             if (context.isDev()) {
                 menuLayout.add(menuService.creaRoutersDeveloper(mappa));
@@ -268,7 +268,7 @@ public class MainLayout14 extends AppLayout {
         Tabs tabs = new Tabs();
         Map<String, ArrayList<Class<? extends IAView>>> mappa = menuService.creaMappa();
 
-        if (usaSecurity) {
+        if (usaSecurity && context != null) {
             //--crea menu dello sviluppatore (se loggato)
             if (context.isDev()) {
                 tabs = menuService.addTabsDeveloper(tabs, mappa);

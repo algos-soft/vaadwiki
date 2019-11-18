@@ -89,8 +89,8 @@ public class GenereList extends AttNazProfCatList {
         super.fixPreferenze();
 
         super.titoloModulo = serviceWiki.titoloModuloGenere;
-        super.usaBottoneStatistiche = false;
-        super.usaBottoneUpload = false;
+        this.usaBottoneViewStatistiche = false;
+        this.usaBottoneUploadStatistiche = false;
         super.task = taskGenere;
         super.usaPagination = true;
         super.codeFlagDownload = USA_DAEMON_GENERE;

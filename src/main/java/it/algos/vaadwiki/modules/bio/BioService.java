@@ -13,6 +13,7 @@ import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.download.ElaboraService;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.cognome.CognomeService;
@@ -541,6 +542,54 @@ public class BioService extends AttNazProfCatService {
         }// end of if cycle
 
         return lista;
+    }// end of method
+
+
+    /**
+     * Conta tutte le biografie delle persone con una certa attività (primaria) <br>
+     *
+     * @param attivita per il conteggio
+     *
+     * @return titale biografie che rispondono al requisito
+     */
+    public int countByAttivitaPrincipale(Attivita attivita) {
+        return repository.countAllByAttivita(attivita);
+    }// end of method
+
+
+    /**
+     * Conta tutte le biografie delle persone con una certa attività (secondaria) <br>
+     *
+     * @param attivita per il conteggio
+     *
+     * @return titale biografie che rispondono al requisito
+     */
+    public int countByAttivitaDue(Attivita attivita) {
+        return repository.countAllByAttivita2(attivita);
+    }// end of method
+
+
+    /**
+     * Conta tutte le biografie delle persone con una certa attività (terziaria) <br>
+     *
+     * @param attivita per il conteggio
+     *
+     * @return titale biografie che rispondono al requisito
+     */
+    public int countByAttivitaTre(Attivita attivita) {
+        return repository.countAllByAttivita3(attivita);
+    }// end of method
+
+
+    /**
+     * Conta tutte le biografie delle persone con una certa attività (qualsiasi) <br>
+     *
+     * @param attivita per il conteggio
+     *
+     * @return titale biografie che rispondono al requisito
+     */
+    public int countByAttivitaTotali(Attivita attivita) {
+        return repository.countByAttivitaOrAttivita2OrAttivita3(attivita, attivita, attivita);
     }// end of method
 
 

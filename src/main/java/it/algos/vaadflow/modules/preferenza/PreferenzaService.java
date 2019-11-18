@@ -4,6 +4,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.boot.ABoot;
+import it.algos.vaadflow.enumeration.EAPrefType;
 import it.algos.vaadflow.modules.company.Company;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.service.AService;
@@ -654,6 +655,38 @@ public class PreferenzaService extends AService {
 
         return valoreIntero;
     } // end of method
+
+
+
+
+    public long getLong(IAPreferenza eaPref) {
+        return getLong(eaPref.getCode(), (long) eaPref.getValue());
+    } // end of method
+
+
+    public long getLong(String keyCode) {
+        return getLong(keyCode, 0);
+    } // end of method
+
+
+    public long getLong(String keyCode, long defaultValue) {
+        long valoreLungo = defaultValue;
+        Object value = getValue(keyCode);
+
+        if (value != null) {
+            if (value instanceof Long) {
+                valoreLungo = (Long) value;
+            } else {
+                log.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
+            }// end of if/else cycle
+        } else {
+            log.warn("Algos - Preferenze. Non esiste la preferenza: " + keyCode);
+        }// end of if/else cycle
+
+        return valoreLungo;
+    } // end of method
+
+
 
 
     public String getEnumStr(IAPreferenza eaPref) {

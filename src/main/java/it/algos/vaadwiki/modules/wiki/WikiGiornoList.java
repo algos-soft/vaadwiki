@@ -87,20 +87,6 @@ public class WikiGiornoList extends WikiList {
 
 
     /**
-     * Crea effettivamente il Component Grid <br>
-     * <p>
-     * Può essere Grid oppure PaginatedGrid <br>
-     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
-     */
-    @Override
-    protected Grid creaGridComponent() {
-        return new PaginatedGrid<Giorno>();
-    }// end of method
-
-
-    /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
      * Invocare PRIMA il metodo della superclasse
@@ -114,6 +100,19 @@ public class WikiGiornoList extends WikiList {
         super.durataLastUpload = DURATA_UPLOAD_GIORNI;
     }// end of method
 
+
+    /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Giorno>();
+    }// end of method
 
 
     /**

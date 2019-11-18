@@ -9,6 +9,7 @@ import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.application.FlowVar;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EALogLivello;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
@@ -113,7 +114,7 @@ public class LogList extends AGridViewList {
         super.creaPopupFiltro();
 
         filtroComboBox.setPlaceholder("Livello ...");
-        filtroComboBox.setItems(Livello.values());
+        filtroComboBox.setItems(EALogLivello.values());
         filtroComboBox.addValueChangeListener(e -> {
             updateFiltri();
             updateGrid();
@@ -122,7 +123,7 @@ public class LogList extends AGridViewList {
 
 
     public void updateFiltri() {
-        Livello livello = (Livello) filtroComboBox.getValue();
+        EALogLivello livello = (EALogLivello) filtroComboBox.getValue();
         items = ((LogService) service).findAllByLivello(livello);
     }// end of method
 

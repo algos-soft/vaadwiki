@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EAPrefType;
 import it.algos.vaadflow.modules.company.CompanyService;
 import it.algos.vaadflow.service.AEnumerationService;
 import it.algos.vaadflow.service.IAService;
