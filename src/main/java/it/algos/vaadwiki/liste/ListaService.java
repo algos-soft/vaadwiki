@@ -281,8 +281,8 @@ public class ListaService extends ABioService {
      *
      * @return mappa complessa
      */
-    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> creaMappa(List<WrapDidascalia> listaDidascalie) {
-        return creaMappa(listaDidascalie, "", false, false, false);
+    public LinkedHashMap<String, LinkedHashMap<String, List<String>>> creaMappa(List<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia) {
+        return creaMappa(listaDidascalie, "", false, false, false, typeDidascalia);
     }// fine del metodo
 
 
@@ -308,7 +308,8 @@ public class ListaService extends ABioService {
             String titoloParagrafoVuoto,
             boolean paragrafoVuotoInCoda,
             boolean usaLinkAttivita,
-            boolean usaOrdineAlfabetico) {
+            boolean usaOrdineAlfabetico,
+            EADidascalia typeDidascalia) {
         LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaGenerale;
         LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafi;
 
@@ -316,7 +317,7 @@ public class ListaService extends ABioService {
         mappaParagrafi = creaParagrafi(listaDidascalie);
 
         //--ordinamento alfabetico dei paragrafi
-        mappaParagrafi = array.sort(mappaParagrafi);
+        mappaParagrafi = ordinaParagrafi(mappaParagrafi, typeDidascalia);
 
         //--costruzione del titolo definitivo dei paragrafi
         mappaParagrafi = titoloParagrafi(mappaParagrafi, usaLinkAttivita, titoloParagrafoVuoto);
@@ -328,6 +329,32 @@ public class ListaService extends ABioService {
         this.spostaInFondo(mappaGenerale, paragrafoVuotoInCoda, titoloParagrafoVuoto);
 
         return mappaGenerale;
+    }// fine del metodo
+
+
+    /**
+     * Ordinamento alfabetico dei paragrafi <br>
+     */
+    public LinkedHashMap<String, List<WrapDidascalia>> ordinaParagrafi(LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafi, EADidascalia typeDidascalia) {
+        LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafiOrdinata = mappaParagrafi;
+
+        switch (typeDidascalia) {
+            case giornoNato:
+            case giornoMorto:
+                break;
+            case annoNato:
+            case annoMorto:
+                break;
+            case listaNomi:
+                break;
+            case listaCognomi:
+                break;
+            default:
+                log.warn("Switch - caso non definito");
+                break;
+        } // end of switch statement
+
+        return mappaParagrafiOrdinata;
     }// fine del metodo
 
 
@@ -390,9 +417,9 @@ public class ListaService extends ABioService {
         } else {
             for (String key : mappaParagrafi.keySet()) {
                 if (text.isValid(key)) {
-                    mappaParagrafiTitolo.put(key,mappaParagrafi.get(key));
+                    mappaParagrafiTitolo.put(key, mappaParagrafi.get(key));
                 } else {
-                    mappaParagrafiTitolo.put(titoloParagrafoVuoto,mappaParagrafi.get(key));
+                    mappaParagrafiTitolo.put(titoloParagrafoVuoto, mappaParagrafi.get(key));
                 }// end of if/else cycle
             }// end of for cycle
         }// end of if/else cycle

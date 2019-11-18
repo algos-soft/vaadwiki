@@ -182,7 +182,7 @@ public class ListeIntegrationTest extends ATest {
         ArrayList<WrapDidascalia> listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.listaNomi);
 
         inizio = System.currentTimeMillis();
-        mappa = listaService.creaMappa(listaDidascalie);
+        mappa = listaService.creaMappa(listaDidascalie,null);
         System.out.println("Mappa complessa tempo impiegato: " + dateService.deltaText(inizio));
     }// end of single test
 

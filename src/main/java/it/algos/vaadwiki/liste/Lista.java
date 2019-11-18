@@ -176,7 +176,7 @@ public abstract class Lista {
     protected void inizia() {
         this.fixPreferenze();
         this.creaDidascalie();
-        this.creaMappa(listaDidascalie);
+        this.creaMappa(listaDidascalie, typeDidascalia);
     }// end of method
 
 
@@ -229,8 +229,8 @@ public abstract class Lista {
      *
      * @param listaDidascalie da raggruppare
      */
-    protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie) {
-        mappa = listaService.creaMappa(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkAttivita, usaOrdineAlfabetico);
+    protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie,EADidascalia typeDidascalia) {
+        mappa = listaService.creaMappa(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkAttivita, usaOrdineAlfabetico, typeDidascalia);
     }// fine del metodo
 
 
