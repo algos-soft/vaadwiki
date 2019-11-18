@@ -2,7 +2,9 @@ package it.algos.vaadwiki.statistiche;
 
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
+import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ADateService;
+import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nome.NomeService;
@@ -99,16 +101,47 @@ public abstract class Statistiche {
     protected NomeService nomeService;
 
     /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
     protected BioService bioService;
+
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected AArrayService array;
+
+    @Autowired
+    protected AMongoService mongo;
 
     //--property
     protected String testoPagina;
 
     protected String templateCorrelate;
+
+    /**
+     * Costruisce la pagina <br>
+     * Registra la pagina sul server wiki <br>
+     */
+    protected void inizia() {
+        creaLista();
+        elaboraPagina();
+        registraPagina();
+    }// end of method
+
+    /**
+     * Costruisce la pagina <br>
+     * Registra la pagina sul server wiki <br>
+     */
+    protected void creaLista() {
+    }// end of method
 
 
     /**
@@ -121,7 +154,7 @@ public abstract class Statistiche {
      * Gli spazi (righe) di separazione vanno aggiunti qui <br>
      * Registra la pagina <br>
      */
-    protected void inizia() {
+    protected void elaboraPagina() {
         testoPagina = VUOTA;
 
         //--preferenze
@@ -139,8 +172,6 @@ public abstract class Statistiche {
         //--di fila nella stessa riga, senza ritorno a capo (se inizia con <include>)
         testoPagina += A_CAPO;
         this.elaboraFooter();
-
-        registraPagina();
     }// fine del metodo
 
 
