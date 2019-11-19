@@ -346,8 +346,8 @@ public class ListaService extends ABioService {
             case annoMorto:
                 break;
             case listaNomi:
-                break;
             case listaCognomi:
+                mappaParagrafiOrdinata = array.sort(mappaParagrafi);
                 break;
             default:
                 log.warn("Switch - caso non definito");
