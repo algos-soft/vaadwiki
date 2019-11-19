@@ -70,7 +70,6 @@ public class StatisticheNazionalita extends StatisticheAttNaz {
     @Override
     protected void creaLista() {
         listaPlurali = service.findAllPlurali();
-        listaPlurali = listaPlurali.subList(30, 35);
     }// end of method
 
 
