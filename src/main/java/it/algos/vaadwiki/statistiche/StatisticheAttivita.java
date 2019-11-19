@@ -71,7 +71,6 @@ public class StatisticheAttivita extends StatisticheAttNaz {
     @Override
     protected void creaLista() {
         listaPlurali = service.findAllPlurali();
-        listaPlurali = listaPlurali.subList(60, 120);
     }// end of method
 
 
