@@ -5,6 +5,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.modules.attivita.Attivita;
+import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -62,6 +63,8 @@ public interface BioRepository extends MongoRepository<Bio, String> {
     public int countAllByAttivita3(Attivita attivita);
 
     public int countByAttivitaOrAttivita2OrAttivita3(Attivita attivita, Attivita attivita2, Attivita attivita3);
+
+    public int countAllByNazionalita(Nazionalita nazionalita);
 
 //    @Query("{'nome':?0}")
 //    List<String> findDistinctNome(String nome);

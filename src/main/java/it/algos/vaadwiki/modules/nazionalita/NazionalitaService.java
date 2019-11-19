@@ -3,6 +3,7 @@ package it.algos.vaadwiki.modules.nazionalita;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.DURATA_DOWNLOAD_NAZIONALITA;
 import static it.algos.vaadwiki.application.WikiCost.LAST_DOWNLOAD_NAZIONALITA;
@@ -156,6 +159,37 @@ public class NazionalitaService extends AttNazProfCatService {
         return repository.findBySingolare(singolare);
     }// end of method
 
+
+    /**
+     * Returns all entities of the type <br>
+     * <p>
+     * Se esiste la property 'ordine', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'code', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'descrizione', ordinate secondo questa property <br>
+     * Altrimenti, ordinate secondo il metodo sovrascritto nella sottoclasse concreta <br>
+     * Altrimenti, ordinate in ordine di inserimento nel DB mongo <br>
+     *
+     * @return all ordered entities
+     */
+    @Override
+    public List<Nazionalita> findAll() {
+        return (List<Nazionalita>) super.findAll();
+    }// end of method
+
+
+    public List<String> findAllPlurali() {
+        List<String> listaNazionalitaPlurali = null;
+
+        listaNazionalitaPlurali = mongo.mongoOp.findDistinct("plurale", Nazionalita.class, String.class);
+        listaNazionalitaPlurali = array.sort(listaNazionalitaPlurali);
+
+        return listaNazionalitaPlurali;
+    }// end of method
+
+
+    public List<Nazionalita> findAllByPlurale(String plurale) {
+        return repository.findAllByPlurale(plurale);
+    }// end of method
 
     /**
      * Controlla l'esistenza di una Entity usando la query della property specifica (obbligatoria ed unica) <br>

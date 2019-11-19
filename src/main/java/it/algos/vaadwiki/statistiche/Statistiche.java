@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import static it.algos.vaadflow.application.FlowCost.*;
-import static it.algos.vaadwiki.didascalia.DidascaliaService.TITOLO_PAGINA_WIKI;
 
 /**
  * Project vaadwiki
@@ -37,11 +36,15 @@ public abstract class Statistiche {
 
     protected final static String SEP = "||";
 
+    protected static String TAG_HEAD_INDICE = "__FORCETOC__";
+
     protected static String TAG_HEAD_TEMPLATE_AVVISO = "StatBio";
 
     protected static String PAGINA_PROVA = "Utente:Biobot/2";
 
     protected String titoloPagina;
+
+    protected boolean usaTagIndice;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -126,21 +129,29 @@ public abstract class Statistiche {
 
     protected String templateCorrelate;
 
+
     /**
      * Costruisce la pagina <br>
      * Registra la pagina sul server wiki <br>
      */
     protected void inizia() {
         creaLista();
+        creaMappa();
         elaboraPagina();
         registraPagina();
     }// end of method
 
+
     /**
-     * Costruisce la pagina <br>
-     * Registra la pagina sul server wiki <br>
+     * Costruisce la lista <br>
      */
     protected void creaLista() {
+    }// end of method
+
+    /**
+     * Costruisce la mappa <br>
+     */
+    protected void creaMappa() {
     }// end of method
 
 
@@ -167,6 +178,7 @@ public abstract class Statistiche {
         //--a capo, ma senza senza righe di separazione
         testoPagina += A_CAPO;
         this.elaboraBody();
+        testoPagina += A_CAPO;
 
         //--footer
         //--di fila nella stessa riga, senza ritorno a capo (se inizia con <include>)
@@ -182,6 +194,7 @@ public abstract class Statistiche {
      */
     protected void fixPreferenze() {
         this.templateCorrelate = "BioCorrelate";
+        this.usaTagIndice = true;
     }// fine del metodo
 
 
@@ -195,8 +208,12 @@ public abstract class Statistiche {
     private void elaboraHead() {
         String testo = VUOTA;
 
+        if (usaTagIndice) {
+            testo += TAG_HEAD_INDICE;
+        }// end of if cycle
+
         //--Posizione il template di avviso
-        testo = elaboraTemplateAvviso();
+        testo += elaboraTemplateAvviso();
 
         //--Ritorno ed avviso vanno (eventualmente) protetti con 'include'
         testo = elaboraInclude(testo);

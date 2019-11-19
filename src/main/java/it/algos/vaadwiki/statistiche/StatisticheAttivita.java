@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
@@ -49,7 +50,6 @@ public class StatisticheAttivita extends StatisticheAttNaz {
     }// end of Spring constructor
 
 
-
     /**
      * Preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
      * Può essere sovrascritto, per aggiungere informazioni <br>
@@ -71,22 +71,54 @@ public class StatisticheAttivita extends StatisticheAttNaz {
     @Override
     protected void creaLista() {
         listaPlurali = service.findAllPlurali();
-        listaPlurali = listaPlurali.subList(0, 4);
+        listaPlurali = listaPlurali.subList(60, 120);
     }// end of method
 
 
     /**
-     * Testo descrittivo prima della tabella tabella <br>
+     * Costruisce la mappa <br>
      */
-    @Override
-    protected String inizioParagrafo(int numBio) {
+    protected void creaMappa() {
+        mappaPlurali = new LinkedHashMap<>();
+        MappaStatistiche mappa;
+        List<Attivita> lista = null;
+        int numAttivitaUno;
+        int numAttivitaDue;
+        int numAttivitaTre;
+        int numAttivitaTotali;
+
+        for (String plurale : listaPlurali) {
+            lista = service.findAllByPlurale(plurale);
+            numAttivitaUno = 0;
+            numAttivitaDue = 0;
+            numAttivitaTre = 0;
+            numAttivitaTotali = 0;
+
+            for (Attivita attivita : lista) {
+                numAttivitaUno += bioService.countByAttivitaPrincipale(attivita);
+                numAttivitaDue += bioService.countByAttivitaDue(attivita);
+                numAttivitaTre += bioService.countByAttivitaTre(attivita);
+                numAttivitaTotali += bioService.countByAttivitaTotali(attivita);
+            }// end of for cycle
+
+            mappa = new MappaStatistiche(plurale, numAttivitaUno, numAttivitaDue, numAttivitaTre, numAttivitaTotali);
+            mappaPlurali.put(plurale, mappa);
+        }// end of for cycle
+
+    }// end of method
+
+
+    /*
+     * testo descrittivo prima tabella <br>
+     */
+    protected String testoPrimaTabella(int numBio) {
         String testo = VUOTA;
 
         testo += A_CAPO;
         testo += "==Attività usate==";
         testo += A_CAPO;
         testo += "'''";
-        testo += listaPlurali.size();
+        testo += getNumeroUsate();
         testo += "'''";
         testo += " attività";
         testo += "<ref>Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]</ref>";
@@ -98,11 +130,8 @@ public class StatisticheAttivita extends StatisticheAttNaz {
     }// fine del metodo
 
 
-
-
-
     @Override
-    protected String colonneTabella() {
+    protected String colonnePrimaTabella() {
         String testo = "";
         String color = "! style=\"background-color:#CCC;\" |";
 
@@ -140,67 +169,153 @@ public class StatisticheAttivita extends StatisticheAttNaz {
     }// fine del metodo
 
 
-
     @Override
-    protected String rigaTabella(String attivitaPlurale, int cont) {
+    protected String rigaPrimaTabella(String plurale, int cont) {
         String testo = "";
         String tagDx = "style=\"text-align: right;\" |";
-        String nome = attivitaPlurale.toLowerCase();
+        String nome = plurale.toLowerCase();
         String listaTag = "[[Progetto:Biografie/Attività/";
         String categoriaTag = "[[:Categoria:";
         String sepTag = "|";
         String endTag = "]]";
         String lista;
         String categoria;
-        List<Attivita> listaAttivita = service.findAllByPlurale(attivitaPlurale);
-        int numAttivitaUno = 0;
-        int numAttivitaDue = 0;
-        int numAttivitaTre = 0;
-        int numAttivitaTotali = 0;
+        MappaStatistiche mappa;
 
         lista = listaTag + text.primaMaiuscola(nome) + sepTag + nome + endTag;
         categoria = categoriaTag + nome + sepTag + nome + endTag;
 
-        for (Attivita attivita : listaAttivita) {
-            numAttivitaUno += bioService.countByAttivitaPrincipale(attivita);
-            numAttivitaDue += bioService.countByAttivitaDue(attivita);
-            numAttivitaTre += bioService.countByAttivitaTre(attivita);
-            numAttivitaTotali += bioService.countByAttivitaTotali(attivita);
-        }// end of for cycle
+        mappa = mappaPlurali.get(plurale);
+        if (mappa == null) {
+            return VUOTA;
+        }// end of if cycle
 
-        testo += "|-";
+        if (mappa.getNumAttivitaTotali() > 0) {
+            testo += "|-";
+            testo += A_CAPO;
+            testo += "|";
+
+            testo += tagDx;
+            testo += cont;
+
+            testo += " || ";
+            testo += lista;
+
+            testo += " || ";
+            testo += categoria;
+
+            testo += " || ";
+            testo += tagDx;
+            testo += mappa.getNumAttivitaUno();
+
+            testo += " || ";
+            testo += tagDx;
+            testo += mappa.getNumAttivitaDue();
+
+            testo += " || ";
+            testo += tagDx;
+            testo += mappa.getNumAttivitaTre();
+
+            testo += " || ";
+            testo += tagDx;
+            testo += mappa.getNumAttivitaTotali();
+
+            testo += A_CAPO;
+        }// end of if cycle
+
+        return testo;
+    }// fine del metodo
+
+
+    @Override
+    protected String testoSecondaTabella(int numBio) {
+        String testo = VUOTA;
+
         testo += A_CAPO;
-        testo += "|";
+        testo += "==Attività non usate==";
+        testo += A_CAPO;
+        testo += "'''";
+        testo += getNumeroNonUsate();
+        testo += "'''";
+        testo += " attività  presenti nell' [[Modulo:Bio/Plurale attività|'''elenco del progetto Biografie''']] ma '''non utilizzate''' ";
+        testo += "<ref>Si tratta di attività '''originariamente''' discusse ed [[Modulo:Bio/Plurale attività|inserite nell'elenco]] che non sono mai state utilizzate o che sono state in un secondo tempo sostituite da altre denominazioni</ref>";
+        testo += " in nessuna '''voce biografica''' che usa il [[template:Bio|template Bio]]";
 
-        testo += tagDx;
-        testo += cont;
+        return testo;
+    }// fine del metodo
 
-        testo += " || ";
-        testo += lista;
 
-        testo += " || ";
-        testo += categoria;
+    @Override
+    protected String colonneSecondaTabella() {
+        String testo = "";
+        String color = "! style=\"background-color:#CCC;\" |";
 
-        testo += " || ";
-        testo += tagDx;
-        testo += numAttivitaUno;
+        testo += color;
+        testo += "'''#'''";
+        testo += A_CAPO;
 
-        testo += " || ";
-        testo += tagDx;
-        testo += numAttivitaDue;
-
-        testo += " || ";
-        testo += tagDx;
-        testo += numAttivitaTre;
-
-        testo += " || ";
-        testo += tagDx;
-        testo += numAttivitaTotali;
-
+        testo += color;
+        testo += "'''Attività non utilizzate'''";
         testo += A_CAPO;
 
         return testo;
     }// fine del metodo
 
+
+    @Override
+    protected String rigaSecondaTabella(String plurale, int cont) {
+        String testo = "";
+        String tagDx = "style=\"text-align: right;\" |";
+        String nome = plurale.toLowerCase();
+        MappaStatistiche mappa;
+
+        mappa = mappaPlurali.get(plurale);
+        if (mappa == null) {
+            return VUOTA;
+        }// end of if cycle
+
+        if (mappa.getNumAttivitaTotali() == 0) {
+            testo += "|-";
+            testo += A_CAPO;
+            testo += "|";
+
+            testo += tagDx;
+            testo += cont;
+
+            testo += " || ";
+            testo += nome;
+
+            testo += A_CAPO;
+        }// end of if cycle
+
+
+        return testo;
+    }// fine del metodo
+
+
+    protected int getNumeroUsate() {
+        int numero = 0;
+        boolean usata;
+
+        for (String key : mappaPlurali.keySet()) {
+            usata = mappaPlurali.get(key).getNumAttivitaTotali() > 0;
+            numero = usata ? numero + 1 : numero;
+        }// end of for cycle
+
+        return numero;
+    }// fine del metodo
+
+
+    protected int getNumeroNonUsate() {
+        int numero = 0;
+        boolean nonUsata;
+
+        for (String key : mappaPlurali.keySet()) {
+            nonUsata = mappaPlurali.get(key).getNumAttivitaTotali() == 0;
+            numero = nonUsata ? numero + 1 : numero;
+        }// end of for cycle
+
+        return numero;
+    }// fine del metodo
 
 }// end of class

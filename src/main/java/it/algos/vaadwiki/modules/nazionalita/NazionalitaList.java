@@ -17,6 +17,8 @@ import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attivita.AttivitaDialog;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
 import it.algos.vaadwiki.schedule.TaskNazionalita;
+import it.algos.vaadwiki.statistiche.StatisticheAttivita;
+import it.algos.vaadwiki.statistiche.StatisticheNazionalita;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -93,6 +95,7 @@ public class NazionalitaList extends AttNazProfCatList {
         super.codeLastDownload = LAST_DOWNLOAD_NAZIONALITA;
         super.durataLastDownload = DURATA_DOWNLOAD_NAZIONALITA;
         super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_NAZIONALITA;
+        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_NAZIONALITA;
     }// end of method
 
     /**
@@ -126,8 +129,9 @@ public class NazionalitaList extends AttNazProfCatList {
     }// end of method
 
 
-    //@todo Da sviluppare
     protected void uploadStatistiche() {
+        appContext.getBean(StatisticheNazionalita.class);
+        super.updateGrid();
     }// end of method
 
 }// end of class

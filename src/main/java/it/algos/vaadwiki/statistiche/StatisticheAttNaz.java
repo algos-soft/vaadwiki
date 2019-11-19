@@ -2,6 +2,7 @@ package it.algos.vaadwiki.statistiche;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
@@ -17,6 +18,8 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 public abstract class StatisticheAttNaz extends Statistiche {
 
     protected List<String> listaPlurali;
+
+    protected LinkedHashMap<String, MappaStatistiche> mappaPlurali;
 
     protected String codeLastUpload;
 
@@ -44,13 +47,12 @@ public abstract class StatisticheAttNaz extends Statistiche {
         String testo = VUOTA;
         int numBio = bioService.count();
 
-        //--testo prima della tabella
-        testo += inizioParagrafo(numBio);
+        //--prima tabella
+        testo += A_CAPO;
+        testo += tabellaUsate(numBio);
 
-        //--tabella
-        testo += A_CAPO;
-        testo += creaTabella();
-        testo += A_CAPO;
+        //--seconda tabella
+        testo += tabellaNonUsate(numBio);
 
         testo += "==Note==";
         testo += A_CAPO;
@@ -61,22 +63,50 @@ public abstract class StatisticheAttNaz extends Statistiche {
 
 
     /**
-     * Testo descrittivo prima della tabella tabella <br>
+     * Prima tabella <br>
      */
-    protected String inizioParagrafo(int numBio) {
-        return VUOTA;
+    protected String tabellaUsate(int numBio) {
+        String testo = VUOTA;
+
+        //--tabella
+        testo += A_CAPO;
+        testo += testoPrimaTabella(numBio);
+        testo += A_CAPO;
+        testo += inizioTabella();
+        testo += colonnePrimaTabella();
+        testo += corpoPrimaTabella();
+        testo += fineTabella();
+        testo += A_CAPO;
+
+        return testo;
     }// fine del metodo
 
 
-    private String creaTabella() {
-        String testo = "";
+    /*
+     * seconda tabella <br>
+     */
+    protected String tabellaNonUsate(int numBio) {
+        String testo = VUOTA;
 
+        //--tabella
+        testo += A_CAPO;
+        testo += testoSecondaTabella(numBio);
+        testo += A_CAPO;
         testo += inizioTabella();
-        testo += colonneTabella();
-        testo += corpoTabella();
+        testo += colonneSecondaTabella();
+        testo += corpoSecondaTabella();
         testo += fineTabella();
+        testo += A_CAPO;
 
         return testo;
+    }// fine del metodo
+
+
+    /*
+     * testo descrittivo prima tabella <br>
+     */
+    protected String testoPrimaTabella(int numBio) {
+        return VUOTA;
     }// fine del metodo
 
 
@@ -91,27 +121,31 @@ public abstract class StatisticheAttNaz extends Statistiche {
     }// fine del metodo
 
 
-    protected String colonneTabella() {
+    protected String colonnePrimaTabella() {
         return VUOTA;
     }// fine del metodo
 
 
-    private String corpoTabella() {
+    private String corpoPrimaTabella() {
         StringBuilder testo = new StringBuilder();
-        int cont = 0;
-        int k = 0;
+        int cont = 1;
+        int k = 1;
+        String riga;
 
         for (String plurale : listaPlurali) {
-            k = k + 1;
-            cont = k;
-            testo.append(rigaTabella(plurale, cont));
+            riga = rigaPrimaTabella(plurale, cont);
+            if (text.isValid(riga)) {
+                testo.append(riga);
+                k = k + 1;
+                cont = k;
+            }// end of if cycle
         }// end of for cycle
 
         return testo.toString();
     }// fine del metodo
 
 
-    protected String rigaTabella(String plurale, int cont) {
+    protected String rigaPrimaTabella(String plurale, int cont) {
         return VUOTA;
     }// fine del metodo
 
@@ -123,6 +157,43 @@ public abstract class StatisticheAttNaz extends Statistiche {
         testo += A_CAPO;
 
         return testo;
+    }// fine del metodo
+
+
+    /*
+     * testo descrittivo prima tabella <br>
+     */
+    protected String testoSecondaTabella(int numBio) {
+        return VUOTA;
+    }// fine del metodo
+
+
+    protected String colonneSecondaTabella() {
+        return VUOTA;
+    }// fine del metodo
+
+
+    private String corpoSecondaTabella() {
+        StringBuilder testo = new StringBuilder();
+        int cont = 1;
+        int k = 1;
+        String riga;
+
+        for (String plurale : listaPlurali) {
+            riga = rigaSecondaTabella(plurale, cont);
+            if (text.isValid(riga)) {
+                testo.append(riga);
+                k = k + 1;
+                cont = k;
+            }// end of if cycle
+        }// end of for cycle
+
+        return testo.toString();
+    }// fine del metodo
+
+
+    protected String rigaSecondaTabella(String plurale, int cont) {
+        return VUOTA;
     }// fine del metodo
 
 

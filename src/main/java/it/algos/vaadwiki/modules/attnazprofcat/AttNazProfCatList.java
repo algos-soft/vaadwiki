@@ -281,7 +281,6 @@ public abstract class AttNazProfCatList extends AGridViewList {
         Label label = null;
         LocalDateTime lastDownload = pref.getDate(flagLastUploadStatistiche);
         int durata = pref.getInt(flagDurataLastUploadStatistiche);
-        long durata2 = pref.getInt(flagDurataLastUploadStatistiche);
 
         if (lastDownload != null) {
             label = new Label("Ultimo upload delle statistiche effettuato il " + date.getTime(lastDownload) + " in " + date.toTextMinuti(durata));

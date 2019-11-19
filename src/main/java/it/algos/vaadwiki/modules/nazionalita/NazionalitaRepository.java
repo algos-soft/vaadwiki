@@ -1,12 +1,14 @@
 package it.algos.vaadwiki.modules.nazionalita;
 
-import java.util.List;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.List;
+
 import static it.algos.vaadwiki.application.WikiCost.TAG_NAZ;
 
 /**
@@ -28,10 +30,12 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_NAZ;
 @AIScript(sovrascrivibile = false)
 public interface NazionalitaRepository extends MongoRepository<Nazionalita, String> {
 
-	public Nazionalita findBySingolare(String singolare);
+    public Nazionalita findBySingolare(String singolare);
 
-	public List<Nazionalita> findAllByOrderBySingolareAsc();
+    public List<Nazionalita> findAllByOrderBySingolareAsc();
 
-	public List<Nazionalita> findAllByOrderByPluraleAsc();
+    public List<Nazionalita> findAllByOrderByPluraleAsc();
+
+    public List<Nazionalita> findAllByPlurale(String plurale);
 
 }// end of class

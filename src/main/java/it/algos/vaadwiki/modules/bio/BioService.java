@@ -17,6 +17,7 @@ import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.cognome.CognomeService;
+import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.wiki.Api;
@@ -592,6 +593,16 @@ public class BioService extends AttNazProfCatService {
         return repository.countByAttivitaOrAttivita2OrAttivita3(attivita, attivita, attivita);
     }// end of method
 
+    /**
+     * Conta tutte le biografie delle persone con una certa nazionalità <br>
+     *
+     * @param nazionalita per il conteggio
+     *
+     * @return titale biografie che rispondono al requisito
+     */
+    public int countByNazionalita(Nazionalita nazionalita) {
+        return repository.countAllByNazionalita(nazionalita);
+    }// end of method
 
     public int getOrdine(Bio bio, EADidascalia type) {
         int ordine = 0;
