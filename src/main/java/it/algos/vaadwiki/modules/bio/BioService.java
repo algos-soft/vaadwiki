@@ -604,6 +604,53 @@ public class BioService extends AttNazProfCatService {
         return repository.countAllByNazionalita(nazionalita);
     }// end of method
 
+    /**
+     * Conta tutte le biografie delle persone con un determinato giorno di nascita <br>
+     *
+     * @param giornoNascita per il conteggio
+     *
+     * @return titale biografie che rispondono al requisito
+     */
+    public int countByGiornoNascita(Giorno giornoNascita) {
+        return repository.countAllByGiornoNascita(giornoNascita);
+    }// end of method
+
+    /**
+     * Conta tutte le biografie delle persone con un determinato giorno di morte <br>
+     *
+     * @param giornoMorte per il conteggio
+     *
+     * @return titale biografie che rispondono al requisito
+     */
+    public int countByGiornoMorte(Giorno giornoMorte) {
+        return repository.countAllByGiornoMorte(giornoMorte);
+    }// end of method
+
+
+    /**
+     * Conta tutte le biografie delle persone con un determinato anno di nascita <br>
+     *
+     * @param annoNascita per il conteggio
+     *
+     * @return titale biografie che rispondono al requisito
+     */
+    public int countByAnnoNascita(Anno annoNascita) {
+        return repository.countAllByAnnoNascita(annoNascita);
+    }// end of method
+
+
+    /**
+     * Conta tutte le biografie delle persone con un determinato anno di morte <br>
+     *
+     * @param annoMorte per il conteggio
+     *
+     * @return titale biografie che rispondono al requisito
+     */
+    public int countByAnnoMorte(Anno annoMorte) {
+        return repository.countAllByAnnoMorte(annoMorte);
+    }// end of method
+
+
     public int getOrdine(Bio bio, EADidascalia type) {
         int ordine = 0;
 

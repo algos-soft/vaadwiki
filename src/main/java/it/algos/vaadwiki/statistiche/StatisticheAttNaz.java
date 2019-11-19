@@ -17,9 +17,9 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  */
 public abstract class StatisticheAttNaz extends Statistiche {
 
-    protected List<String> listaPlurali;
+    protected List<String> lista;
 
-    protected LinkedHashMap<String, MappaStatistiche> mappaPlurali;
+    protected LinkedHashMap<String, MappaStatistiche> mappa;
 
     protected String codeLastUpload;
 
@@ -126,14 +126,14 @@ public abstract class StatisticheAttNaz extends Statistiche {
     }// fine del metodo
 
 
-    private String corpoPrimaTabella() {
+    protected String corpoPrimaTabella() {
         StringBuilder testo = new StringBuilder();
         int cont = 1;
         int k = 1;
         String riga;
 
-        for (String plurale : listaPlurali) {
-            riga = rigaPrimaTabella(plurale, cont);
+        for (String chiave : lista) {
+            riga = rigaPrimaTabella(chiave, cont);
             if (text.isValid(riga)) {
                 testo.append(riga);
                 k = k + 1;
@@ -173,13 +173,13 @@ public abstract class StatisticheAttNaz extends Statistiche {
     }// fine del metodo
 
 
-    private String corpoSecondaTabella() {
+    protected String corpoSecondaTabella() {
         StringBuilder testo = new StringBuilder();
         int cont = 1;
         int k = 1;
         String riga;
 
-        for (String plurale : listaPlurali) {
+        for (String plurale : lista) {
             riga = rigaSecondaTabella(plurale, cont);
             if (text.isValid(riga)) {
                 testo.append(riga);

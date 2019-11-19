@@ -64,13 +64,11 @@ public class StatisticheAttivita extends StatisticheAttNaz {
 
 
     /**
-     * Costruisce la pagina <br>
-     * Registra la pagina sul server wiki <br>
+     * Recupera la lista
      */
-
     @Override
     protected void creaLista() {
-        listaPlurali = service.findAllPlurali();
+        lista = service.findAllPlurali();
     }// end of method
 
 
@@ -78,15 +76,15 @@ public class StatisticheAttivita extends StatisticheAttNaz {
      * Costruisce la mappa <br>
      */
     protected void creaMappa() {
-        mappaPlurali = new LinkedHashMap<>();
-        MappaStatistiche mappa;
+        mappa = new LinkedHashMap<>();
+        MappaStatistiche mappaSingola;
         List<Attivita> lista = null;
         int numAttivitaUno;
         int numAttivitaDue;
         int numAttivitaTre;
         int numAttivitaTotali;
 
-        for (String plurale : listaPlurali) {
+        for (String plurale : this.lista) {
             lista = service.findAllByPlurale(plurale);
             numAttivitaUno = 0;
             numAttivitaDue = 0;
@@ -100,8 +98,8 @@ public class StatisticheAttivita extends StatisticheAttNaz {
                 numAttivitaTotali += bioService.countByAttivitaTotali(attivita);
             }// end of for cycle
 
-            mappa = new MappaStatistiche(plurale, numAttivitaUno, numAttivitaDue, numAttivitaTre, numAttivitaTotali);
-            mappaPlurali.put(plurale, mappa);
+            mappaSingola = new MappaStatistiche(plurale, numAttivitaUno, numAttivitaDue, numAttivitaTre, numAttivitaTotali);
+            mappa.put(plurale, mappaSingola);
         }// end of for cycle
 
     }// end of method
@@ -179,17 +177,17 @@ public class StatisticheAttivita extends StatisticheAttNaz {
         String endTag = "]]";
         String lista;
         String categoria;
-        MappaStatistiche mappa;
+        MappaStatistiche mappaSingola;
 
         lista = listaTag + text.primaMaiuscola(nome) + sepTag + nome + endTag;
         categoria = categoriaTag + nome + sepTag + nome + endTag;
 
-        mappa = mappaPlurali.get(plurale);
-        if (mappa == null) {
+        mappaSingola = mappa.get(plurale);
+        if (mappaSingola == null) {
             return VUOTA;
         }// end of if cycle
 
-        if (mappa.getNumAttivitaTotali() > 0) {
+        if (mappaSingola.getNumAttivitaTotali() > 0) {
             testo += "|-";
             testo += A_CAPO;
             testo += "|";
@@ -205,19 +203,19 @@ public class StatisticheAttivita extends StatisticheAttNaz {
 
             testo += " || ";
             testo += tagDx;
-            testo += mappa.getNumAttivitaUno();
+            testo += mappaSingola.getNumAttivitaUno();
 
             testo += " || ";
             testo += tagDx;
-            testo += mappa.getNumAttivitaDue();
+            testo += mappaSingola.getNumAttivitaDue();
 
             testo += " || ";
             testo += tagDx;
-            testo += mappa.getNumAttivitaTre();
+            testo += mappaSingola.getNumAttivitaTre();
 
             testo += " || ";
             testo += tagDx;
-            testo += mappa.getNumAttivitaTotali();
+            testo += mappaSingola.getNumAttivitaTotali();
 
             testo += A_CAPO;
         }// end of if cycle
@@ -266,14 +264,14 @@ public class StatisticheAttivita extends StatisticheAttNaz {
         String testo = "";
         String tagDx = "style=\"text-align: right;\" |";
         String nome = plurale.toLowerCase();
-        MappaStatistiche mappa;
+        MappaStatistiche mappaSingola;
 
-        mappa = mappaPlurali.get(plurale);
-        if (mappa == null) {
+        mappaSingola = mappa.get(plurale);
+        if (mappaSingola == null) {
             return VUOTA;
         }// end of if cycle
 
-        if (mappa.getNumAttivitaTotali() == 0) {
+        if (mappaSingola.getNumAttivitaTotali() == 0) {
             testo += "|-";
             testo += A_CAPO;
             testo += "|";
@@ -296,8 +294,8 @@ public class StatisticheAttivita extends StatisticheAttNaz {
         int numero = 0;
         boolean usata;
 
-        for (String key : mappaPlurali.keySet()) {
-            usata = mappaPlurali.get(key).getNumAttivitaTotali() > 0;
+        for (String key : mappa.keySet()) {
+            usata = mappa.get(key).getNumAttivitaTotali() > 0;
             numero = usata ? numero + 1 : numero;
         }// end of for cycle
 
@@ -309,8 +307,8 @@ public class StatisticheAttivita extends StatisticheAttNaz {
         int numero = 0;
         boolean nonUsata;
 
-        for (String key : mappaPlurali.keySet()) {
-            nonUsata = mappaPlurali.get(key).getNumAttivitaTotali() == 0;
+        for (String key : mappa.keySet()) {
+            nonUsata = mappa.get(key).getNumAttivitaTotali() == 0;
             numero = nonUsata ? numero + 1 : numero;
         }// end of for cycle
 

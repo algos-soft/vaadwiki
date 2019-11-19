@@ -63,13 +63,11 @@ public class StatisticheNazionalita extends StatisticheAttNaz {
 
 
     /**
-     * Costruisce la pagina <br>
-     * Registra la pagina sul server wiki <br>
+     * Recupera la lista
      */
-
     @Override
     protected void creaLista() {
-        listaPlurali = service.findAllPlurali();
+        lista = service.findAllPlurali();
     }// end of method
 
 
@@ -77,12 +75,12 @@ public class StatisticheNazionalita extends StatisticheAttNaz {
      * Costruisce la mappa <br>
      */
     protected void creaMappa() {
-        mappaPlurali = new LinkedHashMap<>();
-        MappaStatistiche mappa;
+        mappa = new LinkedHashMap<>();
+        MappaStatistiche mappaSingola;
         List<Nazionalita> lista = null;
         int numNazionalita;
 
-        for (String plurale : listaPlurali) {
+        for (String plurale : this.lista) {
             lista = service.findAllByPlurale(plurale);
             numNazionalita = 0;
 
@@ -90,8 +88,8 @@ public class StatisticheNazionalita extends StatisticheAttNaz {
                 numNazionalita += bioService.countByNazionalita(nazionalita);
             }// end of for cycle
 
-            mappa = new MappaStatistiche(plurale, numNazionalita);
-            mappaPlurali.put(plurale, mappa);
+            mappaSingola = new MappaStatistiche(plurale, numNazionalita);
+            mappa.put(plurale, mappaSingola);
         }// end of for cycle
 
     }// end of method
@@ -156,17 +154,17 @@ public class StatisticheNazionalita extends StatisticheAttNaz {
         String endTag = "]]";
         String lista;
         String categoria;
-        MappaStatistiche mappa;
+        MappaStatistiche mappaSingola;
 
         lista = listaTag + text.primaMaiuscola(nome) + sepTag + nome + endTag;
         categoria = categoriaTag + nome + sepTag + nome + endTag;
 
-        mappa = mappaPlurali.get(plurale);
-        if (mappa == null) {
+        mappaSingola = mappa.get(plurale);
+        if (mappaSingola == null) {
             return VUOTA;
         }// end of if cycle
 
-        if (mappa.getNumNazionalita() > 0) {
+        if (mappaSingola.getNumNazionalita() > 0) {
             testo += "|-";
             testo += A_CAPO;
             testo += "|";
@@ -182,7 +180,7 @@ public class StatisticheNazionalita extends StatisticheAttNaz {
 
             testo += " || ";
             testo += tagDx;
-            testo += mappa.getNumNazionalita();
+            testo += mappaSingola.getNumNazionalita();
 
             testo += A_CAPO;
         }// end of if cycle
@@ -229,14 +227,14 @@ public class StatisticheNazionalita extends StatisticheAttNaz {
         String testo = "";
         String tagDx = "style=\"text-align: right;\" |";
         String nome = plurale.toLowerCase();
-        MappaStatistiche mappa;
+        MappaStatistiche mappaSingola;
 
-        mappa = mappaPlurali.get(plurale);
-        if (mappa == null) {
+        mappaSingola = mappa.get(plurale);
+        if (mappaSingola == null) {
             return VUOTA;
         }// end of if cycle
 
-        if (mappa.getNumNazionalita() == 0) {
+        if (mappaSingola.getNumNazionalita() == 0) {
             testo += "|-";
             testo += A_CAPO;
             testo += "|";
@@ -258,8 +256,8 @@ public class StatisticheNazionalita extends StatisticheAttNaz {
         int numero = 0;
         boolean usata;
 
-        for (String key : mappaPlurali.keySet()) {
-            usata = mappaPlurali.get(key).getNumNazionalita() > 0;
+        for (String key : mappa.keySet()) {
+            usata = mappa.get(key).getNumNazionalita() > 0;
             numero = usata ? numero + 1 : numero;
         }// end of for cycle
 
@@ -271,8 +269,8 @@ public class StatisticheNazionalita extends StatisticheAttNaz {
         int numero = 0;
         boolean nonUsata;
 
-        for (String key : mappaPlurali.keySet()) {
-            nonUsata = mappaPlurali.get(key).getNumNazionalita() == 0;
+        for (String key : mappa.keySet()) {
+            nonUsata = mappa.get(key).getNumNazionalita() == 0;
             numero = nonUsata ? numero + 1 : numero;
         }// end of for cycle
 

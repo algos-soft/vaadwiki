@@ -24,6 +24,7 @@ import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaDialog;
+import it.algos.vaadwiki.statistiche.StatisticheGiorni;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -96,8 +97,11 @@ public class WikiGiornoList extends WikiList {
         super.fixPreferenze();
 
         super.titoloPaginaStatistiche = attNazProfCatService.titoloPaginaStatisticheGiorni;
+        super.usaBottoneUpload=true;
         super.codeLastUpload = LAST_UPLOAD_GIORNI;
         super.durataLastUpload = DURATA_UPLOAD_GIORNI;
+        super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_ATTIVITA;
+        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_ATTIVITA;
     }// end of method
 
 
@@ -112,6 +116,23 @@ public class WikiGiornoList extends WikiList {
     @Override
     protected Grid creaGridComponent() {
         return new PaginatedGrid<Giorno>();
+    }// end of method
+
+
+    /**
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+
+        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_GIORNI, LAST_UPLOAD_GIORNI));
+        if (text.isValid(codeLastUploadStatistiche) && text.isValid(durataLastUploadStatistiche)) {
+            alertPlacehorder.add(creaInfoUpload(codeLastUploadStatistiche, durataLastUploadStatistiche));
+        }// end of if cycle
     }// end of method
 
 
@@ -132,18 +153,7 @@ public class WikiGiornoList extends WikiList {
     }// end of method
 
 
-    /**
-     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
-     * Normalmente ad uso esclusivo del developer
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
-     */
-    @Override
-    protected void creaAlertLayout() {
-        super.creaAlertLayout();
 
-        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_GIORNI, LAST_UPLOAD_GIORNI));
-    }// end of method
 
 
 
@@ -295,5 +305,9 @@ public class WikiGiornoList extends WikiList {
         uploadService.uploadAllGiorni();
     }// end of method
 
+    protected void uploadStatistiche() {
+        appContext.getBean(StatisticheGiorni.class);
+        super.updateGrid();
+    }// end of method
 
 }// end of class

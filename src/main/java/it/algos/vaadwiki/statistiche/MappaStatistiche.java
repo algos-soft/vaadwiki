@@ -9,7 +9,7 @@ package it.algos.vaadwiki.statistiche;
  */
 public class MappaStatistiche {
 
-    private String plurale;
+    private String chiave;
 
     private int numAttivitaUno = 0;
 
@@ -21,20 +21,30 @@ public class MappaStatistiche {
 
     private int numNazionalita = 0;
 
+    private int numGiornoNato = 0;
 
-    public MappaStatistiche(String plurale) {
-        this.plurale = plurale;
+    private int numGiornoMorto = 0;
+
+    private int numAnnoNato = 0;
+
+    private int numAnnoMorto = 0;
+
+    private int ordine;
+
+
+    public MappaStatistiche(String chiave) {
+        this.chiave = chiave;
     }
 
 
-    public MappaStatistiche(String plurale, int numNazionalita) {
-        this.plurale = plurale;
+    public MappaStatistiche(String chiave, int numNazionalita) {
+        this.chiave = chiave;
         this.numNazionalita = numNazionalita;
     }
 
 
-    public MappaStatistiche(String plurale, int numAttivitaUno, int numAttivitaDue, int numAttivitaTre, int numAttivitaTotali) {
-        this.plurale = plurale;
+    public MappaStatistiche(String chiave, int numAttivitaUno, int numAttivitaDue, int numAttivitaTre, int numAttivitaTotali) {
+        this.chiave = chiave;
         this.numAttivitaUno = numAttivitaUno;
         this.numAttivitaDue = numAttivitaDue;
         this.numAttivitaTre = numAttivitaTre;
@@ -42,13 +52,16 @@ public class MappaStatistiche {
     }
 
 
-    public String getPlurale() {
-        return plurale;
+    public MappaStatistiche(String chiave, int ordine, int numGiornoNato, int numGiornoMorto) {
+        this.chiave = chiave;
+        this.ordine = ordine;
+        this.numGiornoNato = numGiornoNato;
+        this.numGiornoMorto = numGiornoMorto;
     }
 
 
-    public void setPlurale(String plurale) {
-        this.plurale = plurale;
+    public String getChiave() {
+        return chiave;
     }
 
 
@@ -57,18 +70,8 @@ public class MappaStatistiche {
     }
 
 
-    public void setNumAttivitaUno(int numAttivitaUno) {
-        this.numAttivitaUno = numAttivitaUno;
-    }
-
-
     public int getNumAttivitaDue() {
         return numAttivitaDue;
-    }
-
-
-    public void setNumAttivitaDue(int numAttivitaDue) {
-        this.numAttivitaDue = numAttivitaDue;
     }
 
 
@@ -77,18 +80,8 @@ public class MappaStatistiche {
     }
 
 
-    public void setNumAttivitaTre(int numAttivitaTre) {
-        this.numAttivitaTre = numAttivitaTre;
-    }
-
-
     public int getNumAttivitaTotali() {
         return numAttivitaTotali;
-    }
-
-
-    public void setNumAttivitaTotali(int numAttivitaTotali) {
-        this.numAttivitaTotali = numAttivitaTotali;
     }
 
 
@@ -97,8 +90,29 @@ public class MappaStatistiche {
     }
 
 
-    public void setNumNazionalita(int numNazionalita) {
-        this.numNazionalita = numNazionalita;
+    public int getNumGiornoNato() {
+        return numGiornoNato;
     }
+
+
+    public int getNumGiornoMorto() {
+        return numGiornoMorto;
+    }
+
+
+    public int getNumAnnoNato() {
+        return numAnnoNato;
+    }
+
+
+    public int getNumAnnoMorto() {
+        return numAnnoMorto;
+    }
+
+
+    public int getOrdine() {
+        return ordine;
+    }
+
 
 }// end of class

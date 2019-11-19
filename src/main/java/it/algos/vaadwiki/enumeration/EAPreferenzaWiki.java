@@ -1,15 +1,11 @@
 package it.algos.vaadwiki.enumeration;
 
 
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.enumeration.EAPrefType;
-import it.algos.vaadflow.enumeration.EAPreferenza;
 import it.algos.vaadflow.modules.preferenza.IAPreferenza;
 import it.algos.vaadflow.modules.role.EARole;
-import it.algos.vaadwiki.application.WikiCost;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
-import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_COGNOMI;
 
 /**
  * Project it.algos.vaadflow
@@ -37,6 +33,8 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     lastDownloadGenere(LAST_DOWNLOAD_GENERE, "Ultimo download del modulo genere (plurali)", EAPrefType.date, null),
     lastDownloadCategoria(LAST_DOWNLOAD_CATEGORIA, "Ultimo controllo di tutte le pagine esistenti nella categoria BioBot", EAPrefType.date, null),
     lastDownloadBio(LAST_UPDATE_BIO, "Ultimo update delle pagine della categoria BioBot", EAPrefType.date, null),
+    lastUploadStatisticheGiorni(LAST_UPLOAD_STATISTICHE_GIORNI, "Ultimo upload delle pagine di statistiche dei giorni", EAPrefType.date, null),
+    lastUploadStatisticheAnni(LAST_UPLOAD_STATISTICHE_ANNI, "Ultimo upload delle pagine di statistiche degli anni", EAPrefType.date, null),
     lastUploadAttivita(LAST_UPLOAD_STATISTICHE_ATTIVITA, "Ultimo upload delle pagine di statistiche delle attività", EAPrefType.date, null),
     lastUploadNazionalita(LAST_UPLOAD_STATISTICHE_NAZIONALITA, "Ultimo upload delle pagine di statistiche delle nazionalità", EAPrefType.date, null),
 
@@ -46,6 +44,8 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     durataDownloadCategoria(DURATA_DOWNLOAD_CATEGORIA, "Durata in secondi dell'ultimo download delle pagine della categoria BioBot", EAPrefType.integer, 0),
     durataDownloadGenere(DURATA_DOWNLOAD_GENERE, "Durata in secondi dell'ultimo download del modulo genere (plurali)", EAPrefType.integer, 0),
     durataDownloadBio(DURATA_DOWNLOAD_BIO, "Durata in minuti dell'ultimo update delle pagine della categoria BioBot", EAPrefType.integer, 0),
+    durataUploadStatisticheGiorni(DURATA_UPLOAD_STATISTICHE_GIORNI, "Durata in minuti dell'ultimo upload delle pagine di statistiche dei giorni", EAPrefType.integer, 0L),
+    durataUploadStatisticheAnni(DURATA_UPLOAD_STATISTICHE_ANNI, "Durata in minuti dell'ultimo upload delle pagine di statistiche degli anni", EAPrefType.integer, 0L),
     durataUploadStatisticheAttivita(DURATA_UPLOAD_STATISTICHE_ATTIVITA, "Durata in minuti dell'ultimo upload delle pagine di statistiche delle attività", EAPrefType.integer, 0L),
     durataUploadStatisticheNazionalita(DURATA_UPLOAD_STATISTICHE_NAZIONALITA, "Durata in minuti dell'ultimo upload delle pagine di statistiche delle nazionalità", EAPrefType.integer, 0L),
 
@@ -99,7 +99,6 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     usaParagrafoSizeCognomi(USA_PARAGRAFO_SIZE_COGNOMI, "Dimensione del paragrafo nel titolo per i cognomi", EAPrefType.bool, true),
     lastElaboraCognomi(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi", EAPrefType.date, null),
     ;
-
 
 
     private String code;
@@ -157,6 +156,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     public void setValue(Object value) {
         this.value = value;
     }// end of method
+
 
     public EARole getShow() {
         return null;

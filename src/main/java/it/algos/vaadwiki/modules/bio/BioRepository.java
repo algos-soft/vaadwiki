@@ -66,6 +66,14 @@ public interface BioRepository extends MongoRepository<Bio, String> {
 
     public int countAllByNazionalita(Nazionalita nazionalita);
 
+    public int countAllByGiornoNascita(Giorno giornoNascita);
+
+    public int countAllByGiornoMorte(Giorno giornoMorte);
+
+    public int countAllByAnnoNascita(Anno annoNascita);
+
+    public int countAllByAnnoMorte(Anno annoMorte);
+
 //    @Query("{'nome':?0}")
 //    List<String> findDistinctNome(String nome);
 //

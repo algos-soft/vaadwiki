@@ -90,6 +90,10 @@ public abstract class WikiList extends AGridViewList {
 
     protected String durataLastUpload;
 
+    protected String codeLastUploadStatistiche;
+
+    protected String durataLastUploadStatistiche;
+
     /**
      * Flag di preferenza per usare il bottone creaButton situato nella topLayout. Normalmente false. <br>
      */
@@ -337,6 +341,23 @@ public abstract class WikiList extends AGridViewList {
 
 
     protected void uploadStatistiche() {
+    }// end of method
+
+    /**
+     * Eventuale caption sopra la grid
+     */
+    protected Label creaInfoUpload(String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
+        Label label = null;
+        LocalDateTime lastDownload = pref.getDate(flagLastUploadStatistiche);
+        int durata = pref.getInt(flagDurataLastUploadStatistiche);
+
+        if (lastDownload != null) {
+            label = new Label("Ultimo upload delle statistiche effettuato il " + date.getTime(lastDownload) + " in " + date.toTextMinuti(durata));
+        } else {
+            label = new Label("Upload delle statistiche non ancora effettuato");
+        }// end of if/else cycle
+
+        return label;
     }// end of method
 
 }// end of class

@@ -161,6 +161,10 @@ public class WikiCost {
 
     public final static String LAST_UPLOAD_ANNI = CODE_UPLOAD + ANNI;
 
+    public final static String LAST_UPLOAD_STATISTICHE_GIORNI = CODE_STATISTICHE + GIORNI;
+
+    public final static String LAST_UPLOAD_STATISTICHE_ANNI = CODE_STATISTICHE + ANNI;
+
     public final static String LAST_UPLOAD_STATISTICHE_ATTIVITA = CODE_STATISTICHE + ATT;
 
     public final static String LAST_UPLOAD_STATISTICHE_NAZIONALITA = CODE_STATISTICHE + NAZ;
@@ -181,6 +185,10 @@ public class WikiCost {
     public final static String DURATA_UPLOAD_GIORNI = DURATA + GIORNI;
 
     public final static String DURATA_UPLOAD_ANNI = DURATA + ANNI;
+
+    public final static String DURATA_UPLOAD_STATISTICHE_GIORNI = DURATA_UPLOAD + GIORNI;
+
+    public final static String DURATA_UPLOAD_STATISTICHE_ANNI = DURATA_UPLOAD + ANNI;
 
     public final static String DURATA_UPLOAD_STATISTICHE_ATTIVITA = DURATA_UPLOAD + ATT;
 
