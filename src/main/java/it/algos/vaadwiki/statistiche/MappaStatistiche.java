@@ -27,6 +27,12 @@ public class MappaStatistiche {
     }
 
 
+    public MappaStatistiche(String plurale, int numNazionalita) {
+        this.plurale = plurale;
+        this.numNazionalita = numNazionalita;
+    }
+
+
     public MappaStatistiche(String plurale, int numAttivitaUno, int numAttivitaDue, int numAttivitaTre, int numAttivitaTotali) {
         this.plurale = plurale;
         this.numAttivitaUno = numAttivitaUno;

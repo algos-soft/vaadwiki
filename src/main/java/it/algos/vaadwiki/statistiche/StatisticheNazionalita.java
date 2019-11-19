@@ -1,20 +1,20 @@
 package it.algos.vaadwiki.statistiche;
 
-import it.algos.vaadwiki.modules.attivita.Attivita;
-import it.algos.vaadwiki.modules.attivita.AttivitaService;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
-import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.DURATA_UPLOAD_STATISTICHE_NAZIONALITA;
+import static it.algos.vaadwiki.application.WikiCost.LAST_UPLOAD_STATISTICHE_NAZIONALITA;
 
 /**
  * Project vaadwiki
@@ -70,21 +70,44 @@ public class StatisticheNazionalita extends StatisticheAttNaz {
     @Override
     protected void creaLista() {
         listaPlurali = service.findAllPlurali();
-        listaPlurali = listaPlurali.subList(0, 4);
+        listaPlurali = listaPlurali.subList(30, 35);
     }// end of method
 
 
     /**
-     * Prima tabella <br>
+     * Costruisce la mappa <br>
      */
-    protected String tabellaUsate(int numBio) {
+    protected void creaMappa() {
+        mappaPlurali = new LinkedHashMap<>();
+        MappaStatistiche mappa;
+        List<Nazionalita> lista = null;
+        int numNazionalita;
+
+        for (String plurale : listaPlurali) {
+            lista = service.findAllByPlurale(plurale);
+            numNazionalita = 0;
+
+            for (Nazionalita nazionalita : lista) {
+                numNazionalita += bioService.countByNazionalita(nazionalita);
+            }// end of for cycle
+
+            mappa = new MappaStatistiche(plurale, numNazionalita);
+            mappaPlurali.put(plurale, mappa);
+        }// end of for cycle
+
+    }// end of method
+
+    /*
+     * testo descrittivo prima tabella <br>
+     */
+    protected String testoPrimaTabella(int numBio) {
         String testo = VUOTA;
 
         testo += A_CAPO;
         testo += "==Nazionalità usate==";
         testo += A_CAPO;
         testo += "'''";
-        testo += listaPlurali.size();
+        testo += getNumeroUsate();
         testo += "'''";
         testo += " nazionalità";
         testo += "<ref>Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]</ref>";
@@ -124,47 +147,137 @@ public class StatisticheNazionalita extends StatisticheAttNaz {
 
 
     @Override
-    protected String rigaPrimaTabella(String nazionalitaPlurale, int cont) {
+    protected String rigaPrimaTabella(String plurale, int cont) {
         String testo = "";
         String tagDx = "style=\"text-align: right;\" |";
-        String nome = nazionalitaPlurale.toLowerCase();
+        String nome = plurale.toLowerCase();
         String listaTag = "[[Progetto:Biografie/Nazionalità/";
         String categoriaTag = "[[:Categoria:";
         String sepTag = "|";
         String endTag = "]]";
         String lista;
         String categoria;
-        List<Nazionalita> listaNazionalita = service.findAllByPlurale(nazionalitaPlurale);
-        int numNazionalita = 0;
+        MappaStatistiche mappa;
 
         lista = listaTag + text.primaMaiuscola(nome) + sepTag + nome + endTag;
         categoria = categoriaTag + nome + sepTag + nome + endTag;
 
-        for (Nazionalita nazionalita : listaNazionalita) {
-            numNazionalita += bioService.countByNazionalita(nazionalita);
-        }// end of for cycle
+        mappa = mappaPlurali.get(plurale);
+        if (mappa == null) {
+            return VUOTA;
+        }// end of if cycle
 
-        testo += "|-";
+        if (mappa.getNumNazionalita() > 0) {
+            testo += "|-";
+            testo += A_CAPO;
+            testo += "|";
+
+            testo += tagDx;
+            testo += cont;
+
+            testo += " || ";
+            testo += lista;
+
+            testo += " || ";
+            testo += categoria;
+
+            testo += " || ";
+            testo += tagDx;
+            testo += mappa.getNumNazionalita();
+
+            testo += A_CAPO;
+        }// end of if cycle
+
+        return testo;
+    }// fine del metodo
+
+
+    @Override
+    protected String testoSecondaTabella(int numBio) {
+        String testo = VUOTA;
+
         testo += A_CAPO;
-        testo += "|";
+        testo += "==Nazionalità non usate==";
+        testo += A_CAPO;
+        testo += "'''";
+        testo += getNumeroNonUsate();
+        testo += "'''";
+        testo += " nazionalità  presenti nell' [[Modulo:Bio/Plurale nazionalità|'''elenco del progetto Biografie''']] ma '''non utilizzate''' ";
+        testo += "<ref>Si tratta di nazionalità '''originariamente''' discusse ed [[Modulo:Bio/Plurale nazionalità|inserite nell'elenco]] che non sono mai state utilizzate o che sono state in un secondo tempo sostituite da altre denominazioni</ref>";
+        testo += " in nessuna '''voce biografica''' che usa il [[template:Bio|template Bio]]";
 
-        testo += tagDx;
-        testo += cont;
+        return testo;
+    }// fine del metodo
 
-        testo += " || ";
-        testo += lista;
+    @Override
+    protected String colonneSecondaTabella() {
+        String testo = "";
+        String color = "! style=\"background-color:#CCC;\" |";
 
-        testo += " || ";
-        testo += categoria;
+        testo += color;
+        testo += "'''#'''";
+        testo += A_CAPO;
 
-        testo += " || ";
-        testo += tagDx;
-        testo += numNazionalita;
-
+        testo += color;
+        testo += "'''Nazionalità non utilizzate'''";
         testo += A_CAPO;
 
         return testo;
     }// fine del metodo
 
+    @Override
+    protected String rigaSecondaTabella(String plurale, int cont) {
+        String testo = "";
+        String tagDx = "style=\"text-align: right;\" |";
+        String nome = plurale.toLowerCase();
+        MappaStatistiche mappa;
+
+        mappa = mappaPlurali.get(plurale);
+        if (mappa == null) {
+            return VUOTA;
+        }// end of if cycle
+
+        if (mappa.getNumNazionalita() == 0) {
+            testo += "|-";
+            testo += A_CAPO;
+            testo += "|";
+
+            testo += tagDx;
+            testo += cont;
+
+            testo += " || ";
+            testo += nome;
+
+            testo += A_CAPO;
+        }// end of if cycle
+
+
+        return testo;
+    }// fine del metodo
+
+    protected int getNumeroUsate() {
+        int numero = 0;
+        boolean usata;
+
+        for (String key : mappaPlurali.keySet()) {
+            usata = mappaPlurali.get(key).getNumNazionalita() > 0;
+            numero = usata ? numero + 1 : numero;
+        }// end of for cycle
+
+        return numero;
+    }// fine del metodo
+
+
+    protected int getNumeroNonUsate() {
+        int numero = 0;
+        boolean nonUsata;
+
+        for (String key : mappaPlurali.keySet()) {
+            nonUsata = mappaPlurali.get(key).getNumNazionalita() == 0;
+            numero = nonUsata ? numero + 1 : numero;
+        }// end of for cycle
+
+        return numero;
+    }// fine del metodo
 
 }// end of class
