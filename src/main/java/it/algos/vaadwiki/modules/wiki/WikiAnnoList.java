@@ -3,7 +3,6 @@ package it.algos.vaadwiki.modules.wiki;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -20,17 +19,15 @@ import it.algos.vaadflow.modules.anno.AnnoDialog;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
-import it.algos.vaadwiki.modules.attivita.Attivita;
+import it.algos.vaadwiki.statistiche.StatisticheAnni;
+import it.algos.vaadwiki.statistiche.StatisticheGiorni;
 import it.algos.vaadwiki.upload.UploadAnnoMorto;
 import it.algos.vaadwiki.upload.UploadAnnoNato;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
-
-import java.time.LocalDateTime;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -94,6 +91,7 @@ public class WikiAnnoList extends WikiList {
 //        ((AnnoDialog) dialog).fixFunzioni(this::save, this::delete);
 //    }// end of Spring constructor
 
+
     /**
      * Costruttore @Autowired <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
@@ -133,8 +131,28 @@ public class WikiAnnoList extends WikiList {
         super.fixPreferenze();
 
         super.titoloPaginaStatistiche = attNazProfCatService.titoloPaginaStatisticheAnni;
+        super.usaBottoneUpload = true;
         super.codeLastUpload = LAST_UPLOAD_ANNI;
         super.durataLastUpload = DURATA_UPLOAD_ANNI;
+        super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_ANNI;
+        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_ANNI;
+    }// end of method
+
+
+    /**
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+
+        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_ANNI, LAST_UPLOAD_ANNI));
+        if (text.isValid(codeLastUploadStatistiche) && text.isValid(durataLastUploadStatistiche)) {
+            alertPlacehorder.add(creaInfoUpload(codeLastUploadStatistiche, durataLastUploadStatistiche));
+        }// end of if cycle
     }// end of method
 
 
@@ -154,46 +172,6 @@ public class WikiAnnoList extends WikiList {
         sincroBottoniMenu(false);
     }// end of method
 
-
-    /**
-     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
-     * Normalmente ad uso esclusivo del developer
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
-     */
-    @Override
-    protected void creaAlertLayout() {
-        super.creaAlertLayout();
-
-        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_ANNI, LAST_UPLOAD_ANNI));
-    }// end of method
-
-
-
-
-
-
-//    /**
-//     * Aggiunge le colonne alla PaginatedGrid <br>
-//     * Sovrascritto (obbligatorio) <br>
-//     */
-//    protected void addColumnsGridPaginata() {
-//        fixColumn(Anno::getOrdine, "ordine");
-//        fixColumn(Anno::getSecolo, "secolo");
-//        fixColumn(Anno::getTitolo, "titolo");
-//    }// end of method
-
-
-//    /**
-//     * Costruisce la colonna in funzione della PaginatedGrid specifica della sottoclasse <br>
-//     * DEVE essere sviluppato nella sottoclasse, sostituendo AEntity con la classe effettiva  <br>
-//     */
-//    protected void fixColumn(ValueProvider<Anno, ?> valueProvider, String propertyName) {
-//        Grid.Column singleColumn;
-//        singleColumn = ((PaginatedGrid<Anno>) grid).addColumn(valueProvider);
-//        columnService.fixColumn(singleColumn, Anno.class, propertyName);
-//    }// end of method
-//
 
     /**
      * Eventuali colonne calcolate aggiunte DOPO quelle automatiche
@@ -333,6 +311,7 @@ public class WikiAnnoList extends WikiList {
         appContext.getBean(AnnoDialog.class, service, entityClazz).open(entityBean, EAOperation.edit, this::save, this::delete);
     }// end of method
 
+
     /**
      * Opens the confirmation dialog before deleting the current item.
      * <p>
@@ -343,5 +322,10 @@ public class WikiAnnoList extends WikiList {
         uploadService.uploadAllAnni();
     }// end of method
 
+
+    protected void uploadStatistiche() {
+        appContext.getBean(StatisticheAnni.class);
+        super.updateGrid();
+    }// end of method
 
 }// end of class

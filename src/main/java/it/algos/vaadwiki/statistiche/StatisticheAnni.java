@@ -1,9 +1,9 @@
 package it.algos.vaadwiki.statistiche;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.modules.giorno.Giorno;
-import it.algos.vaadflow.modules.giorno.GiornoService;
-import it.algos.vaadflow.service.AMathService;
+import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadflow.modules.anno.AnnoService;
+import it.algos.vaadwiki.enumeration.EAPreferenzaWiki;
 import it.algos.vaadwiki.upload.UploadService;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
@@ -16,23 +16,22 @@ import java.util.LinkedHashMap;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
-import static it.algos.vaadwiki.application.WikiCost.DURATA_UPLOAD_STATISTICHE_GIORNI;
-import static it.algos.vaadwiki.application.WikiCost.LAST_UPLOAD_STATISTICHE_GIORNI;
+import static it.algos.vaadwiki.application.WikiCost.DURATA_UPLOAD_STATISTICHE_ANNI;
+import static it.algos.vaadwiki.application.WikiCost.LAST_UPLOAD_STATISTICHE_ANNI;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: mar, 19-nov-2019
- * Time: 16:32
+ * Date: mer, 20-nov-2019
+ * Time: 14:05
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-public class StatisticheGiorni extends StatisticheAttNaz {
+public class StatisticheAnni extends StatisticheAttNaz {
 
-    private static String TITOLO_PAGINA_WIKI = "Progetto:Biografie/Giorni";
-
+    private static String TITOLO_PAGINA_WIKI = "Progetto:Biografie/Anni";
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
@@ -41,7 +40,7 @@ public class StatisticheGiorni extends StatisticheAttNaz {
      * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    private GiornoService service;
+    private AnnoService service;
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
@@ -52,22 +51,13 @@ public class StatisticheGiorni extends StatisticheAttNaz {
     @Autowired
     private UploadService upload;
 
-    /**
-     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
-     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    private AMathService math;
-
 
     /**
      * Costruttore base senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Usa: appContext.getBean(StatisticheGiorni.class) <br>
+     * Usa: appContext.getBean(StatisticheAnni.class) <br>
      */
-    public StatisticheGiorni() {
+    public StatisticheAnni() {
     }// end of Spring constructor
 
 
@@ -92,8 +82,8 @@ public class StatisticheGiorni extends StatisticheAttNaz {
     protected void fixPreferenze() {
         super.fixPreferenze();
         super.titoloPagina = TITOLO_PAGINA_WIKI;
-        super.codeLastUpload = LAST_UPLOAD_STATISTICHE_GIORNI;
-        super.codeDurataUpload = DURATA_UPLOAD_STATISTICHE_GIORNI;
+        super.codeLastUpload = LAST_UPLOAD_STATISTICHE_ANNI;
+        super.codeDurataUpload = DURATA_UPLOAD_STATISTICHE_ANNI;
     }// fine del metodo
 
 
@@ -112,17 +102,22 @@ public class StatisticheGiorni extends StatisticheAttNaz {
     protected void creaMappa() {
         mappa = new LinkedHashMap<>();
         MappaStatistiche mappaSingola;
-        int numGiornoNato;
-        int numGiornoMorto;
-        Giorno giorno;
+        int numAnnoNato;
+        int numAnnoMorto;
+        Anno anno;
+        int ordine = 1;
+        int min = pref.getInt(EAPreferenzaWiki.minNatiMortiAnno);
 
         for (String titolo : this.lista) {
-            giorno = service.findByKeyUnica(titolo);
-            numGiornoNato = bioService.countByGiornoNascita(giorno);
-            numGiornoMorto = bioService.countByGiornoMorte(giorno);
+            anno = service.findByKeyUnica(titolo);
+            numAnnoNato = bioService.countByAnnoNascita(anno);
+            numAnnoMorto = bioService.countByAnnoMorte(anno);
 
-            mappaSingola = new MappaStatistiche(giorno, numGiornoNato, numGiornoMorto);
-            mappa.put(titolo, mappaSingola);
+            if (numAnnoNato > min || numAnnoMorto > min) {
+                mappaSingola = new MappaStatistiche(anno, ordine, numAnnoNato, numAnnoMorto);
+                mappa.put(titolo, mappaSingola);
+                ordine++;
+            }// end of if cycle
         }// end of for cycle
     }// end of method
 
@@ -132,13 +127,14 @@ public class StatisticheGiorni extends StatisticheAttNaz {
      */
     protected String testoPrimaTabella(int numBio) {
         String testo = VUOTA;
+        int min = pref.getInt(EAPreferenzaWiki.minNatiMortiAnno);
 
         testo += A_CAPO;
-        testo += "==Giorni==";
+        testo += "==Anni==";
         testo += A_CAPO;
-        testo += "Statistiche dei nati e morti per ogni giorno dell'anno.";
-        testo += "<ref>Previsto il [[29 febbraio]] per gli [[Anno bisestile|anni bisestili]]</ref>";
-        testo += " Vengono prese in considerazione '''solo''' le voci biografiche che hanno valori '''validi e certi''' dei giorni di nascita e morte della persona.";
+        testo += "Statistiche dei nati e morti per ogni anno .";
+        testo += "<ref>Potenzialmente dal [[1000 a.C.]] al [[{{CURRENTYEAR}}]]</ref>";
+        testo += " Vengono prese in considerazione '''solo''' le voci biografiche che hanno valori '''validi e certi''' degli anni di nascita e morte della persona. Sono riportati gli anni che hanno un numero di nati o morti maggiore di '''" + min + "'''";
 
         return testo;
     }// fine del metodo
@@ -154,25 +150,17 @@ public class StatisticheGiorni extends StatisticheAttNaz {
         testo += A_CAPO;
 
         testo += color;
-        testo += "'''giorno'''";
+        testo += "'''anno'''";
         testo += A_CAPO;
 
         testo += color;
-        testo += "'''nati nel giorno'''";
-        testo += "<ref>Il [[template:Bio|template Bio]] della voce biografica deve avere un valore valido al parametro '''giornoMeseNascita'''.</ref>'''";
+        testo += "'''nati nell'anno'''";
+        testo += "<ref>Il [[template:Bio|template Bio]] della voce biografica deve avere un valore valido al parametro '''annoNascita'''.</ref>'''";
         testo += A_CAPO;
 
         testo += color;
-        testo += "'''morti nel giorno'''";
-        testo += "<ref>Il [[template:Bio|template Bio]] della voce biografica deve avere un valore valido al parametro '''giornoMeseMorte'''.</ref>'''";
-        testo += A_CAPO;
-
-        testo += color;
-        testo += "'''% nati giorno/anno'''";
-        testo += A_CAPO;
-
-        testo += color;
-        testo += "'''% morti giorno/anno'''";
+        testo += "'''morti nell'anno'''";
+        testo += "<ref>Il [[template:Bio|template Bio]] della voce biografica deve avere un valore valido al parametro '''annoMorte'''.</ref>'''";
         testo += A_CAPO;
 
         return testo;
@@ -185,19 +173,25 @@ public class StatisticheGiorni extends StatisticheAttNaz {
         String sep = "|";
         MappaStatistiche mappaSingola = null;
         String titoloPagina = "";
-        Giorno giorno;
+        Anno anno;
+        int numNati;
+        int numMorti;
+        String nati;
+        String morti;
 
         mappaSingola = mappa.get(titolo);
         if (mappaSingola == null) {
             return VUOTA;
         }// end of if cycle
 
-        giorno = service.findByKeyUnica(titolo);
-        titoloPagina = upload.getTitoloGiornoNato(giorno);
-        int nati = mappaSingola.getNumGiornoNato();
-        int morti = mappaSingola.getNumGiornoMorto();
-        int totNati = getTotaleNati();
-        int totMorti = getTotaleMorti();
+        anno = service.findByKeyUnica(titolo);
+        titoloPagina = upload.getTitoloAnnoNato(anno);
+
+        numNati = mappaSingola.getNumAnnoNato();
+        numMorti = mappaSingola.getNumAnnoMorto();
+
+        nati = numNati == 0 ? "0" : LibWiki.setQuadre(titoloPagina + sep + numNati);
+        morti = numMorti == 0 ? "0" : LibWiki.setQuadre(titoloPagina + sep + numMorti);
 
         testo += "|-";
         testo += A_CAPO;
@@ -207,23 +201,16 @@ public class StatisticheGiorni extends StatisticheAttNaz {
         testo += mappaSingola.getOrdine();
 
         testo += " || ";
+        testo += tagDx;
         testo += LibWiki.setQuadre(titolo);
 
         testo += " || ";
         testo += tagDx;
-        testo += LibWiki.setQuadre(titoloPagina + sep + nati);
+        testo += nati;
 
         testo += " || ";
         testo += tagDx;
-        testo += LibWiki.setQuadre(titoloPagina + sep + morti);
-
-        testo += " || ";
-        testo += tagDx;
-        testo += math.percentualeDueDecimali(nati, totNati);
-
-        testo += " || ";
-        testo += tagDx;
-        testo += math.percentualeDueDecimali(morti, totMorti);
+        testo += morti;
 
         testo += A_CAPO;
 
@@ -236,28 +223,6 @@ public class StatisticheGiorni extends StatisticheAttNaz {
      */
     protected String tabellaNonUsate(int numBio) {
         return VUOTA;
-    }// fine del metodo
-
-
-    protected int getTotaleNati() {
-        int numero = 0;
-
-        for (String key : mappa.keySet()) {
-            numero += mappa.get(key).getNumGiornoNato();
-        }// end of for cycle
-
-        return numero;
-    }// fine del metodo
-
-
-    protected int getTotaleMorti() {
-        int numero = 0;
-
-        for (String key : mappa.keySet()) {
-            numero += mappa.get(key).getNumGiornoMorto();
-        }// end of for cycle
-
-        return numero;
     }// fine del metodo
 
 }// end of class

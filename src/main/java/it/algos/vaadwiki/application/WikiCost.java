@@ -205,7 +205,7 @@ public class WikiCost {
 
     public final static String WIKI_PAGE_LIMIT = "wikiPageLimit";
 
-//    public final static String USA_CHECK_LISTE_PAGEID = "usaCheckListe";
+    public final static String MIN_NATI_MORTI_PER_ANNO = "minNatiMortiAnno";
 
     public final static String TAG_SEPARATORE = SPAZIO + "-" + SPAZIO;
 

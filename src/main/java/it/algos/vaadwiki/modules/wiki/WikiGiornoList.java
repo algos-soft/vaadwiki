@@ -3,7 +3,6 @@ package it.algos.vaadwiki.modules.wiki;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -20,17 +19,12 @@ import it.algos.vaadflow.modules.giorno.GiornoDialog;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
-import it.algos.vaadwiki.modules.attivita.Attivita;
-import it.algos.vaadwiki.modules.nazionalita.NazionalitaDialog;
 import it.algos.vaadwiki.statistiche.StatisticheGiorni;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
-
-import java.time.LocalDateTime;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -66,7 +60,6 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 public class WikiGiornoList extends WikiList {
 
 
-
     @Autowired
     @Qualifier(TASK_GIO)
     protected ATask task;
@@ -97,11 +90,11 @@ public class WikiGiornoList extends WikiList {
         super.fixPreferenze();
 
         super.titoloPaginaStatistiche = attNazProfCatService.titoloPaginaStatisticheGiorni;
-        super.usaBottoneUpload=true;
+        super.usaBottoneUpload = true;
         super.codeLastUpload = LAST_UPLOAD_GIORNI;
         super.durataLastUpload = DURATA_UPLOAD_GIORNI;
-        super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_ATTIVITA;
-        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_ATTIVITA;
+        super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_GIORNI;
+        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_GIORNI;
     }// end of method
 
 
@@ -151,10 +144,6 @@ public class WikiGiornoList extends WikiList {
 //        uploadAllButton.addClickListener(e -> openUploadDialog("dei giorni"));  //@todo versione 14
         sincroBottoniMenu(false);
     }// end of method
-
-
-
-
 
 
     /**
@@ -295,6 +284,7 @@ public class WikiGiornoList extends WikiList {
         appContext.getBean(GiornoDialog.class, service, entityClazz).open(entityBean, isEntityModificabile ? EAOperation.edit : EAOperation.showOnly, this::save, this::delete);
     }// end of method
 
+
     /**
      * Opens the confirmation dialog before deleting the current item.
      * <p>
@@ -304,6 +294,7 @@ public class WikiGiornoList extends WikiList {
     protected void uploadEffettivo() {
         uploadService.uploadAllGiorni();
     }// end of method
+
 
     protected void uploadStatistiche() {
         appContext.getBean(StatisticheGiorni.class);

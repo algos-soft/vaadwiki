@@ -51,6 +51,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
 
     categoriaAttiva(CAT_BIO, "Categoria attiva", EAPrefType.string, "BioBot"),
     wikiPageLimit(WIKI_PAGE_LIMIT, "Numero di pagine wiki da controllare nel blocco", EAPrefType.integer, 250),
+    minNatiMortiAnno(MIN_NATI_MORTI_PER_ANNO, "Numero minimo di nati o morti per la riga della tabella delle statistiche degli anni", EAPrefType.integer, 300),
 
     sendMailCiclo(SEND_MAIL_CICLO, "Mail di conferma e controllo del ciclo giornaliero", EAPrefType.bool, true),
     sendMailRestart(SEND_MAIL_RESTART, "Mail per il restart dell'applicazione", EAPrefType.bool, true),

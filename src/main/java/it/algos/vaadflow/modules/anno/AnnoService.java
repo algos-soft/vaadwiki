@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
@@ -242,6 +243,21 @@ public class AnnoService extends AService {
         }// end of if cycle
 
         return mongo.mongoOp.find(query, Anno.class);
+    }// end of method
+
+
+    public List<String> findAllTitoliOrdered() {
+        List<String> listaTitoli = null;
+        List<Anno> lista = repository.findAllByOrderByOrdineAsc();
+
+        if (array.isValid(lista)) {
+            listaTitoli = new ArrayList<>();
+            for (Anno anno : lista) {
+                listaTitoli.add(anno.titolo);
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaTitoli;
     }// end of method
 
 
