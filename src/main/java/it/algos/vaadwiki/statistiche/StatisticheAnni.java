@@ -172,7 +172,8 @@ public class StatisticheAnni extends StatisticheAttNaz {
         String tagDx = "style=\"text-align: right;\" |";
         String sep = "|";
         MappaStatistiche mappaSingola = null;
-        String titoloPagina = "";
+        String titoloPaginaNati = "";
+        String titoloPaginaMorti = "";
         Anno anno;
         int numNati;
         int numMorti;
@@ -185,13 +186,14 @@ public class StatisticheAnni extends StatisticheAttNaz {
         }// end of if cycle
 
         anno = service.findByKeyUnica(titolo);
-        titoloPagina = upload.getTitoloAnnoNato(anno);
+        titoloPaginaNati = upload.getTitoloAnnoNato(anno);
+        titoloPaginaMorti = upload.getTitoloAnnoMorto(anno);
 
         numNati = mappaSingola.getNumAnnoNato();
         numMorti = mappaSingola.getNumAnnoMorto();
 
-        nati = numNati == 0 ? "0" : LibWiki.setQuadre(titoloPagina + sep + numNati);
-        morti = numMorti == 0 ? "0" : LibWiki.setQuadre(titoloPagina + sep + numMorti);
+        nati = numNati == 0 ? "0" : LibWiki.setQuadre(titoloPaginaNati + sep + numNati);
+        morti = numMorti == 0 ? "0" : LibWiki.setQuadre(titoloPaginaMorti + sep + numMorti);
 
         testo += "|-";
         testo += A_CAPO;

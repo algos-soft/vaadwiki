@@ -184,7 +184,8 @@ public class StatisticheGiorni extends StatisticheAttNaz {
         String tagDx = "style=\"text-align: right;\" |";
         String sep = "|";
         MappaStatistiche mappaSingola = null;
-        String titoloPagina = "";
+        String titoloPaginaNati = "";
+        String titoloPaginaMorti = "";
         Giorno giorno;
 
         mappaSingola = mappa.get(titolo);
@@ -193,7 +194,8 @@ public class StatisticheGiorni extends StatisticheAttNaz {
         }// end of if cycle
 
         giorno = service.findByKeyUnica(titolo);
-        titoloPagina = upload.getTitoloGiornoNato(giorno);
+        titoloPaginaNati = upload.getTitoloGiornoNato(giorno);
+        titoloPaginaMorti = upload.getTitoloGiornoMorto(giorno);
         int nati = mappaSingola.getNumGiornoNato();
         int morti = mappaSingola.getNumGiornoMorto();
         int totNati = getTotaleNati();
@@ -211,11 +213,11 @@ public class StatisticheGiorni extends StatisticheAttNaz {
 
         testo += " || ";
         testo += tagDx;
-        testo += LibWiki.setQuadre(titoloPagina + sep + nati);
+        testo += LibWiki.setQuadre(titoloPaginaNati + sep + nati);
 
         testo += " || ";
         testo += tagDx;
-        testo += LibWiki.setQuadre(titoloPagina + sep + morti);
+        testo += LibWiki.setQuadre(titoloPaginaMorti + sep + morti);
 
         testo += " || ";
         testo += tagDx;
