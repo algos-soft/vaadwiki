@@ -123,9 +123,8 @@ public class WikiGiornoList extends WikiList {
         super.creaAlertLayout();
 
         alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_GIORNI, LAST_UPLOAD_GIORNI));
-        if (text.isValid(codeLastUploadStatistiche) && text.isValid(durataLastUploadStatistiche)) {
-            alertPlacehorder.add(creaInfoUpload(codeLastUploadStatistiche, durataLastUploadStatistiche));
-        }// end of if cycle
+        alertPlacehorder.add(creaInfoUpload(codeLastUpload, durataLastUpload));
+        alertPlacehorder.add(creaInfoUploadStatistiche(codeLastUploadStatistiche, durataLastUploadStatistiche));
     }// end of method
 
 

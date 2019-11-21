@@ -10,7 +10,8 @@ import org.springframework.context.annotation.Scope;
 import javax.annotation.PostConstruct;
 import java.util.List;
 
-import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.SOGLIA_NOMI_MONGO;
 import static it.algos.vaadwiki.application.WikiCost.SOGLIA_NOMI_PAGINA_WIKI;
 
@@ -46,6 +47,7 @@ public class StatisticheNomiB extends Statistiche {
         inizia();
     }// end of method
 
+
     /**
      * Preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
      * Può essere sovrascritto, per aggiungere informazioni <br>
@@ -54,13 +56,15 @@ public class StatisticheNomiB extends Statistiche {
     protected void fixPreferenze() {
         super.fixPreferenze();
         this.templateCorrelate = "AntroponimiCorrelate";
+        super.usaTagIndice = false;
     }// fine del metodo
+
 
     /**
      * Corpo della pagina <br>
      */
     protected void elaboraBody() {
-        Nome nome=null;
+        Nome nome = null;
         StringBuilder testo = new StringBuilder(VUOTA);
         int nomi = nomeService.count();
         int biografie = bioService.count();
@@ -92,7 +96,7 @@ public class StatisticheNomiB extends Statistiche {
         testo.append("\n! style=\"background-color:#CCC;\" | '''Voci'''");
 
         for (int k = 1; k <= lista.size(); k++) {
-             nome= lista.get(k-1);
+            nome = lista.get(k - 1);
             if (nome.valido) {
                 testo.append("\n|-");
                 testo.append("\n|style=\"text-align: right;\"|");

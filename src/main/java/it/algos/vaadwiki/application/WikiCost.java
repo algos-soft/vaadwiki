@@ -169,6 +169,10 @@ public class WikiCost {
 
     public final static String LAST_UPLOAD_STATISTICHE_NAZIONALITA = CODE_STATISTICHE + NAZ;
 
+    public final static String LAST_UPLOAD_STATISTICHE_NOMI = CODE_STATISTICHE + NOME;
+
+    public final static String LAST_UPLOAD_STATISTICHE_COGNOMI = CODE_STATISTICHE + COGNOME;
+
     //--tempo impiegato per l'ultimo download, in secondi
     public final static String DURATA_DOWNLOAD_ATTIVITA = DURATA + ATT;
 
@@ -193,6 +197,10 @@ public class WikiCost {
     public final static String DURATA_UPLOAD_STATISTICHE_ATTIVITA = DURATA_UPLOAD + ATT;
 
     public final static String DURATA_UPLOAD_STATISTICHE_NAZIONALITA = DURATA_UPLOAD + NAZ;
+
+    public final static String DURATA_UPLOAD_STATISTICHE_NOMI = DURATA_UPLOAD + NOME;
+
+    public final static String DURATA_UPLOAD_STATISTICHE_COGNOMI = DURATA_UPLOAD + COGNOME;
 
     //--path di varie pagine wiki
     public final static String PATH_WIKI = "https://it.wikipedia.org/wiki/";

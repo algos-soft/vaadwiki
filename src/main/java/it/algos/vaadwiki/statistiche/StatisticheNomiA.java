@@ -46,6 +46,7 @@ public class StatisticheNomiA extends Statistiche {
         super.inizia();
     }// end of method
 
+
     /**
      * Preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
      * Può essere sovrascritto, per aggiungere informazioni <br>
@@ -54,7 +55,9 @@ public class StatisticheNomiA extends Statistiche {
     protected void fixPreferenze() {
         super.fixPreferenze();
         this.templateCorrelate = "AntroponimiCorrelate";
+        super.usaTagIndice = false;
     }// fine del metodo
+
 
     /**
      * Corpo della pagina <br>

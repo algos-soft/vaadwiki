@@ -11,7 +11,6 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.service.LibBio;
@@ -58,7 +57,6 @@ public abstract class WikiList extends AGridViewList {
      */
     @Autowired
     protected LibBio libBio;
-
 
 
     //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
@@ -193,6 +191,7 @@ public abstract class WikiList extends AGridViewList {
 
         return label;
     }// end of method
+
 
     /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid
@@ -343,16 +342,34 @@ public abstract class WikiList extends AGridViewList {
     protected void uploadStatistiche() {
     }// end of method
 
+
     /**
      * Eventuale caption sopra la grid
      */
-    protected Label creaInfoUpload(String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
+    protected Label creaInfoUpload(String flagLastUpload, String flagDurataLastUpload) {
+        Label label = null;
+        LocalDateTime lastDownload = pref.getDate(flagLastUpload);
+        int durata = pref.getInt(flagDurataLastUpload);
+
+        if (lastDownload != null) {
+            label = new Label("Ultimo upload effettuato il " + date.getTime(lastDownload) + " in " + date.toTextSecondi(durata));
+        } else {
+            label = new Label("Upload non ancora effettuato");
+        }// end of if/else cycle
+
+        return label;
+    }// end of method
+
+    /**
+     * Eventuale caption sopra la grid
+     */
+    protected Label creaInfoUploadStatistiche( String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
         Label label = null;
         LocalDateTime lastDownload = pref.getDate(flagLastUploadStatistiche);
         int durata = pref.getInt(flagDurataLastUploadStatistiche);
 
         if (lastDownload != null) {
-            label = new Label("Ultimo upload delle statistiche effettuato il " + date.getTime(lastDownload) + " in " + date.toTextMinuti(durata));
+            label = new Label("Ultimo upload delle statistiche effettuato il " + date.getTime(lastDownload) + " in " + date.toTextSecondi(durata));
         } else {
             label = new Label("Upload delle statistiche non ancora effettuato");
         }// end of if/else cycle

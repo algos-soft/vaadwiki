@@ -30,6 +30,7 @@ import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.vaadin.klaudeta.PaginatedGrid;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -120,6 +121,8 @@ public class NomeList extends WikiList {
         this.usaStatistiche2Button = true;
         super.titoloPaginaStatistiche = ((NomeService) service).TITOLO_PAGINA_WIKI;
         super.titoloPaginaStatistiche2 = ((NomeService) service).TITOLO_PAGINA_WIKI_2;
+        super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_NOMI;
+        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_NOMI;
         super.usaBottoneUpload = true;
     }// end of method
 
@@ -135,6 +138,8 @@ public class NomeList extends WikiList {
         super.creaAlertLayout();
 
         alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_NOMI, LAST_ELABORA_NOME));
+        alertPlacehorder.add(creaInfoUpload(codeLastUpload, durataLastUpload));
+        alertPlacehorder.add(creaInfoUploadStatistiche(codeLastUploadStatistiche, durataLastUploadStatistiche));
     }// end of method
 
 
@@ -224,13 +229,13 @@ public class NomeList extends WikiList {
         }// end of if cycle
 
         if (items != null) {
-                try { // prova ad eseguire il codice
-                    grid.deselectAll();
-                    grid.setItems(items);
-                    headerGridHolder.setText(getGridHeaderText());
-                } catch (Exception unErrore) { // intercetta l'errore
-                    log.error(unErrore.toString());
-                }// fine del blocco try-catch
+            try { // prova ad eseguire il codice
+                grid.deselectAll();
+                grid.setItems(items);
+                headerGridHolder.setText(getGridHeaderText());
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
         }// end of if cycle
 
         creaAlertLayout();
@@ -376,8 +381,32 @@ public class NomeList extends WikiList {
 
 
     protected void uploadStatistiche() {
+        long inizio = System.currentTimeMillis();
         appContext.getBean(StatisticheNomiA.class);
         appContext.getBean(StatisticheNomiB.class);
+        setLastUpload(inizio);
+        super.updateGrid();
+    }// end of method
+
+
+    /**
+     * Registra nelle preferenze la data dell'ultimo upload effettuato <br>
+     * Registra nelle preferenze la durata dell'ultimo upload effettuato, in secondi <br>
+     */
+    protected void setLastUpload(long inizio) {
+        int delta = 1000;
+        LocalDateTime lastDownload = LocalDateTime.now();
+        pref.saveValue(codeLastUploadStatistiche, lastDownload);
+
+        long fine = System.currentTimeMillis();
+        long durata = fine - inizio;
+        int minuti = 0;
+        if (durata > delta) {
+            minuti = (int) durata / delta;
+        } else {
+            minuti = 0;
+        }// end of if/else cycle
+        pref.saveValue(durataLastUploadStatistiche, minuti);
     }// end of method
 
 

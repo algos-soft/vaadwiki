@@ -21,7 +21,6 @@ import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.statistiche.StatisticheAnni;
-import it.algos.vaadwiki.statistiche.StatisticheGiorni;
 import it.algos.vaadwiki.upload.UploadAnnoMorto;
 import it.algos.vaadwiki.upload.UploadAnnoNato;
 import lombok.extern.slf4j.Slf4j;
@@ -150,9 +149,8 @@ public class WikiAnnoList extends WikiList {
         super.creaAlertLayout();
 
         alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_ANNI, LAST_UPLOAD_ANNI));
-        if (text.isValid(codeLastUploadStatistiche) && text.isValid(durataLastUploadStatistiche)) {
-            alertPlacehorder.add(creaInfoUpload(codeLastUploadStatistiche, durataLastUploadStatistiche));
-        }// end of if cycle
+        alertPlacehorder.add(creaInfoUpload(codeLastUpload, durataLastUpload));
+        alertPlacehorder.add(creaInfoUploadStatistiche(codeLastUploadStatistiche, durataLastUploadStatistiche));
     }// end of method
 
 
