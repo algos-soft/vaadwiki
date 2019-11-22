@@ -10,6 +10,7 @@ import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadwiki.modules.wiki.WikiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -29,8 +30,8 @@ import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 public abstract class AttNazProfCatList extends AGridViewList {
 
 
-    @Autowired
-    protected ApplicationContext appContext;
+//    @Autowired
+//    protected ApplicationContext appContext;
 
     protected Button deleteMongoButton;
 
@@ -74,7 +75,7 @@ public abstract class AttNazProfCatList extends AGridViewList {
 
     //    @Autowired
 //    @Qualifier(TAG_ATT)
-    protected AttNazProfCatService serviceWiki;
+    protected WikiService serviceWiki;
 
     protected ATask task;
 
@@ -91,7 +92,7 @@ public abstract class AttNazProfCatList extends AGridViewList {
      */
     public AttNazProfCatList(IAService service, Class<? extends AEntity> entityClazz) {
         super(service, entityClazz);
-        serviceWiki = (AttNazProfCatService) service;
+        serviceWiki = (WikiService) service;
     }// end of Vaadin/@Route constructor
 
 

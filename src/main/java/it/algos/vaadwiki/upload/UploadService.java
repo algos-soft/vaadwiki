@@ -50,6 +50,16 @@ public class UploadService extends ABioService {
     public static final String MORTI = "Morti";
 
     /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
+
+    /**
+     * Private final property
+     */
+    private static final UploadService INSTANCE = new UploadService();
+
+    /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
@@ -82,6 +92,23 @@ public class UploadService extends ABioService {
      */
     @Autowired
     protected AMailService mailService;
+
+
+    /**
+     * Private constructor to avoid client applications to use constructor
+     */
+    private UploadService() {
+    }// end of constructor
+
+
+    /**
+     * Gets the unique instance of this Singleton.
+     *
+     * @return the unique instance of this Singleton
+     */
+    public static UploadService getInstance() {
+        return INSTANCE;
+    }// end of static method
 
 
     /**

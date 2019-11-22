@@ -129,7 +129,7 @@ public class CognomeList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_COGNOMI, LAST_ELABORA_COGNOME));
+//        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_COGNOMI, LAST_ELABORA_COGNOME));
     }// end of method
 
 

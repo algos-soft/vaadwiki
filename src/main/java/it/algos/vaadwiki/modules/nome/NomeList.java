@@ -121,7 +121,7 @@ public class NomeList extends WikiList {
         this.usaStatistiche2Button = true;
         super.titoloPaginaStatistiche = ((NomeService) service).TITOLO_PAGINA_WIKI;
         super.titoloPaginaStatistiche2 = ((NomeService) service).TITOLO_PAGINA_WIKI_2;
-        super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_NOMI;
+        super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_NOMI;
         super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_NOMI;
         super.usaBottoneUpload = true;
     }// end of method
@@ -137,9 +137,9 @@ public class NomeList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_NOMI, LAST_ELABORA_NOME));
-        alertPlacehorder.add(creaInfoUpload(codeLastUpload, durataLastUpload));
-        alertPlacehorder.add(creaInfoUploadStatistiche(codeLastUploadStatistiche, durataLastUploadStatistiche));
+//        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_NOMI, LAST_ELABORA_NOME));
+//        alertPlacehorder.add(creaInfoUpload(codeLastUpload, durataLastUpload));
+//        alertPlacehorder.add(creaInfoUploadStatistiche(codeLastUploadStatistiche, durataLastUploadStatistiche));
     }// end of method
 
 
@@ -396,7 +396,7 @@ public class NomeList extends WikiList {
     protected void setLastUpload(long inizio) {
         int delta = 1000;
         LocalDateTime lastDownload = LocalDateTime.now();
-        pref.saveValue(codeLastUploadStatistiche, lastDownload);
+        pref.saveValue(lastUploadStatistiche, lastDownload);
 
         long fine = System.currentTimeMillis();
         long durata = fine - inizio;

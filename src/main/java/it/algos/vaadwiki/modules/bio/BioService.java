@@ -14,7 +14,7 @@ import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.modules.attivita.Attivita;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.vaadwiki.modules.wiki.WikiService;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.cognome.CognomeService;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
@@ -63,7 +63,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 @Qualifier(TAG_BIO)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class BioService extends AttNazProfCatService {
+public class BioService extends WikiService {
 
 
     /**

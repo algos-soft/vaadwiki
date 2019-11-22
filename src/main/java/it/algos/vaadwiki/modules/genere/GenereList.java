@@ -8,6 +8,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
+import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
@@ -15,6 +17,7 @@ import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
 import it.algos.vaadwiki.modules.professione.Professione;
+import it.algos.vaadwiki.modules.wiki.WikiList;
 import it.algos.vaadwiki.schedule.TaskGenere;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +54,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Slf4j
 @AIScript(sovrascrivibile = true)
 @AIView(vaadflow = false, menuName = "genere", menuIcon = VaadinIcon.BOAT, searchProperty = "singolare", roleTypeVisibility = EARoleType.developer)
-public class GenereList extends AttNazProfCatList {
+public class GenereList extends WikiList {
 
 
     /**
@@ -78,44 +81,6 @@ public class GenereList extends AttNazProfCatList {
         super(service, Genere.class);
     }// end of Vaadin/@Route constructor
 
-    /**
-     *
-     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        super.titoloModulo = serviceWiki.titoloModuloGenere;
-        this.usaBottoneViewStatistiche = false;
-        this.usaBottoneUploadStatistiche = false;
-        super.task = taskGenere;
-        super.usaPagination = true;
-        super.codeFlagDownload = USA_DAEMON_GENERE;
-        super.codeLastDownload = LAST_DOWNLOAD_GENERE;
-        super.durataLastDownload = DURATA_DOWNLOAD_GENERE;
-    }// end of method
-
-    /**
-     * Eventuali messaggi di avviso specifici di questa view ed inseriti in 'alertPlacehorder' <br>
-     * <p>
-     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse ALayoutViewList <br>
-     * Normalmente ad uso esclusivo del developer (eventualmente dell'admin) <br>
-     * Può essere sovrascritto, per aggiungere informazioni <br>
-     * Invocare PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void creaAlertLayout() {
-        super.creaAlertLayout();
-        alertPlacehorder.add(new Label("Modulo:Bio/Plurale attività genere. Modulo Lua di supporto a Biobot"));
-        alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3, da singolare maschile e femminile (usati nell'incipit) al plurale maschile e femminile, per le intestazioni dei paragrafi nelle liste di antroponimi previste nel Progetto:Antroponimi."));
-        alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
-        alertPlacehorder.add(new Label("[\"attivita singolare maschile\"] = \"attività plurale maschile\""));
-        alertPlacehorder.add(new Label("[\"attivita singolare femminile\"] = \"attività plurale femminile\""));
-        alertPlacehorder.add(new Label("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività e le pagine sono convertite in minuscolo."));
-    }// end of method
 
     /**
      * Crea effettivamente il Component Grid <br>
@@ -130,6 +95,64 @@ public class GenereList extends AttNazProfCatList {
         return new PaginatedGrid<Genere>();
     }// end of method
 
+    /**
+     *
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
+        super.titoloModulo = wikiService.titoloModuloGenere;
+        this.usaStatisticheButton = false;
+        this.usaBottoneUploadStatistiche = false;
+        super.task = taskGenere;
+        super.usaPagination = true;
+        super.flagDaemon = USA_DAEMON_GENERE;
+        super.lastDownload = LAST_DOWNLOAD_GENERE;
+        super.durataLastDownload = DURATA_DOWNLOAD_GENERE;
+    }// end of method
+
+    /**
+     * Eventuali messaggi di avviso specifici di questa view ed inseriti in 'alertPlacehorder' <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse ALayoutViewList <br>
+     * Normalmente ad uso esclusivo del developer (eventualmente dell'admin) <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+
+        alertPlacehorder.add(getLabelBlue("Modulo:Bio/Plurale attività genere."));
+        alertPlacehorder.add(new Label("Modulo Lua di supporto a Modulo:Bio."));
+        alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3, da singolare maschile e femminile (usati nell'incipit) al plurale maschile e femminile, per le intestazioni dei paragrafi nelle liste di antroponimi previste nel Progetto:Antroponimi."));
+        alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
+        alertPlacehorder.add(new Label("[\"attivita singolare maschile\"] = \"attività plurale maschile\""));
+        alertPlacehorder.add(new Label("[\"attivita singolare femminile\"] = \"attività plurale femminile\""));
+        alertPlacehorder.add(getLabelRed("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in minuscolo."));
+    }// end of method
+
+
+    /**
+     * Creazione ed apertura del dialogo per una nuova entity oppure per una esistente <br>
+     * Il dialogo è PROTOTYPE e viene creato esclusivamente da appContext.getBean(... <br>
+     * Nella creazione vengono regolati il service e la entityClazz di riferimento <br>
+     * Contestualmente alla creazione, il dialogo viene aperto con l'item corrente (ricevuto come parametro) <br>
+     * Se entityBean è null, nella superclasse AViewDialog viene modificato il flag a EAOperation.addNew <br>
+     * Si passano al dialogo anche i metodi locali (di questa classe AViewList) <br>
+     * come ritorno dalle azioni save e delete al click dei rispettivi bottoni <br>
+     * Il metodo DEVE essere sovrascritto <br>
+     *
+     * @param entityBean item corrente, null se nuova entity
+     */
+    @Override
+    protected void openDialog(AEntity entityBean) {
+        appContext.getBean(GenereDialog.class, service, entityClazz).open(entityBean, EAOperation.showOnly, this::save, this::delete);
+    }// end of method
 
 
 }// end of class

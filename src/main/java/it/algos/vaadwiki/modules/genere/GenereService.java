@@ -3,7 +3,7 @@ package it.algos.vaadwiki.modules.genere;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.vaadwiki.modules.wiki.WikiService;
 import it.algos.wiki.LibWiki;
 import it.algos.wiki.web.AQueryVoce;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_GEN)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class GenereService extends AttNazProfCatService {
+public class GenereService extends WikiService {
 
 
     /**

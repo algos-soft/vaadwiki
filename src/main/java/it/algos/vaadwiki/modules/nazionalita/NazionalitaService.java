@@ -3,8 +3,7 @@ package it.algos.vaadwiki.modules.nazionalita;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadwiki.modules.attivita.Attivita;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.vaadwiki.modules.wiki.WikiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,7 +39,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_NAZ;
 @Qualifier(TAG_NAZ)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class NazionalitaService extends AttNazProfCatService {
+public class NazionalitaService extends WikiService {
 
 
     /**

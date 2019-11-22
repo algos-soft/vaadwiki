@@ -7,12 +7,12 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
+import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
-import it.algos.vaadwiki.modules.attivita.Attivita;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
+import it.algos.vaadwiki.modules.wiki.WikiList;
 import it.algos.vaadwiki.schedule.TaskProfessione;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Slf4j
 @AIScript(sovrascrivibile = false)
 @AIView(vaadflow = false, menuName = "professione", menuIcon = VaadinIcon.BOAT, searchProperty = "singolare", roleTypeVisibility = EARoleType.developer)
-public class ProfessioneList extends AttNazProfCatList {
+public class ProfessioneList extends WikiList {
 
 
     /**
@@ -57,7 +57,6 @@ public class ProfessioneList extends AttNazProfCatList {
      */
     @Autowired
     private TaskProfessione taskProfessione;
-
 
 
     /**
@@ -77,6 +76,20 @@ public class ProfessioneList extends AttNazProfCatList {
 
 
     /**
+     * Crea effettivamente il Component Grid <br>
+     * <p>
+     * Può essere Grid oppure PaginatedGrid <br>
+     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
+     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
+     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     */
+    @Override
+    protected Grid creaGridComponent() {
+        return new PaginatedGrid<Professione>();
+    }// end of method
+
+
+    /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
      * Invocare PRIMA il metodo della superclasse
@@ -85,15 +98,16 @@ public class ProfessioneList extends AttNazProfCatList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.titoloModulo = serviceWiki.titoloModuloProfessione;
-        this.usaBottoneViewStatistiche = false;
+        super.titoloModulo = wikiService.titoloModuloProfessione;
+        this.usaStatisticheButton = false;
         this.usaBottoneUploadStatistiche = false;
-        super.usaPagination = true;
         super.task = taskProfessione;
-        super.codeFlagDownload = USA_DAEMON_PROFESSIONE;
-        super.codeLastDownload = LAST_DOWNLOAD_PROFESSIONE;
+        super.usaPagination = true;
+        super.flagDaemon = USA_DAEMON_PROFESSIONE;
+        super.lastDownload = LAST_DOWNLOAD_PROFESSIONE;
         super.durataLastDownload = DURATA_DOWNLOAD_PROFESSIONE;
     }// end of method
+
 
     /**
      * Eventuali messaggi di avviso specifici di questa view ed inseriti in 'alertPlacehorder' <br>
@@ -106,7 +120,9 @@ public class ProfessioneList extends AttNazProfCatList {
     @Override
     protected void creaAlertLayout() {
         super.creaAlertLayout();
-        alertPlacehorder.add(new Label("Modulo:Bio/Link attività. Modulo Lua di supporto a Modulo:Bio"));
+
+        alertPlacehorder.add(getLabelBlue("Modulo:Bio/Link attività."));
+        alertPlacehorder.add(new Label("Modulo Lua di supporto a Modulo:Bio."));
         alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3, dal nome dell'attività a quello della voce corrispondente, per creare dei piped wikilink."));
         alertPlacehorder.add(new Label("Quando l'attività corrisponde già al titolo della voce di destinazione NON serve inserirla qui."));
         alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
@@ -114,21 +130,26 @@ public class ProfessioneList extends AttNazProfCatList {
         alertPlacehorder.add(new Label("[\"attivitaforma2\"] = \"voce di riferimento\""));
         alertPlacehorder.add(new Label("Viene utilizzata principalmente per convertire le attività da femminile (che può essere usato nell'incipit) a maschile (usato nel wikilink) e per orfanizzare i redirect"));
         alertPlacehorder.add(new Label("All'interno della tabella le attività sono in ordine alfabetico."));
-        alertPlacehorder.add(new Label("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle attività (maschili) che corrispondono alla pagina (non presenti nel Modulo su Wiki)."));
-        alertPlacehorder.add(new Label("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività e le pagine sono convertite in minuscolo."));
+        alertPlacehorder.add(getLabelRed("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle attività (maschili) che corrispondono alla pagina (non presenti nel Modulo su Wiki)."));
+        alertPlacehorder.add(getLabelRed("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività e le pagine sono convertite in minuscolo."));
     }// end of method
 
+
     /**
-     * Crea effettivamente il Component Grid <br>
-     * <p>
-     * Può essere Grid oppure PaginatedGrid <br>
-     * DEVE essere sovrascritto nella sottoclasse con la PaginatedGrid specifica della Collection <br>
-     * DEVE poi invocare il metodo della superclasse per le regolazioni base della PaginatedGrid <br>
-     * Oppure queste possono essere fatte nella sottoclasse, se non sono standard <br>
+     * Creazione ed apertura del dialogo per una nuova entity oppure per una esistente <br>
+     * Il dialogo è PROTOTYPE e viene creato esclusivamente da appContext.getBean(... <br>
+     * Nella creazione vengono regolati il service e la entityClazz di riferimento <br>
+     * Contestualmente alla creazione, il dialogo viene aperto con l'item corrente (ricevuto come parametro) <br>
+     * Se entityBean è null, nella superclasse AViewDialog viene modificato il flag a EAOperation.addNew <br>
+     * Si passano al dialogo anche i metodi locali (di questa classe AViewList) <br>
+     * come ritorno dalle azioni save e delete al click dei rispettivi bottoni <br>
+     * Il metodo DEVE essere sovrascritto <br>
+     *
+     * @param entityBean item corrente, null se nuova entity
      */
     @Override
-    protected Grid creaGridComponent() {
-        return new PaginatedGrid<Professione>();
+    protected void openDialog(AEntity entityBean) {
+        appContext.getBean(ProfessioneDialog.class, service, entityClazz).open(entityBean, EAOperation.showOnly, this::save, this::delete);
     }// end of method
 
 

@@ -2,7 +2,7 @@ package it.algos.vaadwiki.modules.attivita;
 
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.vaadwiki.modules.wiki.WikiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,7 +38,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_ATT)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class AttivitaService extends AttNazProfCatService {
+public class AttivitaService extends WikiService {
 
 
     /**

@@ -4,7 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.vaadwiki.modules.wiki.WikiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,7 +39,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_PRO)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class ProfessioneService extends AttNazProfCatService {
+public class ProfessioneService extends WikiService {
 
 
     /**
@@ -84,10 +84,24 @@ public class ProfessioneService extends AttNazProfCatService {
      * @return la entity trovata o appena creata
      */
     public Professione findOrCrea(String singolare, String pagina) {
+        return findOrCrea(singolare, pagina, false);
+    }// end of method
+
+
+    /**
+     * Ricerca di una entity (la crea se non la trova) <br>
+     *
+     * @param singolare maschile e femminile (obbligatorio ed unico)
+     * @param pagina    wiki di riferimento per la professione - pipedlink (obbligatorio NON unico)
+     * @param aggiunta  oltre alle voci presenti nel modulo wiki
+     *
+     * @return la entity trovata o appena creata
+     */
+    public Professione findOrCrea(String singolare, String pagina, boolean aggiunta) {
         Professione entity = findByKeyUnica(singolare);
 
         if (entity == null) {
-            entity = crea(singolare, pagina);
+            entity = crea(singolare, pagina, aggiunta);
         }// end of if cycle
 
         return entity;
@@ -99,11 +113,12 @@ public class ProfessioneService extends AttNazProfCatService {
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
      * @param pagina    wiki di riferimento per la professione - pipedlink (obbligatorio NON unico)
+     * @param aggiunta  oltre alle voci presenti nel modulo wiki
      *
      * @return la entity appena creata
      */
-    public Professione crea(String singolare, String pagina) {
-        return (Professione) save(newEntity(singolare, pagina));
+    public Professione crea(String singolare, String pagina, boolean aggiunta) {
+        return (Professione) save(newEntity(singolare, pagina, aggiunta));
     }// end of method
 
 
@@ -116,7 +131,7 @@ public class ProfessioneService extends AttNazProfCatService {
      */
     @Override
     public Professione newEntity() {
-        return newEntity("", "");
+        return newEntity("", "", false);
     }// end of method
 
 
@@ -127,10 +142,11 @@ public class ProfessioneService extends AttNazProfCatService {
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
      * @param pagina    wiki di riferimento per la professione - pipedlink (obbligatorio NON unico)
+     * @param aggiunta  oltre alle voci presenti nel modulo wiki
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Professione newEntity(String singolare, String pagina) {
+    public Professione newEntity(String singolare, String pagina, boolean aggiunta) {
         Professione entity = null;
 
         entity = findByKeyUnica(singolare);
@@ -141,6 +157,7 @@ public class ProfessioneService extends AttNazProfCatService {
         entity = Professione.builderProfessione()
                 .singolare(singolare.equals("") ? null : singolare)
                 .pagina(pagina.equals("") ? null : pagina)
+                .aggiunta(aggiunta)
                 .build();
 
         return entity;
@@ -238,7 +255,7 @@ public class ProfessioneService extends AttNazProfCatService {
         if (array.isValid(lista)) {
             for (Professione professione : lista) {
                 pagina = professione.pagina;
-                findOrCrea(pagina, pagina);
+                findOrCrea(pagina, pagina,true);
             }// end of for cycle
         }// end of if cycle
 

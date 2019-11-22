@@ -89,11 +89,11 @@ public class WikiGiornoList extends WikiList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.titoloPaginaStatistiche = attNazProfCatService.titoloPaginaStatisticheGiorni;
+        super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheGiorni;
         super.usaBottoneUpload = true;
-        super.codeLastUpload = LAST_UPLOAD_GIORNI;
+        super.lastUpload = LAST_UPLOAD_GIORNI;
         super.durataLastUpload = DURATA_UPLOAD_GIORNI;
-        super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_GIORNI;
+        super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_GIORNI;
         super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_GIORNI;
     }// end of method
 
@@ -122,9 +122,9 @@ public class WikiGiornoList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_GIORNI, LAST_UPLOAD_GIORNI));
-        alertPlacehorder.add(creaInfoUpload(codeLastUpload, durataLastUpload));
-        alertPlacehorder.add(creaInfoUploadStatistiche(codeLastUploadStatistiche, durataLastUploadStatistiche));
+//        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_GIORNI, LAST_UPLOAD_GIORNI));
+//        alertPlacehorder.add(creaInfoUpload(codeLastUpload, durataLastUpload));
+//        alertPlacehorder.add(creaInfoUploadStatistiche(codeLastUploadStatistiche, durataLastUploadStatistiche));
     }// end of method
 
 

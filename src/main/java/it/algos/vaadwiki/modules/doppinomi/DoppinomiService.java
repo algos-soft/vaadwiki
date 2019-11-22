@@ -2,7 +2,7 @@ package it.algos.vaadwiki.modules.doppinomi;
 
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
+import it.algos.vaadwiki.modules.wiki.WikiService;
 import it.algos.wiki.web.AQueryVoce;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_DOP;
 @Qualifier(TAG_DOP)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class DoppinomiService extends AttNazProfCatService {
+public class DoppinomiService extends WikiService {
 
 
     /**

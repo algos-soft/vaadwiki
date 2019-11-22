@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.modules.attivita;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
@@ -11,6 +12,8 @@ import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
+import it.algos.vaadwiki.modules.wiki.WikiList;
+import it.algos.vaadwiki.modules.wiki.WikiService;
 import it.algos.vaadwiki.schedule.TaskAttivita;
 import it.algos.vaadwiki.statistiche.StatisticheAttivita;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +59,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Slf4j
 @AIScript(sovrascrivibile = false)
 @AIView(vaadflow = false, menuName = "attivita", menuIcon = VaadinIcon.BOAT, searchProperty = "singolare", roleTypeVisibility = EARoleType.developer)
-public class AttivitaList extends AttNazProfCatList {
+public class AttivitaList extends WikiList {
 
 
     /**
@@ -108,17 +111,39 @@ public class AttivitaList extends AttNazProfCatList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.titoloModulo = serviceWiki.titoloModuloAttivita;
-        super.titoloPaginaStatistiche = serviceWiki.titoloPaginaStatisticheAttivita;
+        super.titoloModulo = wikiService.titoloModuloAttivita;
+        super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheAttivita;
         super.task = taskAttivita;
         super.usaPagination = true;
-        super.codeFlagDownload = USA_DAEMON_ATTIVITA;
-        super.codeLastDownload = LAST_DOWNLOAD_ATTIVITA;
+        super.flagDaemon = USA_DAEMON_ATTIVITA;
+        super.lastDownload = LAST_DOWNLOAD_ATTIVITA;
         super.durataLastDownload = DURATA_DOWNLOAD_ATTIVITA;
-        super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_ATTIVITA;
+        super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_ATTIVITA;
         super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_ATTIVITA;
     }// end of method
 
+
+    /**
+     * Eventuali messaggi di avviso specifici di questa view ed inseriti in 'alertPlacehorder' <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse ALayoutViewList <br>
+     * Normalmente ad uso esclusivo del developer (eventualmente dell'admin) <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+
+        alertPlacehorder.add(getLabelBlue("Modulo:Bio/Plurale attività."));
+        alertPlacehorder.add(new Label("Modulo Lua di supporto a Modulo:Bio."));
+        alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3,"));
+        alertPlacehorder.add(new Label(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
+        alertPlacehorder.add(new Label("All'interno della tabella le attività sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse."));
+        alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
+        alertPlacehorder.add(new Label("[\"attivitaforma1\"] = \"attività al plurale\","));
+        alertPlacehorder.add(new Label("[\"attivitaforma2\"] = \"attività al plurale\","));
+    }// end of method
 
     /**
      * Creazione ed apertura del dialogo per una nuova entity oppure per una esistente <br>

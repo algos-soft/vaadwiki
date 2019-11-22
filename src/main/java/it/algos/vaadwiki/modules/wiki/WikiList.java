@@ -6,25 +6,21 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.selection.SingleSelectionEvent;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.list.AGridViewList;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 
 /**
  * Project vaadwiki
@@ -33,35 +29,54 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Date: gio, 24-gen-2019
  * Time: 11:00
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public abstract class WikiList extends AGridViewList {
 
 
     /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     * Service (@Scope = 'singleton') recuperato come istanza dalla classe e usato come libreria <br>
+     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
      */
-    @Autowired
-    protected UploadService uploadService;
+    protected UploadService uploadService = UploadService.getInstance();
 
-    @Autowired
-    @Qualifier(TAG_BIO)
-    protected AttNazProfCatService attNazProfCatService;
 
     /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     * Service (@Scope = 'singleton') recuperato come istanza dalla classe e usato come libreria <br>
+     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+     */
+    protected LibBio libBio = LibBio.getInstance();
+
+    /**
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    protected LibBio libBio;
+    protected ApplicationContext appContext;
 
 
     //--Soglia minima per creare una entity nella collezione Nomi sul mongoDB
     //--Soglia minima per creare una pagina di un nome sul server wiki
     protected int sogliaWiki;
+
+
+    protected Button donwloadMongoButton;
+
+    protected Button uploadStatisticheButton;
+
+    protected Button showCategoriaButton;
+
+    protected Button showModuloButton;
+
+    protected Button showStatisticheButton;
+
+    protected boolean usaBottoneCategoria;
+
+    protected boolean usaBottoneDeleteMongo;
+
+    protected boolean usaBottoneDownload;
+
+    protected boolean usaBottoneModulo;
 
 
     protected Button uploadOneNatoButton;
@@ -78,19 +93,29 @@ public abstract class WikiList extends AGridViewList {
 
     protected Button statistiche2Button;
 
-    protected Button uploadStatisticheButton;
+    protected String titoloCategoria;
+
+    protected String titoloModulo;
 
     protected String titoloPaginaStatistiche;
 
     protected String titoloPaginaStatistiche2;
 
-    protected String codeLastUpload;
+    protected String flagDaemon;
+
+    protected String lastDownload;
+
+    protected String durataLastDownload;
+
+    protected String lastUpload;
 
     protected String durataLastUpload;
 
-    protected String codeLastUploadStatistiche;
+    protected String lastUploadStatistiche;
 
     protected String durataLastUploadStatistiche;
+
+    protected String infoColor = "green";
 
     /**
      * Flag di preferenza per usare il bottone creaButton situato nella topLayout. Normalmente false. <br>
@@ -117,11 +142,17 @@ public abstract class WikiList extends AGridViewList {
      */
     protected boolean usaStatistiche2Button;
 
+    protected boolean usaBottoneUploadStatistiche;
+
     protected boolean usaBottoneUpload;
+
+    protected WikiService wikiService;
+
+    protected ATask task;
 
 
     /**
-     * Costruttore @Autowired <br>
+     * Costruttore @Autowired (nella sottoclasse concreta) <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      * Nella sottoclasse concreta si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Nella sottoclasse concreta si usa una costante statica, per scrivere sempre uguali i riferimenti <br>
@@ -130,8 +161,9 @@ public abstract class WikiList extends AGridViewList {
      * @param service     business class e layer di collegamento per la Repository
      * @param entityClazz modello-dati specifico di questo modulo
      */
-    public WikiList(IAService service, Class<? extends AEntity> entityClazz) { //@todo versione 14
+    public WikiList(IAService service, Class<? extends AEntity> entityClazz) {
         super(service, entityClazz);
+        this.wikiService = (WikiService) service;
     }// end of Vaadin/@Route constructor
 
 
@@ -144,52 +176,39 @@ public abstract class WikiList extends AGridViewList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneNew = false;
+        this.usaBottoneCategoria = false;
+        this.usaBottoneDeleteMongo = true;
+        this.usaBottoneDownload = true;
+        this.usaBottoneModulo = true;
+        this.usaBottoneUploadStatistiche = true;
 
-        super.isEntityModificabile = false;
+        super.usaBottoneNew = false;
         super.usaBottoneEdit = true;
+        super.isEntityModificabile = false;
+        super.usaBottoneDeleteAll = true;
         super.usaPagination = true;
 
         this.usaCreaButton = false;
         this.usaUpdateButton = false;
-        this.usaUploadAllButton = true;
+        this.usaUploadAllButton = false;
         this.usaStatisticheButton = true;
+        this.usaBottoneUploadStatistiche = true;
         this.usaBottoneUpload = false;
     }// end of method
 
 
     /**
-     * Eventuale caption sopra la grid
+     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
+     * Normalmente ad uso esclusivo del developer
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
-    protected Label creaInfoImport(ATask task, String flagDaemon, String flagLastUpload) {
-        Label label = null;
-        String testo = "";
-        String tag = "Upload automatico: ";
-        String nota = task != null ? task.getNota() : "";
-        int durata = pref.getInt(DURATA_UPLOAD_ANNI);
-        String message = "";
-        LocalDateTime lastUpload = pref.getDate(flagLastUpload);
-        testo = tag;
-
-        if (pref.isBool(flagDaemon)) {
-            testo += nota;
-        } else {
-            testo += "disattivato.";
-        }// end of if/else cycle
-
-        if (lastUpload != null) {
-            message += testo + " Ultimo upload il " + date.getTime(lastUpload);
-            message += ", in circa " + durata + " minuti";
-        } else {
-            if (pref.isBool(flagDaemon)) {
-                message = tag + nota + " Non ancora effettuato.";
-            } else {
-                message = testo;
-            }// end of if/else cycle
-        }// end of if/else cycle
-        label = new Label(message);
-
-        return label;
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+        creaInfoDownload(task, flagDaemon, lastDownload, durataLastDownload);
+        creaInfoUpload(task, flagDaemon, lastUpload, durataLastUpload);
+        creaInfoStatistiche(lastUploadStatistiche, durataLastUploadStatistiche);
     }// end of method
 
 
@@ -204,6 +223,20 @@ public abstract class WikiList extends AGridViewList {
     @Override
     protected void creaTopLayout() {
         super.creaTopLayout();
+
+        if (usaBottoneDownload) {
+            donwloadMongoButton = new Button("Download", new Icon(VaadinIcon.DOWNLOAD));
+            donwloadMongoButton.getElement().setAttribute("theme", "primary");
+            donwloadMongoButton.addClickListener(e -> download());
+            topPlaceholder.add(donwloadMongoButton);
+        }// end of if cycle
+
+        if (usaBottoneCategoria) {
+            showCategoriaButton = new Button("Categoria", new Icon(VaadinIcon.LIST));
+            showCategoriaButton.addClassName("view-toolbar__button");
+            showCategoriaButton.addClickListener(e -> showWikiCategoria());
+            topPlaceholder.add(showCategoriaButton);
+        }// end of if cycle
 
         if (usaCreaButton) {
             creaButton = new Button("Crea all", new Icon(VaadinIcon.LIST));
@@ -235,6 +268,13 @@ public abstract class WikiList extends AGridViewList {
             topPlaceholder.add(uploadAllButton);
         }// end of if cycle
 
+        if (usaBottoneModulo) {
+            showModuloButton = new Button("Modulo", new Icon(VaadinIcon.LIST));
+            showModuloButton.addClassName("view-toolbar__button");
+            showModuloButton.addClickListener(e -> showWikiModulo());
+            topPlaceholder.add(showModuloButton);
+        }// end of if cycle
+
         if (usaStatisticheButton) {
             statisticheButton = new Button("View statistiche", new Icon(VaadinIcon.TABLE));
             statisticheButton.addClassName("view-toolbar__button");
@@ -247,6 +287,15 @@ public abstract class WikiList extends AGridViewList {
             statistiche2Button.addClassName("view-toolbar__button");
             statistiche2Button.addClickListener(e -> showWikiStatistiche2());
             topPlaceholder.add(statistiche2Button);
+        }// end of if cycle
+
+
+        if (usaBottoneUploadStatistiche) {
+            uploadStatisticheButton = new Button("Upload statistiche", new Icon(VaadinIcon.UPLOAD));
+            uploadStatisticheButton.getElement().setAttribute("theme", "error");
+            uploadStatisticheButton.addClassName("view-toolbar__button");
+            uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
+            topPlaceholder.add(uploadStatisticheButton);
         }// end of if cycle
 
         if (usaBottoneUpload) {
@@ -270,13 +319,6 @@ public abstract class WikiList extends AGridViewList {
             entitySelected = (AEntity) grid.getSelectedItems().toArray()[0];
         }// end of if cycle
 
-//        SingleSelect<Grid<AEntity>, AEntity> entitySelected = null;
-//        boolean selezioneSingola = grid.getSelectionModel() == (GridSelectionModel<AEntity>) Grid.SelectionMode.SINGLE;
-//        if (selezioneSingola) {
-//            entitySelected = grid.asSingleSelect();
-//        }// end of if cycle
-//        int alfa = grid.getSelectedItems().size();
-
         if (evento != null && evento.getOldValue() != evento.getValue()) {
             if (evento.getValue().getClass().getName().equals(entityClazz.getName())) {
                 if (usaRouteFormView && text.isValid(routeNameFormEdit)) {
@@ -294,27 +336,16 @@ public abstract class WikiList extends AGridViewList {
     }// end of method
 
 
-//    /**
-//     * Opens the confirmation dialog before deleting the current item.
-//     * <p>
-//     * The dialog will display the given title and message(s), then call
-//     * <p>
-//     */
-//    protected void openUploadDialog(String tag) {
-//        String message = "Sei sicuro di voler aggiornare su wikipedia tutte le pagine " + tag + " ?";
-//        AConfirmDialog dialog = appContext.getBean(AConfirmDialog.class);
-//        dialog.open(message, this::uploadEffettivo);
-//    }// end of method
-
-
-    /**
-     * Opens the confirmation dialog before deleting the current item.
-     * <p>
-     * The dialog will display the given title and message(s), then call
-     * <p>
-     */
-    protected void uploadEffettivo() {
+    protected void deleteMongo() {
+        this.service.deleteAll();
+        updateFiltri();
+        updateGrid();
     }// end of method
+
+
+    protected void findOrCrea(String singolare, String plurale) {
+    }// end of method
+
 
 
     protected void sincroBottoniMenu(boolean enabled) {
@@ -324,6 +355,18 @@ public abstract class WikiList extends AGridViewList {
         if (uploadOneMortoButton != null) {
             uploadOneMortoButton.setEnabled(enabled);
         }// end of if cycle
+    }// end of method
+
+
+    protected void showWikiCategoria() {
+        String link = "\"" + PATH_WIKI + titoloCategoria + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
+    protected void showWikiModulo() {
+        String link = "\"" + PATH_WIKI + titoloModulo + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 
@@ -339,6 +382,23 @@ public abstract class WikiList extends AGridViewList {
     }// end of method
 
 
+    protected void download() {
+        wikiService.download();
+        updateFiltri();
+        updateGrid();
+    }// end of method
+
+
+    /**
+     * Opens the confirmation dialog before deleting the current item.
+     * <p>
+     * The dialog will display the given title and message(s), then call
+     * <p>
+     */
+    protected void uploadEffettivo() {
+    }// end of method
+
+
     protected void uploadStatistiche() {
     }// end of method
 
@@ -346,35 +406,149 @@ public abstract class WikiList extends AGridViewList {
     /**
      * Eventuale caption sopra la grid
      */
-    protected Label creaInfoUpload(String flagLastUpload, String flagDurataLastUpload) {
-        Label label = null;
-        LocalDateTime lastDownload = pref.getDate(flagLastUpload);
-        int durata = pref.getInt(flagDurataLastUpload);
+    protected void creaInfoDownload(ATask task, String flagDaemon, String flagLastDownload, String flagDurataDownload) {
+        String testo;
+        String message = "";
+        String tag = "Download automatico";
+        LocalDateTime lastDownload = pref.getDate(flagLastDownload);
+        int durata;
 
-        if (lastDownload != null) {
-            label = new Label("Ultimo upload effettuato il " + date.getTime(lastDownload) + " in " + date.toTextSecondi(durata));
+        if (task == null) {
+            testo = tag + " non previsto.";
         } else {
-            label = new Label("Upload non ancora effettuato");
+            if (pref.isBool(flagDaemon)) {
+                testo = tag + ": " + task.getNota() + ".";
+            } else {
+                testo = tag + " disattivato.";
+            }// end of if/else cycle
         }// end of if/else cycle
 
-        return label;
+        if (lastDownload != null) {
+            message = testo + " Ultimo import il " + date.getTime(lastDownload);
+        } else {
+            if (pref.isBool(flagDaemon)) {
+                message = tag + ": " + task.getNota() + "." + " Non ancora effettuato.";
+            } else {
+                message = testo;
+            }// end of if/else cycle
+        }// end of if/else cycle
+
+        if (text.isValid(flagDurataDownload)) {
+            durata = pref.getInt(flagDurataDownload);
+            message += ", in " + date.toTextSecondi(durata);
+        }// end of if cycle
+
+        if (text.isValid(message)) {
+            alertPlacehorder.add(getLabelGreen(message));
+        }// end of if cycle
     }// end of method
+
 
     /**
      * Eventuale caption sopra la grid
      */
-    protected Label creaInfoUploadStatistiche( String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
-        Label label = null;
+    protected void creaInfoUpload(ATask task, String flagDaemon, String flagLastUpload, String flagDurataLastUpload) {
+        String testo = "";
+        String message = "";
+        String tag = "Upload automatico: ";
+        String nota;
+        LocalDateTime lastUpload;
+        int durata;
+        testo = tag;
+
+        if (text.isEmpty(flagDaemon) || text.isEmpty(flagLastUpload)) {
+            message = "Upload non previsto";
+        } else {
+            nota = task != null ? task.getNota() : "";
+            lastUpload = pref.getDate(flagLastUpload);
+            if (pref.isBool(flagDaemon)) {
+                testo += nota;
+            } else {
+                testo += "disattivato.";
+            }// end of if/else cycle
+
+            if (lastUpload != null) {
+                message += testo + " Ultimo upload il " + date.getTime(lastUpload);
+            } else {
+                if (pref.isBool(flagDaemon)) {
+                    message = tag + nota + " Non ancora effettuato.";
+                } else {
+                    message = testo;
+                }// end of if/else cycle
+            }// end of if/else cycle
+        }// end of if/else cycle
+
+        if (text.isValid(flagDurataLastUpload)) {
+            durata = pref.getInt(flagDurataLastUpload);
+            message += ", in " + date.toTextSecondi(durata);
+        }// end of if cycle
+
+        if (text.isValid(message)) {
+            alertPlacehorder.add(getLabelGreen(message));
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Eventuale caption sopra la grid
+     */
+    protected void creaInfoStatistiche(String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
+        String message = "";
         LocalDateTime lastDownload = pref.getDate(flagLastUploadStatistiche);
         int durata = pref.getInt(flagDurataLastUploadStatistiche);
 
         if (lastDownload != null) {
-            label = new Label("Ultimo upload delle statistiche effettuato il " + date.getTime(lastDownload) + " in " + date.toTextSecondi(durata));
+            message = "Ultimo upload delle statistiche effettuato il " + date.getTime(lastDownload) + " in " + date.toTextSecondi(durata);
         } else {
-            label = new Label("Upload delle statistiche non ancora effettuato");
+            if (usaBottoneUploadStatistiche) {
+                message = "Upload delle statistiche non ancora effettuato";
+            } else {
+                message = "Upload delle statistiche non previsto";
+            }// end of if/else cycle
         }// end of if/else cycle
 
+        if (text.isValid(message)) {
+            alertPlacehorder.add(getLabelGreen(message));
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Label colorata
+     */
+    protected Label getLabel(String message, String labelColor) {
+        Label label = null;
+
+        if (text.isValid(message)) {
+            label = new Label(message);
+            label.getElement().getStyle().set("color", labelColor);
+        }// end of if cycle
+
         return label;
+    }// end of method
+
+
+    /**
+     * Label colorata
+     */
+    protected Label getLabelRed(String message) {
+        return getLabel(message, "red");
+    }// end of method
+
+
+    /**
+     * Label colorata
+     */
+    protected Label getLabelGreen(String message) {
+        return getLabel(message, "green");
+    }// end of method
+
+
+    /**
+     * Label colorata
+     */
+    protected Label getLabelBlue(String message) {
+        return getLabel(message, "blue");
     }// end of method
 
 }// end of class

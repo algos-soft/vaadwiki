@@ -57,8 +57,8 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderProfessione")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"singolare", "pagina"})
-@AIForm(fields = {"singolare", "pagina"})
+@AIList(fields = {"aggiunta","singolare", "pagina"})
+@AIForm(fields = {"singolare", "pagina","aggiunta"})
 @AIScript(sovrascrivibile = false)
 public class Professione extends AEntity {
 
@@ -89,6 +89,10 @@ public class Professione extends AEntity {
     @AIField(type = EAFieldType.text, required = true, widthEM = 12)
     @AIColumn(flexGrow = true)
     public String pagina;
+
+    @AIField(type = EAFieldType.yesnobold)
+    @AIColumn(name = "add",widthEM = 3)
+    public boolean aggiunta;
 
     /**
      * @return a string representation of the object.

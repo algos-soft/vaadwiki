@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.modules.nazionalita;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
@@ -16,6 +17,7 @@ import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attivita.AttivitaDialog;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
+import it.algos.vaadwiki.modules.wiki.WikiList;
 import it.algos.vaadwiki.schedule.TaskNazionalita;
 import it.algos.vaadwiki.statistiche.StatisticheAttivita;
 import it.algos.vaadwiki.statistiche.StatisticheNazionalita;
@@ -54,7 +56,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Slf4j
 @AIScript(sovrascrivibile = false)
 @AIView(vaadflow = false, menuName = "nazionalita", menuIcon = VaadinIcon.BOAT, searchProperty = "singolare", roleTypeVisibility = EARoleType.developer)
-public class NazionalitaList extends AttNazProfCatList {
+public class NazionalitaList extends WikiList {
 
 
     /**
@@ -79,26 +81,6 @@ public class NazionalitaList extends AttNazProfCatList {
     }// end of Vaadin/@Route constructor
 
     /**
-     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        super.titoloModulo = serviceWiki.titoloModuloNazionalita;
-        super.titoloPaginaStatistiche = serviceWiki.titoloPaginaStatisticheNazionalita;
-        super.task = taskNazionalita;
-        super.usaPagination = true;
-        super.codeFlagDownload = USA_DAEMON_NAZIONALITA;
-        super.codeLastDownload = LAST_DOWNLOAD_NAZIONALITA;
-        super.durataLastDownload = DURATA_DOWNLOAD_NAZIONALITA;
-        super.codeLastUploadStatistiche = LAST_UPLOAD_STATISTICHE_NAZIONALITA;
-        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_NAZIONALITA;
-    }// end of method
-
-    /**
      * Crea effettivamente il Component Grid <br>
      * <p>
      * Può essere Grid oppure PaginatedGrid <br>
@@ -110,6 +92,51 @@ public class NazionalitaList extends AttNazProfCatList {
     protected Grid creaGridComponent() {
         return new PaginatedGrid<Nazionalita>();
     }// end of method
+
+
+    /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
+        super.titoloModulo = wikiService.titoloModuloNazionalita;
+        super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheNazionalita;
+        super.task = taskNazionalita;
+        super.usaPagination = true;
+        super.flagDaemon = USA_DAEMON_NAZIONALITA;
+        super.lastDownload = LAST_DOWNLOAD_NAZIONALITA;
+        super.durataLastDownload = DURATA_DOWNLOAD_NAZIONALITA;
+        super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_NAZIONALITA;
+        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_NAZIONALITA;
+    }// end of method
+
+
+    /**
+     * Eventuali messaggi di avviso specifici di questa view ed inseriti in 'alertPlacehorder' <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse ALayoutViewList <br>
+     * Normalmente ad uso esclusivo del developer (eventualmente dell'admin) <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+
+        alertPlacehorder.add(getLabelBlue("Modulo:Bio/Plurale nazionalità."));
+        alertPlacehorder.add(new Label("Modulo Lua di supporto a Modulo:Bio."));
+        alertPlacehorder.add(new Label("Contiene la tabella di conversione delle nazionalità passate via parametri Nazionalità/Cittadinanza/NazionalitàNaturalizzato,"));
+        alertPlacehorder.add(new Label(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
+        alertPlacehorder.add(new Label("All'interno della tabella le nazionalità sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse."));
+        alertPlacehorder.add(new Label("Le nazionalità sono elencate all'interno del modulo con la seguente sintassi:"));
+        alertPlacehorder.add(new Label("[\"nazionalitaforma1\"] = \"nazionalità al plurale\","));
+        alertPlacehorder.add(new Label("[\"nazionalitaforma2\"] = \"nazionalità al plurale\","));
+    }// end of method
+
 
     /**
      * Creazione ed apertura del dialogo per una nuova entity oppure per una esistente <br>

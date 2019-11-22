@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.modules.attnazprofcat;
+package it.algos.vaadwiki.modules.wiki;
 
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
@@ -30,7 +30,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Time: 16:39
  */
 @Slf4j
-public abstract class AttNazProfCatService extends AService {
+public abstract class WikiService extends AService {
 
     public String titoloModuloAttivita = PATH_MODULO_PLURALE + ATT.toLowerCase();
 
@@ -87,7 +87,7 @@ public abstract class AttNazProfCatService extends AService {
      *
      * @param repository per la persistenza dei dati
      */
-    public AttNazProfCatService(MongoRepository repository) {
+    public WikiService(MongoRepository repository) {
         super(repository);
     }// end of Spring constructor
 
@@ -240,34 +240,5 @@ public abstract class AttNazProfCatService extends AService {
         return Arrays.asList("plurale");
     }// end of method
 
-
-//    /**
-//     * Fetches the entities whose 'main text property' matches the given filter text.
-//     * <p>
-//     * Se esiste la company, filtrate secondo la company <br>
-//     * The matching is case insensitive. When passed an empty filter text,
-//     * the method returns all categories. The returned list is ordered by name.
-//     * The 'main text property' is different in each entity class and chosen in the specific subclass
-//     *
-//     * @param filter the filter text
-//     *
-//     * @return the list of matching entities
-//     */
-//    @Override
-//    public List<? extends AEntity> findFilter(String filter) {
-//        List<? extends AEntity> lista = null;
-//        String normalizedFilter = filter.toLowerCase();
-//
-//        lista = findAll();
-//        if (lista != null) {
-//            lista = lista.stream()
-//                    .filter(entity -> {
-//                        return getKeyUnica(entity).toLowerCase().startsWith(normalizedFilter);
-//                    })
-//                    .collect(Collectors.toList());
-//        }// end of if cycle
-//
-//        return lista;
-//    }// end of method
 
 }// end of class
