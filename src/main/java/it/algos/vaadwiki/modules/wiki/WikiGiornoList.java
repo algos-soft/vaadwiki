@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
 
-import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
@@ -62,7 +61,7 @@ public class WikiGiornoList extends WikiList {
 
     @Autowired
     @Qualifier(TASK_GIO)
-    protected ATask task;
+    protected ATask taskGiorni;
 
 
     /**
@@ -75,7 +74,7 @@ public class WikiGiornoList extends WikiList {
      * @param service business class e layer di collegamento per la Repository
      */
     @Autowired
-    public WikiGiornoList(@Qualifier(TAG_GIO) IAService service) {
+    public WikiGiornoList(@Qualifier(TAG_WGIO) IAService service) {
         super(service, Giorno.class);
     }// end of Vaadin/@Route constructor
 
@@ -90,7 +89,11 @@ public class WikiGiornoList extends WikiList {
         super.fixPreferenze();
 
         super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheGiorni;
-        super.usaBottoneUpload = true;
+        super.usaBottoneDeleteAll = false;
+        super.usaBottoneDownload = false;
+        super.usaUploadAllButton = true;
+        super.task = taskGiorni;
+        super.flagDaemon = USA_DAEMON_GIORNI;
         super.lastUpload = LAST_UPLOAD_GIORNI;
         super.durataLastUpload = DURATA_UPLOAD_GIORNI;
         super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_GIORNI;

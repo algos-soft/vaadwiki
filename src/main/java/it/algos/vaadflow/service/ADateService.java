@@ -1070,7 +1070,7 @@ public class ADateService extends AbstractService {
 
 
     public String toTextSecondi(long durata) {
-        return toText(durata * 1000);
+        return durata < 1 ? INFERIORE_SECONDO : toText(durata * 1000);
     }// end of  method
 
 

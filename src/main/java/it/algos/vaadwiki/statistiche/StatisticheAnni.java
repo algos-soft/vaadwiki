@@ -61,17 +61,17 @@ public class StatisticheAnni extends StatisticheAttNaz {
     }// end of Spring constructor
 
 
-    /**
-     * Questa classe viene tipicamente costruita con appContext.getBean(StatisticheAttivita.class) <br>
-     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
-     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired di questa classe <br>
-     */
-    @PostConstruct
-    protected void postConstruct() {
-        long inizio = System.currentTimeMillis();
-        inizia();
-        setLastUpload(inizio);
-    }// end of method
+//    /**
+//     * Questa classe viene tipicamente costruita con appContext.getBean(StatisticheAttivita.class) <br>
+//     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
+//     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired di questa classe <br>
+//     */
+//    @PostConstruct
+//    protected void postConstruct() {
+//        long inizio = System.currentTimeMillis();
+//        inizia();
+//        setLastUpload(inizio);
+//    }// end of method
 
 
     /**
@@ -92,7 +92,7 @@ public class StatisticheAnni extends StatisticheAttNaz {
      */
     @Override
     protected void creaLista() {
-        lista = service.findAllTitoliOrdered();
+//        lista = service.findAllTitoliOrdered();
     }// end of method
 
 

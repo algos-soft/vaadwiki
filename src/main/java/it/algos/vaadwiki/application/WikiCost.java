@@ -99,11 +99,13 @@ public class WikiCost {
 
     public final static String CODE_UPLOAD = "lastUpload";
 
-    public final static String CODE_STATISTICHE = CODE_UPLOAD + "Statistiche";
+    public final static String STATISTICHE =  "Statistiche";
+    public final static String CODE_STATISTICHE = CODE_UPLOAD + STATISTICHE;
 
     public final static String DURATA = "durataDownload";
 
     public final static String DURATA_UPLOAD = "durataUpload";
+    public final static String DURATA_UPLOAD_STATISTICHE = DURATA_UPLOAD+STATISTICHE;
 
     public final static String PATH_PROGETTO = "Progetto:Biografie/";
 
@@ -194,9 +196,9 @@ public class WikiCost {
 
     public final static String DURATA_UPLOAD_STATISTICHE_ANNI = DURATA_UPLOAD + ANNI;
 
-    public final static String DURATA_UPLOAD_STATISTICHE_ATTIVITA = DURATA_UPLOAD + ATT;
+    public final static String DURATA_UPLOAD_STATISTICHE_ATTIVITA = DURATA_UPLOAD_STATISTICHE + ATT;
 
-    public final static String DURATA_UPLOAD_STATISTICHE_NAZIONALITA = DURATA_UPLOAD + NAZ;
+    public final static String DURATA_UPLOAD_STATISTICHE_NAZIONALITA = DURATA_UPLOAD_STATISTICHE + NAZ;
 
     public final static String DURATA_UPLOAD_STATISTICHE_NOMI = DURATA_UPLOAD + NOME;
 

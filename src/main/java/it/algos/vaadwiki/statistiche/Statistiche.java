@@ -15,6 +15,8 @@ import it.algos.wiki.web.AQueryWrite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import javax.annotation.PostConstruct;
+
 import static it.algos.vaadflow.application.FlowCost.*;
 
 /**
@@ -129,6 +131,16 @@ public abstract class Statistiche {
 
     protected String templateCorrelate;
 
+
+    /**
+     * Questa classe viene tipicamente costruita con appContext.getBean(StatisticheAttivita.class) <br>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired di questa classe <br>
+     */
+    @PostConstruct
+    protected void postConstruct() {
+        inizia();
+    }// end of method
 
     /**
      * Costruisce la pagina <br>

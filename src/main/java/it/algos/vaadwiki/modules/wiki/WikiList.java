@@ -8,6 +8,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.list.AGridViewList;
@@ -20,6 +21,7 @@ import org.springframework.context.ApplicationContext;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 
 /**
@@ -150,6 +152,12 @@ public abstract class WikiList extends AGridViewList {
 
     protected ATask task;
 
+    protected EATempo eaTempoTypeDownload;
+
+    protected EATempo eaTempoTypeUpload;
+
+    protected EATempo eaTempoTypeStatistiche;
+
 
     /**
      * Costruttore @Autowired (nella sottoclasse concreta) <br>
@@ -194,6 +202,9 @@ public abstract class WikiList extends AGridViewList {
         this.usaStatisticheButton = true;
         this.usaBottoneUploadStatistiche = true;
         this.usaBottoneUpload = false;
+        this.eaTempoTypeDownload = EATempo.nessuno;
+        this.eaTempoTypeUpload = EATempo.nessuno;
+        this.eaTempoTypeStatistiche = EATempo.nessuno;
     }// end of method
 
 
@@ -227,7 +238,7 @@ public abstract class WikiList extends AGridViewList {
         if (usaBottoneDownload) {
             donwloadMongoButton = new Button("Download", new Icon(VaadinIcon.DOWNLOAD));
             donwloadMongoButton.getElement().setAttribute("theme", "primary");
-            donwloadMongoButton.addClickListener(e -> download());
+            donwloadMongoButton.addClickListener(e -> download(System.currentTimeMillis()));
             topPlaceholder.add(donwloadMongoButton);
         }// end of if cycle
 
@@ -264,7 +275,7 @@ public abstract class WikiList extends AGridViewList {
         if (usaUploadAllButton) {
             uploadAllButton = new Button("Upload all", new Icon(VaadinIcon.UPLOAD));
             uploadAllButton.getElement().setAttribute("theme", "error");
-            uploadAllButton.addClickListener(e -> uploadEffettivo());
+            uploadAllButton.addClickListener(e -> upload(System.currentTimeMillis()));
             topPlaceholder.add(uploadAllButton);
         }// end of if cycle
 
@@ -294,7 +305,7 @@ public abstract class WikiList extends AGridViewList {
             uploadStatisticheButton = new Button("Upload statistiche", new Icon(VaadinIcon.UPLOAD));
             uploadStatisticheButton.getElement().setAttribute("theme", "error");
             uploadStatisticheButton.addClassName("view-toolbar__button");
-            uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
+            uploadStatisticheButton.addClickListener(e -> uploadStatistiche(System.currentTimeMillis()));
             topPlaceholder.add(uploadStatisticheButton);
         }// end of if cycle
 
@@ -302,7 +313,7 @@ public abstract class WikiList extends AGridViewList {
             uploadStatisticheButton = new Button("Upload statistiche", new Icon(VaadinIcon.UPLOAD));
             uploadStatisticheButton.getElement().setAttribute("theme", "error");
             uploadStatisticheButton.addClassName("view-toolbar__button");
-            uploadStatisticheButton.addClickListener(e -> uploadStatistiche());
+            uploadStatisticheButton.addClickListener(e -> uploadStatistiche(System.currentTimeMillis()));
             topPlaceholder.add(uploadStatisticheButton);
         }// end of if cycle
 
@@ -347,7 +358,6 @@ public abstract class WikiList extends AGridViewList {
     }// end of method
 
 
-
     protected void sincroBottoniMenu(boolean enabled) {
         if (uploadOneNatoButton != null) {
             uploadOneNatoButton.setEnabled(enabled);
@@ -382,24 +392,64 @@ public abstract class WikiList extends AGridViewList {
     }// end of method
 
 
-    protected void download() {
+    /**
+     * Download standard. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    protected void download(long inizio) {
         wikiService.download();
+        setLastDownload(inizio);
         updateFiltri();
         updateGrid();
     }// end of method
 
 
     /**
-     * Opens the confirmation dialog before deleting the current item.
-     * <p>
-     * The dialog will display the given title and message(s), then call
-     * <p>
+     * Upload standard. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
      */
-    protected void uploadEffettivo() {
+    protected void upload(long inizio) {
+        setLastUpload(inizio);
     }// end of method
 
 
-    protected void uploadStatistiche() {
+    /**
+     * Upload standard delle statistiche. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    protected void uploadStatistiche(long inizio) {
+        setLastUploadStatistiche(inizio);
+        super.updateGrid();
+    }// end of method
+
+
+    /**
+     * Registra nelle preferenze la data dell'ultimo download effettuato <br>
+     * Registra nelle preferenze la durata dell'ultimo download effettuato <br>
+     */
+    protected void setLastDownload(long inizio) {
+        pref.saveValue(lastDownload, LocalDateTime.now());
+        pref.saveValue(durataLastDownload, eaTempoTypeDownload.get(inizio));
+    }// end of method
+
+
+    /**
+     * Registra nelle preferenze la data dell'ultimo upload effettuato <br>
+     * Registra nelle preferenze la durata dell'ultimo upload effettuato <br>
+     */
+    protected void setLastUpload(long inizio) {
+        pref.saveValue(lastUpload, LocalDateTime.now());
+        pref.saveValue(durataLastUpload, eaTempoTypeUpload.get(inizio));
+    }// end of method
+
+
+    /**
+     * Registra nelle preferenze la data dell'ultimo upload statistiche effettuato <br>
+     * Registra nelle preferenze la durata dell'ultimo upload statistiche effettuato <br>
+     */
+    protected void setLastUploadStatistiche(long inizio) {
+        pref.saveValue(lastUploadStatistiche, LocalDateTime.now());
+        pref.saveValue(durataLastUploadStatistiche, eaTempoTypeStatistiche.get(inizio));
     }// end of method
 
 
@@ -413,29 +463,35 @@ public abstract class WikiList extends AGridViewList {
         LocalDateTime lastDownload = pref.getDate(flagLastDownload);
         int durata;
 
-        if (task == null) {
-            testo = tag + " non previsto.";
+        if (text.isEmpty(flagDaemon) || text.isEmpty(flagLastDownload)) {
+            message = "Download non previsto";
         } else {
-            if (pref.isBool(flagDaemon)) {
-                testo = tag + ": " + task.getNota() + ".";
+            if (task == null) {
+                testo = tag + " non previsto.";
             } else {
-                testo = tag + " disattivato.";
+                if (pref.isBool(flagDaemon)) {
+                    testo = tag + ": " + task.getNota() + ".";
+                } else {
+                    testo = tag + " disattivato.";
+                }// end of if/else cycle
             }// end of if/else cycle
-        }// end of if/else cycle
 
-        if (lastDownload != null) {
-            message = testo + " Ultimo import il " + date.getTime(lastDownload);
-        } else {
-            if (pref.isBool(flagDaemon)) {
-                message = tag + ": " + task.getNota() + "." + " Non ancora effettuato.";
+            if (lastDownload != null) {
+                message = testo + " Ultimo import il " + date.getTime(lastDownload);
             } else {
-                message = testo;
+                if (pref.isBool(flagDaemon)) {
+                    message = tag + ": " + task.getNota() + "." + " Non ancora effettuato.";
+                } else {
+                    message = testo;
+                }// end of if/else cycle
             }// end of if/else cycle
-        }// end of if/else cycle
 
-        if (text.isValid(flagDurataDownload)) {
-            durata = pref.getInt(flagDurataDownload);
-            message += ", in " + date.toTextSecondi(durata);
+            //--durata
+            message += getDurata(eaTempoTypeDownload, flagDurataDownload);
+//            if (text.isValid(flagDurataDownload)) {
+//                durata = pref.getInt(flagDurataDownload);
+//                message += ", in " + date.toTextSecondi(durata);
+//            }// end of if cycle
         }// end of if cycle
 
         if (text.isValid(message)) {
@@ -478,10 +534,14 @@ public abstract class WikiList extends AGridViewList {
             }// end of if/else cycle
         }// end of if/else cycle
 
-        if (text.isValid(flagDurataLastUpload)) {
-            durata = pref.getInt(flagDurataLastUpload);
-            message += ", in " + date.toTextSecondi(durata);
-        }// end of if cycle
+        //--durata
+        message += getDurata(eaTempoTypeUpload, flagDurataLastUpload);
+//        if (text.isValid(flagDurataLastUpload)) {
+//            durata = pref.getInt(flagDurataLastUpload);
+//            if (durata > 0) {
+//                message += ", in " + date.toTextSecondi(durata);
+//            }// end of if cycle
+//        }// end of if cycle
 
         if (text.isValid(message)) {
             alertPlacehorder.add(getLabelGreen(message));
@@ -495,10 +555,14 @@ public abstract class WikiList extends AGridViewList {
     protected void creaInfoStatistiche(String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
         String message = "";
         LocalDateTime lastDownload = pref.getDate(flagLastUploadStatistiche);
-        int durata = pref.getInt(flagDurataLastUploadStatistiche);
+        int durata = 0;
 
         if (lastDownload != null) {
-            message = "Ultimo upload delle statistiche effettuato il " + date.getTime(lastDownload) + " in " + date.toTextSecondi(durata);
+            message = "Ultimo upload delle statistiche effettuato il " + date.getTime(lastDownload);
+//            durata = pref.getInt(flagDurataLastUploadStatistiche);
+//            if (durata > 0) {
+//                message += ", in " + date.toTextSecondi(durata);
+//            }// end of if cycle
         } else {
             if (usaBottoneUploadStatistiche) {
                 message = "Upload delle statistiche non ancora effettuato";
@@ -507,9 +571,52 @@ public abstract class WikiList extends AGridViewList {
             }// end of if/else cycle
         }// end of if/else cycle
 
+        //--durata
+        message += getDurata(eaTempoTypeStatistiche, flagDurataLastUploadStatistiche);
+
         if (text.isValid(message)) {
             alertPlacehorder.add(getLabelGreen(message));
         }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Durata suddivisa in secondi/minuti/ore
+     */
+    protected String getDurata(EATempo eaTempoType, String flagDurata) {
+        String message = VUOTA;
+        int durata = 0;
+
+        if (text.isValid(flagDurata)) {
+            durata = pref.getInt(flagDurata);
+            if (durata < 1) {
+                return VUOTA;
+            }// end of if cycle
+        }// end of if cycle
+
+        switch (eaTempoType) {
+            case nessuno:
+            case millisecondi:
+                message = ", in " + date.toText(durata);
+                break;
+            case secondi:
+                message = ", in " + date.toTextSecondi(durata);
+                break;
+            case minuti:
+                message = ", in " + date.toTextMinuti(durata);
+                break;
+            case ore:
+                message = ", in " + date.toText(durata);
+                break;
+            case giorni:
+                message = ", in " + date.toText(durata);
+                break;
+            default:
+                log.warn("Switch - caso non definito");
+                break;
+        } // end of switch statement
+
+        return message;
     }// end of method
 
 
@@ -550,5 +657,6 @@ public abstract class WikiList extends AGridViewList {
     protected Label getLabelBlue(String message) {
         return getLabel(message, "blue");
     }// end of method
+
 
 }// end of class

@@ -10,6 +10,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
@@ -110,8 +112,13 @@ public class NazionalitaList extends WikiList {
         super.flagDaemon = USA_DAEMON_NAZIONALITA;
         super.lastDownload = LAST_DOWNLOAD_NAZIONALITA;
         super.durataLastDownload = DURATA_DOWNLOAD_NAZIONALITA;
+        super.eaTempoTypeDownload = EATempo.secondi;
+        super.lastUpload = VUOTA;
+        super.durataLastUpload = VUOTA;
+        super.eaTempoTypeUpload = EATempo.nessuno;
         super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_NAZIONALITA;
         super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_NAZIONALITA;
+        super.eaTempoTypeStatistiche = EATempo.minuti;
     }// end of method
 
 
@@ -156,9 +163,14 @@ public class NazionalitaList extends WikiList {
     }// end of method
 
 
-    protected void uploadStatistiche() {
+    /**
+     * Upload standard delle statistiche. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void uploadStatistiche(long inizio) {
         appContext.getBean(StatisticheNazionalita.class);
-        super.updateGrid();
+        super.uploadStatistiche(inizio);
     }// end of method
 
 }// end of class

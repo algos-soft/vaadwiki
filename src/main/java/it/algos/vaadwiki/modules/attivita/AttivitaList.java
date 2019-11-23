@@ -8,12 +8,11 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
-import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
 import it.algos.vaadwiki.modules.wiki.WikiList;
-import it.algos.vaadwiki.modules.wiki.WikiService;
 import it.algos.vaadwiki.schedule.TaskAttivita;
 import it.algos.vaadwiki.statistiche.StatisticheAttivita;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +22,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.vaadin.klaudeta.PaginatedGrid;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
@@ -113,13 +113,18 @@ public class AttivitaList extends WikiList {
 
         super.titoloModulo = wikiService.titoloModuloAttivita;
         super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheAttivita;
-        super.task = taskAttivita;
         super.usaPagination = true;
+        super.task = taskAttivita;
         super.flagDaemon = USA_DAEMON_ATTIVITA;
         super.lastDownload = LAST_DOWNLOAD_ATTIVITA;
         super.durataLastDownload = DURATA_DOWNLOAD_ATTIVITA;
+        super.eaTempoTypeDownload = EATempo.secondi;
+        super.lastUpload = VUOTA;
+        super.durataLastUpload = VUOTA;
+        super.eaTempoTypeUpload = EATempo.nessuno;
         super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_ATTIVITA;
         super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_ATTIVITA;
+        super.eaTempoTypeStatistiche = EATempo.minuti;
     }// end of method
 
 
@@ -145,6 +150,7 @@ public class AttivitaList extends WikiList {
         alertPlacehorder.add(new Label("[\"attivitaforma2\"] = \"attività al plurale\","));
     }// end of method
 
+
     /**
      * Creazione ed apertura del dialogo per una nuova entity oppure per una esistente <br>
      * Il dialogo è PROTOTYPE e viene creato esclusivamente da appContext.getBean(... <br>
@@ -163,9 +169,14 @@ public class AttivitaList extends WikiList {
     }// end of method
 
 
-    protected void uploadStatistiche() {
+    /**
+     * Upload standard delle statistiche. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void uploadStatistiche(long inizio) {
         appContext.getBean(StatisticheAttivita.class);
-        super.updateGrid();
+        super.uploadStatistiche(inizio);
     }// end of method
 
 }// end of class

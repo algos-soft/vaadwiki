@@ -26,17 +26,6 @@ public abstract class StatisticheAttNaz extends Statistiche {
     protected String codeDurataUpload;
 
 
-    /**
-     * Questa classe viene tipicamente costruita con appContext.getBean(StatisticheAttivita.class) <br>
-     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
-     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired di questa classe <br>
-     */
-    @PostConstruct
-    protected void postConstruct() {
-        long inizio = System.currentTimeMillis();
-        inizia();
-        setLastUpload(inizio);
-    }// end of method
 
 
     /**
@@ -197,24 +186,24 @@ public abstract class StatisticheAttNaz extends Statistiche {
     }// fine del metodo
 
 
-    /**
-     * Registra nelle preferenze la data dell'ultimo upload effettuato <br>
-     * Registra nelle preferenze la durata dell'ultimo upload effettuato, in minuti <br>
-     */
-    protected void setLastUpload(long inizio) {
-        int delta = 1000 * 60;
-        LocalDateTime lastDownload = LocalDateTime.now();
-        pref.saveValue(codeLastUpload, lastDownload);
-
-        long fine = System.currentTimeMillis();
-        long durata = fine - inizio;
-        int minuti = 0;
-        if (durata > delta) {
-            minuti = (int) durata / delta;
-        } else {
-            minuti = 0;
-        }// end of if/else cycle
-        pref.saveValue(codeDurataUpload, minuti);
-    }// end of method
+//    /**
+//     * Registra nelle preferenze la data dell'ultimo upload effettuato <br>
+//     * Registra nelle preferenze la durata dell'ultimo upload effettuato, in minuti <br>
+//     */
+//    protected void setLastUpload(long inizio) {
+//        int delta = 1000 * 60;
+//        LocalDateTime lastDownload = LocalDateTime.now();
+//        pref.saveValue(codeLastUpload, lastDownload);
+//
+//        long fine = System.currentTimeMillis();
+//        long durata = fine - inizio;
+//        int minuti = 0;
+//        if (durata > delta) {
+//            minuti = (int) durata / delta;
+//        } else {
+//            minuti = 0;
+//        }// end of if/else cycle
+//        pref.saveValue(codeDurataUpload, minuti);
+//    }// end of method
 
 }// end of class

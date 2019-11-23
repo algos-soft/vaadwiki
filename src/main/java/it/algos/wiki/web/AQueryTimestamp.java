@@ -81,7 +81,7 @@ public class AQueryTimestamp extends AQueryGet {
 
     /**
      * Le preferenze vengono (eventualmente) sovrascritte nella sottoclasse <br>
-     * Invocare PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
         super.fixPreferenze();
