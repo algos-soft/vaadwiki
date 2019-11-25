@@ -9,7 +9,6 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
-import it.algos.vaadflow.modules.company.Company;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.modules.secolo.Secolo;
 import it.algos.vaadflow.modules.secolo.SecoloService;
@@ -22,9 +21,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.security.access.annotation.Secured;
 import org.vaadin.klaudeta.PaginatedGrid;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
 
@@ -112,10 +108,10 @@ public class AnnoList extends AGridViewList {
 
         super.limit = 25;
         super.usaPopupFiltro = true;
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneReset = true;
+        super.usaButtonDelete = true;
+        super.usaButtonReset = true;
         super.isEntityDeveloper = true;
-        super.usaBottoneNew = false;
+        super.usaButtonNew = false;
         super.usaBottoneEdit = false;
     }// end of method
 

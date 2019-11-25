@@ -798,7 +798,7 @@ public class PreferenzaService extends AService {
     public Preferenza setDate(String keyCode, LocalDateTime value) {
         Preferenza pref = findByKeyUnica(keyCode);
 
-        if (pref != null && pref.type == EAPrefType.date) {
+        if (pref != null && pref.type == EAPrefType.localdatetime) {
             pref = this.setValue(keyCode, value);
         }// end of if cycle
 

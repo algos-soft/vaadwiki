@@ -114,10 +114,10 @@ public abstract class AttNazProfCatList extends AGridViewList {
         this.usaBottoneViewStatistiche = true;
         this.usaBottoneUploadStatistiche = true;
 
-        super.usaBottoneNew = false;
+        super.usaButtonNew = false;
         super.usaBottoneEdit = true;
         super.isEntityModificabile = false;
-        super.usaBottoneDeleteAll = true;
+        super.usaButtonDelete = true;
     }// end of method
 
 

@@ -8,5 +8,5 @@ package it.algos.vaadwiki.modules.nome;
  * Time: 17:51
  */
 public enum EASelezioneNomi {
-    dimensioni, alfabetico, nomiDoppi
+    Dimensioni, Alfabetico, NomiDoppi
 }// end of enum

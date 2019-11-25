@@ -1,17 +1,20 @@
 package it.algos.vaadwiki.modules.doppinomi;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attnazprofcat.AttNazProfCatList;
+import it.algos.vaadwiki.modules.wiki.WikiList;
 import it.algos.wiki.web.AQueryVoce;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +51,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Slf4j
 @AIScript(sovrascrivibile = false)
 @AIView(vaadflow = false, menuName = "nomi doppi", menuIcon = VaadinIcon.BOAT, searchProperty = "code", roleTypeVisibility = EARoleType.developer)
-public class DoppinomiList extends AttNazProfCatList {
+public class DoppinomiList extends WikiList {
 
 
     private static String PAGINA_WIKI = "Utente:Biobot/NomiDoppi";
@@ -79,17 +82,37 @@ public class DoppinomiList extends AttNazProfCatList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.isEntityModificabile = false;
-        super.usaBottoneCategoria = false;
-        super.usaBottoneDeleteMongo = false;
-        super.usaBottoneViewStatistiche = false;
-        super.usaBottoneUploadStatistiche = false;
+        //--bottoni vaadwiki
+        super.usaButtonDownload = true;
+        super.usaButtonModulo = true;
 
-        super.titoloModulo = serviceWiki.titoloModuloDoppiNomi;
-        super.codeLastDownload = LAST_DOWNLOAD_DOPPI_NOMI;
+        super.titoloModulo = wikiService.titoloModuloDoppiNomi;
+        super.isEntityModificabile = false;
         super.usaPagination = false;
+
+        super.lastDownload = LAST_DOWNLOAD_DOPPI_NOMI;
+        super.durataLastDownload = DURATA_DOWNLOAD_DOPPI_NOMI;
+        super.eaTempoTypeDownload = EATempo.secondi;
     }// end of method
 
+    /**
+     * Eventuali messaggi di avviso specifici di questa view ed inseriti in 'alertPlacehorder' <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse ALayoutViewList <br>
+     * Normalmente ad uso esclusivo del developer (eventualmente dell'admin) <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void creaAlertLayout() {
+        super.creaAlertLayout();
+
+        alertPlacehorder.add(getLabelBlue("Progetto:Antroponimi/Nomi doppi."));
+        alertPlacehorder.add(new Label("Sono elencati i nomi doppi (ad esempio 'Maria Teresa'), per i quali il BioBot deve fare una lista di biografati una volta superate le 50 biografie."));
+        alertPlacehorder.add(new Label("Si veda anche la [[Categoria:Prenomi composti]]"));
+        alertPlacehorder.add(getLabelRed("La lista di 'Nomi' prevede SOLO nomi singoli a cui vengono aggiunti questi 'nomi doppi' accettabili."));
+        alertPlacehorder.add(getLabelRed("Quando si crea la lista di 'Nomi', i nomi doppi vengono scaricati ed aggiunti alla lista dei 'Nomi'"));
+    }// end of method
 
     /**
      * Legge server wiki una lista di valori da inserire nel mongoDB (cancellando i precedenti) <br>

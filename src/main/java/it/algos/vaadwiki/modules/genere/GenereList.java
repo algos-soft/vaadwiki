@@ -10,6 +10,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout;
@@ -105,14 +106,18 @@ public class GenereList extends WikiList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        //--bottoni vaadwiki
+        super.usaButtonDownload = true;
+        super.usaButtonModulo = true;
+
         super.titoloModulo = wikiService.titoloModuloGenere;
-        this.usaStatisticheButton = false;
-        this.usaBottoneUploadStatistiche = false;
-        super.task = taskGenere;
         super.usaPagination = true;
+        super.task = taskGenere;
         super.flagDaemon = USA_DAEMON_GENERE;
+
         super.lastDownload = LAST_DOWNLOAD_GENERE;
         super.durataLastDownload = DURATA_DOWNLOAD_GENERE;
+        super.eaTempoTypeDownload = EATempo.secondi;
     }// end of method
 
     /**
@@ -128,7 +133,6 @@ public class GenereList extends WikiList {
         super.creaAlertLayout();
 
         alertPlacehorder.add(getLabelBlue("Modulo:Bio/Plurale attività genere."));
-        alertPlacehorder.add(new Label("Modulo Lua di supporto a Modulo:Bio."));
         alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3, da singolare maschile e femminile (usati nell'incipit) al plurale maschile e femminile, per le intestazioni dei paragrafi nelle liste di antroponimi previste nel Progetto:Antroponimi."));
         alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
         alertPlacehorder.add(new Label("[\"attivita singolare maschile\"] = \"attività plurale maschile\""));

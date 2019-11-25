@@ -22,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import static it.algos.vaadflow.service.ADateService.INFERIORE_MINUTO;
+import static it.algos.vaadflow.service.ADateService.INFERIORE_SECONDO;
 import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 
 /**
@@ -35,11 +37,19 @@ import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 public abstract class WikiList extends AGridViewList {
 
 
+//    /**
+//     * Service (@Scope = 'singleton') recuperato come istanza dalla classe e usato come libreria <br>
+//     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+//     */
+//    protected UploadService uploadService = UploadService.getInstance();
+
     /**
-     * Service (@Scope = 'singleton') recuperato come istanza dalla classe e usato come libreria <br>
-     * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
-    protected UploadService uploadService = UploadService.getInstance();
+    @Autowired
+    protected UploadService uploadService;
 
 
     /**
@@ -62,38 +72,94 @@ public abstract class WikiList extends AGridViewList {
     protected int sogliaWiki;
 
 
-    protected Button donwloadMongoButton;
+    /**
+     * Bottone opzionale (un flag controlla se mostrarlo o meno) (primo dopo quelli standard) <br>
+     */
+    protected Button buttonDownload;
 
-    protected Button uploadStatisticheButton;
+    /**
+     * Flag di preferenza per eseguire 'download'. Normalmente false. <br>
+     */
+    protected boolean usaButtonDownload;
 
-    protected Button showCategoriaButton;
+    /**
+     * Bottone opzionale (un flag controlla se mostrarlo o meno) (secondo dopo quelli standard) <br>
+     */
+    protected Button buttonUpdate;
 
-    protected Button showModuloButton;
+    /**
+     * Flag di preferenza per eseguire 'update'. Normalmente false. <br>
+     */
+    protected boolean usaButtonUpdate;
 
-    protected Button showStatisticheButton;
+    /**
+     * Bottone opzionale (un flag controlla se mostrarlo o meno) (terzo dopo quelli standard) <br>
+     */
+    protected Button buttonElabora;
 
-    protected boolean usaBottoneCategoria;
-
-    protected boolean usaBottoneDeleteMongo;
-
-    protected boolean usaBottoneDownload;
-
-    protected boolean usaBottoneModulo;
+    /**
+     * Flag di preferenza per eseguire 'elabora''. Normalmente false. <br>
+     */
+    protected boolean usaButtonElabora;
 
 
-    protected Button uploadOneNatoButton;
+    /**
+     * Bottone opzionale (un flag controlla se mostrarlo o meno) (quarto dopo quelli standard) <br>
+     */
+    protected Button buttonUpload;
 
-    protected Button uploadOneMortoButton;
+    /**
+     * Flag di preferenza per eseguire 'upload''. Normalmente false. <br>
+     */
+    protected boolean usaButtonUpload;
 
-    protected Button creaButton;
 
-    protected Button updateButton;
+    /**
+     * Bottone opzionale (un flag controlla se mostrarlo o meno) (quinto dopo quelli standard) <br>
+     */
+    protected Button buttonModulo;
 
-    protected Button uploadAllButton;
+    /**
+     * Flag di preferenza per eseguire 'modulo''. Normalmente false. <br>
+     */
+    protected boolean usaButtonModulo;
 
-    protected Button statisticheButton;
 
-    protected Button statistiche2Button;
+    /**
+     * Bottone opzionale (un flag controlla se mostrarlo o meno) (sesto dopo quelli standard) <br>
+     */
+    protected Button buttonShowStatisticheA;
+
+    /**
+     * Flag di preferenza per eseguire 'show statistiche A''. Normalmente false. <br>
+     */
+    protected boolean usaButtonShowStatisticheA;
+
+    /**
+     * Bottone opzionale (un flag controlla se mostrarlo o meno) (settimo dopo quelli standard) <br>
+     */
+    protected Button buttonShowStatisticheB;
+
+    /**
+     * Flag di preferenza per eseguire 'show statistiche B''. Normalmente false. <br>
+     */
+    protected boolean usaButtonShowStatisticheB;
+
+
+    /**
+     * Bottone opzionale (un flag controlla se mostrarlo o meno) (ottavo dopo quelli standard) <br>
+     */
+    protected Button buttonUploadStatistiche;
+
+    /**
+     * Flag di preferenza per eseguire 'upload statistiche''. Normalmente false. <br>
+     */
+    protected boolean usaButtonUploadStatistiche;
+
+    protected Button buttonUploadOneNato;
+
+    protected Button buttonUploadOneMorto;
+
 
     protected String titoloCategoria;
 
@@ -109,6 +175,10 @@ public abstract class WikiList extends AGridViewList {
 
     protected String durataLastDownload;
 
+    protected String lastElaborazione;
+
+    protected String durataLastElaborazione;
+
     protected String lastUpload;
 
     protected String durataLastUpload;
@@ -119,40 +189,14 @@ public abstract class WikiList extends AGridViewList {
 
     protected String infoColor = "green";
 
-    /**
-     * Flag di preferenza per usare il bottone creaButton situato nella topLayout. Normalmente false. <br>
-     */
-    protected boolean usaCreaButton;
-
-    /**
-     * Flag di preferenza per usare il bottone updateButton situato nella topLayout. Normalmente false. <br>
-     */
-    protected boolean usaUpdateButton;
-
-    /**
-     * Flag di preferenza per usare il bottone uploadAllButton situato nella topLayout. Normalmente true. <br>
-     */
-    protected boolean usaUploadAllButton;
-
-    /**
-     * Flag di preferenza per usare il bottone usaStatisticheButton situato nella topLayout. Normalmente true. <br>
-     */
-    protected boolean usaStatisticheButton;
-
-    /**
-     * Flag di preferenza per usare il bottone usaStatisticheButton situato nella topLayout. Normalmente true. <br>
-     */
-    protected boolean usaStatistiche2Button;
-
-    protected boolean usaBottoneUploadStatistiche;
-
-    protected boolean usaBottoneUpload;
 
     protected WikiService wikiService;
 
     protected ATask task;
 
     protected EATempo eaTempoTypeDownload;
+
+    protected EATempo eaTempoTypeElaborazione;
 
     protected EATempo eaTempoTypeUpload;
 
@@ -184,26 +228,35 @@ public abstract class WikiList extends AGridViewList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        this.usaBottoneCategoria = false;
-        this.usaBottoneDeleteMongo = true;
-        this.usaBottoneDownload = true;
-        this.usaBottoneModulo = true;
-        this.usaBottoneUploadStatistiche = true;
-
-        super.usaBottoneNew = false;
+        //--preferenze e bottoni standard
+        super.usaButtonDelete = true;
+        super.usaButtonReset = false;
+        super.usaButtonNew = false;
         super.usaBottoneEdit = true;
         super.isEntityModificabile = false;
-        super.usaBottoneDeleteAll = true;
         super.usaPagination = true;
 
-        this.usaCreaButton = false;
-        this.usaUpdateButton = false;
-        this.usaUploadAllButton = false;
-        this.usaStatisticheButton = true;
-        this.usaBottoneUploadStatistiche = true;
-        this.usaBottoneUpload = false;
+        //--bottoni vaadwiki
+        this.usaButtonDownload = false;
+        this.usaButtonUpdate = false;
+        this.usaButtonElabora = false;
+        this.usaButtonUpload = false;
+        this.usaButtonModulo = false;
+        this.usaButtonShowStatisticheA = false;
+        this.usaButtonShowStatisticheB = false;
+        this.usaButtonUploadStatistiche = false;
+
+        this.lastDownload = VUOTA;
+        this.durataLastDownload = VUOTA;
         this.eaTempoTypeDownload = EATempo.nessuno;
+        this.lastElaborazione = VUOTA;
+        this.durataLastElaborazione = VUOTA;
+        this.eaTempoTypeElaborazione = EATempo.nessuno;
+        this.lastUpload = VUOTA;
+        this.durataLastUpload = VUOTA;
         this.eaTempoTypeUpload = EATempo.nessuno;
+        this.lastUploadStatistiche = VUOTA;
+        this.durataLastUploadStatistiche = VUOTA;
         this.eaTempoTypeStatistiche = EATempo.nessuno;
     }// end of method
 
@@ -217,7 +270,9 @@ public abstract class WikiList extends AGridViewList {
     @Override
     protected void creaAlertLayout() {
         super.creaAlertLayout();
+
         creaInfoDownload(task, flagDaemon, lastDownload, durataLastDownload);
+        creaInfoElaborazione(task, flagDaemon, lastElaborazione, durataLastElaborazione);
         creaInfoUpload(task, flagDaemon, lastUpload, durataLastUpload);
         creaInfoStatistiche(lastUploadStatistiche, durataLastUploadStatistiche);
     }// end of method
@@ -235,160 +290,74 @@ public abstract class WikiList extends AGridViewList {
     protected void creaTopLayout() {
         super.creaTopLayout();
 
-        if (usaBottoneDownload) {
-            donwloadMongoButton = new Button("Download", new Icon(VaadinIcon.DOWNLOAD));
-            donwloadMongoButton.getElement().setAttribute("theme", "primary");
-            donwloadMongoButton.addClickListener(e -> download(System.currentTimeMillis()));
-            topPlaceholder.add(donwloadMongoButton);
+        if (usaButtonDownload) {
+            buttonDownload = new Button("Download", new Icon(VaadinIcon.DOWNLOAD));
+            buttonDownload.getElement().setAttribute("theme", "primary");
+            buttonDownload.addClickListener(e -> download(System.currentTimeMillis()));
+            topPlaceholder.add(buttonDownload);
         }// end of if cycle
 
-        if (usaBottoneCategoria) {
-            showCategoriaButton = new Button("Categoria", new Icon(VaadinIcon.LIST));
-            showCategoriaButton.addClassName("view-toolbar__button");
-            showCategoriaButton.addClickListener(e -> showWikiCategoria());
-            topPlaceholder.add(showCategoriaButton);
+        if (usaButtonUpdate) {
+            buttonUpdate = new Button("Update", new Icon(VaadinIcon.LIST));
+            buttonUpdate.addClassName("view-toolbar__button");
+            buttonUpdate.addClickListener(e -> update(System.currentTimeMillis()));
+//            buttonUpdate.addClickListener(e -> {
+//                ((NomeCognomeService) service).update();
+//                updateFiltri();
+//                updateGrid();
+//            });//end of lambda expressions and anonymous inner class
+            topPlaceholder.add(buttonUpdate);
         }// end of if cycle
 
-        if (usaCreaButton) {
-            creaButton = new Button("Crea all", new Icon(VaadinIcon.LIST));
-            creaButton.addClassName("view-toolbar__button");
-            creaButton.addClickListener(e -> {
-                ((NomeCognomeService) service).crea();
-                updateFiltri();
-                updateGrid();
-            });//end of lambda expressions and anonymous inner class
-            topPlaceholder.add(creaButton);
+        if (usaButtonElabora) {
+            buttonElabora = new Button("Elabora", new Icon(VaadinIcon.LIST));
+            buttonElabora.addClassName("view-toolbar__button");
+            buttonElabora.addClickListener(e -> elabora(System.currentTimeMillis()));
+//            buttonElabora.addClickListener(e -> {
+//                ((NomeCognomeService) service).update();
+//                updateFiltri();
+//                updateGrid();
+//            });//end of lambda expressions and anonymous inner class
+            topPlaceholder.add(buttonElabora);
         }// end of if cycle
 
-        if (usaUpdateButton) {
-            updateButton = new Button("Elabora all", new Icon(VaadinIcon.LIST));
-            updateButton.addClassName("view-toolbar__button");
-            updateButton.addClickListener(e -> {
-                ((NomeCognomeService) service).update();
-                updateFiltri();
-                updateGrid();
-            });//end of lambda expressions and anonymous inner class
-            topPlaceholder.add(updateButton);
+        if (usaButtonUpload) {
+            buttonUpload = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
+            buttonUpload.getElement().setAttribute("theme", "error");
+            buttonUpload.addClickListener(e -> upload(System.currentTimeMillis()));
+            topPlaceholder.add(buttonUpload);
         }// end of if cycle
 
-        //--upload della lista completa di 365 + 365 giorni (nel caso di giorni o anni)
-        if (usaUploadAllButton) {
-            uploadAllButton = new Button("Upload all", new Icon(VaadinIcon.UPLOAD));
-            uploadAllButton.getElement().setAttribute("theme", "error");
-            uploadAllButton.addClickListener(e -> upload(System.currentTimeMillis()));
-            topPlaceholder.add(uploadAllButton);
+        if (usaButtonModulo) {
+            buttonModulo = new Button("Modulo", new Icon(VaadinIcon.LIST));
+            buttonModulo.addClassName("view-toolbar__button");
+            buttonModulo.addClickListener(e -> showWikiPagina(titoloModulo));
+            topPlaceholder.add(buttonModulo);
         }// end of if cycle
 
-        if (usaBottoneModulo) {
-            showModuloButton = new Button("Modulo", new Icon(VaadinIcon.LIST));
-            showModuloButton.addClassName("view-toolbar__button");
-            showModuloButton.addClickListener(e -> showWikiModulo());
-            topPlaceholder.add(showModuloButton);
+        if (usaButtonShowStatisticheA) {
+            buttonShowStatisticheA = new Button("Statistiche", new Icon(VaadinIcon.TABLE));
+            buttonShowStatisticheA.addClassName("view-toolbar__button");
+            buttonShowStatisticheA.addClickListener(e -> showWikiPagina(titoloPaginaStatistiche));
+            topPlaceholder.add(buttonShowStatisticheA);
         }// end of if cycle
 
-        if (usaStatisticheButton) {
-            statisticheButton = new Button("View statistiche", new Icon(VaadinIcon.TABLE));
-            statisticheButton.addClassName("view-toolbar__button");
-            statisticheButton.addClickListener(e -> showWikiStatistiche());
-            topPlaceholder.add(statisticheButton);
+        if (usaButtonShowStatisticheB) {
+            buttonShowStatisticheB = new Button("Statistiche 2", new Icon(VaadinIcon.TABLE));
+            buttonShowStatisticheB.addClassName("view-toolbar__button");
+            buttonShowStatisticheB.addClickListener(e -> showWikiPagina(titoloPaginaStatistiche2));
+            topPlaceholder.add(buttonShowStatisticheB);
         }// end of if cycle
 
-        if (usaStatistiche2Button) {
-            statistiche2Button = new Button("View statistiche 2", new Icon(VaadinIcon.TABLE));
-            statistiche2Button.addClassName("view-toolbar__button");
-            statistiche2Button.addClickListener(e -> showWikiStatistiche2());
-            topPlaceholder.add(statistiche2Button);
-        }// end of if cycle
-
-
-        if (usaBottoneUploadStatistiche) {
-            uploadStatisticheButton = new Button("Upload statistiche", new Icon(VaadinIcon.UPLOAD));
-            uploadStatisticheButton.getElement().setAttribute("theme", "error");
-            uploadStatisticheButton.addClassName("view-toolbar__button");
-            uploadStatisticheButton.addClickListener(e -> uploadStatistiche(System.currentTimeMillis()));
-            topPlaceholder.add(uploadStatisticheButton);
-        }// end of if cycle
-
-        if (usaBottoneUpload) {
-            uploadStatisticheButton = new Button("Upload statistiche", new Icon(VaadinIcon.UPLOAD));
-            uploadStatisticheButton.getElement().setAttribute("theme", "error");
-            uploadStatisticheButton.addClassName("view-toolbar__button");
-            uploadStatisticheButton.addClickListener(e -> uploadStatistiche(System.currentTimeMillis()));
-            topPlaceholder.add(uploadStatisticheButton);
+        if (usaButtonUploadStatistiche) {
+            buttonUploadStatistiche = new Button("Upload statistiche", new Icon(VaadinIcon.UPLOAD));
+            buttonUploadStatistiche.getElement().setAttribute("theme", "error");
+            buttonUploadStatistiche.addClassName("view-toolbar__button");
+            buttonUploadStatistiche.addClickListener(e -> uploadStatistiche(System.currentTimeMillis()));
+            topPlaceholder.add(buttonUploadStatistiche);
         }// end of if cycle
 
         sincroBottoniMenu(false);
-    }// end of method
-
-
-    protected void apreDialogo(SingleSelectionEvent evento, EAOperation operation) {
-        AEntity entitySelected = null;
-        Set selezione = grid.getSelectedItems();
-        boolean selezioneSingola = (selezione != null && selezione.size() == 1);
-
-        if (selezioneSingola) {
-            entitySelected = (AEntity) grid.getSelectedItems().toArray()[0];
-        }// end of if cycle
-
-        if (evento != null && evento.getOldValue() != evento.getValue()) {
-            if (evento.getValue().getClass().getName().equals(entityClazz.getName())) {
-                if (usaRouteFormView && text.isValid(routeNameFormEdit)) {
-                    AEntity entity = (AEntity) evento.getValue();
-                    routeVerso(routeNameFormEdit, entity);
-                } else {
-//                    dialog.open((AEntity) evento.getValue(), operation, context); //@todo versione 14
-                }// end of if/else cycle
-            }// end of if cycle
-        }// end of if cycle
-
-        if (selezioneSingola) {
-            grid.select(entitySelected);
-        }// end of if cycle
-    }// end of method
-
-
-    protected void deleteMongo() {
-        this.service.deleteAll();
-        updateFiltri();
-        updateGrid();
-    }// end of method
-
-
-    protected void findOrCrea(String singolare, String plurale) {
-    }// end of method
-
-
-    protected void sincroBottoniMenu(boolean enabled) {
-        if (uploadOneNatoButton != null) {
-            uploadOneNatoButton.setEnabled(enabled);
-        }// end of if cycle
-        if (uploadOneMortoButton != null) {
-            uploadOneMortoButton.setEnabled(enabled);
-        }// end of if cycle
-    }// end of method
-
-
-    protected void showWikiCategoria() {
-        String link = "\"" + PATH_WIKI + titoloCategoria + "\"";
-        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
-    }// end of method
-
-
-    protected void showWikiModulo() {
-        String link = "\"" + PATH_WIKI + titoloModulo + "\"";
-        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
-    }// end of method
-
-
-    protected void showWikiStatistiche() {
-        String link = "\"" + PATH_WIKI + titoloPaginaStatistiche + "\"";
-        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
-    }// end of method
-
-
-    protected void showWikiStatistiche2() {
-        String link = "\"" + PATH_WIKI + titoloPaginaStatistiche2 + "\"";
-        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
 
@@ -403,6 +372,19 @@ public abstract class WikiList extends AGridViewList {
         updateGrid();
     }// end of method
 
+    /**
+     * Update standard. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    protected void update(long inizio) {
+    }// end of method
+
+    /**
+     * Elabora standard. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    protected void elabora(long inizio) {
+    }// end of method
 
     /**
      * Upload standard. <br>
@@ -412,7 +394,6 @@ public abstract class WikiList extends AGridViewList {
         setLastUpload(inizio);
     }// end of method
 
-
     /**
      * Upload standard delle statistiche. <br>
      * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
@@ -421,6 +402,64 @@ public abstract class WikiList extends AGridViewList {
         setLastUploadStatistiche(inizio);
         super.updateGrid();
     }// end of method
+
+
+//    protected void apreDialogo(SingleSelectionEvent evento, EAOperation operation) {
+//        AEntity entitySelected = null;
+//        Set selezione = grid.getSelectedItems();
+//        boolean selezioneSingola = (selezione != null && selezione.size() == 1);
+//
+//        if (selezioneSingola) {
+//            entitySelected = (AEntity) grid.getSelectedItems().toArray()[0];
+//        }// end of if cycle
+//
+//        if (evento != null && evento.getOldValue() != evento.getValue()) {
+//            if (evento.getValue().getClass().getName().equals(entityClazz.getName())) {
+//                if (usaRouteFormView && text.isValid(routeNameFormEdit)) {
+//                    AEntity entity = (AEntity) evento.getValue();
+//                    routeVerso(routeNameFormEdit, entity);
+//                } else {
+////                    dialog.open((AEntity) evento.getValue(), operation, context); //@todo versione 14
+//                }// end of if/else cycle
+//            }// end of if cycle
+//        }// end of if cycle
+//
+//        if (selezioneSingola) {
+//            grid.select(entitySelected);
+//        }// end of if cycle
+//    }// end of method
+
+
+//    protected void deleteMongo() {
+//        this.service.deleteAll();
+//        updateFiltri();
+//        updateGrid();
+//    }// end of method
+
+
+//    protected void findOrCrea(String singolare, String plurale) {
+//    }// end of method
+
+
+
+
+
+    protected void showWikiPagina(String titoloPagina) {
+        String link = "\"" + PATH_WIKI + titoloPagina + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
+    protected void sincroBottoniMenu(boolean enabled) {
+        if (buttonUploadOneNato != null) {
+            buttonUploadOneNato.setEnabled(enabled);
+        }// end of if cycle
+        if (buttonUploadOneMorto != null) {
+            buttonUploadOneMorto.setEnabled(enabled);
+        }// end of if cycle
+    }// end of method
+
+
 
 
     /**
@@ -461,10 +500,9 @@ public abstract class WikiList extends AGridViewList {
         String message = "";
         String tag = "Download automatico";
         LocalDateTime lastDownload = pref.getDate(flagLastDownload);
-        int durata;
 
-        if (text.isEmpty(flagDaemon) || text.isEmpty(flagLastDownload)) {
-            message = "Download non previsto";
+        if (text.isEmpty(flagLastDownload)) {
+            message = "Download non previsto.";
         } else {
             if (task == null) {
                 testo = tag + " non previsto.";
@@ -477,7 +515,7 @@ public abstract class WikiList extends AGridViewList {
             }// end of if/else cycle
 
             if (lastDownload != null) {
-                message = testo + " Ultimo import il " + date.getTime(lastDownload);
+                message = testo + " Ultimo download il " + date.getTime(lastDownload);
             } else {
                 if (pref.isBool(flagDaemon)) {
                     message = tag + ": " + task.getNota() + "." + " Non ancora effettuato.";
@@ -488,11 +526,48 @@ public abstract class WikiList extends AGridViewList {
 
             //--durata
             message += getDurata(eaTempoTypeDownload, flagDurataDownload);
-//            if (text.isValid(flagDurataDownload)) {
-//                durata = pref.getInt(flagDurataDownload);
-//                message += ", in " + date.toTextSecondi(durata);
-//            }// end of if cycle
         }// end of if cycle
+
+        if (text.isValid(message)) {
+            alertPlacehorder.add(getLabelGreen(message));
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Eventuale caption sopra la grid
+     */
+    protected void creaInfoElaborazione(ATask task, String flagDaemon, String flagLastElaborazione, String flagDurataElaborazione) {
+        String testo = "";
+        String message = "";
+        String tag = "Elaborazione automatica: ";
+        String nota;
+        LocalDateTime lastUpload;
+        int durata;
+        testo = tag;
+
+        if (text.isEmpty(flagDaemon) || text.isEmpty(flagLastElaborazione)) {
+            message = "Elaborazione non prevista.";
+        } else {
+            nota = task != null ? task.getNota() : "";
+            lastUpload = pref.getDate(flagLastElaborazione);
+            if (pref.isBool(flagDaemon)) {
+                testo += nota;
+            } else {
+                testo += "disattivato.";
+            }// end of if/else cycle
+
+            if (lastUpload != null) {
+                message += testo + " Ultima elaborazione il " + date.getTime(lastUpload);
+                message += getDurata(eaTempoTypeElaborazione, flagDurataElaborazione);
+            } else {
+                if (pref.isBool(flagDaemon)) {
+                    message = tag + nota + " Non ancora effettuata.";
+                } else {
+                    message = testo;
+                }// end of if/else cycle
+            }// end of if/else cycle
+        }// end of if/else cycle
 
         if (text.isValid(message)) {
             alertPlacehorder.add(getLabelGreen(message));
@@ -509,11 +584,10 @@ public abstract class WikiList extends AGridViewList {
         String tag = "Upload automatico: ";
         String nota;
         LocalDateTime lastUpload;
-        int durata;
         testo = tag;
 
         if (text.isEmpty(flagDaemon) || text.isEmpty(flagLastUpload)) {
-            message = "Upload non previsto";
+            message = "Upload non previsto.";
         } else {
             nota = task != null ? task.getNota() : "";
             lastUpload = pref.getDate(flagLastUpload);
@@ -525,6 +599,7 @@ public abstract class WikiList extends AGridViewList {
 
             if (lastUpload != null) {
                 message += testo + " Ultimo upload il " + date.getTime(lastUpload);
+                message += getDurata(eaTempoTypeUpload, flagDurataLastUpload);
             } else {
                 if (pref.isBool(flagDaemon)) {
                     message = tag + nota + " Non ancora effettuato.";
@@ -533,15 +608,6 @@ public abstract class WikiList extends AGridViewList {
                 }// end of if/else cycle
             }// end of if/else cycle
         }// end of if/else cycle
-
-        //--durata
-        message += getDurata(eaTempoTypeUpload, flagDurataLastUpload);
-//        if (text.isValid(flagDurataLastUpload)) {
-//            durata = pref.getInt(flagDurataLastUpload);
-//            if (durata > 0) {
-//                message += ", in " + date.toTextSecondi(durata);
-//            }// end of if cycle
-//        }// end of if cycle
 
         if (text.isValid(message)) {
             alertPlacehorder.add(getLabelGreen(message));
@@ -555,24 +621,17 @@ public abstract class WikiList extends AGridViewList {
     protected void creaInfoStatistiche(String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
         String message = "";
         LocalDateTime lastDownload = pref.getDate(flagLastUploadStatistiche);
-        int durata = 0;
 
         if (lastDownload != null) {
-            message = "Ultimo upload delle statistiche effettuato il " + date.getTime(lastDownload);
-//            durata = pref.getInt(flagDurataLastUploadStatistiche);
-//            if (durata > 0) {
-//                message += ", in " + date.toTextSecondi(durata);
-//            }// end of if cycle
+            message = "Statistiche caricate l'ultima volta su wikipedia il " + date.getTime(lastDownload);
+            message += getDurata(eaTempoTypeStatistiche, flagDurataLastUploadStatistiche);
         } else {
-            if (usaBottoneUploadStatistiche) {
-                message = "Upload delle statistiche non ancora effettuato";
+            if (usaButtonUploadStatistiche) {
+                message = "Statistiche non ancora caricate su wikipedia.";
             } else {
-                message = "Upload delle statistiche non previsto";
+                message = "Statistiche non previste.";
             }// end of if/else cycle
         }// end of if/else cycle
-
-        //--durata
-        message += getDurata(eaTempoTypeStatistiche, flagDurataLastUploadStatistiche);
 
         if (text.isValid(message)) {
             alertPlacehorder.add(getLabelGreen(message));
@@ -587,29 +646,29 @@ public abstract class WikiList extends AGridViewList {
         String message = VUOTA;
         int durata = 0;
 
-        if (text.isValid(flagDurata)) {
-            durata = pref.getInt(flagDurata);
-            if (durata < 1) {
-                return VUOTA;
-            }// end of if cycle
+        if (eaTempoType == EATempo.nessuno || text.isEmpty(flagDurata)) {
+            return VUOTA;
         }// end of if cycle
+
+        durata = pref.getInt(flagDurata);
+        message = ", in ";
 
         switch (eaTempoType) {
             case nessuno:
             case millisecondi:
-                message = ", in " + date.toText(durata);
+                message += date.toText(durata);
                 break;
             case secondi:
-                message = ", in " + date.toTextSecondi(durata);
+                message += durata < 1 ? date.toTextSecondi(durata) : INFERIORE_SECONDO;
                 break;
             case minuti:
-                message = ", in " + date.toTextMinuti(durata);
+                message += durata < 1 ? date.toTextMinuti(durata) : INFERIORE_MINUTO;
                 break;
             case ore:
-                message = ", in " + date.toText(durata);
+                message += date.toText(durata);
                 break;
             case giorni:
-                message = ", in " + date.toText(durata);
+                message += date.toText(durata);
                 break;
             default:
                 log.warn("Switch - caso non definito");

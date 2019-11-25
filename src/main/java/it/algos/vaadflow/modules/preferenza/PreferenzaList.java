@@ -152,12 +152,12 @@ public class PreferenzaList extends AGridViewList {
         super.fixPreferenze();
 
         if (!FlowVar.usaSecurity || login.isDeveloper()) {
-            super.usaBottoneDeleteAll = true;
-            super.usaBottoneReset = true;
+            super.usaButtonDelete = true;
+            super.usaButtonReset = true;
         }// end of if cycle
 
         super.usaBottoneEdit = false;
-        super.usaBottoneNew = false;
+        super.usaButtonNew = false;
         super.isEntityDeveloper = true;
         super.usaPagination = true;
     }// end of method

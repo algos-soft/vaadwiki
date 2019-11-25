@@ -163,7 +163,7 @@ public class PreferenzaDialog extends AViewDialog<Preferenza> {
             case bool:
                 valueField.setValue((boolean) genericValue);
                 break;
-            case date:
+            case localdatetime:
                 if (genericValue instanceof LocalDateTime) {
                     genericValue = date.localDateTimeToLocalDate((LocalDateTime) genericValue);
                 }// end of if cycle
@@ -217,7 +217,7 @@ public class PreferenzaDialog extends AViewDialog<Preferenza> {
             case bool:
                 valueField = new ACheckBox(caption + "(vero/falso)");
                 break;
-            case date:
+            case localdatetime:
                 valueField = new DatePicker(caption + "(giorno)");
                 break;
             case enumeration:
@@ -263,7 +263,7 @@ public class PreferenzaDialog extends AViewDialog<Preferenza> {
                     break;
                 case bool:
                     break;
-                case date:
+                case localdatetime:
                     break;
                 case enumeration:
                     if (currentItem != null && text.isValid(currentItem.id)) {

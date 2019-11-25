@@ -111,11 +111,18 @@ public class AttivitaList extends WikiList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        //--bottoni vaadwiki
+        super.usaButtonDownload = true;
+        super.usaButtonModulo = true;
+        super.usaButtonShowStatisticheA = true;
+        super.usaButtonUploadStatistiche = true;
+
         super.titoloModulo = wikiService.titoloModuloAttivita;
         super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheAttivita;
         super.usaPagination = true;
         super.task = taskAttivita;
         super.flagDaemon = USA_DAEMON_ATTIVITA;
+
         super.lastDownload = LAST_DOWNLOAD_ATTIVITA;
         super.durataLastDownload = DURATA_DOWNLOAD_ATTIVITA;
         super.eaTempoTypeDownload = EATempo.secondi;
@@ -141,7 +148,7 @@ public class AttivitaList extends WikiList {
         super.creaAlertLayout();
 
         alertPlacehorder.add(getLabelBlue("Modulo:Bio/Plurale attività."));
-        alertPlacehorder.add(new Label("Modulo Lua di supporto a Modulo:Bio."));
+        alertPlacehorder.add(getLabelBlue("Progetto:Biografie/Attività."));
         alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3,"));
         alertPlacehorder.add(new Label(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
         alertPlacehorder.add(new Label("All'interno della tabella le attività sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse."));

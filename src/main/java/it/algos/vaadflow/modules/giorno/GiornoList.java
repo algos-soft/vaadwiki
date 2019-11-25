@@ -9,7 +9,6 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
-import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.mese.Mese;
 import it.algos.vaadflow.modules.mese.MeseService;
 import it.algos.vaadflow.modules.role.EARoleType;
@@ -105,10 +104,10 @@ public class GiornoList extends AGridViewList {
 
         super.limit = 25;
         super.usaPopupFiltro = true;
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneReset = true;
+        super.usaButtonDelete = true;
+        super.usaButtonReset = true;
         super.isEntityDeveloper = true;
-        super.usaBottoneNew = false;
+        super.usaButtonNew = false;
         super.usaBottoneEdit = false;
     }// end of method
 

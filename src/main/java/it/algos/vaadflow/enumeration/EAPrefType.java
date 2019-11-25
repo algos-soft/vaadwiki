@@ -24,6 +24,7 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
+
         @Override
         public String bytesToObject(byte[] bytes) {
             String obj = "";
@@ -33,6 +34,7 @@ public enum EAPrefType {
             return obj;
         }// end of method
     },// end of single enumeration
+
 
     bool("bool", EAFieldType.checkbox) {
         @Override
@@ -59,30 +61,6 @@ public enum EAPrefType {
         }// end of method
     },// end of single enumeration
 
-//    bool2("booleano", EAFieldType.checkboxlabel) {
-//        @Override
-//        public byte[] objectToBytes(Object obj) {
-//            byte[] bytes = new byte[0];
-//            if (obj instanceof Boolean) {
-//                boolean bool = (boolean) obj;
-//                bytes = new byte[]{(byte) (bool ? 1 : 0)};
-//            }// end of if cycle
-//            return bytes;
-//        }// end of method
-//
-//        @Override
-//        @SuppressWarnings("all")
-//        public Object bytesToObject(byte[] bytes) {
-//            Object obj = null;
-//            if (bytes.length > 0) {
-//                byte b = bytes[0];
-//                obj = new Boolean(b == (byte) 0b00000001);
-//            } else {
-//                obj = new Boolean(false);
-//            }// end of if/else cycle
-//            return obj;
-//        }// end of method
-//    },// end of single enumeration
 
     integer("int", EAFieldType.integer) {
         @Override
@@ -105,6 +83,7 @@ public enum EAPrefType {
         }// end of method
     },// end of single enumeration
 
+
     lungo("long", EAFieldType.lungo) {
         @Override
         public byte[] objectToBytes(Object obj) {
@@ -126,7 +105,8 @@ public enum EAPrefType {
         }// end of method
     },// end of single enumeration
 
-    date("data", EAFieldType.localdatetime) {
+
+    localdatetime("data", EAFieldType.localdatetime) {
         @Override
         public byte[] objectToBytes(Object obj) {
             byte[] bytes = new byte[0];
@@ -143,11 +123,11 @@ public enum EAPrefType {
         @Override
         public Object bytesToObject(byte[] bytes) {
             LocalDateTime data = null;
-            long millis=0;
+            long millis = 0;
 
 //            return bytes.length > 0 ? LibDate.dateToLocalDateTime(new Date(Longs.fromByteArray(bytes))) : null;
-            if (bytes!=null&&bytes.length>0) {
-                 millis = Longs.fromByteArray(bytes);
+            if (bytes != null && bytes.length > 0) {
+                millis = Longs.fromByteArray(bytes);
                 data = bytes.length > 0 ? LocalDateTime.ofEpochSecond(millis, 0, ZoneOffset.UTC) : null;
             }// end of if cycle
 
@@ -166,6 +146,7 @@ public enum EAPrefType {
             }// end of if cycle
             return bytes;
         }// end of method
+
 
         @Override
         public String bytesToObject(byte[] bytes) {
@@ -246,8 +227,9 @@ public enum EAPrefType {
 
 //    bytes("blog", EAFieldType.json);
 
-//    private static ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+    //    private static ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
     private String nome;
+
     private EAFieldType fieldType;
 
 
@@ -255,6 +237,7 @@ public enum EAPrefType {
         this.setNome(nome);
         this.setFieldType(tipoDiFieldPerVisualizzareQuestoTipoDiPreferenza);
     }// fine del costruttore
+
 
     public static String[] getValues() {
         String[] valori;
@@ -268,6 +251,7 @@ public enum EAPrefType {
         return valori;
     }// end of static method
 
+
     public static byte[] intToByteArray(int x) {
         return new byte[]{
                 (byte) ((x >> 24) & 0xFF),
@@ -276,6 +260,7 @@ public enum EAPrefType {
                 (byte) (x & 0xFF)
         };
     }// end of static method
+
 
     public static int byteArrayToInt(byte[] bytes) {
         int num = 0;
@@ -288,11 +273,13 @@ public enum EAPrefType {
         return num;
     }// end of static method
 
+
     public static byte[] longToByteArray(long x) {
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
         buffer.putLong(0, x);
         return buffer.array();
     }// end of static method
+
 
     public static long byteArrayToLong(byte[] bytes) {
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
@@ -314,6 +301,7 @@ public enum EAPrefType {
         return null;
     }// end of method
 
+
     /**
      * Converte un byte[] in Object del tipo adatto per questa preferenza.
      * Sovrascritto
@@ -326,6 +314,7 @@ public enum EAPrefType {
         return null;
     }// end of method
 
+
     /**
      * Writes a value in the storage for this type of preference
      * Sovrascritto
@@ -335,6 +324,7 @@ public enum EAPrefType {
     public void put(Object value) {
     }// end of method
 
+
     /**
      * Retrieves the value of this preference's type
      * Sovrascritto
@@ -343,17 +333,21 @@ public enum EAPrefType {
         return null;
     }// end of method
 
+
     public String getNome() {
         return nome;
     }// end of getter method
+
 
     public void setNome(String nome) {
         this.nome = nome;
     }//end of setter method
 
+
     public EAFieldType getFieldType() {
         return fieldType;
     }
+
 
     public void setFieldType(EAFieldType fieldType) {
         this.fieldType = fieldType;

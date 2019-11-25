@@ -82,11 +82,11 @@ public class LogList extends AGridViewList {
         super.fixPreferenze();
 
         if (!FlowVar.usaSecurity || login.isDeveloper()) {
-            super.usaBottoneDeleteAll = true;
+            super.usaButtonDelete = true;
         }// end of if cycle
         super.usaPopupFiltro = true;
         super.isEntityAdmin = true;
-        super.usaBottoneNew = false;
+        super.usaButtonNew = false;
 
         super.grid = new PaginatedGrid<Log>();
     }// end of method

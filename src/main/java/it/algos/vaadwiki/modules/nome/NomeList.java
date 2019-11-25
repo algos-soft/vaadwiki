@@ -13,6 +13,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
@@ -30,9 +31,9 @@ import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.vaadin.klaudeta.PaginatedGrid;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
@@ -71,7 +72,7 @@ public class NomeList extends WikiList {
 
     @Autowired
     @Qualifier(TASK_NOM)
-    protected ATask task;
+    protected ATask taskNomi;
 
 
     /**
@@ -113,35 +114,56 @@ public class NomeList extends WikiList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneDeleteAll = true;
-        this.sogliaWiki = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI, 50);
+        //--bottoni vaadwiki
+        super.usaButtonElabora = true;
+        super.usaButtonUpload = true;
+        super.usaButtonShowStatisticheA = true;
+        super.usaButtonShowStatisticheB = true;
+        super.usaButtonUploadStatistiche = true;
 
-        this.usaCreaButton = true;
-        super.usaPopupFiltro = true;
-        this.usaStatistiche2Button = true;
         super.titoloPaginaStatistiche = ((NomeService) service).TITOLO_PAGINA_WIKI;
         super.titoloPaginaStatistiche2 = ((NomeService) service).TITOLO_PAGINA_WIKI_2;
+        super.usaPagination = true;
+        this.sogliaWiki = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI, 50);
+        super.usaPopupFiltro = true;
+        super.task = taskNomi;
+        super.flagDaemon = USA_DAEMON_NOMI;
+
+        this.lastDownload = VUOTA;
+        this.durataLastDownload = VUOTA;
+        this.eaTempoTypeDownload = EATempo.nessuno;
+        super.lastElaborazione = LAST_ELABORA_NOME;
+        super.durataLastElaborazione = DURATA_ELABORA_NOMI;
+        super.eaTempoTypeElaborazione = EATempo.secondi;
+        super.lastUpload = LAST_UPLOAD_NOMI;
+        super.durataLastUpload = DURATA_UPLOAD_NOMI;
+        super.eaTempoTypeUpload = EATempo.minuti;
         super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_NOMI;
         super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_NOMI;
-        super.usaBottoneUpload = true;
+        super.eaTempoTypeStatistiche = EATempo.secondi;
     }// end of method
 
 
     /**
-     * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
-     * Normalmente ad uso esclusivo del developer
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
+     * Eventuali messaggi di avviso specifici di questa view ed inseriti in 'alertPlacehorder' <br>
+     * <p>
+     * Chiamato da AViewList.initView() e sviluppato nella sottoclasse ALayoutViewList <br>
+     * Normalmente ad uso esclusivo del developer (eventualmente dell'admin) <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
      */
     @Override
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-//        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_NOMI, LAST_ELABORA_NOME));
-//        alertPlacehorder.add(creaInfoUpload(codeLastUpload, durataLastUpload));
-//        alertPlacehorder.add(creaInfoUploadStatistiche(codeLastUploadStatistiche, durataLastUploadStatistiche));
+        alertPlacehorder.add(getLabelBlue("Progetto:Antroponimi/Nomi."));
+        alertPlacehorder.add(getLabelBlue("Progetto:Antroponimi/Liste nomi."));
+        alertPlacehorder.add(new Label("Sono elencati i nomi usati nelle biografie"));
+        alertPlacehorder.add(new Label("La lista accetta SOLO nomi singoli"));
+        alertPlacehorder.add(new Label("La lista prevede nomi utilizzati da almeno 'sogliaNomiMongo' biografie"));
+        alertPlacehorder.add(new Label("Upload crea una pagina su wiki per ogni nome che supera 'sogliaNomiWiki' biografie"));
+        alertPlacehorder.add(getLabelRed("Quando si elabora la lista dei 'Nomi', i nomi doppi vengono scaricati da wikipedia ed aggiunti a questa lista"));
     }// end of method
-
 
     /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid
@@ -174,7 +196,7 @@ public class NomeList extends WikiList {
 
         filtroComboBox.setPlaceholder("Selezione ...");
         filtroComboBox.setItems(EASelezioneNomi.values());
-        filtroComboBox.setValue(EASelezioneNomi.dimensioni);
+        filtroComboBox.setValue(EASelezioneNomi.Dimensioni);
     }// end of method
 
 
@@ -194,15 +216,15 @@ public class NomeList extends WikiList {
 
         if (selezione != null) {
             switch (selezione) {
-                case dimensioni:
+                case Dimensioni:
 //                items = ((NomeService) service).findAllDimensioni();
 //                    filtri.add(Criteria.where("nome").exists(true));
                     break;
-                case alfabetico:
+                case Alfabetico:
 //                items = ((NomeService) service).findAllAlfabetico();
 //                    filtri.add(Criteria.where("nome").exists(false));
                     break;
-                case nomiDoppi:
+                case NomiDoppi:
                     filtri.add(Criteria.where("doppio").is(true));
                     break;
                 default:
@@ -263,13 +285,13 @@ public class NomeList extends WikiList {
 
         if (selezione != null) {
             switch (selezione) {
-                case dimensioni:
+                case Dimensioni:
                     query.with(new Sort(Sort.Direction.DESC, "voci"));
                     break;
-                case alfabetico:
+                case Alfabetico:
                     query.with(new Sort(Sort.Direction.ASC, "nome"));
                     break;
-                case nomiDoppi:
+                case NomiDoppi:
                     query.with(new Sort(Sort.Direction.ASC, "nome"));
                     break;
                 default:
@@ -380,33 +402,15 @@ public class NomeList extends WikiList {
     }// end of method
 
 
-    protected void uploadStatistiche() {
-        long inizio = System.currentTimeMillis();
+    /**
+     * Upload standard delle statistiche. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void uploadStatistiche(long inizio) {
         appContext.getBean(StatisticheNomiA.class);
         appContext.getBean(StatisticheNomiB.class);
-        setLastUpload(inizio);
-        super.updateGrid();
-    }// end of method
-
-
-    /**
-     * Registra nelle preferenze la data dell'ultimo upload effettuato <br>
-     * Registra nelle preferenze la durata dell'ultimo upload effettuato, in secondi <br>
-     */
-    protected void setLastUpload(long inizio) {
-        int delta = 1000;
-        LocalDateTime lastDownload = LocalDateTime.now();
-        pref.saveValue(lastUploadStatistiche, lastDownload);
-
-        long fine = System.currentTimeMillis();
-        long durata = fine - inizio;
-        int minuti = 0;
-        if (durata > delta) {
-            minuti = (int) durata / delta;
-        } else {
-            minuti = 0;
-        }// end of if/else cycle
-        pref.saveValue(durataLastUploadStatistiche, minuti);
+        super.uploadStatistiche(inizio);
     }// end of method
 
 
@@ -418,15 +422,15 @@ public class NomeList extends WikiList {
 
         if (selezione != null) {
             switch (selezione) {
-                case dimensioni:
+                case Dimensioni:
                     for (Nome nome : (List<Nome>) items) {
                         System.out.println(nome.voci + " - " + nome.nome);
                     }// end of for cycle
                     break;
-                case alfabetico:
+                case Alfabetico:
                     items = ((NomeService) service).findAllAlfabetico();
                     break;
-                case nomiDoppi:
+                case NomiDoppi:
                     for (Nome nome : (List<Nome>) items) {
                         System.out.println(nome.nome + " - " + nome.voci);
                     }// end of for cycle

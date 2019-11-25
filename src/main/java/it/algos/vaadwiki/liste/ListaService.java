@@ -909,8 +909,8 @@ public class ListaService extends ABioService {
         String titoloParagrafo = LibWiki.setLink(paginaWiki, linkVisibile);
         String link;
 
-        if (linkVisibile.equals(tagParagrafoNullo)) {
-            return linkVisibile;
+        if (linkVisibile.equals(paginaWiki)) {
+            return LibWiki.setQuadre(paginaWiki);
         }// end of if cycle
 
 //        for (String keyCompleta : mappaBio.keySet()) {

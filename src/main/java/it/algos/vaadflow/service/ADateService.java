@@ -51,9 +51,9 @@ public class ADateService extends AbstractService {
     private static final ADateService INSTANCE = new ADateService();
 
 
-    private static final String INFERIORE_SECONDO = "meno di un secondo";
+    public static final String INFERIORE_SECONDO = "meno di un secondo";
 
-    private static final String INFERIORE_MINUTO = "meno di un minuto";
+    public static final String INFERIORE_MINUTO = "meno di un minuto";
 
     private static final String SECONDI = " sec.";
 
@@ -211,7 +211,7 @@ public class ADateService extends AbstractService {
      * @return data con ore e minuti alla mezzanotte
      */
     public LocalDate localDateTimeToLocalDate(LocalDateTime localDateTime) {
-        return localDateTime.toLocalDate();
+        return localDateTime != null ? localDateTime.toLocalDate() : null;
     }// end of method
 
 
@@ -484,7 +484,7 @@ public class ADateService extends AbstractService {
      * @return la data sotto forma di stringa
      */
     public String getDate(LocalDateTime localDateTime) {
-        return getDate(localDateTimeToLocalDate(localDateTime));
+        return localDateTime != null ? getDate(localDateTimeToLocalDate(localDateTime)) : VUOTA;
     }// end of method
 
 
@@ -543,8 +543,26 @@ public class ADateService extends AbstractService {
      *
      * @return la data sotto forma di stringa
      */
+    public String getDateTime(LocalDateTime localDateTime) {
+        return localDateTime != null ? getDate(localDateTime) + SPAZIO + getOrario(localDateTime) : VUOTA;
+    }// end of method
+
+
+    /**
+     * Restituisce la data completa di tempo
+     * <p>
+     * 5-ott-14 alle 7:04
+     * <p>
+     * Returns a string representation of the date
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
     public String getTime(LocalDateTime localDateTime) {
-        return getDate(localDateTime) + " alle " + getOrario(localDateTime);
+        return localDateTime != null ? getDate(localDateTime) + " alle " + getOrario(localDateTime) : VUOTA;
     }// end of method
 
 

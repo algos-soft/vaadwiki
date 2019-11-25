@@ -3,6 +3,7 @@ package it.algos.vaadwiki.modules.wiki;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -14,6 +15,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoDialog;
 import it.algos.vaadflow.modules.role.EARoleType;
@@ -28,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
 
-import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
@@ -63,32 +64,15 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 public class WikiAnnoList extends WikiList {
 
 
-    public static final String MENU_NAME = "Anno";
-
     @Autowired
     @Qualifier(TASK_ANN)
-    protected ATask task;
+    protected ATask taskAnni;
 
     //    @Autowired
     private UploadAnnoNato uploadAnnoNato;
 
     //    @Autowired
     private UploadAnnoMorto uploadAnnoMorto;
-
-
-//    /**
-//     * Costruttore @Autowired <br>
-//     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
-//     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-//     *
-//     * @param presenter per gestire la business logic del package
-//     * @param dialog    per visualizzare i fields
-//     */
-//    @Autowired
-//    public WikiAnnoViewList(@Qualifier(TAG_ANN) IAPresenter presenter, @Qualifier(TAG_ANN) IADialog dialog) {
-//        super(presenter, dialog);
-//        ((AnnoDialog) dialog).fixFunzioni(this::save, this::delete);
-//    }// end of Spring constructor
 
 
     /**
@@ -101,7 +85,7 @@ public class WikiAnnoList extends WikiList {
      * @param service business class e layer di collegamento per la Repository
      */
     @Autowired
-    public WikiAnnoList(@Qualifier(TAG_ANN) IAService service) {
+    public WikiAnnoList(@Qualifier(TAG_WANN) IAService service) {
         super(service, Anno.class);
     }// end of Vaadin/@Route constructor
 
@@ -129,12 +113,24 @@ public class WikiAnnoList extends WikiList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        //--preferenze e bottoni standard
+        super.usaButtonDelete = false;
+
+        //--bottoni vaadwiki
+        super.usaButtonUpload = true;
+        super.usaButtonShowStatisticheA = true;
+        super.usaButtonUploadStatistiche = true;
+
         super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheAnni;
-        super.usaBottoneUpload = true;
+        super.task = taskAnni;
+        super.flagDaemon = USA_DAEMON_ANNI;
+
         super.lastUpload = LAST_UPLOAD_ANNI;
         super.durataLastUpload = DURATA_UPLOAD_ANNI;
+        super.eaTempoTypeUpload = EATempo.minuti;
         super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_ANNI;
         super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_ANNI;
+        super.eaTempoTypeStatistiche = EATempo.minuti;
     }// end of method
 
 
@@ -148,9 +144,10 @@ public class WikiAnnoList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-//        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_ANNI, LAST_UPLOAD_ANNI));
-//        alertPlacehorder.add(creaInfoUpload(codeLastUpload, durataLastUpload));
-//        alertPlacehorder.add(creaInfoUploadStatistiche(codeLastUploadStatistiche, durataLastUploadStatistiche));
+        alertPlacehorder.add(getLabelBlue(" Progetto:Biografie/Anni"));
+        alertPlacehorder.add(getLabelBlue("Sovrascrive il modulo 'Anno' di vaadflow. Contiene i 1.000 anni A.C. ed i 2020 (estensibile) D.C.. Non modificabili."));
+        alertPlacehorder.add(new Label("Upload crea le pagina wiki (2) 'Nati nel...' e 'Morti nel...' per ogni anno."));
+        alertPlacehorder.add(new Label("Le statistiche contengono il numero delle biografie dei nati/morti per ogni anno."));
     }// end of method
 
 
@@ -219,54 +216,54 @@ public class WikiAnnoList extends WikiList {
 
 
     protected Button createViewNatoButton(Anno entityBean) {
-        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.LIST));
-        uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
-        uploadOneNatoButton.addClickListener(e -> viewNato(entityBean));
-        return uploadOneNatoButton;
+        buttonUploadOneNato = new Button("Nati", new Icon(VaadinIcon.LIST));
+        buttonUploadOneNato.getElement().setAttribute("theme", "secondary");
+        buttonUploadOneNato.addClickListener(e -> viewNato(entityBean));
+        return buttonUploadOneNato;
     }// end of method
 
 
     protected Button createViewMortoButton(Anno entityBean) {
-        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.LIST));
-        uploadOneMortoButton.getElement().setAttribute("theme", "secondary");
-        uploadOneMortoButton.getElement().setAttribute("color", "green");
-        uploadOneMortoButton.addClickListener(e -> viewMorto(entityBean));
-        return uploadOneMortoButton;
+        buttonUploadOneMorto = new Button("Morti", new Icon(VaadinIcon.LIST));
+        buttonUploadOneMorto.getElement().setAttribute("theme", "secondary");
+        buttonUploadOneMorto.getElement().setAttribute("color", "green");
+        buttonUploadOneMorto.addClickListener(e -> viewMorto(entityBean));
+        return buttonUploadOneMorto;
     }// end of method
 
 
     protected Button createWikiNatoButton(Anno entityBean) {
         Element input = ElementFactory.createInput();
-        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.SERVER));
-        uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
-        uploadOneNatoButton.getElement().getStyle().set("background-color", input.getProperty("green"));
-        uploadOneNatoButton.addClickListener(e -> wikiPageNato(entityBean));
-        return uploadOneNatoButton;
+        buttonUploadOneNato = new Button("Nati", new Icon(VaadinIcon.SERVER));
+        buttonUploadOneNato.getElement().setAttribute("theme", "secondary");
+        buttonUploadOneNato.getElement().getStyle().set("background-color", input.getProperty("green"));
+        buttonUploadOneNato.addClickListener(e -> wikiPageNato(entityBean));
+        return buttonUploadOneNato;
     }// end of method
 
 
     protected Button createWikiMortoButton(Anno entityBean) {
-        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.SERVER));
-        uploadOneMortoButton.getElement().setAttribute("theme", "secondary");
+        buttonUploadOneMorto = new Button("Morti", new Icon(VaadinIcon.SERVER));
+        buttonUploadOneMorto.getElement().setAttribute("theme", "secondary");
 //        uploadOneMortoButton.getElement().getClassList().add("green");
-        uploadOneMortoButton.addClickListener(e -> wikiPageMorto(entityBean));
-        return uploadOneMortoButton;
+        buttonUploadOneMorto.addClickListener(e -> wikiPageMorto(entityBean));
+        return buttonUploadOneMorto;
     }// end of method
 
 
     protected Button createUploadNatoButton(Anno entityBean) {
-        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.UPLOAD));
-        uploadOneNatoButton.getElement().setAttribute("theme", "error");
-        uploadOneNatoButton.addClickListener(e -> uploadService.uploadAnnoNato(entityBean));
-        return uploadOneNatoButton;
+        buttonUploadOneNato = new Button("Nati", new Icon(VaadinIcon.UPLOAD));
+        buttonUploadOneNato.getElement().setAttribute("theme", "error");
+        buttonUploadOneNato.addClickListener(e -> uploadService.uploadAnnoNato(entityBean));
+        return buttonUploadOneNato;
     }// end of method
 
 
     protected Button createUploadMortoButton(Anno entityBean) {
-        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.UPLOAD));
-        uploadOneMortoButton.getElement().setAttribute("theme", "error");
-        uploadOneMortoButton.addClickListener(e -> uploadService.uploadAnnoMorto(entityBean));
-        return uploadOneMortoButton;
+        buttonUploadOneMorto = new Button("Morti", new Icon(VaadinIcon.UPLOAD));
+        buttonUploadOneMorto.getElement().setAttribute("theme", "error");
+        buttonUploadOneMorto.addClickListener(e -> uploadService.uploadAnnoMorto(entityBean));
+        return buttonUploadOneMorto;
     }// end of method
 
 
@@ -321,9 +318,14 @@ public class WikiAnnoList extends WikiList {
     }// end of method
 
 
-    protected void uploadStatistiche() {
+    /**
+     * Upload standard delle statistiche. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void uploadStatistiche(long inizio) {
         appContext.getBean(StatisticheAnni.class);
-        super.updateGrid();
+        super.uploadStatistiche(inizio);
     }// end of method
 
 }// end of class

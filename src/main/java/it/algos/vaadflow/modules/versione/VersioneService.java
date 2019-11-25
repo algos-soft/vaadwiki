@@ -393,7 +393,7 @@ public class VersioneService extends AService {
      * @param value    di default della preferenza
      */
     public void creaPrefDate(String sigla, String codePref, String descPref, LocalDateTime value) {
-        creaPref(sigla, codePref, descPref, EAPrefType.date, value);
+        creaPref(sigla, codePref, descPref, EAPrefType.localdatetime, value);
     }// end of method
 
 

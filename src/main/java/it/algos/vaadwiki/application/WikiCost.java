@@ -99,13 +99,17 @@ public class WikiCost {
 
     public final static String CODE_UPLOAD = "lastUpload";
 
-    public final static String STATISTICHE =  "Statistiche";
+    public final static String STATISTICHE = "Statistiche";
+
     public final static String CODE_STATISTICHE = CODE_UPLOAD + STATISTICHE;
 
     public final static String DURATA = "durataDownload";
 
+    public final static String DURATA_ELABORA = "durataElabora";
+
     public final static String DURATA_UPLOAD = "durataUpload";
-    public final static String DURATA_UPLOAD_STATISTICHE = DURATA_UPLOAD+STATISTICHE;
+
+    public final static String DURATA_UPLOAD_STATISTICHE = DURATA_UPLOAD + STATISTICHE;
 
     public final static String PATH_PROGETTO = "Progetto:Biografie/";
 
@@ -163,6 +167,10 @@ public class WikiCost {
 
     public final static String LAST_UPLOAD_ANNI = CODE_UPLOAD + ANNI;
 
+    public final static String LAST_UPLOAD_NOMI = CODE_UPLOAD + NOME;
+
+    public final static String LAST_UPLOAD_COGNOMI = CODE_UPLOAD + COGNOME;
+
     public final static String LAST_UPLOAD_STATISTICHE_GIORNI = CODE_STATISTICHE + GIORNI;
 
     public final static String LAST_UPLOAD_STATISTICHE_ANNI = CODE_STATISTICHE + ANNI;
@@ -188,9 +196,19 @@ public class WikiCost {
 
     public final static String DURATA_DOWNLOAD_BIO = DURATA + BIO;
 
+    public final static String DURATA_DOWNLOAD_DOPPI_NOMI = DURATA + "DoppiNomi";
+
     public final static String DURATA_UPLOAD_GIORNI = DURATA + GIORNI;
 
     public final static String DURATA_UPLOAD_ANNI = DURATA + ANNI;
+
+    public final static String DURATA_UPLOAD_NOMI = DURATA + NOME;
+
+    public final static String DURATA_UPLOAD_COGNOMI = DURATA + COGNOME;
+
+    public final static String DURATA_ELABORA_NOMI = DURATA_ELABORA + NOME;
+
+    public final static String DURATA_ELABORA_COGNOMI = DURATA_ELABORA + NOME;
 
     public final static String DURATA_UPLOAD_STATISTICHE_GIORNI = DURATA_UPLOAD + GIORNI;
 

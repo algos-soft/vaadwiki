@@ -1,10 +1,10 @@
 package it.algos.vaadwiki.modules.wiki;
 
-import com.mongodb.client.DistinctIterable;
 import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadflow.service.AService;
-import it.algos.vaadwiki.modules.nome.Nome;
-import it.algos.vaadwiki.modules.nome.NomeRepository;
+import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadflow.modules.anno.AnnoRepository;
+import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadflow.modules.giorno.GiornoRepository;
 import lombok.extern.slf4j.Slf4j;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,23 +14,24 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
-import static it.algos.vaadwiki.application.WikiCost.LAST_ELABORA_NOME;
-import static it.algos.vaadwiki.application.WikiCost.TAG_NOM;
+import static it.algos.vaadflow.application.FlowCost.TAG_ANN;
+import static it.algos.vaadflow.application.FlowCost.TAG_GIO;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: mar, 10-set-2019
- * Time: 09:16
+ * Date: dom, 24-nov-2019
+ * Time: 08:22
  */
+@SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Qualifier(TAG_WANN)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class NomeCognomeService extends  WikiService {
+public class WikiAnnoService extends WikiService{
 
     /**
      * Costruttore @Autowired <br>
@@ -41,25 +42,10 @@ public class NomeCognomeService extends  WikiService {
      * @param repository per la persistenza dei dati
      */
     @Autowired
-    public NomeCognomeService(@Qualifier(TAG_NOM) MongoRepository repository) {
+    public WikiAnnoService(@Qualifier(TAG_ANN) MongoRepository repository) {
         super(repository);
+        super.entityClass = Anno.class;
+        this.repository = (AnnoRepository) repository;
     }// end of Spring constructor
-
-    /**
-     * Cancella i nomi esistenti <br>
-     * Crea tutti i nomi <br>
-     * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
-     * Registra la entity <br>
-     * Non registra la entity col nome mancante <br>
-     */
-    public void crea() {
-    }// end of method
-
-    /**
-     * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
-     */
-    @Deprecated
-    public void update() {
-    }// end of method
 
 }// end of class

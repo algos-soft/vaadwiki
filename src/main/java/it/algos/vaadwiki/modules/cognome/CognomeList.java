@@ -108,14 +108,13 @@ public class CognomeList extends WikiList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneDeleteAll = true;
+        super.usaButtonDelete = true;
         this.sogliaWiki = pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI, 50);
 
-        this.usaCreaButton = true;
-        this.usaStatistiche2Button = true;
         super.titoloPaginaStatistiche = ((CognomeService) service).TITOLO_PAGINA_WIKI;
         super.titoloPaginaStatistiche2 = ((CognomeService) service).TITOLO_PAGINA_WIKI_2;
-        super.usaBottoneUpload = true;
+        this.usaButtonShowStatisticheB = true;
+        super.usaButtonUpload = true;
     }// end of method
 
 

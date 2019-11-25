@@ -105,11 +105,18 @@ public class NazionalitaList extends WikiList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        //--bottoni vaadwiki
+        super.usaButtonDownload = true;
+        super.usaButtonModulo = true;
+        super.usaButtonShowStatisticheA = true;
+        super.usaButtonUploadStatistiche = true;
+
         super.titoloModulo = wikiService.titoloModuloNazionalita;
         super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheNazionalita;
         super.task = taskNazionalita;
         super.usaPagination = true;
         super.flagDaemon = USA_DAEMON_NAZIONALITA;
+
         super.lastDownload = LAST_DOWNLOAD_NAZIONALITA;
         super.durataLastDownload = DURATA_DOWNLOAD_NAZIONALITA;
         super.eaTempoTypeDownload = EATempo.secondi;
@@ -135,7 +142,7 @@ public class NazionalitaList extends WikiList {
         super.creaAlertLayout();
 
         alertPlacehorder.add(getLabelBlue("Modulo:Bio/Plurale nazionalità."));
-        alertPlacehorder.add(new Label("Modulo Lua di supporto a Modulo:Bio."));
+        alertPlacehorder.add(getLabelBlue("Progetto:Biografie/Nazionalità."));
         alertPlacehorder.add(new Label("Contiene la tabella di conversione delle nazionalità passate via parametri Nazionalità/Cittadinanza/NazionalitàNaturalizzato,"));
         alertPlacehorder.add(new Label(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
         alertPlacehorder.add(new Label("All'interno della tabella le nazionalità sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse."));

@@ -3,6 +3,7 @@ package it.algos.vaadwiki.modules.wiki;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -14,6 +15,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoDialog;
 import it.algos.vaadflow.modules.role.EARoleType;
@@ -80,28 +82,6 @@ public class WikiGiornoList extends WikiList {
 
 
     /**
-     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
-     * Può essere sovrascritto, per aggiungere informazioni
-     * Invocare PRIMA il metodo della superclasse
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheGiorni;
-        super.usaBottoneDeleteAll = false;
-        super.usaBottoneDownload = false;
-        super.usaUploadAllButton = true;
-        super.task = taskGiorni;
-        super.flagDaemon = USA_DAEMON_GIORNI;
-        super.lastUpload = LAST_UPLOAD_GIORNI;
-        super.durataLastUpload = DURATA_UPLOAD_GIORNI;
-        super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_GIORNI;
-        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_GIORNI;
-    }// end of method
-
-
-    /**
      * Crea effettivamente il Component Grid <br>
      * <p>
      * Può essere Grid oppure PaginatedGrid <br>
@@ -116,6 +96,36 @@ public class WikiGiornoList extends WikiList {
 
 
     /**
+     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
+        //--preferenze e bottoni standard
+        super.usaButtonDelete = false;
+
+        //--bottoni vaadwiki
+        super.usaButtonUpload = true;
+        super.usaButtonShowStatisticheA = true;
+        super.usaButtonUploadStatistiche = true;
+
+        super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheGiorni;
+        super.task = taskGiorni;
+        super.flagDaemon = USA_DAEMON_GIORNI;
+
+        super.lastUpload = LAST_UPLOAD_GIORNI;
+        super.durataLastUpload = DURATA_UPLOAD_GIORNI;
+        super.eaTempoTypeUpload = EATempo.minuti;
+        super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_GIORNI;
+        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_GIORNI;
+        super.eaTempoTypeStatistiche = EATempo.minuti;
+    }// end of method
+
+
+    /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive alla grid ed alla lista di elementi
      * Normalmente ad uso esclusivo del developer
      * Può essere sovrascritto, per aggiungere informazioni
@@ -125,9 +135,10 @@ public class WikiGiornoList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-//        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_GIORNI, LAST_UPLOAD_GIORNI));
-//        alertPlacehorder.add(creaInfoUpload(codeLastUpload, durataLastUpload));
-//        alertPlacehorder.add(creaInfoUploadStatistiche(codeLastUploadStatistiche, durataLastUploadStatistiche));
+        alertPlacehorder.add(getLabelBlue(" Progetto:Biografie/Giorni"));
+        alertPlacehorder.add(getLabelBlue("Sovrascrive il modulo 'Giorno' di vaadflow. Contiene i 366 giorni dell'anno (29 febbraio compreso). Non modificabili."));
+        alertPlacehorder.add(new Label("Upload crea le pagina wiki (2) 'Nati il...' e 'Morti il...' per ogni giorno."));
+        alertPlacehorder.add(new Label("Le statistiche contengono il numero delle biografie dei nati/morti per ogni giorno e la loro incidenza percentuale sul totale annuo degli stessi."));
     }// end of method
 
 
@@ -196,54 +207,54 @@ public class WikiGiornoList extends WikiList {
 
 
     protected Button createViewNatoButton(Giorno entityBean) {
-        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.LIST));
-        uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
-        uploadOneNatoButton.addClickListener(e -> viewNato(entityBean));
-        return uploadOneNatoButton;
+        buttonUploadOneNato = new Button("Nati", new Icon(VaadinIcon.LIST));
+        buttonUploadOneNato.getElement().setAttribute("theme", "secondary");
+        buttonUploadOneNato.addClickListener(e -> viewNato(entityBean));
+        return buttonUploadOneNato;
     }// end of method
 
 
     protected Button createViewMortoButton(Giorno entityBean) {
-        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.LIST));
-        uploadOneMortoButton.getElement().setAttribute("theme", "secondary");
-        uploadOneMortoButton.getElement().setAttribute("color", "green");
-        uploadOneMortoButton.addClickListener(e -> viewMorto(entityBean));
-        return uploadOneMortoButton;
+        buttonUploadOneMorto = new Button("Morti", new Icon(VaadinIcon.LIST));
+        buttonUploadOneMorto.getElement().setAttribute("theme", "secondary");
+        buttonUploadOneMorto.getElement().setAttribute("color", "green");
+        buttonUploadOneMorto.addClickListener(e -> viewMorto(entityBean));
+        return buttonUploadOneMorto;
     }// end of method
 
 
     protected Button createWikiNatoButton(Giorno entityBean) {
         Element input = ElementFactory.createInput();
-        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.SERVER));
-        uploadOneNatoButton.getElement().setAttribute("theme", "secondary");
-        uploadOneNatoButton.getElement().getStyle().set("background-color", input.getProperty("green"));
-        uploadOneNatoButton.addClickListener(e -> wikiPageNato(entityBean));
-        return uploadOneNatoButton;
+        buttonUploadOneNato = new Button("Nati", new Icon(VaadinIcon.SERVER));
+        buttonUploadOneNato.getElement().setAttribute("theme", "secondary");
+        buttonUploadOneNato.getElement().getStyle().set("background-color", input.getProperty("green"));
+        buttonUploadOneNato.addClickListener(e -> wikiPageNato(entityBean));
+        return buttonUploadOneNato;
     }// end of method
 
 
     protected Button createWikiMortoButton(Giorno entityBean) {
-        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.SERVER));
-        uploadOneMortoButton.getElement().setAttribute("theme", "secondary");
+        buttonUploadOneMorto = new Button("Morti", new Icon(VaadinIcon.SERVER));
+        buttonUploadOneMorto.getElement().setAttribute("theme", "secondary");
 //        uploadOneMortoButton.getElement().getClassList().add("green");
-        uploadOneMortoButton.addClickListener(e -> wikiPageMorto(entityBean));
-        return uploadOneMortoButton;
+        buttonUploadOneMorto.addClickListener(e -> wikiPageMorto(entityBean));
+        return buttonUploadOneMorto;
     }// end of method
 
 
     protected Button createUploadNatoButton(Giorno entityBean) {
-        uploadOneNatoButton = new Button("Nati", new Icon(VaadinIcon.UPLOAD));
-        uploadOneNatoButton.getElement().setAttribute("theme", "error");
-        uploadOneNatoButton.addClickListener(e -> uploadService.uploadGiornoNato(entityBean));
-        return uploadOneNatoButton;
+        buttonUploadOneNato = new Button("Nati", new Icon(VaadinIcon.UPLOAD));
+        buttonUploadOneNato.getElement().setAttribute("theme", "error");
+        buttonUploadOneNato.addClickListener(e -> uploadService.uploadGiornoNato(entityBean));
+        return buttonUploadOneNato;
     }// end of method
 
 
     protected Button createUploadMortoButton(Giorno entityBean) {
-        uploadOneMortoButton = new Button("Morti", new Icon(VaadinIcon.UPLOAD));
-        uploadOneMortoButton.getElement().setAttribute("theme", "error");
-        uploadOneMortoButton.addClickListener(e -> uploadService.uploadGiornoMorto(entityBean));
-        return uploadOneMortoButton;
+        buttonUploadOneMorto = new Button("Morti", new Icon(VaadinIcon.UPLOAD));
+        buttonUploadOneMorto.getElement().setAttribute("theme", "error");
+        buttonUploadOneMorto.addClickListener(e -> uploadService.uploadGiornoMorto(entityBean));
+        return buttonUploadOneMorto;
     }// end of method
 
 
@@ -298,9 +309,14 @@ public class WikiGiornoList extends WikiList {
     }// end of method
 
 
-    protected void uploadStatistiche() {
+    /**
+     * Upload standard delle statistiche. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void uploadStatistiche(long inizio) {
         appContext.getBean(StatisticheGiorni.class);
-        super.updateGrid();
+        super.uploadStatistiche(inizio);
     }// end of method
 
 }// end of class

@@ -21,8 +21,6 @@ import org.springframework.context.ApplicationContext;
  * Date: dom, 12-ago-2018
  * Time: 18:45
  */
-//@SpringComponent
-//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public abstract class ABioService {
 

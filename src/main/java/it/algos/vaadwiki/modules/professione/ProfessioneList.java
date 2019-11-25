@@ -9,6 +9,7 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.vaadin.klaudeta.PaginatedGrid;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
@@ -98,14 +100,18 @@ public class ProfessioneList extends WikiList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        //--bottoni vaadwiki
+        super.usaButtonDownload = true;
+        super.usaButtonModulo = true;
+
         super.titoloModulo = wikiService.titoloModuloProfessione;
-        this.usaStatisticheButton = false;
-        this.usaBottoneUploadStatistiche = false;
-        super.task = taskProfessione;
         super.usaPagination = true;
+        super.task = taskProfessione;
         super.flagDaemon = USA_DAEMON_PROFESSIONE;
+
         super.lastDownload = LAST_DOWNLOAD_PROFESSIONE;
         super.durataLastDownload = DURATA_DOWNLOAD_PROFESSIONE;
+        super.eaTempoTypeDownload = EATempo.secondi;
     }// end of method
 
 
@@ -122,7 +128,6 @@ public class ProfessioneList extends WikiList {
         super.creaAlertLayout();
 
         alertPlacehorder.add(getLabelBlue("Modulo:Bio/Link attività."));
-        alertPlacehorder.add(new Label("Modulo Lua di supporto a Modulo:Bio."));
         alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3, dal nome dell'attività a quello della voce corrispondente, per creare dei piped wikilink."));
         alertPlacehorder.add(new Label("Quando l'attività corrisponde già al titolo della voce di destinazione NON serve inserirla qui."));
         alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));

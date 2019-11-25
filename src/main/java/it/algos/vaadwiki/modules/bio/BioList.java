@@ -202,7 +202,7 @@ public class BioList extends AGridViewList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneNew = true;
+        super.usaButtonNew = true;
 //        super.usaBottoneDeleteMongo = true;
 //        super.usaBottoneDownload = true;
 //        super.usaBottoneUpload = false;
@@ -251,7 +251,7 @@ public class BioList extends AGridViewList {
 //
         //-- bottoni 'Ricerca' e 'New'
         super.creaTopLayout();
-        newButton.getElement().setAttribute("theme", "secondary");
+        buttonNew.getElement().setAttribute("theme", "secondary");
 
 //        //--download iniziale
 //        downloadButton = new Button("Reset", new Icon(VaadinIcon.DOWNLOAD));
