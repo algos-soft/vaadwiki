@@ -2274,7 +2274,26 @@ public class LibBio {
      * @return testoValido regolato in uscita
      */
     public String fixLuogoValido(String testoGrezzo) {
-        return fixPropertyBase(testoGrezzo);
+        String testoValido;
+
+        if (text.isEmpty(testoGrezzo)) {
+            return VUOTA;
+        }// end of if cycle
+
+        testoValido = testoGrezzo.trim();
+        testoValido = text.levaDopoRef(testoValido);
+        testoValido = text.levaDopoNote(testoValido);
+        testoValido = text.levaDopoGraffe(testoValido);
+        testoValido = text.levaDopoInterrogativo(testoValido);
+        testoValido = this.setNoQuadre(testoValido);
+        testoValido = testoValido.trim();
+
+        if (testoValido.length() > 253) {
+            testoValido = testoValido.substring(0, 252);
+            //@todo manca warning
+        }// fine del blocco if
+
+        return testoValido;
     } // // end of method
 
 
