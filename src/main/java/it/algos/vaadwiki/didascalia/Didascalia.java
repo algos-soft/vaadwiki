@@ -208,6 +208,11 @@ public abstract class Didascalia {
             this.luogoNatoLink = bio.getLuogoNatoLink();
         }// fine del blocco if
 
+        //--controllo per evitare la fastidiosa ripetiziopne [[Guantánamo|Guantánamo (città)]]
+        if (luogoNato.equals(luogoNatoLink)) {
+            luogoNatoLink = VUOTA;
+        }// end of if cycle
+
         if (bio.getLuogoMorto() != null) {
             this.luogoMorto = bio.getLuogoMorto();
         }// fine del blocco if
@@ -215,6 +220,11 @@ public abstract class Didascalia {
         if (bio.getLuogoMortoLink() != null) {
             this.luogoMortoLink = bio.getLuogoMortoLink();
         }// fine del blocco if
+
+        //--controllo per evitare la fastidiosa ripetiziopne [[Guantánamo|Guantánamo (città)]]
+        if (luogoMorto.equals(luogoMortoLink)) {
+            luogoMortoLink = VUOTA;
+        }// end of if cycle
     }// end of method
 
 
