@@ -392,6 +392,7 @@ public abstract class WikiList extends AGridViewList {
      */
     protected void upload(long inizio) {
         setLastUpload(inizio);
+        super.updateGrid();
     }// end of method
 
     /**

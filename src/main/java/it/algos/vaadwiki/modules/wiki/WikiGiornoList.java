@@ -299,13 +299,12 @@ public class WikiGiornoList extends WikiList {
 
 
     /**
-     * Opens the confirmation dialog before deleting the current item.
-     * <p>
-     * The dialog will display the given title and message(s), then call
-     * <p>
+     * Upload standard. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
      */
-    protected void uploadEffettivo() {
+    protected void upload(long inizio) {
         uploadService.uploadAllGiorni();
+        super.upload(inizio);
     }// end of method
 
 
