@@ -35,6 +35,7 @@ import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.modules.nome.NomeService.TITOLO_TEMPLATE_INCIPIT_NOMI;
 
 /**
  * Project vaadwiki <br>
@@ -123,8 +124,8 @@ public class NomeList extends WikiList {
 
         super.titoloPaginaStatistiche = ((NomeService) service).TITOLO_PAGINA_WIKI;
         super.titoloPaginaStatistiche2 = ((NomeService) service).TITOLO_PAGINA_WIKI_2;
-        super.usaPagination = true;
         this.sogliaWiki = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI, 50);
+        super.usaPagination = true;
         super.usaPopupFiltro = true;
         super.task = taskNomi;
         super.flagDaemon = USA_DAEMON_NOMI;
@@ -158,6 +159,7 @@ public class NomeList extends WikiList {
 
         alertPlacehorder.add(getLabelBlue("Progetto:Antroponimi/Nomi."));
         alertPlacehorder.add(getLabelBlue("Progetto:Antroponimi/Liste nomi."));
+        alertPlacehorder.add(getLabelBlue(TITOLO_TEMPLATE_INCIPIT_NOMI));
         alertPlacehorder.add(new Label("Sono elencati i nomi usati nelle biografie"));
         alertPlacehorder.add(new Label("La lista accetta SOLO nomi singoli"));
         alertPlacehorder.add(new Label("La lista prevede nomi utilizzati da almeno 'sogliaNomiMongo' biografie"));

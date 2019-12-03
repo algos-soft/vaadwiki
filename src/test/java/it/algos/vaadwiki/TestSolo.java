@@ -31,4 +31,38 @@ public class TestSolo {
         Assert.assertTrue(context.getBean(WLogin.class) != null);
     }
 
+    @Test
+    public void aComponent2() {
+        Assert.assertTrue(context.getBean(WLogin.class) != null);
+        String[] tests = {
+                "AAA123",
+                "ABCDEFGH123",
+                "XXXX123",
+                "XYZ123ABC",
+                "123123",
+                "X123",
+                "123",
+        };
+        for (String test : tests) {
+            System.out.println(test + " " +test.matches(".+123"));
+        }
+    }
+
+    @Test
+    public void aComponent3() {
+        Assert.assertTrue(context.getBean(WLogin.class) != null);
+        String[] tests = {
+                "AAA,123",
+                ",ABCDEFGH123",
+                "XXXX123,",
+                "XY,Z123ABC",
+                "1231,23",
+                "X1,,23",
+                "1,2,3,",
+        };
+        for (String test : tests) {
+            System.out.println(test + " " +test.matches(".*,.*"));
+        }
+    }
+
 }// end of class

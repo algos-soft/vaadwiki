@@ -52,6 +52,9 @@ public class NomeService extends NomeCognomeService {
     //--titolo della pagina di statistiche sul server wiki
     public static final String TITOLO_PAGINA_WIKI_2 = "Progetto:Antroponimi/Liste nomi";
 
+    //--titolo del template incipit nomi
+    public static final String TITOLO_TEMPLATE_INCIPIT_NOMI = "Template:Incipit lista nomi";
+
     /**
      * versione della classe per la serializzazione
      */
@@ -403,7 +406,6 @@ public class NomeService extends NomeCognomeService {
 
         return nome;
     }// end of method
-
 
 
 }// end of class

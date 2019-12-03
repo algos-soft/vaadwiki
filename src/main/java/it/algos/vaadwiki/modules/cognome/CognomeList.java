@@ -8,30 +8,25 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
-import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadflow.ui.MainLayout14;
-import it.algos.vaadwiki.modules.attivita.Attivita;
-import it.algos.vaadwiki.modules.nome.Nome;
-import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.modules.wiki.WikiList;
-import it.algos.vaadwiki.service.LibBio;
-import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.vaadin.klaudeta.PaginatedGrid;
 
-import java.time.LocalDateTime;
-
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.modules.nome.NomeService.TITOLO_TEMPLATE_INCIPIT_NOMI;
 
 /**
  * Project vaadwiki <br>
@@ -65,8 +60,12 @@ public class CognomeList extends WikiList {
 
 
     @Autowired
+    public MongoOperations mongoOp;
+
+    @Autowired
     @Qualifier(TASK_COG)
-    protected ATask task;
+    protected ATask taskCognomi;
+
 
     /**
      * Costruttore @Autowired <br>
@@ -98,7 +97,6 @@ public class CognomeList extends WikiList {
     }// end of method
 
 
-
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
      * Può essere sovrascritto, per aggiungere informazioni
@@ -108,13 +106,34 @@ public class CognomeList extends WikiList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaButtonDelete = true;
-        this.sogliaWiki = pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI, 50);
+        //--bottoni vaadwiki
+        super.usaButtonElabora = true;
+        super.usaButtonUpload = true;
+        super.usaButtonShowStatisticheA = true;
+        super.usaButtonShowStatisticheB = true;
+        super.usaButtonUploadStatistiche = true;
+
 
         super.titoloPaginaStatistiche = ((CognomeService) service).TITOLO_PAGINA_WIKI;
         super.titoloPaginaStatistiche2 = ((CognomeService) service).TITOLO_PAGINA_WIKI_2;
-        this.usaButtonShowStatisticheB = true;
-        super.usaButtonUpload = true;
+        this.sogliaWiki = pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI, 50);
+        super.usaPagination = true;
+        super.usaPopupFiltro = true;
+        super.task = taskCognomi;
+        super.flagDaemon = USA_DAEMON_COGNOMI;
+
+        this.lastDownload = VUOTA;
+        this.durataLastDownload = VUOTA;
+        this.eaTempoTypeDownload = EATempo.nessuno;
+        super.lastElaborazione = LAST_ELABORA_COGNOME;
+        super.durataLastElaborazione = DURATA_ELABORA_COGNOMI;
+        super.eaTempoTypeElaborazione = EATempo.secondi;
+        super.lastUpload = LAST_UPLOAD_COGNOMI;
+        super.durataLastUpload = DURATA_UPLOAD_COGNOMI;
+        super.eaTempoTypeUpload = EATempo.minuti;
+        super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_COGNOMI;
+        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_COGNOMI;
+        super.eaTempoTypeStatistiche = EATempo.secondi;
     }// end of method
 
 
@@ -128,7 +147,11 @@ public class CognomeList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-//        alertPlacehorder.add(creaInfoImport(task, USA_DAEMON_COGNOMI, LAST_ELABORA_COGNOME));
+        alertPlacehorder.add(getLabelBlue("Progetto:Antroponimi/Cognomi."));
+        alertPlacehorder.add(getLabelBlue("Progetto:Antroponimi/Liste cognomi."));
+        alertPlacehorder.add(new Label("Sono elencati i cognomi usati nelle biografie"));
+        alertPlacehorder.add(new Label("La lista prevede cognomi utilizzati da almeno 'sogliaCognomiMongo' biografie"));
+        alertPlacehorder.add(new Label("Upload crea una pagina su wiki per ogni cognome che supera 'sogliaCognomiWiki' biografie"));
     }// end of method
 
 
@@ -144,17 +167,8 @@ public class CognomeList extends WikiList {
     protected void creaTopLayout() {
         super.creaTopLayout();
 
-//        topPlaceholder.add(creaPopup());
-//
-//        Button testButton = new Button("Test", new Icon(VaadinIcon.SEARCH));
-//        testButton.addClassName("view-toolbar__button");
-//        testButton.addClickListener(e -> test());
-//        topPlaceholder.add(testButton);
-
         sincroBottoniMenu(false);
     }// end of method
-
-
 
 
     /**
@@ -187,6 +201,7 @@ public class CognomeList extends WikiList {
         colonna.setFlexGrow(0);
     }// end of method
 
+
     protected Button createViewButton(Cognome entityBean) {
         Button viewButton = new Button(entityBean.cognome, new Icon(VaadinIcon.LIST));
         viewButton.getElement().setAttribute("theme", "secondary");
@@ -218,6 +233,7 @@ public class CognomeList extends WikiList {
         }// end of if/else cycle
     }// end of method
 
+
     protected void viewCognome(Cognome cognome) {
         getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_COGNOMI + "/" + cognome.id));
     }// end of method
@@ -228,14 +244,25 @@ public class CognomeList extends WikiList {
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
+
     /**
-     * Opens the confirmation dialog before deleting the current item.
-     * <p>
-     * The dialog will display the given title and message(s), then call
-     * <p>
+     * Upload standard. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
      */
-    protected void uploadEffettivo() {
+    protected void upload(long inizio) {
         uploadService.uploadAllCognomi();
+        super.upload(inizio);
+    }// end of method
+
+
+    /**
+     * Upload standard delle statistiche. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void uploadStatistiche(long inizio) {
+//        appContext.getBean(StatisticheCognomi.class);
+        super.uploadStatistiche(inizio);
     }// end of method
 
 }// end of class

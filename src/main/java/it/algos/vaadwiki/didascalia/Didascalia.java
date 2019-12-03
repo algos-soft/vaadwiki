@@ -31,6 +31,9 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_SEPARATORE;
  * Not annotated with @SpringComponent (sbagliato) perché è una classe astratta <br>
  */
 public abstract class Didascalia {
+//William Chester Minor
+//William Chauvenet
+//Vincenzo Troya
 
     public static String TAG_SEP = " - ";
 

@@ -14,6 +14,8 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIView;
+import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
@@ -22,8 +24,8 @@ import it.algos.vaadwiki.didascalia.Didascalia;
 import it.algos.vaadwiki.didascalia.DidascaliaService;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.bio.BioDialog;
+import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.vaadwiki.upload.UploadService;
@@ -192,7 +194,11 @@ public class UtilityView extends VerticalLayout {
 
     private Div pageSesso = new Div();
 
+    private Div pageLocalita = new Div();
+
     private VerticalLayout pageSessoResult = new VerticalLayout();
+
+    private VerticalLayout pageLocalitaResult = new VerticalLayout();
 
 
     @Autowired
@@ -211,6 +217,7 @@ public class UtilityView extends VerticalLayout {
         this.creaTestLogin();
         this.creaTestQuery();
         this.creaCheckSesso();
+        this.creaCheckLocalita();
     }// end of method
 
 
@@ -225,15 +232,17 @@ public class UtilityView extends VerticalLayout {
         Tab tabLogin = new Tab("Login");
         Tab tabQuery = new Tab("Query");
         Tab tabSesso = new Tab("Sesso");
+        Tab tabLocalita = new Tab("Località");
 
         Map<Tab, Component> tabsToPages = new HashMap<>();
         tabsToPages.put(tabDidascalie, pageDidascalie);
         tabsToPages.put(tabLogin, pageLogin);
         tabsToPages.put(tabQuery, pageQuery);
         tabsToPages.put(tabSesso, pageSesso);
+        tabsToPages.put(tabLocalita, pageLocalita);
 
-        Tabs tabs = new Tabs(tabDidascalie, tabLogin, tabQuery, tabSesso);
-        Div pages = new Div(pageDidascalie, pageLogin, pageQuery, pageSesso);
+        Tabs tabs = new Tabs(tabDidascalie, tabLogin, tabQuery, tabSesso, tabLocalita);
+        Div pages = new Div(pageDidascalie, pageLogin, pageQuery, pageSesso, pageLocalita);
         Set<Component> pagesShown = Stream.of(pageDidascalie).collect(Collectors.toSet());
 
         tabs.addSelectedChangeListener(event -> {
@@ -339,11 +348,31 @@ public class UtilityView extends VerticalLayout {
     }// end of method
 
 
+    public void creaCheckLocalita() {
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.setMargin(false);
+        layout.setSpacing(true);
+
+        Button buttonCount = new Button("Count", new Icon(VaadinIcon.QUESTION));
+        buttonCount.getElement().setAttribute("theme", "secondary");
+        buttonCount.addClickListener(e -> esegueTestCountLocalita());
+
+        Button buttonList = new Button("List", new Icon(VaadinIcon.FEMALE));
+        buttonList.getElement().setAttribute("theme", "secondary");
+        buttonList.addClickListener(e -> esegueListLuogoNato());
+
+        layout.add(buttonCount, buttonList);
+        pageLocalita.add(layout);
+        pageLocalita.add(pageLocalitaResult);
+        pageLocalita.setVisible(false);
+    }// end of method
+
+
     /**
      * Test con uscita sul terminale di Idea
      */
     public void esegueTestDidascalieConsole() {
-        String ottenuto="";
+        String ottenuto = "";
         log.info("");
         log.info("Algos");
         log.info("");
@@ -387,7 +416,6 @@ public class UtilityView extends VerticalLayout {
 
         Api.scriveVoce(wikiPagineDidascalie, testo);
     }// end of method
-
 
 
     public void mostraPaginaWiki() {
@@ -642,6 +670,66 @@ public class UtilityView extends VerticalLayout {
 
 
     /**
+     * Voci biografiche che contengono una virgola nel parametro luogoNato
+     */
+    public long bioConLuogoNato() {
+        long voci = 0;
+        Query query = new Query(Criteria.where("luogoNato").regex(".*,.*"));
+        voci = mongoTemplate.count(query, Bio.class);
+
+        return voci;
+    }// end of method
+
+
+    /**
+     * Voci biografiche che contengono una virgola nel parametro luogoNatoLink
+     */
+    public long bioConLuogoNatoLink() {
+        long voci = 0;
+        Query query = new Query(Criteria.where("luogoNatoLink").regex(".*,.*"));
+        voci = mongoTemplate.count(query, Bio.class);
+
+        return voci;
+    }// end of method
+
+
+    /**
+     * Voci biografiche che contengono una virgola nel parametro luogoMorto
+     */
+    public long bioConLuogoMorto() {
+        long voci = 0;
+        Query query = new Query(Criteria.where("luogoMorto").regex(".*,.*"));
+        voci = mongoTemplate.count(query, Bio.class);
+
+        return voci;
+    }// end of method
+
+
+    /**
+     * Voci biografiche che contengono una virgola nel parametro luogoMortoLink
+     */
+    public long bioConLuogoMortoLink() {
+        long voci = 0;
+        Query query = new Query(Criteria.where("luogoMortoLink").regex(".*,.*"));
+        voci = mongoTemplate.count(query, Bio.class);
+
+        return voci;
+    }// end of method
+
+
+    /**
+     * Voci biografiche che contengono una virgola nel parametro luogoNato
+     */
+    public List<Bio> bioLuogoNato() {
+        List<Bio> lista;
+        Query query = new Query(Criteria.where("luogoNato").regex(".*,.*"));
+        lista = mongoTemplate.find(query, Bio.class);
+
+        return lista;
+    }// end of method
+
+
+    /**
      * Numero di voci biografiche senza valore al parametro 'sesso' (che deve essere 'M' o 'F')
      */
     public void esegueTestCountSex() {
@@ -738,13 +826,18 @@ public class UtilityView extends VerticalLayout {
         buttonUpload.getElement().setAttribute("theme", "error");
         buttonUpload.addClickListener(e -> esegueFixSesso(wikiTitle, genere));
 
-        pageSessoResult.add(new HorizontalLayout(new Label(nome), buttonMongo, buttonWikiShow, buttonWikiEdit, buttonTest, buttonUpload));
+        pageSessoResult.add(new HorizontalLayout(new Label(wikiTitle), buttonMongo, buttonWikiShow, buttonWikiEdit, buttonTest, buttonUpload));
     }// end of method
 
 
     public void apreDialogo(String wikiTitle) {
         Bio bio = bioService.findByKeyUnica(wikiTitle);
-//        dialog.open((AEntity) bio, EAOperation.showOnly, null);  //@todo versione 14
+        appContext.getBean(BioDialog.class, bioService, Bio.class).open(bio, EAOperation.edit, this::save, null, null);
+    }// end of method
+
+
+    protected void save(AEntity entityBean, EAOperation operation) {
+        bioService.save(entityBean, operation);
     }// end of method
 
 
@@ -757,9 +850,47 @@ public class UtilityView extends VerticalLayout {
 
     public void esegueFixSesso(String wikiTitle, String genere) {
         Bio bio = bioService.findByKeyUnica(wikiTitle);
-        bio.setSesso(genere);
         bioService.save(bio);
+        bio.setSesso(genere);
         uploadService.uploadBio(wikiTitle);
+    }// end of method
+
+
+    /**
+     * Numero di voci biografiche senza valore al parametro 'sesso' (che deve essere 'M' o 'F')
+     */
+    public void esegueTestCountLocalita() {
+        pageLocalitaResult.removeAll();
+        pageLocalitaResult.add(new Label(" Ci sono " + bioConLuogoNato() + " voci biografiche con una virgola nel campo 'luogoNato'"));
+        pageLocalitaResult.add(new Label(" Ci sono " + bioConLuogoNatoLink() + " voci biografiche con una virgola nel campo 'luogoNatoLink'"));
+        pageLocalitaResult.add(new Label(" Ci sono " + bioConLuogoMorto() + " voci biografiche con una virgola nel campo 'luogoMorto'"));
+        pageLocalitaResult.add(new Label(" Ci sono " + bioConLuogoMortoLink() + " voci biografiche con una virgola nel campo 'luogoMortoLink'"));
+    }// end of method
+
+
+    /**
+     * Lista di voci biografiche che hanno una virgola nel parametro luogoNato
+     */
+    public void esegueListLuogoNato() {
+        pageLocalitaResult.removeAll();
+        List<Bio> listaLuogoNato = bioLuogoNato();
+        pageLocalitaResult.add(new Label("Elenco delle " + listaLuogoNato.size() + " voci biografiche con una virgola nel campo 'luogoNato'"));
+
+        for (Bio bio : listaLuogoNato) {
+            riga(bio);
+        }// end of for cycle
+    }// end of method
+
+
+    public void riga(Bio bio) {
+        final String nome = bio.getNome();
+        final String wikiTitle = bio.getWikiTitle();
+
+        Button buttonMongo = new Button("Mongo", new Icon(VaadinIcon.DATABASE));
+        buttonMongo.getElement().setAttribute("theme", "secondary");
+        buttonMongo.addClickListener(e -> apreDialogo(wikiTitle));
+
+        pageLocalitaResult.add(new HorizontalLayout(new Label(bio.wikiTitle), buttonMongo));
     }// end of method
 
 }// end of class
