@@ -1,12 +1,15 @@
 package it.algos.vaadflow.modules.log;
 
 import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow.application.FlowVar;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.enumeration.EALogAction;
 import it.algos.vaadflow.enumeration.EALogLivello;
 import it.algos.vaadflow.enumeration.EALogType;
+import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.logtype.Logtype;
 import it.algos.vaadflow.modules.logtype.LogtypeService;
+import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadflow.service.AService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +26,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
+import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadflow.service.AConsoleColorService.RESET;
 
 /**
  * Project vaadflow <br>
@@ -48,7 +52,6 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 @AIScript(sovrascrivibile = false)
 public class LogService extends AService {
 
-
     /**
      * versione della classe per la serializzazione
      */
@@ -62,6 +65,12 @@ public class LogService extends AService {
     @Autowired
     protected LogtypeService logtype;
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected AMailService mail;
 
     /**
      * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
@@ -275,37 +284,230 @@ public class LogService extends AService {
     }// end of method
 
 
-    //--registra un avviso
+    /**
+     * Gestisce un log di debug <br>
+     *
+     * @param descrizione della informazione da gestire
+     */
     public void debug(String descrizione) {
-        crea(EALogLivello.debug, EALogType.debug, descrizione);
-        log.debug(descrizione);
+        debug(descrizione, null, VUOTA);
+    }// end of method
+
+
+    /**
+     * Gestisce un log di debug <br>
+     *
+     * @param descrizione della informazione da gestire
+     * @param clazz       di provenienza della richiesta
+     * @param methodName  di provenienza della richiesta
+     */
+    public void debug(String descrizione, Class clazz, String methodName) {
+        esegue(EALogLivello.debug, descrizione, clazz, methodName);
     }// fine del metodo
 
 
-    //--registra un avviso
+    /**
+     * Gestisce un log di info <br>
+     *
+     * @param descrizione della informazione da gestire
+     */
     public void info(String descrizione) {
-        crea(EALogLivello.info, EALogType.info, descrizione);
-        log.info(descrizione);
+        info(descrizione, null, VUOTA);
+    }// end of method
+
+
+    /**
+     * Gestisce un log di info <br>
+     *
+     * @param descrizione della informazione da gestire
+     * @param clazz       di provenienza della richiesta
+     * @param methodName  di provenienza della richiesta
+     */
+    public void info(String descrizione, Class clazz, String methodName) {
+        esegue(EALogLivello.info, descrizione, clazz, methodName);
     }// fine del metodo
 
 
-    //--registra un avviso
-    public void warning(String descrizione) {
-        crea(EALogLivello.warn, EALogType.warn, descrizione);
-        log.warn(descrizione);
+    /**
+     * Gestisce un log di warning <br>
+     *
+     * @param descrizione della informazione da gestire
+     */
+    public void warn(String descrizione) {
+        warn(descrizione, null, VUOTA);
+    }// end of method
+
+
+    /**
+     * Gestisce un log di warning <br>
+     *
+     * @param descrizione della informazione da gestire
+     * @param clazz       di provenienza della richiesta
+     * @param methodName  di provenienza della richiesta
+     */
+    public void warn(String descrizione, Class clazz, String methodName) {
+        esegue(EALogLivello.warn, descrizione, clazz, methodName);
     }// fine del metodo
 
 
-    //--registra un avviso
+    /**
+     * Gestisce un log di error <br>
+     *
+     * @param descrizione della informazione da gestire
+     */
     public void error(String descrizione) {
-        crea(EALogLivello.error, EALogType.error, descrizione);
-        log.error(descrizione);
+        error(descrizione, null, VUOTA);
+    }// end of method
+
+
+    /**
+     * Gestisce un log di error <br>
+     *
+     * @param descrizione della informazione da gestire
+     * @param clazz       di provenienza della richiesta
+     * @param methodName  di provenienza della richiesta
+     */
+    public void error(String descrizione, Class clazz, String methodName) {
+        esegue(EALogLivello.error, descrizione, clazz, methodName);
+    }// fine del metodo
+
+
+    /**
+     * Gestisce un log, con le modalità fissate nelle preferenze <br>
+     *
+     * @param logLevel    del messaggio
+     * @param descrizione della informazione da gestire
+     * @param clazz       di provenienza della richiesta
+     * @param methodName  di provenienza della richiesta
+     */
+    public void esegue(EALogLivello logLevel, String descrizione, Class clazz, String methodName) {
+        esegue(EALogAction.get(pref), logLevel, descrizione, clazz, methodName);
+    }// fine del metodo
+
+
+    /**
+     * Gestisce un log <br>
+     *
+     * @param logAction   del messaggio
+     * @param logLevel    del messaggio
+     * @param descrizione della informazione da gestire
+     * @param clazz       di provenienza della richiesta
+     * @param methodName  di provenienza della richiesta
+     */
+    public void esegue(EALogAction logAction, EALogLivello logLevel, String descrizione, Class clazz, String methodName) {
+        switch (logAction) {
+            case nessuno:
+                break;
+            case collectionMongo:
+                crea(logLevel, EALogType.debug, descrizione);
+                break;
+            case sendMail:
+                sendMail(logLevel, descrizione, clazz, methodName);
+                break;
+            case terminale:
+                sendTerminale(logLevel, descrizione, clazz, methodName);
+                break;
+            default:
+                log.warn("Switch - caso non definito");
+                break;
+        } // end of switch statement
     }// fine del metodo
 
 
     //--registra un avviso
     public void importo(String descrizione) {
         crea(EALogLivello.debug, logtype.getImport(), descrizione);
+    }// fine del metodo
+
+
+    /**
+     * Elabora il log da inviare via mail <br>
+     *
+     * @param logLevel    del messaggio
+     * @param descrizione della informazione da gestire
+     * @param clazz       di provenienza della richiesta
+     * @param methodName  di provenienza della richiesta
+     */
+    public void sendMail(EALogLivello logLevel, String descrizione, Class clazz, String methodName) {
+        String messaggio = VUOTA;
+        String adesso = date.get();
+        messaggio += adesso;
+        String appName = FlowVar.projectName;
+
+        if (logLevel != null) {
+            messaggio += A_CAPO;
+            messaggio += text.primaMaiuscola(logLevel.name());
+        }// end of if cycle
+
+        if (text.isValid(appName)) {
+            messaggio += A_CAPO;
+            messaggio += "App: " + appName;
+        }// end of if cycle
+
+        if (clazz != null) {
+            messaggio += A_CAPO;
+            messaggio += "Class: " + clazz.getSimpleName();
+        }// end of if cycle
+
+        if (text.isValid(methodName)) {
+            messaggio += A_CAPO;
+            messaggio += "Method: " + methodName;
+        }// end of if cycle
+
+        if (text.isValid(logLevel)) {
+            messaggio += A_CAPO;
+            messaggio += "Level: " + logLevel;
+        }// end of if cycle
+
+        messaggio += A_CAPO;
+        messaggio += "Message: " + descrizione;
+        mail.send(appName, messaggio);
+    }// fine del metodo
+
+
+    /**
+     * Elabora il log da presentare a terminale <br>
+     *
+     * @param logLevel    del messaggio
+     * @param descrizione della informazione da gestire
+     * @param clazz       di provenienza della richiesta
+     * @param methodName  di provenienza della richiesta
+     */
+    public void sendTerminale(EALogLivello logLevel, String descrizione, Class clazz, String methodName) {
+        String messaggio = VUOTA;
+        String adesso = date.get();
+        String sep = SEP;
+        sep = SPAZIO;
+        String appName = FlowVar.projectName;
+
+        if (logLevel == null) {
+            return;
+        } else {
+            messaggio += logLevel.color + logLevel.name().toUpperCase() + RESET;
+        }// end of if/else cycle
+
+        if (text.isValid(appName)) {
+            messaggio += sep;
+            messaggio += logLevel.color + "(App)" + RESET;
+            messaggio += appName;
+        }// end of if cycle
+
+        if (clazz != null) {
+            messaggio += sep;
+            messaggio += logLevel.color + "(Class)" + RESET;
+            messaggio += clazz.getSimpleName();
+        }// end of if cycle
+
+        if (text.isValid(methodName)) {
+            messaggio += sep;
+            messaggio += logLevel.color + "(Method)" + RESET;
+            messaggio += methodName;
+        }// end of if cycle
+
+        messaggio += sep;
+        messaggio += logLevel.color + "(Message)" + RESET;
+        messaggio += descrizione;
+        System.out.println(messaggio);
     }// fine del metodo
 
 

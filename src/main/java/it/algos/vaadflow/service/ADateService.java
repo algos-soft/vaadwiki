@@ -39,21 +39,19 @@ import static it.algos.vaadflow.application.FlowCost.*;
 @Slf4j
 public class ADateService extends AbstractService {
 
+    public static final String INFERIORE_SECONDO = "meno di un secondo";
+
+    public static final String INFERIORE_MINUTO = "meno di un minuto";
+
     /**
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
 
-
     /**
      * Private final property
      */
     private static final ADateService INSTANCE = new ADateService();
-
-
-    public static final String INFERIORE_SECONDO = "meno di un secondo";
-
-    public static final String INFERIORE_MINUTO = "meno di un minuto";
 
     private static final String SECONDI = " sec.";
 
@@ -365,6 +363,22 @@ public class ADateService extends AbstractService {
      */
     public String get(LocalDate localDate, EATime patternEnum) {
         return get(localDate, patternEnum.getPattern());
+    }// end of method
+
+
+    /**
+     * Restituisce la data corrente nella forma del pattern ricevuto
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param patternEnum enumeration di pattern per la formattazione
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String get(EATime patternEnum) {
+        return get(LocalDate.now(), patternEnum.getPattern());
     }// end of method
 
 

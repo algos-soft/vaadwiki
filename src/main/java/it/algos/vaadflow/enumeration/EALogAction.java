@@ -1,5 +1,7 @@
 package it.algos.vaadflow.enumeration;
 
+import it.algos.vaadflow.modules.preferenza.PreferenzaService;
+
 import static it.algos.vaadflow.application.FlowCost.*;
 
 /**
@@ -23,18 +25,39 @@ public enum EALogAction implements IAEnum {
      */
     @Override
     public String getPref() {
-        String testo = VUOTA;
+        StringBuilder testo = new StringBuilder(VUOTA);
 
         for (EALogAction eaLogAction : EALogAction.values()) {
-            testo += eaLogAction.name();
-            testo += VIRGOLA;
+            testo.append(eaLogAction.name());
+            testo.append(VIRGOLA);
         }// end of for cycle
 
-        testo = testo.substring(0, testo.length() - 1);
-        testo += PUNTO_VIRGOLA;
-        testo += name();
+        testo = new StringBuilder(testo.substring(0, testo.length() - 1));
+        testo.append(PUNTO_VIRGOLA);
+        testo.append(name());
 
-        return testo;
+        return testo.toString();
+    }// end of method
+
+
+    /**
+     * Azione memorizzata nelle preferenze <br>
+     *
+     * @return azione
+     */
+    public static EALogAction get(PreferenzaService pref) {
+        EALogAction eaLogAction = null;
+        String actionStr = VUOTA;
+
+        if (pref != null) {
+            actionStr = pref.getStr(EAPreferenza.logAction);
+        }// end of if cycle
+
+        if (actionStr.length() > 0) {
+            eaLogAction = EALogAction.valueOf(actionStr);
+        }// end of if cycle
+
+        return eaLogAction;
     }// end of method
 
 }// end of enumeration
