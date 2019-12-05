@@ -1,6 +1,8 @@
 package it.algos.vaadwiki.liste;
 
+import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ATextService;
@@ -84,6 +86,12 @@ public abstract class Lista {
      * Property della classe perché regolata nelle sottoclassi concrete <br>
      */
     public EADidascalia typeDidascalia;
+
+    //--property
+    protected Giorno giorno;
+
+    //--property
+    protected Anno anno;
 
     //--property
     public int size;

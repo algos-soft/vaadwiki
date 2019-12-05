@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_ANNI_NASCITA;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
@@ -26,7 +26,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_ANNI_NA
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ListaAnnoNato extends ListaAnni {
+public class ListaAnnoNato extends Lista {
 
 
     /**
@@ -46,8 +46,7 @@ public class ListaAnnoNato extends ListaAnni {
      * @param anno di cui costruire la pagina sul server wiki
      */
     public ListaAnnoNato(Anno anno) {
-        super(anno);
-        super.typeDidascalia = EADidascalia.annoNato;
+        super.anno = anno;
     }// end of constructor
 
 
@@ -60,7 +59,12 @@ public class ListaAnnoNato extends ListaAnni {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.typeDidascalia = EADidascalia.annoNato;
+        super.usaSuddivisioneParagrafi = pref.isBool(USA_PARAGRAFI_ANNI);
+        super.usaRigheRaggruppate = pref.isBool(USA_RIGHE_RAGGRUPPATE_ANNI);
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_ANNI_NASCITA);
+        super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_ANNI_IN_CODA);
+        super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_ANNI);
     }// end of method
 
 

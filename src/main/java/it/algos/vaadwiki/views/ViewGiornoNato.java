@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.views;
 
+import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadwiki.liste.ListaGiornoNato;
 
@@ -15,10 +16,23 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_GIORNO_NATI;
  * <p>
  * Classe per la visualizzazione di una lista di prova di biografie di un particolare giorno <br>
  * Viene invocata da WikiGiornoList <br>
+ * Eliminato header e footer della pagina definitiva su wiki <br>
  * Lista dei Nati nel giorno <br>
  */
 @Route(value = ROUTE_VIEW_GIORNO_NATI)
-public class ViewGiornoNato extends ViewGiorni {
+public class ViewGiornoNato extends ViewListe {
+
+
+    /**
+     * Punto di ingresso dopo la chiamata navigate() effettuata da com.vaadin.flow.router.Router verso questa view <br>
+     *
+     * @param event       con la Location, segments, target, source, ecc
+     * @param giornoIdKey per recuperare l'istanza di Giorno
+     */
+    public void setParameter(BeforeEvent event, String giornoIdKey) {
+        this.giorno = giornoService.findById(giornoIdKey);
+        this.inizia();
+    }// end of method
 
 
     /**
@@ -32,6 +46,7 @@ public class ViewGiornoNato extends ViewGiorni {
         lista = appContext.getBean(ListaGiornoNato.class, giorno);
         super.inizia();
     }// end of method
+
 
 
     /**

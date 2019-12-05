@@ -19,11 +19,24 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * <p>
  * Classe per la visualizzazione di una lista di prova di biografie di un particolare giorno <br>
  * Viene invocata da WikiGiornoList <br>
+ * Eliminato header e footer della pagina definitiva su wiki <br>
  * Lista dei Morti nel giorno <br>
  */
 @Route(value = ROUTE_VIEW_GIORNO_MORTI)
-public class ViewGiornoMorto extends ViewGiorni {
+public class ViewGiornoMorto extends ViewListe {
 
+
+
+    /**
+     * Punto di ingresso dopo la chiamata navigate() effettuata da com.vaadin.flow.router.Router verso questa view <br>
+     *
+     * @param event       con la Location, segments, target, source, ecc
+     * @param giornoIdKey per recuperare l'istanza di Giorno
+     */
+    public void setParameter(BeforeEvent event, String giornoIdKey) {
+        this.giorno = giornoService.findById(giornoIdKey);
+        this.inizia();
+    }// end of method
 
 
     /**

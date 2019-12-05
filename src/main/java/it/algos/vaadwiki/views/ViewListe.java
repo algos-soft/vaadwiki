@@ -9,12 +9,24 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.HasUrlParameter;
+import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadflow.modules.anno.AnnoService;
+import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.liste.Lista;
 import it.algos.vaadwiki.liste.ListaService;
 import it.algos.vaadwiki.liste.ListaSottopagina;
+import it.algos.vaadwiki.modules.attivita.Attivita;
+import it.algos.vaadwiki.modules.attivita.AttivitaService;
+import it.algos.vaadwiki.modules.cognome.Cognome;
+import it.algos.vaadwiki.modules.cognome.CognomeService;
+import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
+import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
+import it.algos.vaadwiki.modules.nome.Nome;
+import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.upload.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -47,6 +59,72 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
     //--property
     public LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaComplessa;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected AttivitaService attivitaService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected NazionalitaService nazionalitaService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected CognomeService cognomeService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected NomeService nomeService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected GiornoService giornoService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected AnnoService annoService;
+
+    //--property
+    protected Anno anno;
+
+    //--property
+    protected Giorno giorno;
+
+    //--property
+    protected Nome nome;
+
+    //--property
+    protected Cognome cognome;
+
+    //--property
+    protected Attivita attivita;
+
+    //--property
+    protected Nazionalita nazionalita;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>

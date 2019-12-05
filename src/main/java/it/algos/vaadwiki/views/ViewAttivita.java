@@ -19,23 +19,12 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_ATTIVITA;
  * Classe per la visualizzazione di una lista di prova di biografie di una particolare attivita <br>
  * Viene invocata da AttivitaList <br>
  * Eliminato header e footer della pagina definitiva su wiki <br>
- * Lista delle biografie di una Attivitra <br>
+ * Lista delle biografie di una Attivita <br>
  */
 @Route(value = ROUTE_VIEW_ATTIVITA)
 public class ViewAttivita extends ViewListe {
 
 
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected AttivitaService attivitaService;
-
-
-    //--property
-    protected Attivita attivita;
 
 
     /**

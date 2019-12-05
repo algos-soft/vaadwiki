@@ -30,18 +30,6 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_NOMI;
 @Route(value = ROUTE_VIEW_NOMI)
 public class ViewNome extends ViewListe {
 
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected NomeService nomeService;
-
-
-    //--property
-    protected Nome nome;
-
 
     /**
      * Punto di ingresso dopo la chiamata navigate() effettuata da com.vaadin.flow.router.Router verso questa view <br>

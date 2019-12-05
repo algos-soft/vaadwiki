@@ -10,7 +10,8 @@ import org.springframework.context.annotation.Scope;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_ANNI_MORTE;
+import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.USA_PARAGRAFO_SIZE_ANNI;
 
 /**
  * Project vaadwiki
@@ -26,7 +27,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_ANNI_MO
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ListaAnnoMorto extends ListaAnni {
+public class ListaAnnoMorto extends Lista {
 
 
     /**
@@ -46,8 +47,7 @@ public class ListaAnnoMorto extends ListaAnni {
      * @param anno di cui costruire la pagina sul server wiki
      */
     public ListaAnnoMorto(Anno anno) {
-        super(anno);
-        super.typeDidascalia = EADidascalia.annoMorto;
+        super.anno = anno;
     }// end of constructor
 
 
@@ -60,7 +60,12 @@ public class ListaAnnoMorto extends ListaAnni {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.typeDidascalia = EADidascalia.annoMorto;
+        super.usaSuddivisioneParagrafi = pref.isBool(USA_PARAGRAFI_ANNI);
+        super.usaRigheRaggruppate = pref.isBool(USA_RIGHE_RAGGRUPPATE_ANNI);
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_ANNI_MORTE);
+        super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_ANNI_IN_CODA);
+        super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_ANNI);
     }// end of method
 
 

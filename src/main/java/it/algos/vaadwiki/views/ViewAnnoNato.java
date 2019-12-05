@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.views;
 
+import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadwiki.liste.ListaAnnoNato;
 import it.algos.vaadwiki.liste.ListaGiornoNato;
@@ -19,11 +20,24 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_ANNO_NATI;
  * <p>
  * Classe per la visualizzazione di una lista di prova di biografie di un particolare anno <br>
  * Viene invocata da WikiAnnoList <br>
+ * Eliminato header e footer della pagina definitiva su wiki <br>
  * Lista dei Nati nell'anno <br>
  */
 @Route(value = ROUTE_VIEW_ANNO_NATI)
-public class ViewAnnoNato extends ViewAnni {
+public class ViewAnnoNato extends ViewListe {
 
+
+    /**
+     * Punto di ingresso dopo la chiamata navigate() effettuata da com.vaadin.flow.router.Router verso questa view <br>
+     *
+     * @param event       con la Location, segments, target, source, ecc
+     * @param annoIdKey per recuperare l'istanza di Anno
+     */
+    @Override
+    public void setParameter(BeforeEvent event, String annoIdKey) {
+        this.anno = annoService.findById(annoIdKey);
+        this.inizia();
+    }// end of method
 
     /**
      * Costruisce il testo con tutte le didascalie relative al giorno considerato <br>

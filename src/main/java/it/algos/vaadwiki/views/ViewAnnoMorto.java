@@ -1,13 +1,9 @@
 package it.algos.vaadwiki.views;
 
+import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadwiki.liste.ListaAnnoMorto;
-import it.algos.vaadwiki.liste.ListaAnnoNato;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
-import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_ANNO_MORTI;
 
 /**
@@ -19,10 +15,24 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_ANNO_MORTI;
  * <p>
  * Classe per la visualizzazione di una lista di prova di biografie di un particolare anno <br>
  * Viene invocata da WikiAnnoList <br>
+ * Eliminato header e footer della pagina definitiva su wiki <br>
  * Lista dei Morti nell'anno <br>
  */
 @Route(value = ROUTE_VIEW_ANNO_MORTI)
-public class ViewAnnoMorto extends ViewAnni {
+public class ViewAnnoMorto extends ViewListe {
+
+
+    /**
+     * Punto di ingresso dopo la chiamata navigate() effettuata da com.vaadin.flow.router.Router verso questa view <br>
+     *
+     * @param event     con la Location, segments, target, source, ecc
+     * @param annoIdKey per recuperare l'istanza di Anno
+     */
+    @Override
+    public void setParameter(BeforeEvent event, String annoIdKey) {
+        this.anno = annoService.findById(annoIdKey);
+        this.inizia();
+    }// end of method
 
 
     /**

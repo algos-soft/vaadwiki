@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Scope;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
@@ -27,7 +27,7 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ListaGiornoNato extends ListaGiorni {
+public class ListaGiornoNato extends Lista {
 
 
     /**
@@ -47,8 +47,7 @@ public class ListaGiornoNato extends ListaGiorni {
      * @param giorno di cui costruire la pagina sul server wiki
      */
     public ListaGiornoNato(Giorno giorno) {
-        super(giorno);
-        super.typeDidascalia = EADidascalia.giornoNato;
+        super.giorno = giorno;
     }// end of constructor
 
 
@@ -61,7 +60,12 @@ public class ListaGiornoNato extends ListaGiorni {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.typeDidascalia = EADidascalia.giornoNato;
+        super.usaSuddivisioneParagrafi = pref.isBool(USA_PARAGRAFI_GIORNI);
+        super.usaRigheRaggruppate = pref.isBool(USA_RIGHE_RAGGRUPPATE_GIORNI);
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
+        super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
+        super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_GIORNI);
     }// end of method
 
 

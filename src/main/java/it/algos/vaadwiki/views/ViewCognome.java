@@ -3,14 +3,7 @@ package it.algos.vaadwiki.views;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadwiki.liste.ListaCognomi;
-import it.algos.vaadwiki.modules.cognome.Cognome;
-import it.algos.vaadwiki.modules.cognome.CognomeService;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
-import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_COGNOMI;
 
 /**
@@ -26,27 +19,13 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_COGNOMI;
  * Lista delle biografie di un Cognome <br>
  */
 @Route(value = ROUTE_VIEW_COGNOMI)
-public class ViewCognome extends ViewListe{
-
-
-
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected CognomeService cognomeService;
-
-
-    //--property
-    protected Cognome cognome;
+public class ViewCognome extends ViewListe {
 
 
     /**
-     * Recupera il nome arrivato come parametro nella chiamata del browser effettuata da @Route <br>
+     * Punto di ingresso dopo la chiamata navigate() effettuata da com.vaadin.flow.router.Router verso questa view <br>
      *
+     * @param event        con la Location, segments, target, source, ecc
      * @param cognomeIdKey per recuperare l'istanza di Cognome
      */
     @Override
@@ -54,8 +33,6 @@ public class ViewCognome extends ViewListe{
         this.cognome = cognomeService.findById(cognomeIdKey);
         this.inizia();
     }// end of method
-
-
 
 
     /**
