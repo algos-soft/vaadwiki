@@ -50,6 +50,10 @@ public class WikiCost {
 
     public final static String ROUTE_VIEW_COGNOMI = "viewcognomi";
 
+    public final static String ROUTE_VIEW_ATTIVITA = "viewattivita";
+
+    public final static String ROUTE_VIEW_NAZIONALITA = "viewnazionalita";
+
     public final static String ROUTE_DIDASCALIE = "didascalie";
 
     public final static String TAG_PRO = "professione";
@@ -346,6 +350,10 @@ public class WikiCost {
 
     public final static String IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA = "isParagrafoVuotoCognomiInCoda";
 
+    public final static String IS_PARAGRAFO_VUOTO_ATTIVITA_IN_CODA = "isParagrafoVuotoAttivitaInCoda";
+
+    public final static String IS_PARAGRAFO_VUOTO_NAZIONALITA_IN_CODA = "isParagrafoVuotoNazionalitaInCoda";
+
     public final static String USA_PARAGRAFO_SIZE_GIORNI = "usaParagrafoSizeGiorni";
 
     public final static String USA_PARAGRAFO_SIZE_ANNI = "usaParagrafoSizeAnni";
@@ -353,6 +361,10 @@ public class WikiCost {
     public final static String USA_PARAGRAFO_SIZE_NOMI = "usaParagrafoSizeNomi";
 
     public final static String USA_PARAGRAFO_SIZE_COGNOMI = "usaParagrafoSizeCognomi";
+
+    public final static String USA_PARAGRAFO_SIZE_ATTIVITA = "usaParagrafoSizeAttivita";
+
+    public final static String USA_PARAGRAFO_SIZE_NAZIONALITA = "usaParagrafoSizeNazionalita";
 
     public static WikiLoginOld WIKI_LOGIN = null;
 

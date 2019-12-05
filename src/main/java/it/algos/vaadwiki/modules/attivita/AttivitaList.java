@@ -1,8 +1,13 @@
 package it.algos.vaadwiki.modules.attivita;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
@@ -12,6 +17,7 @@ import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
+import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.wiki.WikiList;
 import it.algos.vaadwiki.schedule.TaskAttivita;
 import it.algos.vaadwiki.statistiche.StatisticheAttivita;
@@ -157,6 +163,71 @@ public class AttivitaList extends WikiList {
         alertPlacehorder.add(new Label("[\"attivitaforma2\"] = \"attività al plurale\","));
     }// end of method
 
+
+    /**
+     * Eventuali colonne calcolate aggiunte DOPO quelle automatiche
+     * Sovrascritto
+     */
+    protected void addSpecificColumnsAfter() {
+        String lar = "12em";
+        ComponentRenderer renderer;
+        Grid.Column colonna;
+
+        renderer = new ComponentRenderer<>(this::createViewButton);
+        colonna = grid.addColumn(renderer);
+        colonna.setHeader("Test");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+
+        renderer = new ComponentRenderer<>(this::createWikiButton);
+        colonna = grid.addColumn(renderer);
+        colonna.setHeader("Wiki");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+
+        renderer = new ComponentRenderer<>(this::createUploaButton);
+        colonna = grid.addColumn(renderer);
+        colonna.setHeader("Upload");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+    }// end of method
+
+
+    protected Button createViewButton(Attivita entityBean) {
+        Button viewButton = new Button(entityBean.plurale, new Icon(VaadinIcon.LIST));
+        viewButton.getElement().setAttribute("theme", "secondary");
+        viewButton.addClickListener(e -> viewAttivita(entityBean));
+        return viewButton;
+    }// end of method
+
+
+    protected Component createWikiButton(Attivita entityBean) {
+        Button wikiButton = new Button(entityBean.plurale, new Icon(VaadinIcon.SERVER));
+        wikiButton.getElement().setAttribute("theme", "secondary");
+        wikiButton.addClickListener(e -> wikiPage(entityBean));
+        return wikiButton;
+    }// end of method
+
+
+    protected Component createUploaButton(Attivita entityBean) {
+        Button uploadButton = new Button(entityBean.plurale, new Icon(VaadinIcon.UPLOAD));
+        uploadButton.getElement().setAttribute("theme", "error");
+//        uploadButton.addClickListener(e -> uploadService.uploadNome(entityBean));
+        return uploadButton;
+    }// end of method
+
+    protected void viewAttivita(Attivita attivita) {
+        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_ATTIVITA + "/" + attivita.id));
+    }// end of method
+
+
+    protected void wikiPage(Attivita attivita) {
+        String link = "\"" + PATH_WIKI + uploadService.getTitoloAttivita(attivita) + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
 
     /**
      * Creazione ed apertura del dialogo per una nuova entity oppure per una esistente <br>

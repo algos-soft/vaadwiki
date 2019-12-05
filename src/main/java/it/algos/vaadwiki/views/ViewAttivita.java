@@ -1,34 +1,29 @@
 package it.algos.vaadwiki.views;
 
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Route;
-import it.algos.vaadwiki.liste.ListaGiornoNato;
-import it.algos.vaadwiki.liste.ListaNomi;
-import it.algos.vaadwiki.modules.nome.Nome;
-import it.algos.vaadwiki.modules.nome.NomeService;
+import it.algos.vaadwiki.liste.ListaAttivita;
+import it.algos.vaadwiki.modules.attivita.Attivita;
+import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
-import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_NOMI;
+import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_ATTIVITA;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: Fri, 07-Jun-2019
- * Time: 19:00
- * <p>
- * Classe per la visualizzazione di una lista di prova di biografie di un particolare nome <br>
- * Viene invocata da NomeList <br>
+ * Date: mer, 04-dic-2019
+ * Time: 17:21
+ * Classe per la visualizzazione di una lista di prova di biografie di una particolare attivita <br>
+ * Viene invocata da AttivitaList <br>
  * Eliminato header e footer della pagina definitiva su wiki <br>
- * Lista delle biografie di un Nome <br>
+ * Lista delle biografie di una Attivitra <br>
  */
-@Route(value = ROUTE_VIEW_NOMI)
-public class ViewNome extends ViewListe {
+@Route(value = ROUTE_VIEW_ATTIVITA)
+public class ViewAttivita extends ViewListe {
+
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -36,22 +31,22 @@ public class ViewNome extends ViewListe {
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    protected NomeService nomeService;
+    protected AttivitaService attivitaService;
 
 
     //--property
-    protected Nome nome;
+    protected Attivita attivita;
 
 
     /**
      * Punto di ingresso dopo la chiamata navigate() effettuata da com.vaadin.flow.router.Router verso questa view <br>
      *
-     * @param event       con la Location, segments, target, source, ecc
-     * @param nomeIdKey per recuperare l'istanza di Nome
+     * @param event     con la Location, segments, target, source, ecc
+     * @param attivitaIdKey per recuperare l'istanza di Attivita
      */
     @Override
-    public void setParameter(BeforeEvent event, String nomeIdKey) {
-        this.nome = nomeService.findById(nomeIdKey);
+    public void setParameter(BeforeEvent event, String attivitaIdKey) {
+        this.attivita = attivitaService.findById(attivitaIdKey);
         this.inizia();
     }// end of method
 
@@ -64,7 +59,7 @@ public class ViewNome extends ViewListe {
      */
     @Override
     public void inizia() {
-        lista = appContext.getBean(ListaNomi.class, nome);
+        lista = appContext.getBean(ListaAttivita.class, attivita);
         super.inizia();
     }// end of method
 
@@ -76,7 +71,7 @@ public class ViewNome extends ViewListe {
      */
     @Override
     protected void addInfoTitolo() {
-        this.add("Lista biografie di " + text.format(numVoci) + " persone di nome " + nome.getNome() + A_CAPO);
+        this.add("Lista biografie di " + text.format(numVoci) + " persone con attività " + attivita.getPlurale() + A_CAPO);
         super.addInfoTitolo();
     }// end of method
 

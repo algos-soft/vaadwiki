@@ -7,9 +7,11 @@ import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.service.AMailService;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.cognome.CognomeService;
+import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.service.ABioService;
@@ -460,6 +462,37 @@ public class UploadService extends ABioService {
      */
     public String getTitoloCognome(Cognome cognome) {
         return getTitoloCognome(cognome.getCognome());
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Attivita da creare/caricare su wikipedia
+     */
+    public String getTitoloAttivita(String titolo) {
+        return "Progetto:Biografie/Attività/" + text.primaMaiuscola(titolo);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Attivita da creare/caricare su wikipedia
+     */
+    public String getTitoloAttivita(Attivita attivita) {
+        return getTitoloAttivita(attivita.getPlurale());
+    }// fine del metodo
+
+    /**
+     * Titolo della pagina Nazionalita da creare/caricare su wikipedia
+     */
+    public String getTitoloNazionalita(String titolo) {
+        return "Progetto:Biografie/Nazionalita/" + text.primaMaiuscola(titolo);
+    }// fine del metodo
+
+
+    /**
+     * Titolo della pagina Nazionalita da creare/caricare su wikipedia
+     */
+    public String getTitoloNazionalita(Nazionalita nazionalita) {
+        return getTitoloNazionalita(nazionalita.getPlurale());
     }// fine del metodo
 
 

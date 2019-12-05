@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Time: 22:13
  * <p>
  * Classe astratta per la visualizzazione di una lista di prova di biografie di un particolare anno <br>
- * Viene invocata da WikiAnnoViewList <br>
+ * Viene invocata da WikiAnnoList <br>
  * Due sottoclassi (concrete) per i Nati e per i Morti <br>
  */
 public abstract class ViewAnni extends ViewListe {

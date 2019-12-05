@@ -1,12 +1,13 @@
 package it.algos.vaadwiki.liste;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.vaadwiki.modules.nome.Nome;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,29 +18,26 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: Fri, 07-Jun-2019
- * Time: 20:32
- * <p>
- * Lista delle persone per nome <br>
+ * Date: mer, 04-dic-2019
+ * Time: 18:10
+ * Lista delle persone per attività <br>
  * La lista è un semplice testo (formattato secondo i possibili tipi di raggruppamento) <br>
- * Creata con appContext.getBean(ListaNomi.class, nome) <br>
+ * Creata con appContext.getBean(ListaAttivita.class, nome) <br>
  * Punto di inzio @PostConstruct inizia() nella superclasse <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ListaNomi extends Lista{
-
+public class ListaAttivita extends Lista {
 
     //--property
-    protected Nome nome;
-
+    protected Attivita attivita;
 
     /**
      * Costruttore base senza parametri <br>
      * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
      * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
      */
-    public ListaNomi() {
+    public ListaAttivita() {
     }// end of constructor
 
 
@@ -50,13 +48,12 @@ public class ListaNomi extends Lista{
      * Non rimanda al costruttore della superclasse. Regola qui solo alcune property. <br>
      * La superclasse usa poi il metodo @PostConstruct inizia() per proseguire dopo l'init del costruttore <br>
      *
-     * @param nome di cui costruire la pagina sul server wiki
+     * @param attivita di cui costruire la pagina sul server wiki
      */
-    public ListaNomi(Nome nome) {
-        this.nome = nome;
-        super.typeDidascalia = EADidascalia.listaNomi;
+    public ListaAttivita(Attivita attivita) {
+        this.attivita = attivita;
+        super.typeDidascalia = EADidascalia.listaAttivita;
     }// end of constructor
-
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
@@ -67,17 +64,9 @@ public class ListaNomi extends Lista{
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaSuddivisioneParagrafi = true;
-        super.usaOrdineAlfabetico = true;
-        super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_NOMI_IN_CODA);
-        super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_NOMI);
-        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
-        super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
-        super.usaRigheRaggruppate = false;
-        super.usaLinkAttivita = true;
-        super.usaBodySottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
+        super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_ATTIVITA_IN_CODA);
+        super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_ATTIVITA);
     }// end of method
-
 
     /**
      * Recupera una lista (array) di records Bio che usano questa istanza di Nome nella property nome
@@ -87,7 +76,11 @@ public class ListaNomi extends Lista{
      */
     @Override
     public List<Bio> listaBio() {
-        return bioService.findAllByNome(nome);
+        if (true) {
+            return bioService.findAllByAttivita23(attivita);
+        } else {
+            return bioService.findAllByAttivita(attivita);
+        }// end of if/else cycle
     }// fine del metodo
 
 
@@ -100,8 +93,8 @@ public class ListaNomi extends Lista{
     }// fine del metodo
 
 
-    public ListaSottopagina getSottopagina() {
-        return listaService.sottopagina(mappa, pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI), "Persone di nome " + nome.nome, titoloParagrafoVuoto, titoloSottoPaginaVuota);
-    }// fine del metodo
+//    public ListaSottopagina getSottopagina() {
+//        return listaService.sottopagina(mappa, pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI), "Persone di nome " + nome.nome, titoloParagrafoVuoto, titoloSottoPaginaVuota);
+//    }// fine del metodo
 
 }// end of class

@@ -111,6 +111,12 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     usaParagrafoSizeCognomi(USA_PARAGRAFO_SIZE_COGNOMI, "Dimensione del paragrafo nel titolo per i cognomi", EAPrefType.bool, true),
     lastElaboraCognomi(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi", EAPrefType.localdatetime, null),
     durataElaboraCognomi(DURATA_ELABORA_COGNOMI, "Durata in secondi dell'elaborazione dei nocognomimi", EAPrefType.integer, 0),
+
+    isParagrafoVuotoAttivitaCoda(IS_PARAGRAFO_VUOTO_ATTIVITA_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza nazionalità specificata nelle liste per attività", EAPrefType.bool, true),
+    usaParagrafoSizeAttivita(USA_PARAGRAFO_SIZE_ATTIVITA, "Dimensione del paragrafo nel titolo della nazionalità nelle liste di attività", EAPrefType.bool, true),
+
+    isParagrafoVuotoNazionalitaCoda(IS_PARAGRAFO_VUOTO_NAZIONALITA_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza attività specificata nelle liste per nazionalità", EAPrefType.bool, true),
+    usaParagrafoSizeNazionalita(USA_PARAGRAFO_SIZE_NAZIONALITA, "Dimensione del paragrafo nel titolo della attività nelle liste di nazionalità", EAPrefType.bool, true),
     ;
 
 

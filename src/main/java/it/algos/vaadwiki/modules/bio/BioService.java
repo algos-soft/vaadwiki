@@ -14,12 +14,12 @@ import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.modules.attivita.Attivita;
-import it.algos.vaadwiki.modules.wiki.WikiService;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.cognome.CognomeService;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
+import it.algos.vaadwiki.modules.wiki.WikiService;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
 import it.algos.wiki.WrapTime;
@@ -453,6 +453,34 @@ public class BioService extends WikiService {
 
 
     /**
+     * Seleziona tutte le biografie delle persone che svolgono una certa attività PRINCIPALE <br>
+     * La lista viene ordinata per attività <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
+     *
+     * @param attivita per la selezione
+     *
+     * @return ordered entities
+     */
+    public List<Bio> findAllByAttivita(Attivita attivita) {
+        return repository.findAllByAttivita(attivita);
+    }// end of method
+
+
+    /**
+     * Seleziona tutte le biografie delle persone che svolgono una certa attività, sia principale sia secondaria sia terziaria <br>
+     * La lista viene ordinata per attività <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
+     *
+     * @param attivita per la selezione
+     *
+     * @return ordered entities
+     */
+    public List<Bio> findAllByAttivita23(Attivita attivita) {
+        return repository.findByAttivitaOrAttivita2OrAttivita3(attivita, attivita, attivita);
+    }// end of method
+
+
+    /**
      * Ordina la lista <br>
      *
      * @return all ordered entities
@@ -593,6 +621,7 @@ public class BioService extends WikiService {
         return repository.countByAttivitaOrAttivita2OrAttivita3(attivita, attivita, attivita);
     }// end of method
 
+
     /**
      * Conta tutte le biografie delle persone con una certa nazionalità <br>
      *
@@ -604,6 +633,7 @@ public class BioService extends WikiService {
         return repository.countAllByNazionalita(nazionalita);
     }// end of method
 
+
     /**
      * Conta tutte le biografie delle persone con un determinato giorno di nascita <br>
      *
@@ -614,6 +644,7 @@ public class BioService extends WikiService {
     public int countByGiornoNascita(Giorno giornoNascita) {
         return repository.countAllByGiornoNascita(giornoNascita);
     }// end of method
+
 
     /**
      * Conta tutte le biografie delle persone con un determinato giorno di morte <br>

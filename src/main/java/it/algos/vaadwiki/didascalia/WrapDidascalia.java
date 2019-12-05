@@ -243,6 +243,17 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
                 chiave = chiaveUno.toLowerCase();
                 chiaveQuattro = getGenere(bio);
                 break;
+            case listaAttivita:
+                didascalia = didascaliaService.getDidascaliaListe(bio);
+                chiave = bio.getNazionalita() != null ? bio.getNazionalita().plurale : "";
+
+                chiaveUno = chiave;
+                chiaveTre = bio.getNazionalita()!=null ? bio.getNazionalita().plurale : bio.getWikiTitle();
+                chiaveDue = text.isValid(chiaveTre) ? chiaveTre.substring(0, 1).toUpperCase() : "";
+                chiaveQuattro = getGenere(bio);
+                break;
+            case listaNazionalita:
+                break;
             case biografie:
                 didascalia = didascaliaService.getDidascaliaBiografie(bio);
                 this.chiave = "";

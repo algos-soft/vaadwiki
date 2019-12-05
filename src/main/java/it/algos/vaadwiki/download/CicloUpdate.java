@@ -93,12 +93,12 @@ public class CicloUpdate extends ABioService {
         if (result.getNumVociCategoria() == 0) {
             message = "Numero errato di pagine sul server";
             log.warn(message);
-            logger.warning("Download - " + message);
+            logger.warn("Download - " + message);
         }// end of if cycle
         if (result.getVociDaCreare() == null) {
             message = "Non riesco a leggere le pagine dal server. Forse non sono loggato come bot";
             log.warn(message);
-            logger.warning("Download - " + message);
+            logger.warn("Download - " + message);
             return result;
         }// end of if cycle
 

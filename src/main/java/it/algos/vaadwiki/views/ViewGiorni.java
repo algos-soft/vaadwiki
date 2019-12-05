@@ -15,7 +15,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  * Time: 05:38
  * <p>
  * Classe astratta per la visualizzazione di una lista di prova di biografie di un particolare giorno <br>
- * Viene invocata da WikiGiornoViewList <br>
+ * Viene invocata da WikiGiornoList <br>
  * Due sottoclassi (concrete) per i Nati e per i Morti <br>
  */
 public abstract class ViewGiorni extends ViewListe {

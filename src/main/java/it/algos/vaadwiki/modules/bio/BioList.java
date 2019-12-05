@@ -362,7 +362,7 @@ public class BioList extends AGridViewList {
         } else {
             message = "Non riesco a leggere le pagine dal server. Forse non sono loggato come bot";
             log.warn(message);
-            logger.warning("Download - " + message);
+            logger.warn("Download - " + message);
         }// end of if/else cycle
 
         updateGrid();

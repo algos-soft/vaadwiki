@@ -18,7 +18,7 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_ANNO_NATI;
  * Time: 22:14
  * <p>
  * Classe per la visualizzazione di una lista di prova di biografie di un particolare anno <br>
- * Viene invocata da WikiAnnoViewList <br>
+ * Viene invocata da WikiAnnoList <br>
  * Lista dei Nati nell'anno <br>
  */
 @Route(value = ROUTE_VIEW_ANNO_NATI)

@@ -21,7 +21,7 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_COGNOMI;
  * Time: 17:19
  * <p>
  * Classe per la visualizzazione di una lista di prova di biografie di un particolare cognome <br>
- * Viene invocata da CognomeViewList <br>
+ * Viene invocata da CognomeList <br>
  * Eliminato header e footer della pagina definitiva su wiki <br>
  * Lista delle biografie di un Cognome <br>
  */

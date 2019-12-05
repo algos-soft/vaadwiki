@@ -201,7 +201,7 @@ public class DidascaliaService extends ABioService {
                     break;
                 case listaAttivita:
                 case listaNazionalita:
-                    didascalia = null;
+                    didascalia = getDidascaliaListe(bio);
                     break;
                 case biografie:
                     didascalia = getDidascaliaBiografie(bio);

@@ -14,7 +14,7 @@ import static it.algos.vaadwiki.application.WikiCost.ROUTE_VIEW_GIORNO_NATI;
  * Time: 22:38
  * <p>
  * Classe per la visualizzazione di una lista di prova di biografie di un particolare giorno <br>
- * Viene invocata da WikiGiornoViewList <br>
+ * Viene invocata da WikiGiornoList <br>
  * Lista dei Nati nel giorno <br>
  */
 @Route(value = ROUTE_VIEW_GIORNO_NATI)

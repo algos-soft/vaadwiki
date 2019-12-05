@@ -27,7 +27,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ListaCognomi extends ListaNomiCognomi {
+public class ListaCognomi extends Lista {
 
 
     //--property
@@ -65,8 +65,15 @@ public class ListaCognomi extends ListaNomiCognomi {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.usaSuddivisioneParagrafi = true;
+        super.usaOrdineAlfabetico = true;
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_COGNOMI);
+        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
+        super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
+        super.usaRigheRaggruppate = false;
+        super.usaLinkAttivita = true;
+        super.usaBodySottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
     }// end of method
 
 

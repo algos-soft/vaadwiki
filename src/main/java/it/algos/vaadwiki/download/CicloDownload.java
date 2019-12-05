@@ -76,17 +76,17 @@ public class CicloDownload extends ABioService {
             if (result.getNumVociCategoria() == 0) {
                 message = "Numero errato di pagine sul server";
                 log.warn(message);
-                logger.warning("Download - " + message);
+                logger.warn("Download - " + message);
             }// end of if cycle
             if (result.getVociDaCreare() == null) {
                 message = "Non riesco a leggere le pagine dal server. Forse non sono loggato come bot";
                 log.warn(message);
-                logger.warning("Download - " + message);
+                logger.warn("Download - " + message);
             }// end of if cycle
             if (result.getNumVociCategoria() != result.getVociDaCreare().size()) {
                 message = "Le pagine della categoria non coincidono: sul server ce ne sono " + text.format(result.getNumVociCategoria()) + " e ne ha recuperate " + text.format(result.getVociDaCreare().size());
                 log.warn(message);
-                logger.warning("Download - " + message);
+                logger.warn("Download - " + message);
             }// end of if cycle
         }// end of if cycle
 
