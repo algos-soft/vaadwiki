@@ -14,6 +14,7 @@ import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
+import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.liste.Lista;
@@ -27,13 +28,16 @@ import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
+import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadwiki.application.WikiCost.SOGLIA_SOTTOPAGINA_NOMI_COGNOMI;
 
 /**
@@ -59,6 +63,9 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
     //--property
     public LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaComplessa;
+
+    //--property
+    public boolean usaParagrafoSize;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -156,6 +163,14 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
+    protected AArrayService array;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
     protected ATextService text;
 
     /**
@@ -193,6 +208,18 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
     protected Lista lista;
 
+    //--property elaborata
+    private List<String> titoloParagrafiDisordinato;
+
+    //--property elaborata
+    private List<String> titoloParagrafiOrdinato;
+
+    //--property elaborata
+    private List<String> titoloParagrafiDefinitivo;
+
+    //--property elaborata
+    private List<Integer> numVociParagrafi;
+
 
     /**
      * Costruisce il testo con tutte le didascalie relative al giorno/anno/nome/cognome considerato <br>
@@ -227,12 +254,17 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
      * Regola le preferenze <br>
      */
     protected void fixPreferenze() {
-        this.numVoci = lista.size;
+        this.numVoci = lista.getNumVoci();
+        this.titoloParagrafiDisordinato = lista.getTitoloParagrafiDisordinato();
+        this.titoloParagrafiOrdinato = lista.getTitoloParagrafiOrdinato();
+        this.titoloParagrafiDefinitivo = lista.getTitoloParagrafiDefinitivo();
         this.usaSuddivisioneParagrafi = lista.usaSuddivisioneParagrafi;
         this.titoloParagrafoVuoto = lista.titoloParagrafoVuoto;
         this.paragrafoVuotoInCoda = lista.paragrafoVuotoInCoda;
+        this.usaParagrafoSize = lista.usaParagrafoSize;
         this.usaRigheRaggruppate = lista.usaRigheRaggruppate;
         this.usaBodySottopagine = lista.usaBodySottopagine;
+        this.numVociParagrafi = lista.getDimParagrafi();
 //        this.mappaSemplice = lista.mappaSemplice;
         this.mappaComplessa = lista.getMappa();
     }// end of method
@@ -258,8 +290,13 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
     protected void addInfoTitolo() {
         this.add(new Label((usaSuddivisioneParagrafi) ? "Con paragrafi" : "Senza paragrafi"));
         if (usaSuddivisioneParagrafi) {
+            this.add(new Label("Lista titoli paragrafi disordinati: " + array.toStringa(titoloParagrafiDisordinato)));
+            this.add(new Label("Lista titoli paragrafi ordinati: " + array.toStringa(titoloParagrafiOrdinato)));
+            this.add(new Label("Lista titoli paragrafi definitivi: " + array.toStringa(titoloParagrafiDefinitivo)));
+            this.add(new Label("Dimensioni dei paragrafi: " + array.toStringa(numVociParagrafi)));
             this.add(new Label("Titolo paragrafo vuoto: " + titoloParagrafoVuoto));
             this.add(new Label("Paragrafo vuoto posizionato " + (paragrafoVuotoInCoda ? "in coda" : "in testa")));
+            this.add(new Label(usaParagrafoSize ? "Usa le dimensioni nel titolo del paragrafo" : "Non usa le dimensioni nel titolo del paragrafo"));
         }// end of if cycle
         this.add(new Label((usaRigheRaggruppate ? "Usa righe raggruppate" : "Usa righe singole")));
         this.add(new Label((usaBodySottopagine ? "Usa sottopagine con taglio a " + pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI) : "Non usa sottopagine")));
@@ -273,15 +310,47 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
         String testoLista = "";
         ListaSottopagina listaSottopagina;
 
-        if (usaBodySottopagine) {
-            listaSottopagina = lista.getSottopagina();
-            testoLista = listaSottopagina.getTesto();
+        if (usaSuddivisioneParagrafi) {
+            testoLista = creaParagrafi();
         } else {
-            testoLista = lista.getTesto();
+            testoLista = lista.getMappaLista().getTesto();
         }// end of if/else cycle
+
+
+//        if (usaBodySottopagine) {
+//            listaSottopagina = lista.getSottopagina();
+//            testoLista = listaSottopagina.getTesto();
+//        } else {
+//            testoLista = lista.getMappaLista().getTesto();
+//        }// end of if/else cycle
 
         area.setValue(testoLista);
     }// end of method
 
+
+    protected String creaParagrafi() {
+        StringBuilder testoLista = new StringBuilder();
+        HashMap<String, HashMap<String, HashMap<String, List<String>>>> mappa = lista.getMappaNew();
+        List<String> listaTxt = null;
+
+        for (String chiaveParagrafo : mappa.keySet()) {
+            listaTxt = mappa.get(chiaveParagrafo).get("").get("");
+            testoLista.append(A_CAPO);
+            testoLista.append(LibBio.setParagrafo(chiaveParagrafo));
+            for (String riga : listaTxt) {
+                testoLista.append(riga);
+                testoLista.append(A_CAPO);
+            }// end of for cycle
+        }// end of for cycle
+
+//        if (usaBodySottopagine) {
+//            listaSottopagina = lista.getSottopagina();
+//            testoLista = listaSottopagina.getTesto();
+//        } else {
+//            testoLista = lista.getMappaLista().getTesto();
+//        }// end of if/else cycle
+
+        return testoLista.toString().trim();
+    }// end of method
 
 }// end of class

@@ -7,7 +7,7 @@ package it.algos.vaadflow.modules.secolo;
  */
 public enum EASecolo {
 
-//    XXac("XX", 2000, 1901, true),
+    //    XXac("XX", 2000, 1901, true),
 //    XIXac("XIX", 1900, 1801, true),
 //    XVIIIac("XVII", 1800, 1701, true),
 //    XVIIac("XVII", 1700, 1601, true),
@@ -50,13 +50,19 @@ public enum EASecolo {
     XXI("XXI", 2001, 2100, false);
 
     public final static String TAG_AC = " a.C.";
+
     private final static String SECOLO_DC = " secolo";
+
     private final static String SECOLO_AC = SECOLO_DC + TAG_AC;
 
     private String titolo;
+
     private int inizio;
+
     private int fine;
+
     private boolean anteCristo;
+
 
     /**
      * Costruttore completo con parametri.
@@ -77,7 +83,8 @@ public enum EASecolo {
         this.setAnteCristo(anteCristo);
     } // fine del costruttore
 
-    public  static EASecolo getSecoloAC(int anno) {
+
+    public static EASecolo getSecoloAC(int anno) {
         EASecolo secolo = null;
         int inizio;
         int fine;
@@ -95,18 +102,8 @@ public enum EASecolo {
         return secolo;
     }// end of method
 
-    public  String getTextSecoloAC(int anno) {
-        String titolo = "";
-        EASecolo secolo = getSecoloAC(anno);
 
-        if (secolo != null) {
-            titolo = secolo.getTitolo();
-        }// end of if cycle
-
-        return titolo;
-    }// end of method
-
-    public static  EASecolo getSecoloDC(int anno) {
+    public static EASecolo getSecoloDC(int anno) {
         EASecolo secolo = null;
         int inizio;
         int fine;
@@ -125,16 +122,39 @@ public enum EASecolo {
     }// end of method
 
 
-    public  String getTextSecoloDC(int anno) {
-        String titolo = "";
-        EASecolo secolo = getSecoloDC(anno);
+    /**
+     * Recupera l'enumeration dal titolo <br>
+     *
+     * @return enumeration trovata
+     */
+    public static EASecolo getSecolo(String titolo) {
+        EASecolo secolo = null;
+
+        for (EASecolo secoloTmp : values()) {
+            if (secoloTmp.titolo.equals(titolo)) {
+                secolo = secoloTmp;
+            }// fine del blocco if
+        }// end of for cycle
+
+        return secolo;
+    }//end of setter method
+
+
+    /**
+     * Recupera l'ordine della enumeration dal titolo <br>
+     *
+     * @return ordinamento
+     */
+    public static int getOrder(String titolo) {
+        int ordine = 0;
+        EASecolo secolo = getSecolo(titolo);
 
         if (secolo != null) {
-            titolo = secolo.getTitolo();
+            ordine = secolo.ordinal() + 1;
         }// end of if cycle
 
-        return titolo;
-    }// end of method
+        return ordine;
+    }//end of setter method
 
 //    public static String getSecolo(String annoTxt) {
 //        String tagAC = 'a.C.'
@@ -162,33 +182,64 @@ public enum EASecolo {
 //    }// fine del metodo
 
 
+    public String getTextSecoloAC(int anno) {
+        String titolo = "";
+        EASecolo secolo = getSecoloAC(anno);
+
+        if (secolo != null) {
+            titolo = secolo.getTitolo();
+        }// end of if cycle
+
+        return titolo;
+    }// end of method
+
+
+    public String getTextSecoloDC(int anno) {
+        String titolo = "";
+        EASecolo secolo = getSecoloDC(anno);
+
+        if (secolo != null) {
+            titolo = secolo.getTitolo();
+        }// end of if cycle
+
+        return titolo;
+    }// end of method
+
+
     public String getTitolo() {
         return titolo;
     }// end of getter method
+
 
     public void setTitolo(String titolo) {
         this.titolo = titolo;
     }//end of setter method
 
+
     public int getInizio() {
         return inizio;
     }// end of getter method
+
 
     public void setInizio(int inizio) {
         this.inizio = inizio;
     }//end of setter method
 
+
     public int getFine() {
         return fine;
     }// end of getter method
+
 
     public void setFine(int fine) {
         this.fine = fine;
     }//end of setter method
 
+
     public boolean isAnteCristo() {
         return anteCristo;
     }// end of getter method
+
 
     public void setAnteCristo(boolean anteCristo) {
         this.anteCristo = anteCristo;

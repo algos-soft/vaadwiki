@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -88,12 +89,6 @@ public abstract class Lista {
     public EADidascalia typeDidascalia;
 
     //--property
-    protected Giorno giorno;
-
-    //--property
-    protected Anno anno;
-
-    //--property
     public int size;
 
     //--property
@@ -122,6 +117,12 @@ public abstract class Lista {
 
     //--property
     public boolean usaOrdineAlfabetico;
+
+    //--property
+    protected Giorno giorno;
+
+    //--property
+    protected Anno anno;
 
     /**
      * Testo finale disponibile <br>
@@ -158,6 +159,8 @@ public abstract class Lista {
      * Le didascalie sono ordinate per cognome <br>
      */
     protected LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
+
+    protected MappaLista mappaLista;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -217,9 +220,6 @@ public abstract class Lista {
         //--Crea una lista di didascalie specifiche
         listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, typeDidascalia);
 
-        //--Ordina la lista di didascalie specifiche
-//        listaDidascalie = this.ordinaListaDidascalie(listaDidascalie);
-
         this.size = listaDidascalie.size();
     }// end of method
 
@@ -237,8 +237,9 @@ public abstract class Lista {
      *
      * @param listaDidascalie da raggruppare
      */
-    protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie,EADidascalia typeDidascalia) {
-        mappa = listaService.creaMappa(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkAttivita, usaOrdineAlfabetico, typeDidascalia);
+    protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia) {
+//        mappa = listaService.creaMappa(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkAttivita, usaOrdineAlfabetico, typeDidascalia);
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeDidascalia, usaSuddivisioneParagrafi, usaRigheRaggruppate, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaParagrafoSize, usaLinkAttivita, usaOrdineAlfabetico);
     }// fine del metodo
 
 
@@ -302,5 +303,41 @@ public abstract class Lista {
     public LinkedHashMap<String, LinkedHashMap<String, List<String>>> getMappa() {
         return mappa;
     }// fine del metodo
+
+
+    public MappaLista getMappaLista() {
+        return mappaLista;
+    }
+
+
+    public HashMap<String, HashMap<String, HashMap<String, List<String>>>> getMappaNew() {
+        return mappaLista.getMappa();
+    }// fine del metodo
+
+
+    public int getNumVoci() {
+        return mappaLista.getNumVoci();
+    }// fine del metodo
+
+
+    public List<String> getTitoloParagrafiDisordinato() {
+        return mappaLista.getTitoloParagrafiDisordinato();
+    }// fine del metodo
+
+
+    public List<String> getTitoloParagrafiOrdinato() {
+        return mappaLista.getTitoloParagrafiOrdinato();
+    }// fine del metodo
+
+
+    public List<String> getTitoloParagrafiDefinitivo() {
+        return mappaLista.getTitoloParagrafiDefinitivo();
+    }// fine del metodo
+
+
+    public List<Integer> getDimParagrafi() {
+        return mappaLista.getDimParagrafi();
+    }// fine del metodo
+
 
 }// end of class

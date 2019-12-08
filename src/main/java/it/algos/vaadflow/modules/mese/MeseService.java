@@ -4,7 +4,6 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.service.AService;
-import it.algos.vaadflow.ui.dialog.AViewDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -83,7 +82,7 @@ public class MeseService extends AService {
         boolean creata = false;
 
         if (isMancaByKeyUnica(eaMese.getLungo())) {
-            AEntity entity = save(newEntity(eaMese.getLungo(), eaMese.getBreve(), eaMese.getGiorni()));
+            AEntity entity = save(newEntity(eaMese.getLungo(), eaMese.getBreve(), eaMese.getGiorni(), eaMese.ordinal() + 1));
             creata = entity != null;
         }// end of if cycle
 
@@ -99,7 +98,7 @@ public class MeseService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Mese newEntity() {
-        return newEntity("", "", 0);
+        return newEntity("", "", 0, 0);
     }// end of method
 
 
@@ -112,14 +111,16 @@ public class MeseService extends AService {
      * @param titoloLungo nome completo (obbligatorio, unico)
      * @param titoloBreve nome abbreviato di tre cifre (obbligatorio, unico)
      * @param giorni      numero di giorni presenti (obbligatorio)
+     * @param ordine      (obbligatorio, unico)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Mese newEntity(String titoloLungo, String titoloBreve, int giorni) {
+    public Mese newEntity(String titoloLungo, String titoloBreve, int giorni, int ordine) {
         return Mese.builderMese()
                 .titoloLungo(text.isValid(titoloLungo) ? titoloLungo : null)
                 .titoloBreve(text.isValid(titoloBreve) ? titoloBreve : null)
                 .giorni(giorni)
+                .ordine(ordine)
                 .build();
     }// end of method
 
@@ -179,7 +180,7 @@ public class MeseService extends AService {
      */
     @Override
     public List<? extends AEntity> findAll() {
-        return (List<Mese>)super.findAll();
+        return (List<Mese>) super.findAll();
     }// end of method
 
 

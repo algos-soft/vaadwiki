@@ -117,8 +117,8 @@ public class ListaService extends ABioService {
 
                 @Override
                 public int compare(WrapDidascalia dida1, WrapDidascalia dida2) {
-                    w1Ord = dida1.getOrdine();
-                    w2Ord = dida2.getOrdine();
+                    w1Ord = dida1.getChiaveOrdinamentoNumerico();
+                    w2Ord = dida2.getChiaveOrdinamentoNumerico();
                     w1ChiaveUno = dida1.getChiave();
                     w2ChiaveUno = dida2.getChiave();
 
@@ -183,7 +183,7 @@ public class ListaService extends ABioService {
             mappa = new LinkedHashMap<>();
 
             for (WrapDidascalia wrap : listaDisordinata) {
-                mappa.put(wrap.chiaveTre, wrap);
+                mappa.put(wrap.chiaveCognome, wrap);
             }// end of for cycle
 
             Set<String> listaChiavi = mappa.keySet();
@@ -367,7 +367,7 @@ public class ListaService extends ABioService {
         ArrayList<WrapDidascalia> listaChiaveDue = null;
 
         for (WrapDidascalia wrap : listaDidascalie) {
-            chiaveUno = wrap.chiaveUno;
+            chiaveUno = wrap.chiaveParagrafo;
 
             if (mappaParagrafi.get(chiaveUno) == null) {
                 listaChiaveDue = new ArrayList<WrapDidascalia>();
@@ -480,7 +480,7 @@ public class ListaService extends ABioService {
 
         //--costruisce una mappa 'disordinata' usando la 'chiaveDue' (A, B, C, ...) (
         for (WrapDidascalia wrap : listaDidascalieDellaChiaveUno) {
-            chiaveDue = wrap.chiaveDue;
+            chiaveDue = wrap.chiaveSottoPagina;
 
             if (mappaWrap.get(chiaveDue) == null) {
                 listaWrap = new ArrayList<>();
@@ -528,7 +528,7 @@ public class ListaService extends ABioService {
             mappa = new LinkedHashMap<>();
 
             for (WrapDidascalia wrap : listaIn) {
-                cognome = wrap.chiaveTre;
+                cognome = wrap.chiaveCognome;
 
                 if (mappa.containsKey(cognome)) {
                     listaTmp = mappa.get(cognome);

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static it.algos.vaadflow.application.FlowCost.VIRGOLA;
+
 /**
  * Project springvaadin
  * Created by Algos
@@ -353,6 +355,17 @@ public class AArrayService extends AbstractService {
     public String toStringaPipe(ArrayList array) {
         return toStringa(array, "|");
     }// end of method
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un separatore virgola
+     * <p>
+     *
+     * @param array lista di valori
+     *
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public String toStringa(List array) {
+        return toStringa(array, VIRGOLA);
+    }// end of method
 
 
     /**
@@ -364,7 +377,7 @@ public class AArrayService extends AbstractService {
      *
      * @return stringa con i singoli valori divisi da un separatore
      */
-    public String toStringa(ArrayList array, String sep) {
+    public String toStringa(List array, String sep) {
         String testo;
         StringBuilder textBuffer = new StringBuilder();
 

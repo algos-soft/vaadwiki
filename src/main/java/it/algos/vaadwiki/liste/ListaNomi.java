@@ -76,6 +76,7 @@ public class ListaNomi extends Lista{
         super.usaRigheRaggruppate = false;
         super.usaLinkAttivita = true;
         super.usaBodySottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
+        super.usaLinkAttivita = pref.isBool(USA_LINK_ATTIVITA);
     }// end of method
 
 

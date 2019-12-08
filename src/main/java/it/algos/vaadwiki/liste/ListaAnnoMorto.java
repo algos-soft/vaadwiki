@@ -66,6 +66,7 @@ public class ListaAnnoMorto extends Lista {
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_ANNI_MORTE);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_ANNI_IN_CODA);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_ANNI);
+        super.usaLinkAttivita = false;
     }// end of method
 
 

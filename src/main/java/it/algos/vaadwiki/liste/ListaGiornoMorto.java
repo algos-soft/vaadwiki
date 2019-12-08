@@ -3,16 +3,13 @@ package it.algos.vaadwiki.liste;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.didascalia.EADidascalia;
-import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
-import static it.algos.vaadwiki.application.WikiCost.USA_PARAGRAFO_SIZE_GIORNI;
 
 /**
  * Project vaadwiki
@@ -67,6 +64,8 @@ public class ListaGiornoMorto extends Lista {
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_GIORNI_MORTE);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_GIORNI);
+        super.usaLinkAttivita = false;
+        super.usaSuddivisioneParagrafi = true; //@todo PROVVISORIO IN DEBUG
     }// end of method
 
 
@@ -80,7 +79,6 @@ public class ListaGiornoMorto extends Lista {
     public List<Bio> listaBio() {
         return bioService.findAllByGiornoMorte(giorno);
     }// fine del metodo
-
 
 
 }// end of class

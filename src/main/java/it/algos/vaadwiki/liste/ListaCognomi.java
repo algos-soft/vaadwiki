@@ -72,8 +72,8 @@ public class ListaCognomi extends Lista {
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
         super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
         super.usaRigheRaggruppate = false;
-        super.usaLinkAttivita = true;
         super.usaBodySottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
+        super.usaLinkAttivita = pref.isBool(USA_LINK_ATTIVITA);
     }// end of method
 
 
