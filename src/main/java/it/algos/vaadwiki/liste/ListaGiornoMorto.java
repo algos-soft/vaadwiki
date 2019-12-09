@@ -63,8 +63,8 @@ public class ListaGiornoMorto extends Lista {
         super.usaRigheRaggruppate = pref.isBool(USA_RIGHE_RAGGRUPPATE_GIORNI);
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_GIORNI_MORTE);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
+        super.usaLinkParagrafo = pref.isBool(USA_LINK_PARAGRAFO_GIORNI);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_GIORNI);
-        super.usaLinkParagrafo = false;
     }// end of method
 
 

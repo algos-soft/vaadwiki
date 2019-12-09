@@ -69,11 +69,10 @@ public class ListaNomi extends Lista{
         super.typeDidascalia = EADidascalia.listaNomi;
         super.usaSuddivisioneParagrafi = true;
         super.usaRigheRaggruppate = false;
-//        super.usaOrdineAlfabetico = true;
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_NOMI_IN_CODA);
-        super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_NOMI);
         super.usaLinkParagrafo = pref.isBool(USA_LINK_PARAGRAFO_NOMI);
+        super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_NOMI);
         super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
         super.usaBodySottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
     }// end of method

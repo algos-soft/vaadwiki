@@ -54,6 +54,7 @@ public class MappaLista {
      */
     @Autowired
     private SecoloService secoloService;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
@@ -83,7 +84,7 @@ public class MappaLista {
     private boolean usaParagrafoSize;
 
     //--parametro in ingresso
-    private boolean usaLinkAttivita;
+    private boolean usaLinkParagrafo;
 
     //--parametro in ingresso
     private boolean usaOrdineAlfabetico;
@@ -143,7 +144,7 @@ public class MappaLista {
             String titoloParagrafoVuoto,
             boolean paragrafoVuotoInCoda,
             boolean usaParagrafoSize,
-            boolean usaLinkAttivita,
+            boolean usaLinkParagrafo,
             boolean usaOrdineAlfabetico) {
         this.listaDidascalie = listaDidascalie;
         this.typeDidascalia = typeDidascalia;
@@ -152,7 +153,7 @@ public class MappaLista {
         this.titoloParagrafoVuoto = titoloParagrafoVuoto;
         this.paragrafoVuotoInCoda = paragrafoVuotoInCoda;
         this.usaParagrafoSize = usaParagrafoSize;
-        this.usaLinkAttivita = usaLinkAttivita;
+        this.usaLinkParagrafo = usaLinkParagrafo;
         this.usaOrdineAlfabetico = usaOrdineAlfabetico;
     }// end of constructor
 
@@ -340,9 +341,12 @@ public class MappaLista {
         if (text.isValid(titoloParagrafoVuoto) && titolo.equals(VUOTA)) {
             titoloDefinitivo = titoloParagrafoVuoto;
         } else {
-            titoloDefinitivo = LibWiki.setQuadre(titolo);
+            if (usaLinkParagrafo) {
+                titoloDefinitivo = LibWiki.setQuadre(titolo);
+            } else {
+                titoloDefinitivo = titolo;
+            }// end of if/else cycle
         }// end of if/else cycle
-
 
         if (usaParagrafoSize && numVociParagrafi != null && numVociParagrafi.size() > 0) {
             if (numVociParagrafi.get(titolo) > 0) {
@@ -377,7 +381,11 @@ public class MappaLista {
                             for (String chiaveSottoSottoPagina : mappaSottoPagina.keySet()) {
                                 listaDisordinata = mappaSottoPagina.get(chiaveSottoSottoPagina);
                                 if (listaDisordinata != null && listaDisordinata.size() > 0) {
-                                    numVociParagrafi.put(chiaveParagrafo, listaDisordinata.size());
+                                    if (numVociParagrafi.get(chiaveParagrafo) != null) {
+                                        numVociParagrafi.put(chiaveParagrafo, numVociParagrafi.get(chiaveParagrafo) + listaDisordinata.size());
+                                    } else {
+                                        numVociParagrafi.put(chiaveParagrafo, listaDisordinata.size());
+                                    }// end of if/else cycle
                                     numVociTotali += listaDisordinata.size();
                                 }// end of if cycle
                             }// end of for cycle

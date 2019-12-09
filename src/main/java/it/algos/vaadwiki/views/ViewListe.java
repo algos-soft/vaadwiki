@@ -33,11 +33,13 @@ import it.algos.vaadwiki.upload.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.SOGLIA_SOTTOPAGINA_NOMI_COGNOMI;
 
 /**
@@ -199,6 +201,9 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
     protected boolean paragrafoVuotoInCoda;
 
     //--property
+    protected boolean usaLinkParagrafo;
+
+    //--property
     protected boolean usaBodySottopagine;
 
     protected TextArea area = new TextArea();
@@ -261,6 +266,7 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
         this.usaSuddivisioneParagrafi = lista.usaSuddivisioneParagrafi;
         this.titoloParagrafoVuoto = lista.titoloParagrafoVuoto;
         this.paragrafoVuotoInCoda = lista.paragrafoVuotoInCoda;
+        this.usaLinkParagrafo = lista.usaLinkParagrafo;
         this.usaParagrafoSize = lista.usaParagrafoSize;
         this.usaRigheRaggruppate = lista.usaRigheRaggruppate;
         this.usaBodySottopagine = lista.usaBodySottopagine;
@@ -290,12 +296,13 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
     protected void addInfoTitolo() {
         this.add(new Label((usaSuddivisioneParagrafi) ? "Con paragrafi" : "Senza paragrafi"));
         if (usaSuddivisioneParagrafi) {
-            this.add(new Label("Lista titoli paragrafi disordinati: " + array.toStringa(titoloParagrafiDisordinato)));
-            this.add(new Label("Lista titoli paragrafi ordinati: " + array.toStringa(titoloParagrafiOrdinato)));
-            this.add(new Label("Lista titoli paragrafi definitivi: " + array.toStringa(titoloParagrafiDefinitivo)));
+            this.add(new Label("Lista titoli paragrafi disordinati: " + array.toStringaSpazio(fixVuoto(titoloParagrafiDisordinato))));
+            this.add(new Label("Lista titoli paragrafi ordinati: " + array.toStringaSpazio(fixVuoto(titoloParagrafiOrdinato))));
+            this.add(new Label("Lista titoli paragrafi definitivi: " + array.toStringaSpazio(titoloParagrafiDefinitivo)));
             this.add(new Label("Dimensioni dei paragrafi: " + array.toStringa(numVociParagrafi)));
             this.add(new Label("Titolo paragrafo vuoto: " + titoloParagrafoVuoto));
             this.add(new Label("Paragrafo vuoto posizionato " + (paragrafoVuotoInCoda ? "in coda" : "in testa")));
+            this.add(new Label(usaLinkParagrafo ? "Usa un wikilink ad una pagina di wikipedia nel titolo del paragrafo" : "Non usa un wikilink nel titolo del paragrafo"));
             this.add(new Label(usaParagrafoSize ? "Usa le dimensioni nel titolo del paragrafo" : "Non usa le dimensioni nel titolo del paragrafo"));
         }// end of if cycle
         this.add(new Label((usaRigheRaggruppate ? "Usa righe raggruppate" : "Usa righe singole")));
@@ -330,27 +337,52 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
     protected String creaParagrafi() {
         StringBuilder testoLista = new StringBuilder();
-        HashMap<String, HashMap<String, HashMap<String, List<String>>>> mappa = lista.getMappaNew();
+        HashMap<String, HashMap<String, HashMap<String, List<String>>>> mappaUno = lista.getMappaNew();
+        HashMap<String, HashMap<String, List<String>>> mappaDue;
+        HashMap<String, List<String>> mappaTre;
         List<String> listaTxt = null;
 
-        for (String chiaveParagrafo : mappa.keySet()) {
-            listaTxt = mappa.get(chiaveParagrafo).get("").get("");
+        for (String chiaveParagrafo : mappaUno.keySet()) {
+            listaTxt = new ArrayList<>();
             testoLista.append(A_CAPO);
             testoLista.append(LibBio.setParagrafo(chiaveParagrafo));
+            mappaDue = mappaUno.get(chiaveParagrafo);
+            if (mappaDue != null && mappaDue.size() > 0) {
+                for (String chiaveDue : mappaDue.keySet()) {
+                    mappaTre = mappaDue.get(chiaveDue);
+                    if (mappaTre != null && mappaTre.size() > 0) {
+                        for (String chiaveTre : mappaTre.keySet()) {
+                            listaTxt.addAll(mappaTre.get(chiaveTre));
+                        }// end of for cycle
+                    }// end of if cycle
+                }// end of for cycle
+            }// end of if cycle
             for (String riga : listaTxt) {
                 testoLista.append(riga);
                 testoLista.append(A_CAPO);
             }// end of for cycle
         }// end of for cycle
 
-//        if (usaBodySottopagine) {
-//            listaSottopagina = lista.getSottopagina();
-//            testoLista = listaSottopagina.getTesto();
-//        } else {
-//            testoLista = lista.getMappaLista().getTesto();
-//        }// end of if/else cycle
-
         return testoLista.toString().trim();
+    }// end of method
+
+
+    /**
+     * Sostituisce una stringa vuota con un testo 'visibile' <br>
+     */
+    private List<String> fixVuoto(List<String> listaIn) {
+        List<String> listaOut = new ArrayList<>();
+        String tag = "Vuoto";
+
+        for (String stringa : listaIn) {
+            if (stringa.equals(VUOTA)) {
+                listaOut.add(tag);
+            } else {
+                listaOut.add(stringa);
+            }// end of if/else cycle
+        }// end of for cycle
+
+        return listaOut;
     }// end of method
 
 }// end of class
