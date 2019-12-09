@@ -54,7 +54,6 @@ public class ListaNomi extends Lista{
      */
     public ListaNomi(Nome nome) {
         this.nome = nome;
-        super.typeDidascalia = EADidascalia.listaNomi;
     }// end of constructor
 
 
@@ -67,16 +66,16 @@ public class ListaNomi extends Lista{
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.typeDidascalia = EADidascalia.listaNomi;
         super.usaSuddivisioneParagrafi = true;
-        super.usaOrdineAlfabetico = true;
+        super.usaRigheRaggruppate = false;
+//        super.usaOrdineAlfabetico = true;
+        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_NOMI_IN_CODA);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_NOMI);
-        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
+        super.usaLinkParagrafo = pref.isBool(USA_LINK_PARAGRAFO_NOMI);
         super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
-        super.usaRigheRaggruppate = false;
-        super.usaLinkAttivita = true;
         super.usaBodySottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
-        super.usaLinkAttivita = pref.isBool(USA_LINK_ATTIVITA);
     }// end of method
 
 

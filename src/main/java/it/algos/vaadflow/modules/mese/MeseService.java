@@ -3,6 +3,7 @@ package it.algos.vaadflow.modules.mese;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.secolo.EASecolo;
 import it.algos.vaadflow.service.AService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_MES;
@@ -202,6 +206,37 @@ public class MeseService extends AService {
         }// end of for cycle
 
         return numRec;
+    }// end of method
+
+    /**
+     * Riordina una lista di valori <br>
+     *
+     * @return numero di elementi creato
+     */
+    public List<String> riordina(List<String> listaDisordinata) {
+        List<String> listaOrdinata = null;
+        List<Integer> keyList = null;
+        HashMap<Integer, String> mappa;
+        int key;
+
+        if (listaDisordinata != null && listaDisordinata.size() > 0) {
+            mappa = new LinkedHashMap();
+            keyList = new ArrayList<>();
+
+            for (String titolo : listaDisordinata) {
+                key = EAMese.getOrder(titolo);
+                keyList.add(key);
+                mappa.put(key, titolo);
+            }// end of for cycle
+
+            keyList = array.sort(keyList);
+            listaOrdinata = new ArrayList<>();
+            for (int pos : keyList) {
+                listaOrdinata.add(mappa.get(pos));
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaOrdinata;
     }// end of method
 
 }// end of class

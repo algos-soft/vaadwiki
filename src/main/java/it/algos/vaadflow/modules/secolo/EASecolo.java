@@ -156,31 +156,6 @@ public enum EASecolo {
         return ordine;
     }//end of setter method
 
-//    public static String getSecolo(String annoTxt) {
-//        String tagAC = 'a.C.'
-//        boolean dopoCristo = true
-//        int anno
-//
-//        if (annoTxt.contains(tagAC)) {
-//            annoTxt = LibTesto.levaCoda(annoTxt, tagAC)
-//            dopoCristo = false
-//        }// fine del blocco if
-//        try { // prova ad eseguire il codice
-//            anno = Integer.decode(annoTxt)
-//        } catch (Exception unErrore) { // intercetta l'errore
-//        }// fine del blocco try-catch
-//
-//        if (anno) {
-//            if (dopoCristo) {
-//                return getSecoloDC(anno)
-//            } else {
-//                return getSecoloAC(anno)
-//            }// fine del blocco if-else
-//        } else {
-//            return ''
-//        }// fine del blocco if-else
-//    }// fine del metodo
-
 
     public String getTextSecoloAC(int anno) {
         String titolo = "";

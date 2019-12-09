@@ -7,11 +7,9 @@ import it.algos.vaadwiki.modules.bio.Bio;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
-import static it.algos.vaadwiki.application.WikiCost.USA_PARAGRAFO_SIZE_ANNI;
 
 /**
  * Project vaadwiki
@@ -66,7 +64,8 @@ public class ListaAnnoMorto extends Lista {
         super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_ANNI_MORTE);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_ANNI_IN_CODA);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_ANNI);
-        super.usaLinkAttivita = false;
+        super.usaLinkParagrafo = false;
+        super.usaSuddivisioneParagrafi = true;
     }// end of method
 
 

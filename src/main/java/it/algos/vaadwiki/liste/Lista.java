@@ -110,7 +110,7 @@ public abstract class Lista {
     public boolean usaParagrafoSize;
 
     //--property
-    public boolean usaLinkAttivita;
+    public boolean usaLinkParagrafo;
 
     //--property
     public boolean usaBodySottopagine;
@@ -202,7 +202,7 @@ public abstract class Lista {
         this.titoloSottoPaginaVuota = "";
         this.paragrafoVuotoInCoda = true;
         this.usaParagrafoSize = false;
-        this.usaLinkAttivita = false;
+        this.usaLinkParagrafo = false;
         this.usaBodySottopagine = false;
         this.usaOrdineAlfabetico = false;
     }// end of method
@@ -239,7 +239,7 @@ public abstract class Lista {
      */
     protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia) {
 //        mappa = listaService.creaMappa(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkAttivita, usaOrdineAlfabetico, typeDidascalia);
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeDidascalia, usaSuddivisioneParagrafi, usaRigheRaggruppate, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaParagrafoSize, usaLinkAttivita, usaOrdineAlfabetico);
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeDidascalia, usaSuddivisioneParagrafi, usaRigheRaggruppate, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaParagrafoSize, usaLinkParagrafo, usaOrdineAlfabetico);
     }// fine del metodo
 
 

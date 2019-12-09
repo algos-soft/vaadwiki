@@ -1,10 +1,10 @@
 package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.modules.mese.MeseService;
 import it.algos.vaadflow.modules.secolo.SecoloService;
 import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ATextService;
-import it.algos.vaadwiki.application.WikiCost;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.wiki.LibWiki;
@@ -21,6 +21,7 @@ import java.util.List;
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.AST;
+import static it.algos.vaadwiki.application.WikiCost.TAG_SEP;
 
 /**
  * Project vaadwiki
@@ -53,6 +54,12 @@ public class MappaLista {
      */
     @Autowired
     private SecoloService secoloService;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    private MeseService meseService;
 
     //--parametro in ingresso
     private List<WrapDidascalia> listaDidascalie;
@@ -282,7 +289,24 @@ public class MappaLista {
 
         if (titoloParagrafiDisordinato != null && titoloParagrafiDisordinato.size() > 0) {
             titoloParagrafiOrdinato = new ArrayList<>();
-            titoloParagrafiOrdinato = secoloService.riordina(titoloParagrafiDisordinato);//@todo ATTENZIONE vale solo per i giorni
+            switch (typeDidascalia) {
+                case giornoNato:
+                case giornoMorto:
+                    titoloParagrafiOrdinato = secoloService.riordina(titoloParagrafiDisordinato);
+                    break;
+                case annoNato:
+                case annoMorto:
+                    titoloParagrafiOrdinato = meseService.riordina(titoloParagrafiDisordinato);
+                    break;
+                case listaNomi:
+                case listaCognomi:
+                    titoloParagrafiOrdinato = titoloParagrafiDisordinato;
+                    titoloParagrafiOrdinato = array.sort(titoloParagrafiOrdinato);
+                    break;
+                default:
+                    titoloParagrafiOrdinato = titoloParagrafiDisordinato;
+                    break;
+            } // end of switch statement
         }// end of if cycle
 
         if (paragrafoVuotoInCoda && titoloParagrafiOrdinato != null) {
@@ -418,7 +442,7 @@ public class MappaLista {
         List<WrapDidascalia> listaOrdinataWrap;
         HashMap<String, HashMap<String, List<String>>> mappaParagrafoTxt;
         HashMap<String, List<String>> mappaSottoPaginaTxt;
-        List<String> listaTxt = null;
+        List<String> listaTxt;
 
         if (mappaWrapTre != null) {
             mappa = new LinkedHashMap<>();
@@ -432,13 +456,6 @@ public class MappaLista {
                         if (mappaSottoPaginaWrap != null && mappaSottoPaginaWrap.size() > 0) {
                             for (String chiaveSottoSottoPagina : mappaSottoPaginaWrap.keySet()) {
                                 listaOrdinataWrap = mappaSottoPaginaWrap.get(chiaveSottoSottoPagina);
-//                                listaTxt = new ArrayList<>();
-//                                if (listaOrdinataWrap != null && listaOrdinataWrap.size() > 0) {
-//                                    for (WrapDidascalia wrap : listaOrdinataWrap) {
-//                                        testoRiga = wrap.getTestoCon();
-//                                        listaTxt.add(testoRiga);
-//                                    }// end of for cycle
-//                                }// end of if cycle
                                 listaTxt = creaRighe(listaOrdinataWrap);
                                 mappaSottoPaginaTxt.put(chiaveSottoSottoPagina, listaTxt);
                             }// end of for cycle
@@ -455,45 +472,142 @@ public class MappaLista {
 
     private List<String> creaRighe(List<WrapDidascalia> listaWrapDidascalie) {
         List<String> listaTxt = null;
-        String testoRiga = VUOTA;
-        String titoloParagrafo = "";
-        int size = 0;
-        String iniRiga = VUOTA;
-        WrapDidascalia wrap;
+        LinkedHashMap<String, Integer> mappa;
 
         if (array.isValid(listaWrapDidascalie)) {
             listaTxt = new ArrayList<>();
             if (listaWrapDidascalie.size() == 1) {
-                wrap = listaWrapDidascalie.get(0);
-                testoRiga = AST;
-                if (text.isValid(wrap.chiaveRiga)) {
-                    testoRiga += LibWiki.setQuadre(wrap.chiaveRiga);
-                    testoRiga += WikiCost.TAG_SEP;
-                }// end of if cycle
-                testoRiga += wrap.getTestoSenza();
-                listaTxt.add(testoRiga);
+                creaRigaConChiave(listaTxt, listaWrapDidascalie.get(0));
             } else {
-//                if (text.isValid(keyDue)) {
-//                    testo.append(A_CAPO);
-//                    testo.append(AST);
-//                    testo.append(LibWiki.setQuadre(keyDue));
-//                    for (String stringa : listaWrapDidascalie) {
-//                        testo.append(A_CAPO);
-//                        testo.append(AST);
-//                        testo.append(AST);
-//                        testo.append(stringa);
-//                    }// end of for cycle
-//                } else {
-//                    for (String stringa : listaWrapDidascalie) {
-//                        testo.append(A_CAPO);
-//                        testo.append(AST);
-//                        testo.append(stringa);
-//                    }// end of for cycle
-//                }// end of if/else cycle
+                if (usaRigheRaggruppate) {
+                    mappa = creaMappaChiavi(listaWrapDidascalie);
+                    for (String key : mappa.keySet()) {
+                        if (mappa.get(key) == 1) {
+                            creaRigaConChiave(listaTxt, listaWrapDidascalie, key);
+                        } else {
+                            creaRigheMultiple(listaTxt, listaWrapDidascalie, key);
+                        }// end of if/else cycle
+                    }// end of for cycle
+                } else {
+                    for (WrapDidascalia wrap : listaWrapDidascalie) {
+                        creaRigaConChiave(listaTxt, wrap);
+                    }// end of for cycle
+                }// end of if/else cycle
             }// end of if/else cycle
         }// end of if cycle
 
         return listaTxt;
+    }// fine del metodo
+
+
+    /**
+     * Conta quante righe ci sono per ogni chiave <br>
+     */
+    private LinkedHashMap<String, Integer> creaMappaChiavi(List<WrapDidascalia> listaWrapDidascalie) {
+        LinkedHashMap<String, Integer> mappa = null;
+        String key;
+
+        if (listaWrapDidascalie != null) {
+            mappa = new LinkedHashMap<>();
+            for (WrapDidascalia wrap : listaWrapDidascalie) {
+                key = wrap.chiaveRiga;
+                if (mappa.containsKey(key)) {
+                    mappa.put(key, mappa.get(key) + 1);
+                } else {
+                    mappa.put(key, 1);
+                }// end of if/else cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return mappa;
+    }// fine del metodo
+
+
+    /**
+     * Riga singola con la chiave iniziale <br>
+     * Ne esiste solo una con questa chiave <br>
+     */
+    private void creaRigaConChiave(List<String> listaTxt, WrapDidascalia wrap) {
+        String testoRiga = VUOTA;
+
+        testoRiga += AST;
+        if (text.isValid(wrap.chiaveRiga)) {
+            testoRiga += LibWiki.setQuadre(wrap.chiaveRiga);
+            testoRiga += TAG_SEP;
+        }// end of if cycle
+        testoRiga += wrap.getTestoSenza();
+
+        listaTxt.add(testoRiga);
+    }// fine del metodo
+
+
+    /**
+     * Riga singola senza la chiave iniziale <br>
+     * Ne esistono più di una con la stessa chiave <br>
+     * La chiave viene scritta (da sola) nella riga iniziale del gruppo con la stessa chiave <br>
+     */
+    private void creaRigaSenzaChiave(List<String> listaTxt, WrapDidascalia wrap) {
+        String testoRiga = VUOTA;
+
+        testoRiga += AST;
+        testoRiga += AST;
+        testoRiga += wrap.getTestoSenza();
+
+        listaTxt.add(testoRiga);
+    }// fine del metodo
+
+
+    /**
+     * Riga singola con la chiave iniziale <br>
+     * Ne esiste solo una con questa chiave <br>
+     */
+    private void creaRigaConChiave(List<String> listaTxt, List<WrapDidascalia> listaWrapDidascalie, String key) {
+        List<WrapDidascalia> listaWrap = selezionaListaWrap(listaWrapDidascalie, key);
+
+        if (listaWrap != null && listaWrap.size() == 1) {
+            creaRigaConChiave(listaTxt, listaWrap.get(0));
+        }// end of if cycle
+    }// fine del metodo
+
+
+    /**
+     * Gruppo di righe con la stessa chiave <br>
+     * Nella prima riga la chiave, da sola <br>
+     * Nelle righe successive, le singole didascalie senza la chiave <br>
+     */
+    private void creaRigheMultiple(List<String> listaTxt, List<WrapDidascalia> listaWrapDidascalie, String key) {
+        String testoRiga = VUOTA;
+        List<WrapDidascalia> listaWrap = selezionaListaWrap(listaWrapDidascalie, key);
+
+        testoRiga += AST;
+        testoRiga += LibWiki.setQuadre(key);
+        listaTxt.add(testoRiga);
+
+        if (listaWrap != null && listaWrap.size() > 1) {
+            for (WrapDidascalia wrap : selezionaListaWrap(listaWrapDidascalie, key)) {
+                creaRigaSenzaChiave(listaTxt, wrap);
+            }// end of for cycle
+        }// end of if cycle
+
+    }// fine del metodo
+
+
+    /**
+     * Seleziona una lista di WrapDidascalia con la chiave richiesta <br>
+     */
+    private List<WrapDidascalia> selezionaListaWrap(List<WrapDidascalia> listaWrapDidascalie, String key) {
+        List<WrapDidascalia> listaWrap = null;
+
+        if (listaWrapDidascalie != null && listaWrapDidascalie.size() > 0 && text.isValid(key)) {
+            listaWrap = new ArrayList<>();
+            for (WrapDidascalia wrap : listaWrapDidascalie) {
+                if (wrap.chiaveRiga.equals(key)) {
+                    listaWrap.add(wrap);
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaWrap;
     }// fine del metodo
 
 

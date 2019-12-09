@@ -354,7 +354,12 @@ public class WikiCost {
 
     public final static String IS_PARAGRAFO_VUOTO_NAZIONALITA_IN_CODA = "isParagrafoVuotoNazionalitaInCoda";
 
-    public final static String USA_LINK_ATTIVITA = "usaLinkAttivita";
+    public final static String USA_LINK_PARAGRAFO_GIORNI = "usaLinkParagrafoGiorni";
+
+    public final static String USA_LINK_PARAGRAFO_ANNI = "usaLinkParagrafoAnni";
+
+    public final static String USA_LINK_PARAGRAFO_NOMI = "usaLinkParagrafoNomi";
+    public final static String USA_LINK_PARAGRAFO_COGNOMI = "usaLinkParagrafoCognomi";
 
     public final static String USA_LINK_PROFESSIONE = "usaLinkProfessione";
 
@@ -363,6 +368,7 @@ public class WikiCost {
     public final static String USA_PARAGRAFO_SIZE_ANNI = "usaParagrafoSizeAnni";
 
     public final static String USA_PARAGRAFO_SIZE_NOMI = "usaParagrafoSizeNomi";
+
 
     public final static String USA_PARAGRAFO_SIZE_COGNOMI = "usaParagrafoSizeCognomi";
 

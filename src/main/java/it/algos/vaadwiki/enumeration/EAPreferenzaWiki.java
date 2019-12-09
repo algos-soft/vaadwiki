@@ -78,6 +78,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     paragrafoVuotoGiorniMorte(TAG_PARAGRAFO_VUOTO_GIORNI_MORTE, "Titolo del paragrafo per le biografie senza anno di morte specificato", EAPrefType.string, "Senza anno di morte"),
     usaForcetocGiorni(USA_FORCETOC_GIORNI, "Usa l'indice dei paragrafi nelle liste dei giorni", EAPrefType.bool, false),
     isParagrafoVuotoGiorniCoda(IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza anno specificato", EAPrefType.bool, true),
+    usaLinkParagrafoGiorni(USA_LINK_PARAGRAFO_GIORNI, "Titolo del paragrafo col wikilink alla pagina del mese", EAPrefType.bool, true),
     usaParagrafoSizeGiorni(USA_PARAGRAFO_SIZE_GIORNI, "Dimensione del paragrafo nei titoli dei mesi per i giorni", EAPrefType.bool, true),
     usaRigheRaggruppateGiorni(USA_RIGHE_RAGGRUPPATE_GIORNI, "Usa righe raggruppate per anno nella liste dei giorni", EAPrefType.bool, true),
 
@@ -86,6 +87,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     paragrafoVuotoAnniMorte(TAG_PARAGRAFO_VUOTO_ANNI_MORTE, "Titolo del paragrafo per le biografie senza giorno di morte specificato", EAPrefType.string, "Senza giorno di morte"),
     usaForcetocAnni(USA_FORCETOC_ANNI, "Usa l'indice dei paragrafi nelle liste degli anni", EAPrefType.bool, false),
     isParagrafoVuotoAnniCoda(IS_PARAGRAFO_VUOTO_ANNI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza giorno specificato", EAPrefType.bool, true),
+    usaLinkParagrafoAnni(USA_LINK_PARAGRAFO_ANNI, "Titolo del paragrafo col wikilink alla pagina del secolo", EAPrefType.bool, true),
     usaParagrafoSizeAnni(USA_PARAGRAFO_SIZE_ANNI, "Dimensione del paragrafo nei titoli dei secoli per gli anni", EAPrefType.bool, true),
     usaRigheRaggruppateAnni(USA_RIGHE_RAGGRUPPATE_ANNI, "Usa righe raggruppate per giorno nella liste degli anni", EAPrefType.bool, true),
     sogliaSottopaginaGiorniAnni(SOGLIA_SOTTOPAGINA_GIORNI_ANNI, "Soglia per sottopaginare i paragrafi di giorni ed anni", EAPrefType.integer, 50),
@@ -100,6 +102,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     sogliaNomiWiki(SOGLIA_NOMI_PAGINA_WIKI, "Soglia minima per creare la pagina di un nome sul server wiki", EAPrefType.integer, 50),
     usaForcetocNomi(USA_FORCETOC_NOMI, "Usa l'indice dei paragrafi nelle liste dei nomi", EAPrefType.bool, true),
     isParagrafoVuotoNomiCoda(IS_PARAGRAFO_VUOTO_NOMI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza attività specificata nelle liste dei nomi", EAPrefType.bool, true),
+    usaLinkParagrafoNomi(USA_LINK_PARAGRAFO_NOMI, "Titolo del paragrafo col wikilink alla pagina della attività, nelle liste di nomi", EAPrefType.bool, true),
     usaParagrafoSizeNomi(USA_PARAGRAFO_SIZE_NOMI, "Numero delle voci contenute nel paragrafo per i nomi", EAPrefType.bool, true),
     lastElaboraNomi(LAST_ELABORA_NOME, "Ultima elaborazione dei nomi", EAPrefType.localdatetime, null),
     durataElaboraNomi(DURATA_ELABORA_NOMI, "Durata in secondi dell'elaborazione dei nomi", EAPrefType.integer, 0),
@@ -108,11 +111,11 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     sogliaCognomiWiki(SOGLIA_COGNOMI_PAGINA_WIKI, "Soglia minima per creare la pagina di un cognome sul server wiki", EAPrefType.integer, 50),
     usaForcetocCognomi(USA_FORCETOC_COGNOMI, "Usa l'indice dei paragrafi nelle liste dei cognomi", EAPrefType.bool, true),
     isParagrafoVuotoCognomiCoda(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza attività specificata nelle liste dei cognomi", EAPrefType.bool, true),
+    usaLinkParagrafoCognomi(USA_LINK_PARAGRAFO_COGNOMI, "Titolo del paragrafo col wikilink alla pagina della attività, nelle liste di cognomi", EAPrefType.bool, true),
     usaParagrafoSizeCognomi(USA_PARAGRAFO_SIZE_COGNOMI, "Dimensione del paragrafo nel titolo per i cognomi", EAPrefType.bool, true),
     lastElaboraCognomi(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi", EAPrefType.localdatetime, null),
     durataElaboraCognomi(DURATA_ELABORA_COGNOMI, "Durata in secondi dell'elaborazione dei nocognomimi", EAPrefType.integer, 0),
 
-    usaLinkProfessione(USA_LINK_ATTIVITA, "Titolo del paragrafo col wikilink alla professione nelle liste di nomi, cognomi e nazionalità", EAPrefType.bool, true),
     isParagrafoVuotoAttivitaCoda(IS_PARAGRAFO_VUOTO_ATTIVITA_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza nazionalità specificata nelle liste per attività", EAPrefType.bool, true),
     usaParagrafoSizeAttivita(USA_PARAGRAFO_SIZE_ATTIVITA, "Dimensione del paragrafo nel titolo della nazionalità nelle liste di attività", EAPrefType.bool, true),
 
