@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.liste;
 
+import com.google.common.collect.Lists;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.mese.MeseService;
 import it.algos.vaadflow.modules.secolo.SecoloService;
@@ -317,15 +318,58 @@ public class MappaLista {
             }// end of if cycle
         }// end of if cycle
 
-        if (mappaWrapTre != null && titoloParagrafiOrdinato != null) {
-            titoloParagrafiDefinitivo = new ArrayList<>();
-            numVociParagrafiDefinitivi = new LinkedHashMap<>();
-            mappa = mappaWrapTre;
-            mappaWrapTre = new LinkedHashMap<>();
+        titoloParagrafiDefinitivo = new ArrayList<>();
+        numVociParagrafiDefinitivi = new LinkedHashMap<>();
+        mappaWrapTre = ordinaMappaUno(mappaWrapTre, titoloParagrafiOrdinato);
+
+    }// fine del metodo
+
+
+    private LinkedHashMap<String, HashMap<String, HashMap<String, List<WrapDidascalia>>>> ordinaMappaUno(HashMap<String, HashMap<String, HashMap<String, List<WrapDidascalia>>>> mappaDisordinata, List<String> titoloParagrafiOrdinato) {
+        LinkedHashMap<String, HashMap<String, HashMap<String, List<WrapDidascalia>>>> mappaOut = null;
+
+        if (mappaDisordinata != null && titoloParagrafiOrdinato != null) {
+            mappaOut = new LinkedHashMap<>();
             for (String titolo : titoloParagrafiOrdinato) {
-                mappaWrapTre.put(titoloDefinitivoParagrafo(titolo), mappa.get(titolo));
+                mappaOut.put(titoloDefinitivoParagrafo(titolo), mappaDisordinata.get(titolo));
             }// end of for cycle
         }// end of if cycle
+
+        return mappaOut;
+    }// fine del metodo
+
+
+    private LinkedHashMap<String, HashMap<String, List<WrapDidascalia>>> ordinaMappaDue(HashMap<String, HashMap<String, List<WrapDidascalia>>> mappaDisordinata) {
+        LinkedHashMap<String, HashMap<String, List<WrapDidascalia>>> mappaOut = null;
+        List<String> listaChiavi = null;
+
+        if (mappaDisordinata != null && mappaDisordinata.size() > 0) {
+            mappaOut = new LinkedHashMap<>();
+            listaChiavi = Lists.newArrayList(mappaDisordinata.keySet());
+            listaChiavi = array.sort(listaChiavi);
+            for (String titolo : listaChiavi) {
+                mappaOut.put(titolo, mappaDisordinata.get(titolo));
+            }// end of for cycle
+        }// end of if cycle
+
+        return mappaOut;
+    }// fine del metodo
+
+
+    private LinkedHashMap<String, List<WrapDidascalia>> ordinaMappaTre(HashMap<String, List<WrapDidascalia>> mappaDisordinata) {
+        LinkedHashMap<String, List<WrapDidascalia>> mappaOut = null;
+        List<String> listaChiavi = null;
+
+        if (mappaDisordinata != null && mappaDisordinata.size() > 0) {
+            mappaOut = new LinkedHashMap<>();
+            listaChiavi = Lists.newArrayList(mappaDisordinata.keySet());
+            listaChiavi = array.sort(listaChiavi);
+            for (String titolo : listaChiavi) {
+                mappaOut.put(titolo, mappaDisordinata.get(titolo));
+            }// end of for cycle
+        }// end of if cycle
+
+        return mappaOut;
     }// fine del metodo
 
 
