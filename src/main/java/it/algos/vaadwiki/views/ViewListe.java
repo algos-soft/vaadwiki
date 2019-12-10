@@ -337,9 +337,9 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
 
     protected String creaParagrafi() {
         StringBuilder testoLista = new StringBuilder();
-        HashMap<String, HashMap<String, HashMap<String, List<String>>>> mappaUno = lista.getMappaNew();
-        HashMap<String, HashMap<String, List<String>>> mappaDue;
-        HashMap<String, List<String>> mappaTre;
+        LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> mappaUno = lista.getMappaNew();
+        LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaDue;
+        LinkedHashMap<String, List<String>> mappaTre;
         List<String> listaTxt = null;
 
         for (String chiaveParagrafo : mappaUno.keySet()) {

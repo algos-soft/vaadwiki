@@ -111,16 +111,16 @@ public class MappaLista {
     private int numVociTotali;
 
     //--property elaborata
-    private HashMap<String, HashMap<String, HashMap<String, List<String>>>> mappa;
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> mappa;
 
     //--property elaborata
-    private HashMap<String, List<WrapDidascalia>> mappaWrapUno;
+    private LinkedHashMap<String, List<WrapDidascalia>> mappaWrapUno;
 
     //--property elaborata
-    private HashMap<String, HashMap<String, List<WrapDidascalia>>> mappaWrapDue;
+    private LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>> mappaWrapDue;
 
     //--property elaborata
-    private HashMap<String, HashMap<String, HashMap<String, List<WrapDidascalia>>>> mappaWrapTre;
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>>> mappaWrapTre;
 
 
     /**
@@ -179,8 +179,9 @@ public class MappaLista {
         //--dimensioni della mappa
         calcolaDimensioni();
 
-        //--ordinamento alfabetico dei titoli dei paragrafi
-        ordinaTitoliParagrafi();
+        //--ordinamento dei titoli dei paragrafi
+        //--ordinamento alfabetico delle sottopagine
+        ordinaChiavi();
 
         //--ordinamento delle liste
         ordinaListe();
@@ -198,7 +199,7 @@ public class MappaLista {
         String key;
 
         if (listaDidascalie != null) {
-            mappaWrapUno = new HashMap<>();
+            mappaWrapUno = new LinkedHashMap<>();
             for (WrapDidascalia wrap : listaDidascalie) {
                 key = wrap.chiaveParagrafo;
                 add(mappaWrapUno, wrap, key);
@@ -214,13 +215,13 @@ public class MappaLista {
      */
     private void creaMappaWrapDue() {
         List<WrapDidascalia> listaDisordinata;
-        HashMap<String, List<WrapDidascalia>> mappaSottoPagina;
+        LinkedHashMap<String, List<WrapDidascalia>> mappaSottoPagina;
         String key;
 
         if (mappaWrapUno != null) {
-            mappaWrapDue = new HashMap<>();
+            mappaWrapDue = new LinkedHashMap<>();
             for (String chiaveParagrafo : mappaWrapUno.keySet()) {
-                mappaSottoPagina = new HashMap<>();
+                mappaSottoPagina = new LinkedHashMap<>();
                 listaDisordinata = mappaWrapUno.get(chiaveParagrafo);
                 if (listaDisordinata != null && listaDisordinata.size() > 0) {
                     for (WrapDidascalia wrap : listaDisordinata) {
@@ -241,19 +242,19 @@ public class MappaLista {
      */
     private void creaMappaWrapTre() {
         List<WrapDidascalia> listaDisordinata;
-        HashMap<String, List<WrapDidascalia>> mappaInternaWrapDue;
-        HashMap<String, HashMap<String, List<WrapDidascalia>>> mappaSottoPagina;
-        HashMap<String, List<WrapDidascalia>> mappaSottoSottoPagina;
+        LinkedHashMap<String, List<WrapDidascalia>> mappaInternaWrapDue;
+        LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>> mappaSottoPagina;
+        LinkedHashMap<String, List<WrapDidascalia>> mappaSottoSottoPagina;
         String key;
 
         if (mappaWrapDue != null) {
-            mappaWrapTre = new HashMap<>();
+            mappaWrapTre = new LinkedHashMap<>();
             for (String chiaveParagrafo : mappaWrapDue.keySet()) {
                 mappaInternaWrapDue = mappaWrapDue.get(chiaveParagrafo);
-                mappaSottoPagina = new HashMap<>();
+                mappaSottoPagina = new LinkedHashMap<>();
                 if (mappaInternaWrapDue != null && mappaInternaWrapDue.size() > 0) {
                     for (String chiaveSottoPagina : mappaInternaWrapDue.keySet()) {
-                        mappaSottoSottoPagina = new HashMap<>();
+                        mappaSottoSottoPagina = new LinkedHashMap<>();
                         listaDisordinata = mappaInternaWrapDue.get(chiaveSottoPagina);
                         if (listaDisordinata != null && listaDisordinata.size() > 0) {
                             for (WrapDidascalia wrap : listaDisordinata) {
@@ -280,17 +281,35 @@ public class MappaLista {
      * Costruisce i titoli definitivi dei paragrafi (link a wikipagine, quadre e dimensioni del paragrafo) <br>
      * Sostituisce i titoli definitivi nella mappa <br>
      */
-    private void ordinaTitoliParagrafi() {
-        HashMap<String, HashMap<String, HashMap<String, List<WrapDidascalia>>>> mappa;
-        int pos;
+    private void ordinaChiavi() {
+        titoloParagrafiDisordinato = new ArrayList<>();
+        titoloParagrafiOrdinato = new ArrayList<>();
+        titoloParagrafiDefinitivo = new ArrayList<>();
+        numVociParagrafiDefinitivi = new LinkedHashMap<>();
+
+        ordinaPrimoLivello();
+        ordinaSecondoLivello();
+        ordinaTerzoLivello();
+    }// fine del metodo
+
+
+    /**
+     * Ordinamento delle chiavi di primo livello <br>
+     * Costruisce la lista dei paragrafi esistenti dalla mappa <br>
+     * Ordina i paragrafi in base al tipo di lista (alfabetico, per anno, per giorno) <br>
+     * Mette in coda (eventualmente) il paragrafo dal titolo vuoto <br>
+     * Sostituisce il titolo del paragrafo vuoto <br>
+     * Costruisce i titoli definitivi dei paragrafi (link a wikipagine, quadre e dimensioni del paragrafo) <br>
+     * Sostituisce i titoli definitivi nella mappa <br>
+     */
+    private void ordinaPrimoLivello() {
+        LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>>> mappa = null;
 
         if (array.isValid(mappaWrapUno)) {
-            titoloParagrafiDisordinato = new ArrayList<>();
             titoloParagrafiDisordinato.addAll(mappaWrapUno.keySet());
         }// end of if cycle
 
         if (titoloParagrafiDisordinato != null && titoloParagrafiDisordinato.size() > 0) {
-            titoloParagrafiOrdinato = new ArrayList<>();
             switch (typeDidascalia) {
                 case giornoNato:
                 case giornoMorto:
@@ -318,29 +337,54 @@ public class MappaLista {
             }// end of if cycle
         }// end of if cycle
 
-        titoloParagrafiDefinitivo = new ArrayList<>();
-        numVociParagrafiDefinitivi = new LinkedHashMap<>();
-        mappaWrapTre = ordinaMappaUno(mappaWrapTre, titoloParagrafiOrdinato);
-
-    }// fine del metodo
-
-
-    private LinkedHashMap<String, HashMap<String, HashMap<String, List<WrapDidascalia>>>> ordinaMappaUno(HashMap<String, HashMap<String, HashMap<String, List<WrapDidascalia>>>> mappaDisordinata, List<String> titoloParagrafiOrdinato) {
-        LinkedHashMap<String, HashMap<String, HashMap<String, List<WrapDidascalia>>>> mappaOut = null;
-
-        if (mappaDisordinata != null && titoloParagrafiOrdinato != null) {
-            mappaOut = new LinkedHashMap<>();
+        if (mappaWrapTre != null && titoloParagrafiOrdinato != null) {
+            mappa = new LinkedHashMap<>();
             for (String titolo : titoloParagrafiOrdinato) {
-                mappaOut.put(titoloDefinitivoParagrafo(titolo), mappaDisordinata.get(titolo));
+                mappa.put(titoloDefinitivoParagrafo(titolo), mappaWrapTre.get(titolo));
             }// end of for cycle
         }// end of if cycle
 
-        return mappaOut;
+        mappaWrapTre = mappa;
     }// fine del metodo
 
 
-    private LinkedHashMap<String, HashMap<String, List<WrapDidascalia>>> ordinaMappaDue(HashMap<String, HashMap<String, List<WrapDidascalia>>> mappaDisordinata) {
-        LinkedHashMap<String, HashMap<String, List<WrapDidascalia>>> mappaOut = null;
+    /**
+     * Ordinamento delle chiavi di secondo livello <br>
+     * Ordinamento alfabetico <br>
+     * Sostituisce le chiavi nella sotto-mappa <br>
+     */
+    private void ordinaSecondoLivello() {
+        LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>> mappaParagrafo;
+
+        if (mappaWrapTre != null && mappaWrapTre.size() > 0) {
+            for (String chiaveParagrafo : mappaWrapTre.keySet()) {
+                mappaParagrafo = mappaWrapTre.get(chiaveParagrafo);
+                if (mappaParagrafo != null && mappaParagrafo.size() > 0) {
+
+                    mappaWrapTre.put(chiaveParagrafo, ordinaMappaDue(mappaParagrafo));
+
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+    }// fine del metodo
+
+
+    /**
+     * Ordinamento delle chiavi di terzo livello <br>
+     * Ordinamento alfabetico <br>
+     * Sostituisce le chiavi nella sotto-mappa <br>
+     */
+    private void ordinaTerzoLivello() {
+    }// fine del metodo
+
+
+    /**
+     * Ordinamento delle chiavi di secondo livello <br>
+     * Ordinamento alfabetico <br>
+     * Sostituisce le chiavi nella sotto-mappa <br>
+     */
+    private LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>> ordinaMappaDue(LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>> mappaDisordinata) {
+        LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>> mappaOut = null;
         List<String> listaChiavi = null;
 
         if (mappaDisordinata != null && mappaDisordinata.size() > 0) {
@@ -356,7 +400,12 @@ public class MappaLista {
     }// fine del metodo
 
 
-    private LinkedHashMap<String, List<WrapDidascalia>> ordinaMappaTre(HashMap<String, List<WrapDidascalia>> mappaDisordinata) {
+    /**
+     * Ordinamento delle chiavi di terzo livello <br>
+     * Ordinamento alfabetico <br>
+     * Sostituisce le chiavi nella sotto-mappa <br>
+     */
+    private LinkedHashMap<String, List<WrapDidascalia>> ordinaMappaTre(LinkedHashMap<String, List<WrapDidascalia>> mappaDisordinata) {
         LinkedHashMap<String, List<WrapDidascalia>> mappaOut = null;
         List<String> listaChiavi = null;
 
@@ -410,8 +459,8 @@ public class MappaLista {
      */
     private void calcolaDimensioni() {
         List<WrapDidascalia> listaDisordinata;
-        HashMap<String, HashMap<String, List<WrapDidascalia>>> mappaParagrafo;
-        HashMap<String, List<WrapDidascalia>> mappaSottoPagina;
+        LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>> mappaParagrafo;
+        LinkedHashMap<String, List<WrapDidascalia>> mappaSottoPagina;
 
         if (mappaWrapTre != null) {
             numVociParagrafi = new LinkedHashMap<>();
@@ -448,8 +497,8 @@ public class MappaLista {
     private void ordinaListe() {
         List<WrapDidascalia> listaDisordinata;
         List<WrapDidascalia> listaOrdinata;
-        HashMap<String, HashMap<String, List<WrapDidascalia>>> mappaParagrafo;
-        HashMap<String, List<WrapDidascalia>> mappaSottoPagina;
+        LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>> mappaParagrafo;
+        LinkedHashMap<String, List<WrapDidascalia>> mappaSottoPagina;
 
         if (mappaWrapTre != null) {
             for (String chiaveParagrafo : mappaWrapTre.keySet()) {
@@ -475,7 +524,7 @@ public class MappaLista {
 
 
     /**
-     * Costruzione della mappa definitiva <br>
+     * Ordinamento alfabetico ?
      */
     private List<WrapDidascalia> ordinaListaWrap(List<WrapDidascalia> listaDisordinata) {
         List<WrapDidascalia> listaOrdinata = listaDisordinata;
@@ -489,22 +538,22 @@ public class MappaLista {
      * Sostituisce il testo alla WrapDidascalia <br>
      */
     private void creaMappaFinale() {
-        HashMap<String, HashMap<String, List<WrapDidascalia>>> mappaParagrafoWrap;
-        HashMap<String, List<WrapDidascalia>> mappaSottoPaginaWrap;
+        LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>> mappaParagrafoWrap;
+        LinkedHashMap<String, List<WrapDidascalia>> mappaSottoPaginaWrap;
         List<WrapDidascalia> listaOrdinataWrap;
-        HashMap<String, HashMap<String, List<String>>> mappaParagrafoTxt;
-        HashMap<String, List<String>> mappaSottoPaginaTxt;
+        LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaParagrafoTxt;
+        LinkedHashMap<String, List<String>> mappaSottoPaginaTxt;
         List<String> listaTxt;
 
         if (mappaWrapTre != null) {
             mappa = new LinkedHashMap<>();
             for (String chiaveParagrafo : mappaWrapTre.keySet()) {
                 mappaParagrafoWrap = mappaWrapTre.get(chiaveParagrafo);
-                mappaParagrafoTxt = new HashMap<>();
+                mappaParagrafoTxt = new LinkedHashMap<>();
                 if (mappaParagrafoWrap != null && mappaParagrafoWrap.size() > 0) {
                     for (String chiaveSottoPagina : mappaParagrafoWrap.keySet()) {
                         mappaSottoPaginaWrap = mappaParagrafoWrap.get(chiaveSottoPagina);
-                        mappaSottoPaginaTxt = new HashMap<>();
+                        mappaSottoPaginaTxt = new LinkedHashMap<>();
                         if (mappaSottoPaginaWrap != null && mappaSottoPaginaWrap.size() > 0) {
                             for (String chiaveSottoSottoPagina : mappaSottoPaginaWrap.keySet()) {
                                 listaOrdinataWrap = mappaSottoPaginaWrap.get(chiaveSottoSottoPagina);
@@ -631,15 +680,25 @@ public class MappaLista {
         String testoRiga = VUOTA;
         List<WrapDidascalia> listaWrap = selezionaListaWrap(listaWrapDidascalie, key);
 
-        testoRiga += AST;
-        testoRiga += LibWiki.setQuadre(key);
-        listaTxt.add(testoRiga);
+        if (text.isValid(key)) {
+            testoRiga += AST;
+            testoRiga += LibWiki.setQuadre(key);
+            listaTxt.add(testoRiga);
 
-        if (listaWrap != null && listaWrap.size() > 1) {
-            for (WrapDidascalia wrap : selezionaListaWrap(listaWrapDidascalie, key)) {
-                creaRigaSenzaChiave(listaTxt, wrap);
-            }// end of for cycle
-        }// end of if cycle
+            if (listaWrap != null && listaWrap.size() > 1) {
+                for (WrapDidascalia wrap : selezionaListaWrap(listaWrapDidascalie, key)) {
+                    creaRigaSenzaChiave(listaTxt, wrap);
+                }// end of for cycle
+            }// end of if cycle
+        } else {
+            if (listaWrap != null && listaWrap.size() > 1) {
+                for (WrapDidascalia wrap : selezionaListaWrap(listaWrapDidascalie, key)) {
+                    testoRiga = AST;
+                    testoRiga += wrap.getTestoSenza();
+                    listaTxt.add(testoRiga);
+                }// end of for cycle
+            }// end of if cycle
+        }// end of if/else cycle
 
     }// fine del metodo
 
@@ -650,7 +709,7 @@ public class MappaLista {
     private List<WrapDidascalia> selezionaListaWrap(List<WrapDidascalia> listaWrapDidascalie, String key) {
         List<WrapDidascalia> listaWrap = null;
 
-        if (listaWrapDidascalie != null && listaWrapDidascalie.size() > 0 && text.isValid(key)) {
+        if (listaWrapDidascalie != null && listaWrapDidascalie.size() > 0) {
             listaWrap = new ArrayList<>();
             for (WrapDidascalia wrap : listaWrapDidascalie) {
                 if (wrap.chiaveRiga.equals(key)) {
@@ -676,7 +735,7 @@ public class MappaLista {
     }// fine del metodo
 
 
-    public HashMap<String, HashMap<String, HashMap<String, List<String>>>> getMappa() {
+    public LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> getMappa() {
         return mappa;
     }// fine del metodo
 
@@ -719,8 +778,8 @@ public class MappaLista {
      */
     private List<String> getLista() {
         List<String> listaRighe = null;
-        HashMap<String, HashMap<String, List<String>>> mappaParagrafoTxt;
-        HashMap<String, List<String>> mappaSottoPaginaTxt;
+        LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaParagrafoTxt;
+        LinkedHashMap<String, List<String>> mappaSottoPaginaTxt;
         List<String> listaTxt = null;
 
         if (mappa != null) {
@@ -746,7 +805,13 @@ public class MappaLista {
 
 
     /**
-     * Testo <br>
+     * Testo finale della pagina <br>
+     * Con o senza suddivisione per paragrafi <br>
+     * Con o senza righe raggruppate <br>
+     * Con o senza wikilink nel titolo dei paragrafi <br>
+     * Con o senza dimensioni nel titolo dei paragrafi <br>
+     * Col paragrafo senza titolo per primo o per ultimo <br>
+     * Se si usano le sottopagine riporta solo il link alla sottopagina. La lista delle biografie è in altra mappa <br>
      */
     public String getTesto() {
         StringBuilder testoLista = new StringBuilder();

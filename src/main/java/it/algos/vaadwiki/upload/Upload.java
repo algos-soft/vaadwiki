@@ -590,7 +590,7 @@ public abstract class Upload {
             testoLista = sottoPagina.getTesto();
             uploadSottoPagine(sottoPagina.getMappa());
         } else {
-            testoLista = lista.getTesto();
+//            testoLista = lista.getTesto();
         }// end of if/else cycle
 
         numVoci = lista.size;

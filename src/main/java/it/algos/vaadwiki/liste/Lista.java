@@ -145,21 +145,21 @@ public abstract class Lista {
      * Lista delle didascalie da usare per costruire la mappa <br>
      * Property della classe perché regolata nelle sottoclassi concrete <br>
      */
-    protected ArrayList<WrapDidascalia> listaDidascalie;
+    public ArrayList<WrapDidascalia> listaDidascalie;
 
     /**
      * Mappa delle didascalie che hanno una valore valido per la pagina specifica <br>
      * La mappa è composta da una chiaveUno (ordinata) che corrisponde al titolo del paragrafo <br>
      * La visualizzazione dei paragrafi può anche essere esclusa, ma questi sono comunque presenti <br>
      * Ogni valore della mappa è costituito da una ulteriore LinkedHashMap <br>
-     * Questa mappa è composta da una chiaveDue e da un ArrayList di didascalie (testo) <br>
+     * Questa mappa è composta da una chiaveDue e da una ulteriore LinkedHashMap <br>
+     * Questa mappa è composta da una chiaveTre e da un ArrayList di didascalie (testo) <br>
      * La chiaveUno è un secolo, un mese, un'attività (a seconda del tipo di didascalia) <br>
      * La chiaveUno è un link a pagina di wikipedia (escluso titoloParagrafoVuoto) con doppie quadre <br>
-     * La chiaveDue è un anno, un giorno (a seconda del tipo di didascalia) <br>
-     * Le didascalie sono ordinate per cognome <br>
+     * La chiaveDue è una lettera alfabetica <br>
+     * La chiaveTre è una doppia lettera alfabetica <br>
      */
     protected LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
-
     protected MappaLista mappaLista;
 
     /**
@@ -169,7 +169,6 @@ public abstract class Lista {
     @Autowired
     protected ListaService listaService;
 
-    private LinkedHashMap<String, ArrayList<String>> mappaSemplice;
 
 
     /**
@@ -237,7 +236,7 @@ public abstract class Lista {
      *
      * @param listaDidascalie da raggruppare
      */
-    protected void creaMappa(ArrayList<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia) {
+    protected void creaMappa(List<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia) {
 //        mappa = listaService.creaMappa(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkAttivita, usaOrdineAlfabetico, typeDidascalia);
         mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeDidascalia, usaSuddivisioneParagrafi, usaRigheRaggruppate, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaParagrafoSize, usaLinkParagrafo, usaOrdineAlfabetico);
     }// fine del metodo
@@ -310,7 +309,7 @@ public abstract class Lista {
     }
 
 
-    public HashMap<String, HashMap<String, HashMap<String, List<String>>>> getMappaNew() {
+    public LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> getMappaNew() {
         return mappaLista.getMappa();
     }// fine del metodo
 

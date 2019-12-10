@@ -10,13 +10,9 @@ import it.algos.vaadwiki.ATest;
 import it.algos.vaadwiki.application.WikiCost;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
-import it.algos.vaadwiki.liste.ListaAnnoNato;
-import it.algos.vaadwiki.liste.ListaGiornoNato;
-import it.algos.vaadwiki.liste.ListaNomi;
-import it.algos.vaadwiki.liste.ListaService;
+import it.algos.vaadwiki.liste.*;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
-import it.algos.vaadwiki.modules.genere.Genere;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.wiki.LibWiki;
@@ -119,6 +115,8 @@ public class ListeIntegrationTest extends ATest {
 
     private Bio bio;
 
+    private MappaLista mappaLista;
+
     @Autowired
     private ApplicationContext appContext;
 
@@ -136,6 +134,9 @@ public class ListeIntegrationTest extends ATest {
 
     private int posEnd = 45;
 
+    private List<WrapDidascalia> listaDidascalie;
+
+    private EADidascalia type = EADidascalia.giornoNato;
 
 
     @Before
@@ -182,7 +183,7 @@ public class ListeIntegrationTest extends ATest {
         ArrayList<WrapDidascalia> listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, EADidascalia.listaNomi);
 
         inizio = System.currentTimeMillis();
-        mappa = listaService.creaMappa(listaDidascalie,null);
+        mappa = listaService.creaMappa(listaDidascalie, null);
         System.out.println("Mappa complessa tempo impiegato: " + dateService.deltaText(inizio));
     }// end of single test
 
@@ -264,31 +265,119 @@ public class ListeIntegrationTest extends ATest {
 
     /**
      * Lista dei giorni.
-     * Può usare i paragrafi oppure no.
-     * Senza paragrafi e con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
+     * <p>
+     * Con o senza suddivisione per paragrafi <br>
+     * Con o senza righe raggruppate <br>
+     * Con o senza wikilink nel titolo dei paragrafi <br>
+     * Con o senza dimensioni nel titolo dei paragrafi <br>
+     * Col paragrafo senza titolo per primo o per ultimo <br>
+     * Con o senza sottopagine <br>
      * <p>
      * Regola le preferenze da usare nella Lista.
      * I valori attuali del mongoDB in produzione vengono alterati.
      * Se tutto va bene, vengono ripristinati al termine del test.
      * In caso di uscita dal test per errore, vanno controllati.
      */
+    public void listaGiorni() {
+//        testUnico();
+//        giorniSenzaParagrafiRigheSingole();
+//        giorniSenzaParagrafiRigheRaggruppate();
+//        giorniConParagrafiRigheSingole();
+//        giorniConParagrafiRigheRaggruppate();
+//        giorniConParagrafiSenzaLink();
+//        giorniConParagrafiConLink();
+//        giorniConParagrafiSenzaDimensioni();
+//        giorniConParagrafiConDimensioni();
+    }// end of method
+
+
     @Test
-    public void listaGiorniSenzaParagrafi() {
-        listaGiorno = fixGiornoSenzaParagrafi();
+    public void giorniSenzaParagrafiRigheSingoleTesta() {
+        testUnico();
+        listaDidascalie = listaGiorno.listaDidascalie;
 
-        mappa = listaGiorno.getMappa();
-        Assert.assertNotNull(mappa);
-
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, type, false, false, "", false, false, false, false);
+        Assert.assertNotNull(mappaLista);
         System.out.println("*************");
-        System.out.println("listaService.righeSenzaParagrafo");
-        System.out.println("Lista dei primi " + listaGiorno.size + " nati il giorno " + giornoText + " - Senza paragrafi e con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili)");
+        System.out.println("righesingoleSenzaParagrafoVuotoInTesta");
+        System.out.println("Lista dei " + listaGiorno.size + " nati il giorno " + giornoText + " - Senza paragrafi, righe singole, vuoto in testa");
         System.out.println("*************");
-        testo = listaService.righeSenzaParagrafo(mappa);
+        testo = mappaLista.getTesto();
         System.out.println(testo);
         System.out.println("");
+    }// end of method
 
-        resetPreferenzeGiorno();
+    @Test
+    public void giorniSenzaParagrafiRigheSingoleCoda() {
+        testUnico();
+        listaDidascalie = listaGiorno.listaDidascalie;
+
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, type, false, false, "", true, false, false, false);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("righesingoleSenzaParagrafoVuotoInCoda");
+        System.out.println("Lista dei " + listaGiorno.size + " nati il giorno " + giornoText + " - Senza paragrafi, righe singole, vuoto in coda");
+        System.out.println("*************");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
+    }// end of method
+
+
+    @Test
+    public void giorniSenzaParagrafiRigheRaggruppateTesta() {
+        testUnico();
+        listaDidascalie = listaGiorno.listaDidascalie;
+
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, type, false, true, "", false, false, false, false);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("righeRaggruppateSenzaParagrafoTesta");
+        System.out.println("Lista dei " + listaGiorno.size + " nati il giorno " + giornoText + " - Senza paragrafi, righe raggruppate, vuoto in testa");
+        System.out.println("*************");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
     }// end of single test
+    @Test
+    public void giorniSenzaParagrafiRigheRaggruppateCoda() {
+        testUnico();
+        listaDidascalie = listaGiorno.listaDidascalie;
+
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, type, false, true, "", true, false, false, false);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("righeRaggruppateSenzaParagrafoCoda");
+        System.out.println("Lista dei " + listaGiorno.size + " nati il giorno " + giornoText + " - Senza paragrafi, righe raggruppate, vuoto in coda");
+        System.out.println("*************");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
+    }// end of single test
+
+
+    private void giorniConParagrafiRigheSingole() {
+    }// end of method
+
+
+    private void giorniConParagrafiRigheRaggruppate() {
+    }// end of method
+
+
+    private void giorniConParagrafiSenzaLink() {
+    }// end of method
+
+
+    private void giorniConParagrafiConLink() {
+    }// end of method
+
+
+    private void giorniConParagrafiSenzaDimensioni() {
+    }// end of method
+
+
+    private void giorniConParagrafiConDimensioni() {
+    }// end of method
 
 
     /**
@@ -305,7 +394,7 @@ public class ListeIntegrationTest extends ATest {
      * Se tutto va bene, vengono ripristinati al termine del test.
      * In caso di uscita dal test per errore, vanno controllati.
      */
-    @Test
+//    @Test
     public void listaGiorniConParagrafi() {
         listaGiorno = fixGiornoConParagrafi();
 
@@ -338,7 +427,7 @@ public class ListeIntegrationTest extends ATest {
      * Se tutto va bene, vengono ripristinati al termine del test.
      * In caso di uscita dal test per errore, vanno controllati.
      */
-    @Test
+//    @Test
     public void listaGiorniConParagrafiSize() {
         listaGiorno = fixGiornoConParagrafi();
 
@@ -357,29 +446,29 @@ public class ListeIntegrationTest extends ATest {
     }// end of single test
 
 
-    /**
-     * Lista dei giorni attiva da preferenze della lista.
-     * Senza paragrafi e con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
-     * <p>
-     * Regola le preferenze da usare nella Lista.
-     * I valori attuali del mongoDB in produzione vengono alterati.
-     * Se tutto va bene, vengono ripristinati al termine del test.
-     * In caso di uscita dal test per errore, vanno controllati.
-     */
-    @Test
-    public void listaGiorniInUso() {
-        listaGiorno = fixGiornoConParagrafi();
-
-        System.out.println("*************");
-        System.out.println("listaGiorno.getTesto");
-        System.out.println("Lista dei primi " + listaGiorno.size + " nati il giorno " + giornoText + " come da preferenze correnti");
-        System.out.println("*************");
-        testo = listaGiorno.getTesto();
-        System.out.println(testo);
-        System.out.println("");
-
-        resetPreferenzeGiorno();
-    }// end of single test
+//    /**
+//     * Lista dei giorni attiva da preferenze della lista.
+//     * Senza paragrafi e con righe raggruppate (le righe non raggruppate non vengono usate anche se teoricamente possibili).
+//     * <p>
+//     * Regola le preferenze da usare nella Lista.
+//     * I valori attuali del mongoDB in produzione vengono alterati.
+//     * Se tutto va bene, vengono ripristinati al termine del test.
+//     * In caso di uscita dal test per errore, vanno controllati.
+//     */
+//    @Test
+//    public void listaGiorniInUso() {
+//        listaGiorno = fixGiornoConParagrafi();
+//
+//        System.out.println("*************");
+//        System.out.println("listaGiorno.getTesto");
+//        System.out.println("Lista dei primi " + listaGiorno.size + " nati il giorno " + giornoText + " come da preferenze correnti");
+//        System.out.println("*************");
+//        testo = listaGiorno.getTesto();
+//        System.out.println(testo);
+//        System.out.println("");
+//
+//        resetPreferenzeGiorno();
+//    }// end of single test
 
 
     private ListaAnnoNato getAnno() {
@@ -601,7 +690,7 @@ public class ListeIntegrationTest extends ATest {
      * Se tutto va bene, vengono ripristinati al termine del test.
      * In caso di uscita dal test per errore, vanno controllati.
      */
-    @Test
+//    @Test
     public void listaNomi() {
         listaNome = fixNomi();
 
@@ -693,7 +782,7 @@ public class ListeIntegrationTest extends ATest {
     }// end of single test
 
 
-    @Test
+    //    @Test
     public void ordineMappa() {
         listaNome = getNome();
         String tag = "|";
@@ -747,9 +836,7 @@ public class ListeIntegrationTest extends ATest {
     }// end of single test
 
 
-
-
-    @Test
+    //    @Test
     public void getTitoloParagrafo() {
         previsto = "[[Allenatore|Allenatori di calcio]]";
         sorgente = "allenatori di calcio";
