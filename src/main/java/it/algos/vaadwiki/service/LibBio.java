@@ -1254,7 +1254,7 @@ public class LibBio {
      * @return stringa con la formattazione del paragrafo
      */
     public static String setParagrafo(String stringaIn) {
-        return PARAGRAFO + stringaIn.trim() + PARAGRAFO + A_CAPO;
+        return PARAGRAFO + stringaIn.trim() + PARAGRAFO;
     } // fine del metodo
 
 

@@ -120,7 +120,7 @@ public class ListeIntegrationTest extends ATest {
     @Autowired
     private ApplicationContext appContext;
 
-    private String annoText = "1924";
+    private String annoText = "1824";
 
     private String annoTextSecondo = "2005";
 
@@ -130,13 +130,21 @@ public class ListeIntegrationTest extends ATest {
 
     private String nomeTextLungo = "Giovanni";
 
+    private String parVuoto = "Senza giorno di nascita";
+
+    private String parAttivita = "Senza attività specificata";
+
     private int posIni = 35;
 
     private int posEnd = 45;
 
     private List<WrapDidascalia> listaDidascalie;
 
-    private EADidascalia type = EADidascalia.giornoNato;
+    private EADidascalia typeGiorno = EADidascalia.giornoNato;
+
+    private EADidascalia typeAnno = EADidascalia.annoNato;
+
+    private EADidascalia typeNome = EADidascalia.listaNomi;
 
 
     @Before
@@ -292,31 +300,15 @@ public class ListeIntegrationTest extends ATest {
 
 
     @Test
-    public void giorniSenzaParagrafiRigheSingoleTesta() {
+    public void anniSenzaParagrafiRigheSingoleTesta() {
         testUnico();
-        listaDidascalie = listaGiorno.listaDidascalie;
+        listaDidascalie = listaAnno.listaDidascalie;
 
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, type, false, false, "", false, false, false, false);
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, false, "", false, false, false, false);
         Assert.assertNotNull(mappaLista);
         System.out.println("*************");
-        System.out.println("righesingoleSenzaParagrafoVuotoInTesta");
-        System.out.println("Lista dei " + listaGiorno.size + " nati il giorno " + giornoText + " - Senza paragrafi, righe singole, vuoto in testa");
-        System.out.println("*************");
-        testo = mappaLista.getTesto();
-        System.out.println(testo);
-        System.out.println("");
-    }// end of method
-
-    @Test
-    public void giorniSenzaParagrafiRigheSingoleCoda() {
-        testUnico();
-        listaDidascalie = listaGiorno.listaDidascalie;
-
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, type, false, false, "", true, false, false, false);
-        Assert.assertNotNull(mappaLista);
-        System.out.println("*************");
-        System.out.println("righesingoleSenzaParagrafoVuotoInCoda");
-        System.out.println("Lista dei " + listaGiorno.size + " nati il giorno " + giornoText + " - Senza paragrafi, righe singole, vuoto in coda");
+        System.out.println("anniSenzaParagrafiRigheSingoleTesta");
+        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe singole, vuoto in testa");
         System.out.println("*************");
         testo = mappaLista.getTesto();
         System.out.println(testo);
@@ -325,30 +317,32 @@ public class ListeIntegrationTest extends ATest {
 
 
     @Test
-    public void giorniSenzaParagrafiRigheRaggruppateTesta() {
+    public void anniSenzaParagrafiRigheSingoleCoda() {
         testUnico();
-        listaDidascalie = listaGiorno.listaDidascalie;
+        listaDidascalie = listaAnno.listaDidascalie;
 
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, type, false, true, "", false, false, false, false);
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, false, "", true, false, false, false);
         Assert.assertNotNull(mappaLista);
         System.out.println("*************");
-        System.out.println("righeRaggruppateSenzaParagrafoTesta");
-        System.out.println("Lista dei " + listaGiorno.size + " nati il giorno " + giornoText + " - Senza paragrafi, righe raggruppate, vuoto in testa");
+        System.out.println("anniSenzaParagrafiRigheSingoleCoda");
+        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe singole, vuoto in coda");
         System.out.println("*************");
         testo = mappaLista.getTesto();
         System.out.println(testo);
         System.out.println("");
-    }// end of single test
-    @Test
-    public void giorniSenzaParagrafiRigheRaggruppateCoda() {
-        testUnico();
-        listaDidascalie = listaGiorno.listaDidascalie;
+    }// end of method
 
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, type, false, true, "", true, false, false, false);
+
+    @Test
+    public void anniSenzaParagrafiRigheRaggruppateTesta() {
+        testUnico();
+        listaDidascalie = listaAnno.listaDidascalie;
+
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, true, "", false, false, false, false);
         Assert.assertNotNull(mappaLista);
         System.out.println("*************");
-        System.out.println("righeRaggruppateSenzaParagrafoCoda");
-        System.out.println("Lista dei " + listaGiorno.size + " nati il giorno " + giornoText + " - Senza paragrafi, righe raggruppate, vuoto in coda");
+        System.out.println("anniSenzaParagrafiRigheRaggruppateTesta");
+        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe raggruppate, vuoto in testa");
         System.out.println("*************");
         testo = mappaLista.getTesto();
         System.out.println(testo);
@@ -356,27 +350,88 @@ public class ListeIntegrationTest extends ATest {
     }// end of single test
 
 
-    private void giorniConParagrafiRigheSingole() {
+    @Test
+    public void anniSenzaParagrafiRigheRaggruppateCoda() {
+        testUnico();
+        listaDidascalie = listaAnno.listaDidascalie;
+
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, true, "", true, false, false, false);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("anniSenzaParagrafiRigheRaggruppateCoda");
+        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe raggruppate, vuoto in coda");
+        System.out.println("*************");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
+    }// end of single test
+
+
+    @Test
+    public void anniConParagrafiRigheRaggruppateTestaSenzalinkSenzasize() {
+        testUnico();
+        listaDidascalie = listaAnno.listaDidascalie;
+
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, false, false, false, false);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("anniConParagrafiRigheRaggruppateTestaSenzalinkSenzasize");
+        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in testa, senza link, senza size");
+        System.out.println("*************");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
     }// end of method
 
 
-    private void giorniConParagrafiRigheRaggruppate() {
+    @Test
+    public void anniConParagrafiRigheRaggruppateCodaSenzalinkSenzasize() {
+        testUnico();
+        listaDidascalie = listaAnno.listaDidascalie;
+
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, true, false, false, false);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("anniConParagrafiRigheRaggruppateCodaSenzalinkSenzasize");
+        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in coda, senza link, senza size");
+        System.out.println("*************");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
     }// end of method
 
 
-    private void giorniConParagrafiSenzaLink() {
+    @Test
+    public void anniConParagrafiRigheRaggruppateTestaConlinkSenzasize() {
+        testUnico();
+        listaDidascalie = listaAnno.listaDidascalie;
+
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, false, true, false, false);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("anniConParagrafiRigheRaggruppateTestaConlinkSenzasize");
+        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in testa, con link, senza size");
+        System.out.println("*************");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
     }// end of method
 
 
-    private void giorniConParagrafiConLink() {
-    }// end of method
+    @Test
+    public void anniConParagrafiRigheRaggruppateTestaConlinkConsize() {
+        testUnico();
+        listaDidascalie = listaAnno.listaDidascalie;
 
-
-    private void giorniConParagrafiSenzaDimensioni() {
-    }// end of method
-
-
-    private void giorniConParagrafiConDimensioni() {
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, false, true, true, false);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("anniConParagrafiRigheRaggruppateTestaConlinkConsize");
+        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in testa, con link, con size");
+        System.out.println("*************");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
     }// end of method
 
 
@@ -690,24 +745,71 @@ public class ListeIntegrationTest extends ATest {
      * Se tutto va bene, vengono ripristinati al termine del test.
      * In caso di uscita dal test per errore, vanno controllati.
      */
-//    @Test
-    public void listaNomi() {
-        listaNome = fixNomi();
+    @Test
+    public void nomiTestaSenzalinkSenzasizeSenzasottopagine() {
+        testUnico();
+        listaDidascalie = listaNome.listaDidascalie;
 
-        mappa = listaNome.getMappa();
-        Assert.assertNotNull(mappa);
-
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeNome, true, false, parAttivita, false, false, false, false);
+        Assert.assertNotNull(mappaLista);
         System.out.println("*************");
-        System.out.println("listaService.righeConParagrafoSize");
-        System.out.println("Lista dei " + listaNome.size + " biografati di nome " + nomeTextCorto + " - Con paragrafi e con le dimensioni nel titolo del paragrafo");
+        System.out.println("nomiTestaSenzalinkSenzasizeSenzasottopagine");
+        System.out.println("Lista dei " + listaNome.size + " biografati di nome " + nomeTextCorto + " - Con paragrafi, senza link, senza le dimensioni nel titolo del paragrafo e senza sottopagine");
         System.out.println("*************");
-        testo = listaService.righeConParagrafoSize(mappa);
+        testo = mappaLista.getTesto();
         System.out.println(testo);
         System.out.println("");
-
-        resetPreferenzeNome();
     }// end of single test
 
+
+    @Test
+    public void nomiCodaSenzalinkSenzasizeSenzasottopagine() {
+        testUnico();
+        listaDidascalie = listaNome.listaDidascalie;
+
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeNome, true, false, parAttivita, true, false, false, false);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("nomiCodaSenzalinkSenzasizeSenzasottopagine");
+        System.out.println("Lista dei " + listaNome.size + " biografati di nome " + nomeTextCorto + " - Con paragrafi, senza link, senza le dimensioni nel titolo del paragrafo e senza sottopagine");
+        System.out.println("*************");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
+    }// end of single test
+
+
+    @Test
+    public void nomiTestaConlinkSenzasizeSenzasottopagine() {
+        testUnico();
+        listaDidascalie = listaNome.listaDidascalie;
+
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeNome, true, false, parAttivita, false, true, false, false);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("nomiTestaConlinkSenzasizeSenzasottopagine");
+        System.out.println("Lista dei " + listaNome.size + " biografati di nome " + nomeTextCorto + " - Con paragrafi, con link, senza le dimensioni nel titolo del paragrafo e senza sottopagine");
+        System.out.println("*************");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
+    }// end of single test
+
+    @Test
+    public void nomiTestaConlinkConsizeSenzasottopagine() {
+        testUnico();
+        listaDidascalie = listaNome.listaDidascalie;
+
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeNome, true, false, parAttivita, false, true, true, false);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("nomiTestaConlinkConsizeSenzasottopagine");
+        System.out.println("Lista dei " + listaNome.size + " biografati di nome " + nomeTextCorto + " - Con paragrafi, con link, con le dimensioni nel titolo del paragrafo e senza sottopagine");
+        System.out.println("*************");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
+    }// end of single test
 
     /**
      * Lista dei nomi attiva da preferenze della lista.

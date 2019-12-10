@@ -8,6 +8,7 @@ import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
+import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -88,7 +89,7 @@ public class MappaLista {
     private boolean usaLinkParagrafo;
 
     //--parametro in ingresso
-    private boolean usaOrdineAlfabetico;
+    private boolean usaBodySottopagine;
 
     //--property elaborata
     private List<String> titoloParagrafiDisordinato;
@@ -144,18 +145,18 @@ public class MappaLista {
             boolean usaRigheRaggruppate,
             String titoloParagrafoVuoto,
             boolean paragrafoVuotoInCoda,
-            boolean usaParagrafoSize,
             boolean usaLinkParagrafo,
-            boolean usaOrdineAlfabetico) {
+            boolean usaParagrafoSize,
+            boolean usaBodySottopagine) {
         this.listaDidascalie = listaDidascalie;
         this.typeDidascalia = typeDidascalia;
         this.usaSuddivisioneParagrafi = usaSuddivisioneParagrafi;
         this.usaRigheRaggruppate = usaRigheRaggruppate;
         this.titoloParagrafoVuoto = titoloParagrafoVuoto;
         this.paragrafoVuotoInCoda = paragrafoVuotoInCoda;
-        this.usaParagrafoSize = usaParagrafoSize;
         this.usaLinkParagrafo = usaLinkParagrafo;
-        this.usaOrdineAlfabetico = usaOrdineAlfabetico;
+        this.usaParagrafoSize = usaParagrafoSize;
+        this.usaBodySottopagine = usaBodySottopagine;
     }// end of constructor
 
 
@@ -773,10 +774,38 @@ public class MappaLista {
     }// fine del metodo
 
 
+    private List<String> getListaCon() {
+        List<String> listaRighe = null;
+        LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaDue;
+        LinkedHashMap<String, List<String>> mappaTre;
+
+        if (mappa != null) {
+            listaRighe = new ArrayList<>();
+            for (String chiaveParagrafo : mappa.keySet()) {
+                listaRighe.add(VUOTA);
+                listaRighe.add(LibBio.setParagrafo(chiaveParagrafo));
+                mappaDue = mappa.get(chiaveParagrafo);
+                if (mappaDue != null && mappaDue.size() > 0) {
+                    for (String chiaveDue : mappaDue.keySet()) {
+                        mappaTre = mappaDue.get(chiaveDue);
+                        if (mappaTre != null && mappaTre.size() > 0) {
+                            for (String chiaveTre : mappaTre.keySet()) {
+                                listaRighe.addAll(mappaTre.get(chiaveTre));
+                            }// end of for cycle
+                        }// end of if cycle
+                    }// end of for cycle
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaRighe;
+    }// end of method
+
+
     /**
      * Lista di righe <br>
      */
-    private List<String> getLista() {
+    private List<String> getListaSenza() {
         List<String> listaRighe = null;
         LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaParagrafoTxt;
         LinkedHashMap<String, List<String>> mappaSottoPaginaTxt;
@@ -815,7 +844,13 @@ public class MappaLista {
      */
     public String getTesto() {
         StringBuilder testoLista = new StringBuilder();
-        List<String> listaRighe = getLista();
+        List<String> listaRighe;
+
+        if (usaSuddivisioneParagrafi) {
+            listaRighe = getListaCon();
+        } else {
+            listaRighe = getListaSenza();
+        }// end of if/else cycle
 
         if (listaRighe != null && listaRighe.size() > 0) {
             for (String riga : listaRighe) {

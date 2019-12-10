@@ -16,7 +16,6 @@ import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -115,8 +114,14 @@ public abstract class Lista {
     //--property
     public boolean usaBodySottopagine;
 
-    //--property
-    public boolean usaOrdineAlfabetico;
+//    //--property
+//    public boolean usaOrdineAlfabetico;
+
+    /**
+     * Lista delle didascalie da usare per costruire la mappa <br>
+     * Property della classe perché regolata nelle sottoclassi concrete <br>
+     */
+    public ArrayList<WrapDidascalia> listaDidascalie;
 
     //--property
     protected Giorno giorno;
@@ -142,12 +147,6 @@ public abstract class Lista {
     protected List<Bio> listaGrezzaBio;
 
     /**
-     * Lista delle didascalie da usare per costruire la mappa <br>
-     * Property della classe perché regolata nelle sottoclassi concrete <br>
-     */
-    public ArrayList<WrapDidascalia> listaDidascalie;
-
-    /**
      * Mappa delle didascalie che hanno una valore valido per la pagina specifica <br>
      * La mappa è composta da una chiaveUno (ordinata) che corrisponde al titolo del paragrafo <br>
      * La visualizzazione dei paragrafi può anche essere esclusa, ma questi sono comunque presenti <br>
@@ -160,6 +159,7 @@ public abstract class Lista {
      * La chiaveTre è una doppia lettera alfabetica <br>
      */
     protected LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
+
     protected MappaLista mappaLista;
 
     /**
@@ -168,7 +168,6 @@ public abstract class Lista {
      */
     @Autowired
     protected ListaService listaService;
-
 
 
     /**
@@ -200,10 +199,9 @@ public abstract class Lista {
         this.titoloParagrafoVuoto = "";
         this.titoloSottoPaginaVuota = "";
         this.paragrafoVuotoInCoda = true;
-        this.usaParagrafoSize = false;
         this.usaLinkParagrafo = false;
+        this.usaParagrafoSize = false;
         this.usaBodySottopagine = false;
-        this.usaOrdineAlfabetico = false;
     }// end of method
 
 
@@ -238,7 +236,7 @@ public abstract class Lista {
      */
     protected void creaMappa(List<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia) {
 //        mappa = listaService.creaMappa(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkAttivita, usaOrdineAlfabetico, typeDidascalia);
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeDidascalia, usaSuddivisioneParagrafi, usaRigheRaggruppate, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaParagrafoSize, usaLinkParagrafo, usaOrdineAlfabetico);
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeDidascalia, usaSuddivisioneParagrafi, usaRigheRaggruppate, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkParagrafo, usaParagrafoSize, usaBodySottopagine);
     }// fine del metodo
 
 
