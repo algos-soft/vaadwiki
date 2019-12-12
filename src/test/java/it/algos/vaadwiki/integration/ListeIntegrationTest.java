@@ -8,7 +8,7 @@ import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadwiki.ATest;
 import it.algos.vaadwiki.application.WikiCost;
-import it.algos.vaadwiki.didascalia.EADidascalia;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.liste.*;
 import it.algos.vaadwiki.modules.bio.Bio;
@@ -299,140 +299,140 @@ public class ListeIntegrationTest extends ATest {
     }// end of method
 
 
-    @Test
-    public void anniSenzaParagrafiRigheSingoleTesta() {
-        testUnico();
-        listaDidascalie = listaAnno.listaDidascalie;
-
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, false, "", false, false, false, false);
-        Assert.assertNotNull(mappaLista);
-        System.out.println("*************");
-        System.out.println("anniSenzaParagrafiRigheSingoleTesta");
-        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe singole, vuoto in testa");
-        System.out.println("*************");
-        testo = mappaLista.getTesto();
-        System.out.println(testo);
-        System.out.println("");
-    }// end of method
-
-
-    @Test
-    public void anniSenzaParagrafiRigheSingoleCoda() {
-        testUnico();
-        listaDidascalie = listaAnno.listaDidascalie;
-
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, false, "", true, false, false, false);
-        Assert.assertNotNull(mappaLista);
-        System.out.println("*************");
-        System.out.println("anniSenzaParagrafiRigheSingoleCoda");
-        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe singole, vuoto in coda");
-        System.out.println("*************");
-        testo = mappaLista.getTesto();
-        System.out.println(testo);
-        System.out.println("");
-    }// end of method
-
-
-    @Test
-    public void anniSenzaParagrafiRigheRaggruppateTesta() {
-        testUnico();
-        listaDidascalie = listaAnno.listaDidascalie;
-
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, true, "", false, false, false, false);
-        Assert.assertNotNull(mappaLista);
-        System.out.println("*************");
-        System.out.println("anniSenzaParagrafiRigheRaggruppateTesta");
-        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe raggruppate, vuoto in testa");
-        System.out.println("*************");
-        testo = mappaLista.getTesto();
-        System.out.println(testo);
-        System.out.println("");
-    }// end of single test
-
-
-    @Test
-    public void anniSenzaParagrafiRigheRaggruppateCoda() {
-        testUnico();
-        listaDidascalie = listaAnno.listaDidascalie;
-
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, true, "", true, false, false, false);
-        Assert.assertNotNull(mappaLista);
-        System.out.println("*************");
-        System.out.println("anniSenzaParagrafiRigheRaggruppateCoda");
-        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe raggruppate, vuoto in coda");
-        System.out.println("*************");
-        testo = mappaLista.getTesto();
-        System.out.println(testo);
-        System.out.println("");
-    }// end of single test
-
-
-    @Test
-    public void anniConParagrafiRigheRaggruppateTestaSenzalinkSenzasize() {
-        testUnico();
-        listaDidascalie = listaAnno.listaDidascalie;
-
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, false, false, false, false);
-        Assert.assertNotNull(mappaLista);
-        System.out.println("*************");
-        System.out.println("anniConParagrafiRigheRaggruppateTestaSenzalinkSenzasize");
-        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in testa, senza link, senza size");
-        System.out.println("*************");
-        testo = mappaLista.getTesto();
-        System.out.println(testo);
-        System.out.println("");
-    }// end of method
-
-
-    @Test
-    public void anniConParagrafiRigheRaggruppateCodaSenzalinkSenzasize() {
-        testUnico();
-        listaDidascalie = listaAnno.listaDidascalie;
-
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, true, false, false, false);
-        Assert.assertNotNull(mappaLista);
-        System.out.println("*************");
-        System.out.println("anniConParagrafiRigheRaggruppateCodaSenzalinkSenzasize");
-        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in coda, senza link, senza size");
-        System.out.println("*************");
-        testo = mappaLista.getTesto();
-        System.out.println(testo);
-        System.out.println("");
-    }// end of method
-
-
-    @Test
-    public void anniConParagrafiRigheRaggruppateTestaConlinkSenzasize() {
-        testUnico();
-        listaDidascalie = listaAnno.listaDidascalie;
-
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, false, true, false, false);
-        Assert.assertNotNull(mappaLista);
-        System.out.println("*************");
-        System.out.println("anniConParagrafiRigheRaggruppateTestaConlinkSenzasize");
-        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in testa, con link, senza size");
-        System.out.println("*************");
-        testo = mappaLista.getTesto();
-        System.out.println(testo);
-        System.out.println("");
-    }// end of method
-
-
-    @Test
-    public void anniConParagrafiRigheRaggruppateTestaConlinkConsize() {
-        testUnico();
-        listaDidascalie = listaAnno.listaDidascalie;
-
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, false, true, true, false);
-        Assert.assertNotNull(mappaLista);
-        System.out.println("*************");
-        System.out.println("anniConParagrafiRigheRaggruppateTestaConlinkConsize");
-        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in testa, con link, con size");
-        System.out.println("*************");
-        testo = mappaLista.getTesto();
-        System.out.println(testo);
-        System.out.println("");
-    }// end of method
+//    @Test
+//    public void anniSenzaParagrafiRigheSingoleTesta() {
+//        testUnico();
+//        listaDidascalie = listaAnno.listaDidascalie;
+//
+//        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, false, "", false, false, false, false);
+//        Assert.assertNotNull(mappaLista);
+//        System.out.println("*************");
+//        System.out.println("anniSenzaParagrafiRigheSingoleTesta");
+//        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe singole, vuoto in testa");
+//        System.out.println("*************");
+//        testo = mappaLista.getTesto();
+//        System.out.println(testo);
+//        System.out.println("");
+//    }// end of method
+//
+//
+//    @Test
+//    public void anniSenzaParagrafiRigheSingoleCoda() {
+//        testUnico();
+//        listaDidascalie = listaAnno.listaDidascalie;
+//
+//        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, false, "", true, false, false, false);
+//        Assert.assertNotNull(mappaLista);
+//        System.out.println("*************");
+//        System.out.println("anniSenzaParagrafiRigheSingoleCoda");
+//        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe singole, vuoto in coda");
+//        System.out.println("*************");
+//        testo = mappaLista.getTesto();
+//        System.out.println(testo);
+//        System.out.println("");
+//    }// end of method
+//
+//
+//    @Test
+//    public void anniSenzaParagrafiRigheRaggruppateTesta() {
+//        testUnico();
+//        listaDidascalie = listaAnno.listaDidascalie;
+//
+//        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, true, "", false, false, false, false);
+//        Assert.assertNotNull(mappaLista);
+//        System.out.println("*************");
+//        System.out.println("anniSenzaParagrafiRigheRaggruppateTesta");
+//        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe raggruppate, vuoto in testa");
+//        System.out.println("*************");
+//        testo = mappaLista.getTesto();
+//        System.out.println(testo);
+//        System.out.println("");
+//    }// end of single test
+//
+//
+//    @Test
+//    public void anniSenzaParagrafiRigheRaggruppateCoda() {
+//        testUnico();
+//        listaDidascalie = listaAnno.listaDidascalie;
+//
+//        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, true, "", true, false, false, false);
+//        Assert.assertNotNull(mappaLista);
+//        System.out.println("*************");
+//        System.out.println("anniSenzaParagrafiRigheRaggruppateCoda");
+//        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Senza paragrafi, righe raggruppate, vuoto in coda");
+//        System.out.println("*************");
+//        testo = mappaLista.getTesto();
+//        System.out.println(testo);
+//        System.out.println("");
+//    }// end of single test
+//
+//
+//    @Test
+//    public void anniConParagrafiRigheRaggruppateTestaSenzalinkSenzasize() {
+//        testUnico();
+//        listaDidascalie = listaAnno.listaDidascalie;
+//
+//        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, false, false, false, false);
+//        Assert.assertNotNull(mappaLista);
+//        System.out.println("*************");
+//        System.out.println("anniConParagrafiRigheRaggruppateTestaSenzalinkSenzasize");
+//        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in testa, senza link, senza size");
+//        System.out.println("*************");
+//        testo = mappaLista.getTesto();
+//        System.out.println(testo);
+//        System.out.println("");
+//    }// end of method
+//
+//
+//    @Test
+//    public void anniConParagrafiRigheRaggruppateCodaSenzalinkSenzasize() {
+//        testUnico();
+//        listaDidascalie = listaAnno.listaDidascalie;
+//
+//        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, true, false, false, false);
+//        Assert.assertNotNull(mappaLista);
+//        System.out.println("*************");
+//        System.out.println("anniConParagrafiRigheRaggruppateCodaSenzalinkSenzasize");
+//        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in coda, senza link, senza size");
+//        System.out.println("*************");
+//        testo = mappaLista.getTesto();
+//        System.out.println(testo);
+//        System.out.println("");
+//    }// end of method
+//
+//
+//    @Test
+//    public void anniConParagrafiRigheRaggruppateTestaConlinkSenzasize() {
+//        testUnico();
+//        listaDidascalie = listaAnno.listaDidascalie;
+//
+//        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, false, true, false, false);
+//        Assert.assertNotNull(mappaLista);
+//        System.out.println("*************");
+//        System.out.println("anniConParagrafiRigheRaggruppateTestaConlinkSenzasize");
+//        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in testa, con link, senza size");
+//        System.out.println("*************");
+//        testo = mappaLista.getTesto();
+//        System.out.println(testo);
+//        System.out.println("");
+//    }// end of method
+//
+//
+//    @Test
+//    public void anniConParagrafiRigheRaggruppateTestaConlinkConsize() {
+//        testUnico();
+//        listaDidascalie = listaAnno.listaDidascalie;
+//
+//        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, true, true, parVuoto, false, true, true, false);
+//        Assert.assertNotNull(mappaLista);
+//        System.out.println("*************");
+//        System.out.println("anniConParagrafiRigheRaggruppateTestaConlinkConsize");
+//        System.out.println("Lista dei " + listaAnno.size + " nati nel " + annoText + " - Con paragrafi, righe raggruppate, vuoto in testa, con link, con size");
+//        System.out.println("*************");
+//        testo = mappaLista.getTesto();
+//        System.out.println(testo);
+//        System.out.println("");
+//    }// end of method
 
 
     /**

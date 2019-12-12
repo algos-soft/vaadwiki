@@ -22,7 +22,7 @@ import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.ui.MainLayout;
 import it.algos.vaadwiki.didascalia.Didascalia;
 import it.algos.vaadwiki.didascalia.DidascaliaService;
-import it.algos.vaadwiki.didascalia.EADidascalia;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioDialog;
 import it.algos.vaadwiki.modules.bio.BioService;

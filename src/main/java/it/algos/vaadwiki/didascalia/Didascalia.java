@@ -3,6 +3,7 @@ package it.algos.vaadwiki.didascalia;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.service.ATextService;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.wiki.LibWiki;
 import org.springframework.beans.factory.annotation.Autowired;

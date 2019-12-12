@@ -330,9 +330,9 @@ public class WikiCost {
 
     public final static String USA_RIGHE_RAGGRUPPATE_ANNI = "usaRigheRaggruppateAnni";
 
-    public final static String SOGLIA_SOTTOPAGINA_GIORNI_ANNI = "sogliaSottopaginaGiorniAnni";
+    public final static String TAGLIO_SOTTOPAGINA_GIORNI_ANNI = "taglioSottopaginaGiorniAnni";
 
-    public final static String SOGLIA_SOTTOPAGINA_NOMI_COGNOMI = "sogliaSottopaginaNomiCognomi";
+    public final static String TAGLIO_SOTTOPAGINA_NOMI_COGNOMI = "taglioSottopaginaNomiCognomi";
 
     public final static String USA_SOTTOPAGINE_GIORNI_ANNI = "usaSottopagineGiorniAnni";
 

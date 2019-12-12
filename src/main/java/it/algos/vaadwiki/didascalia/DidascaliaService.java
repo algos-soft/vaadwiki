@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.didascalia;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.vaadwiki.service.LibBio;

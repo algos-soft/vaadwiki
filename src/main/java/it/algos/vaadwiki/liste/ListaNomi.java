@@ -1,8 +1,8 @@
 package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.nome.Nome;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -27,11 +27,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ListaNomi extends Lista{
-
-
-    //--property
-    protected Nome nome;
+public class ListaNomi extends Lista {
 
 
     /**
@@ -53,7 +49,8 @@ public class ListaNomi extends Lista{
      * @param nome di cui costruire la pagina sul server wiki
      */
     public ListaNomi(Nome nome) {
-        this.nome = nome;
+        super.nome = nome;
+        super.soggetto = nome.nome;
     }// end of constructor
 
 
@@ -74,7 +71,8 @@ public class ListaNomi extends Lista{
         super.usaLinkParagrafo = pref.isBool(USA_LINK_PARAGRAFO_NOMI);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_NOMI);
         super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
-        super.usaBodySottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
+        super.usaSottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
+        super.taglioSottoPagina = pref.getInt(TAGLIO_SOTTOPAGINA_NOMI_COGNOMI);
     }// end of method
 
 
@@ -100,7 +98,7 @@ public class ListaNomi extends Lista{
 
 
     public ListaSottopagina getSottopagina() {
-        return listaService.sottopagina(mappa, pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI), "Persone di nome " + nome.nome, titoloParagrafoVuoto, titoloSottoPaginaVuota);
+        return listaService.sottopagina(mappa, pref.getInt(TAGLIO_SOTTOPAGINA_NOMI_COGNOMI), "Persone di nome " + nome.nome, titoloParagrafoVuoto, titoloSottoPaginaVuota);
     }// fine del metodo
 
 }// end of class

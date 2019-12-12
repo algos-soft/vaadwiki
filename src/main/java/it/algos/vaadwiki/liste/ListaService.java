@@ -3,8 +3,8 @@ package it.algos.vaadwiki.liste;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.application.WikiCost;
-import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.genere.Genere;
 import it.algos.vaadwiki.modules.genere.GenereService;
@@ -393,7 +393,6 @@ public class ListaService extends ABioService {
         LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafiTitolo = new LinkedHashMap<>();
         String chiave = "";
         List<String> listaChiavi;
-        List<WrapDidascalia> listaWrap;
 
         if (usaLinkAttivita) {
             for (String key : mappaParagrafi.keySet()) {
@@ -842,6 +841,18 @@ public class ListaService extends ABioService {
      *
      * @return nome della pagina wiki da linkare come riferimento
      */
+    public String getProfessioneDaBio(Bio bio) {
+        return bio.getAttivita() != null ? getProfessioneDaAttivitaSingolare(bio.getAttivita().singolare) : VUOTA;
+    }// fine del metodo
+
+
+    /**
+     * Restituisce il titolo della pagina wiki associata all'attività indicata <br>
+     *
+     * @param attivitaSingolare
+     *
+     * @return nome della pagina wiki da linkare come riferimento
+     */
     public String getProfessioneDaAttivitaSingolare(String attivitaSingolare) {
         String professioneTxt = "";
         Professione professione;
@@ -859,7 +870,19 @@ public class ListaService extends ABioService {
         }// end of if cycle
 
         return professioneTxt;
-    }// end of single test
+    }// fine del metodo
+
+
+    /**
+     * Restituisce il titolo plurale visibile associato all'attività indicata <br>
+     *
+     * @param attivitaSingolare
+     *
+     * @return nome della pagina wiki da linkare come riferimento
+     */
+    public String getGenereDaBio(Bio bio) {
+        return bio.getAttivita() != null ? getGenereDaAttivitaSingolare(bio.getAttivita().singolare, bio.sesso) : VUOTA;
+    }// fine del metodo
 
 
     /**

@@ -6,10 +6,11 @@ import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ATextService;
-import it.algos.vaadwiki.didascalia.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
+import it.algos.vaadwiki.modules.nome.Nome;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -37,6 +38,8 @@ import java.util.List;
  */
 @Slf4j
 public abstract class Lista {
+
+    public static int TAGLIO_SOTTOPAGINA_DEFAULT = 50;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -112,10 +115,7 @@ public abstract class Lista {
     public boolean usaLinkParagrafo;
 
     //--property
-    public boolean usaBodySottopagine;
-
-//    //--property
-//    public boolean usaOrdineAlfabetico;
+    public boolean usaSottopagine;
 
     /**
      * Lista delle didascalie da usare per costruire la mappa <br>
@@ -123,11 +123,23 @@ public abstract class Lista {
      */
     public ArrayList<WrapDidascalia> listaDidascalie;
 
+//    //--property
+//    public boolean usaOrdineAlfabetico;
+
+    //--property
+    public int taglioSottoPagina;
+
     //--property
     protected Giorno giorno;
 
     //--property
     protected Anno anno;
+
+    //--property
+    protected Nome nome;
+
+    //--property
+    protected String soggetto;
 
     /**
      * Testo finale disponibile <br>
@@ -201,7 +213,8 @@ public abstract class Lista {
         this.paragrafoVuotoInCoda = true;
         this.usaLinkParagrafo = false;
         this.usaParagrafoSize = false;
-        this.usaBodySottopagine = false;
+        this.usaSottopagine = false;
+        this.taglioSottoPagina = TAGLIO_SOTTOPAGINA_DEFAULT;
     }// end of method
 
 
@@ -236,7 +249,7 @@ public abstract class Lista {
      */
     protected void creaMappa(List<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia) {
 //        mappa = listaService.creaMappa(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkAttivita, usaOrdineAlfabetico, typeDidascalia);
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeDidascalia, usaSuddivisioneParagrafi, usaRigheRaggruppate, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkParagrafo, usaParagrafoSize, usaBodySottopagine);
+        mappaLista = appContext.getBean(MappaLista.class, soggetto, listaDidascalie, typeDidascalia, usaRigheRaggruppate, paragrafoVuotoInCoda, usaSuddivisioneParagrafi, titoloParagrafoVuoto, usaLinkParagrafo, usaParagrafoSize, usaSottopagine, taglioSottoPagina);
     }// fine del metodo
 
 
@@ -252,15 +265,19 @@ public abstract class Lista {
     public String getTesto() {
         String testo = "";
 
-        if (usaSuddivisioneParagrafi) {
-            if (usaParagrafoSize) {
-                testo = listaService.righeConParagrafoSize(mappa);
-            } else {
-                testo = listaService.righeConParagrafo(mappa);
-            }// end of if/else cycle
-        } else {
-            testo = listaService.righeSenzaParagrafo(mappa);
-        }// end of if/else cycle
+//        if (usaSuddivisioneParagrafi) {
+//            if (usaParagrafoSize) {
+//                testo = listaService.righeConParagrafoSize(mappa);
+//            } else {
+//                testo = listaService.righeConParagrafo(mappa);
+//            }// end of if/else cycle
+//        } else {
+//            testo = listaService.righeSenzaParagrafo(mappa);
+//        }// end of if/else cycle
+
+        if (mappaLista != null) {
+            testo = mappaLista.getTesto();
+        }// end of if cycle
 
         return testo;
     }// fine del metodo
@@ -317,18 +334,43 @@ public abstract class Lista {
     }// fine del metodo
 
 
-    public List<String> getTitoloParagrafiDisordinato() {
-        return mappaLista.getTitoloParagrafiDisordinato();
+    public int getNumParagrafi() {
+        return mappaLista.getNumParagrafi();
     }// fine del metodo
 
 
-    public List<String> getTitoloParagrafiOrdinato() {
-        return mappaLista.getTitoloParagrafiOrdinato();
+    public List<String> getTitoliParagrafiDisordinati() {
+        return mappaLista.getTitoliParagrafiDisordinati();
     }// fine del metodo
 
 
-    public List<String> getTitoloParagrafiDefinitivo() {
-        return mappaLista.getTitoloParagrafiDefinitivo();
+    public List<String> getTitoliParagrafiOrdinati() {
+        return mappaLista.getTitoliParagrafiOrdinati();
+    }// fine del metodo
+
+
+    public List<String> getTitoliParagrafiPagine() {
+        return mappaLista.getTitoliParagrafiPagine();
+    }// fine del metodo
+
+
+    public List<String> getTitoliParagrafiVisibili() {
+        return mappaLista.getTitoliParagrafiVisibili();
+    }// fine del metodo
+
+
+    public List<String> getTitoliParagrafiLinkati() {
+        return mappaLista.getTitoliParagrafiLinkati();
+    }// fine del metodo
+
+
+    public List<String> getTitoliParagrafiConSize() {
+        return mappaLista.getTitoliParagrafiConSize();
+    }// fine del metodo
+
+
+    public List<String> getTitoliParagrafiDefinitivi() {
+        return mappaLista.getTitoliParagrafiDefinitivi();
     }// fine del metodo
 
 

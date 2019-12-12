@@ -90,13 +90,13 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     usaLinkParagrafoAnni(USA_LINK_PARAGRAFO_ANNI, "Titolo del paragrafo col wikilink alla pagina del secolo", EAPrefType.bool, true),
     usaParagrafoSizeAnni(USA_PARAGRAFO_SIZE_ANNI, "Dimensione del paragrafo nei titoli dei secoli per gli anni", EAPrefType.bool, true),
     usaRigheRaggruppateAnni(USA_RIGHE_RAGGRUPPATE_ANNI, "Usa righe raggruppate per giorno nella liste degli anni", EAPrefType.bool, true),
-    sogliaSottopaginaGiorniAnni(SOGLIA_SOTTOPAGINA_GIORNI_ANNI, "Soglia per sottopaginare i paragrafi di giorni ed anni", EAPrefType.integer, 50),
+    taglioSottopaginaGiorniAnni(TAGLIO_SOTTOPAGINA_GIORNI_ANNI, "Taglio per sottopaginare i paragrafi di giorni ed anni", EAPrefType.integer, 50),
     usaSottopagineGiorniAnni(USA_SOTTOPAGINE_GIORNI_ANNI, "Usa sottopagine se i paragrafi nella liste dei giorni e degli anni superano SOGLIA_SOTTOPAGINA_GIORNI_ANNI", EAPrefType.bool, false),
 
     paragrafoVuotoNomiCognomi(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI, "Titolo del paragrafo per le biografie senza attività specificata", EAPrefType.string, "Senza attività specificata"),
     sottopaginaVuotaNomiCognomi(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI, "Titolo della sottopagina per le biografie senza attività specificata", EAPrefType.string, "Altre..."),
-    sogliaSottopaginaNomiCognomi(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI, "Soglia per sottopaginare i paragrafi di nomi e cognomi", EAPrefType.integer, 50),
-    usaSottopagineNomiCognomi(USA_SOTTOPAGINE_NOMI_COGNOMI, "Usa sottopagine se i paragrafi nella liste di nomi e cognomi superano SOGLIA_SOTTOPAGINA_NOMI_COGNOMI", EAPrefType.bool, false),
+    taglioSottopaginaNomiCognomi(TAGLIO_SOTTOPAGINA_NOMI_COGNOMI, "Taglio per sottopaginare i paragrafi di nomi e cognomi", EAPrefType.integer, 50),
+    usaSottopagineNomiCognomi(USA_SOTTOPAGINE_NOMI_COGNOMI, "Usa sottopagine se i paragrafi nella liste di nomi e cognomi superano SOGLIA_SOTTOPAGINA_NOMI_COGNOMI", EAPrefType.bool, true),
 
     sogliaNomiMongo(SOGLIA_NOMI_MONGO, "Soglia minima per creare una entity nella collezione Nomi sul mongoDB", EAPrefType.integer, 30),
     sogliaNomiWiki(SOGLIA_NOMI_PAGINA_WIKI, "Soglia minima per creare la pagina di un nome sul server wiki", EAPrefType.integer, 50),

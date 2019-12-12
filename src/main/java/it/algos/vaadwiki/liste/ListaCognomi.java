@@ -1,7 +1,7 @@
 package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.didascalia.EADidascalia;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.cognome.Cognome;
@@ -72,7 +72,7 @@ public class ListaCognomi extends Lista {
         super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
         super.usaLinkParagrafo = pref.isBool(USA_LINK_PARAGRAFO_COGNOMI);
         super.usaRigheRaggruppate = false;
-        super.usaBodySottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
+        super.usaSottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
     }// end of method
 
 
@@ -98,7 +98,7 @@ public class ListaCognomi extends Lista {
 
 
     public ListaSottopagina getSottopagina() {
-        return listaService.sottopagina(mappa, pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI), "Persone di cognome " + cognome.cognome, titoloParagrafoVuoto, titoloSottoPaginaVuota);
+        return listaService.sottopagina(mappa, pref.getInt(TAGLIO_SOTTOPAGINA_NOMI_COGNOMI), "Persone di cognome " + cognome.cognome, titoloParagrafoVuoto, titoloSottoPaginaVuota);
     }// fine del metodo
 
 }// end of class

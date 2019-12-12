@@ -586,11 +586,13 @@ public abstract class Upload {
         String testoLista = "";
 
         if (usaBodySottopagine) {
-            sottoPagina = lista.getSottopagina();
-            testoLista = sottoPagina.getTesto();
-            uploadSottoPagine(sottoPagina.getMappa());
+            testoLista = lista.getTesto();
+
+//            sottoPagina = lista.getSottopagina();
+//            testoLista = sottoPagina.getTesto();
+//            uploadSottoPagine(sottoPagina.getMappa());
         } else {
-//            testoLista = lista.getTesto();
+            testoLista = lista.getTesto();
         }// end of if/else cycle
 
         numVoci = lista.size;

@@ -2,12 +2,11 @@ package it.algos.vaadwiki.liste;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.anno.Anno;
-import it.algos.vaadwiki.didascalia.EADidascalia;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -47,6 +46,7 @@ public class ListaAnnoNato extends Lista {
      */
     public ListaAnnoNato(Anno anno) {
         super.anno = anno;
+        super.soggetto = anno.titolo;
     }// end of constructor
 
 
