@@ -89,44 +89,28 @@ public class MappaLista {
     private EADidascalia typeDidascalia;
 
     //--parametro in ingresso
-    private boolean usaSuddivisioneParagrafi;
-
-    //--parametro in ingresso
-    private boolean usaRigheRaggruppate;
+    private TypeLista typeLista;
 
     //--parametro in ingresso
     private String titoloParagrafoVuoto;
 
-    //--parametro in ingresso
-    private boolean paragrafoVuotoInCoda;
-
-    //--parametro in ingresso
-    private boolean usaLinkParagrafo;
-
-    //--parametro in ingresso
-    private boolean usaParagrafoSize;
-
-    //--parametro in ingresso
-    private boolean usaSottopagine;
-
-    //--property elaborata
-    @Deprecated
-    private List<String> titoloParagrafiDisordinato;
-
-    //--property elaborata
-    @Deprecated
-    private List<String> titoloParagrafiOrdinato;
-
-    //--property elaborata
-    @Deprecated
-    private List<String> titoloParagrafiDefinitivo;
-
-    //--property elaborata
-    private LinkedHashMap<String, Integer> numVociParagrafi;
-
-    //--property elaborata
-    @Deprecated
-    private LinkedHashMap<String, Integer> numVociParagrafiDefinitivi;
+//    //--property elaborata
+//    private boolean paragrafoVuotoInCoda;
+//
+//    //--property elaborata
+//    private boolean usaLinkParagrafo;
+//
+//    //--property elaborata
+//    private boolean usaParagrafoSize;
+//
+//    //--property elaborata
+//    private boolean usaSottopagine;
+//
+//    //--property elaborata
+//    private boolean usaSuddivisioneParagrafi;
+//
+//    //--property elaborata
+//    private boolean usaRigheRaggruppate;
 
     //--property elaborata
     private TitoliLista titoliLista;
@@ -166,9 +150,8 @@ public class MappaLista {
      * Senza paragrafi <br>
      */
     public MappaLista(List<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia, boolean usaRigheRaggruppate, boolean paragrafoVuotoInCoda) {
-        this(VUOTA, listaDidascalie, typeDidascalia, usaRigheRaggruppate, paragrafoVuotoInCoda, false, VUOTA, false, false, false, 0);
+        this(VUOTA, listaDidascalie, typeDidascalia, new TypeLista(false, usaRigheRaggruppate, paragrafoVuotoInCoda, false, false, false), VUOTA, 0);
     }// end of constructor
-
 
     /**
      * Costruttore con parametri <br>
@@ -180,26 +163,42 @@ public class MappaLista {
             String soggetto,
             List<WrapDidascalia> listaDidascalie,
             EADidascalia typeDidascalia,
-            boolean usaRigheRaggruppate,
-            boolean paragrafoVuotoInCoda,
-            boolean usaSuddivisioneParagrafi,
+            TypeLista typeLista,
             String titoloParagrafoVuoto,
-            boolean usaLinkParagrafo,
-            boolean usaParagrafoSize,
-            boolean usaSottopagine,
             int taglioSottoPagina) {
         this.soggetto = soggetto;
         this.listaDidascalie = listaDidascalie;
         this.typeDidascalia = typeDidascalia;
-        this.usaRigheRaggruppate = usaRigheRaggruppate;
-        this.paragrafoVuotoInCoda = paragrafoVuotoInCoda;
-        this.usaSuddivisioneParagrafi = usaSuddivisioneParagrafi;
+        this.typeLista = typeLista;
         this.titoloParagrafoVuoto = titoloParagrafoVuoto;
-        this.usaLinkParagrafo = usaLinkParagrafo;
-        this.usaParagrafoSize = usaParagrafoSize;
-        this.usaSottopagine = usaSottopagine;
         this.taglioSottoPagina = taglioSottoPagina > 0 ? taglioSottoPagina : Lista.TAGLIO_SOTTOPAGINA_DEFAULT;
     }// end of constructor
+
+
+//    /**
+//     * Costruttore con parametri <br>
+//     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+//     * Usa: appContext.getBean(MappaLista.class, ..., ...) <br>
+//     * Con paragrafi <br>
+//     */
+//    public MappaLista(
+//            String soggetto,
+//            List<WrapDidascalia> listaDidascalie,
+//            EADidascalia typeDidascalia,
+//            boolean usaRigheRaggruppate,
+//            boolean paragrafoVuotoInCoda,
+//            boolean usaSuddivisioneParagrafi,
+//            String titoloParagrafoVuoto,
+//            boolean usaLinkParagrafo,
+//            boolean usaParagrafoSize,
+//            boolean usaSottopagine,
+//            int taglioSottoPagina) {
+//        this.soggetto = soggetto;
+//        this.listaDidascalie = listaDidascalie;
+//        this.typeDidascalia = typeDidascalia;
+//        this.titoloParagrafoVuoto = titoloParagrafoVuoto;
+//        this.taglioSottoPagina = taglioSottoPagina > 0 ? taglioSottoPagina : Lista.TAGLIO_SOTTOPAGINA_DEFAULT;
+//    }// end of constructor
 
 
     /**
@@ -222,9 +221,6 @@ public class MappaLista {
         //--crea la mappa wrap di terzo livello
         creaMappaWrapTre();
 
-        //--ordinamento dei titoli dei paragrafi
-        titoliLista.ordina();
-
         //--ordinamento alfabetico delle sottopagine
         ordinaChiavi();
 
@@ -234,7 +230,7 @@ public class MappaLista {
         //--ordinamento delle liste
         ordinaListe();
 
-        titoliLista.definitivi(numVociParagrafi);
+//        titoliLista.definitivi(type.numVociParagrafi);
 
         //--creazione della mappa finale
         creaMappaFinale();
@@ -310,7 +306,7 @@ public class MappaLista {
                 listaTitoli.add(titolo);
                 mappaParagrafiTitolo.put(chiave, mappaWrapUno.get(chiaveParagrafo));
             }// end of for cycle
-            titoliLista = appContext.getBean(TitoliLista.class, listaTitoli, typeDidascalia, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkParagrafo, usaParagrafoSize);
+            titoliLista = appContext.getBean(TitoliLista.class, listaTitoli, typeDidascalia, typeLista, titoloParagrafoVuoto);
         }// end of if cycle
     }// fine del metodo
 
@@ -399,10 +395,10 @@ public class MappaLista {
      * Sostituisce i titoli definitivi nella mappa <br>
      */
     private void ordinaChiavi() {
-        titoloParagrafiDisordinato = new ArrayList<>();
-        titoloParagrafiOrdinato = new ArrayList<>();
-        titoloParagrafiDefinitivo = new ArrayList<>();
-        numVociParagrafiDefinitivi = new LinkedHashMap<>();
+//        titoloParagrafiDisordinato = new ArrayList<>();
+//        titoloParagrafiOrdinato = new ArrayList<>();
+//        titoloParagrafiDefinitivo = new ArrayList<>();
+//        numVociParagrafiDefinitivi = new LinkedHashMap<>();
 
         ordinaSecondoLivello();
         ordinaTerzoLivello();
@@ -575,11 +571,13 @@ public class MappaLista {
         List<WrapDidascalia> listaDisordinata;
         LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>> mappaParagrafo;
         LinkedHashMap<String, List<WrapDidascalia>> mappaSottoPagina;
+        int numVociParagrafo;
 
         if (mappaWrapTre != null) {
-            numVociParagrafi = new LinkedHashMap<>();
+//            numVociParagrafi = new LinkedHashMap<>();
             numVociTotali = 0;
             for (String chiaveParagrafo : titoliLista.getChiavi()) {
+                numVociParagrafo = 0;
                 mappaParagrafo = mappaWrapTre.get(chiaveParagrafo);
                 if (mappaParagrafo != null && mappaParagrafo.size() > 0) {
                     for (String chiaveSottoPagina : mappaParagrafo.keySet()) {
@@ -588,17 +586,20 @@ public class MappaLista {
                             for (String chiaveSottoSottoPagina : mappaSottoPagina.keySet()) {
                                 listaDisordinata = mappaSottoPagina.get(chiaveSottoSottoPagina);
                                 if (listaDisordinata != null && listaDisordinata.size() > 0) {
-                                    if (numVociParagrafi.get(chiaveParagrafo) != null) {
-                                        numVociParagrafi.put(chiaveParagrafo, numVociParagrafi.get(chiaveParagrafo) + listaDisordinata.size());
-                                    } else {
-                                        numVociParagrafi.put(chiaveParagrafo, listaDisordinata.size());
-                                    }// end of if/else cycle
+                                    numVociParagrafo += listaDisordinata.size();
+//                                    if (numVociParagrafi.get(chiaveParagrafo) != null) {
+//                                        numVociParagrafi.put(chiaveParagrafo, numVociParagrafi.get(chiaveParagrafo) + listaDisordinata.size());
+//                                    } else {
+//                                        numVociParagrafi.put(chiaveParagrafo, listaDisordinata.size());
+//                                    }// end of if/else cycle
                                     numVociTotali += listaDisordinata.size();
                                 }// end of if cycle
                             }// end of for cycle
                         }// end of if cycle
                     }// end of for cycle
                 }// end of if cycle
+                //xx
+                titoliLista.setSize(chiaveParagrafo, numVociParagrafo);
             }// end of for cycle
         }// end of if cycle
 
@@ -723,7 +724,7 @@ public class MappaLista {
             if (listaWrapDidascalie.size() == 1) {
                 creaRigaConChiave(listaTxt, listaWrapDidascalie.get(0));
             } else {
-                if (usaRigheRaggruppate) {
+                if (typeLista.usaRigheRaggruppate) {
                     mappa = creaMappaChiavi(listaWrapDidascalie);
                     for (String key : mappa.keySet()) {
                         if (mappa.get(key) == 1) {
@@ -894,7 +895,7 @@ public class MappaLista {
 
 
     public List<String> getTitoliParagrafiDisordinati() {
-        return titoliLista != null ? titoliLista.getChiavi() : new ArrayList<>();
+        return titoliLista != null ? titoliLista.getDisordinati() : new ArrayList<>();
     }// fine del metodo
 
 
@@ -929,15 +930,7 @@ public class MappaLista {
 
 
     public List<Integer> getDimParagrafi() {
-        List<Integer> lista = new ArrayList<>();
-
-        if (numVociParagrafiDefinitivi != null) {
-            for (String titolo : numVociParagrafiDefinitivi.keySet()) {
-                lista.add(numVociParagrafiDefinitivi.get(titolo));
-            }// end of for cycle
-        }// end of if cycle
-
-        return lista;
+        return titoliLista != null ? titoliLista.getDimensioni() : new ArrayList<>();
     }// fine del metodo
 
 
@@ -1050,7 +1043,9 @@ public class MappaLista {
         StringBuilder testoLista = new StringBuilder();
         List<String> listaRighe;
 
-        if (usaSuddivisioneParagrafi) {
+        titoliLista.setDefinitivi(typeLista);
+
+        if (typeLista.usaSuddivisioneParagrafi) {
             listaRighe = getListaCon();
         } else {
             listaRighe = getListaSenza();

@@ -249,7 +249,9 @@ public abstract class Lista {
      */
     protected void creaMappa(List<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia) {
 //        mappa = listaService.creaMappa(listaDidascalie, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkAttivita, usaOrdineAlfabetico, typeDidascalia);
-        mappaLista = appContext.getBean(MappaLista.class, soggetto, listaDidascalie, typeDidascalia, usaRigheRaggruppate, paragrafoVuotoInCoda, usaSuddivisioneParagrafi, titoloParagrafoVuoto, usaLinkParagrafo, usaParagrafoSize, usaSottopagine, taglioSottoPagina);
+        TypeLista type = new TypeLista(usaSuddivisioneParagrafi, usaRigheRaggruppate, paragrafoVuotoInCoda, usaLinkParagrafo, usaParagrafoSize, usaSottopagine);
+        mappaLista = appContext.getBean(MappaLista.class, soggetto, listaDidascalie, typeDidascalia, type, titoloParagrafoVuoto, taglioSottoPagina);
+//        mappaLista = appContext.getBean(MappaLista.class, soggetto, listaDidascalie, typeDidascalia, usaRigheRaggruppate, paragrafoVuotoInCoda, usaSuddivisioneParagrafi, titoloParagrafoVuoto, usaLinkParagrafo, usaParagrafoSize, usaSottopagine, taglioSottoPagina);
     }// fine del metodo
 
 

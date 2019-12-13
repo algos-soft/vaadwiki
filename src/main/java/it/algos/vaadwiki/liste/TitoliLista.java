@@ -6,7 +6,6 @@ import it.algos.vaadflow.modules.secolo.SecoloService;
 import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.enumeration.EADidascalia;
-import it.algos.wiki.LibWiki;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -36,16 +35,10 @@ public class TitoliLista {
     private EADidascalia typeDidascalia;
 
     //--parametro in ingresso
+    private TypeLista typeLista;
+
+    //--parametro in ingresso
     private String titoloParagrafoVuoto;
-
-    //--parametro in ingresso
-    private boolean paragrafoVuotoInCoda;
-
-    //--parametro in ingresso
-    private boolean usaLinkParagrafo;
-
-    //--parametro in ingresso
-    private boolean usaParagrafoSize;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -78,11 +71,11 @@ public class TitoliLista {
     //--property elaborata
     private List<String> ordinati;
 
-    //--property elaborata
-    private LinkedHashMap<String, String> mappaDefinitivi;
+//    //--property elaborata
+//    private LinkedHashMap<String, String> mappaDefinitivi;
 
-    //--property elaborata
-    private LinkedHashMap<String, Integer> mappaVoci;
+//    //--property elaborata
+//    private LinkedHashMap<String, Integer> mappaVoci;
 
     //--property elaborata
     private List<Titolo> listaTitoli;
@@ -105,13 +98,11 @@ public class TitoliLista {
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(TitoliLista.class, ..., ...) <br>
      */
-    public TitoliLista(List<Titolo> listaTitoli, EADidascalia typeDidascalia, String titoloParagrafoVuoto, boolean paragrafoVuotoInCoda, boolean usaLinkParagrafo, boolean usaParagrafoSize) {
+    public TitoliLista(List<Titolo> listaTitoli, EADidascalia typeDidascalia, TypeLista typeLista, String titoloParagrafoVuoto) {
         this.listaTitoli = listaTitoli;
         this.typeDidascalia = typeDidascalia;
+        this.typeLista = typeLista;
         this.titoloParagrafoVuoto = titoloParagrafoVuoto;
-        this.paragrafoVuotoInCoda = paragrafoVuotoInCoda;
-        this.usaLinkParagrafo = usaLinkParagrafo;
-        this.usaParagrafoSize = usaParagrafoSize;
     }// end of constructor
 
 
@@ -122,10 +113,19 @@ public class TitoliLista {
      */
     @PostConstruct
     protected void postConstruct() {
+        creaMappa();
+        ordina();
+        riordinaMappa();
+    }// end of method
+
+
+    protected void creaMappa() {
         mappaTitoli = new LinkedHashMap<>();
+        disordinati = new ArrayList<>();
 
         if (listaTitoli != null && listaTitoli.size() > 0) {
             for (Titolo titolo : listaTitoli) {
+                disordinati.add(titolo.chiave);
                 mappaTitoli.put(titolo.chiave, titolo);
             }// end of for cycle
         }// end of if cycle
@@ -163,7 +163,7 @@ public class TitoliLista {
             } // end of switch statement
         }// end of if cycle
 
-        if (paragrafoVuotoInCoda && ordinati != null) {
+        if (typeLista.paragrafoVuotoInCoda && ordinati != null) {
             if (ordinati.contains(VUOTA)) {
                 ordinati.remove(VUOTA);
                 ordinati.add(VUOTA);
@@ -173,129 +173,165 @@ public class TitoliLista {
 
 
     /**
-     * Costruisce i titoli definitivi dei paragrafi (link a wikipagine, quadre e dimensioni del paragrafo) <br>
+     * Riordina la mappa dopo una modifica alla lista 'ordinati' <br>
      */
-    public void definitivi(LinkedHashMap<String, Integer> numVociParagrafi) {
+    public void riordinaMappa() {
+        LinkedHashMap<String, Titolo> mappaTmp = null;
+
         if (ordinati != null) {
-            mappaDefinitivi = new LinkedHashMap<>();
-            mappaVoci = new LinkedHashMap<>();
-            for (String titolo : ordinati) {
-                mappaDefinitivi.put(titolo, titoloDefinitivo(titolo, numVociParagrafi.get(titolo)));
+            mappaTmp = new LinkedHashMap<>();
+            for (String key : ordinati) {
+                mappaTmp.put(key, mappaTitoli.get(key));
             }// end of for cycle
         }// end of if cycle
+
+        mappaTitoli = mappaTmp;
     }// fine del metodo
 
 
-    /**
-     * Costruzione del titolo definitivo dei paragrafi <br>
-     * Eventuale link a wikipagine <br>
-     * Doppie quadre <br>
-     * Eventuali dimensioni del paragrafo <br>
-     */
-    private String titoloDefinitivo(String titolo, int size) {
-        String titoloDefinitivo = VUOTA;
+//    /**
+//     * Costruisce i titoli definitivi dei paragrafi (link a wikipagine, quadre e dimensioni del paragrafo) <br>
+//     */
+//    public void definitivi(LinkedHashMap<String, Integer> numVociParagrafi) {
+//        if (ordinati != null) {
+//            mappaDefinitivi = new LinkedHashMap<>();
+//            mappaVoci = new LinkedHashMap<>();
+//            for (String titolo : ordinati) {
+//                mappaDefinitivi.put(titolo, titoloDefinitivo(titolo, numVociParagrafi.get(titolo)));
+//            }// end of for cycle
+//        }// end of if cycle
+//    }// fine del metodo
 
-        if (text.isValid(titoloParagrafoVuoto) && titolo.equals(VUOTA)) {
-            titoloDefinitivo = titoloParagrafoVuoto;
-        } else {
-            if (usaLinkParagrafo) {
-                titoloDefinitivo = LibWiki.setQuadre(titolo);
-            } else {
-                titoloDefinitivo = titolo;
-            }// end of if/else cycle
-        }// end of if/else cycle
 
-        if (usaParagrafoSize && size > 0) {
-            titoloDefinitivo += " <span style=\"font-size:70%\">(" + size + ")</span>";
-        }// end of if cycle
-
-        mappaVoci.put(titolo, size);
-
-        return titoloDefinitivo;
-    }// fine del metodo
+//    /**
+//     * Costruzione del titolo definitivo dei paragrafi <br>
+//     * Eventuale link a wikipagine <br>
+//     * Doppie quadre <br>
+//     * Eventuali dimensioni del paragrafo <br>
+//     */
+//    private String titoloDefinitivo(String titolo, int size) {
+//        String titoloDefinitivo = VUOTA;
+//
+//        if (text.isValid(titoloParagrafoVuoto) && titolo.equals(VUOTA)) {
+//            titoloDefinitivo = titoloParagrafoVuoto;
+//        } else {
+//            if (typeLista.usaLinkParagrafo) {
+//                titoloDefinitivo = LibWiki.setQuadre(titolo);
+//            } else {
+//                titoloDefinitivo = titolo;
+//            }// end of if/else cycle
+//        }// end of if/else cycle
+//
+//        if (typeLista.usaParagrafoSize && size > 0) {
+//            titoloDefinitivo += " <span style=\"font-size:70%\">(" + size + ")</span>";
+//        }// end of if cycle
+//
+//        mappaVoci.put(titolo, size);
+//
+//        return titoloDefinitivo;
+//    }// fine del metodo
 
 
     public List<String> getChiavi() {
-        List<String> lista = null;
+        return ordinati;
+    }// fine del metodo
 
-        if (mappaTitoli != null && mappaTitoli.size() > 0) {
-            lista = new ArrayList<>();
-            for (String key : mappaTitoli.keySet()) {
-                lista.add(mappaTitoli.get(key).chiave);
-            }// end of for cycle
-        }// end of if cycle
 
-        return lista;
+    public List<String> getDisordinati() {
+        return disordinati;
     }// fine del metodo
 
 
     public List<String> getOrdinati() {
-        return new ArrayList<>();
+        return ordinati;
     }// fine del metodo
 
 
     public List<String> getPagine() {
-        List<String> lista = null;
+        List<String> lista = new ArrayList<>();
 
-        if (mappaTitoli != null && mappaTitoli.size() > 0) {
-            lista = new ArrayList<>();
-            for (String key : mappaTitoli.keySet()) {
-                lista.add(mappaTitoli.get(key).pagina);
-            }// end of for cycle
-        }// end of if cycle
+        for (String key : ordinati) {
+            lista.add(mappaTitoli.get(key).pagina);
+        }// end of for cycle
 
         return lista;
     }// fine del metodo
+
 
     public List<String> getVisibili() {
-        List<String> lista = null;
+        List<String> lista = new ArrayList<>();
 
-        if (mappaTitoli != null && mappaTitoli.size() > 0) {
-            lista = new ArrayList<>();
-            for (String key : mappaTitoli.keySet()) {
-                lista.add(mappaTitoli.get(key).visibile);
-            }// end of for cycle
-        }// end of if cycle
+        for (String key : ordinati) {
+            lista.add(mappaTitoli.get(key).visibile);
+        }// end of for cycle
 
         return lista;
     }// fine del metodo
+
 
     public List<String> getLinkati() {
-        List<String> lista = null;
+        List<String> lista = new ArrayList<>();
 
-        if (mappaTitoli != null && mappaTitoli.size() > 0) {
-            lista = new ArrayList<>();
-            for (String key : mappaTitoli.keySet()) {
-                lista.add(mappaTitoli.get(key).getLinkato());
-            }// end of for cycle
-        }// end of if cycle
+        for (String key : ordinati) {
+            lista.add(mappaTitoli.get(key).getLinkato());
+        }// end of for cycle
 
         return lista;
     }// fine del metodo
 
-    public List<String> getConSize() {
-        List<String> lista = null;
 
-        if (mappaTitoli != null && mappaTitoli.size() > 0) {
-            lista = new ArrayList<>();
-            for (String key : mappaTitoli.keySet()) {
-                lista.add(mappaTitoli.get(key).getConSize());
-            }// end of for cycle
-        }// end of if cycle
+    public List<String> getConSize() {
+        List<String> lista = new ArrayList<>();
+
+        for (String key : ordinati) {
+            lista.add(mappaTitoli.get(key).getConSize());
+        }// end of for cycle
 
         return lista;
     }// fine del metodo
 
 
     public List<String> getDefinitivi() {
-        List<String> lista = null;
+        List<String> lista = new ArrayList<>();
 
-        if (mappaTitoli != null && mappaTitoli.size() > 0) {
-            lista = new ArrayList<>();
+        for (String key : ordinati) {
+            lista.add(mappaTitoli.get(key).getDefinitivo());
+        }// end of for cycle
+
+        return lista;
+    }// fine del metodo
+
+
+    public void setDefinitivi(TypeLista type) {
+        Titolo titolo;
+        String visibile;
+        String linkato;
+        String conSize;
+
+        if (type != null && mappaTitoli != null) {
             for (String key : mappaTitoli.keySet()) {
-                lista.add(mappaTitoli.get(key).getDefinitivo());
+                titolo = mappaTitoli.get(key);
+                visibile = titolo.getVisibile();
+                linkato = titolo.getLinkato();
+                conSize = titolo.getConSize();
+                titolo.setDefinitivo(visibile);
+                if (type.usaLinkParagrafo) {
+                    titolo.setDefinitivo(linkato);
+                }// end of if cycle
+                if (type.usaParagrafoSize) {
+                    titolo.setDefinitivo(conSize);
+                }// end of if cycle
             }// end of for cycle
         }// end of if cycle
+    }// fine del metodo
+
+
+    public List<Integer> getDimensioni() {
+        List<Integer> lista = new ArrayList<>();
+
+        for (String key : ordinati) {
+            lista.add(mappaTitoli.get(key).getNumVoci());
+        }// end of for cycle
 
         return lista;
     }// fine del metodo
@@ -306,11 +342,22 @@ public class TitoliLista {
     }// fine del metodo
 
 
+    public void setSize(String titolo, int size) {
+        if (text.isValid(titolo) && size > 0) {
+            if (mappaTitoli.containsKey(titolo)) {
+                mappaTitoli.get(titolo).setNumVoci(size);
+            }// end of if cycle
+        }// end of if cycle
+    }// fine del metodo
+
+
     public int getSize(String titolo) {
         int size = 0;
 
-        if (mappaVoci != null && mappaVoci.size() > 0 && mappaVoci.containsKey(titolo)) {
-            size = mappaVoci.get(titolo);
+        if (text.isValid(titolo)) {
+            if (mappaTitoli.containsKey(titolo)) {
+                size = mappaTitoli.get(titolo).getNumVoci();
+            }// end of if cycle
         }// end of if cycle
 
         return size;

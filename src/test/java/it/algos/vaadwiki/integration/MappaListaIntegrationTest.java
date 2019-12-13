@@ -69,7 +69,9 @@ public class MappaListaIntegrationTest extends ATest {
     private String giornoText = "3 marzo";
 
     //    private String nomeText = "Rita";
-    private String nomeText = "Andrea";
+//    private String nomeText = "Andrea";
+//    private String nomeText = "Željko";
+    private String nomeText = "Aldo";
 
     private Anno annoEntity;
 
@@ -155,7 +157,7 @@ public class MappaListaIntegrationTest extends ATest {
         inizia();
         listaDidascalie = listaAnno.listaDidascalie;
 
-        mappaLista = appContext.getBean(MappaLista.class,  listaDidascalie, typeAnno, false, true);
+        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeAnno, false, true);
         Assert.assertNotNull(mappaLista);
         System.out.println("*************");
         System.out.println("anniSenzaParagrafiRigheSingoleCoda");
@@ -352,16 +354,59 @@ public class MappaListaIntegrationTest extends ATest {
 
 
     @Test
+    public void nomiCodaConlinkConsizeConsottopagine() {
+        inizia();
+        int dim = 10;
+        listaDidascalie = listaNome.listaDidascalie;
+        TypeLista type = new TypeLista(true);
+        mappaLista = appContext.getBean(MappaLista.class, nomeText, listaDidascalie, typeNome, type, parAttivita, 12);
+        Assert.assertNotNull(mappaLista);
+        System.out.println("*************");
+        System.out.println("nomiCodaConlinkConsizeConsottopagine");
+        System.out.println("Lista dei " + listaNome.size + " biografati di nome " + nomeText + " - Con paragrafi, con link, con le dimensioni nel titolo del paragrafo e con sottopagine");
+        System.out.println("*************");
+        System.out.println("Ci sono " + mappaLista.getNumParagrafi() + " paragrafi");
+        if (dim >= mappaLista.getNumParagrafi()) {
+            dim = mappaLista.getNumParagrafi();
+        }// end of if cycle
+        System.out.println("Primi " + dim + " titoli disordinati");
+        System.out.println(mappaLista.getTitoliParagrafiDisordinati().subList(0, dim));
+        System.out.println("Primi " + dim + " titoli ordinati");
+        System.out.println(mappaLista.getTitoliParagrafiOrdinati().subList(0, dim));
+        System.out.println("Primi " + dim + " riferimenti alla pagina professione");
+        System.out.println(mappaLista.getTitoliParagrafiPagine().subList(0, dim));
+        System.out.println("Primi " + dim + " titoli visibili");
+        System.out.println(mappaLista.getTitoliParagrafiVisibili().subList(0, dim));
+        System.out.println("Primi " + dim + " titoli linkati");
+        System.out.println(mappaLista.getTitoliParagrafiLinkati().subList(0, dim));
+        System.out.println("Primi " + dim + " titoli conSize");
+        System.out.println(mappaLista.getTitoliParagrafiConSize().subList(0, dim));
+        System.out.println("Primi " + dim + " titoli definitivi");
+        System.out.println(mappaLista.getTitoliParagrafiDefinitivi().subList(0, dim));
+        System.out.println("Dimensione dei paragrafi");
+        System.out.println(mappaLista.getDimParagrafi());
+
+        System.out.println("");
+        testo = mappaLista.getTesto();
+        System.out.println(testo);
+        System.out.println("");
+    }// end of single test
+
+
+    @Test
     public void nomiTestaConlinkConsizeConsottopagine() {
         inizia();
+        int dim = 10;
         listaDidascalie = listaNome.listaDidascalie;
-
-        mappaLista = appContext.getBean(MappaLista.class, nomeText, listaDidascalie, typeNome, false, false, true, parAttivita, true, true, true, 12);
+        TypeLista type = new TypeLista(true);
+        type.paragrafoVuotoInCoda = false;
+        mappaLista = appContext.getBean(MappaLista.class, nomeText, listaDidascalie, typeNome, type, parAttivita, 12);
         Assert.assertNotNull(mappaLista);
         System.out.println("*************");
         System.out.println("nomiTestaConlinkConsizeConsottopagine");
         System.out.println("Lista dei " + listaNome.size + " biografati di nome " + nomeText + " - Con paragrafi, con link, con le dimensioni nel titolo del paragrafo e con sottopagine");
         System.out.println("*************");
+        System.out.println("");
         testo = mappaLista.getTesto();
         System.out.println(testo);
         System.out.println("");

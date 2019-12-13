@@ -13,6 +13,7 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  */
 public class Titolo {
 
+
     public String chiave;
 
     public String pagina;
@@ -63,6 +64,16 @@ public class Titolo {
     }// end of method
 
 
+    public void setDefinitivo(String definitivo) {
+        this.definitivo = definitivo;
+    }// end of method
+
+
+    public String getVisibile() {
+        return visibile;
+    }// end of method
+
+
     public String getDefinitivo() {
         return definitivo.length() > 0 ? definitivo : visibile;
     }// end of method
@@ -71,5 +82,16 @@ public class Titolo {
     public int getNumVoci() {
         return numVoci;
     }// end of method
+
+
+    public void setNumVoci(int numVoci) {
+        this.numVoci = numVoci;
+
+        if (numVoci > 0) {
+            conSize = linkato + " <span style=\"font-size:70%\">(" + numVoci + ")</span>";
+        } else {
+            conSize = linkato;
+        }// end of if/else cycle
+    }// fine del metodo
 
 }// end of class
