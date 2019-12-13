@@ -64,11 +64,6 @@ public class Titolo {
     }// end of method
 
 
-    public void setDefinitivo(String definitivo) {
-        this.definitivo = definitivo;
-    }// end of method
-
-
     public String getVisibile() {
         return visibile;
     }// end of method
@@ -79,6 +74,11 @@ public class Titolo {
     }// end of method
 
 
+    public void setDefinitivo(String definitivo) {
+        this.definitivo = definitivo;
+    }// end of method
+
+
     public int getNumVoci() {
         return numVoci;
     }// end of method
@@ -86,11 +86,18 @@ public class Titolo {
 
     public void setNumVoci(int numVoci) {
         this.numVoci = numVoci;
+        String valido = "";
+
+        if (linkato != null && linkato.length() > 0) {
+            valido = linkato;
+        } else {
+            valido = visibile;
+        }// end of if/else cycle
 
         if (numVoci > 0) {
-            conSize = linkato + " <span style=\"font-size:70%\">(" + numVoci + ")</span>";
+            conSize = valido + " <span style=\"font-size:70%\">(" + numVoci + ")</span>";
         } else {
-            conSize = linkato;
+            conSize = valido;
         }// end of if/else cycle
     }// fine del metodo
 

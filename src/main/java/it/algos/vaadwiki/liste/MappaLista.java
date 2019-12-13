@@ -153,6 +153,23 @@ public class MappaLista {
         this(VUOTA, listaDidascalie, typeDidascalia, new TypeLista(false, usaRigheRaggruppate, paragrafoVuotoInCoda, false, false, false), VUOTA, 0);
     }// end of constructor
 
+
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Usa: appContext.getBean(MappaLista.class, ..., ...) <br>
+     * Con paragrafi <br>
+     */
+    public MappaLista(
+            String soggetto,
+            List<WrapDidascalia> listaDidascalie,
+            EADidascalia typeDidascalia,
+            TypeLista typeLista,
+            String titoloParagrafoVuoto) {
+        this(soggetto, listaDidascalie, typeDidascalia, typeLista, titoloParagrafoVuoto, 0);
+    }// end of constructor
+
+
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
@@ -574,9 +591,8 @@ public class MappaLista {
         int numVociParagrafo;
 
         if (mappaWrapTre != null) {
-//            numVociParagrafi = new LinkedHashMap<>();
             numVociTotali = 0;
-            for (String chiaveParagrafo : titoliLista.getChiavi()) {
+            for (String chiaveParagrafo : titoliLista.getOrdinati()) {
                 numVociParagrafo = 0;
                 mappaParagrafo = mappaWrapTre.get(chiaveParagrafo);
                 if (mappaParagrafo != null && mappaParagrafo.size() > 0) {
@@ -587,18 +603,12 @@ public class MappaLista {
                                 listaDisordinata = mappaSottoPagina.get(chiaveSottoSottoPagina);
                                 if (listaDisordinata != null && listaDisordinata.size() > 0) {
                                     numVociParagrafo += listaDisordinata.size();
-//                                    if (numVociParagrafi.get(chiaveParagrafo) != null) {
-//                                        numVociParagrafi.put(chiaveParagrafo, numVociParagrafi.get(chiaveParagrafo) + listaDisordinata.size());
-//                                    } else {
-//                                        numVociParagrafi.put(chiaveParagrafo, listaDisordinata.size());
-//                                    }// end of if/else cycle
                                     numVociTotali += listaDisordinata.size();
                                 }// end of if cycle
                             }// end of for cycle
                         }// end of if cycle
                     }// end of for cycle
                 }// end of if cycle
-                //xx
                 titoliLista.setSize(chiaveParagrafo, numVociParagrafo);
             }// end of for cycle
         }// end of if cycle
@@ -995,7 +1005,7 @@ public class MappaLista {
         String tagFisso = "Vedi anche|";
         String tagTypo = typeDidascalia.pagina;
         String tag = "/";
-        return LibWiki.setGraffe(tagFisso + tagTypo + soggetto + tag + chiaveParagrafo);
+        return LibWiki.setGraffe(tagFisso + tagTypo + soggetto + tag + text.primaMaiuscola(chiaveParagrafo));
     }// end of method
 
 

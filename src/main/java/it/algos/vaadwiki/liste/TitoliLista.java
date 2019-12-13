@@ -71,12 +71,6 @@ public class TitoliLista {
     //--property elaborata
     private List<String> ordinati;
 
-//    //--property elaborata
-//    private LinkedHashMap<String, String> mappaDefinitivi;
-
-//    //--property elaborata
-//    private LinkedHashMap<String, Integer> mappaVoci;
-
     //--property elaborata
     private List<Titolo> listaTitoli;
 
@@ -126,7 +120,13 @@ public class TitoliLista {
         if (listaTitoli != null && listaTitoli.size() > 0) {
             for (Titolo titolo : listaTitoli) {
                 disordinati.add(titolo.chiave);
-                mappaTitoli.put(titolo.chiave, titolo);
+                if (titolo.chiave.equals(VUOTA)) {
+                    mappaTitoli.put(VUOTA, titolo);
+                    titolo.chiave = titoloParagrafoVuoto;
+                    titolo.visibile = text.primaMaiuscola(titoloParagrafoVuoto);
+                } else {
+                    mappaTitoli.put(titolo.chiave, titolo);
+                }// end of if/else cycle
             }// end of for cycle
         }// end of if cycle
     }// end of method
@@ -169,6 +169,7 @@ public class TitoliLista {
                 ordinati.add(VUOTA);
             }// end of if cycle
         }// end of if cycle
+
     }// fine del metodo
 
 
@@ -187,49 +188,6 @@ public class TitoliLista {
 
         mappaTitoli = mappaTmp;
     }// fine del metodo
-
-
-//    /**
-//     * Costruisce i titoli definitivi dei paragrafi (link a wikipagine, quadre e dimensioni del paragrafo) <br>
-//     */
-//    public void definitivi(LinkedHashMap<String, Integer> numVociParagrafi) {
-//        if (ordinati != null) {
-//            mappaDefinitivi = new LinkedHashMap<>();
-//            mappaVoci = new LinkedHashMap<>();
-//            for (String titolo : ordinati) {
-//                mappaDefinitivi.put(titolo, titoloDefinitivo(titolo, numVociParagrafi.get(titolo)));
-//            }// end of for cycle
-//        }// end of if cycle
-//    }// fine del metodo
-
-
-//    /**
-//     * Costruzione del titolo definitivo dei paragrafi <br>
-//     * Eventuale link a wikipagine <br>
-//     * Doppie quadre <br>
-//     * Eventuali dimensioni del paragrafo <br>
-//     */
-//    private String titoloDefinitivo(String titolo, int size) {
-//        String titoloDefinitivo = VUOTA;
-//
-//        if (text.isValid(titoloParagrafoVuoto) && titolo.equals(VUOTA)) {
-//            titoloDefinitivo = titoloParagrafoVuoto;
-//        } else {
-//            if (typeLista.usaLinkParagrafo) {
-//                titoloDefinitivo = LibWiki.setQuadre(titolo);
-//            } else {
-//                titoloDefinitivo = titolo;
-//            }// end of if/else cycle
-//        }// end of if/else cycle
-//
-//        if (typeLista.usaParagrafoSize && size > 0) {
-//            titoloDefinitivo += " <span style=\"font-size:70%\">(" + size + ")</span>";
-//        }// end of if cycle
-//
-//        mappaVoci.put(titolo, size);
-//
-//        return titoloDefinitivo;
-//    }// fine del metodo
 
 
     public List<String> getChiavi() {
@@ -343,7 +301,7 @@ public class TitoliLista {
 
 
     public void setSize(String titolo, int size) {
-        if (text.isValid(titolo) && size > 0) {
+        if (size > 0) {
             if (mappaTitoli.containsKey(titolo)) {
                 mappaTitoli.get(titolo).setNumVoci(size);
             }// end of if cycle

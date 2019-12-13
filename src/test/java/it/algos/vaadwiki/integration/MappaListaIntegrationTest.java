@@ -81,9 +81,9 @@ public class MappaListaIntegrationTest extends ATest {
 
     private Cognome cognomeEntity;
 
-    private String parVuoto = "Senza giorno di nascita";
+    private String parVuoto = "senza giorno di nascita";
 
-    private String parAttivita = "Senza attività specificata";
+    private String parAttivita = "senza attività specificata";
 
     private ListaGiornoNato listaGiorno;
 
@@ -114,15 +114,15 @@ public class MappaListaIntegrationTest extends ATest {
 
 
     private void inizia() {
-        annoEntity = annoService.findByKeyUnica(annoText);
-        Assert.assertNotNull(annoEntity);
-        listaAnno = appContext.getBean(ListaAnnoNato.class, annoEntity);
-        Assert.assertNotNull(listaAnno);
-
-        giornoEntity = giornoService.findByKeyUnica(giornoText);
-        Assert.assertNotNull(giornoEntity);
-        listaGiorno = appContext.getBean(ListaGiornoNato.class, giornoEntity);
-        Assert.assertNotNull(listaGiorno);
+//        annoEntity = annoService.findByKeyUnica(annoText);
+//        Assert.assertNotNull(annoEntity);
+//        listaAnno = appContext.getBean(ListaAnnoNato.class, annoEntity);
+//        Assert.assertNotNull(listaAnno);
+//
+//        giornoEntity = giornoService.findByKeyUnica(giornoText);
+//        Assert.assertNotNull(giornoEntity);
+//        listaGiorno = appContext.getBean(ListaGiornoNato.class, giornoEntity);
+//        Assert.assertNotNull(listaGiorno);
 
         nomeEntity = nomeService.findByKeyUnica(nomeText);
         Assert.assertNotNull(nomeEntity);
@@ -400,7 +400,7 @@ public class MappaListaIntegrationTest extends ATest {
         listaDidascalie = listaNome.listaDidascalie;
         TypeLista type = new TypeLista(true);
         type.paragrafoVuotoInCoda = false;
-        mappaLista = appContext.getBean(MappaLista.class, nomeText, listaDidascalie, typeNome, type, parAttivita, 12);
+        mappaLista = appContext.getBean(MappaLista.class, nomeText, listaDidascalie, typeNome, type, parAttivita);
         Assert.assertNotNull(mappaLista);
         System.out.println("*************");
         System.out.println("nomiTestaConlinkConsizeConsottopagine");
