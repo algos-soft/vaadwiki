@@ -13,6 +13,7 @@ import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadflow.application.FlowCost.USA_DEBUG;
+import static it.algos.vaadwiki.application.WikiCost.MAX_RIGHE_COLONNE;
 import static it.algos.wiki.LibWiki.PARAGRAFO;
 
 /**
@@ -54,7 +55,7 @@ public class UploadSottoPagina extends Upload {
      * @param titoloBreveSottoPagina      attività della sottopagina per l'incipit (eventuale) e per le categorie
      * @param mappaAlfabetica             mappa delle didascalie suddivise per iniziale alfabetica del cognome
      */
-    public UploadSottoPagina( String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
+    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
         this.titoloBrevePaginaPrincipale = titoloBrevePaginaPrincipale;
         this.titoloBreveSottoPagina = titoloBreveSottoPagina;
         this.mappaAlfabetica = mappaAlfabetica;
@@ -108,10 +109,9 @@ public class UploadSottoPagina extends Upload {
 
         testoLista = mettereInService(mappaAlfabetica);
         numVoci = 87;
-        int maxRigheColonne = 10; //@todo mettere la preferenza
 
         //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
-        if (usaBodyDoppiaColonna && (numVoci > maxRigheColonne)) {
+        if (usaBodyDoppiaColonna && (numVoci > pref.getInt(MAX_RIGHE_COLONNE))) {
             testoLista = LibWiki.setColonne(testoLista);
         }// fine del blocco if
 

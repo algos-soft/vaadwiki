@@ -1,8 +1,8 @@
 package it.algos.vaadwiki.modules.bio;
 
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -11,11 +11,11 @@ import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
-import it.algos.vaadflow.presenter.IAPresenter;
-import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.dialog.AViewDialog;
+import it.algos.vaadwiki.didascalia.DidascaliaBiografie;
+import it.algos.vaadwiki.didascalia.DidascaliaListe;
 import it.algos.vaadwiki.download.DeleteService;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.download.PageService;
@@ -30,7 +30,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
 
 /**
@@ -91,9 +91,6 @@ public class BioDialog extends AViewDialog<Bio> {
     @Autowired
     protected PreferenzaService pref;
 
-    @Autowired
-    private LibBio libBio;
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -117,6 +114,9 @@ public class BioDialog extends AViewDialog<Bio> {
      */
     @Autowired
     protected ATextService text;
+
+    @Autowired
+    private LibBio libBio;
 
 
     /**
@@ -181,6 +181,21 @@ public class BioDialog extends AViewDialog<Bio> {
         uploadButton.getElement().setAttribute("theme", "error");
         uploadButton.addClickListener(event -> upload());
         bottomLayout.add(uploadButton);
+    }// end of method
+
+
+    /**
+     * Eventuali aggiustamenti finali al layout
+     * Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap)
+     * Sovrascritto nella sottoclasse
+     */
+    @Override
+    protected void fixLayout() {
+        DidascaliaBiografie didascalia = appContext.getBean(DidascaliaBiografie.class, currentItem);
+
+        String didascaliaTxt = didascalia.testoSenza;
+
+        getFormLayout().add(new Label(didascaliaTxt));
     }// end of method
 
 

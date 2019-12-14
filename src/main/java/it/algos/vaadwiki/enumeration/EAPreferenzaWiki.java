@@ -71,6 +71,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     sendMailCiclo(SEND_MAIL_CICLO, "Mail di conferma e controllo del ciclo giornaliero", EAPrefType.bool, true),
     sendMailRestart(SEND_MAIL_RESTART, "Mail per il restart dell'applicazione", EAPrefType.bool, true),
 
+    maxRigheColonne(MAX_RIGHE_COLONNE, "Numero massimo di rughe oltre il quale usare le colonne affiancate", EAPrefType.integer, 10),
     registraSempreCrono(USA_REGISTRA_SEMPRE_CRONO, "Registra sempre le pagine di giorni ed anni", EAPrefType.bool, false),
 
     usaParagrafiGiorni(USA_PARAGRAFI_GIORNI, "Paragrafi dei secoli nelle liste dei giorni", EAPrefType.bool, false),

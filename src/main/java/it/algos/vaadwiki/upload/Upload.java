@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadwiki.application.WikiCost.MAX_RIGHE_COLONNE;
 
 /**
  * Project vaadwiki
@@ -585,21 +586,18 @@ public abstract class Upload {
         ListaSottopagina sottoPagina;
         String testoLista = "";
 
-        if (usaBodySottopagine) {
-            testoLista = lista.getTesto();
+        testoLista = lista.getTesto();
 
+        if (usaBodySottopagine) {
 //            sottoPagina = lista.getSottopagina();
 //            testoLista = sottoPagina.getTesto();
 //            uploadSottoPagine(sottoPagina.getMappa());
-        } else {
-            testoLista = lista.getTesto();
-        }// end of if/else cycle
+        }// end of if cycle
 
         numVoci = lista.size;
-        int maxRigheColonne = 10; //@todo mettere la preferenza
 
         //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
-        if (usaBodyDoppiaColonna && (numVoci > maxRigheColonne)) {
+        if (usaBodyDoppiaColonna && (numVoci > pref.getInt(MAX_RIGHE_COLONNE))) {
             testoLista = LibWiki.setColonne(testoLista);
         }// fine del blocco if
 

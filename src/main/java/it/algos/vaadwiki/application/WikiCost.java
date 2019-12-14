@@ -342,6 +342,8 @@ public class WikiCost {
 
     public final static String TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI = "tagSottoPaginaVuotaNomi";
 
+    public final static String MAX_RIGHE_COLONNE = "maxRigheColonne";
+
     public final static String USA_FORCETOC_NOMI = "usaForcetocNomi";
 
     public final static String USA_FORCETOC_COGNOMI = "usaForcetocCognomi";
@@ -359,6 +361,7 @@ public class WikiCost {
     public final static String USA_LINK_PARAGRAFO_ANNI = "usaLinkParagrafoAnni";
 
     public final static String USA_LINK_PARAGRAFO_NOMI = "usaLinkParagrafoNomi";
+
     public final static String USA_LINK_PARAGRAFO_COGNOMI = "usaLinkParagrafoCognomi";
 
     public final static String USA_LINK_PROFESSIONE = "usaLinkProfessione";
