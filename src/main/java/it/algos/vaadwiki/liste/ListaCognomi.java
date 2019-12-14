@@ -30,8 +30,6 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 public class ListaCognomi extends Lista {
 
 
-    //--property
-    protected Cognome cognome;
 
 
     /**
@@ -51,8 +49,8 @@ public class ListaCognomi extends Lista {
      * @param cognome di cui costruire la pagina sul server wiki
      */
     public ListaCognomi(Cognome cognome) {
-        this.cognome = cognome;
-        super.typeDidascalia = EADidascalia.listaCognomi;
+        super.cognome = cognome;
+        super.soggetto = cognome.cognome;
     }// end of constructor
 
 
@@ -65,14 +63,16 @@ public class ListaCognomi extends Lista {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.typeDidascalia = EADidascalia.listaCognomi;
         super.usaSuddivisioneParagrafi = true;
-        super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA);
-        super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_COGNOMI);
-        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
-        super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
-        super.usaLinkParagrafo = pref.isBool(USA_LINK_PARAGRAFO_COGNOMI);
         super.usaRigheRaggruppate = false;
+        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
+        super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_COGNOMI_IN_CODA);
+        super.usaLinkParagrafo = pref.isBool(USA_LINK_PARAGRAFO_COGNOMI);
+        super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_COGNOMI);
         super.usaSottopagine = pref.isBool(USA_SOTTOPAGINE_NOMI_COGNOMI);
+        super.taglioSottoPagina = pref.getInt(TAGLIO_SOTTOPAGINA_NOMI_COGNOMI);
+        super.titoloSottoPaginaVuota = pref.getStr(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI);
     }// end of method
 
 

@@ -264,7 +264,11 @@ public class MappaLista {
         if (listaDidascalie != null) {
             mappaWrapUno = new LinkedHashMap<>();
             for (WrapDidascalia wrap : listaDidascalie) {
-                key = wrap.chiaveParagrafo.toLowerCase();
+                if (typeDidascalia.isProfessione) {
+                    key = wrap.chiaveParagrafo.toLowerCase();
+                } else {
+                    key = wrap.chiaveParagrafo;
+                }// end of if/else cycle
                 add(mappaWrapUno, wrap, key);
             }// end of for cycle
         }// end of if cycle
@@ -279,11 +283,9 @@ public class MappaLista {
      * se il titolo del paragrafo è vuoto, sostituisce col titolo previsto standard <br>
      */
     private void creaTitoli() {
-        LinkedHashMap<String, List<WrapDidascalia>> mappaParagrafiTitolo = new LinkedHashMap<>();
         String chiave = "";
         List<String> listaProfessioni;
         List<String> listaVisibili;
-//        List<WrapDidascalia> listaWrap;
         List<Titolo> listaTitoli;
         Titolo titolo;
         String professione;
@@ -294,51 +296,43 @@ public class MappaLista {
             listaTitoli = new ArrayList();
             for (String chiaveParagrafo : mappaWrapUno.keySet()) {
 
-                listaProfessioni = new ArrayList();
-                listaVisibili = new ArrayList();
-                pagina = VUOTA;
-                professione = VUOTA;
-                visibile = VUOTA;
-
-                for (WrapDidascalia wrap : mappaWrapUno.get(chiaveParagrafo)) {
-                    chiave = listaService.getTitoloParagrafo(wrap.bio);
-                    professione = listaService.getProfessioneDaBio(wrap.bio);
-                    if (!listaProfessioni.contains(professione)) {
-                        listaProfessioni.add(professione);
-                    }// end of if cycle
-                    visibile = listaService.getGenereDaBio(wrap.bio);
-                    if (!listaVisibili.contains(visibile)) {
-                        listaVisibili.add(visibile);
-                    }// end of if cycle
-                }// end of for cycle
-
-                if (listaProfessioni.size() == 1) {
-                    pagina = listaProfessioni.get(0);
-                } else {
+                if (typeDidascalia.isProfessione) {
+                    listaProfessioni = new ArrayList();
+                    listaVisibili = new ArrayList();
                     pagina = VUOTA;
+                    professione = VUOTA;
+                    visibile = VUOTA;
+
+                    for (WrapDidascalia wrap : mappaWrapUno.get(chiaveParagrafo)) {
+                        chiave = listaService.getTitoloParagrafo(wrap.bio);
+                        professione = listaService.getProfessioneDaBio(wrap.bio);
+                        if (!listaProfessioni.contains(professione)) {
+                            listaProfessioni.add(professione);
+                        }// end of if cycle
+                        visibile = listaService.getGenereDaBio(wrap.bio);
+                        if (!listaVisibili.contains(visibile)) {
+                            listaVisibili.add(visibile);
+                        }// end of if cycle
+                    }// end of for cycle
+
+                    if (listaProfessioni.size() == 1) {
+                        pagina = listaProfessioni.get(0);
+                    } else {
+                        pagina = VUOTA;
+                    }// end of if/else cycle
+                    visibile = listaVisibili.get(0);
+                    chiave = text.isValid(chiave) ? chiave : titoloParagrafoVuoto;
+                    titolo = new Titolo(chiaveParagrafo, pagina, visibile);
+                } else {
+                    titolo = new Titolo(chiaveParagrafo, chiaveParagrafo, chiaveParagrafo);
                 }// end of if/else cycle
-                visibile = listaVisibili.get(0);
-                chiave = text.isValid(chiave) ? chiave : titoloParagrafoVuoto;
-                titolo = new Titolo(chiaveParagrafo, pagina, visibile);
+
                 listaTitoli.add(titolo);
-                mappaParagrafiTitolo.put(chiave, mappaWrapUno.get(chiaveParagrafo));
             }// end of for cycle
+
             titoliLista = appContext.getBean(TitoliLista.class, listaTitoli, typeDidascalia, typeLista, titoloParagrafoVuoto);
         }// end of if cycle
     }// fine del metodo
-
-
-//    /**
-//     * Crea i titoli in una classe dedicata <br>
-//     */
-//    private void creaTitoli2() {
-//        List<String> lista;
-//
-//        if (mappaWrapUno != null) {
-//            lista = new ArrayList<>(mappaWrapUno.keySet());
-//            titoliLista = appContext.getBean(TitoliLista.class, lista, typeDidascalia, titoloParagrafoVuoto, paragrafoVuotoInCoda, usaLinkParagrafo, usaParagrafoSize);
-//        }// end of if cycle
-//    }// fine del metodo
 
 
     /**
@@ -962,7 +956,7 @@ public class MappaLista {
                 listaRighe.add(LibBio.setParagrafo(titoloDefinitivo));
                 mappaSottopagina = mappa.get(chiaveParagrafo);
                 if (mappaSottopagina != null && mappaSottopagina.size() > 0) {
-                    if (sogliaSuperata(chiaveParagrafo)) {
+                    if (typeLista.usaSottopagine && sogliaSuperata(chiaveParagrafo)) {
                         listaRighe.add(sottopagina(chiaveParagrafo, mappaSottopagina));
                     } else {
                         for (String chiaveDue : mappaSottopagina.keySet()) {

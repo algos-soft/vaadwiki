@@ -10,6 +10,7 @@ import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
+import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.nome.Nome;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +138,9 @@ public abstract class Lista {
 
     //--property
     protected Nome nome;
+
+    //--property
+    protected Cognome cognome;
 
     //--property
     protected String soggetto;

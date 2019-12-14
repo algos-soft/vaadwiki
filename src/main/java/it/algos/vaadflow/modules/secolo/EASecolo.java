@@ -131,7 +131,7 @@ public enum EASecolo {
         EASecolo secolo = null;
 
         for (EASecolo secoloTmp : values()) {
-            if (secoloTmp.titolo.equals(titolo)) {
+            if (secoloTmp.titolo.toLowerCase().equals(titolo.toLowerCase())) {
                 secolo = secoloTmp;
             }// fine del blocco if
         }// end of for cycle
