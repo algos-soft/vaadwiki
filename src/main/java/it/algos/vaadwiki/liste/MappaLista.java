@@ -72,12 +72,6 @@ public class MappaLista {
     @Autowired
     private ListaService listaService;
 
-//    /**
-//     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-//     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-//     */
-//    @Autowired
-//    private MeseService meseService;
 
     //--parametro in ingresso
     private String soggetto;
@@ -94,32 +88,11 @@ public class MappaLista {
     //--parametro in ingresso
     private String titoloParagrafoVuoto;
 
-//    //--property elaborata
-//    private boolean paragrafoVuotoInCoda;
-//
-//    //--property elaborata
-//    private boolean usaLinkParagrafo;
-//
-//    //--property elaborata
-//    private boolean usaParagrafoSize;
-//
-//    //--property elaborata
-//    private boolean usaSottopagine;
-//
-//    //--property elaborata
-//    private boolean usaSuddivisioneParagrafi;
-//
-//    //--property elaborata
-//    private boolean usaRigheRaggruppate;
-
     //--property elaborata
     private TitoliLista titoliLista;
 
     //--property elaborata
     private int numVociTotali;
-
-    //--property elaborata
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> mappa;
 
     //--property elaborata
     private LinkedHashMap<String, List<WrapDidascalia>> mappaWrapUno;
@@ -129,6 +102,12 @@ public class MappaLista {
 
     //--property elaborata
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>>> mappaWrapTre;
+
+    //--property elaborata
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> mappa;
+
+    //--property elaborata
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> sottoPagine;
 
     //--property elaborata
     private int taglioSottoPagina;
@@ -192,32 +171,6 @@ public class MappaLista {
     }// end of constructor
 
 
-//    /**
-//     * Costruttore con parametri <br>
-//     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-//     * Usa: appContext.getBean(MappaLista.class, ..., ...) <br>
-//     * Con paragrafi <br>
-//     */
-//    public MappaLista(
-//            String soggetto,
-//            List<WrapDidascalia> listaDidascalie,
-//            EADidascalia typeDidascalia,
-//            boolean usaRigheRaggruppate,
-//            boolean paragrafoVuotoInCoda,
-//            boolean usaSuddivisioneParagrafi,
-//            String titoloParagrafoVuoto,
-//            boolean usaLinkParagrafo,
-//            boolean usaParagrafoSize,
-//            boolean usaSottopagine,
-//            int taglioSottoPagina) {
-//        this.soggetto = soggetto;
-//        this.listaDidascalie = listaDidascalie;
-//        this.typeDidascalia = typeDidascalia;
-//        this.titoloParagrafoVuoto = titoloParagrafoVuoto;
-//        this.taglioSottoPagina = taglioSottoPagina > 0 ? taglioSottoPagina : Lista.TAGLIO_SOTTOPAGINA_DEFAULT;
-//    }// end of constructor
-
-
     /**
      * Questa classe viene tipicamente costruita con appContext.getBean(MappaLista.class, ..., ...) <br>
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
@@ -246,8 +199,6 @@ public class MappaLista {
 
         //--ordinamento delle liste
         ordinaListe();
-
-//        titoliLista.definitivi(type.numVociParagrafi);
 
         //--creazione della mappa finale
         creaMappaFinale();
@@ -406,68 +357,8 @@ public class MappaLista {
      * Sostituisce i titoli definitivi nella mappa <br>
      */
     private void ordinaChiavi() {
-//        titoloParagrafiDisordinato = new ArrayList<>();
-//        titoloParagrafiOrdinato = new ArrayList<>();
-//        titoloParagrafiDefinitivo = new ArrayList<>();
-//        numVociParagrafiDefinitivi = new LinkedHashMap<>();
-
         ordinaSecondoLivello();
         ordinaTerzoLivello();
-    }// fine del metodo
-
-
-    /**
-     * Ordinamento delle chiavi di primo livello <br>
-     * Costruisce la lista dei paragrafi esistenti dalla mappa <br>
-     * Ordina i paragrafi in base al tipo di lista (alfabetico, per anno, per giorno) <br>
-     * Mette in coda (eventualmente) il paragrafo dal titolo vuoto <br>
-     * Sostituisce il titolo del paragrafo vuoto <br>
-     * Costruisce i titoli definitivi dei paragrafi (link a wikipagine, quadre e dimensioni del paragrafo) <br>
-     * Sostituisce i titoli definitivi nella mappa <br>
-     */
-    private void ordinaPrimoLivello() {
-//        LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>>> mappa = null;
-//
-//        if (array.isValid(mappaWrapUno)) {
-//            titoloParagrafiDisordinato.addAll(mappaWrapUno.keySet());
-//        }// end of if cycle
-//
-//        if (titoloParagrafiDisordinato != null && titoloParagrafiDisordinato.size() > 0) {
-//            switch (typeDidascalia) {
-//                case giornoNato:
-//                case giornoMorto:
-//                    titoloParagrafiOrdinato = secoloService.riordina(titoloParagrafiDisordinato);
-//                    break;
-//                case annoNato:
-//                case annoMorto:
-//                    titoloParagrafiOrdinato = meseService.riordina(titoloParagrafiDisordinato);
-//                    break;
-//                case listaNomi:
-//                case listaCognomi:
-//                    titoloParagrafiOrdinato = titoloParagrafiDisordinato;
-//                    titoloParagrafiOrdinato = array.sort(titoloParagrafiOrdinato);
-//                    break;
-//                default:
-//                    titoloParagrafiOrdinato = titoloParagrafiDisordinato;
-//                    break;
-//            } // end of switch statement
-//        }// end of if cycle
-//
-//        if (paragrafoVuotoInCoda && titoloParagrafiOrdinato != null) {
-//            if (titoloParagrafiOrdinato.contains(VUOTA)) {
-//                titoloParagrafiOrdinato.remove(VUOTA);
-//                titoloParagrafiOrdinato.add(VUOTA);
-//            }// end of if cycle
-//        }// end of if cycle
-//
-//        if (mappaWrapTre != null && titoloParagrafiOrdinato != null) {
-//            mappa = new LinkedHashMap<>();
-//            for (String titolo : titoloParagrafiOrdinato) {
-//                mappa.put(titoloDefinitivoParagrafo(titolo), mappaWrapTre.get(titolo));
-//            }// end of for cycle
-//        }// end of if cycle
-//
-//        mappaWrapTre = mappa;
     }// fine del metodo
 
 
@@ -543,38 +434,6 @@ public class MappaLista {
     }// fine del metodo
 
 
-//    /**
-//     * Costruzione del titolo definitivo dei paragrafi <br>
-//     * Eventuale link a wikipagine <br>
-//     * Doppie quadre <br>
-//     * Eventuali dimensioni del paragrafo <br>
-//     */
-//    private String titoloDefinitivoParagrafo(String titolo) {
-//        String titoloDefinitivo = VUOTA;
-//
-//        if (text.isValid(titoloParagrafoVuoto) && titolo.equals(VUOTA)) {
-//            titoloDefinitivo = titoloParagrafoVuoto;
-//        } else {
-//            if (usaLinkParagrafo) {
-//                titoloDefinitivo = LibWiki.setQuadre(titolo);
-//            } else {
-//                titoloDefinitivo = titolo;
-//            }// end of if/else cycle
-//        }// end of if/else cycle
-//
-//        if (usaParagrafoSize && numVociParagrafi != null && numVociParagrafi.size() > 0) {
-//            if (numVociParagrafi.get(titolo) > 0) {
-//                titoloDefinitivo += " <span style=\"font-size:70%\">(" + numVociParagrafi.get(titolo) + ")</span>";
-//            }// end of if cycle
-//        }// end of if cycle
-//
-//        titoloParagrafiDefinitivo.add(titoloDefinitivo);
-//        numVociParagrafiDefinitivi.put(titoloDefinitivo, numVociParagrafi.get(titolo));
-//
-//        return titoloDefinitivo;
-//    }// fine del metodo
-
-
     /**
      * Dimensioni della mappa <br>
      */
@@ -608,32 +467,6 @@ public class MappaLista {
         }// end of if cycle
 
     }// fine del metodo
-
-
-//    /**
-//     * Dimensioni della sottoPagina <br>
-//     */
-//    private int calcolaDimensioniSottoPagina(LinkedHashMap<String, LinkedHashMap<String, List<WrapDidascalia>>> mappaParagrafo) {
-//        int numVociSottoPagina = 0;
-//        LinkedHashMap<String, List<WrapDidascalia>> mappaSottoPagina;
-//        List<WrapDidascalia> listaDisordinata;
-//
-//        if (mappaParagrafo != null && mappaParagrafo.size() > 0) {
-//            for (String chiaveSottoPagina : mappaParagrafo.keySet()) {
-//                mappaSottoPagina = mappaParagrafo.get(chiaveSottoPagina);
-//                if (mappaSottoPagina != null && mappaSottoPagina.size() > 0) {
-//                    for (String chiaveSottoSottoPagina : mappaSottoPagina.keySet()) {
-//                        listaDisordinata = mappaSottoPagina.get(chiaveSottoSottoPagina);
-//                        if (listaDisordinata != null && listaDisordinata.size() > 0) {
-//                            numVociSottoPagina += listaDisordinata.size();
-//                        }// end of if cycle
-//                    }// end of for cycle
-//                }// end of if cycle
-//            }// end of for cycle
-//        }// end of if cycle
-//
-//        return numVociSottoPagina;
-//    }// fine del metodo
 
 
     /**
@@ -950,6 +783,10 @@ public class MappaLista {
 
         if (mappa != null) {
             listaRighe = new ArrayList<>();
+            if (typeLista.usaSottopagine) {
+                sottoPagine = new LinkedHashMap<>();
+            }// end of if cycle
+
             for (String chiaveParagrafo : titoliLista.getChiavi()) {
                 listaRighe.add(VUOTA);
                 titoloDefinitivo = titoliLista.getDefinitivo(chiaveParagrafo);
@@ -957,7 +794,8 @@ public class MappaLista {
                 mappaSottopagina = mappa.get(chiaveParagrafo);
                 if (mappaSottopagina != null && mappaSottopagina.size() > 0) {
                     if (typeLista.usaSottopagine && sogliaSuperata(chiaveParagrafo)) {
-                        listaRighe.add(sottopagina(chiaveParagrafo, mappaSottopagina));
+                        listaRighe.add(rinvioSottopagina(chiaveParagrafo));
+                        creaSottopagina(chiaveParagrafo, mappaSottopagina);
                     } else {
                         for (String chiaveDue : mappaSottopagina.keySet()) {
                             mappaTre = mappaSottopagina.get(chiaveDue);
@@ -988,18 +826,21 @@ public class MappaLista {
 
 
     /**
-     * Lista di righe senza paragrafo <br>
-     * Mette da parte la mappa della sottopagina <br>
      * Restituisce la riga di 'rinvio' alla sottopagina <br>
      */
-    private String sottopagina(String chiaveParagrafo, LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaSottopagina) {
-        //Mette da parte la mappa della sottopagina
-        //@todo da fare
-
+    private String rinvioSottopagina(String chiaveParagrafo) {
         String tagFisso = "Vedi anche|";
         String tagTypo = typeDidascalia.pagina;
         String tag = "/";
         return LibWiki.setGraffe(tagFisso + tagTypo + soggetto + tag + text.primaMaiuscola(chiaveParagrafo));
+    }// end of method
+
+
+    /**
+     * Mette da parte la mappa della sottopagina <br>
+     */
+    private void creaSottopagina(String chiaveParagrafo, LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaSottopagina) {
+        sottoPagine.put(chiaveParagrafo, mappaSottopagina);
     }// end of method
 
 
@@ -1063,6 +904,16 @@ public class MappaLista {
         }// end of if cycle
 
         return testoLista.toString().trim();
+    }// fine del metodo
+
+
+    public LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> getSottoPagine() {
+        return sottoPagine;
+    }// fine del metodo
+
+
+    public int getDimParagrafo(String titoloParagrafo) {
+        return titoliLista.getSize(titoloParagrafo);
     }// fine del metodo
 
 }// end of class

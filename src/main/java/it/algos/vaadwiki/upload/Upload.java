@@ -8,6 +8,7 @@ import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.modules.secolo.SecoloService;
 import it.algos.vaadflow.service.*;
 import it.algos.vaadwiki.download.*;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.liste.Lista;
 import it.algos.vaadwiki.liste.ListaService;
 import it.algos.vaadwiki.liste.ListaSottopagina;
@@ -285,6 +286,10 @@ public abstract class Upload {
     //--property
     protected LinkedHashMap<String, List<String>> mappaAlfabetica;
 
+    //--property
+    protected EADidascalia typeDidascalia;
+
+
     /**
      * Metodo invocato subito DOPO il costruttore
      * <p>
@@ -341,7 +346,7 @@ public abstract class Upload {
      * Gli spazi (righe) di separazione vanno aggiunti qui <br>
      * Registra la pagina <br>
      */
-    private void elaboraPagina() {
+    protected void elaboraPagina() {
         String summary = LibWiki.getSummary();
         testoPagina = VUOTA;
 
@@ -374,7 +379,7 @@ public abstract class Upload {
         testoPagina += this.elaboraFooter();
 //        }// fine del blocco if
 
-        //registra la pagina
+        //--registra la pagina principale
         if (text.isValid(testoPagina)) {
             testoPagina = testoPagina.trim();
 
@@ -392,6 +397,11 @@ public abstract class Upload {
             }// end of if/else cycle
         }// fine del blocco if
 
+        //--registra eventuali sottopagine
+        if (usaBodySottopagine) {
+            uploadSottoPagine();
+        }// end of if cycle
+
     }// fine del metodo
 
 
@@ -407,7 +417,7 @@ public abstract class Upload {
      * Ogni blocco esce trimmato (per l'inizio) e con un solo ritorno a capo per fine riga. <br>
      * Eventuali spazi gestiti da chi usa il metodo <br>
      */
-    private String elaboraHead() {
+    protected String elaboraHead() {
         String testo = VUOTA;
         String testoIncluso = VUOTA;
 
@@ -585,14 +595,7 @@ public abstract class Upload {
     protected String elaboraBody() {
         ListaSottopagina sottoPagina;
         String testoLista = "";
-
         testoLista = lista.getTesto();
-
-        if (usaBodySottopagine) {
-//            sottoPagina = lista.getSottopagina();
-//            testoLista = sottoPagina.getTesto();
-//            uploadSottoPagine(sottoPagina.getMappa());
-        }// end of if cycle
 
         numVoci = lista.size;
 
@@ -619,17 +622,13 @@ public abstract class Upload {
     /**
      * Esegue l'upload delle sottopagine <br>
      */
-    protected void uploadSottoPagine(LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaDiTutteLeSottoPagine) {
-        for (String attivita : mappaDiTutteLeSottoPagine.keySet()) {
-            uploadSingolaSottoPagina(attivita, mappaDiTutteLeSottoPagine.get(attivita));
+    protected void uploadSottoPagine() {
+        LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
+
+        for (String key : lista.getSottoPagine().keySet()) {
+            mappa = lista.getSottoPagine().get(key);
+            appContext.getBean(UploadSottoPagina.class, soggetto, key, mappa, typeDidascalia);
         }// end of for cycle
-    }// end of method
-
-
-    /**
-     * Esegue l'upload della singola sottopagina <br>
-     */
-    protected void uploadSingolaSottoPagina(String suffixTitolo, LinkedHashMap<String, List<String>> mappaSingolaSottoPagina) {
     }// end of method
 
 

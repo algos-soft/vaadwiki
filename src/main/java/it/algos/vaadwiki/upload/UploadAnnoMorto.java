@@ -2,6 +2,7 @@ package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.liste.ListaAnnoMorto;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
@@ -82,6 +83,7 @@ public class UploadAnnoMorto extends UploadAnni {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.typeDidascalia = EADidascalia.annoMorto;
         super.titoloPagina = uploadService.getTitoloAnnoMorto(anno);
         super.tagCategoria = LibWiki.setCat("Liste di morti per anno", SPAZIO + anno.ordine);
     }// end of method

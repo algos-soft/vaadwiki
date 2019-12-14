@@ -2,6 +2,7 @@ package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.liste.ListaGiornoNato;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
@@ -82,6 +83,7 @@ public class UploadGiornoNato extends UploadGiorni {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.typeDidascalia = EADidascalia.giornoNato;
         super.titoloPagina = uploadService.getTitoloGiornoNato(giorno);
         super.tagCategoria = LibWiki.setCat("Liste di nati per giorno", SPAZIO + giorno.ordine);
     }// end of method

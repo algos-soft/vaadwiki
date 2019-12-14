@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.liste.ListaCognomi;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.wiki.LibWiki;
@@ -88,6 +89,7 @@ public class UploadCognome extends UploadNomiCognomi {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.typeDidascalia = EADidascalia.listaCognomi;
         super.usaSuddivisioneParagrafi = true;
         super.usaRigheRaggruppate = false;
         super.titoloPagina = uploadService.getTitoloCognome(cognome);

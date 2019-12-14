@@ -291,6 +291,9 @@ public abstract class Lista {
         return null;
     }// fine del metodo
 
+    public LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> getSottoPagine() {
+        return mappaLista.getSottoPagine();
+    }// fine del metodo
 
     /**
      * Recupera una lista (array) di records Bio che usano un'istanza della property appropriata <br>

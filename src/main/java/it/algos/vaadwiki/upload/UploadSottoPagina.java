@@ -1,19 +1,22 @@
 package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.liste.ListaSottopagina;
+import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadwiki.enumeration.EADidascalia;
+import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
+import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
-import static it.algos.vaadflow.application.FlowCost.USA_DEBUG;
-import static it.algos.vaadwiki.application.WikiCost.MAX_RIGHE_COLONNE;
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.wiki.LibWiki.PARAGRAFO;
 
 /**
@@ -36,6 +39,9 @@ public class UploadSottoPagina extends Upload {
     //--property
     protected String titoloBreveSottoPagina;
 
+    //--property
+    protected LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
+
 
     /**
      * Costruttore base senza parametri <br>
@@ -46,6 +52,22 @@ public class UploadSottoPagina extends Upload {
     }// end of constructor
 
 
+//    /**
+//     * Costruttore con parametri <br>
+//     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+//     * Usa: appContext.getBean(UploadSottoPagina.class, titoloBrevePaginaPrincipale, titoloCompletoSottoPagina, mappaAlfabetica) <br>
+//     *
+//     * @param titoloBrevePaginaPrincipale solo il nome/cognome per la costruzione del titolo e per le categorie
+//     * @param titoloBreveSottoPagina      attività della sottopagina per l'incipit (eventuale) e per le categorie
+//     * @param mappaAlfabetica             mappa delle didascalie suddivise per iniziale alfabetica del cognome
+//     */
+//    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
+//        this.titoloBrevePaginaPrincipale = titoloBrevePaginaPrincipale;
+//        this.titoloBreveSottoPagina = titoloBreveSottoPagina;
+//        this.mappaAlfabetica = mappaAlfabetica;
+//    }// end of constructor
+
+
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
@@ -53,12 +75,13 @@ public class UploadSottoPagina extends Upload {
      *
      * @param titoloBrevePaginaPrincipale solo il nome/cognome per la costruzione del titolo e per le categorie
      * @param titoloBreveSottoPagina      attività della sottopagina per l'incipit (eventuale) e per le categorie
-     * @param mappaAlfabetica             mappa delle didascalie suddivise per iniziale alfabetica del cognome
+     * @param mappa                       mappa delle didascalie suddivise per iniziale alfabetica del cognome
      */
-    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
+    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa, EADidascalia typeDidascalia) {
         this.titoloBrevePaginaPrincipale = titoloBrevePaginaPrincipale;
         this.titoloBreveSottoPagina = titoloBreveSottoPagina;
-        this.mappaAlfabetica = mappaAlfabetica;
+        this.mappa = mappa;
+        this.typeDidascalia = typeDidascalia;
     }// end of constructor
 
 
@@ -94,7 +117,82 @@ public class UploadSottoPagina extends Upload {
         super.usaHeadTocIndice = false;
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
+
+        String titoloBreve = text.primaMaiuscola(titoloBreveSottoPagina);
+        this.prefixTitolo = typeDidascalia.pagina;
+        super.titoloPagina = prefixTitolo + " " + titoloBrevePaginaPrincipale + "/" + titoloBreve;
+        String nomeCat = titoloBrevePaginaPrincipale + "/" + titoloBreve;
+        super.tagCategoria = LibWiki.setCat(typeDidascalia.categoria, nomeCat);
+
     }// end of method
+
+
+    /**
+     * Elaborazione principale della pagina
+     * <p>
+     * Costruisce head <br>
+     * Costruisce body <br>
+     * Costruisce footer <br>
+     * Ogni blocco esce trimmato (inizio e fine) <br>
+     * Gli spazi (righe) di separazione vanno aggiunti qui <br>
+     * Registra la pagina <br>
+     */
+    @Override
+    protected void elaboraPagina() {
+        String summary = LibWiki.getSummary();
+        testoPagina = VUOTA;
+
+        if (isSottoPagina) {
+            numVoci = 87;
+        }// end of if cycle
+
+        //header
+        testoPagina += this.elaboraHead();
+
+        //body
+        testoPagina += this.elaboraBody();
+
+        //footer
+        //di fila nella stessa riga, senza ritorno a capo (se inizia con <include>)
+        testoPagina += A_CAPO;
+        testoPagina += this.elaboraFooter();
+
+        //--registra la sottopagina
+        if (text.isValid(testoPagina)) {
+            testoPagina = testoPagina.trim();
+
+            if (pref.isBool(FlowCost.USA_DEBUG)) {
+                testoPagina = titoloPagina + A_CAPO + testoPagina;
+                titoloPagina = PAGINA_PROVA;
+            }// end of if cycle
+
+            //--nelle sottopagine non eseguo il controllo e le registro sempre (per adesso)
+            appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina);
+            log.info("Registrata la pagina: " + titoloPagina);
+        }// fine del blocco if
+
+    }// fine del metodo
+
+
+    /**
+     * Costruisce la frase di incipit iniziale
+     * <p>
+     * Sovrascrivibile <br>
+     * Parametrizzato (nelle sottoclassi) l'utilizzo e la formulazione <br>
+     */
+    protected String elaboraIncipitSpecifico() {
+        String testo = VUOTA;
+
+        testo += "Questa è una lista di persone presenti nell'enciclopedia che hanno il ";
+        testo += typeDidascalia.tag;
+        testo += " '''";
+        testo += titoloBrevePaginaPrincipale;
+        testo += "''' e come attività principale sono '''''";
+        testo += titoloBreveSottoPagina;
+        testo += "'''''";
+
+        return testo;
+    }// fine del metodo
 
 
     /**
@@ -104,29 +202,56 @@ public class UploadSottoPagina extends Upload {
      * Sovrascritto
      */
     protected String elaboraBody() {
-        ListaSottopagina sottoPagina;
-        String testoLista = "";
+        return getTesto();
+    }// fine del metodo
 
-        testoLista = mettereInService(mappaAlfabetica);
-        numVoci = 87;
 
-        //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
-        if (usaBodyDoppiaColonna && (numVoci > pref.getInt(MAX_RIGHE_COLONNE))) {
-            testoLista = LibWiki.setColonne(testoLista);
-        }// fine del blocco if
+    /**
+     * Testo finale della pagina <br>
+     * Con o senza suddivisione per paragrafi <br>
+     * Senza righe raggruppate <br>
+     * Senza wikilink nel titolo dei paragrafi <br>
+     * Con o senza dimensioni nel titolo dei paragrafi <br>
+     * Se si usano le sottosottopagine riporta solo il link alla sottopagina. La lista delle biografie è in altra mappa <br>
+     */
+    public String getTesto() {
+        StringBuilder testoLista = new StringBuilder();
+        List<String> listaRighe = getListaRighe();
 
-        if (usaBodyTemplate) {
-//            if (Pref.getBool(CostBio.USA_DEBUG, false)) {
-//                text = elaboraTemplate("") + text;
-//            } else {
-//                text = elaboraTemplate(text);
-//            }// end of if/else cycle
-            if (!pref.isBool(USA_DEBUG)) {
-                testoLista = elaboraTemplate(testoLista);
-            }// end of if cycle
+        if (listaRighe != null && listaRighe.size() > 0) {
+            for (String riga : listaRighe) {
+                testoLista.append(riga);
+                testoLista.append(A_CAPO);
+            }// end of for cycle
         }// end of if cycle
 
-        return testoLista;
+        return testoLista.toString().trim();
+    }// fine del metodo
+
+
+    /**
+     * Lista di righe <br>
+     */
+    private List<String> getListaRighe() {
+        List<String> listaRighe = null;
+        LinkedHashMap<String, List<String>> mappaSottoPaginaTxt;
+        List<String> listaTxt = null;
+
+        if (mappa != null && mappa.size() > 0) {
+            listaRighe = new ArrayList<>();
+            for (String chiaveSottoPagina : mappa.keySet()) {
+                listaRighe.add(LibBio.setParagrafo(chiaveSottoPagina));
+                mappaSottoPaginaTxt = mappa.get(chiaveSottoPagina);
+                if (mappaSottoPaginaTxt != null && mappaSottoPaginaTxt.size() > 0) {
+                    for (String chiaveSottoSottoPagina : mappaSottoPaginaTxt.keySet()) {
+                        listaTxt = mappaSottoPaginaTxt.get(chiaveSottoSottoPagina);
+                        listaRighe.addAll(listaTxt);
+                    }// end of for cycle
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaRighe;
     }// fine del metodo
 
 

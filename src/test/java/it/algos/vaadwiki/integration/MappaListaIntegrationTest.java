@@ -75,7 +75,8 @@ public class MappaListaIntegrationTest extends ATest {
     //    private String nomeText = "Rita";
 //    private String nomeText = "Andrea";
 //    private String nomeText = "Željko";
-    private String nomeText = "Aldo";
+//    private String nomeText = "Aldo";
+    private String nomeText = "Giovanni";
 
     private String cognomeText = "Smith";
 
@@ -466,7 +467,7 @@ public class MappaListaIntegrationTest extends ATest {
         listaDidascalie = listaCognome.listaDidascalie;
         typeLista = new TypeLista(true);
         typeLista.paragrafoVuotoInCoda = false;
-        mappaLista = appContext.getBean(MappaLista.class, cognomeText, listaDidascalie, typeCognome, typeLista, parAttivita,12);
+        mappaLista = appContext.getBean(MappaLista.class, cognomeText, listaDidascalie, typeCognome, typeLista, parAttivita, 12);
         Assert.assertNotNull(mappaLista);
         System.out.println("*************");
         System.out.println("cognomiTestaConlinkConsizeConsottopagine");
@@ -476,6 +477,24 @@ public class MappaListaIntegrationTest extends ATest {
         testo = mappaLista.getTesto();
         System.out.println(testo);
         System.out.println("");
+    }// end of single test
+
+
+    @Test
+    public void nomiSottoPagine() {
+        inizia();
+        listaDidascalie = listaNome.listaDidascalie;
+        typeLista = new TypeLista(true);
+        mappaLista = appContext.getBean(MappaLista.class, nomeText, listaDidascalie, typeNome, typeLista, parAttivita);
+        Assert.assertNotNull(mappaLista);
+        mappaLista.getTesto();
+        System.out.println("*************");
+        System.out.println("nomiSottoPagine: Nella lista di " + nomeText + " ci sono " + mappaLista.getNumParagrafi() + " paragrafi di cui " + mappaLista.getSottoPagine().size() + " sono sottopagine");
+        System.out.println("*************");
+        System.out.println("");
+        for (String sottopagina : mappaLista.getSottoPagine().keySet()) {
+            System.out.println(sottopagina + " con " + mappaLista.getDimParagrafo(sottopagina) + " voci");
+        }// end of for cycle
     }// end of single test
 
 }// end of class

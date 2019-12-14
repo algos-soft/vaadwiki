@@ -19,7 +19,7 @@ import java.util.List;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-public class UploadSottoPaginaCognomi extends UploadSottoPagina {
+public class UploadSottoPaginaCognomi  {
 
     protected final static String PREFIX_TITOLO = "Persone di cognome ";
 
@@ -43,23 +43,23 @@ public class UploadSottoPaginaCognomi extends UploadSottoPagina {
      * @param mappaAlfabetica             mappa delle didascalie suddivise per iniziale alfabetica del cognome
      */
     public UploadSottoPaginaCognomi(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
-        super(titoloBrevePaginaPrincipale, titoloBreveSottoPagina, mappaAlfabetica);
+//        super(titoloBrevePaginaPrincipale, titoloBreveSottoPagina, mappaAlfabetica);
     }// end of constructor
 
 
-    /**
-     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
-     * Può essere sovrascritto, per aggiungere informazioni <br>
-     * Invocare PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        super.prefixTitolo = PREFIX_TITOLO;
-        super.titoloPagina = prefixTitolo + " " + titoloBrevePaginaPrincipale + "/" + titoloBreveSottoPagina;
-        String nomeCat = titoloBrevePaginaPrincipale + "/" + titoloBreveSottoPagina;
-        super.tagCategoria = LibWiki.setCat("Liste di persone per cognome", nomeCat);
-    }// end of method
+//    /**
+//     * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+//     * Può essere sovrascritto, per aggiungere informazioni <br>
+//     * Invocare PRIMA il metodo della superclasse <br>
+//     */
+//    @Override
+//    protected void fixPreferenze() {
+//        super.fixPreferenze();
+//
+//        super.prefixTitolo = PREFIX_TITOLO;
+//        super.titoloPagina = prefixTitolo + " " + titoloBrevePaginaPrincipale + "/" + titoloBreveSottoPagina;
+//        String nomeCat = titoloBrevePaginaPrincipale + "/" + titoloBreveSottoPagina;
+//        super.tagCategoria = LibWiki.setCat("Liste di persone per cognome", nomeCat);
+//    }// end of method
 
 }// end of class
