@@ -103,7 +103,7 @@ public abstract class UploadGiorni extends UploadCrono {
         testoIni += A_CAPO;
         testoIni += "|titolo=" + titoloPagina;
         testoIni += A_CAPO;
-        testoIni += "|voci=" + numVoci;
+        testoIni += "|voci=" + lista.size;
         testoIni += A_CAPO;
         testoIni += "|testo=";
         testoIni += A_CAPO;

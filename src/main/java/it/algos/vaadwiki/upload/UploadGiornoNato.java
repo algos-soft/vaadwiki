@@ -88,5 +88,4 @@ public class UploadGiornoNato extends UploadGiorni {
         super.tagCategoria = LibWiki.setCat("Liste di nati per giorno", SPAZIO + giorno.ordine);
     }// end of method
 
-
 }// end of class

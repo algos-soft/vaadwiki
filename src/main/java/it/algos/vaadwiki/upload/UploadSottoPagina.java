@@ -52,22 +52,6 @@ public class UploadSottoPagina extends Upload {
     }// end of constructor
 
 
-//    /**
-//     * Costruttore con parametri <br>
-//     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-//     * Usa: appContext.getBean(UploadSottoPagina.class, titoloBrevePaginaPrincipale, titoloCompletoSottoPagina, mappaAlfabetica) <br>
-//     *
-//     * @param titoloBrevePaginaPrincipale solo il nome/cognome per la costruzione del titolo e per le categorie
-//     * @param titoloBreveSottoPagina      attività della sottopagina per l'incipit (eventuale) e per le categorie
-//     * @param mappaAlfabetica             mappa delle didascalie suddivise per iniziale alfabetica del cognome
-//     */
-//    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, List<String>> mappaAlfabetica) {
-//        this.titoloBrevePaginaPrincipale = titoloBrevePaginaPrincipale;
-//        this.titoloBreveSottoPagina = titoloBreveSottoPagina;
-//        this.mappaAlfabetica = mappaAlfabetica;
-//    }// end of constructor
-
-
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
@@ -77,11 +61,12 @@ public class UploadSottoPagina extends Upload {
      * @param titoloBreveSottoPagina      attività della sottopagina per l'incipit (eventuale) e per le categorie
      * @param mappa                       mappa delle didascalie suddivise per iniziale alfabetica del cognome
      */
-    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa, EADidascalia typeDidascalia) {
+    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa, EADidascalia typeDidascalia,int numVoci) {
         this.titoloBrevePaginaPrincipale = titoloBrevePaginaPrincipale;
         this.titoloBreveSottoPagina = titoloBreveSottoPagina;
         this.mappa = mappa;
         this.typeDidascalia = typeDidascalia;
+        this.numVoci = numVoci;
     }// end of constructor
 
 
@@ -111,7 +96,6 @@ public class UploadSottoPagina extends Upload {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.isSottoPagina = true;
         super.usaSuddivisioneParagrafi = false;
         super.usaRigheRaggruppate = false;
         super.usaHeadTocIndice = false;
@@ -141,10 +125,6 @@ public class UploadSottoPagina extends Upload {
     protected void elaboraPagina() {
         String summary = LibWiki.getSummary();
         testoPagina = VUOTA;
-
-        if (isSottoPagina) {
-            numVoci = 87;
-        }// end of if cycle
 
         //header
         testoPagina += this.elaboraHead();
@@ -184,7 +164,7 @@ public class UploadSottoPagina extends Upload {
         String testo = VUOTA;
 
         testo += "Questa è una lista di persone presenti nell'enciclopedia che hanno il ";
-        testo += typeDidascalia.tag;
+        testo += LibWiki.setQuadre(typeDidascalia.tag);
         testo += " '''";
         testo += titoloBrevePaginaPrincipale;
         testo += "''' e come attività principale sono '''''";
@@ -265,19 +245,19 @@ public class UploadSottoPagina extends Upload {
     }// fine del metodo
 
 
-    protected String mettereInService(LinkedHashMap<String, List<String>> mappaAlfabetica) {
-        StringBuilder testoLista = new StringBuilder();
-
-        if (mappaAlfabetica != null) {
-            for (String titoloParagrafo : mappaAlfabetica.keySet()) {
-                testoLista.append(PARAGRAFO).append(titoloParagrafo).append(PARAGRAFO).append(A_CAPO);
-                for (String didascalia : mappaAlfabetica.get(titoloParagrafo)) {
-                    testoLista.append("*").append(didascalia).append("\n");
-                }// end of for cycle
-            }// end of for cycle
-        }// end of if cycle
-
-        return testoLista.toString();
-    }// fine del metodo
+//    protected String mettereInService(LinkedHashMap<String, List<String>> mappaAlfabetica) {
+//        StringBuilder testoLista = new StringBuilder();
+//
+//        if (mappaAlfabetica != null) {
+//            for (String titoloParagrafo : mappaAlfabetica.keySet()) {
+//                testoLista.append(PARAGRAFO).append(titoloParagrafo).append(PARAGRAFO).append(A_CAPO);
+//                for (String didascalia : mappaAlfabetica.get(titoloParagrafo)) {
+//                    testoLista.append("*").append(didascalia).append("\n");
+//                }// end of for cycle
+//            }// end of for cycle
+//        }// end of if cycle
+//
+//        return testoLista.toString();
+//    }// fine del metodo
 
 }// end of class

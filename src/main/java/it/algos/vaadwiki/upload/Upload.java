@@ -243,8 +243,6 @@ public abstract class Upload {
 
     protected String tagHeadTemplateProgetto;
 
-    protected int numVoci = 0;
-
     protected boolean usaHeadNonScrivere;
 
     protected boolean usaHeadToc;
@@ -262,8 +260,6 @@ public abstract class Upload {
     protected boolean usaBodyTemplate;
 
     protected boolean usaSuddivisioneParagrafi;
-
-    protected boolean isSottoPagina;
 
     //--property
     protected Lista lista;
@@ -284,10 +280,9 @@ public abstract class Upload {
     protected String soggetto;
 
     //--property
-    protected LinkedHashMap<String, List<String>> mappaAlfabetica;
-
-    //--property
     protected EADidascalia typeDidascalia;
+
+    protected int numVoci = 0;
 
 
     /**
@@ -301,7 +296,6 @@ public abstract class Upload {
      * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
      * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
      */
-//    @PostConstruct
     protected void inizia() {
         this.fixPreferenze();
         this.elaboraPagina();
@@ -326,13 +320,10 @@ public abstract class Upload {
         usaHeadIncipit = false; //--normalmente false. Sovrascrivibile da preferenze
 
         // body
-//        usaSuddivisioneParagrafi = false;
-//        usaOrdineAlfabeticoParagrafi = false;
         usaBodySottopagine = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
         usaRigheRaggruppate = true; //--normalmente true. Sovrascrivibile da preferenze
         usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         usaBodyTemplate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
-        isSottoPagina = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
     }// end of method
 
 
@@ -350,22 +341,7 @@ public abstract class Upload {
         String summary = LibWiki.getSummary();
         testoPagina = VUOTA;
 
-        //--nelle sottopagine la lista è comunque vuota (perchè usa una mappa diversa)
-        if (!isSottoPagina) {
-            if (lista == null || lista.size == 0) {
-                log.info("La pagina: " + titoloPagina + " non aveva nessuna biografia");
-                return;
-            }// end of if cycle
-        }// end of if cycle
-        if (isSottoPagina) {
-            numVoci = listaService.getMappaSize(mappaAlfabetica);
-        } else {
-            numVoci = lista.size;
-            if (lista == null || lista.size == 0) {
-                log.info("La pagina: " + titoloPagina + " non aveva nessuna biografia");
-                return;
-            }// end of if cycle
-        }// end of if/else cycle
+        numVoci = lista.size;
 
         //header
         testoPagina += this.elaboraHead();
@@ -377,7 +353,6 @@ public abstract class Upload {
         //di fila nella stessa riga, senza ritorno a capo (se inizia con <include>)
         testoPagina += A_CAPO;
         testoPagina += this.elaboraFooter();
-//        }// fine del blocco if
 
         //--registra la pagina principale
         if (text.isValid(testoPagina)) {
@@ -389,7 +364,7 @@ public abstract class Upload {
             }// end of if cycle
 
             //--nelle sottopagine non eseguo il controllo e le registro sempre (per adesso)
-            if (checkPossoRegistrare(titoloPagina, testoPagina) || isSottoPagina || pref.isBool(FlowCost.USA_DEBUG)) {
+            if (checkPossoRegistrare(titoloPagina, testoPagina) || pref.isBool(FlowCost.USA_DEBUG)) {
                 appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina);
                 log.info("Registrata la pagina: " + titoloPagina);
             } else {
@@ -597,19 +572,12 @@ public abstract class Upload {
         String testoLista = "";
         testoLista = lista.getTesto();
 
-        numVoci = lista.size;
-
         //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
         if (usaBodyDoppiaColonna && (numVoci > pref.getInt(MAX_RIGHE_COLONNE))) {
             testoLista = LibWiki.setColonne(testoLista);
         }// fine del blocco if
 
         if (usaBodyTemplate) {
-//            if (Pref.getBool(CostBio.USA_DEBUG, false)) {
-//                text = elaboraTemplate("") + text;
-//            } else {
-//                text = elaboraTemplate(text);
-//            }// end of if/else cycle
             if (!pref.isBool(USA_DEBUG)) {
                 testoLista = elaboraTemplate(testoLista);
             }// end of if cycle
@@ -624,36 +592,38 @@ public abstract class Upload {
      */
     protected void uploadSottoPagine() {
         LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
+        int numVoci = 0;
 
         for (String key : lista.getSottoPagine().keySet()) {
             mappa = lista.getSottoPagine().get(key);
-            appContext.getBean(UploadSottoPagina.class, soggetto, key, mappa, typeDidascalia);
+            numVoci = lista.getMappaLista().getDimParagrafo(key);
+            appContext.getBean(UploadSottoPagina.class, soggetto, key, mappa, typeDidascalia, numVoci);
         }// end of for cycle
     }// end of method
 
 
-    /**
-     * Costruisce il corpo della pagina <br>
-     */
-    protected String getTestoLista(Lista lista) {
-        String testoLista = "";
-
-        if (usaSuddivisioneParagrafi) {
-            if (usaRigheRaggruppate) {
-                testoLista = listaService.righeSenzaParagrafo(lista.getMappa());
-            } else {
-                testoLista = listaService.righeSenzaParagrafo(lista.getMappa());
-            }// end of if/else cycle
-        } else {
-            if (usaRigheRaggruppate) {
-//                testoLista = listaService.senzaParagrafi(lista.mappaSemplice);
-            } else {
-//                testoLista = listaService.righeSemplici(lista.mappaSemplice);
-            }// end of if/else cycle
-        }// end of if/else cycle
-
-        return testoLista;
-    }// end of method
+//    /**
+//     * Costruisce il corpo della pagina <br>
+//     */
+//    protected String getTestoLista(Lista lista) {
+//        String testoLista = "";
+//
+//        if (usaSuddivisioneParagrafi) {
+//            if (usaRigheRaggruppate) {
+//                testoLista = listaService.righeSenzaParagrafo(lista.getMappa());
+//            } else {
+//                testoLista = listaService.righeSenzaParagrafo(lista.getMappa());
+//            }// end of if/else cycle
+//        } else {
+//            if (usaRigheRaggruppate) {
+////                testoLista = listaService.senzaParagrafi(lista.mappaSemplice);
+//            } else {
+////                testoLista = listaService.righeSemplici(lista.mappaSemplice);
+//            }// end of if/else cycle
+//        }// end of if/else cycle
+//
+//        return testoLista;
+//    }// end of method
 
 
     /**
