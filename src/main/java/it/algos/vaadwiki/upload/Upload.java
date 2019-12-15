@@ -602,29 +602,6 @@ public abstract class Upload {
     }// end of method
 
 
-//    /**
-//     * Costruisce il corpo della pagina <br>
-//     */
-//    protected String getTestoLista(Lista lista) {
-//        String testoLista = "";
-//
-//        if (usaSuddivisioneParagrafi) {
-//            if (usaRigheRaggruppate) {
-//                testoLista = listaService.righeSenzaParagrafo(lista.getMappa());
-//            } else {
-//                testoLista = listaService.righeSenzaParagrafo(lista.getMappa());
-//            }// end of if/else cycle
-//        } else {
-//            if (usaRigheRaggruppate) {
-////                testoLista = listaService.senzaParagrafi(lista.mappaSemplice);
-//            } else {
-////                testoLista = listaService.righeSemplici(lista.mappaSemplice);
-//            }// end of if/else cycle
-//        }// end of if/else cycle
-//
-//        return testoLista;
-//    }// end of method
-
 
     /**
      * Incapsula il testo come parametro di un (eventuale) template

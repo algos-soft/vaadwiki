@@ -100,12 +100,12 @@ public class UploadCognome extends UploadNomiCognomi {
     }// fine del metodo
 
 
-    /**
-     * Esegue l'upload della singola sottopagina <br>
-     */
-    protected void uploadSingolaSottoPagina(String suffixTitolo, LinkedHashMap<String, List<String>> mappaSingolaSottoPagina) {
-        appContext.getBean(UploadSottoPaginaCognomi.class, soggetto, suffixTitolo, mappaSingolaSottoPagina);
-    }// end of method
+//    /**
+//     * Esegue l'upload della singola sottopagina <br>
+//     */
+//    protected void uploadSingolaSottoPagina(String suffixTitolo, LinkedHashMap<String, List<String>> mappaSingolaSottoPagina) {
+//        appContext.getBean(UploadSottoPagina.class, soggetto, suffixTitolo, mappaSingolaSottoPagina);
+//    }// end of method
 
 
     /**
