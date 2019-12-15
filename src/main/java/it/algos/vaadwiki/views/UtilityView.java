@@ -341,7 +341,11 @@ public class UtilityView extends VerticalLayout {
         buttonListM.getElement().setAttribute("theme", "secondary");
         buttonListM.addClickListener(e -> esegueListM());
 
-        layout.add(buttonCount, buttonSizeF, buttonSizeM, buttonListF, buttonListM);
+        Button buttonListMF = new Button("List");
+        buttonListMF.getElement().setAttribute("theme", "secondary");
+        buttonListMF.addClickListener(e -> esegueListMF());
+
+        layout.add(buttonCount, buttonSizeF, buttonSizeM, buttonListF, buttonListM, buttonListMF);
         pageSesso.add(layout);
         pageSesso.add(pageSessoResult);
         pageSesso.setVisible(false);
@@ -792,6 +796,17 @@ public class UtilityView extends VerticalLayout {
         List<Bio> listaMaschi = bioProbabilmente(elencoNomiMaschili);
         pageSessoResult.add(new Label("Elenco delle " + listaMaschi.size() + " voci biografiche che sono PROBABILMENTE di genere maschile"));
         allRighe(listaMaschi, "M");
+    }// end of method
+
+
+    /**
+     * Lista di voci biografiche che sono PROBABILMENTE di genere femminile
+     */
+    public void esegueListMF() {
+        List<Bio> listaAll = bioSenzaSesso();
+        List<Bio> lista = listaAll.subList(0, 20);
+        pageSessoResult.add(new Label("Elenco delle prime " + lista.size() + " voci biografiche che non hanno genere sul totale di " + listaAll.size()));
+        allRighe(lista, "M");
     }// end of method
 
 
