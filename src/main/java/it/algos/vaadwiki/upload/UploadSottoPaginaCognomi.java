@@ -23,7 +23,6 @@ public class UploadSottoPaginaCognomi  {
 
     protected final static String PREFIX_TITOLO = "Persone di cognome ";
 
-
     /**
      * Costruttore base senza parametri <br>
      * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
