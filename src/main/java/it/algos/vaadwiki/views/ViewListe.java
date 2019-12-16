@@ -313,7 +313,7 @@ public abstract class ViewListe extends VerticalLayout implements HasUrlParamete
      * Dopo DEVE invocare il metodo della superclasse <br>
      */
     protected void addInfoTitolo() {
-        this.add(new Label((usaSuddivisioneParagrafi) ? "Con paragrafi: ce ne sono " + numParagrafi : "Senza paragrafi"));
+        this.add(new Label((usaSuddivisioneParagrafi) ? "Ci sono " + numParagrafi +" paragrafi": "Senza paragrafi"));
         if (usaSuddivisioneParagrafi) {
             this.add(new Label("Paragrafi disordinati: " + array.toStringaSpazio(fixVuoto(titoliParagrafiDisordinati))));
             this.add(new Label("Paragrafi ordinati: " + array.toStringaSpazio(fixVuoto(titoliParagrafiOrdinati))));

@@ -26,10 +26,12 @@ import static it.algos.vaadwiki.service.LibBio.PIPE;
  * <p>
  * Classe specializzata per caricare (upload) le liste sul server wiki. <br>
  * <p>
- * Viene chiamato da Scheduler (con frequenza giornaliera ?) <br>
- * Può essere invocato dal bottone 'Upload all' della classe NomeViewList <br>
- * Può essere invocato dal bottone della colonna 'Upload' della classe NomeViewList <br>
+ * Viene chiamato da Scheduler (standard, con frequenza settimanale) <br>
+ * Può essere invocato dal bottone 'Upload all' della classe NomeList <br>
+ * Può essere invocato dal bottone della colonna 'Upload' della classe ViewNome <br>
  * Necessita del login come bot <br>
+ * Creata con appContext.getBean(UploadNome.class, nome) <br>
+ * Punto di inzio @PostConstruct inizia() nella sottoclasse <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -100,13 +102,6 @@ public class UploadNome extends UploadNomiCognomi {
         super.tagCategoria = LibWiki.setCat("Liste di persone per nome", nome.getNome());
     }// end of method
 
-
-//    /**
-//     * Esegue l'upload della singola sottopagina <br>
-//     */
-//    protected void uploadSingolaSottoPagina(String suffixTitolo, LinkedHashMap<String, List<String>> mappaSingolaSottoPagina) {
-//        appContext.getBean(UploadSottoPagina.class, soggetto, suffixTitolo, mappaSingolaSottoPagina);
-//    }// end of method
 
 
     /**

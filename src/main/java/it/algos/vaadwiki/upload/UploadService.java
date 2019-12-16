@@ -321,33 +321,43 @@ public class UploadService extends ABioService {
     }// end of method
 
 
-    public UploadGiornoNato uploadGiornoNato(Giorno giorno) {
-        return appContext.getBean(UploadGiornoNato.class, giorno);
+    public void uploadGiornoNato(Giorno giorno) {
+        appContext.getBean(UploadGiornoNato.class, giorno);
     }// end of method
 
 
-    public UploadGiornoMorto uploadGiornoMorto(Giorno giorno) {
-        return appContext.getBean(UploadGiornoMorto.class, giorno);
+    public void uploadGiornoMorto(Giorno giorno) {
+        appContext.getBean(UploadGiornoMorto.class, giorno);
     }// end of method
 
 
-    public UploadAnnoNato uploadAnnoNato(Anno anno) {
-        return appContext.getBean(UploadAnnoNato.class, anno);
+    public void uploadAnnoNato(Anno anno) {
+        appContext.getBean(UploadAnnoNato.class, anno);
     }// end of method
 
 
-    public UploadAnnoMorto uploadAnnoMorto(Anno anno) {
-        return appContext.getBean(UploadAnnoMorto.class, anno);
+    public void uploadAnnoMorto(Anno anno) {
+        appContext.getBean(UploadAnnoMorto.class, anno);
     }// end of method
 
 
-    public UploadNome uploadNome(Nome nome) {
-        return appContext.getBean(UploadNome.class, nome);
+    public void uploadNome(Nome nome) {
+        appContext.getBean(UploadNome.class, nome);
     }// end of method
 
 
-    public UploadCognome uploadCognome(Cognome cognome) {
-        return appContext.getBean(UploadCognome.class, cognome);
+    public void uploadCognome(Cognome cognome) {
+        appContext.getBean(UploadCognome.class, cognome);
+    }// end of method
+
+
+    public void uploadAttivita(Attivita attivita) {
+        appContext.getBean(UploadAttivita.class, attivita);
+    }// end of method
+
+
+    public void uploadNazionalita(Nazionalita nazionalita) {
+        appContext.getBean(UploadNazionalita.class, nazionalita);
     }// end of method
 
 
@@ -479,6 +489,7 @@ public class UploadService extends ABioService {
     public String getTitoloAttivita(Attivita attivita) {
         return getTitoloAttivita(attivita.getPlurale());
     }// fine del metodo
+
 
     /**
      * Titolo della pagina Nazionalita da creare/caricare su wikipedia

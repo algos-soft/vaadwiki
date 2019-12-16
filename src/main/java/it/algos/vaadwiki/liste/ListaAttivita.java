@@ -1,12 +1,12 @@
 package it.algos.vaadwiki.liste;
 
-import it.algos.vaadwiki.enumeration.EADidascalia;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.bio.Bio;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,7 @@ public class ListaAttivita extends Lista {
     //--property
     protected Attivita attivita;
 
+
     /**
      * Costruttore base senza parametri <br>
      * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
@@ -51,8 +52,9 @@ public class ListaAttivita extends Lista {
      */
     public ListaAttivita(Attivita attivita) {
         this.attivita = attivita;
-        super.typeDidascalia = EADidascalia.listaAttivita;
+        super.soggetto = attivita.plurale;
     }// end of constructor
+
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
@@ -63,9 +65,14 @@ public class ListaAttivita extends Lista {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.typeDidascalia = EADidascalia.listaAttivita;
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_ATTIVITA_IN_CODA);
+        super.usaLinkParagrafo = pref.isBool(USA_LINK_PARAGRAFO_ATTIVITA);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_ATTIVITA);
+        super.usaSottopagine = pref.isBool(USA_SOTTOPAGINE_ATT_NAZ);
+        super.taglioSottoPagina = pref.getInt(TAGLIO_SOTTOPAGINA_ATT_NAZ);
     }// end of method
+
 
     /**
      * Recupera una lista (array) di records Bio che usano questa istanza di Nome nella property nome
@@ -75,11 +82,21 @@ public class ListaAttivita extends Lista {
      */
     @Override
     public List<Bio> listaBio() {
-        if (true) {
-            return bioService.findAllByAttivita23(attivita);
-        } else {
-            return bioService.findAllByAttivita(attivita);
-        }// end of if/else cycle
+        List<Bio> listaBio = null;
+        List<Attivita> listaAttivita = attivitaService.findAllByPlurale(attivita.plurale);
+
+        if (listaAttivita != null && listaAttivita.size() > 0) {
+            listaBio = new ArrayList<>();
+            for (Attivita attivita : listaAttivita) {
+                if (pref.isBool(USA_SOLO_PRIMA_ATTIVITA)) {
+                    listaBio.addAll(bioService.findAllByAttivita(attivita));
+                } else {
+                    listaBio.addAll(bioService.findAllByAttivita23(attivita));
+                }// end of if/else cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return listaBio;
     }// fine del metodo
 
 
@@ -91,9 +108,5 @@ public class ListaAttivita extends Lista {
         return listaService.ordinaListaDidascalieNomi(listaDisordinata);
     }// fine del metodo
 
-
-//    public ListaSottopagina getSottopagina() {
-//        return listaService.sottopagina(mappa, pref.getInt(SOGLIA_SOTTOPAGINA_NOMI_COGNOMI), "Persone di nome " + nome.nome, titoloParagrafoVuoto, titoloSottoPaginaVuota);
-//    }// fine del metodo
 
 }// end of class

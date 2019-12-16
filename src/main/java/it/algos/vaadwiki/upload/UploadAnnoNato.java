@@ -22,12 +22,12 @@ import static it.algos.vaadflow.application.FlowCost.SPAZIO;
  * <p>
  * Classe specializzata per caricare (upload) le liste sul server wiki. <br>
  * <p>
- * Viene chiamato da Scheduler (con frequenza giornaliera ?) <br>
- * Può essere invocato dal bottone 'Upload all' della classe WikiAnnoViewList <br>
- * Può essere invocato dal bottone 'Nati' della colonna 'Upload' della classe WikiAnnoViewList <br>
+ * Viene chiamato da Scheduler (standard, con frequenza giornaliera) <br>
+ * Può essere invocato dal bottone 'Upload all' della classe WikiAnnoList <br>
+ * Può essere invocato dal bottone 'Nati' della colonna 'Upload' della classe WikiAnnoList <br>
  * Necessita del login come bot <br>
  * Creata con appContext.getBean(UploadAnnoNato.class, anno) <br>
- * Punto di inzio @PostConstruct inizia() nella superclasse <br>
+ * Punto di inzio @PostConstruct inizia() nella sottoclasse <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

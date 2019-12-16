@@ -17,15 +17,15 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 public enum EAPreferenzaWiki implements IAPreferenza {
 
     usaDaemonBio(USA_DAEMON_BIO, "Crono per ciclo bio completo", EAPrefType.bool, true),
-    usaDaemonAttivita(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo", EAPrefType.bool, false),
-    usaDaemonNazionalita(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo", EAPrefType.bool, false),
     usaDaemonProfessione(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo", EAPrefType.bool, false),
     usaDaemonCategoria(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo", EAPrefType.bool, false),
     usaDaemonGenere(USA_DAEMON_GENERE, "Crono per download genere, extra-ciclo", EAPrefType.bool, false),
     usaDaemonGiorni(USA_DAEMON_GIORNI, "Crono per upload giorni, extra-ciclo", EAPrefType.bool, true),
     usaDaemonAnni(USA_DAEMON_ANNI, "Crono per upload anni, extra-ciclo", EAPrefType.bool, true),
-    usaDaemonNomi(USA_DAEMON_NOMI, "Crono per upload nomi, extra-ciclo", EAPrefType.bool, false),
-    usaDaemonCognomi(USA_DAEMON_COGNOMI, "Crono per upload cognomi, extra-ciclo", EAPrefType.bool, false),
+    usaDaemonNomi(USA_DAEMON_NOMI, "Crono per upload nomi, extra-ciclo", EAPrefType.bool, true),
+    usaDaemonCognomi(USA_DAEMON_COGNOMI, "Crono per upload cognomi, extra-ciclo", EAPrefType.bool, true),
+    usaDaemonAttivita(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo", EAPrefType.bool, false),
+    usaDaemonNazionalita(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo", EAPrefType.bool, false),
 
     lastDownloadAttivita(LAST_DOWNLOAD_ATTIVITA, "Ultimo download del modulo attività", EAPrefType.localdatetime, null),
     lastDownloadNazionalita(LAST_DOWNLOAD_NAZIONALITA, "Ultimo download del modulo nazionalità", EAPrefType.localdatetime, null),
@@ -92,12 +92,12 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     usaParagrafoSizeAnni(USA_PARAGRAFO_SIZE_ANNI, "Dimensione del paragrafo nei titoli dei secoli per gli anni", EAPrefType.bool, true),
     usaRigheRaggruppateAnni(USA_RIGHE_RAGGRUPPATE_ANNI, "Usa righe raggruppate per giorno nella liste degli anni", EAPrefType.bool, true),
     taglioSottopaginaGiorniAnni(TAGLIO_SOTTOPAGINA_GIORNI_ANNI, "Taglio per sottopaginare i paragrafi di giorni ed anni", EAPrefType.integer, 50),
-    usaSottopagineGiorniAnni(USA_SOTTOPAGINE_GIORNI_ANNI, "Usa sottopagine se i paragrafi nella liste dei giorni e degli anni superano SOGLIA_SOTTOPAGINA_GIORNI_ANNI", EAPrefType.bool, false),
+    usaSottopagineGiorniAnni(USA_SOTTOPAGINE_GIORNI_ANNI, "Usa sottopagine se i paragrafi nella liste dei giorni e degli anni superano taglioSottopaginaGiorniAnni", EAPrefType.bool, false),
 
     paragrafoVuotoNomiCognomi(TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI, "Titolo del paragrafo per le biografie senza attività specificata", EAPrefType.string, "Senza attività specificata"),
     sottopaginaVuotaNomiCognomi(TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI, "Titolo della sottopagina per le biografie senza attività specificata", EAPrefType.string, "Altre..."),
     taglioSottopaginaNomiCognomi(TAGLIO_SOTTOPAGINA_NOMI_COGNOMI, "Taglio per sottopaginare i paragrafi di nomi e cognomi", EAPrefType.integer, 50),
-    usaSottopagineNomiCognomi(USA_SOTTOPAGINE_NOMI_COGNOMI, "Usa sottopagine se i paragrafi nella liste di nomi e cognomi superano SOGLIA_SOTTOPAGINA_NOMI_COGNOMI", EAPrefType.bool, true),
+    usaSottopagineNomiCognomi(USA_SOTTOPAGINE_NOMI_COGNOMI, "Usa sottopagine se i paragrafi nella liste di nomi e cognomi superano taglioSottopaginaNomiCognomi", EAPrefType.bool, true),
 
     sogliaNomiMongo(SOGLIA_NOMI_MONGO, "Soglia minima per creare una entity nella collezione Nomi sul mongoDB", EAPrefType.integer, 30),
     sogliaNomiWiki(SOGLIA_NOMI_PAGINA_WIKI, "Soglia minima per creare la pagina di un nome sul server wiki", EAPrefType.integer, 50),
@@ -118,10 +118,17 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     durataElaboraCognomi(DURATA_ELABORA_COGNOMI, "Durata in secondi dell'elaborazione dei nocognomimi", EAPrefType.integer, 0),
 
     isParagrafoVuotoAttivitaCoda(IS_PARAGRAFO_VUOTO_ATTIVITA_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza nazionalità specificata nelle liste per attività", EAPrefType.bool, true),
+    usaLinkParagrafoAttivita(USA_LINK_PARAGRAFO_ATTIVITA, "Titolo del paragrafo col wikilink alla pagina della nazionalità, nelle liste di attività", EAPrefType.bool, true),
     usaParagrafoSizeAttivita(USA_PARAGRAFO_SIZE_ATTIVITA, "Dimensione del paragrafo nel titolo della nazionalità nelle liste di attività", EAPrefType.bool, true),
 
     isParagrafoVuotoNazionalitaCoda(IS_PARAGRAFO_VUOTO_NAZIONALITA_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza attività specificata nelle liste per nazionalità", EAPrefType.bool, true),
+    usaLinkParagrafoNazionalita(USA_LINK_PARAGRAFO_NAZIONALITA, "Titolo del paragrafo col wikilink alla pagina della attività, nelle liste di nazionalità", EAPrefType.bool, true),
     usaParagrafoSizeNazionalita(USA_PARAGRAFO_SIZE_NAZIONALITA, "Dimensione del paragrafo nel titolo della attività nelle liste di nazionalità", EAPrefType.bool, true),
+
+    taglioSottopaginaAttNaz(TAGLIO_SOTTOPAGINA_ATT_NAZ, "Taglio per sottopaginare i paragrafi di attività e nazionalità", EAPrefType.integer, 50),
+    usaSottopagineAttNaz(USA_SOTTOPAGINE_ATT_NAZ, "Usa sottopagine se i paragrafi nella liste di attività e nazionalità superano taglioSottopaginaAttNaz", EAPrefType.bool, true),
+    usaSoloPrimoNome(USA_SOLO_PRIMO_NOME, "Considera solo il primo nome nelle liste di nomi", EAPrefType.bool, true),
+    usaSoloPrimaAttivita(USA_SOLO_PRIMA_ATTIVITA, "Considera solo la prima attività nelle liste di attività", EAPrefType.bool, true),
     ;
 
 

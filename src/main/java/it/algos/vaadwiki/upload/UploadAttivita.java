@@ -1,17 +1,17 @@
 package it.algos.vaadwiki.upload;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.enumeration.EADidascalia;
+import it.algos.vaadwiki.liste.ListaAttivita;
 import it.algos.vaadwiki.liste.ListaCognomi;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import javax.annotation.PostConstruct;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_COGNOMI;
@@ -21,25 +21,26 @@ import static it.algos.vaadwiki.service.LibBio.PIPE;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: Fri, 14-Jun-2019
- * Time: 17:07
+ * Date: dom, 15-dic-2019
+ * Time: 22:36
  * <p>
  * Classe specializzata per caricare (upload) le liste sul server wiki. <br>
  * <p>
  * Viene chiamato da Scheduler (standard, con frequenza settimanale) <br>
- * Può essere invocato dal bottone 'Upload all' della classe CognomeList <br>
- * Può essere invocato dal bottone della colonna 'Upload' della classe ViewCognome <br>
+ * Può essere invocato dal bottone 'Upload all' della classe AttivitaList <br>
+ * Può essere invocato dal bottone della colonna 'Upload' della classe ViewAttivita <br>
  * Necessita del login come bot <br>
- * Creata con appContext.getBean(UploadCognome.class, cognome) <br>
+ * Creata con appContext.getBean(UploadAttivita.class, attivita) <br>
  * Punto di inzio @PostConstruct inizia() nella sottoclasse <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-public class UploadCognome extends UploadNomiCognomi {
+public class UploadAttivita extends UploadNomiCognomi {
+
 
     //--property
-    protected Cognome cognome;
+    protected Attivita attivita;
 
 
     /**
@@ -47,7 +48,7 @@ public class UploadCognome extends UploadNomiCognomi {
      * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
      * Se manca, manda in rosso il parametro Bio del costruttore usato <br>
      */
-    public UploadCognome() {
+    public UploadAttivita() {
     }// end of constructor
 
 
@@ -56,10 +57,10 @@ public class UploadCognome extends UploadNomiCognomi {
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(UploadCognome.class, cognome) <br>
      *
-     * @param cognome di cui costruire la pagina sul server wiki
+     * @param attivita di cui costruire la pagina sul server wiki
      */
-    public UploadCognome(Cognome cognome) {
-        this.cognome = cognome;
+    public UploadAttivita(Attivita attivita) {
+        this.attivita = attivita;
     }// end of constructor
 
 
@@ -76,8 +77,8 @@ public class UploadCognome extends UploadNomiCognomi {
      */
     @PostConstruct
     protected void inizia() {
-        lista = appContext.getBean(ListaCognomi.class, cognome);
-        super.soggetto = cognome.cognome;
+        lista = appContext.getBean(ListaAttivita.class, attivita);
+        super.soggetto = attivita.plurale;
         super.inizia();
     }// end of method
 
@@ -94,14 +95,12 @@ public class UploadCognome extends UploadNomiCognomi {
         super.typeDidascalia = EADidascalia.listaCognomi;
         super.usaSuddivisioneParagrafi = true;
         super.usaRigheRaggruppate = false;
-        super.titoloPagina = uploadService.getTitoloCognome(cognome);
+        super.titoloPagina = uploadService.getTitoloAttivita(attivita);
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_COGNOMI);
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
-        super.tagCategoria = LibWiki.setCat("Liste di persone per cognome", cognome.getCognome());
+        super.tagCategoria = LibWiki.setCat("Bio:Attivita", text.primaMaiuscola(attivita.getPlurale()));
     }// fine del metodo
-
-
 
     /**
      * Costruisce la frase di incipit iniziale
@@ -112,10 +111,10 @@ public class UploadCognome extends UploadNomiCognomi {
     protected String elaboraIncipitSpecifico() {
         String testo = VUOTA;
 
-        testo += "incipit lista cognomi";
+        testo += "incipit lista attivita";
         testo += PIPE;
         testo += "cognome=";
-        testo += cognome.cognome;
+        testo += attivita.getPlurale();
         testo = LibWiki.setGraffe(testo);
 
         return testo;

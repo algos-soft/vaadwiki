@@ -26,7 +26,6 @@ public class ViewAttivita extends ViewListe {
 
 
 
-
     /**
      * Punto di ingresso dopo la chiamata navigate() effettuata da com.vaadin.flow.router.Router verso questa view <br>
      *

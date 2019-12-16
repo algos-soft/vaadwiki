@@ -8,6 +8,7 @@ import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.enumeration.EADidascalia;
+import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.cognome.Cognome;
@@ -56,6 +57,13 @@ public abstract class Lista {
     @Autowired
     public AnnoService annoService;
 
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    public AttivitaService attivitaService;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -252,8 +260,10 @@ public abstract class Lista {
      * @param listaDidascalie da raggruppare
      */
     protected void creaMappa(List<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia) {
-        TypeLista type = new TypeLista(usaSuddivisioneParagrafi, usaRigheRaggruppate, paragrafoVuotoInCoda, usaLinkParagrafo, usaParagrafoSize, usaSottopagine);
-        mappaLista = appContext.getBean(MappaLista.class, soggetto, listaDidascalie, typeDidascalia, type, titoloParagrafoVuoto, taglioSottoPagina);
+        if (size > 0) {
+            TypeLista type = new TypeLista(usaSuddivisioneParagrafi, usaRigheRaggruppate, paragrafoVuotoInCoda, usaLinkParagrafo, usaParagrafoSize, usaSottopagine);
+            mappaLista = appContext.getBean(MappaLista.class, soggetto, listaDidascalie, typeDidascalia, type, titoloParagrafoVuoto, taglioSottoPagina);
+        }// end of if cycle
     }// fine del metodo
 
 
@@ -269,16 +279,6 @@ public abstract class Lista {
     public String getTesto() {
         String testo = "";
 
-//        if (usaSuddivisioneParagrafi) {
-//            if (usaParagrafoSize) {
-//                testo = listaService.righeConParagrafoSize(mappa);
-//            } else {
-//                testo = listaService.righeConParagrafo(mappa);
-//            }// end of if/else cycle
-//        } else {
-//            testo = listaService.righeSenzaParagrafo(mappa);
-//        }// end of if/else cycle
-
         if (mappaLista != null) {
             testo = mappaLista.getTesto();
         }// end of if cycle
@@ -291,9 +291,11 @@ public abstract class Lista {
         return null;
     }// fine del metodo
 
+
     public LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> getSottoPagine() {
         return mappaLista.getSottoPagine();
     }// fine del metodo
+
 
     /**
      * Recupera una lista (array) di records Bio che usano un'istanza della property appropriata <br>

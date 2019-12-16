@@ -234,55 +234,98 @@ public class MappaLista {
      * se il titolo del paragrafo è vuoto, sostituisce col titolo previsto standard <br>
      */
     private void creaTitoli() {
-        String chiave = "";
-        List<String> listaProfessioni;
-        List<String> listaVisibili;
+        Titolo titolo = null;
         List<Titolo> listaTitoli;
-        Titolo titolo;
-        String professione;
-        String pagina;
-        String visibile;
 
         if (mappaWrapUno != null) {
-            listaTitoli = new ArrayList();
+            listaTitoli = new ArrayList<>();
             for (String chiaveParagrafo : mappaWrapUno.keySet()) {
+                switch (typeDidascalia) {
+                    case giornoNato:
+                    case giornoMorto:
+                    case annoNato:
+                    case annoMorto:
+                        titolo = new Titolo(chiaveParagrafo, chiaveParagrafo, chiaveParagrafo);
+                        break;
+                    case listaNomi:
+                    case listaCognomi:
+                        titolo = creaTitoloNomiCognomi(chiaveParagrafo);
+                        break;
+                    case listaAttivita:
+                        titolo = creaTitoloAttivita(chiaveParagrafo);
+                        break;
+                    case listaNazionalita:
+                        titolo = creaTitoloNazionalita(chiaveParagrafo);
+                        break;
+                    default:
+                        break;
+                } // end of switch statement
 
-                if (typeDidascalia.isProfessione) {
-                    listaProfessioni = new ArrayList();
-                    listaVisibili = new ArrayList();
-                    pagina = VUOTA;
-                    professione = VUOTA;
-                    visibile = VUOTA;
-
-                    for (WrapDidascalia wrap : mappaWrapUno.get(chiaveParagrafo)) {
-                        chiave = listaService.getTitoloParagrafo(wrap.bio);
-                        professione = listaService.getProfessioneDaBio(wrap.bio);
-                        if (!listaProfessioni.contains(professione)) {
-                            listaProfessioni.add(professione);
-                        }// end of if cycle
-                        visibile = listaService.getGenereDaBio(wrap.bio);
-                        if (!listaVisibili.contains(visibile)) {
-                            listaVisibili.add(visibile);
-                        }// end of if cycle
-                    }// end of for cycle
-
-                    if (listaProfessioni.size() == 1) {
-                        pagina = listaProfessioni.get(0);
-                    } else {
-                        pagina = VUOTA;
-                    }// end of if/else cycle
-                    visibile = listaVisibili.get(0);
-                    chiave = text.isValid(chiave) ? chiave : titoloParagrafoVuoto;
-                    titolo = new Titolo(chiaveParagrafo, pagina, visibile);
-                } else {
-                    titolo = new Titolo(chiaveParagrafo, chiaveParagrafo, chiaveParagrafo);
-                }// end of if/else cycle
-
-                listaTitoli.add(titolo);
+                if (titolo != null) {
+                    listaTitoli.add(titolo);
+                }// end of if cycle
             }// end of for cycle
 
             titoliLista = appContext.getBean(TitoliLista.class, listaTitoli, typeDidascalia, typeLista, titoloParagrafoVuoto);
         }// end of if cycle
+    }// fine del metodo
+
+
+    private Titolo creaTitoloNomiCognomi(String chiaveParagrafo) {
+        List<String> listaProfessioni = new ArrayList<>();
+        List<String> listaVisibili = new ArrayList<>();
+        String professione = VUOTA;
+        String pagina = VUOTA;
+        String visibile = VUOTA;
+
+        for (WrapDidascalia wrap : mappaWrapUno.get(chiaveParagrafo)) {
+            professione = listaService.getProfessioneDaBio(wrap.bio);
+            if (!listaProfessioni.contains(professione)) {
+                listaProfessioni.add(professione);
+            }// end of if cycle
+            visibile = listaService.getGenereDaBio(wrap.bio);
+            if (!listaVisibili.contains(visibile)) {
+                listaVisibili.add(visibile);
+            }// end of if cycle
+        }// end of for cycle
+
+        if (listaProfessioni.size() == 1) {
+            pagina = listaProfessioni.get(0);
+        } else {
+            pagina = VUOTA;
+        }// end of if/else cycle
+        visibile = listaVisibili.get(0);
+
+        return new Titolo(chiaveParagrafo, pagina, visibile);
+    }// fine del metodo
+
+
+    private Titolo creaTitoloAttivita(String chiaveParagrafo) {
+        String tagPagina = "Progetto:Biografie/Nazionalità/";
+        String pagina = VUOTA;
+        String visibile = VUOTA;
+
+        pagina += tagPagina;
+        pagina += text.primaMaiuscola(chiaveParagrafo);
+        visibile = text.primaMaiuscola(chiaveParagrafo);
+
+        return new Titolo(chiaveParagrafo, pagina, visibile);
+    }// fine del metodo
+
+
+    private Titolo creaTitoloNazionalita(String chiaveParagrafo) {
+        Titolo titolo = null;
+        String tagPagina = "Progetto:Biografie/Attività/";
+        String pagina = VUOTA;
+        String visibile = VUOTA;
+
+        pagina += tagPagina;
+        pagina += text.primaMaiuscola(chiaveParagrafo);
+        pagina += "|";
+        pagina += text.primaMaiuscola(chiaveParagrafo);
+        visibile = text.primaMaiuscola(chiaveParagrafo);
+
+        return new Titolo(chiaveParagrafo, pagina, visibile);
     }// fine del metodo
 
 

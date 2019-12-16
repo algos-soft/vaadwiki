@@ -215,7 +215,7 @@ public class AttivitaList extends WikiList {
     protected Component createUploaButton(Attivita entityBean) {
         Button uploadButton = new Button(entityBean.plurale, new Icon(VaadinIcon.UPLOAD));
         uploadButton.getElement().setAttribute("theme", "error");
-//        uploadButton.addClickListener(e -> uploadService.uploadNome(entityBean));
+        uploadButton.addClickListener(e -> uploadService.uploadAttivita(entityBean));
         return uploadButton;
     }// end of method
 

@@ -157,6 +157,11 @@ public class TitoliLista {
                     ordinati = disordinati;
                     ordinati = array.sort(disordinati);
                     break;
+                case listaAttivita:
+                case listaNazionalita:
+                    ordinati = disordinati;
+                    ordinati = array.sort(disordinati);
+                    break;
                 default:
                     ordinati = disordinati;
                     break;

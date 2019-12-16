@@ -334,9 +334,13 @@ public class WikiCost {
 
     public final static String TAGLIO_SOTTOPAGINA_NOMI_COGNOMI = "taglioSottopaginaNomiCognomi";
 
+    public final static String TAGLIO_SOTTOPAGINA_ATT_NAZ = "taglioSottopaginaAttNaz";
+
     public final static String USA_SOTTOPAGINE_GIORNI_ANNI = "usaSottopagineGiorniAnni";
 
     public final static String USA_SOTTOPAGINE_NOMI_COGNOMI = "usaSottopagineNomiCognomi";
+
+    public final static String USA_SOTTOPAGINE_ATT_NAZ = "usaSottopagineAttNaz";
 
     public final static String TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI = "tagParagrafoVuotoNomi";
 
@@ -362,6 +366,10 @@ public class WikiCost {
 
     public final static String USA_LINK_PARAGRAFO_NOMI = "usaLinkParagrafoNomi";
 
+    public final static String USA_LINK_PARAGRAFO_ATTIVITA = "usaLinkParagrafoAttivita";
+
+    public final static String USA_LINK_PARAGRAFO_NAZIONALITA = "usaLinkParagrafoNazionalita";
+
     public final static String USA_LINK_PARAGRAFO_COGNOMI = "usaLinkParagrafoCognomi";
 
     public final static String USA_LINK_PROFESSIONE = "usaLinkProfessione";
@@ -378,6 +386,10 @@ public class WikiCost {
     public final static String USA_PARAGRAFO_SIZE_ATTIVITA = "usaParagrafoSizeAttivita";
 
     public final static String USA_PARAGRAFO_SIZE_NAZIONALITA = "usaParagrafoSizeNazionalita";
+
+    public final static String USA_SOLO_PRIMO_NOME = "usaSoloPrimoNome";
+
+    public final static String USA_SOLO_PRIMA_ATTIVITA = "usaSoloPrimaAttivita";
 
     public static WikiLoginOld WIKI_LOGIN = null;
 
