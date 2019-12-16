@@ -125,7 +125,8 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     usaLinkParagrafoNazionalita(USA_LINK_PARAGRAFO_NAZIONALITA, "Titolo del paragrafo col wikilink alla pagina della attività, nelle liste di nazionalità", EAPrefType.bool, true),
     usaParagrafoSizeNazionalita(USA_PARAGRAFO_SIZE_NAZIONALITA, "Dimensione del paragrafo nel titolo della attività nelle liste di nazionalità", EAPrefType.bool, true),
 
-    taglioSottopaginaAttNaz(TAGLIO_SOTTOPAGINA_ATT_NAZ, "Taglio per sottopaginare i paragrafi di attività e nazionalità", EAPrefType.integer, 50),
+    sogliaAttNazWiki(SOGLIA_ATT_NAZ_PAGINA_WIKI, "Soglia minima per creare la pagina di una attività o nazionalità sul server wiki", EAPrefType.integer, 100),
+    taglioSottopaginaAttNaz(TAGLIO_SOTTOPAGINA_ATT_NAZ, "Taglio per sottopaginare i paragrafi di attività e nazionalità", EAPrefType.integer, 75),
     usaSottopagineAttNaz(USA_SOTTOPAGINE_ATT_NAZ, "Usa sottopagine se i paragrafi nella liste di attività e nazionalità superano taglioSottopaginaAttNaz", EAPrefType.bool, true),
     usaSoloPrimoNome(USA_SOLO_PRIMO_NOME, "Considera solo il primo nome nelle liste di nomi", EAPrefType.bool, true),
     usaSoloPrimaAttivita(USA_SOLO_PRIMA_ATTIVITA, "Considera solo la prima attività nelle liste di attività", EAPrefType.bool, true),

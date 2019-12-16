@@ -285,6 +285,8 @@ public class WikiCost {
 
     public final static String SOGLIA_COGNOMI_PAGINA_WIKI = "sogliaCognomiPaginaWiki";
 
+    public final static String SOGLIA_ATT_NAZ_PAGINA_WIKI = "sogliaAttNazPaginaWiki";
+
     public final static String KEY_MAP_PARAGRAFO_TITOLO = "keyMapTitolo";
 
     public final static String KEY_MAP_PARAGRAFO_LINK = "keyMapLink";

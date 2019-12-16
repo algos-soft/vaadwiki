@@ -17,6 +17,8 @@ import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.enumeration.EAPreferenzaWiki.taglioSottopaginaNomiCognomi;
 import static it.algos.wiki.LibWiki.PARAGRAFO;
 
 /**
@@ -138,7 +140,7 @@ public class UploadSottoPagina extends Upload {
         testoPagina += this.elaboraFooter();
 
         //--registra la sottopagina
-        if (text.isValid(testoPagina)) {
+        if (dimensioniValide()) {
             testoPagina = testoPagina.trim();
 
             if (pref.isBool(FlowCost.USA_DEBUG)) {
@@ -151,6 +153,37 @@ public class UploadSottoPagina extends Upload {
             log.info("Registrata la pagina: " + titoloPagina);
         }// fine del blocco if
 
+    }// fine del metodo
+
+
+    protected boolean dimensioniValide() {
+        boolean uploadValido = false;
+
+        switch (typeDidascalia) {
+            case giornoNato:
+            case giornoMorto:
+            case annoNato:
+            case annoMorto:
+                uploadValido = numVoci > pref.getInt(TAGLIO_SOTTOPAGINA_GIORNI_ANNI);
+                break;
+            case listaNomi:
+            case listaCognomi:
+                uploadValido = numVoci > pref.getInt(TAGLIO_SOTTOPAGINA_NOMI_COGNOMI);
+                break;
+            case listaAttivita:
+            case listaNazionalita:
+                uploadValido = numVoci > pref.getInt(TAGLIO_SOTTOPAGINA_ATT_NAZ);
+                break;
+            default:
+                log.warn("Switch - caso non definito");
+                break;
+        } // end of switch statement
+
+        if (!uploadValido) {
+            log.warn("La sottopagina " + titoloPagina + " non contiene un numero sufficiente di voci biografiche e non è stata creata");
+        }// end of if cycle
+
+        return uploadValido;
     }// fine del metodo
 
 

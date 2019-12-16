@@ -28,7 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.*;
-import static it.algos.vaadwiki.application.WikiCost.MAX_RIGHE_COLONNE;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
@@ -355,7 +355,7 @@ public abstract class Upload {
         testoPagina += this.elaboraFooter();
 
         //--registra la pagina principale
-        if (numVoci > 0) {
+        if (dimensioniValide()) {
             testoPagina = testoPagina.trim();
 
             if (pref.isBool(FlowCost.USA_DEBUG)) {
@@ -370,16 +370,46 @@ public abstract class Upload {
             } else {
                 log.info("Non modificata la pagina: " + titoloPagina);
             }// end of if/else cycle
-        } else {
-            log.info("La pagina " + titoloPagina + " non contiene voci biografiche e non è stata creata");
-        }// end of if/else cycle
 
-
-        //--registra eventuali sottopagine
-        if (usaBodySottopagine) {
-            uploadSottoPagine();
+            //--registra eventuali sottopagine
+            if (usaBodySottopagine) {
+                uploadSottoPagine();
+            }// end of if cycle
         }// end of if cycle
 
+    }// fine del metodo
+
+
+    protected boolean dimensioniValide() {
+        boolean uploadValido = false;
+
+        switch (typeDidascalia) {
+            case giornoNato:
+            case giornoMorto:
+            case annoNato:
+            case annoMorto:
+                uploadValido = numVoci > 0;
+                break;
+            case listaNomi:
+                uploadValido = numVoci > pref.getInt(SOGLIA_NOMI_PAGINA_WIKI);
+                break;
+            case listaCognomi:
+                uploadValido = numVoci > pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI);
+                break;
+            case listaAttivita:
+            case listaNazionalita:
+                uploadValido = numVoci > pref.getInt(SOGLIA_ATT_NAZ_PAGINA_WIKI);
+                break;
+            default:
+                log.warn("Switch - caso non definito");
+                break;
+        } // end of switch statement
+
+        if (!uploadValido) {
+            log.info("La pagina " + titoloPagina + " non contiene un numero sufficiente di voci biografiche e non è stata creata");
+        }// end of if cycle
+
+        return uploadValido;
     }// fine del metodo
 
 
