@@ -346,6 +346,10 @@ public class WikiCost {
 
     public final static String TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI = "tagParagrafoVuotoNomi";
 
+    public final static String TAG_PARAGRAFO_VUOTO_ATTIVITA = "tagParagrafoVuotoAttivita";
+
+    public final static String TAG_PARAGRAFO_VUOTO_NAZIONALITA = "tagParagrafoVuotoNazionalita";
+
     public final static String TAG_SOTTOPAGINA_VUOTA_NOMI_COGNOMI = "tagSottoPaginaVuotaNomi";
 
     public final static String MAX_RIGHE_COLONNE = "maxRigheColonne";

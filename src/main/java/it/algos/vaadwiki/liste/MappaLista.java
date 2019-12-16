@@ -305,8 +305,10 @@ public class MappaLista {
         String pagina = VUOTA;
         String visibile = VUOTA;
 
-        pagina += tagPagina;
-        pagina += text.primaMaiuscola(chiaveParagrafo);
+        if (text.isValid(chiaveParagrafo)) {
+            pagina += tagPagina;
+            pagina += text.primaMaiuscola(chiaveParagrafo);
+        }// end of if cycle
         visibile = text.primaMaiuscola(chiaveParagrafo);
 
         return new Titolo(chiaveParagrafo, pagina, visibile);
@@ -875,7 +877,7 @@ public class MappaLista {
         String tagFisso = "Vedi anche|";
         String tagTypo = typeDidascalia.pagina;
         String tag = "/";
-        return LibWiki.setGraffe(tagFisso + tagTypo + soggetto + tag + text.primaMaiuscola(chiaveParagrafo));
+        return LibWiki.setGraffe(tagFisso + tagTypo + text.primaMaiuscola(soggetto) + tag + text.primaMaiuscola(chiaveParagrafo));
     }// end of method
 
 

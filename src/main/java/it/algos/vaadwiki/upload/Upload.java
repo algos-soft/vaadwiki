@@ -11,7 +11,6 @@ import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.liste.Lista;
 import it.algos.vaadwiki.liste.ListaService;
-import it.algos.vaadwiki.liste.ListaSottopagina;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
@@ -261,6 +260,8 @@ public abstract class Upload {
 
     protected boolean usaSuddivisioneParagrafi;
 
+    protected boolean usaNote;
+
     //--property
     protected Lista lista;
 
@@ -313,7 +314,7 @@ public abstract class Upload {
         usaHeadInclude = true; //--tipicamente sempre true. Si attiva solo se c'è del testo (iniziale) da includere
         usaHeadToc = true; //--tipicamente sempre true.
         usaHeadTocIndice = true; //--normalmente true. Sovrascrivibile da preferenze
-        usaHeadRitorno = true; //--normalmente false. Sovrascrivibile da preferenze
+        usaHeadRitorno = true; //--normalmente true. Sovrascrivibile da preferenze
         usaHeadTemplateAvviso = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         tagHeadTemplateAvviso = "ListaBio"; //--Sovrascrivibile da preferenze
         tagHeadTemplateProgetto = "biografie"; //--Sovrascrivibile da preferenze
@@ -323,7 +324,10 @@ public abstract class Upload {
         usaBodySottopagine = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
         usaRigheRaggruppate = true; //--normalmente true. Sovrascrivibile da preferenze
         usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
-        usaBodyTemplate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
+        usaBodyTemplate = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
+
+        // footer
+        usaNote = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
     }// end of method
 
 
@@ -373,7 +377,7 @@ public abstract class Upload {
 
             //--registra eventuali sottopagine
             if (usaBodySottopagine) {
-                uploadSottoPagine();
+//                uploadSottoPagine();
             }// end of if cycle
         }// end of if cycle
 
@@ -601,7 +605,6 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected String elaboraBody() {
-        ListaSottopagina sottoPagina;
         String testoLista = "";
         testoLista = lista.getTesto();
 
@@ -654,10 +657,33 @@ public abstract class Upload {
         boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
         String cat;
 
+        if (usaNote) {
+            testo += usaNote();
+        }// end of if cycle
+
         testo += LibWiki.setPortale(tagHeadTemplateProgetto);
         cat = tagCategoria;
         cat = nascosta ? LibWiki.setNowiki(cat) : cat;
         testo += cat;
+
+        return testo;
+    }// fine del metodo
+
+
+    /**
+     * Paragrafo delle note (eventuale)
+     * Sovrascritto
+     */
+    protected String usaNote() {
+        String testo = VUOTA;
+        String tag = "Note";
+        String ref = "<references/>";
+
+        testo += LibWiki.setParagrafo(tag);
+        testo += A_CAPO;
+        testo += ref;
+        testo += A_CAPO;
+        testo += A_CAPO;
 
         return testo;
     }// fine del metodo

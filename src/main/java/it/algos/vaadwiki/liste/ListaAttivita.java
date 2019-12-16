@@ -66,6 +66,9 @@ public class ListaAttivita extends Lista {
         super.fixPreferenze();
 
         super.typeDidascalia = EADidascalia.listaAttivita;
+        super.usaSuddivisioneParagrafi = true;
+        super.usaRigheRaggruppate = false;
+        super.titoloParagrafoVuoto = pref.getStr(TAG_PARAGRAFO_VUOTO_ATTIVITA);
         super.paragrafoVuotoInCoda = pref.isBool(IS_PARAGRAFO_VUOTO_ATTIVITA_IN_CODA);
         super.usaLinkParagrafo = pref.isBool(USA_LINK_PARAGRAFO_ATTIVITA);
         super.usaParagrafoSize = pref.isBool(USA_PARAGRAFO_SIZE_ATTIVITA);

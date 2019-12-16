@@ -1,21 +1,19 @@
 package it.algos.vaadwiki.upload;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.liste.ListaAttivita;
-import it.algos.vaadwiki.liste.ListaCognomi;
 import it.algos.vaadwiki.modules.attivita.Attivita;
-import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.wiki.LibWiki;
 import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_COGNOMI;
-import static it.algos.vaadwiki.service.LibBio.PIPE;
+import static it.algos.vaadwiki.application.WikiCost.USA_SOLO_PRIMA_ATTIVITA;
 
 /**
  * Project vaadwiki
@@ -99,8 +97,10 @@ public class UploadAttivita extends UploadNomiCognomi {
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_COGNOMI);
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
-        super.tagCategoria = LibWiki.setCat("Bio:Attivita", text.primaMaiuscola(attivita.getPlurale()));
+        super.tagCategoria = LibWiki.setCat("Bio attività", text.primaMaiuscola(attivita.getPlurale()));
+        super.usaNote = true;
     }// fine del metodo
+
 
     /**
      * Costruisce la frase di incipit iniziale
@@ -110,12 +110,36 @@ public class UploadAttivita extends UploadNomiCognomi {
      */
     protected String elaboraIncipitSpecifico() {
         String testo = VUOTA;
+        String message1="Le didascalie delle voci sono quelle previste nel [[Progetto:Biografie/Didascalie|progetto biografie]]";
+        String message2 = "La lista non è esaustiva e contiene solo le persone che sono citate nell'enciclopedia e per le quali è stato implementato correttamente il [[template:Bio|template Bio]]";
+        String message3 = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+        String message4 = VUOTA;
+        String message5 = "Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+        String message6 = "Nel paragrafo ''Senza nazionalità utilizzabile'' (eventuale) vengono raggruppate quelle voci biografiche che '''non''' usano il parametro ''nazionalità'' oppure che usano una nazionalità di difficile elaborazione da parte del '''[[Utente:Biobot|<span style=\"color:green;\">bot</span>]]'''";
+        String message77 = "Alcune nazionalità, ancorché correttamente inserite nel [[template:Bio|template Bio]], potrebbero risultare di difficile elaborazione da parte del '''[[Utente:Biobot|<span style=\"color:green;\">bot</span>]]'''. Vengono raggruppate nel paragrafo eventuale ''Senza nazionalità utilizzabile''.";
 
-        testo += "incipit lista attivita";
-        testo += PIPE;
-        testo += "cognome=";
-        testo += attivita.getPlurale();
-        testo = LibWiki.setGraffe(testo);
+        if (pref.isBool(USA_SOLO_PRIMA_ATTIVITA)) {
+            message4 = "Ogni persona è presente in una sola [[Progetto:Biografie/Attività|lista]], in base a quanto riportata nel parametro ''attività'' del [[template:Bio|template Bio]] presente nella voce biografica specifica della persona";
+        } else {
+            message4 = "Ogni persona è presente in diverse [[Progetto:Biografie/Attività|liste]], in base a quanto riportato nei parametri ''attività'', ''attività2''  e ''attività3'' del [[template:Bio|template Bio]] presente nella voce biografica specifica della persona. Le ''attivitàAltre'' non vengono considerate";
+        }// end of if/else cycle
+
+        testo += "Questa è una lista";
+        testo += LibWiki.setRef(message1);
+        testo += " di persone";
+        testo += LibWiki.setRef(message2);
+        testo += " presenti nell'enciclopedia che hanno come attività";
+        testo += LibWiki.setRef(message3);
+        testo += " principale";
+        testo += LibWiki.setRef(message4);
+        testo += " quella di ";
+        testo += "'''''";
+        testo += soggetto;
+        testo += "'''''";
+        testo += " e sono suddivise per ";
+        testo += "nazionalità.";
+        testo += LibWiki.setRef(message5);
+        testo += LibWiki.setRef(message6);
 
         return testo;
     }// fine del metodo

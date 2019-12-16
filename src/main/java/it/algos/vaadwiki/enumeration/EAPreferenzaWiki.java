@@ -130,6 +130,8 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     usaSottopagineAttNaz(USA_SOTTOPAGINE_ATT_NAZ, "Usa sottopagine se i paragrafi nella liste di attività e nazionalità superano taglioSottopaginaAttNaz", EAPrefType.bool, true),
     usaSoloPrimoNome(USA_SOLO_PRIMO_NOME, "Considera solo il primo nome nelle liste di nomi", EAPrefType.bool, true),
     usaSoloPrimaAttivita(USA_SOLO_PRIMA_ATTIVITA, "Considera solo la prima attività nelle liste di attività", EAPrefType.bool, true),
+    tagParagrafoVuotoAttivita(TAG_PARAGRAFO_VUOTO_ATTIVITA, "Titolo del paragrafo per le biografie senza attività specificata nelle liste per attività", EAPrefType.string, "Senza nazionalità utilizzabile"),
+    tagParagrafoVuotoNazionalita(TAG_PARAGRAFO_VUOTO_NAZIONALITA, "Titolo del paragrafo per le biografie senza nazionalità specificata nelle liste per nazionalità", EAPrefType.string, "Senza attività utilizzabile"),
     ;
 
 
