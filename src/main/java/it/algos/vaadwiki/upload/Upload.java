@@ -355,7 +355,7 @@ public abstract class Upload {
         testoPagina += this.elaboraFooter();
 
         //--registra la pagina principale
-        if (text.isValid(testoPagina)) {
+        if (numVoci > 0) {
             testoPagina = testoPagina.trim();
 
             if (pref.isBool(FlowCost.USA_DEBUG)) {
@@ -370,7 +370,10 @@ public abstract class Upload {
             } else {
                 log.info("Non modificata la pagina: " + titoloPagina);
             }// end of if/else cycle
-        }// fine del blocco if
+        } else {
+            log.info("La pagina " + titoloPagina + " non contiene voci biografiche e non è stata creata");
+        }// end of if/else cycle
+
 
         //--registra eventuali sottopagine
         if (usaBodySottopagine) {
@@ -600,7 +603,6 @@ public abstract class Upload {
             appContext.getBean(UploadSottoPagina.class, soggetto, key, mappa, typeDidascalia, numVoci);
         }// end of for cycle
     }// end of method
-
 
 
     /**
