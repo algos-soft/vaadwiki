@@ -119,6 +119,7 @@ public class AttivitaList extends WikiList {
 
         //--bottoni vaadwiki
         super.usaButtonDownload = true;
+        super.usaButtonUpload = true;
         super.usaButtonModulo = true;
         super.usaButtonShowStatisticheA = true;
         super.usaButtonUploadStatistiche = true;
@@ -227,6 +228,15 @@ public class AttivitaList extends WikiList {
     protected void wikiPage(Attivita attivita) {
         String link = "\"" + PATH_WIKI + uploadService.getTitoloAttivita(attivita) + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+    /**
+     * Upload standard. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    protected void upload(long inizio) {
+        uploadService.uploadAllAttivita();
+        super.upload(inizio);
     }// end of method
 
     /**

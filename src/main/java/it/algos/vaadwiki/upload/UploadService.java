@@ -8,10 +8,12 @@ import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadwiki.modules.attivita.Attivita;
+import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.cognome.CognomeService;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
+import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.service.ABioService;
@@ -90,6 +92,20 @@ public class UploadService extends ABioService {
     protected CognomeService cognomeService;
 
     /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected AttivitaService attivitaService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected NazionalitaService nazionalitaService;
+
+    /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
@@ -124,9 +140,7 @@ public class UploadService extends ABioService {
         }// end of if cycle
 
         long inizio = System.currentTimeMillis();
-        List<Giorno> listaGiorni = giornoService.findAll();
-
-        for (Giorno giorno : listaGiorni) {
+        for (Giorno giorno : giornoService.findAll()) {
             uploadGiornoNato(giorno);
             uploadGiornoMorto(giorno);
         }// end of for cycle
@@ -145,9 +159,7 @@ public class UploadService extends ABioService {
         }// end of if cycle
 
         long inizio = System.currentTimeMillis();
-        List<Anno> listaAnni = annoService.findAll();
-
-        for (Anno anno : listaAnni) {
+        for (Anno anno : annoService.findAll()) {
             uploadAnnoNato(anno);
             uploadAnnoMorto(anno);
         }// end of for cycle
@@ -190,12 +202,26 @@ public class UploadService extends ABioService {
             return;
         }// end of if cycle
 
-        List<Cognome> listaCognomi = cognomeService.findAll();
-
-        for (Cognome cognome : listaCognomi) {
+        for (Cognome cognome : cognomeService.findAll()) {
             if (cognome.voci > pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI)) {
                 uploadCognome(cognome);
             }// end of if cycle
+        }// end of for cycle
+    }// end of method
+
+
+    /**
+     * Esegue un ciclo di creazione (UPLOAD) delle liste attività per ogni attività superiore alla soglia fissata <br>
+     */
+    public void uploadAllAttivita() {
+        //--Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile, altrimenti non esegue
+        if (checkBioScarso()) {
+            mailService.send("Upload attivita", "Abortito l'upload delle attività perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+            return;
+        }// end of if cycle
+
+        for (Attivita attivita : attivitaService.findAll()) {
+            uploadAttivita(attivita);
         }// end of for cycle
     }// end of method
 
@@ -312,6 +338,7 @@ public class UploadService extends ABioService {
     /**
      * Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile <br>
      * Per evitare di 'sparare' sul server pagine con biografie 'mancanti' <br>
+     * Valore da aggiornare ogni tanto <br>
      */
     private boolean checkBioScarso() {
         int minimo = BIO_NEEDED_MINUMUM_SIZE;

@@ -24,7 +24,7 @@ import static it.algos.vaadflow.application.FlowCost.SPAZIO;
 public class WikiCost {
 
     // da aumentare ogni tanto per essere sicuri che sia adeguato alle dimensioni del database
-    public final static int BIO_NEEDED_MINUMUM_SIZE = 381000;
+    public final static int BIO_NEEDED_MINUMUM_SIZE = 385000;
 
     public final static String TAG_DOP = "doppinomi";
 
