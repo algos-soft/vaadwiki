@@ -192,7 +192,7 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
     @PostConstruct
     public void inizia() {
         Didascalia didascalia = null;
-        String paginaAttivita = "";
+//        String paginaAttivita = "";
         boolean sessoMaschile = true;
         String key = VUOTA;
 
@@ -283,7 +283,7 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
 
                 chiaveParagrafo = chiave;
                 chiaveCognome = bio.getNazionalita() != null ? bio.getNazionalita().plurale : bio.getWikiTitle();
-                chiaveSottoPagina = text.isValid(chiaveCognome) ? chiaveCognome.substring(0, 1).toUpperCase() : "";
+                chiaveSottoPagina = text.isValid(bio.getCognome()) ? bio.getCognome().substring(0, 1) : bio.getWikiTitle().substring(0,1);
                 chiaveProfessione = getGenere(bio);
                 break;
             case listaNazionalita:

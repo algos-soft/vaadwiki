@@ -104,10 +104,11 @@ public class UploadSottoPagina extends Upload {
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
 
-        String titoloBreve = text.primaMaiuscola(titoloBreveSottoPagina);
+        String titoloPagina = text.primaMaiuscola(titoloBrevePaginaPrincipale);
+        String titoloSotto = text.primaMaiuscola(titoloBreveSottoPagina);
         this.prefixTitolo = typeDidascalia.pagina;
-        super.titoloPagina = prefixTitolo + " " + titoloBrevePaginaPrincipale + "/" + titoloBreve;
-        String nomeCat = titoloBrevePaginaPrincipale + "/" + titoloBreve;
+        super.titoloPagina = prefixTitolo  + titoloPagina + "/" + titoloSotto;
+        String nomeCat = titoloPagina + "/" + titoloSotto;
         super.tagCategoria = LibWiki.setCat(typeDidascalia.categoria, nomeCat);
 
     }// end of method
@@ -187,25 +188,25 @@ public class UploadSottoPagina extends Upload {
     }// fine del metodo
 
 
-    /**
-     * Costruisce la frase di incipit iniziale
-     * <p>
-     * Sovrascrivibile <br>
-     * Parametrizzato (nelle sottoclassi) l'utilizzo e la formulazione <br>
-     */
-    protected String elaboraIncipitSpecifico() {
-        String testo = VUOTA;
-
-        testo += "Questa è una lista di persone presenti nell'enciclopedia che hanno il ";
-        testo += LibWiki.setQuadre(typeDidascalia.tag);
-        testo += " '''";
-        testo += titoloBrevePaginaPrincipale;
-        testo += "''' e come attività principale sono '''''";
-        testo += titoloBreveSottoPagina;
-        testo += "'''''";
-
-        return testo;
-    }// fine del metodo
+//    /**
+//     * Costruisce la frase di incipit iniziale
+//     * <p>
+//     * Sovrascrivibile <br>
+//     * Parametrizzato (nelle sottoclassi) l'utilizzo e la formulazione <br>
+//     */
+//    protected String elaboraIncipitSpecifico() {
+//        String testo = VUOTA;
+//
+//        testo += "Questa è una lista di persone presenti nell'enciclopedia che hanno il ";
+//        testo += LibWiki.setQuadre(typeDidascalia.tag);
+//        testo += " '''";
+//        testo += titoloBrevePaginaPrincipale;
+//        testo += "''' e come attività principale sono '''''";
+//        testo += titoloBreveSottoPagina;
+//        testo += "'''''";
+//
+//        return testo;
+//    }// fine del metodo
 
 
     /**
@@ -274,7 +275,7 @@ public class UploadSottoPagina extends Upload {
      * Sovrascritto
      */
     protected String getTitoloPaginaMadre() {
-        return prefixTitolo + titoloBrevePaginaPrincipale;//@todo controllare
+        return prefixTitolo + text.primaMaiuscola(titoloBrevePaginaPrincipale);
     }// fine del metodo
 
 

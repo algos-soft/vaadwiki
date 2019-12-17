@@ -90,7 +90,7 @@ public class UploadAttivita extends UploadNomiCognomi {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.typeDidascalia = EADidascalia.listaCognomi;
+        super.typeDidascalia = EADidascalia.listaAttivita;
         super.usaSuddivisioneParagrafi = true;
         super.usaRigheRaggruppate = false;
         super.titoloPagina = uploadService.getTitoloAttivita(attivita);
@@ -110,36 +110,40 @@ public class UploadAttivita extends UploadNomiCognomi {
      */
     protected String elaboraIncipitSpecifico() {
         String testo = VUOTA;
-        String message1="Le didascalie delle voci sono quelle previste nel [[Progetto:Biografie/Didascalie|progetto biografie]]";
-        String message2 = "La lista non è esaustiva e contiene solo le persone che sono citate nell'enciclopedia e per le quali è stato implementato correttamente il [[template:Bio|template Bio]]";
-        String message3 = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
-        String message4 = VUOTA;
-        String message5 = "Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
-        String message6 = "Nel paragrafo ''Senza nazionalità utilizzabile'' (eventuale) vengono raggruppate quelle voci biografiche che '''non''' usano il parametro ''nazionalità'' oppure che usano una nazionalità di difficile elaborazione da parte del '''[[Utente:Biobot|<span style=\"color:green;\">bot</span>]]'''";
-        String message77 = "Alcune nazionalità, ancorché correttamente inserite nel [[template:Bio|template Bio]], potrebbero risultare di difficile elaborazione da parte del '''[[Utente:Biobot|<span style=\"color:green;\">bot</span>]]'''. Vengono raggruppate nel paragrafo eventuale ''Senza nazionalità utilizzabile''.";
+        String message1 = "Le didascalie delle voci sono quelle previste nel [[Progetto:Biografie/Didascalie|progetto biografie]]";
+        String message2 = "Le voci, all'interno di ogni paragrafo, sono ordinate per ''cognome''; se questo manca si utilizza il titolo della pagina.";
+        String message3 = "La lista non è esaustiva e contiene solo le persone che sono citate nell'enciclopedia e per le quali è stato implementato correttamente il [[template:Bio|template Bio]]";
+        String message4 = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+        String message5 = VUOTA;
+        String message6 = "La lista è suddivisa in paragrafi per ogni nazionalità individuata. Se il numero di voci biografiche nel paragrafo supera le " + taglioSottoPagina + " unità, viene creata una sottopagina.";
+        String message7 = "Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+        String message8 = "Nel paragrafo " + titoloParagrafoVuoto + " (eventuale) vengono raggruppate quelle voci biografiche che '''non''' usano il parametro ''nazionalità'' oppure che usano una nazionalità di difficile elaborazione da parte del '''[[Utente:Biobot|<span style=\"color:green;\">bot</span>]]'''";
+//        String message999 = "Alcune nazionalità, ancorché correttamente inserite nel [[template:Bio|template Bio]], potrebbero risultare di difficile elaborazione da parte del '''[[Utente:Biobot|<span style=\"color:green;\">bot</span>]]'''. Vengono raggruppate nel paragrafo eventuale ''Senza nazionalità utilizzabile''.";
 
         if (pref.isBool(USA_SOLO_PRIMA_ATTIVITA)) {
-            message4 = "Ogni persona è presente in una sola [[Progetto:Biografie/Attività|lista]], in base a quanto riportata nel parametro ''attività'' del [[template:Bio|template Bio]] presente nella voce biografica specifica della persona";
+            message5 = "Ogni persona è presente in una sola [[Progetto:Biografie/Attività|lista]], in base a quanto riportata nel parametro ''attività'' del [[template:Bio|template Bio]] presente nella voce biografica specifica della persona";
         } else {
-            message4 = "Ogni persona è presente in diverse [[Progetto:Biografie/Attività|liste]], in base a quanto riportato nei parametri ''attività'', ''attività2''  e ''attività3'' del [[template:Bio|template Bio]] presente nella voce biografica specifica della persona. Le ''attivitàAltre'' non vengono considerate";
+            message5 = "Ogni persona è presente in diverse [[Progetto:Biografie/Attività|liste]], in base a quanto riportato nei parametri ''attività'', ''attività2''  e ''attività3'' del [[template:Bio|template Bio]] presente nella voce biografica specifica della persona. Le ''attivitàAltre'' non vengono considerate";
         }// end of if/else cycle
 
         testo += "Questa è una lista";
         testo += LibWiki.setRef(message1);
-        testo += " di persone";
         testo += LibWiki.setRef(message2);
-        testo += " presenti nell'enciclopedia che hanno come attività";
+        testo += " di persone";
         testo += LibWiki.setRef(message3);
-        testo += " principale";
+        testo += " presenti nell'enciclopedia che hanno come attività";
         testo += LibWiki.setRef(message4);
+        testo += " principale";
+        testo += LibWiki.setRef(message5);
         testo += " quella di ";
         testo += "'''''";
         testo += soggetto;
         testo += "'''''";
-        testo += " e sono suddivise per ";
-        testo += "nazionalità.";
-        testo += LibWiki.setRef(message5);
+        testo += " e sono suddivise";
         testo += LibWiki.setRef(message6);
+        testo += " per nazionalità.";
+        testo += LibWiki.setRef(message7);
+        testo += LibWiki.setRef(message8);
 
         return testo;
     }// fine del metodo

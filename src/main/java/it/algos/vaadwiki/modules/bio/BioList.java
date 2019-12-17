@@ -24,6 +24,7 @@ import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.schedule.TaskUpdate;
+import it.algos.vaadwiki.statistiche.StatisticheDidascalie;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;
 import it.algos.wiki.DownloadResult;
@@ -293,6 +294,12 @@ public class BioList extends AGridViewList {
 //        topPlaceholder.add(creaPopup());
 
 //        sincroBottoniMenu(false);
+
+        //--statistiche didascalie (provvisorio)
+        Button didascalieButton = new Button("Didascalie", new Icon(VaadinIcon.UPLOAD));
+        didascalieButton.getElement().setAttribute("theme", "error");
+        didascalieButton.addClickListener(e -> appContext.getBean(StatisticheDidascalie.class));
+        topPlaceholder.add(didascalieButton);
     }// end of method
 
 

@@ -33,7 +33,8 @@ import static it.algos.vaadwiki.didascalia.DidascaliaService.TITOLO_PAGINA_WIKI;
 @Slf4j
 public class StatisticheDidascalie extends Statistiche {
 
-    private static String NOME_BIO_DEFAULT = "Vittorio Gassman";
+    //    private static String NOME_BIO_DEFAULT = "Vittorio Gassman";
+    private static String NOME_BIO_DEFAULT = "Sergio Ferrero";
 
     private static String TAG_HEAD_TEMPLATE_AVVISO = "StatBio";
 
@@ -110,7 +111,7 @@ public class StatisticheDidascalie extends Statistiche {
      */
     protected void fixBiografia() {
         if (bio == null) {
-            bioService.findByKeyUnica(NOME_BIO_DEFAULT);
+            bio = bioService.findByKeyUnica(NOME_BIO_DEFAULT);
         }// end of if cycle
     }// end of method
 
@@ -213,6 +214,7 @@ public class StatisticheDidascalie extends Statistiche {
         testo += rigaAnnoMorto();
         testo += rigaListeNome();
         testo += rigaListeCognome();
+        testo += rigaListeAttivita();
 
         //--fine tabella
         testo += "\n|}";
@@ -257,7 +259,7 @@ public class StatisticheDidascalie extends Statistiche {
             if (giorno != null) {
                 didascalia = didascaliaService.getGiornoNatoCon(bio);
                 linkPagina = uploadService.getTitoloGiornoNato(giorno);
-                linkPagina = LibWiki.setQuadre(linkPagina);
+                linkPagina = LibWiki.setQuadre(linkPagina.toLowerCase());
                 testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
@@ -280,7 +282,7 @@ public class StatisticheDidascalie extends Statistiche {
             if (giorno != null) {
                 didascalia = didascaliaService.getGiornoMortoCon(bio);
                 linkPagina = uploadService.getTitoloGiornoMorto(giorno);
-                linkPagina = LibWiki.setQuadre(linkPagina);
+                linkPagina = LibWiki.setQuadre(linkPagina.toLowerCase());
                 testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
@@ -303,7 +305,7 @@ public class StatisticheDidascalie extends Statistiche {
             if (anno != null) {
                 didascalia = didascaliaService.getAnnoNatoCon(bio);
                 linkPagina = uploadService.getTitoloAnnoNato(anno);
-                linkPagina = LibWiki.setQuadre(linkPagina);
+                linkPagina = LibWiki.setQuadre(linkPagina.toLowerCase());
                 testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
@@ -326,7 +328,7 @@ public class StatisticheDidascalie extends Statistiche {
             if (anno != null) {
                 didascalia = didascaliaService.getAnnoMortoCon(bio);
                 linkPagina = uploadService.getTitoloAnnoMorto(anno);
-                linkPagina = LibWiki.setQuadre(linkPagina);
+                linkPagina = LibWiki.setQuadre(linkPagina.toLowerCase());
                 testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
@@ -348,8 +350,8 @@ public class StatisticheDidascalie extends Statistiche {
             nome = bio.getNome();
             if (text.isValid(nome)) {
                 didascalia = didascaliaService.getListeSenza(bio);
-                linkPagina = LibWiki.setQuadre("Persone di nome " + nome);
-                testo += "Nella pagina con la lista " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+                linkPagina = LibWiki.setQuadre("persone di nome " + nome);
+                testo += "Nella pagina con la lista delle " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
 
@@ -370,8 +372,30 @@ public class StatisticheDidascalie extends Statistiche {
             cognome = bio.getCognome();
             if (text.isValid(cognome)) {
                 didascalia = didascaliaService.getListeSenza(bio);
-                linkPagina = LibWiki.setQuadre("Persone di cognome " + cognome);
-                testo += "Nella pagina con la lista " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+                linkPagina = LibWiki.setQuadre("persone di cognome " + cognome);
+                testo += "Nella pagina con la lista delle " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+            }// end of if cycle
+        }// end of if cycle
+
+        return testo;
+    }// fine del metodo
+
+
+    /**
+     * Riga di esempio per la didascalia Liste <br>
+     */
+    protected String rigaListeAttivita() {
+        String testo = INIZIO_RIGA;
+        String didascalia = "";
+        String attivita = "";
+        String linkPagina;
+
+        if (bio != null) {
+            attivita = bio.getAttivita() != null ? bio.getAttivita().plurale : VUOTA;
+            if (text.isValid(attivita)) {
+                didascalia = didascaliaService.getListeSenza(bio);
+                linkPagina = LibWiki.setQuadre("Progetto:Biografie/Attività/" + text.primaMaiuscola(attivita) + "|" + attivita);
+                testo += "Nella pagina con la lista di " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
 

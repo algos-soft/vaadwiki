@@ -64,6 +64,8 @@ public abstract class Upload {
     //--property
     public boolean usaRigheRaggruppate;
 
+    public int taglioSottoPagina;
+
     //--property
     protected boolean usaBodySottopagine;
 
@@ -262,6 +264,8 @@ public abstract class Upload {
 
     protected boolean usaNote;
 
+    protected String titoloParagrafoVuoto;
+
     //--property
     protected Lista lista;
 
@@ -346,6 +350,8 @@ public abstract class Upload {
         testoPagina = VUOTA;
 
         numVoci = lista.size;
+        titoloParagrafoVuoto = lista.titoloParagrafoVuoto;
+        taglioSottoPagina = lista.taglioSottoPagina;
 
         //header
         testoPagina += this.elaboraHead();
@@ -377,7 +383,7 @@ public abstract class Upload {
 
             //--registra eventuali sottopagine
             if (usaBodySottopagine) {
-//                uploadSottoPagine();
+                uploadSottoPagine();
             }// end of if cycle
         }// end of if cycle
 
