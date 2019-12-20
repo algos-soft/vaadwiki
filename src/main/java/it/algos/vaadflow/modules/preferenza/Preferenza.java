@@ -98,7 +98,7 @@ public class Preferenza extends ACEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
-    @AIColumn(widthEM = 14)
+    @AIColumn(widthEM = 16)
     public String code;
 
     /**

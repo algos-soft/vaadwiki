@@ -14,8 +14,8 @@ import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.dialog.AViewDialog;
+import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadwiki.didascalia.DidascaliaBiografie;
-import it.algos.vaadwiki.didascalia.DidascaliaListe;
 import it.algos.vaadwiki.download.DeleteService;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.download.PageService;
@@ -55,9 +55,9 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 @AIScript(sovrascrivibile = false)
 public class BioDialog extends AViewDialog<Bio> {
 
-    private final Button downloadButton = new Button("DownloadOnly");
+    private final Button downloadButton = new Button("Download");
 
-    private final Button elaboraOnlyButton = new Button("ElaboraOnly");
+    private final Button elaboraOnlyButton = new Button("Elabora");
 
     private final Button wikiShowButton = new Button("WikiShow");
 
@@ -156,14 +156,21 @@ public class BioDialog extends AViewDialog<Bio> {
     protected void addBottoniSpecifici() {
         saveButton.getElement().setAttribute("theme", "secondary");
 
+        //--dal server wikipedia al template
         downloadButton.setIcon(new Icon(VaadinIcon.ARROW_DOWN));
         downloadButton.getElement().setAttribute("theme", "primary");
-        downloadButton.addClickListener(event -> downloadOnly());
+        downloadButton.addClickListener(event -> download());
         bottomLayout.add(downloadButton);
 
+        //--dal template alle properties
         elaboraOnlyButton.setIcon(new Icon(VaadinIcon.ARROW_RIGHT));
-        elaboraOnlyButton.addClickListener(event -> elaboraOnly());
+        elaboraOnlyButton.addClickListener(event -> elabora());
         bottomLayout.add(elaboraOnlyButton);
+
+        Button reverseButton = new Button("Reverse");
+        reverseButton.setIcon(new Icon(VaadinIcon.ARROW_LEFT));
+        reverseButton.addClickListener(event -> reverse());
+        bottomLayout.add(reverseButton);
 
         saveButton.setIcon(new Icon(VaadinIcon.DATABASE));
         saveButton.getElement().setAttribute("theme", "error");
@@ -199,16 +206,19 @@ public class BioDialog extends AViewDialog<Bio> {
     }// end of method
 
 
-    protected void downloadOnly() {
+    /**
+     * Utilizza il valore della property 'wikititle' <br>
+     */
+    protected void download() {
         long pageId = this.getPageId();
         String wikiTitle = this.getWikiTitle();
         Bio bio = null;
         AbstractField field;
         Object obj = null;
 
-        if (pageId > 0) {
-            bio = api.leggeBio(pageId);
-        }// end of if cycle
+//        if (pageId > 0) {
+//            bio = api.leggeBio(pageId);
+//        }// end of if cycle
 
         if (bio == null) {
             if (text.isValid(wikiTitle)) {
@@ -241,7 +251,7 @@ public class BioDialog extends AViewDialog<Bio> {
      * Non registra <br>
      * Non chiude il Form <br>
      */
-    protected Bio elaboraOnly() {
+    protected Bio elabora() {
         Bio bio = null;
 
         if (binder != null) {
@@ -258,6 +268,10 @@ public class BioDialog extends AViewDialog<Bio> {
         }// end of if cycle
 
         return bio;
+    }// end of method
+
+
+    protected void reverse() {
     }// end of method
 
 
@@ -298,11 +312,16 @@ public class BioDialog extends AViewDialog<Bio> {
     }// end of method
 
 
+    /**
+     * Utilizza il valore della form-property 'wikititle' e NON quello della enity <br>
+     */
     protected String getWikiTitle() {
         String title = "";
+        String fieldName = "wikiTitle";
+        ATextField titleField = (ATextField) getField(fieldName);
 
-        if (currentItem != null) {
-            title = currentItem.getWikiTitle();
+        if (titleField != null) {
+            title = titleField.getValue();
         }// end of if cycle
 
         return title;
