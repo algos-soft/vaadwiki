@@ -110,7 +110,6 @@ public class UploadSottoPagina extends Upload {
         super.titoloPagina = prefixTitolo  + titoloPagina + "/" + titoloSotto;
         String nomeCat = titoloPagina + "/" + titoloSotto;
         super.tagCategoria = LibWiki.setCat(typeDidascalia.categoria, nomeCat);
-
     }// end of method
 
 

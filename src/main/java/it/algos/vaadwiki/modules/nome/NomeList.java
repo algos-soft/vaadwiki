@@ -18,6 +18,7 @@ import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
+import it.algos.vaadflow.wrapper.AFiltro;
 import it.algos.vaadwiki.modules.wiki.WikiList;
 import it.algos.vaadwiki.statistiche.StatisticheNomiA;
 import it.algos.vaadwiki.statistiche.StatisticheNomiB;
@@ -167,6 +168,7 @@ public class NomeList extends WikiList {
         alertPlacehorder.add(getLabelRed("Quando si elabora la lista dei 'Nomi', i nomi doppi vengono scaricati da wikipedia ed aggiunti a questa lista"));
     }// end of method
 
+
     /**
      * Placeholder (eventuale, presente di default) SOPRA la Grid
      * - con o senza campo edit search, regolato da preferenza o da parametro
@@ -215,19 +217,26 @@ public class NomeList extends WikiList {
     protected void updateFiltri() {
         super.updateFiltri();
         EASelezioneNomi selezione = (EASelezioneNomi) filtroComboBox.getValue();
+        Sort sort = null;
 
         if (selezione != null) {
             switch (selezione) {
                 case Dimensioni:
+                    sort = new Sort(Sort.Direction.DESC, "voci");
+                    filtri.add(new AFiltro(sort));
+
 //                items = ((NomeService) service).findAllDimensioni();
 //                    filtri.add(Criteria.where("nome").exists(true));
                     break;
                 case Alfabetico:
+                    sort = new Sort(Sort.Direction.ASC, "nome");
+                    filtri.add(new AFiltro(sort));
+
 //                items = ((NomeService) service).findAllAlfabetico();
 //                    filtri.add(Criteria.where("nome").exists(false));
                     break;
                 case NomiDoppi:
-                    filtri.add(Criteria.where("doppio").is(true));
+                    filtri.add(new AFiltro(Criteria.where("doppio").is(true)));
                     break;
                 default:
                     log.warn("Switch - caso non definito");
@@ -245,11 +254,10 @@ public class NomeList extends WikiList {
      * Sviluppato nella sottoclasse AGridViewList, oppure APaginatedGridViewList <br>
      * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>
      */
-    @Override
-    public void updateGrid() {
+    public void updateGrid2() {
         super.updateGrid();
         if (array.isValid(filtri)) {
-            items = findAllByProperty(entityClazz, filtri);
+            items = findAllByProperty2(entityClazz, filtri);
         }// end of if cycle
 
         if (items != null) {
@@ -269,38 +277,47 @@ public class NomeList extends WikiList {
     /**
      * Returns only the property of the type.
      *
-     * @param clazz                   della collezione
-     * @param listaCriteriaDefinition per le selezioni di filtro
+     * @param clazz       della collezione
+     * @param listaFiltri per le selezioni di filtro
      *
      * @return entity
      */
-    public List<AEntity> findAllByProperty(Class<? extends AEntity> clazz, List<CriteriaDefinition> listaCriteriaDefinition) {
+    public List<AEntity> findAllByProperty2(Class<? extends AEntity> clazz, List<AFiltro> listaFiltri) {
         List<AEntity> lista;
         Query query = new Query();
-        EASelezioneNomi selezione = (EASelezioneNomi) filtroComboBox.getValue();
+        CriteriaDefinition criteria;
+        Sort sort;
+//        EASelezioneNomi selezione = (EASelezioneNomi) filtroComboBox.getValue();
 
-        if (listaCriteriaDefinition != null && listaCriteriaDefinition.size() > 0) {
-            for (CriteriaDefinition criteria : listaCriteriaDefinition) {
+        if (listaFiltri != null && listaFiltri.size() > 0) {
+            for (AFiltro filtro : listaFiltri) {
+                criteria = filtro.getCriteria();
+                if (filtro.getSort() != null) {
+                    sort = filtro.getSort();
+                } else {
+                    sort = new Sort(Sort.Direction.ASC, criteria.getKey());
+                }// end of if/else cycle
                 query.addCriteria(criteria);
+                query.with(sort);
             }// end of for cycle
         }// end of if cycle
 
-        if (selezione != null) {
-            switch (selezione) {
-                case Dimensioni:
-                    query.with(new Sort(Sort.Direction.DESC, "voci"));
-                    break;
-                case Alfabetico:
-                    query.with(new Sort(Sort.Direction.ASC, "nome"));
-                    break;
-                case NomiDoppi:
-                    query.with(new Sort(Sort.Direction.ASC, "nome"));
-                    break;
-                default:
-                    log.warn("Switch - caso non definito");
-                    break;
-            } // end of switch statement
-        }// end of if cycle
+//        if (selezione != null) {
+//            switch (selezione) {
+//                case Dimensioni:
+//                    query.with(new Sort(Sort.Direction.DESC, "voci"));
+//                    break;
+//                case Alfabetico:
+//                    query.with(new Sort(Sort.Direction.ASC, "nome"));
+//                    break;
+//                case NomiDoppi:
+//                    query.with(new Sort(Sort.Direction.ASC, "nome"));
+//                    break;
+//                default:
+//                    log.warn("Switch - caso non definito");
+//                    break;
+//            } // end of switch statement
+//        }// end of if cycle
 
         lista = (List<AEntity>) mongoOp.find(query, clazz);
 
@@ -401,7 +418,6 @@ public class NomeList extends WikiList {
         uploadService.uploadAllNomi();
         super.upload(inizio);
     }// end of method
-
 
 
     /**

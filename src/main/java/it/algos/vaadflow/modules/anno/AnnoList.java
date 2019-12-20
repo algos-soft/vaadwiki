@@ -15,6 +15,7 @@ import it.algos.vaadflow.modules.secolo.SecoloService;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadflow.wrapper.AFiltro;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -162,7 +163,7 @@ public class AnnoList extends AGridViewList {
 
         if (filtroComboBox != null && filtroComboBox.getValue() != null) {
             secolo = (Secolo) filtroComboBox.getValue();
-            filtri.add(Criteria.where("secolo").is(secolo));
+            filtri.add(new AFiltro(Criteria.where("secolo").is(secolo)));
         }// end of if cycle
     }// end of method
 

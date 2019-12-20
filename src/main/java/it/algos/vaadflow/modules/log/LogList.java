@@ -110,6 +110,7 @@ public class LogList extends AGridViewList {
      * DEVE essere sovrascritto, per regolare il contenuto (items) <br>
      * Invocare PRIMA il metodo della superclasse <br>
      */
+    @Override
     protected void creaPopupFiltro() {
         super.creaPopupFiltro();
 
@@ -122,7 +123,16 @@ public class LogList extends AGridViewList {
     }// end of method
 
 
-    public void updateFiltri() {
+    /**
+     * Aggiorna i filtri specifici della Grid. Modificati per: popup, newEntity, deleteEntity, ecc... <br>
+     * <p>
+     * Può essere sovrascritto, per costruire i filtri specifici dei combobox, popup, ecc. <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void updateFiltriSpecifici() {
+        super.updateFiltriSpecifici();
+
         EALogLivello livello = (EALogLivello) filtroComboBox.getValue();
         items = ((LogService) service).findAllByLivello(livello);
     }// end of method

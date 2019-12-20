@@ -22,6 +22,7 @@ import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadflow.wrapper.AFiltro;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.schedule.TaskUpdate;
 import it.algos.vaadwiki.statistiche.StatisticheDidascalie;
@@ -554,7 +555,7 @@ public class BioList extends AGridViewList {
         String value = searchField.getValue();
 
         if (text.isValid(value) && value.length() > 3) {
-            filtri.add(Criteria.where(searchProperty).regex("^" + value, "i"));
+            filtri.add(new AFiltro(Criteria.where(searchProperty).regex("^" + value, "i")));
         }// end of if cycle
 
     }// end of method

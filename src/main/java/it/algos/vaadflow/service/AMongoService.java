@@ -6,6 +6,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.result.DeleteResult;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.wrapper.AFiltro;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadflow.service.AService.FIELD_NAME_ORDINE;
 
 /**
@@ -221,27 +223,39 @@ public class AMongoService extends AbstractService {
     }// end of method
 
 
-
     /**
      * Returns only the property of the type.
      *
-     * @param clazz                   della collezione
-     * @param listaCriteriaDefinition per le selezioni di filtro
+     * @param clazz       della collezione
+     * @param listaFiltri per le selezioni di filtro
      *
      * @return entity
      */
-    public List<AEntity> findAllByProperty(Class<? extends AEntity> clazz, List<CriteriaDefinition> listaCriteriaDefinition) {
+    public List<AEntity> findAllByProperty(Class<? extends AEntity> clazz, List<AFiltro> listaFiltri) {
         List<AEntity> lista = null;
+        String key = "_id";
         Query query = new Query();
+        CriteriaDefinition criteria = null;
+        Sort sort = null;
 
-        if (listaCriteriaDefinition != null && listaCriteriaDefinition.size() > 0) {
-            for (CriteriaDefinition criteria : listaCriteriaDefinition) {
+        if (listaFiltri != null && listaFiltri.size() > 0) {
+            for (AFiltro filtro : listaFiltri) {
+                criteria = filtro.getCriteria();
+                if (criteria == null) {
+                    criteria = Criteria.where(key).ne(VUOTA);
+                }// end of if cycle
+
+                if (filtro.getSort() != null) {
+                    sort = filtro.getSort();
+                } else {
+                    sort = new Sort(Sort.Direction.ASC, criteria.getKey());
+                }// end of if/else cycle
                 query.addCriteria(criteria);
-                query.with(new Sort(Sort.Direction.ASC,criteria.getKey()));
             }// end of for cycle
-        }// end of if cycle
+            query.with(sort);
 
-        lista = (List<AEntity>) mongoOp.find(query, clazz);
+            lista = (List<AEntity>) mongoOp.find(query, clazz);
+        }// end of if cycle
 
         return lista;
     }// end of method

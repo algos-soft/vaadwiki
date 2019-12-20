@@ -25,7 +25,9 @@ import it.algos.vaadflow.ui.fields.AIntegerField;
 import it.algos.vaadflow.ui.fields.ATextArea;
 import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadflow.ui.fields.IAField;
+import it.algos.vaadflow.wrapper.AFiltro;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import javax.annotation.PostConstruct;
@@ -594,12 +596,12 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
             fieldValue = field.getValore();
             if (field instanceof ATextField || field instanceof ATextArea) {
                 if (text.isValid(fieldValue)) {
-                    filtri.add(Criteria.where(fieldName).is(fieldValue));
+                    filtri.add(new AFiltro(Criteria.where(fieldName).is(fieldValue)));
                 }// end of if cycle
             }// end of if cycle
             if (field instanceof AIntegerField) {
                 if ((Integer) fieldValue > 0) {
-                    filtri.add(Criteria.where(fieldName).is(fieldValue));
+                    filtri.add(new AFiltro(Criteria.where(fieldName).is(fieldValue)));
                 }// end of if cycle
             }// end of if cycle
         }// end of for cycle

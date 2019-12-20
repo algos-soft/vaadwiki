@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -423,6 +424,17 @@ public class PreferenzaService extends AService {
         return pref;
     }// end of method
 
+    public List<Preferenza> findAllByType(EAPrefType type) {
+//        Query query = new Query();
+//        String meseField = "mese";
+//
+//        if (mese != null) {
+//            query.addCriteria(Criteria.where(meseField).is(mese));
+//        }// end of if cycle
+//
+//        return mongo.mongoOp.find(query, Preferenza.class);
+        return repository.findAllByTypeOrderByValue(type);
+    }// end of method
 
     /**
      * Metodo invocato da ABoot (o da una sua sottoclasse) <br>

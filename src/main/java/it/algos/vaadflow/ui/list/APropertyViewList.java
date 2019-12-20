@@ -22,6 +22,7 @@ import it.algos.vaadflow.ui.dialog.ADeleteDialog;
 import it.algos.vaadflow.ui.dialog.ASearchDialog;
 import it.algos.vaadflow.ui.dialog.IADialog;
 import it.algos.vaadflow.ui.fields.AComboBox;
+import it.algos.vaadflow.wrapper.AFiltro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -439,7 +440,7 @@ public abstract class APropertyViewList extends VerticalLayout {
 
     protected Collection items;
 
-    protected List<CriteriaDefinition> filtri;
+    protected List<AFiltro> filtri;
 
     protected ADeleteDialog deleteDialog;
 
