@@ -254,21 +254,6 @@ public class UploadService extends ABioService {
 
 
     /**
-     * Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile, altrimenti non esegue <br>
-     */
-    public boolean checkMongo() {
-        boolean scarso = false;
-
-        if (checkBioScarso()) {
-            mailService.send("Upload attivita", "Abortito l'upload delle attività perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
-            scarso = true;
-        }// end of if cycle
-
-        return scarso;
-    }// end of method
-
-
-    /**
      * Carica sul server wiki la entity indicata
      * <p>
      * 1) Recupera la entity dal mongoDB (parametri eventualmente modificati dal programma)
@@ -376,18 +361,6 @@ public class UploadService extends ABioService {
         return status;
     } // fine del metodo
 
-
-    /**
-     * Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile <br>
-     * Per evitare di 'sparare' sul server pagine con biografie 'mancanti' <br>
-     * Valore da aggiornare ogni tanto <br>
-     */
-    private boolean checkBioScarso() {
-        int minimo = BIO_NEEDED_MINUMUM_SIZE;
-        int numVoci = bioService.count();
-
-        return numVoci < minimo;
-    }// end of method
 
 
     public void uploadGiornoNato(Giorno giorno) {

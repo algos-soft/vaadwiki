@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import static it.algos.vaadwiki.application.WikiCost.BIO_NEEDED_MINUMUM_SIZE;
+
 /**
  * Project vaadbio2
  * Created by Algos
@@ -155,5 +157,30 @@ public abstract class ABioService {
      */
     @Autowired
     protected LibBio libBio;
+
+
+    /**
+     * Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile, altrimenti non esegue <br>
+     */
+    protected boolean checkMongo() {
+        boolean scarso = false;
+
+        if (checkBioScarso()) {
+            mail.send("Upload attivita", "Abortito l'upload delle attività perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+            scarso = true;
+        }// end of if cycle
+
+        return scarso;
+    }// end of method
+
+
+    /**
+     * Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile <br>
+     * Per evitare di 'sparare' sul server pagine con biografie 'mancanti' <br>
+     * Valore da aggiornare ogni tanto <br>
+     */
+    protected boolean checkBioScarso() {
+        return bioService.count() < BIO_NEEDED_MINUMUM_SIZE;
+    }// end of method
 
 }// end of class

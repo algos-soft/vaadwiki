@@ -14,6 +14,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EALogType;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.giorno.Giorno;
@@ -314,7 +315,7 @@ public class WikiGiornoList extends WikiList {
      */
     @Override
     protected void uploadStatistiche(long inizio) {
-        appContext.getBean(StatisticheGiorni.class);
+        statisticheService.updatePaginaGiorni();
         super.uploadStatistiche(inizio);
     }// end of method
 

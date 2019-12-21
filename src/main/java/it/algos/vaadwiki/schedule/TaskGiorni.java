@@ -3,6 +3,7 @@ package it.algos.vaadwiki.schedule;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.schedule.ATask;
+import it.algos.vaadwiki.statistiche.StatisticheService;
 import it.algos.vaadwiki.upload.UploadService;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,14 @@ public class TaskGiorni extends ATask {
     @Autowired
     protected UploadService uploadService;
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected StatisticheService statisticheService;
+
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -64,6 +73,7 @@ public class TaskGiorni extends ATask {
     public void execute(TaskExecutionContext context) throws RuntimeException {
         if (pref.isBool(USA_DAEMON_GIORNI)) {
             uploadService.uploadAllGiorni();
+            statisticheService.updatePaginaGiorni();
         }// end of if cycle
     }// end of method
 

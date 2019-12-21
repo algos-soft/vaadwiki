@@ -13,6 +13,7 @@ import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadwiki.service.LibBio;
+import it.algos.vaadwiki.statistiche.StatisticheService;
 import it.algos.vaadwiki.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,14 @@ public abstract class WikiList extends AGridViewList {
     @Autowired
     protected UploadService uploadService;
 
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected StatisticheService statisticheService;
 
     /**
      * Service (@Scope = 'singleton') recuperato come istanza dalla classe e usato come libreria <br>
@@ -400,7 +409,7 @@ public abstract class WikiList extends AGridViewList {
      * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
      */
     protected void uploadStatistiche(long inizio) {
-        setLastUploadStatistiche(inizio);
+//        setLastUploadStatistiche(inizio);
         super.updateGrid();
     }// end of method
 
