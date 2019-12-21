@@ -2,10 +2,13 @@ package it.algos.vaadwiki.upload;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.enumeration.EALogType;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
+import it.algos.vaadflow.modules.log.LogService;
+import it.algos.vaadflow.modules.logtype.LogtypeService;
 import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
@@ -111,6 +114,19 @@ public class UploadService extends ABioService {
     @Autowired
     protected AMailService mailService;
 
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected LogService logger;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    private LogtypeService logtypeService;
+
 
     /**
      * Private constructor to avoid client applications to use constructor
@@ -134,8 +150,7 @@ public class UploadService extends ABioService {
      * Controlla che il mongoDb delle voci biografiche non sia vuoto <br>
      */
     public void uploadAllGiorni() {
-        if (checkBioScarso()) {
-            mailService.send("Upload giorni", "Abortito l'upload dei giorni perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+        if (checkMongo()) {
             return;
         }// end of if cycle
 
@@ -146,15 +161,16 @@ public class UploadService extends ABioService {
         }// end of for cycle
 
         setLastUpload(inizio, LAST_UPLOAD_GIORNI, DURATA_UPLOAD_GIORNI);
+        logger.crea(EALogType.upload, "Upload delle liste per i nati e morti nei 366 giorni previsti", inizio);
     }// end of method
 
 
     /**
      * Esegue un ciclo di creazione (UPLOAD) delle liste di nati e morti per ogni giorno dell'anno
+     * Controlla che il mongoDb delle voci biografiche non sia vuoto <br>
      */
     public void uploadAllAnni() {
-        if (checkBioScarso()) {
-            mailService.send("Upload anni", "Abortito l'upload degli anni perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+        if (checkMongo()) {
             return;
         }// end of if cycle
 
@@ -165,23 +181,26 @@ public class UploadService extends ABioService {
         }// end of for cycle
 
         setLastUpload(inizio, LAST_UPLOAD_ANNI, DURATA_UPLOAD_ANNI);
+        logger.crea(EALogType.upload, "Upload delle liste per i nati e morti nei 3030 anni teoricamente possibili", inizio);
     }// end of method
 
 
     /**
      * Esegue un ciclo di creazione (UPLOAD) delle liste persone per ogni nome superiore alla soglia fissata <br>
+     * Controlla che il mongoDb delle voci biografiche non sia vuoto <br>
      * Ricrea al volo (per sicurezza di aggiornamento) tutta la collezione mongoDb dei nomi <br>
      */
     public void uploadAllNomi() {
         List<Nome> listaNomi = null;
+        int numBio = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI);
 
         //--Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile, altrimenti non esegue
-        if (checkBioScarso()) {
-            mailService.send("Upload nomi", "Abortito l'upload dei nomi perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+        if (checkMongo()) {
             return;
         }// end of if cycle
 
         //--Ricrea al volo (per sicurezza di aggiornamento) tutta la collezione mongoDb dei nomi (circa due minuti)
+        long inizio = System.currentTimeMillis();
         nomeService.crea();
         listaNomi = nomeService.findAll();
 
@@ -190,39 +209,62 @@ public class UploadService extends ABioService {
                 uploadNome(nome);
             }// end of if cycle
         }// end of for cycle
+
+        setLastUpload(inizio, LAST_UPLOAD_NOMI, DURATA_UPLOAD_NOMI);
+        logger.crea(EALogType.upload, "Upload delle liste per ogni nome con più di " + numBio + " persone", inizio);
     }// end of method
 
 
     /**
      * Esegue un ciclo di creazione (UPLOAD) delle liste persone per ogni cognome superiore alla soglia fissata
+     * Controlla che il mongoDb delle voci biografiche non sia vuoto <br>
      */
     public void uploadAllCognomi() {
-        if (checkBioScarso()) {
-            mailService.send("Upload cognomi", "Abortito l'upload dei cognomi perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+        int numBio = pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI);
+
+        if (checkMongo()) {
             return;
         }// end of if cycle
 
+        long inizio = System.currentTimeMillis();
         for (Cognome cognome : cognomeService.findAll()) {
             if (cognome.voci > pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI)) {
                 uploadCognome(cognome);
             }// end of if cycle
         }// end of for cycle
+
+        setLastUpload(inizio, LAST_UPLOAD_COGNOMI, DURATA_UPLOAD_COGNOMI);
+        logger.crea(EALogType.upload, "Upload delle liste per ogni cognome con più di " + numBio + " persone", inizio);
     }// end of method
 
 
     /**
      * Esegue un ciclo di creazione (UPLOAD) delle liste attività per ogni attività superiore alla soglia fissata <br>
+     * Controlla che il mongoDb delle voci biografiche non sia vuoto <br>
      */
     public void uploadAllAttivita() {
-        //--Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile, altrimenti non esegue
-        if (checkBioScarso()) {
-            mailService.send("Upload attivita", "Abortito l'upload delle attività perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+        if (checkMongo()) {
             return;
         }// end of if cycle
 
         for (Attivita attivita : attivitaService.findAll()) {
             uploadAttivita(attivita);
         }// end of for cycle
+    }// end of method
+
+
+    /**
+     * Controlla che il mongoDb delle voci biografiche abbia una dimensione accettabile, altrimenti non esegue <br>
+     */
+    public boolean checkMongo() {
+        boolean scarso = false;
+
+        if (checkBioScarso()) {
+            mailService.send("Upload attivita", "Abortito l'upload delle attività perché il mongoDb delle biografie sembra vuoto o comunque carente di voci che invece dovrebbero esserci.");
+            scarso = true;
+        }// end of if cycle
+
+        return scarso;
     }// end of method
 
 

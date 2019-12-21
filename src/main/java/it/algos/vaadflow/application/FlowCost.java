@@ -50,6 +50,7 @@ public abstract class FlowCost {
     public static final String VUOTA = "";
 
     public static final String SPAZIO = " ";
+
     public static final String SEP = " - ";
 
     public static final String VIRGOLA = ",";
@@ -224,23 +225,35 @@ public abstract class FlowCost {
     public static final String CONFERMA = "Conferma";
 
     //log type
-    public static final String LOG_SETUP = "logSetup";
+//    public static final String LOG_SYSTEM = "system";
+//
+//    public static final String LOG_SETUP = "setup";
+//
+//    public static final String LOG_NEW = "new";
+//
+//    public static final String LOG_EDIT = "edit";
+//
+//    public static final String LOG_DELETE = "delete";
+//
+//    public static final String LOG_DEBUG = "debug";
+//
+//    public static final String LOG_INFO = "info";
+//
+//    public static final String LOG_WARN = "warn";
+//
+//    public static final String LOG_ERROR = "error";
+//
+//    public static final String LOG_IMPORT = "import";
+//
+//    public static final String LOG_DOWNLOD = "download";
+//
+//    public static final String LOG_UPLOAD = "upload";
+//
+//    public static final String LOG_RESET = "reset";
+//
+//    public static final String LOG_PASSWORD = "password";
 
-    public static final String LOG_NEW = "logNew";
-
-    public static final String LOG_EDIT = "logEdit";
-
-    public static final String LOG_DELETE = "logDelete";
-
-    public static final String LOG_DEBUG = "logDebug";
-
-    public static final String LOG_INFO = "logInfo";
-
-    public static final String LOG_WARN = "logWarn";
-
-    public static final String LOG_ERROR = "logError";
-
-    public static final String LOG_IMPORT = "logImport";
+    public static final String LOG_LEVEL_CORRENTE = "logLevelCorrente";
 
     // generali
     public static final String USA_DEBUG = "usaDebug";

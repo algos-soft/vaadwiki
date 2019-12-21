@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowVar;
 import it.algos.vaadflow.boot.ABoot;
+import it.algos.vaadflow.modules.logtype.LogtypeService;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.RoleService;
 import it.algos.vaadflow.modules.utente.UtenteService;
@@ -35,7 +36,7 @@ import javax.servlet.ServletContextEvent;
 import java.net.InetAddress;
 import java.time.LocalDate;
 
-import static it.algos.vaadwiki.application.WikiCost.SEND_MAIL_RESTART;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadwiki
@@ -64,9 +65,9 @@ public class WikiBoot extends ABoot {
 
     private final static String PROJECT_NAME = "vaadwiki";
 
-    private final static double PROJECT_VERSION = 8.2;
+    private final static double PROJECT_VERSION = 8.3;
 
-    private final static LocalDate VERSION_DATE = LocalDate.of(2019, 12, 20);
+    private final static LocalDate VERSION_DATE = LocalDate.of(2019, 12, 21);
 
     private final static String PATH_LOGO = "frontend/images/Emblem-wiki-blue.svg.png";
 
@@ -93,6 +94,8 @@ public class WikiBoot extends ABoot {
 
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private LogtypeService logtypeService;
 
     /**
      * Iniettata dal costruttore <br>

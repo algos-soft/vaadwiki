@@ -16,7 +16,7 @@ public enum EAPreferenza implements IAPreferenza {
 
     usaDebug(FlowCost.USA_DEBUG, "Flag generale di debug (ce ne possono essere di specifici, validi solo se questo è vero)", EAPrefType.bool, EARole.developer, false, false),
     usaLogDebug(FlowCost.USA_LOG_DEBUG, "Uso del log di registrazione per il livello debug. Di default false.", EAPrefType.bool, EARole.developer, false, false),
-    //    usaCompany(FlowCost.USA_COMPANY, "L'applicazione è multiCompany", EAPrefType.bool, EARole.developer, false, false),
+    logLevelCorrente(FlowCost.LOG_LEVEL_CORRENTE, "Livello corrente di log. Di default info.", EAPrefType.enumeration, EARole.developer, false, EALogLivello.info),
     loadUtenti(FlowCost.LOAD_UTENTI, "Flag per caricare gli utenti di prova allo startup del programma. Di default false.", EAPrefType.bool, EARole.developer, false, false),
 
     //--visibilità standard dei moduli

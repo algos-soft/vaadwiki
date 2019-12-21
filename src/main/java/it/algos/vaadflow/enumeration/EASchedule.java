@@ -121,6 +121,14 @@ public enum EASchedule {
     /**
      * Descrizione: ogni giorno alle ore 8 del mattino
      */
+    oreOttoGiovedi("5 8 * * 4", "ogni giovedì alle ore 8:05 del mattino."),
+    /**
+     * Descrizione: ogni giorno alle ore 8 del mattino
+     */
+    oreOttoVenerdi("5 8 * * 5", "ogni venerdì alle ore 8:05 del mattino."),
+    /**
+     * Descrizione: ogni giorno alle ore 8 del mattino
+     */
     prova("5 8 * * *", "mercoledì alle 8."),
     ;
 
