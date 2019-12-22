@@ -30,21 +30,7 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_GIORNI;
 @Slf4j
 public class TaskGiorni extends ATask {
 
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected UploadService uploadService;
 
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected StatisticheService statisticheService;
 
 
     /**

@@ -67,6 +67,9 @@ public abstract class Upload {
     public int taglioSottoPagina;
 
     //--property
+    public boolean usaParagrafoSize;
+
+    //--property
     protected boolean usaBodySottopagine;
 
     /**
@@ -264,7 +267,13 @@ public abstract class Upload {
 
     protected boolean usaNote;
 
+    protected boolean usaVociCorrelate;
+
     protected String titoloParagrafoVuoto;
+
+    protected String incipitSottopagina;
+
+    protected List<String> listaCorrelate;
 
     //--property
     protected Lista lista;
@@ -332,6 +341,7 @@ public abstract class Upload {
 
         // footer
         usaNote = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
+        usaVociCorrelate = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
     }// end of method
 
 
@@ -352,6 +362,7 @@ public abstract class Upload {
         numVoci = lista.size;
         titoloParagrafoVuoto = lista.titoloParagrafoVuoto;
         taglioSottoPagina = lista.taglioSottoPagina;
+        usaParagrafoSize = lista.usaParagrafoSize;
 
         //header
         testoPagina += this.elaboraHead();
@@ -605,6 +616,17 @@ public abstract class Upload {
 
 
     /**
+     * Costruisce la frase di incipit iniziale per la sottopagina
+     * <p>
+     * Sovrascrivibile <br>
+     * Parametrizzato (nelle sottoclassi) l'utilizzo e la formulazione <br>
+     */
+    protected String elaboraIncipitSpecificoSottopagina(String soggettoSottopagina) {
+        return VUOTA;
+    }// fine del metodo
+
+
+    /**
      * Corpo della pagina
      * Decide se c'è la doppia colonna
      * Controlla eventuali template di rinvio
@@ -639,7 +661,9 @@ public abstract class Upload {
         for (String key : lista.getSottoPagine().keySet()) {
             mappa = lista.getSottoPagine().get(key);
             numVoci = lista.getMappaLista().getDimParagrafo(key);
-            appContext.getBean(UploadSottoPagina.class, soggetto, key, mappa, typeDidascalia, numVoci);
+            incipitSottopagina = elaboraIncipitSpecificoSottopagina(key);
+            listaCorrelate = listaVociCorrelate();
+            appContext.getBean(UploadSottoPagina.class, soggetto, key, mappa, typeDidascalia, numVoci, usaParagrafoSize, incipitSottopagina, usaNote, usaVociCorrelate, listaCorrelate);
         }// end of for cycle
     }// end of method
 
@@ -667,6 +691,10 @@ public abstract class Upload {
             testo += usaNote();
         }// end of if cycle
 
+        if (usaVociCorrelate) {
+            testo += usaVociCorrelate();
+        }// end of if cycle
+
         testo += LibWiki.setPortale(tagHeadTemplateProgetto);
         cat = tagCategoria;
         cat = nascosta ? LibWiki.setNowiki(cat) : cat;
@@ -692,6 +720,39 @@ public abstract class Upload {
         testo += A_CAPO;
 
         return testo;
+    }// fine del metodo
+
+
+    /**
+     * Paragrafo delle voci correlate (eventuale)
+     */
+    protected String usaVociCorrelate() {
+        StringBuilder testo = new StringBuilder(VUOTA);
+        String titolo = "Voci correlate";
+        List<String> lista = listaCorrelate == null ? listaVociCorrelate() : listaCorrelate;
+        String tag = "*";
+
+        if (array.isValid(lista)) {
+            testo.append(LibWiki.setParagrafo(titolo));
+            testo.append(A_CAPO);
+            for (String riga : lista) {
+                testo.append(tag);
+                testo.append(LibWiki.setQuadre(riga));
+                testo.append(A_CAPO);
+            }// end of for cycle
+            testo.append(A_CAPO);
+        }// end of if cycle
+
+        return testo.toString();
+    }// fine del metodo
+
+
+    /**
+     * Lista delle voci correlate (eventuale)
+     * Sovrascritto
+     */
+    protected List<String> listaVociCorrelate() {
+        return null;
     }// fine del metodo
 
 

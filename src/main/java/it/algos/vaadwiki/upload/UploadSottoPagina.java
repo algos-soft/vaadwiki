@@ -18,8 +18,6 @@ import java.util.List;
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.*;
-import static it.algos.vaadwiki.enumeration.EAPreferenzaWiki.taglioSottopaginaNomiCognomi;
-import static it.algos.wiki.LibWiki.PARAGRAFO;
 
 /**
  * Project vaadwiki
@@ -33,6 +31,9 @@ import static it.algos.wiki.LibWiki.PARAGRAFO;
 @Slf4j
 public class UploadSottoPagina extends Upload {
 
+    //--property
+    public boolean usaParagrafoSize;
+
     protected String prefixTitolo;
 
     //--property
@@ -43,6 +44,10 @@ public class UploadSottoPagina extends Upload {
 
     //--property
     protected LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa;
+
+    private boolean usaNoteSottopagina;
+
+    private boolean usaVociCorrelateSottopagina;
 
 
     /**
@@ -62,13 +67,23 @@ public class UploadSottoPagina extends Upload {
      * @param titoloBrevePaginaPrincipale solo il nome/cognome per la costruzione del titolo e per le categorie
      * @param titoloBreveSottoPagina      attività della sottopagina per l'incipit (eventuale) e per le categorie
      * @param mappa                       mappa delle didascalie suddivise per iniziale alfabetica del cognome
+     * @param usaParagrafoSize            nei titoli dei paragrafi
+     * @param incipitSottopagina          creato nella classe specifica di Upload
+     * @param usaNote                     come nella pagina principale
+     * @param usaVociCorrelate            come nella pagina principale
+     * @param listaCorrelate              creata nella classe specifica di Upload
      */
-    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa, EADidascalia typeDidascalia,int numVoci) {
+    public UploadSottoPagina(String titoloBrevePaginaPrincipale, String titoloBreveSottoPagina, LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappa, EADidascalia typeDidascalia, int numVoci, boolean usaParagrafoSize, String incipitSottopagina, boolean usaNote, boolean usaVociCorrelate, List<String> listaCorrelate) {
         this.titoloBrevePaginaPrincipale = titoloBrevePaginaPrincipale;
         this.titoloBreveSottoPagina = titoloBreveSottoPagina;
         this.mappa = mappa;
         this.typeDidascalia = typeDidascalia;
         this.numVoci = numVoci;
+        this.usaParagrafoSize = usaParagrafoSize;
+        this.incipitSottopagina = incipitSottopagina;
+        this.usaNoteSottopagina = usaNote;
+        this.usaVociCorrelateSottopagina = usaVociCorrelate;
+        this.listaCorrelate = listaCorrelate;
     }// end of constructor
 
 
@@ -103,11 +118,13 @@ public class UploadSottoPagina extends Upload {
         super.usaHeadTocIndice = false;
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
+        super.usaNote = usaNoteSottopagina;
+        super.usaVociCorrelate = usaVociCorrelateSottopagina;
 
         String titoloPagina = text.primaMaiuscola(titoloBrevePaginaPrincipale);
         String titoloSotto = text.primaMaiuscola(titoloBreveSottoPagina);
         this.prefixTitolo = typeDidascalia.pagina;
-        super.titoloPagina = prefixTitolo  + titoloPagina + "/" + titoloSotto;
+        super.titoloPagina = prefixTitolo + titoloPagina + "/" + titoloSotto;
         String nomeCat = titoloPagina + "/" + titoloSotto;
         super.tagCategoria = LibWiki.setCat(typeDidascalia.categoria, nomeCat);
     }// end of method
@@ -187,25 +204,15 @@ public class UploadSottoPagina extends Upload {
     }// fine del metodo
 
 
-//    /**
-//     * Costruisce la frase di incipit iniziale
-//     * <p>
-//     * Sovrascrivibile <br>
-//     * Parametrizzato (nelle sottoclassi) l'utilizzo e la formulazione <br>
-//     */
-//    protected String elaboraIncipitSpecifico() {
-//        String testo = VUOTA;
-//
-//        testo += "Questa è una lista di persone presenti nell'enciclopedia che hanno il ";
-//        testo += LibWiki.setQuadre(typeDidascalia.tag);
-//        testo += " '''";
-//        testo += titoloBrevePaginaPrincipale;
-//        testo += "''' e come attività principale sono '''''";
-//        testo += titoloBreveSottoPagina;
-//        testo += "'''''";
-//
-//        return testo;
-//    }// fine del metodo
+    /**
+     * Costruisce la frase di incipit iniziale
+     * <p>
+     * Sovrascrivibile <br>
+     * Parametrizzato (nelle sottoclassi) l'utilizzo e la formulazione <br>
+     */
+    protected String elaboraIncipitSpecifico() {
+        return incipitSottopagina;
+    }// fine del metodo
 
 
     /**
@@ -249,13 +256,15 @@ public class UploadSottoPagina extends Upload {
         List<String> listaRighe = null;
         LinkedHashMap<String, List<String>> mappaSottoPaginaTxt;
         List<String> listaTxt = null;
+        String titoloParagrafo = VUOTA;
 
         if (mappa != null && mappa.size() > 0) {
             listaRighe = new ArrayList<>();
             for (String chiaveSottoPagina : mappa.keySet()) {
-                listaRighe.add(LibBio.setParagrafo(chiaveSottoPagina));
                 mappaSottoPaginaTxt = mappa.get(chiaveSottoPagina);
-                if (mappaSottoPaginaTxt != null && mappaSottoPaginaTxt.size() > 0) {
+                if (mappaSottoPaginaTxt.size() > 0) {
+                    titoloParagrafo = addSize(chiaveSottoPagina, mappaSottoPaginaTxt.get(null).size());
+                    listaRighe.add(LibBio.setParagrafo(titoloParagrafo));
                     for (String chiaveSottoSottoPagina : mappaSottoPaginaTxt.keySet()) {
                         listaTxt = mappaSottoPaginaTxt.get(chiaveSottoSottoPagina);
                         listaRighe.addAll(listaTxt);
@@ -265,6 +274,20 @@ public class UploadSottoPagina extends Upload {
         }// end of if cycle
 
         return listaRighe;
+    }// fine del metodo
+
+
+    /**
+     * Titolo con dimensioni
+     */
+    protected String addSize(String chiaveParagrafo, int size) {
+        String titoloParagrafo = chiaveParagrafo;
+
+        if (usaParagrafoSize) {
+            titoloParagrafo = chiaveParagrafo + " <span style=\"font-size:70%\">(" + size + ")</span>";
+        }// end of if cycle
+
+        return titoloParagrafo;
     }// fine del metodo
 
 

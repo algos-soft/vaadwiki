@@ -7,6 +7,8 @@ import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMailService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.service.IAService;
+import it.algos.vaadwiki.statistiche.StatisticheService;
+import it.algos.vaadwiki.upload.UploadService;
 import it.sauronsoftware.cron4j.Task;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +49,22 @@ public class ATask extends Task {
      */
     @Autowired
     protected AMailService mailService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected UploadService uploadService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected StatisticheService statisticheService;
 
     /**
      * Property usata da Daemonxxx <br>

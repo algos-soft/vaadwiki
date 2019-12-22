@@ -10,6 +10,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.USA_FORCETOC_COGNOMI;
@@ -99,6 +101,7 @@ public class UploadAttivita extends UploadNomiCognomi {
         super.usaBodyDoppiaColonna = false;
         super.tagCategoria = LibWiki.setCat("Bio attività", text.primaMaiuscola(attivita.getPlurale()));
         super.usaNote = true;
+        super.usaVociCorrelate = true;
     }// fine del metodo
 
 
@@ -118,7 +121,6 @@ public class UploadAttivita extends UploadNomiCognomi {
         String message6 = "La lista è suddivisa in paragrafi per ogni nazionalità individuata. Se il numero di voci biografiche nel paragrafo supera le " + taglioSottoPagina + " unità, viene creata una sottopagina.";
         String message7 = "Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
         String message8 = "Nel paragrafo " + titoloParagrafoVuoto + " (eventuale) vengono raggruppate quelle voci biografiche che '''non''' usano il parametro ''nazionalità'' oppure che usano una nazionalità di difficile elaborazione da parte del '''[[Utente:Biobot|<span style=\"color:green;\">bot</span>]]'''";
-//        String message999 = "Alcune nazionalità, ancorché correttamente inserite nel [[template:Bio|template Bio]], potrebbero risultare di difficile elaborazione da parte del '''[[Utente:Biobot|<span style=\"color:green;\">bot</span>]]'''. Vengono raggruppate nel paragrafo eventuale ''Senza nazionalità utilizzabile''.";
 
         if (pref.isBool(USA_SOLO_PRIMA_ATTIVITA)) {
             message5 = "Ogni persona è presente in una sola [[Progetto:Biografie/Attività|lista]], in base a quanto riportata nel parametro ''attività'' del [[template:Bio|template Bio]] presente nella voce biografica specifica della persona";
@@ -136,16 +138,70 @@ public class UploadAttivita extends UploadNomiCognomi {
         testo += " principale";
         testo += LibWiki.setRef(message5);
         testo += " quella di ";
-        testo += "'''''";
-        testo += soggetto;
-        testo += "'''''";
-        testo += " e sono suddivise";
+        testo += LibWiki.setBold(soggetto);
+        testo += ". Le persone sono suddivise";
         testo += LibWiki.setRef(message6);
         testo += " per nazionalità.";
         testo += LibWiki.setRef(message7);
         testo += LibWiki.setRef(message8);
 
         return testo;
+    }// fine del metodo
+
+
+    /**
+     * Costruisce la frase di incipit iniziale per la sottopagina
+     * <p>
+     * Sovrascrivibile <br>
+     * Parametrizzato (nelle sottoclassi) l'utilizzo e la formulazione <br>
+     */
+    protected String elaboraIncipitSpecificoSottopagina(String soggettoSottopagina) {
+        String testo = VUOTA;
+        String message1 = "Le didascalie delle voci sono quelle previste nel [[Progetto:Biografie/Didascalie|progetto biografie]]";
+        String message2 = "Questa sottopagina specifica viene creata se il numero di voci biografiche nel paragrafo della pagina principale supera le " + taglioSottoPagina + " unità.";
+        String message3 = "Le voci, all'interno di ogni paragrafo, sono ordinate per ''cognome''; se questo manca si utilizza il titolo della pagina.";
+        String message4 = "La lista non è esaustiva e contiene solo le persone che sono citate nell'enciclopedia e per le quali è stato implementato correttamente il [[template:Bio|template Bio]]";
+        String message5 = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+        String message6 = VUOTA;
+        String message7 = "Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+
+        if (pref.isBool(USA_SOLO_PRIMA_ATTIVITA)) {
+            message6 = "Ogni persona è presente in una sola [[Progetto:Biografie/Attività|lista]], in base a quanto riportata nel parametro ''attività'' del [[template:Bio|template Bio]] presente nella voce biografica specifica della persona";
+        } else {
+            message6 = "Ogni persona è presente in diverse [[Progetto:Biografie/Attività|liste]], in base a quanto riportato nei parametri ''attività'', ''attività2''  e ''attività3'' del [[template:Bio|template Bio]] presente nella voce biografica specifica della persona. Le ''attivitàAltre'' non vengono considerate";
+        }// end of if/else cycle
+
+        testo += "Questa è una lista";
+        testo += LibWiki.setRef(message1);
+        testo += LibWiki.setRef(message2);
+        testo += LibWiki.setRef(message3);
+        testo += " di persone";
+        testo += LibWiki.setRef(message4);
+        testo += " presenti nell'enciclopedia che hanno come attività";
+        testo += LibWiki.setRef(message5);
+        testo += " principale";
+        testo += LibWiki.setRef(message6);
+        testo += " quella di ";
+        testo += LibWiki.setBold(soggetto);
+        testo += " e sono ";
+        testo += LibWiki.setBold(soggettoSottopagina);
+        testo += LibWiki.setRef(message7);
+        testo += ".";
+
+        return testo;
+    }// fine del metodo
+
+
+    /**
+     * Lista delle voci correlate (eventuale)
+     * Sovrascritto
+     */
+    protected List<String> listaVociCorrelate() {
+        List<String> lista = new ArrayList<>();
+
+        lista.add(":Categoria:" + attivita.plurale);
+        lista.add("Progetto:Biografie/Attività");
+        return lista;
     }// fine del metodo
 
 }// end of class

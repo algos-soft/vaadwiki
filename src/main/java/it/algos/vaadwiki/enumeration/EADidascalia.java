@@ -16,7 +16,7 @@ public enum EADidascalia {
     annoMorto(VUOTA, false, "", ""),
     listaNomi("Persone di nome ", true, "Liste di persone per nome", "prenome"),
     listaCognomi("Persone di cognome ", true, "Liste di persone per cognome", "cognome"),
-    listaAttivita("Progetto:Biografie/Attività/", false, "", ""),
+    listaAttivita("Progetto:Biografie/Attività/", false, "Bio attività", ""),
     listaNazionalita("Progetto:Biografie/Nazionalità/", false, "", ""),
     biografie(VUOTA, true, "", "");
 

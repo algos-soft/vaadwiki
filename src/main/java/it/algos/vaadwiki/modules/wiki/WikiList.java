@@ -409,7 +409,6 @@ public abstract class WikiList extends AGridViewList {
      * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
      */
     protected void uploadStatistiche(long inizio) {
-//        setLastUploadStatistiche(inizio);
         super.updateGrid();
     }// end of method
 
@@ -492,14 +491,14 @@ public abstract class WikiList extends AGridViewList {
     }// end of method
 
 
-    /**
-     * Registra nelle preferenze la data dell'ultimo upload statistiche effettuato <br>
-     * Registra nelle preferenze la durata dell'ultimo upload statistiche effettuato <br>
-     */
-    protected void setLastUploadStatistiche(long inizio) {
-        pref.saveValue(lastUploadStatistiche, LocalDateTime.now());
-        pref.saveValue(durataLastUploadStatistiche, eaTempoTypeStatistiche.get(inizio));
-    }// end of method
+//    /**
+//     * Registra nelle preferenze la data dell'ultimo upload statistiche effettuato <br>
+//     * Registra nelle preferenze la durata dell'ultimo upload statistiche effettuato <br>
+//     */
+//    protected void setLastUploadStatistiche(long inizio) {
+//        pref.saveValue(lastUploadStatistiche, LocalDateTime.now());
+//        pref.saveValue(durataLastUploadStatistiche, eaTempoTypeStatistiche.get(inizio));
+//    }// end of method
 
 
     /**

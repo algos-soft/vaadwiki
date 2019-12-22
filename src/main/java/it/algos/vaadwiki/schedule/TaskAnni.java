@@ -28,13 +28,6 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Slf4j
 public class TaskAnni extends ATask {
 
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected UploadService uploadService;
 
 
     /**
@@ -63,6 +56,7 @@ public class TaskAnni extends ATask {
     public void execute(TaskExecutionContext context) throws RuntimeException {
         if (pref.isBool(USA_DAEMON_ANNI)) {
             uploadService.uploadAllAnni();
+            statisticheService.updatePaginaAnni();
         }// end of if cycle
     }// end of method
 

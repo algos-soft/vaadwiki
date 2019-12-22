@@ -1,13 +1,12 @@
 package it.algos.vaadwiki.statistiche;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EALogType;
 import it.algos.vaadflow.enumeration.EATempo;
-import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.service.ABioService;
 import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +25,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 public class StatisticheService extends ABioService {
 
     /**
-     * Upload standard delle statistiche. <br>
+     * Upload delle statistiche. <br>
      * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
      */
     public void updatePaginaGiorni() {
@@ -36,18 +35,28 @@ public class StatisticheService extends ABioService {
         }// end of if cycle
 
         appContext.getBean(StatisticheGiorni.class);
+
         logger.crea(EALogType.upload, "Upload delle statistiche per i giorni", inizio);
-        setLastUploadStatisticheGiorni(inizio);
+        pref.saveValue(LAST_UPLOAD_STATISTICHE_GIORNI, LocalDateTime.now());
+        pref.saveValue(DURATA_UPLOAD_STATISTICHE_GIORNI, EATempo.minuti.get(inizio));
     }// end of method
 
 
     /**
-     * Registra nelle preferenze la data dell'ultimo upload statistiche effettuato <br>
-     * Registra nelle preferenze la durata dell'ultimo upload statistiche effettuato <br>
+     * Upload delle statistiche. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
      */
-    protected void setLastUploadStatisticheGiorni(long inizio) {
-        pref.saveValue(LAST_UPLOAD_STATISTICHE_GIORNI, LocalDateTime.now());
-        pref.saveValue(DURATA_UPLOAD_STATISTICHE_GIORNI, EATempo.minuti.get(inizio));
+    public void updatePaginaAnni() {
+        long inizio = System.currentTimeMillis();
+        if (checkMongo()) {
+            return;
+        }// end of if cycle
+
+        appContext.getBean(StatisticheAnni.class);
+
+        logger.crea(EALogType.upload, "Upload delle statistiche per gli anni", inizio);
+        pref.saveValue(LAST_UPLOAD_STATISTICHE_ANNI, LocalDateTime.now());
+        pref.saveValue(DURATA_UPLOAD_STATISTICHE_ANNI, EATempo.minuti.get(inizio));
     }// end of method
 
 }// end of class
