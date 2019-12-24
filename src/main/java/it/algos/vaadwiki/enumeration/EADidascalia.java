@@ -17,7 +17,7 @@ public enum EADidascalia {
     listaNomi("Persone di nome ", true, "Liste di persone per nome", "prenome"),
     listaCognomi("Persone di cognome ", true, "Liste di persone per cognome", "cognome"),
     listaAttivita("Progetto:Biografie/Attività/", false, "Bio attività", ""),
-    listaNazionalita("Progetto:Biografie/Nazionalità/", false, "", ""),
+    listaNazionalita("Progetto:Biografie/Nazionalità/", false, "Bio nazionalità", ""),
     biografie(VUOTA, true, "", "");
 
     public String pagina;

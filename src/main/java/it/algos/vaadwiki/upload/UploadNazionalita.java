@@ -103,7 +103,7 @@ public class UploadNazionalita extends Upload {
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_COGNOMI);
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
-        super.tagCategoria = LibWiki.setCat("Bio nazionalià", text.primaMaiuscola(nazionalita.getPlurale()));
+        super.tagCategoria = LibWiki.setCat("Bio nazionalità", text.primaMaiuscola(nazionalita.getPlurale()));
         super.usaNote = true;
         super.usaVociCorrelate = true;
         super.usaBodySottopagine = true;
