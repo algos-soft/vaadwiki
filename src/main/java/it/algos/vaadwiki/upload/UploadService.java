@@ -247,9 +247,32 @@ public class UploadService extends ABioService {
             return;
         }// end of if cycle
 
+        long inizio = System.currentTimeMillis();
         for (Attivita attivita : attivitaService.findAll()) {
             uploadAttivita(attivita);
         }// end of for cycle
+
+        setLastUpload(inizio, LAST_UPLOAD_ATTIVITA, DURATA_UPLOAD_ATTIVITA);
+        logger.crea(EALogType.upload, "Upload delle liste per attività", inizio);
+    }// end of method
+
+
+    /**
+     * Esegue un ciclo di creazione (UPLOAD) delle liste nazionalità per ogni nazionalità superiore alla soglia fissata <br>
+     * Controlla che il mongoDb delle voci biografiche non sia vuoto <br>
+     */
+    public void uploadAllNazionalita() {
+        if (checkMongo()) {
+            return;
+        }// end of if cycle
+
+        long inizio = System.currentTimeMillis();
+        for (Nazionalita nazionalità : nazionalitaService.findAll()) {
+            uploadNazionalita(nazionalità);
+        }// end of for cycle
+
+        setLastUpload(inizio, LAST_UPLOAD_NAZIONALITA, DURATA_UPLOAD_NAZIONALITA);
+        logger.crea(EALogType.upload, "Upload delle liste per nazionalità", inizio);
     }// end of method
 
 
@@ -537,7 +560,7 @@ public class UploadService extends ABioService {
      * Titolo della pagina Nazionalita da creare/caricare su wikipedia
      */
     public String getTitoloNazionalita(String titolo) {
-        return "Progetto:Biografie/Nazionalita/" + text.primaMaiuscola(titolo);
+        return "Progetto:Biografie/Nazionalità/" + text.primaMaiuscola(titolo);
     }// fine del metodo
 
 

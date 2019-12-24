@@ -16,16 +16,17 @@ import static it.algos.vaadwiki.application.WikiCost.*;
  */
 public enum EAPreferenzaWiki implements IAPreferenza {
 
-    usaDaemonBio(USA_DAEMON_BIO, "Crono per ciclo bio completo", EAPrefType.bool, true),
+    usaDaemonBio(USA_DAEMON_BIO, "Crono per ciclo bio di download", EAPrefType.bool, true),
     usaDaemonProfessione(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo", EAPrefType.bool, false),
     usaDaemonCategoria(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo", EAPrefType.bool, false),
     usaDaemonGenere(USA_DAEMON_GENERE, "Crono per download genere, extra-ciclo", EAPrefType.bool, false),
-    usaDaemonGiorni(USA_DAEMON_GIORNI, "Crono per upload giorni, extra-ciclo", EAPrefType.bool, true),
-    usaDaemonAnni(USA_DAEMON_ANNI, "Crono per upload anni, extra-ciclo", EAPrefType.bool, true),
-    usaDaemonNomi(USA_DAEMON_NOMI, "Crono per upload nomi, extra-ciclo", EAPrefType.bool, true),
-    usaDaemonCognomi(USA_DAEMON_COGNOMI, "Crono per upload cognomi, extra-ciclo", EAPrefType.bool, true),
+    usaDaemonGiorni(USA_DAEMON_GIORNI, "Crono per upload giorni", EAPrefType.bool, true),
+    usaDaemonAnni(USA_DAEMON_ANNI, "Crono per upload anni", EAPrefType.bool, true),
+    usaDaemonNomi(USA_DAEMON_NOMI, "Crono per upload nomi", EAPrefType.bool, true),
+    usaDaemonCognomi(USA_DAEMON_COGNOMI, "Crono per upload cognomi", EAPrefType.bool, true),
     usaDaemonAttivita(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo", EAPrefType.bool, true),
     usaDaemonNazionalita(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo", EAPrefType.bool, false),
+    usaDaemonStatistiche(USA_DAEMON_STATISTICHE, "Crono per upload statistiche", EAPrefType.bool, false),
 
     lastDownloadAttivita(LAST_DOWNLOAD_ATTIVITA, "Ultimo download del modulo attività", EAPrefType.localdatetime, null),
     lastDownloadNazionalita(LAST_DOWNLOAD_NAZIONALITA, "Ultimo download del modulo nazionalità", EAPrefType.localdatetime, null),
@@ -38,6 +39,8 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     lastUploadAnni(LAST_UPLOAD_ANNI, "Ultimo upload degli anni", EAPrefType.localdatetime, null),
     lastUploadNomi(LAST_UPLOAD_NOMI, "Ultimo upload dei nomi", EAPrefType.localdatetime, null),
     lastUploadCognomi(LAST_UPLOAD_COGNOMI, "Ultimo upload dei cognomi", EAPrefType.localdatetime, null),
+    lastUploadAttivita(LAST_UPLOAD_ATTIVITA, "Ultimo upload delle attività", EAPrefType.localdatetime, null),
+    lastUploadNazionalita(LAST_UPLOAD_NAZIONALITA, "Ultimo upload delle nazionalità", EAPrefType.localdatetime, null),
     lastUploadStatisticheGiorni(LAST_UPLOAD_STATISTICHE_GIORNI, "Ultimo upload delle pagine di statistiche dei giorni", EAPrefType.localdatetime, null),
     lastUploadStatisticheAnni(LAST_UPLOAD_STATISTICHE_ANNI, "Ultimo upload delle pagine di statistiche degli anni", EAPrefType.localdatetime, null),
     lastUploadStatisticheAttivita(LAST_UPLOAD_STATISTICHE_ATTIVITA, "Ultimo upload delle pagine di statistiche delle attività", EAPrefType.localdatetime, null),
@@ -55,6 +58,8 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     durataUploadAnni(DURATA_UPLOAD_ANNI, "Durata in minuti dell'ultimo upload degli anni", EAPrefType.integer, 0),
     durataUploadNomi(DURATA_UPLOAD_NOMI, "Durata in minuti dell'ultimo upload dei nomi", EAPrefType.integer, 0),
     durataUploadCognomi(DURATA_UPLOAD_COGNOMI, "Durata in minuti dell'ultimo upload dei cognomi", EAPrefType.integer, 0),
+    durataUploadAttivita(DURATA_UPLOAD_ATTIVITA, "Durata in minuti dell'ultimo upload delle attività", EAPrefType.integer, 0),
+    durataUploadNazionalita(DURATA_UPLOAD_NAZIONALITA, "Durata in minuti dell'ultimo upload delle nazionalità", EAPrefType.integer, 0),
     durataDownloadDoppiNomi(DURATA_DOWNLOAD_DOPPI_NOMI, "Durata in secondi dell'ultimo download del modulo nomiDoppi", EAPrefType.integer, 0),
 
     durataUploadStatisticheGiorni(DURATA_UPLOAD_STATISTICHE_GIORNI, "Durata in minuti dell'ultimo upload delle pagine di statistiche dei giorni", EAPrefType.integer, 0),

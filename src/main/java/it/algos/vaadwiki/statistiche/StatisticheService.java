@@ -59,4 +59,21 @@ public class StatisticheService extends ABioService {
         pref.saveValue(DURATA_UPLOAD_STATISTICHE_ANNI, EATempo.minuti.get(inizio));
     }// end of method
 
+    /**
+     * Upload delle statistiche. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    public void updatePagineStatistiche() {
+        long inizio = System.currentTimeMillis();
+        if (checkMongo()) {
+            return;
+        }// end of if cycle
+
+        appContext.getBean(StatisticheAnni.class);
+
+        logger.crea(EALogType.upload, "Upload delle statistiche per gli anni", inizio);
+        pref.saveValue(LAST_UPLOAD_STATISTICHE_ANNI, LocalDateTime.now());
+        pref.saveValue(DURATA_UPLOAD_STATISTICHE_ANNI, EATempo.minuti.get(inizio));
+    }// end of method
+
 }// end of class

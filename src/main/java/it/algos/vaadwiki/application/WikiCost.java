@@ -146,7 +146,7 @@ public class WikiCost {
 
     public final static String USA_DAEMON_COGNOMI = DAEMON + "Cognomi";
 
-    public final static String USA_DAEMON_LOCALITA = DAEMON + "Localita";
+    public final static String USA_DAEMON_STATISTICHE = DAEMON + "Statistiche";
 
     //--localdatetime dell'ultimo download
     public final static String LAST_DOWNLOAD_ATTIVITA = CODE_DOWNLOAD + ATT;
@@ -174,6 +174,10 @@ public class WikiCost {
     public final static String LAST_UPLOAD_NOMI = CODE_UPLOAD + NOME;
 
     public final static String LAST_UPLOAD_COGNOMI = CODE_UPLOAD + COGNOME;
+
+    public final static String LAST_UPLOAD_ATTIVITA = CODE_UPLOAD + ATT;
+
+    public final static String LAST_UPLOAD_NAZIONALITA = CODE_UPLOAD + NAZ;
 
     public final static String LAST_UPLOAD_STATISTICHE_GIORNI = CODE_STATISTICHE + GIORNI;
 
@@ -209,6 +213,10 @@ public class WikiCost {
     public final static String DURATA_UPLOAD_NOMI = DURATA + NOME;
 
     public final static String DURATA_UPLOAD_COGNOMI = DURATA + COGNOME;
+
+    public final static String DURATA_UPLOAD_ATTIVITA = DURATA + ATT;
+
+    public final static String DURATA_UPLOAD_NAZIONALITA = DURATA + NAZ;
 
     public final static String DURATA_ELABORA_NOMI = DURATA_ELABORA + NOME;
 
@@ -258,6 +266,8 @@ public class WikiCost {
     public final static String TASK_NOM = "taskNomi";
 
     public final static String TASK_COG = "taskCognomi";
+
+    public final static String TASK_STAT = "taskStatistiche";
 
     public final static String SEND_MAIL_CICLO = "sendMailCiclo";
 

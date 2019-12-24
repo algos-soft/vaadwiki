@@ -58,9 +58,6 @@ public abstract class Upload {
 
     protected final static String TAG_NO_INDICE = "__NOTOC__";
 
-    //
-//    protected boolean usaOrdineAlfabeticoParagrafi;
-
     //--property
     public boolean usaRigheRaggruppate;
 
@@ -99,6 +96,9 @@ public abstract class Upload {
      */
     @Autowired
     protected ProfessioneService professioneService;
+
+    //
+//    protected boolean usaOrdineAlfabeticoParagrafi;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -298,6 +298,19 @@ public abstract class Upload {
 
     protected int numVoci = 0;
 
+    protected String notaDidascalie;
+
+    protected String notaOrdinamento;
+
+    protected String notaEsaustiva;
+
+    protected String notaAttivita;
+
+    protected String notaNazionalita;
+
+
+    protected String notaSottoPagina;
+
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -342,6 +355,22 @@ public abstract class Upload {
         // footer
         usaNote = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
         usaVociCorrelate = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
+
+        // dalla lista
+        if (lista != null) {
+            numVoci = lista.size;
+            titoloParagrafoVuoto = lista.titoloParagrafoVuoto;
+            taglioSottoPagina = lista.taglioSottoPagina;
+            usaParagrafoSize = lista.usaParagrafoSize;
+        }// end of if cycle
+
+        // note <ref>
+        notaDidascalie = "Le didascalie delle voci sono quelle previste nel [[Progetto:Biografie/Didascalie|progetto biografie]]";
+        notaOrdinamento = "Le voci, all'interno di ogni paragrafo, sono in ordine alfabetico per " + LibWiki.setBold("cognome") + "; se questo manca si utilizza il " + LibWiki.setBold("titolo") + " della pagina.";
+        notaEsaustiva = "La lista non è esaustiva e contiene solo le persone che sono citate nell'enciclopedia e per le quali è stato implementato correttamente il [[template:Bio|template Bio]]";
+        notaSottoPagina = "Questa sottopagina specifica viene creata se il numero di voci biografiche nel paragrafo della pagina principale supera le " + taglioSottoPagina + " unità.";
+        notaAttivita = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+        notaNazionalita = "Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
     }// end of method
 
 
@@ -358,11 +387,6 @@ public abstract class Upload {
     protected void elaboraPagina() {
         String summary = LibWiki.getSummary();
         testoPagina = VUOTA;
-
-        numVoci = lista.size;
-        titoloParagrafoVuoto = lista.titoloParagrafoVuoto;
-        taglioSottoPagina = lista.taglioSottoPagina;
-        usaParagrafoSize = lista.usaParagrafoSize;
 
         //header
         testoPagina += this.elaboraHead();
@@ -425,6 +449,10 @@ public abstract class Upload {
                 log.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            uploadValido = true;
+        }// end of if cycle
 
         if (!uploadValido) {
             log.info("La pagina " + titoloPagina + " non contiene un numero sufficiente di voci biografiche e non è stata creata");

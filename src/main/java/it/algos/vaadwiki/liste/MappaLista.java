@@ -316,16 +316,21 @@ public class MappaLista {
 
 
     private Titolo creaTitoloNazionalita(String chiaveParagrafo) {
-        Titolo titolo = null;
         String tagPagina = "Progetto:Biografie/Attività/";
         String pagina = VUOTA;
         String visibile = VUOTA;
 
-        pagina += tagPagina;
-        pagina += text.primaMaiuscola(chiaveParagrafo);
-        pagina += "|";
-        pagina += text.primaMaiuscola(chiaveParagrafo);
+        if (text.isValid(chiaveParagrafo)) {
+            pagina += tagPagina;
+            pagina += text.primaMaiuscola(chiaveParagrafo);
+        }// end of if cycle
         visibile = text.primaMaiuscola(chiaveParagrafo);
+
+//        pagina += tagPagina;
+//        pagina += text.primaMaiuscola(chiaveParagrafo);
+//        pagina += "|";
+//        pagina += text.primaMaiuscola(chiaveParagrafo);
+//        visibile = text.primaMaiuscola(chiaveParagrafo);
 
         return new Titolo(chiaveParagrafo, pagina, visibile);
     }// fine del metodo

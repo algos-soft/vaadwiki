@@ -481,6 +481,19 @@ public class BioService extends WikiService {
 
 
     /**
+     * Seleziona tutte le biografie delle persone che hanno una determinata nazionalità <br>
+     * La lista viene ordinata per nazionalità <br>
+     * La lista viene ulteriormente ordinata per cognome o per wikiTitle (a seconda del flag di programma) <br>
+     *
+     * @param nazionalita per la selezione
+     *
+     * @return ordered entities
+     */
+    public List<Bio> findAllByNazionalita(Nazionalita nazionalita) {
+        return repository.findAllByNazionalita(nazionalita);
+    }// end of method
+
+    /**
      * Ordina la lista <br>
      *
      * @return all ordered entities

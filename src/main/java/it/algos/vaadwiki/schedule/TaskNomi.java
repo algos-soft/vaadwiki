@@ -1,19 +1,18 @@
 package it.algos.vaadwiki.schedule;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.schedule.ATask;
-import it.algos.vaadwiki.upload.UploadService;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.TASK_NOM;
+import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_NOMI;
 
 /**
  * Project vaadwiki
@@ -27,14 +26,6 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TASK_NOM)
 @Slf4j
 public class TaskNomi extends ATask {
-
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected UploadService uploadService;
 
 
     /**

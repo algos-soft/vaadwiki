@@ -1,8 +1,13 @@
 package it.algos.vaadwiki.modules.nazionalita;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -107,14 +112,15 @@ public class NazionalitaList extends WikiList {
 
         //--bottoni vaadwiki
         super.usaButtonDownload = true;
+        super.usaButtonUpload = true;
         super.usaButtonModulo = true;
         super.usaButtonShowStatisticheA = true;
         super.usaButtonUploadStatistiche = true;
 
         super.titoloModulo = wikiService.titoloModuloNazionalita;
         super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheNazionalita;
-        super.task = taskNazionalita;
         super.usaPagination = true;
+        super.task = taskNazionalita;
         super.flagDaemon = USA_DAEMON_NAZIONALITA;
 
         super.lastDownload = LAST_DOWNLOAD_NAZIONALITA;
@@ -149,6 +155,82 @@ public class NazionalitaList extends WikiList {
         alertPlacehorder.add(new Label("Le nazionalità sono elencate all'interno del modulo con la seguente sintassi:"));
         alertPlacehorder.add(new Label("[\"nazionalitaforma1\"] = \"nazionalità al plurale\","));
         alertPlacehorder.add(new Label("[\"nazionalitaforma2\"] = \"nazionalità al plurale\","));
+    }// end of method
+
+
+    /**
+     * Eventuali colonne calcolate aggiunte DOPO quelle automatiche
+     * Sovrascritto
+     */
+    protected void addSpecificColumnsAfter() {
+        String lar = "12em";
+        ComponentRenderer renderer;
+        Grid.Column colonna;
+
+        renderer = new ComponentRenderer<>(this::createViewButton);
+        colonna = grid.addColumn(renderer);
+        colonna.setHeader("Test");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+
+        renderer = new ComponentRenderer<>(this::createWikiButton);
+        colonna = grid.addColumn(renderer);
+        colonna.setHeader("Wiki");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+
+        renderer = new ComponentRenderer<>(this::createUploaButton);
+        colonna = grid.addColumn(renderer);
+        colonna.setHeader("Upload");
+        colonna.setWidth(lar);
+        colonna.setFlexGrow(0);
+
+    }// end of method
+
+
+    protected Button createViewButton(Nazionalita entityBean) {
+        Button viewButton = new Button(entityBean.plurale, new Icon(VaadinIcon.LIST));
+        viewButton.getElement().setAttribute("theme", "secondary");
+        viewButton.addClickListener(e -> viewNazionalita(entityBean));
+        return viewButton;
+    }// end of method
+
+
+    protected Component createWikiButton(Nazionalita entityBean) {
+        Button wikiButton = new Button(entityBean.plurale, new Icon(VaadinIcon.SERVER));
+        wikiButton.getElement().setAttribute("theme", "secondary");
+        wikiButton.addClickListener(e -> wikiPage(entityBean));
+        return wikiButton;
+    }// end of method
+
+
+    protected Component createUploaButton(Nazionalita entityBean) {
+        Button uploadButton = new Button(entityBean.plurale, new Icon(VaadinIcon.UPLOAD));
+        uploadButton.getElement().setAttribute("theme", "error");
+        uploadButton.addClickListener(e -> uploadService.uploadNazionalita(entityBean));
+        return uploadButton;
+    }// end of method
+
+
+    protected void viewNazionalita(Nazionalita nazionalita) {
+        getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_NAZIONALITA + "/" + nazionalita.id));
+    }// end of method
+
+
+    protected void wikiPage(Nazionalita nazionalita) {
+        String link = "\"" + PATH_WIKI + uploadService.getTitoloNazionalita(nazionalita) + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+    /**
+     * Upload standard. <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     */
+    protected void upload(long inizio) {
+        uploadService.uploadAllNazionalita();
+        super.upload(inizio);
     }// end of method
 
 

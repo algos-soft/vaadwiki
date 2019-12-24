@@ -3,29 +3,38 @@ package it.algos.vaadwiki.schedule;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.schedule.ATask;
+import it.algos.vaadwiki.statistiche.StatisticheService;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadwiki.application.WikiCost.TASK_ATT;
-import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA;
+import static it.algos.vaadwiki.application.WikiCost.TASK_STAT;
+import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_STATISTICHE;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: mer, 23-gen-2019
- * Time: 07:11
+ * Date: dom, 22-dic-2019
+ * Time: 14:25
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(TASK_ATT)
+@Qualifier(TASK_STAT)
 @Slf4j
-public class TaskAttivita extends ATask {
+public class TaskStatistiche extends ATask {
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    private StatisticheService statisticheService;
 
 
     /**
@@ -42,15 +51,15 @@ public class TaskAttivita extends ATask {
      */
     @PostConstruct
     protected void inizia() {
-        super.eaSchedule = EASchedule.oreOttoGiovedi;
-        super.usaDaemon = pref.isBool(USA_DAEMON_ATTIVITA);
+        super.eaSchedule = EASchedule.oreOttoDomenica;
+        super.usaDaemon = pref.isBool(USA_DAEMON_STATISTICHE);
     }// end of method
 
 
     @Override
     public void execute(TaskExecutionContext context) throws RuntimeException {
-        if (pref.isBool(USA_DAEMON_ATTIVITA)) {
-            uploadService.uploadAllAttivita();
+        if (pref.isBool(USA_DAEMON_STATISTICHE)) {
+            statisticheService.updatePagineStatistiche();
         }// end of if cycle
     }// end of method
 

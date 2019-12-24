@@ -30,12 +30,6 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA;
 @Slf4j
 public class TaskNazionalita extends ATask {
 
-    /**
-     * La injection viene fatta da SpringBoot in automatico <br>
-     */
-    @Autowired
-    private AttivitaService service;
-
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -51,7 +45,7 @@ public class TaskNazionalita extends ATask {
      */
     @PostConstruct
     protected void inizia() {
-        super.eaSchedule = EASchedule.giornoSecondoMinuto;
+        super.eaSchedule = EASchedule.oreOttoVenerdi;
         super.usaDaemon = pref.isBool(USA_DAEMON_NAZIONALITA);
     }// end of method
 
@@ -59,7 +53,7 @@ public class TaskNazionalita extends ATask {
     @Override
     public void execute(TaskExecutionContext context) throws RuntimeException {
         if (pref.isBool(USA_DAEMON_NAZIONALITA)) {
-            service.download();
+            uploadService.uploadAllNazionalita();
         }// end of if cycle
     }// end of method
 

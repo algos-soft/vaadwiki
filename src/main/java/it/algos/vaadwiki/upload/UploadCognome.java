@@ -36,7 +36,7 @@ import static it.algos.vaadwiki.service.LibBio.PIPE;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-public class UploadCognome extends UploadNomiCognomi {
+public class UploadCognome extends Upload {
 
     //--property
     protected Cognome cognome;
@@ -99,6 +99,7 @@ public class UploadCognome extends UploadNomiCognomi {
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
         super.tagCategoria = LibWiki.setCat("Liste di persone per cognome", cognome.getCognome());
+        super.usaBodySottopagine = true;
     }// fine del metodo
 
 

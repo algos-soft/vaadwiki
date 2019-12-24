@@ -90,16 +90,17 @@ public class WikiScheduler extends Scheduler {
         if (!isStarted()) {
             super.start();
 
-            this.task(attivita);
-            this.task(nazionalita);
-            this.task(professione);
+//            this.task(professione);
+//            this.task(update);
 
             this.task(download);
-            this.task(update);
+
             this.task(giorni);
             this.task(anni);
             this.task(nomi);
             this.task(cognomi);
+            this.task(attivita);
+            this.task(nazionalita);
 
         }// fine del blocco if
     }// end of method

@@ -3,11 +3,8 @@ package it.algos.vaadwiki.schedule;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EASchedule;
 import it.algos.vaadflow.schedule.ATask;
-import it.algos.vaadwiki.statistiche.StatisticheService;
-import it.algos.vaadwiki.upload.UploadService;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -29,8 +26,6 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_GIORNI;
 @Qualifier(TASK_GIO)
 @Slf4j
 public class TaskGiorni extends ATask {
-
-
 
 
     /**
@@ -59,7 +54,6 @@ public class TaskGiorni extends ATask {
     public void execute(TaskExecutionContext context) throws RuntimeException {
         if (pref.isBool(USA_DAEMON_GIORNI)) {
             uploadService.uploadAllGiorni();
-            statisticheService.updatePaginaGiorni();
         }// end of if cycle
     }// end of method
 
