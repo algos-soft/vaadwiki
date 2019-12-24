@@ -463,7 +463,7 @@ public abstract class Didascalia {
                 testo += TAG_NATO;
             }// end of if cycle
             if (isEsisteLocalitaLink) {
-                testo += LibWiki.setQuadre(luogoNato + "|" + luogoNatoLink);
+                testo += LibWiki.setQuadre(luogoNatoLink + "|" + luogoNato);
             } else {
                 testo += LibWiki.setQuadre(luogoNato);
             }// end of if/else cycle
@@ -509,7 +509,7 @@ public abstract class Didascalia {
                 testo += TAG_MORTO;
             }// end of if cycle
             if (isEsisteLocalitaLink) {
-                testo += LibWiki.setQuadre(luogoMorto + "|" + luogoMortoLink);
+                testo += LibWiki.setQuadre(luogoMortoLink + "|" + luogoMorto);
             } else {
                 testo += LibWiki.setQuadre(luogoMorto);
             }// end of if/else cycle

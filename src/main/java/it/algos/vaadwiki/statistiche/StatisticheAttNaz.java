@@ -99,17 +99,6 @@ public abstract class StatisticheAttNaz extends Statistiche {
     }// fine del metodo
 
 
-    private String inizioTabella() {
-        String testo = "";
-
-        testo += A_CAPO;
-        testo += "{|class=\"wikitable sortable\" style=\"background-color:#EFEFEF;\"";
-        testo += A_CAPO;
-
-        return testo;
-    }// fine del metodo
-
-
     protected String colonnePrimaTabella() {
         return VUOTA;
     }// fine del metodo
@@ -139,14 +128,14 @@ public abstract class StatisticheAttNaz extends Statistiche {
     }// fine del metodo
 
 
-    private String fineTabella() {
-        String testo = "";
-
-        testo += "|}";
-        testo += A_CAPO;
-
-        return testo;
-    }// fine del metodo
+//    private String fineTabella() {
+//        String testo = "";
+//
+//        testo += "|}";
+//        testo += A_CAPO;
+//
+//        return testo;
+//    }// fine del metodo
 
 
     /*

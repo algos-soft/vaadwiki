@@ -15,6 +15,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
+import java.util.Random;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 import static it.algos.vaadwiki.didascalia.DidascaliaService.TITOLO_PAGINA_WIKI;
@@ -33,10 +34,10 @@ import static it.algos.vaadwiki.didascalia.DidascaliaService.TITOLO_PAGINA_WIKI;
 @Slf4j
 public class StatisticheDidascalie extends Statistiche {
 
-    //    private static String NOME_BIO_DEFAULT = "Vittorio Gassman";
-    private static String NOME_BIO_DEFAULT = "Sergio Ferrero";
 
     private static String TAG_HEAD_TEMPLATE_AVVISO = "StatBio";
+
+    private static String[] NOMI = {"Sergio Ferrero", "Gene Clark", "Bill Miller (astista)", "Harry Fox"};
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -111,7 +112,7 @@ public class StatisticheDidascalie extends Statistiche {
      */
     protected void fixBiografia() {
         if (bio == null) {
-            bio = bioService.findByKeyUnica(NOME_BIO_DEFAULT);
+            bio = bioService.findByKeyUnica(getNome());
         }// end of if cycle
     }// end of method
 
@@ -215,6 +216,7 @@ public class StatisticheDidascalie extends Statistiche {
         testo += rigaListeNome();
         testo += rigaListeCognome();
         testo += rigaListeAttivita();
+        testo += rigaListeNazionalita();
 
         //--fine tabella
         testo += "\n|}";
@@ -404,6 +406,28 @@ public class StatisticheDidascalie extends Statistiche {
 
 
     /**
+     * Riga di esempio per la didascalia Liste <br>
+     */
+    protected String rigaListeNazionalita() {
+        String testo = INIZIO_RIGA;
+        String didascalia = "";
+        String nazionalita = "";
+        String linkPagina;
+
+        if (bio != null) {
+            nazionalita = bio.getNazionalita() != null ? bio.getNazionalita().plurale : VUOTA;
+            if (text.isValid(nazionalita)) {
+                didascalia = didascaliaService.getListeSenza(bio);
+                linkPagina = LibWiki.setQuadre("Progetto:Biografie/Nazionalità/" + text.primaMaiuscola(nazionalita) + "|" + nazionalita);
+                testo += "Nella pagina con la lista di " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+            }// end of if cycle
+        }// end of if cycle
+
+        return testo;
+    }// fine del metodo
+
+
+    /**
      * Costruisce il testo finale della pagina
      */
     protected void elaboraFooter() {
@@ -435,6 +459,26 @@ public class StatisticheDidascalie extends Statistiche {
 
             appContext.getBean(AQueryWrite.class, titolo, testoPagina);
         }// fine del blocco if
+    }// end of method
+
+
+    /**
+     * Contenuto random della lista di nomi <br>
+     */
+    private String getNome() {
+        String nome = VUOTA;
+        Random random = null;
+        int dim = 0;
+        int pos = 0;
+
+        if (NOMI != null && NOMI.length > 0) {
+            dim = NOMI.length;
+            random = new Random();
+            pos = random.nextInt(dim);
+            nome = NOMI[pos];
+        }// end of if cycle
+
+        return nome;
     }// end of method
 
 }// end of class

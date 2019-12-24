@@ -1071,12 +1071,12 @@ public class BioService extends WikiService {
     }// end of method
 
 
-    public List<String> findDistinctNome() {
+//    public int countDistinctAnnoNascita() {
 //        return repository.findDistinctNome("nome");
 //        return repository.findDistinctByNome();
 //        JSONArray lista= repository.listDistinctNome();
-        return null;
-    }// end of method
+//        return repository.countDistinctByAnnoNascita();
+//    }// end of method
 
 
 //    /**

@@ -1,12 +1,15 @@
 package it.algos.vaadwiki.statistiche;
 
+import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.ATextService;
+import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.BioService;
+import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.upload.UploadService;
@@ -47,6 +50,10 @@ public abstract class Statistiche {
     protected String titoloPagina;
 
     protected boolean usaTagIndice;
+
+    protected boolean usaNote;
+
+    protected boolean usaCorrelate;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -90,6 +97,27 @@ public abstract class Statistiche {
      */
     @Autowired
     protected GiornoService giornoService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected AnnoService annoService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected AttivitaService attivitaService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected NazionalitaService nazionalitaService;
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -142,6 +170,7 @@ public abstract class Statistiche {
         inizia();
     }// end of method
 
+
     /**
      * Costruisce la pagina <br>
      * Registra la pagina sul server wiki <br>
@@ -159,6 +188,7 @@ public abstract class Statistiche {
      */
     protected void creaLista() {
     }// end of method
+
 
     /**
      * Costruisce la mappa <br>
@@ -205,8 +235,10 @@ public abstract class Statistiche {
      * Invocare PRIMA il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
+        this.usaCorrelate = true;
         this.templateCorrelate = "BioCorrelate";
         this.usaTagIndice = true;
+        this.usaNote = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
     }// fine del metodo
 
 
@@ -273,8 +305,15 @@ public abstract class Statistiche {
     protected void elaboraFooter() {
         String testo = VUOTA;
 
-        testo += LibWiki.setGraffe(templateCorrelate);
-        testo += A_CAPO;
+        if (usaNote) {
+            testo += usaNote();
+        }// end of if cycle
+
+        if (usaCorrelate) {
+            testo += LibWiki.setGraffe(templateCorrelate);
+            testo += A_CAPO;
+        }// end of if cycle
+
         testo += LibBio.setNoIncludeMultiRiga("[[Categoria:Progetto Biografie|{{PAGENAME}}]]");
 
         testoPagina += testo.trim();
@@ -300,5 +339,45 @@ public abstract class Statistiche {
             appContext.getBean(AQueryWrite.class, titolo, testoPagina);
         }// fine del blocco if
     }// end of method
+
+
+    protected String inizioTabella() {
+        String testo = "";
+
+        testo += A_CAPO;
+        testo += "{|class=\"wikitable\" style=\"background-color:#EFEFEF; text-align: right;\"";
+        testo += A_CAPO;
+
+        return testo;
+    }// fine del metodo
+
+
+    protected String fineTabella() {
+        String testo = "";
+
+        testo += "|}";
+        testo += A_CAPO;
+
+        return testo;
+    }// fine del metodo
+
+
+    /**
+     * Paragrafo delle note (eventuale)
+     * Sovrascritto
+     */
+    protected String usaNote() {
+        String testo = VUOTA;
+        String tag = "Note";
+        String ref = "<references/>";
+
+        testo += LibWiki.setParagrafo(tag);
+        testo += A_CAPO;
+        testo += ref;
+        testo += A_CAPO;
+        testo += A_CAPO;
+
+        return testo;
+    }// fine del metodo
 
 }// end of class

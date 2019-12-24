@@ -25,7 +25,6 @@ import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadflow.wrapper.AFiltro;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.schedule.TaskUpdate;
-import it.algos.vaadwiki.statistiche.StatisticheDidascalie;
 import it.algos.vaadwiki.statistiche.StatisticheService;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;
@@ -37,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import static it.algos.vaadwiki.application.WikiCost.PATH_WIKI;
 import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
 
@@ -96,6 +96,13 @@ public class BioList extends AGridViewList {
 //    @Autowired
 //    protected CategoriaService categoriaService;
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected StatisticheService statisticheService;
 
     private ATextField input;
 
@@ -167,13 +174,6 @@ public class BioList extends AGridViewList {
 
     @Autowired
     private WLogin wLogin;
-    /**
-     * Istanza (@Scope = 'singleton') inietta da Spring <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    protected StatisticheService statisticheService;
 
 //    @Autowired
 //    private Upload upload;
@@ -304,11 +304,27 @@ public class BioList extends AGridViewList {
 
 //        sincroBottoniMenu(false);
 
-        //--statistiche didascalie (provvisorio)
+        Button buttonShowDidascalie = new Button("Didascalie", new Icon(VaadinIcon.TABLE));
+        buttonShowDidascalie.addClassName("view-toolbar__button");
+        buttonShowDidascalie.addClickListener(e -> showDidascalie());
+        topPlaceholder.add(buttonShowDidascalie);
+
+        //--statistiche didascalie
         Button didascalieButton = new Button("Didascalie", new Icon(VaadinIcon.UPLOAD));
         didascalieButton.getElement().setAttribute("theme", "error");
         didascalieButton.addClickListener(e -> uploadDidascalie());
         topPlaceholder.add(didascalieButton);
+
+        Button buttonShowStatistiche = new Button("Statistiche", new Icon(VaadinIcon.TABLE));
+        buttonShowStatistiche.addClassName("view-toolbar__button");
+        buttonShowStatistiche.addClickListener(e -> showStatistiche());
+        topPlaceholder.add(buttonShowStatistiche);
+
+        //--statistiche didascalie (provvisorio)
+        Button statisticheButton = new Button("Statistiche", new Icon(VaadinIcon.UPLOAD));
+        statisticheButton.getElement().setAttribute("theme", "error");
+        statisticheButton.addClickListener(e -> uploadStatistiche());
+        topPlaceholder.add(statisticheButton);
     }// end of method
 
 
@@ -384,12 +400,42 @@ public class BioList extends AGridViewList {
         updateGrid();
     }// end of method
 
+
+    /**
+     * Mostra pagina wiki delle didascalie. <br>
+     */
+    protected void showDidascalie() {
+        String titoloPagina = "Progetto:Biografie/Didascalie";
+        String link = "\"" + PATH_WIKI + titoloPagina + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
     /**
      * Upload standard delle didascalie. <br>
      */
     protected void uploadDidascalie() {
         statisticheService.updateDidascalie();
     }// end of method
+
+
+    /**
+     * Mostra pagina wiki delle statistiche. <br>
+     */
+    protected void showStatistiche() {
+        String titoloPagina = "Progetto:Biografie/Statistiche";
+        String link = "\"" + PATH_WIKI + titoloPagina + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
+    /**
+     * Upload standard delle statistiche. <br>
+     */
+    protected void uploadStatistiche() {
+        statisticheService.updateBiografie();
+    }// end of method
+
 
     /**
      * Opens the confirmation dialog before deleting all items.

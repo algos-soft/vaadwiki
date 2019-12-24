@@ -245,6 +245,22 @@ public class AnnoService extends AService {
     }// end of method
 
 
+    public int countAnniUsati() {
+        int numAnni = 0;
+
+//        DistinctIterable<String> listaAnniNascita = mongo.mongoOp.getCollection("bio").distinct("anato", String.class);
+//        if (listaAnniNascita != null) {
+//            for (Object anno : listaAnniNascita) {
+//                numAnni++;
+//            }// end of for cycle
+//        }// end of if cycle
+
+        numAnni = count();//@todo sarebbe bello poter avere il conto esatto di quelli usato e non il totale
+
+        return numAnni;
+    }// end of method
+
+
     /**
      * Controlla l'esistenza di una Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *

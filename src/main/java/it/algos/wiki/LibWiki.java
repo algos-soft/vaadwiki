@@ -2922,6 +2922,24 @@ public abstract class LibWiki {
         return stringaOut.trim();
     } // fine del metodo
 
+    /**
+     * Aggiunge tripli apici (grassetto) in testa ed in coda alla stringa.
+     * Aggiunge doppie quadre in testa e coda alla stringa.
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con tripli apici aggiunte
+     */
+    public static String setQuadreBold(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (stringaIn != null && stringaIn.length() > 0) {
+            stringaOut= setQuadre(stringaOut);
+            stringaOut= setBold(stringaOut);
+        }// fine del blocco if
+
+        return stringaOut.trim();
+    } // fine del metodo
 
     /**
      * Aggiunge tripli apici (grassetto) in testa ed in coda al numero.

@@ -310,11 +310,6 @@ public abstract class WikiList extends AGridViewList {
             buttonUpdate = new Button("Update", new Icon(VaadinIcon.LIST));
             buttonUpdate.addClassName("view-toolbar__button");
             buttonUpdate.addClickListener(e -> update(System.currentTimeMillis()));
-//            buttonUpdate.addClickListener(e -> {
-//                ((NomeCognomeService) service).update();
-//                updateFiltri();
-//                updateGrid();
-//            });//end of lambda expressions and anonymous inner class
             topPlaceholder.add(buttonUpdate);
         }// end of if cycle
 
@@ -322,11 +317,6 @@ public abstract class WikiList extends AGridViewList {
             buttonElabora = new Button("Elabora", new Icon(VaadinIcon.LIST));
             buttonElabora.addClassName("view-toolbar__button");
             buttonElabora.addClickListener(e -> elabora(System.currentTimeMillis()));
-//            buttonElabora.addClickListener(e -> {
-//                ((NomeCognomeService) service).update();
-//                updateFiltri();
-//                updateGrid();
-//            });//end of lambda expressions and anonymous inner class
             topPlaceholder.add(buttonElabora);
         }// end of if cycle
 

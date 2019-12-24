@@ -27,6 +27,14 @@ public class StatisticheService extends ABioService {
     /**
      * Upload delle statistiche delle didascalie. <br>
      */
+    public void updateBiografie() {
+        appContext.getBean(StatisticheBiografie.class);
+    }// end of method
+
+
+    /**
+     * Upload delle statistiche delle didascalie. <br>
+     */
     public void updateDidascalie() {
         appContext.getBean(StatisticheDidascalie.class);
     }// end of method
@@ -119,6 +127,7 @@ public class StatisticheService extends ABioService {
             return;
         }// end of if cycle
 
+        updateBiografie();
         updateDidascalie();
         updateGiorni();
         updateAnni();

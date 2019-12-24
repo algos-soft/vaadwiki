@@ -407,6 +407,18 @@ public class WikiCost {
 
     public final static String USA_SOLO_PRIMA_ATTIVITA = "usaSoloPrimaAttivita";
 
+    public final static String STATISTICHE_VOCI = "statisticheVoci";
+
+    public final static String STATISTICHE_GIORNI = "statisticheGiorni";
+
+    public final static String STATISTICHE_ANNI = "statisticheAnni";
+
+    public final static String STATISTICHE_ATTIVITA = "statisticheAttivita";
+
+    public final static String STATISTICHE_NAZIONALITA = "statisticheNazionalita";
+
+    public final static String STATISTICHE_ATTESA = "statisticheAttesa";
+
     public static WikiLoginOld WIKI_LOGIN = null;
 
 }// end of static class

@@ -137,6 +137,13 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     usaSoloPrimaAttivita(USA_SOLO_PRIMA_ATTIVITA, "Considera solo la prima attività nelle liste di attività", EAPrefType.bool, true),
     tagParagrafoVuotoAttivita(TAG_PARAGRAFO_VUOTO_ATTIVITA, "Titolo del paragrafo per le biografie senza attività specificata nelle liste per attività", EAPrefType.string, "Altre..."),
     tagParagrafoVuotoNazionalita(TAG_PARAGRAFO_VUOTO_NAZIONALITA, "Titolo del paragrafo per le biografie senza nazionalità specificata nelle liste per nazionalità", EAPrefType.string, "Altre..."),
+
+    statisticheVoci(STATISTICHE_VOCI, "Numero di voci presenti nel database Mongo, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
+    statisticheGiorni(STATISTICHE_GIORNI, "Numero di giorni considerati, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
+    statisticheAnni(STATISTICHE_ANNI, "Numero di anni considerati, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
+    statisticheAttivita(STATISTICHE_ATTIVITA, "Numero di attività presenti nel database Mongo, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
+    statisticheNazionalita(STATISTICHE_NAZIONALITA, "Numero di nazionalità presenti nel database Mongo, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
+    statisticheAttesa(STATISTICHE_ATTESA, "Numero di giorni di attesa previsti, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
     ;
 
 
