@@ -323,7 +323,7 @@ public class WikiAnnoList extends WikiList {
      */
     @Override
     protected void uploadStatistiche(long inizio) {
-        appContext.getBean(StatisticheAnni.class);
+        statisticheService.updateAnni();
         super.uploadStatistiche(inizio);
     }// end of method
 

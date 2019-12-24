@@ -261,7 +261,7 @@ public class CognomeList extends WikiList {
      */
     @Override
     protected void uploadStatistiche(long inizio) {
-//        appContext.getBean(StatisticheCognomi.class);
+        statisticheService.updateCognomi();
         super.uploadStatistiche(inizio);
     }// end of method
 

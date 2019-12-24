@@ -315,7 +315,7 @@ public class WikiGiornoList extends WikiList {
      */
     @Override
     protected void uploadStatistiche(long inizio) {
-        statisticheService.updatePaginaGiorni();
+        statisticheService.updateGiorni();
         super.uploadStatistiche(inizio);
     }// end of method
 

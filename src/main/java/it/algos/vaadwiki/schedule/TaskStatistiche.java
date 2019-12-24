@@ -59,7 +59,7 @@ public class TaskStatistiche extends ATask {
     @Override
     public void execute(TaskExecutionContext context) throws RuntimeException {
         if (pref.isBool(USA_DAEMON_STATISTICHE)) {
-            statisticheService.updatePagineStatistiche();
+            statisticheService.updateAll();
         }// end of if cycle
     }// end of method
 

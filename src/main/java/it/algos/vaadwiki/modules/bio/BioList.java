@@ -26,6 +26,7 @@ import it.algos.vaadflow.wrapper.AFiltro;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.schedule.TaskUpdate;
 import it.algos.vaadwiki.statistiche.StatisticheDidascalie;
+import it.algos.vaadwiki.statistiche.StatisticheService;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;
 import it.algos.wiki.DownloadResult;
@@ -166,6 +167,13 @@ public class BioList extends AGridViewList {
 
     @Autowired
     private WLogin wLogin;
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected StatisticheService statisticheService;
 
 //    @Autowired
 //    private Upload upload;
@@ -299,7 +307,7 @@ public class BioList extends AGridViewList {
         //--statistiche didascalie (provvisorio)
         Button didascalieButton = new Button("Didascalie", new Icon(VaadinIcon.UPLOAD));
         didascalieButton.getElement().setAttribute("theme", "error");
-        didascalieButton.addClickListener(e -> appContext.getBean(StatisticheDidascalie.class));
+        didascalieButton.addClickListener(e -> uploadDidascalie());
         topPlaceholder.add(didascalieButton);
     }// end of method
 
@@ -376,6 +384,12 @@ public class BioList extends AGridViewList {
         updateGrid();
     }// end of method
 
+    /**
+     * Upload standard delle didascalie. <br>
+     */
+    protected void uploadDidascalie() {
+        statisticheService.updateDidascalie();
+    }// end of method
 
     /**
      * Opens the confirmation dialog before deleting all items.

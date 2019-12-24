@@ -258,8 +258,9 @@ public class NazionalitaList extends WikiList {
      */
     @Override
     protected void uploadStatistiche(long inizio) {
-        appContext.getBean(StatisticheNazionalita.class);
+        statisticheService.updateNazionalita();
         super.uploadStatistiche(inizio);
     }// end of method
+
 
 }// end of class

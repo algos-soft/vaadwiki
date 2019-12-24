@@ -426,11 +426,9 @@ public class NomeList extends WikiList {
      */
     @Override
     protected void uploadStatistiche(long inizio) {
-        appContext.getBean(StatisticheNomiA.class);
-        appContext.getBean(StatisticheNomiB.class);
+        statisticheService.updateNomi();
         super.uploadStatistiche(inizio);
     }// end of method
-
 
     /**
      * Stampa nella console la lista di tutti i nomi, nell'ordine selezionato <br>

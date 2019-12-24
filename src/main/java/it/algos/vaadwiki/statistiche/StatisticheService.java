@@ -25,15 +25,18 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 public class StatisticheService extends ABioService {
 
     /**
-     * Upload delle statistiche. <br>
-     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     * Upload delle statistiche delle didascalie. <br>
      */
-    public void updatePaginaGiorni() {
-        long inizio = System.currentTimeMillis();
-        if (checkMongo()) {
-            return;
-        }// end of if cycle
+    public void updateDidascalie() {
+        appContext.getBean(StatisticheDidascalie.class);
+    }// end of method
 
+
+    /**
+     * Upload delle statistiche dei giorni. <br>
+     */
+    public void updateGiorni() {
+        long inizio = System.currentTimeMillis();
         appContext.getBean(StatisticheGiorni.class);
 
         logger.crea(EALogType.upload, "Upload delle statistiche per i giorni", inizio);
@@ -43,15 +46,10 @@ public class StatisticheService extends ABioService {
 
 
     /**
-     * Upload delle statistiche. <br>
-     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     * Upload delle statistiche degli anni. <br>
      */
-    public void updatePaginaAnni() {
+    public void updateAnni() {
         long inizio = System.currentTimeMillis();
-        if (checkMongo()) {
-            return;
-        }// end of if cycle
-
         appContext.getBean(StatisticheAnni.class);
 
         logger.crea(EALogType.upload, "Upload delle statistiche per gli anni", inizio);
@@ -59,21 +57,75 @@ public class StatisticheService extends ABioService {
         pref.saveValue(DURATA_UPLOAD_STATISTICHE_ANNI, EATempo.minuti.get(inizio));
     }// end of method
 
+
     /**
-     * Upload delle statistiche. <br>
-     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
+     * Upload delle statistiche dei nomi. <br>
      */
-    public void updatePagineStatistiche() {
+    public void updateNomi() {
         long inizio = System.currentTimeMillis();
+        appContext.getBean(StatisticheNomiA.class);
+        appContext.getBean(StatisticheNomiB.class);
+
+        logger.crea(EALogType.upload, "Upload delle statistiche dei nomi", inizio);
+        pref.saveValue(LAST_UPLOAD_STATISTICHE_NOMI, LocalDateTime.now());
+        pref.saveValue(DURATA_UPLOAD_STATISTICHE_NOMI, EATempo.minuti.get(inizio));
+    }// end of method
+
+
+    /**
+     * Upload delle statistiche dei cognomi. <br>
+     */
+    public void updateCognomi() {
+//        long inizio = System.currentTimeMillis();
+//        appContext.getBean(StatisticheCognomi.class);
+//
+//        logger.crea(EALogType.upload, "Upload delle statistiche dei cognomi", inizio);
+//        pref.saveValue(LAST_UPLOAD_STATISTICHE_COGNOMI, LocalDateTime.now());
+//        pref.saveValue(DURATA_UPLOAD_STATISTICHE_COGNOMI, EATempo.minuti.get(inizio));
+    }// end of method
+
+
+    /**
+     * Upload delle statistiche delle attività. <br>
+     */
+    public void updateAttivita() {
+        long inizio = System.currentTimeMillis();
+        appContext.getBean(StatisticheAttivita.class);
+
+        logger.crea(EALogType.upload, "Upload delle statistiche delle attività", inizio);
+        pref.saveValue(LAST_UPLOAD_STATISTICHE_ATTIVITA, LocalDateTime.now());
+        pref.saveValue(DURATA_UPLOAD_STATISTICHE_ATTIVITA, EATempo.minuti.get(inizio));
+    }// end of method
+
+
+    /**
+     * Upload delle statistiche delle nazionalità. <br>
+     */
+    public void updateNazionalita() {
+        long inizio = System.currentTimeMillis();
+        appContext.getBean(StatisticheNazionalita.class);
+
+        logger.crea(EALogType.upload, "Upload delle statistiche delle nazionalità", inizio);
+        pref.saveValue(LAST_UPLOAD_STATISTICHE_NAZIONALITA, LocalDateTime.now());
+        pref.saveValue(DURATA_UPLOAD_STATISTICHE_NAZIONALITA, EATempo.minuti.get(inizio));
+    }// end of method
+
+
+    /**
+     * Upload di tutte le statistiche. <br>
+     */
+    public void updateAll() {
         if (checkMongo()) {
             return;
         }// end of if cycle
 
-        appContext.getBean(StatisticheAnni.class);
-
-        logger.crea(EALogType.upload, "Upload delle statistiche per gli anni", inizio);
-        pref.saveValue(LAST_UPLOAD_STATISTICHE_ANNI, LocalDateTime.now());
-        pref.saveValue(DURATA_UPLOAD_STATISTICHE_ANNI, EATempo.minuti.get(inizio));
+        updateDidascalie();
+        updateGiorni();
+        updateAnni();
+        updateNomi();
+        updateCognomi();
+        updateAttivita();
+        updateNazionalita();
     }// end of method
 
 }// end of class

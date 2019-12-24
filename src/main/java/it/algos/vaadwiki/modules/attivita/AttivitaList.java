@@ -263,8 +263,9 @@ public class AttivitaList extends WikiList {
      */
     @Override
     protected void uploadStatistiche(long inizio) {
-        appContext.getBean(StatisticheAttivita.class);
+        statisticheService.updateAttivita();
         super.uploadStatistiche(inizio);
     }// end of method
+
 
 }// end of class
