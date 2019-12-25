@@ -407,6 +407,8 @@ public class WikiCost {
 
     public final static String USA_SOLO_PRIMA_ATTIVITA = "usaSoloPrimaAttivita";
 
+    public final static String STATISTICHE_DATA = "statisticheData";
+
     public final static String STATISTICHE_VOCI = "statisticheVoci";
 
     public final static String STATISTICHE_GIORNI = "statisticheGiorni";

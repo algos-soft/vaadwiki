@@ -76,6 +76,7 @@ public class StatisticheBiografie extends Statistiche {
      * Registra la pagina sul server wiki <br>
      */
     protected void inizia() {
+        this.fixPreferenze();
         recuperaPrecedentiValori();
         recuperaValoriAttuali();
         elaboraPagina();
@@ -83,6 +84,22 @@ public class StatisticheBiografie extends Statistiche {
         registraValoriAttuali();
     }// end of method
 
+
+    /**
+     * Preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
+        this.dataOld = "pippoz";
+        this.dataNew = date.get();
+        this.modificate = false;
+        this.usaTagIndice = false;
+        this.usaNote = true;
+        this.usaCorrelate = false;
+    }// fine del metodo
 
     /**
      * Recupera valori dalle preferenze <br>
@@ -119,25 +136,12 @@ public class StatisticheBiografie extends Statistiche {
      * Registra nelle preferenze i valori attuali <br>
      */
     protected void registraValoriAttuali() {
-        pref.saveValue(STATISTICHE_VOCI, 87);
+        pref.saveValue(STATISTICHE_VOCI, anniNew-54);
+        pref.saveValue(STATISTICHE_VOCI, anniNew-54);
+        pref.saveValue(STATISTICHE_VOCI, anniNew-54);
     }// end of method
 
 
-    /**
-     * Preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
-     * Può essere sovrascritto, per aggiungere informazioni <br>
-     * Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        this.dataOld = "pippoz";
-        this.dataNew = date.get();
-        this.modificate = false;
-        this.usaTagIndice = false;
-        this.usaNote = true;
-        this.usaCorrelate = false;
-    }// fine del metodo
 
 
     /**
@@ -223,7 +227,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "2 bis";
+            testo += text.format(bioOld);
         }// end of if cycle
 
         testo += SEP_DOPPIO;
@@ -231,7 +235,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "3 bis";
+            testo += text.format(bioNew-bioOld);
         }// end of if cycle
 
         testo += A_CAPO;

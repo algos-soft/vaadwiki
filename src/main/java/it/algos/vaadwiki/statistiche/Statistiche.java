@@ -176,11 +176,25 @@ public abstract class Statistiche {
      * Registra la pagina sul server wiki <br>
      */
     protected void inizia() {
+        fixPreferenze();
         creaLista();
         creaMappa();
         elaboraPagina();
         registraPagina();
     }// end of method
+
+
+    /**
+     * Preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        this.usaCorrelate = true;
+        this.templateCorrelate = "BioCorrelate";
+        this.usaTagIndice = true;
+        this.usaNote = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
+    }// fine del metodo
 
 
     /**
@@ -210,9 +224,6 @@ public abstract class Statistiche {
     protected void elaboraPagina() {
         testoPagina = VUOTA;
 
-        //--preferenze
-        fixPreferenze();
-
         //--header
         this.elaboraHead();
 
@@ -226,19 +237,6 @@ public abstract class Statistiche {
         //--di fila nella stessa riga, senza ritorno a capo (se inizia con <include>)
         testoPagina += A_CAPO;
         this.elaboraFooter();
-    }// fine del metodo
-
-
-    /**
-     * Preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
-     * Può essere sovrascritto, per aggiungere informazioni <br>
-     * Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected void fixPreferenze() {
-        this.usaCorrelate = true;
-        this.templateCorrelate = "BioCorrelate";
-        this.usaTagIndice = true;
-        this.usaNote = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
     }// fine del metodo
 
 
