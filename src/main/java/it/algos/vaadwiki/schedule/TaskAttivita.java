@@ -25,7 +25,7 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TASK_ATT)
 @Slf4j
-public class TaskAttivita extends ATask {
+public class TaskAttivita extends WikiTask {
 
 
     /**

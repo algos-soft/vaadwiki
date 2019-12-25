@@ -25,7 +25,7 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_GIORNI;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TASK_GIO)
 @Slf4j
-public class TaskGiorni extends ATask {
+public class TaskGiorni extends WikiTask {
 
 
     /**

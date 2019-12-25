@@ -5,6 +5,9 @@ import com.vaadin.flow.router.RouterLayout;
 import it.algos.vaadflow.ui.MainLayout;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -363,6 +366,12 @@ public abstract class FlowCost {
 
     public static final VaadinIcon VAADIN_ICON_DA_NON_USARE = VaadinIcon.VAADIN_H;
 
+    public static final LocalDate START_DATE = LocalDate.of(1970, 1, 1);
+
+    public static final LocalDateTime START_DATE_TIME = LocalDateTime.of(1970, 1, 1, 0, 0);
+
+    public static final LocalTime START_TIME = LocalTime.of(0, 0);
+
     private static final String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
 
     public static final List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
@@ -382,6 +391,5 @@ public abstract class FlowCost {
     private static final String[] companyMatrice = {COMPANY_CODE, COMPANY_UNICO};
 
     public static final List<String> COMPANY_OPTIONAL = Arrays.asList(companyMatrice);
-
 
 }// end of static class

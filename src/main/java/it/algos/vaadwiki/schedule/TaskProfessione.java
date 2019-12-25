@@ -27,7 +27,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_PRO)
 @Slf4j
-public class TaskProfessione extends ATask {
+public class TaskProfessione extends WikiTask {
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

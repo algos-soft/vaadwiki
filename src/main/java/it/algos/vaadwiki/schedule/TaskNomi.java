@@ -25,7 +25,7 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_NOMI;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TASK_NOM)
 @Slf4j
-public class TaskNomi extends ATask {
+public class TaskNomi extends WikiTask {
 
 
     /**

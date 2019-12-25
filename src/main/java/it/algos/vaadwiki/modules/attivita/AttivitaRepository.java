@@ -47,6 +47,6 @@ public interface AttivitaRepository extends MongoRepository<Attivita, String> {
     public List<Attivita> findPage(Pageable pageable);
 
     @Query("{ distinct : 'plurale'}")
-    JSONArray listDistinctPlurali();
+    public JSONArray listDistinctPlurali();
 
 }// end of class

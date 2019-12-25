@@ -30,7 +30,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TASK_DOW)
 @Slf4j
-public class TaskDownload extends ATask {
+public class TaskDownload extends WikiTask {
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

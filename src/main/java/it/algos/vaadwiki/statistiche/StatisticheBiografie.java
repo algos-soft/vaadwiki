@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDate;
+
 import static it.algos.vaadflow.application.FlowCost.*;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
@@ -33,9 +35,9 @@ public class StatisticheBiografie extends Statistiche {
 
     private boolean modificate;
 
-    private String dataOld;
+    private LocalDate dataOld;
 
-    private String dataNew;
+    private LocalDate dataNew;
 
     private int bioOld;
 
@@ -93,21 +95,23 @@ public class StatisticheBiografie extends Statistiche {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        this.dataOld = "pippoz";
-        this.dataNew = date.get();
+        super.titoloPagina = TITOLO_PAGINA_WIKI;
+        this.dataNew = LocalDate.now();
         this.modificate = false;
         this.usaTagIndice = false;
         this.usaNote = true;
         this.usaCorrelate = false;
     }// fine del metodo
 
+
     /**
      * Recupera valori dalle preferenze <br>
      */
     protected void recuperaPrecedentiValori() {
+        dataOld = pref.getDate(STATISTICHE_DATA);
         bioOld = pref.getInt(STATISTICHE_VOCI);
 
-        if (bioOld > 0) {
+        if (dataNew.toEpochDay() > dataOld.toEpochDay()) {
             modificate = true;
             giorniOld = pref.getInt(STATISTICHE_GIORNI);
             anniOld = pref.getInt(STATISTICHE_ANNI);
@@ -124,10 +128,9 @@ public class StatisticheBiografie extends Statistiche {
     protected void recuperaValoriAttuali() {
         bioNew = bioService.count();
         giorniNew = giornoService.count();
-        anniNew = annoService.countAnniUsati();
-        anniNew = 2574;//@todo patch 'terrificante'
-        attivitaNew = attivitaService.count();
-        nazionalitaNew = nazionalitaService.count();
+        anniNew = bioService.countAnniUsati();
+        attivitaNew = attivitaService.countDistinctPlurale();
+        nazionalitaNew = nazionalitaService.countDistinctPlurale();
         attesaNew = 3;
     }// end of method
 
@@ -136,12 +139,14 @@ public class StatisticheBiografie extends Statistiche {
      * Registra nelle preferenze i valori attuali <br>
      */
     protected void registraValoriAttuali() {
-        pref.saveValue(STATISTICHE_VOCI, anniNew-54);
-        pref.saveValue(STATISTICHE_VOCI, anniNew-54);
-        pref.saveValue(STATISTICHE_VOCI, anniNew-54);
+        pref.saveValue(STATISTICHE_DATA, dataNew);
+        pref.saveValue(STATISTICHE_VOCI, bioNew);
+        pref.saveValue(STATISTICHE_GIORNI, giorniNew);
+        pref.saveValue(STATISTICHE_ANNI, anniNew);
+        pref.saveValue(STATISTICHE_ATTIVITA, attivitaNew);
+        pref.saveValue(STATISTICHE_NAZIONALITA, nazionalitaNew);
+        pref.saveValue(STATISTICHE_ATTESA, 3);
     }// end of method
-
-
 
 
     /**
@@ -177,12 +182,12 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += color;
-            testo += dataOld;
+            testo += dataOld != null ? date.getDate(dataOld) : VUOTA;
             testo += A_CAPO;
         }// end of if cycle
 
         testo += color;
-        testo += dataNew;
+        testo += dataNew != null ? date.getDate(dataNew) : VUOTA;
         testo += A_CAPO;
 
         if (modificate) {
@@ -235,7 +240,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += text.format(bioNew-bioOld);
+            testo += bioNew - bioOld > 0 ? text.format(bioNew - bioOld) : VUOTA;
         }// end of if cycle
 
         testo += A_CAPO;
@@ -262,7 +267,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "2 bis";
+            testo += text.format(giorniOld);
         }// end of if cycle
 
         testo += SEP_DOPPIO;
@@ -270,7 +275,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "3 bis";
+            testo += giorniNew - giorniOld > 0 ? text.format(giorniNew - giorniOld) : VUOTA;
         }// end of if cycle
 
         testo += A_CAPO;
@@ -297,7 +302,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "2 bis";
+            testo += text.format(anniOld);
         }// end of if cycle
 
         testo += SEP_DOPPIO;
@@ -305,7 +310,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "3 bis";
+            testo += anniNew - anniOld > 0 ? text.format(anniNew - anniOld) : VUOTA;
         }// end of if cycle
 
         testo += A_CAPO;
@@ -332,7 +337,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "2 bis";
+            testo += text.format(attivitaOld);
         }// end of if cycle
 
         testo += SEP_DOPPIO;
@@ -340,7 +345,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "3 bis";
+            testo += attivitaNew - attivitaOld > 0 ? text.format(attivitaNew - attivitaOld) : VUOTA;
         }// end of if cycle
 
         testo += A_CAPO;
@@ -368,7 +373,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "2 bis";
+            testo += text.format(nazionalitaOld);
         }// end of if cycle
 
         testo += SEP_DOPPIO;
@@ -376,7 +381,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "3 bis";
+            testo += nazionalitaNew - nazionalitaOld > 0 ? text.format(nazionalitaNew - nazionalitaOld) : VUOTA;
         }// end of if cycle
 
         testo += A_CAPO;
@@ -403,7 +408,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "2 bis";
+            testo += text.format(attesaOld);
         }// end of if cycle
 
         testo += SEP_DOPPIO;
@@ -411,7 +416,7 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += SEP_DOPPIO;
-            testo += "3 bis";
+            testo += attesaOld - attesaNew > 0 ? text.format(attesaOld - attesaNew) : VUOTA;
         }// end of if cycle
 
         testo += A_CAPO;

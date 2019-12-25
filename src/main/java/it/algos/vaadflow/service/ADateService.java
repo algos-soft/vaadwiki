@@ -395,7 +395,11 @@ public class ADateService extends AbstractService {
      * @return la data sotto forma di stringa
      */
     public String get(LocalDate localDate, String pattern) {
-        return localDate.format(DateTimeFormatter.ofPattern(pattern, LOCALE));
+        if (localDate != null) {
+            return localDate.format(DateTimeFormatter.ofPattern(pattern, LOCALE));
+        } else {
+            return VUOTA;
+        }// end of if/else cycle
     }// end of method
 
 

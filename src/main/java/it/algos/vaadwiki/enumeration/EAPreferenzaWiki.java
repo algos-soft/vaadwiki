@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.enumeration;
 
 
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.enumeration.EAPrefType;
 import it.algos.vaadflow.modules.preferenza.IAPreferenza;
 import it.algos.vaadflow.modules.role.EARole;
@@ -138,7 +139,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     tagParagrafoVuotoAttivita(TAG_PARAGRAFO_VUOTO_ATTIVITA, "Titolo del paragrafo per le biografie senza attività specificata nelle liste per attività", EAPrefType.string, "Altre..."),
     tagParagrafoVuotoNazionalita(TAG_PARAGRAFO_VUOTO_NAZIONALITA, "Titolo del paragrafo per le biografie senza nazionalità specificata nelle liste per nazionalità", EAPrefType.string, "Altre..."),
 
-    statisticheData(STATISTICHE_DATA, "Data dell'ultimo controllo statistico", EAPrefType.localdatetime, null),
+    statisticheData(STATISTICHE_DATA, "Data dell'ultimo controllo statistico", EAPrefType.localdate, FlowCost.START_DATE),
     statisticheVoci(STATISTICHE_VOCI, "Numero di voci presenti nel database Mongo, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
     statisticheGiorni(STATISTICHE_GIORNI, "Numero di giorni considerati, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
     statisticheAnni(STATISTICHE_ANNI, "Numero di anni considerati, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),

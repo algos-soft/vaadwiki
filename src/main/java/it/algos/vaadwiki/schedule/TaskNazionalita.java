@@ -28,7 +28,7 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_NAZ)
 @Slf4j
-public class TaskNazionalita extends ATask {
+public class TaskNazionalita extends WikiTask {
 
 
     /**

@@ -498,7 +498,7 @@ public abstract class WikiList extends AGridViewList {
         String testo;
         String message = "";
         String tag = "Download automatico";
-        LocalDateTime lastDownload = pref.getDate(flagLastDownload);
+        LocalDateTime lastDownload = pref.getDateTime(flagLastDownload);
 
         if (text.isEmpty(flagLastDownload)) {
             message = "Download non previsto.";
@@ -549,7 +549,7 @@ public abstract class WikiList extends AGridViewList {
             message = "Elaborazione non prevista.";
         } else {
             nota = task != null ? task.getNota() : "";
-            lastUpload = pref.getDate(flagLastElaborazione);
+            lastUpload = pref.getDateTime(flagLastElaborazione);
             if (pref.isBool(flagDaemon)) {
                 testo += nota;
             } else {
@@ -589,7 +589,7 @@ public abstract class WikiList extends AGridViewList {
             message = "Upload non previsto.";
         } else {
             nota = task != null ? task.getNota() : "";
-            lastUpload = pref.getDate(flagLastUpload);
+            lastUpload = pref.getDateTime(flagLastUpload);
             if (pref.isBool(flagDaemon)) {
                 testo += nota;
             } else {
@@ -619,7 +619,7 @@ public abstract class WikiList extends AGridViewList {
      */
     protected void creaInfoStatistiche(String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
         String message = "";
-        LocalDateTime lastDownload = pref.getDate(flagLastUploadStatistiche);
+        LocalDateTime lastDownload = pref.getDateTime(flagLastUploadStatistiche);
 
         if (lastDownload != null) {
             message = "Statistiche caricate l'ultima volta su wikipedia il " + date.getTime(lastDownload);

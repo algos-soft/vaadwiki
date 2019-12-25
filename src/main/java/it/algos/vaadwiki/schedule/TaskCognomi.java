@@ -25,7 +25,7 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_COGNOMI;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TASK_COG)
 @Slf4j
-public class TaskCognomi extends ATask {
+public class TaskCognomi extends WikiTask {
 
 
     /**

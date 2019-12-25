@@ -2,7 +2,6 @@ package it.algos.vaadwiki.modules.attivita;
 
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.wiki.WikiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -161,6 +161,7 @@ public class AttivitaService extends WikiService {
         return (Attivita) super.findById(id);
     }// end of method
 
+
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
@@ -225,5 +226,20 @@ public class AttivitaService extends WikiService {
         return ((Attivita) entityBean).getSingolare();
     }// end of method
 
+
+    public int countDistinctPlurale() {
+        List<String> lista = new ArrayList<>();
+        List<Attivita> listaAttivita = repository.findAllByOrderByPluraleAsc();
+
+        if (array.isValid(listaAttivita)) {
+            for (Attivita attivita : listaAttivita) {
+                if (!lista.contains(attivita.plurale)) {
+                    lista.add(attivita.plurale);
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return lista.size();
+    }// end of method
 
 }// end of class

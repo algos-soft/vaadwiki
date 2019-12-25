@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.DURATA_DOWNLOAD_NAZIONALITA;
@@ -222,6 +223,21 @@ public class NazionalitaService extends WikiService {
     @Override
     public String getPropertyUnica(AEntity entityBean) {
         return ((Nazionalita) entityBean).getSingolare();
+    }// end of method
+
+    public int countDistinctPlurale() {
+        List<String> lista = new ArrayList<>();
+        List<Nazionalita> listaNazionalita = repository.findAllByOrderByPluraleAsc();
+
+        if (array.isValid(listaNazionalita)) {
+            for (Nazionalita nazionalita : listaNazionalita) {
+                if (!lista.contains(nazionalita.plurale)) {
+                    lista.add(nazionalita.plurale);
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return lista.size();
     }// end of method
 
 }// end of class

@@ -11,8 +11,8 @@ import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
-import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.download.ElaboraService;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.cognome.CognomeService;
@@ -492,6 +492,7 @@ public class BioService extends WikiService {
     public List<Bio> findAllByNazionalita(Nazionalita nazionalita) {
         return repository.findAllByNazionalita(nazionalita);
     }// end of method
+
 
     /**
      * Ordina la lista <br>
@@ -1071,12 +1072,24 @@ public class BioService extends WikiService {
     }// end of method
 
 
-//    public int countDistinctAnnoNascita() {
-//        return repository.findDistinctNome("nome");
-//        return repository.findDistinctByNome();
-//        JSONArray lista= repository.listDistinctNome();
-//        return repository.countDistinctByAnnoNascita();
-//    }// end of method
+    public int countAnniUsati() {
+        int anni = 0;
+        List<Anno> listaAnni = annoService.findAll();
+        int nati = 0;
+        int morti = 0;
+
+        if (array.isValid(listaAnni)) {
+            for (Anno anno : listaAnni) {
+                nati = countByAnnoNascita(anno);
+                morti = countByAnnoMorte(anno);
+                if (nati > 0 || morti > 0) {
+                    anni++;
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+       return anni;
+    }// end of method
 
 
 //    /**

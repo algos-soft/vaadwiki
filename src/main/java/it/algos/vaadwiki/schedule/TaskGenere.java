@@ -26,7 +26,7 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_GENERE;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public class TaskGenere extends ATask {
+public class TaskGenere extends WikiTask {
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>

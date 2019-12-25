@@ -78,6 +78,7 @@ public class StatisticheGiorni extends StatisticheAttNaz {
      */
     protected void fixPreferenze() {
         super.fixPreferenze();
+
         super.titoloPagina = TITOLO_PAGINA_WIKI;
         super.codeLastUpload = LAST_UPLOAD_STATISTICHE_GIORNI;
         super.codeDurataUpload = DURATA_UPLOAD_STATISTICHE_GIORNI;

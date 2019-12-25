@@ -27,7 +27,7 @@ import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_STATISTICHE;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TASK_STAT)
 @Slf4j
-public class TaskStatistiche extends ATask {
+public class TaskStatistiche extends WikiTask {
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>

@@ -249,7 +249,7 @@ public abstract class AttNazProfCatList extends AGridViewList {
         Label label = null;
         String testo;
         String tag = "Download automatico";
-        LocalDateTime lastDownload = pref.getDate(flagLastDownload);
+        LocalDateTime lastDownload = pref.getDateTime(flagLastDownload);
 
         if (task == null) {
             testo = tag + " non previsto.";
@@ -280,7 +280,7 @@ public abstract class AttNazProfCatList extends AGridViewList {
      */
     protected Label creaInfoUpload(String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
         Label label = null;
-        LocalDateTime lastDownload = pref.getDate(flagLastUploadStatistiche);
+        LocalDateTime lastDownload = pref.getDateTime(flagLastUploadStatistiche);
         int durata = pref.getInt(flagDurataLastUploadStatistiche);
 
         if (lastDownload != null) {
