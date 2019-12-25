@@ -471,6 +471,7 @@ public class AColumnService extends AbstractService {
                     label = new Label();
                     switch (typePref) {
                         case string:
+                            label.getStyle().set("color", "blue");
                             message = (String) value;
                             break;
                         case bool:
@@ -483,19 +484,27 @@ public class AColumnService extends AbstractService {
                             }// end of if/else cycle
                             break;
                         case integer:
+                            label.getStyle().set("color", "maroon");
                             message = text.format(value);
                             break;
+                        case localdate:
+                            label.getStyle().set("color", "fuchsia");
+                            message = date.get((LocalDate) value);
+                            break;
                         case localdatetime:
+                            label.getStyle().set("color", "fuchsia");
                             message = date.getDateTime((LocalDateTime) value);
                             break;
-//                        case localdate:
-//                            break;
-//                        case localtime:
-//                            break;
+                        case localtime:
+                            label.getStyle().set("color", "fuchsia");
+                            message = date.getOrario((LocalTime) value);
+                            break;
                         case email:
+                            label.getStyle().set("color", "lime");
+                            message = (String) value;
                             break;
                         case enumeration:
-                            label.getStyle().set("color", "green");
+                            label.getStyle().set("color", "teal");
                             message = enumService.convertToPresentation((String) value);
                             break;
                         default:

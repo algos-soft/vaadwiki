@@ -43,8 +43,8 @@ public enum EAPreferenza implements IAPreferenza {
 
     //--mail
     usaLogMail(FlowCost.USA_LOG_MAIL, "Uso della mail spedita da un log. Di default false", EAPrefType.bool, EARole.developer, false, false),
-    mailFrom(FlowCost.MAIL_FROM, "Email di default da cui partono i log", EAPrefType.string, EARole.developer, false, "info@algos.it"),
-    mailTo(FlowCost.MAIL_TO, "Email di default a cui spedire i log di posta", EAPrefType.string, EARole.admin, false, "gac@algos.it"),
+    mailFrom(FlowCost.MAIL_FROM, "Email di default da cui partono i log", EAPrefType.email, EARole.developer, false, "info@algos.it"),
+    mailTo(FlowCost.MAIL_TO, "Email di default a cui spedire i log di posta", EAPrefType.email, EARole.admin, false, "gac@algos.it"),
 
     //--.grid
     maxRigheGrid(FlowCost.MAX_RIGHE_GRID, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)", EAPrefType.integer, EARole.developer, true, 20),

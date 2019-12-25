@@ -275,7 +275,7 @@ public class LogService extends AService {
                 long fine = System.currentTimeMillis();
                 long durata = fine - inizio;
                 tempo = date.toText(durata);
-                descrizioneFinale = descrizioneSemplice + ", in " + tempo;
+                descrizioneFinale = descrizioneSemplice + " in " + tempo;
             }// end of if cycle
         }// end of if cycle
 

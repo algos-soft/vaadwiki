@@ -5,7 +5,9 @@ import com.google.common.primitives.Longs;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 
 /**
@@ -106,7 +108,34 @@ public enum EAPrefType {
     },// end of single enumeration
 
 
-    localdatetime("data", EAFieldType.localdatetime) {
+    localdate("data", EAFieldType.localdate) {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof LocalDate) {
+                LocalDate data = (LocalDate) obj;
+                long millis = data.toEpochDay();
+                bytes = Longs.toByteArray(millis);
+            }// end of if cycle
+            return bytes;
+        }// end of method
+
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            LocalDate data = null;
+            long millis = 0;
+
+            if (bytes != null) {
+                millis = Longs.fromByteArray(bytes);
+                LocalDateTime localDataTime = bytes.length > 0 ? LocalDateTime.ofEpochSecond(millis, 0, ZoneOffset.UTC) : null;
+                data = localDataTime !=null ? localDataTime.toLocalDate() : null;
+            }// end of if cycle
+
+            return data;
+        }// end of method
+    },// end of single enumeration
+
+    localdatetime("datatime", EAFieldType.localdatetime) {
         @Override
         public byte[] objectToBytes(Object obj) {
             byte[] bytes = new byte[0];
@@ -126,12 +155,38 @@ public enum EAPrefType {
             long millis = 0;
 
 //            return bytes.length > 0 ? LibDate.dateToLocalDateTime(new Date(Longs.fromByteArray(bytes))) : null;
-            if (bytes != null && bytes.length > 0) {
+            if (bytes != null) {
                 millis = Longs.fromByteArray(bytes);
                 data = bytes.length > 0 ? LocalDateTime.ofEpochSecond(millis, 0, ZoneOffset.UTC) : null;
             }// end of if cycle
 
             return data;
+        }// end of method
+    },// end of single enumeration
+
+    localtime("time", EAFieldType.localtime) {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof LocalTime) {
+                LocalTime time = (LocalTime) obj;
+                long millis = time.toNanoOfDay();
+                bytes = Longs.toByteArray(millis);
+            }// end of if cycle
+            return bytes;
+        }// end of method
+
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            LocalTime time = null;
+            long millis = 0;
+
+            if (bytes != null ) {
+                millis = Longs.fromByteArray(bytes);
+                time = bytes.length > 0 ? LocalTime.ofNanoOfDay(millis) : null;
+            }// end of if cycle
+
+            return time;
         }// end of method
     },// end of single enumeration
 
@@ -160,22 +215,25 @@ public enum EAPrefType {
 
 
     email("email", EAFieldType.email) {
-//        @Override
-//        public byte[] objectToBytes(Object obj) {
-//            byte[] bytes = new byte[0];
-//            if (obj instanceof String) {
-//                String stringa = (String) obj;
-//                bytes = stringa.getBytes(Charset.forName("UTF-8"));
-//            }// end of if cycle
-//            return bytes;
-//        }// end of method
-//
-//        @Override
-//        public Object bytesToObject(byte[] bytes) {
-//            Object obj = null;
-//            obj = new String(bytes, Charset.forName("UTF-8"));
-//            return obj;
-//        }// end of method
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof String) {
+                String stringa = (String) obj;
+                bytes = stringa.getBytes(Charset.forName("UTF-8"));
+            }// end of if cycle
+            return bytes;
+        }// end of method
+
+
+        @Override
+        public String bytesToObject(byte[] bytes) {
+            String obj = "";
+            if (bytes != null) {
+                obj = new String(bytes, Charset.forName("UTF-8"));
+            }// end of if cycle
+            return obj;
+        }// end of method
     };// end of single enumeration
 
 //    decimal("decimale", AFieldType.lungo) {
