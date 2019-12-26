@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadflow.application.FlowCost.START_TIME;
 import static it.algos.vaadflow.application.FlowVar.projectName;
 import static it.algos.vaadflow.application.FlowVar.usaCompany;
 

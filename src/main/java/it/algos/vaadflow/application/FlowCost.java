@@ -227,35 +227,6 @@ public abstract class FlowCost {
 
     public static final String CONFERMA = "Conferma";
 
-    //log type
-//    public static final String LOG_SYSTEM = "system";
-//
-//    public static final String LOG_SETUP = "setup";
-//
-//    public static final String LOG_NEW = "new";
-//
-//    public static final String LOG_EDIT = "edit";
-//
-//    public static final String LOG_DELETE = "delete";
-//
-//    public static final String LOG_DEBUG = "debug";
-//
-//    public static final String LOG_INFO = "info";
-//
-//    public static final String LOG_WARN = "warn";
-//
-//    public static final String LOG_ERROR = "error";
-//
-//    public static final String LOG_IMPORT = "import";
-//
-//    public static final String LOG_DOWNLOD = "download";
-//
-//    public static final String LOG_UPLOAD = "upload";
-//
-//    public static final String LOG_RESET = "reset";
-//
-//    public static final String LOG_PASSWORD = "password";
-
     public static final String LOG_LEVEL_CORRENTE = "logLevelCorrente";
 
     // generali
@@ -264,8 +235,6 @@ public abstract class FlowCost {
     public static final String USA_LOG_DEBUG = "usaLogDebug";
 
     public static final String LOG_ERROR_VIEW = "errorView";
-
-//    public static final String USA_COMPANY = "usaCompany";
 
     public static final String USA_LOG_MAIL = "usaLogMail";
 
@@ -359,10 +328,11 @@ public abstract class FlowCost {
 
     public static final String KEY_CONTEXT = "context";
 
+    public static final String TAG_SEARCH = "search";
+
+
     //--date
     public static final Locale LOCALE = Locale.ITALIAN;
-
-    public static final String TAG_SEARCH = "search";
 
     public static final VaadinIcon VAADIN_ICON_DA_NON_USARE = VaadinIcon.VAADIN_H;
 

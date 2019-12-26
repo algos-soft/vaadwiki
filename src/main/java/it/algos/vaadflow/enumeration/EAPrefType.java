@@ -49,7 +49,6 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
-
         @Override
         @SuppressWarnings("all")
         public Object bytesToObject(byte[] bytes) {
@@ -80,7 +79,6 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
-
         @Override
         public Object bytesToObject(byte[] bytes) {
             return byteArrayToInt(bytes);
@@ -103,7 +101,6 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
-
         @Override
         public Object bytesToObject(byte[] bytes) {
             return byteArrayToLong(bytes);
@@ -123,15 +120,15 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
-
         @Override
         public Object bytesToObject(byte[] bytes) {
             LocalDate data = null;
             long millis = 0;
 
-            if (bytes != null && bytes.length > 0) {
+            if (bytes != null) {
                 millis = Longs.fromByteArray(bytes);
-                data = LocalDate.ofEpochDay(millis);
+                LocalDateTime localDataTime = bytes.length > 0 ? LocalDateTime.ofEpochSecond(millis, 0, ZoneOffset.UTC) : null;
+                data = localDataTime !=null ? localDataTime.toLocalDate() : null;
             }// end of if cycle
 
             return data;
@@ -152,15 +149,15 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
-
         @Override
         public Object bytesToObject(byte[] bytes) {
             LocalDateTime data = null;
             long millis = 0;
 
-            if (bytes != null && bytes.length > 0) {
+//            return bytes.length > 0 ? LibDate.dateToLocalDateTime(new Date(Longs.fromByteArray(bytes))) : null;
+            if (bytes != null) {
                 millis = Longs.fromByteArray(bytes);
-                data = LocalDateTime.ofEpochSecond(millis, 0, ZoneOffset.UTC);
+                data = bytes.length > 0 ? LocalDateTime.ofEpochSecond(millis, 0, ZoneOffset.UTC) : null;
             }// end of if cycle
 
             return data;
@@ -179,13 +176,12 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
-
         @Override
         public Object bytesToObject(byte[] bytes) {
             LocalTime time = null;
             long millis = 0;
 
-            if (bytes != null && bytes.length > 0) {
+            if (bytes != null ) {
                 millis = Longs.fromByteArray(bytes);
                 time = bytes.length > 0 ? LocalTime.ofNanoOfDay(millis) : null;
             }// end of if cycle
