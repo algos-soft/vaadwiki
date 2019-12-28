@@ -37,7 +37,7 @@ public class StatisticheNomiB extends Statistiche {
 
 
     /**
-     * Questa classe viene tipicamente costruita con appContext.getBean(StatisticheAttivita.class) <br>
+     * Questa classe viene tipicamente costruita con appContext.getBean(StatisticheNomiB.class) <br>
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
      * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired di questa classe <br>
      */

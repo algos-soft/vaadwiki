@@ -212,35 +212,13 @@ public class BioList extends AGridViewList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.usaSecondTopPlaceholder = true;
         super.usaButtonNew = true;
-//        super.usaBottoneDeleteMongo = true;
-//        super.usaBottoneDownload = true;
-//        super.usaBottoneUpload = false;
-//        super.usaBottoneStatistiche = false;
-//        super.usaBottoneModulo = false;
         super.isEntityModificabile = true;
         super.usaBottoneEdit = true;
-//        super.task = taskUpdate;
         super.usaPagination = true;
-//        super.codeFlagDownload = USA_DAEMON_BIO;
-//        super.codeLastDownload = LAST_UPDATE_BIO;
-//        super.durataLastDownload = DURATA_DOWNLOAD_BIO;
     }// end of method
 
-
-//    /**
-//     * Crea la GridPaginata <br>
-//     * Per usare una GridPaginata occorre:
-//     * 1) la view xxxList deve estendere APaginatedGridViewList anziche AGridViewList <br>
-//     * 2) deve essere sovrascritto questo metodo nella classe xxxList <br>
-//     * 3) nel metodo sovrascritto va creata la PaginatedGrid 'tipizzata' con la entityClazz (Collection) specifica <br>
-//     * 4) il metodo sovrascritto DOPO deve invocare questo stesso superMetodo in APaginatedGridViewList <br>
-//     */
-//    @Override
-//    protected void creaGridPaginata() {
-//        super.paginatedGrid = new PaginatedGrid<Bio>();
-//        super.creaGridPaginata();
-//    }// end of method
 
 
     /**
@@ -253,21 +231,10 @@ public class BioList extends AGridViewList {
      */
     @Override
     protected void creaTopLayout() {
-//        //--cancella il database
-//        deleteButton = new Button("Delete", new Icon(VaadinIcon.CLOSE_CIRCLE));
-//        deleteButton.getElement().setAttribute("theme", "error");
-//        deleteButton.addClickListener(e -> openConfirmDeleteDialog());
-//        topPlaceholder.add(deleteButton);
-//
+
         //-- bottoni 'Ricerca' e 'New'
         super.creaTopLayout();
         buttonNew.getElement().setAttribute("theme", "secondary");
-
-//        //--download iniziale
-//        downloadButton = new Button("Reset", new Icon(VaadinIcon.DOWNLOAD));
-//        downloadButton.getElement().setAttribute("theme", "error");
-//        downloadButton.addClickListener(e -> openConfirmResetDialog());
-//        topPlaceholder.add(downloadButton);
 
         //--ciclo upodate corrente
         updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
@@ -280,51 +247,36 @@ public class BioList extends AGridViewList {
         elaboraButton.addClickListener(e -> elaboraService.esegue());
         topPlaceholder.add(elaboraButton);
 
-//        //--upload le pagine cronologiche (giorni ed anni)
-//        uploadButton = new Button("Upload", new Icon(VaadinIcon.UPLOAD));
-//        uploadButton.getElement().setAttribute("theme", "error");
-//        topPlaceholder.add(uploadButton);
-//
-//        cicloButton = new Button("Ciclo", new Icon(VaadinIcon.UPLOAD));
-//        cicloButton.getElement().setAttribute("theme", "error");
-////        cicloButton.addClickListener(e -> service.delete(null));
-//        topPlaceholder.add(cicloButton);
-
-//        //--aggiorna singola biografia
-//        updateButton = new Button("Update", new Icon(VaadinIcon.DOWNLOAD));
-//        updateButton.getElement().setAttribute("theme", "primary");
-//        topPlaceholder.add(updateButton);
-//
-//        //--elabora singola biografia
-//        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
-//        elaboraButton.addClickListener(e -> elaboraService.esegue());
-//        topPlaceholder.add(elaboraButton);
-
-//        topPlaceholder.add(creaPopup());
-
-//        sincroBottoniMenu(false);
-
         Button buttonShowDidascalie = new Button("Didascalie", new Icon(VaadinIcon.TABLE));
         buttonShowDidascalie.addClassName("view-toolbar__button");
         buttonShowDidascalie.addClickListener(e -> showDidascalie());
-        topPlaceholder.add(buttonShowDidascalie);
+        secondTopPlaceholder.add(buttonShowDidascalie);
 
         //--statistiche didascalie
         Button didascalieButton = new Button("Didascalie", new Icon(VaadinIcon.UPLOAD));
         didascalieButton.getElement().setAttribute("theme", "error");
         didascalieButton.addClickListener(e -> uploadDidascalie());
-        topPlaceholder.add(didascalieButton);
+        secondTopPlaceholder.add(didascalieButton);
 
         Button buttonShowStatistiche = new Button("Statistiche", new Icon(VaadinIcon.TABLE));
         buttonShowStatistiche.addClassName("view-toolbar__button");
         buttonShowStatistiche.addClickListener(e -> showStatistiche());
-        topPlaceholder.add(buttonShowStatistiche);
+        secondTopPlaceholder.add(buttonShowStatistiche);
 
-        //--statistiche didascalie (provvisorio)
         Button statisticheButton = new Button("Statistiche", new Icon(VaadinIcon.UPLOAD));
         statisticheButton.getElement().setAttribute("theme", "error");
         statisticheButton.addClickListener(e -> uploadStatistiche());
-        topPlaceholder.add(statisticheButton);
+        secondTopPlaceholder.add(statisticheButton);
+
+        Button buttonShowParametri = new Button("Parametri", new Icon(VaadinIcon.TABLE));
+        buttonShowParametri.addClassName("view-toolbar__button");
+        buttonShowParametri.addClickListener(e -> showParametri());
+        secondTopPlaceholder.add(buttonShowParametri);
+
+        Button parametriButton = new Button("Parametri", new Icon(VaadinIcon.UPLOAD));
+        parametriButton.getElement().setAttribute("theme", "error");
+        parametriButton.addClickListener(e -> uploadParametri());
+        secondTopPlaceholder.add(parametriButton);
     }// end of method
 
 
@@ -345,39 +297,6 @@ public class BioList extends AGridViewList {
             log.error(unErrore.toString());
         }// fine del blocco try-catch
     }// end of method
-
-
-//    protected Component creaPopup() {
-//        ArrayList<Upload> items = new ArrayList<>();
-////        items.add(null);
-//        items.add(giorni);
-//        items.add(anni);
-//        comboUpload = new AComboBox();
-//        comboUpload.setWidth("8em");
-//        comboUpload.setItems(items);
-////        comboUpload.setValue(null);
-//        comboUpload.addValueChangeListener(event -> openUploadDialog(event));
-//
-//        return comboUpload;
-//    }// end of method
-
-
-//    /**
-//     * Opens the confirmation dialog before uploadin.
-//     * <p>
-//     * The dialog will display the given title and message(s), then call
-//     */
-//    protected void openUploadDialog(HasValue.ValueChangeEvent event) {
-//        Upload value = (Upload) event.getValue();
-//
-//        if (value!=null) {
-//            String message = "Vuoi eseguire un UPLOAD di tutte le biografie divise per " + value + " ?";
-//            String additionalMessage = "L'operazione non si può interrompere";
-//            AConfirmDialog dialog = appContext.getBean(AConfirmDialog.class);
-//            dialog.open(message, additionalMessage, new RunnableUploadDialogo(value), null);
-//        }// end of if cycle
-//
-//    }// end of method
 
 
     protected void download() {
@@ -436,6 +355,23 @@ public class BioList extends AGridViewList {
         statisticheService.updateBiografie();
     }// end of method
 
+    /**
+     * Mostra pagina wiki dei parametri. <br>
+     */
+    protected void showParametri() {
+        String titoloPagina = "Progetto:Biografie/Parametri";
+        String link = "\"" + PATH_WIKI + titoloPagina + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }// end of method
+
+
+    /**
+     * Upload standard dei parametri. <br>
+     */
+    protected void uploadParametri() {
+        statisticheService.updateParametri();
+    }// end of method
+
 
     /**
      * Opens the confirmation dialog before deleting all items.
@@ -487,37 +423,6 @@ public class BioList extends AGridViewList {
         updateGrid();
     }// end of method
 
-
-//    /**
-//     * Crea il corpo centrale della view
-//     * Componente grafico obbligatorio
-//     * Alcune regolazioni vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
-//     * Facoltativo (presente di default) il bottone Edit (flag da mongo eventualmente sovrascritto)
-//     */
-//    @Override
-//    protected void creaGrid() {
-//        super.creaGrid();
-//        grid.addSelectionListener(new SelectionListener<Grid<AEntity>, AEntity>() {
-//
-//            @Override
-//            public void selectionChange(SelectionEvent<Grid<AEntity>, AEntity> selectionEvent) {
-//                sincroBottoniMenu(selectionEvent);
-//            }// end of inner method
-//        });//end of lambda expressions and anonymous inner class
-//    }// end of method
-
-
-//    protected void sincroBottoniMenu(boolean enabled) {
-//        if (deleteButton != null) {
-//            deleteButton.setEnabled(enabled);
-//        }// end of if cycle
-//
-//        if (deleteAllButton != null) {
-//            deleteAllButton.setEnabled(!enabled);
-//        }// end of if cycle
-//    }// end of method
-
-
     /**
      * Aggiunge eventuali colonne calcolate
      */
@@ -540,65 +445,6 @@ public class BioList extends AGridViewList {
         })).setHeader(key);
         super.addSpecificColumnsBefore();
     }// end of method
-
-
-//    private class RunnableUploadDialogo implements Runnable {
-//
-//        private Upload upload;
-//
-//
-//        public RunnableUploadDialogo(Upload upload) {
-//            this.upload = upload;
-//        }// end of constructor
-//
-//
-//        /**
-//         * When an object implementing interface <code>Runnable</code> is used
-//         * to create a thread, starting the thread causes the object's
-//         * <code>run</code> method to be called in that separately executing
-//         * thread.
-//         * <p>
-//         * The general contract of the method <code>run</code> is that it may
-//         * take any action whatsoever.
-//         *
-//         * @see Thread#run()
-//         */
-//        @Override
-//        public void run() {
-//            esegueUploadDialogo(upload);
-//        }// end of method
-//
-//    }// end of inner class
-
-
-//    private void sendMail(DownloadResult result) {
-//        long inizio = result.getInizio();
-//        Date startDate = new Date(inizio);
-//        LocalDateTime start = date.dateToLocalDateTime(startDate);
-//        LocalDateTime end;
-//        String testo = "";
-//        testo += A_CAPO;
-//        testo += "Carica le nuove pagine biografiche e aggiorna tutte quelle esistenti";
-//        testo += A_CAPO;
-//        testo += A_CAPO;
-//        testo += "Ciclo del " + date.get();
-//        testo += A_CAPO;
-//        testo += "Iniziato alle " + date.getOrario(start);
-//        testo += A_CAPO;
-//
-//        if (pref.isBool(SEND_MAIL_CICLO)) {
-//            end = LocalDateTime.now();
-//            testo += "Terminato alle " + date.getOrario(end);
-//            testo += A_CAPO;
-//            testo += "Durata totale: " + date.deltaText(inizio);
-//            testo += A_CAPO;
-//            testo += "Nel db ci sono " + text.format(service.count()) + " pagine biografiche";
-//            testo += A_CAPO;
-//            testo += "Sono state aggiornate " + text.format(result.getNumVociRegistrate()) + " pagine";
-//            mailService.send("Ciclo update", testo);
-//        }// end of if cycle
-//    }// end of method
-
 
     /**
      * Aggiorna la lista dei filtri della Grid. Modificati per: popup, newEntity, deleteEntity, ecc... <br>

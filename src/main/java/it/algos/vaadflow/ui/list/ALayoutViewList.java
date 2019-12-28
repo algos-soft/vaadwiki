@@ -84,8 +84,9 @@ public abstract class ALayoutViewList extends APrefViewList {
         this.setSpacing(false);
         this.setPadding(true);
 
-        this.topPlaceholder = new HorizontalLayout();
         this.alertPlacehorder = new VerticalLayout();
+        this.topPlaceholder = new HorizontalLayout();
+        this.secondTopPlaceholder = new HorizontalLayout();
         this.gridPlaceholder = new VerticalLayout();
         this.bottomPlacehorder = new HorizontalLayout();
 
@@ -93,6 +94,7 @@ public abstract class ALayoutViewList extends APrefViewList {
             this.getElement().getStyle().set("background-color", EAColor.yellow.getEsadecimale());
             alertPlacehorder.getElement().getStyle().set("background-color", EAColor.lightgreen.getEsadecimale());
             topPlaceholder.getElement().getStyle().set("background-color", EAColor.lime.getEsadecimale());
+            secondTopPlaceholder.getElement().getStyle().set("background-color", EAColor.bisque.getEsadecimale());
             gridPlaceholder.getElement().getStyle().set("background-color", EAColor.red.getEsadecimale());
             bottomPlacehorder.getElement().getStyle().set("background-color", EAColor.silver.getEsadecimale());
         }// end of if cycle

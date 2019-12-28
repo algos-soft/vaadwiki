@@ -39,7 +39,15 @@ public abstract class Statistiche {
 
     protected final static String INIZIO_RIGA = "\n|-\n|";
 
-    protected final static String SEP = "||";
+
+    protected static String SEP_INI = "|-";
+
+    protected static String SEP = "|";
+
+    protected static String SEP_DOPPIO = "||";
+
+
+    protected static String SINISTRA = "style=\"text-align: left;\"";
 
     protected static String TAG_HEAD_INDICE = "__FORCETOC__";
 
@@ -343,7 +351,7 @@ public abstract class Statistiche {
         String testo = "";
 
         testo += A_CAPO;
-        testo += "{|class=\"wikitable\" style=\"background-color:#EFEFEF; text-align: right;\"";
+        testo += "{|class=\"wikitable sortable\" style=\"background-color:#EFEFEF; text-align: right;\"";
         testo += A_CAPO;
 
         return testo;

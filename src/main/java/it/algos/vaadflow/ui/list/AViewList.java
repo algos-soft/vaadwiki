@@ -233,6 +233,11 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
             this.add(topPlaceholder);
         }// end of if cycle
 
+        //--seconda riga di bottoni-menu sopra la grid (normalmente non si usa)
+        if (usaSecondTopPlaceholder) {
+            this.add(secondTopPlaceholder);
+        }// end of if cycle
+
         //--body con la Grid
         //--seleziona quale grid usare e la aggiunge al layout
         this.creaBody();

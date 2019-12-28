@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
+import java.util.Set;
 
 import static it.algos.vaadflow.application.FlowCost.*;
 
@@ -122,6 +122,7 @@ public class AColumnService extends AbstractService {
         switch (type) {
             case text://@todo in futuro vanno differenziati
             case email:
+            case password:
             case textarea:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                     Field field = reflection.getField(entityClazz, propertyName);
@@ -268,16 +269,39 @@ public class AColumnService extends AbstractService {
                 }));//end of lambda expressions and anonymous inner class
                 break;
             case multicombo:
+//                colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+//                    Field field = reflection.getField(entityClazz, propertyName);
+//                    String testo = "";
+//                    List valueList;
+//
+//                    try { // prova ad eseguire il codice
+//                        if (field.get(entity) instanceof List) {
+//                            valueList = (List) field.get(entity);
+//                            if (array.isValid(valueList)) {
+//                                for (Object singleValue : valueList) {
+//                                    testo += singleValue.toString();
+//                                    testo += VIRGOLA + SPAZIO;
+//                                }// end of for cycle
+//                                testo = text.levaCoda(testo.trim(), VIRGOLA).trim();
+//                            }// end of if cycle
+//                        }// end of if cycle
+//                    } catch (Exception unErrore) { // intercetta l'errore
+//                        log.error(unErrore.toString());
+//                    }// fine del blocco try-catch
+//
+//                    return new Label(testo);
+//                }));//end of lambda expressions and anonymous inner class
+
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                     Field field = reflection.getField(entityClazz, propertyName);
                     String testo = "";
-                    List valueList;
+                    Set valueSet;
 
                     try { // prova ad eseguire il codice
-                        if (field.get(entity) instanceof List) {
-                            valueList = (List) field.get(entity);
-                            if (array.isValid(valueList)) {
-                                for (Object singleValue : valueList) {
+                        if (field.get(entity) instanceof Set) {
+                            valueSet = (Set) field.get(entity);
+                            if (valueSet != null && valueSet.size() > 0) {
+                                for (Object singleValue : valueSet) {
                                     testo += singleValue.toString();
                                     testo += VIRGOLA + SPAZIO;
                                 }// end of for cycle
@@ -559,6 +583,11 @@ public class AColumnService extends AbstractService {
                 //--larghezza di default per un mail = 18em
                 //--per larghezze diverse, inserire widthEM = ... nell'annotation @AIColumn della Entity
                 width = text.isValid(width) ? width : "18em";
+                break;
+            case password:
+                //--larghezza di default per un testo = 7em
+                //--per larghezze minori o maggiori, inserire widthEM = ... nell'annotation @AIColumn della Entity
+                width = text.isValid(width) ? width : "9em";
                 break;
             case integer:
                 //--larghezza di default per un intero = 3em

@@ -25,13 +25,6 @@ public class StatisticheBiografie extends Statistiche {
 
     private static String TITOLO_PAGINA_WIKI = "Progetto:Biografie/Statistiche";
 
-    private static String SEP_INI = "|-";
-
-    private static String SEP = "|";
-
-    private static String SEP_DOPPIO = "||";
-
-    private static String SINISTRA = "style=\"text-align: left;\"";
 
     private boolean modificate;
 

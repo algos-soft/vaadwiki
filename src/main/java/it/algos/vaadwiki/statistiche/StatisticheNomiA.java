@@ -36,7 +36,7 @@ public class StatisticheNomiA extends Statistiche {
 
 
     /**
-     * Questa classe viene tipicamente costruita con appContext.getBean(StatisticheAttivita.class) <br>
+     * Questa classe viene tipicamente costruita con appContext.getBean(StatisticheNomiA.class) <br>
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
      * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired di questa classe <br>
      */
@@ -54,6 +54,7 @@ public class StatisticheNomiA extends Statistiche {
      */
     protected void fixPreferenze() {
         super.fixPreferenze();
+
         this.templateCorrelate = "AntroponimiCorrelate";
         super.usaTagIndice = false;
     }// fine del metodo

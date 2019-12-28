@@ -49,6 +49,7 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
+
         @Override
         @SuppressWarnings("all")
         public Object bytesToObject(byte[] bytes) {
@@ -79,6 +80,7 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
+
         @Override
         public Object bytesToObject(byte[] bytes) {
             return byteArrayToInt(bytes);
@@ -101,6 +103,7 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
+
         @Override
         public Object bytesToObject(byte[] bytes) {
             return byteArrayToLong(bytes);
@@ -112,23 +115,26 @@ public enum EAPrefType {
         @Override
         public byte[] objectToBytes(Object obj) {
             byte[] bytes = new byte[0];
+            LocalDate data;
+            long giorni;
+
             if (obj instanceof LocalDate) {
-                LocalDate data = (LocalDate) obj;
-                long millis = data.toEpochDay();
-                bytes = Longs.toByteArray(millis);
+                data = (LocalDate) obj;
+                giorni = data.toEpochDay();
+                bytes = Longs.toByteArray(giorni);
             }// end of if cycle
             return bytes;
         }// end of method
 
+
         @Override
         public Object bytesToObject(byte[] bytes) {
             LocalDate data = null;
-            long millis = 0;
+            long giorni = 0;
 
-            if (bytes != null) {
-                millis = Longs.fromByteArray(bytes);
-                LocalDateTime localDataTime = bytes.length > 0 ? LocalDateTime.ofEpochSecond(millis, 0, ZoneOffset.UTC) : null;
-                data = localDataTime !=null ? localDataTime.toLocalDate() : null;
+            if (bytes != null && bytes.length > 0) {
+                giorni = Longs.fromByteArray(bytes);
+                data = LocalDate.ofEpochDay(giorni);
             }// end of if cycle
 
             return data;
@@ -139,9 +145,12 @@ public enum EAPrefType {
         @Override
         public byte[] objectToBytes(Object obj) {
             byte[] bytes = new byte[0];
+            LocalDateTime data;
+            long millis;
+
             if (obj instanceof LocalDateTime) {
-                LocalDateTime data = (LocalDateTime) obj;
-                long millis = data.toEpochSecond(ZoneOffset.UTC);
+                data = (LocalDateTime) obj;
+                 millis = data.toEpochSecond(ZoneOffset.UTC);
 //                long millis = LibDate.getLongSecs((LocalDateTime) obj);
 //                long millis = ((LocalDateTime) obj).;
                 bytes = Longs.toByteArray(millis);
@@ -149,13 +158,14 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
+
         @Override
         public Object bytesToObject(byte[] bytes) {
             LocalDateTime data = null;
             long millis = 0;
 
 //            return bytes.length > 0 ? LibDate.dateToLocalDateTime(new Date(Longs.fromByteArray(bytes))) : null;
-            if (bytes != null) {
+            if (bytes != null && bytes.length > 0) {
                 millis = Longs.fromByteArray(bytes);
                 data = bytes.length > 0 ? LocalDateTime.ofEpochSecond(millis, 0, ZoneOffset.UTC) : null;
             }// end of if cycle
@@ -176,12 +186,13 @@ public enum EAPrefType {
             return bytes;
         }// end of method
 
+
         @Override
         public Object bytesToObject(byte[] bytes) {
             LocalTime time = null;
             long millis = 0;
 
-            if (bytes != null ) {
+            if (bytes != null && bytes.length > 0) {
                 millis = Longs.fromByteArray(bytes);
                 time = bytes.length > 0 ? LocalTime.ofNanoOfDay(millis) : null;
             }// end of if cycle

@@ -120,6 +120,14 @@ public class StatisticheService extends ABioService {
 
 
     /**
+     * Upload delle statistiche dei parametri. <br>
+     */
+    public void updateParametri() {
+        appContext.getBean(StatisticheParametri.class);
+    }// end of method
+
+
+    /**
      * Upload di tutte le statistiche. <br>
      */
     public void updateAll() {
@@ -135,6 +143,7 @@ public class StatisticheService extends ABioService {
         updateCognomi();
         updateAttivita();
         updateNazionalita();
+        updateParametri();
     }// end of method
 
 }// end of class
