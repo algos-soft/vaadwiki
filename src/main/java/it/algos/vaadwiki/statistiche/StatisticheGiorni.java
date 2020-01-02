@@ -52,15 +52,6 @@ public class StatisticheGiorni extends StatisticheAttNaz {
     @Autowired
     private UploadService upload;
 
-    /**
-     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
-     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
-     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
-     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
-     */
-    @Autowired
-    private AMathService math;
-
 
     /**
      * Costruttore base senza parametri <br>

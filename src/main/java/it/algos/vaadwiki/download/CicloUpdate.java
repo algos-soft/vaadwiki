@@ -2,6 +2,7 @@ package it.algos.vaadwiki.download;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.enumeration.EALogType;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.wiki.DownloadResult;
 import it.algos.wiki.web.AQueryCatInfo;
@@ -131,6 +132,7 @@ public class CicloUpdate extends ABioService {
         if (pref.isBool(SEND_MAIL_CICLO)) {
             libBio.sendUpdate(result);
         }// end of if cycle
+        logger.crea(EALogType.update, "Update delle biografie", inizio);
 
         log.info("Update - Ciclo totale attività, nazionalità, professione, categoria, nuove pagine in " + date.deltaText(result.getInizioLong()));
         log.info("Fine task di update: " + date.getTime(LocalDateTime.now()));

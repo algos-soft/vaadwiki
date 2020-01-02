@@ -9,6 +9,7 @@ import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.genere.GenereService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
+import it.algos.vaadwiki.modules.wiki.WikiService;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,11 +65,6 @@ public abstract class ABioService {
     public Api api;
 
 
-//    /**
-//     * La injection viene fatta da SpringBoot in automatico <br>
-//     */
-//    @Autowired
-//    protected CategoriaService categoriaService;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

@@ -6,6 +6,10 @@ import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AService;
+import it.algos.vaadwiki.modules.attivita.AttivitaService;
+import it.algos.vaadwiki.modules.genere.GenereService;
+import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
+import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.wiki.Api;
 import it.algos.wiki.web.AQueryVoce;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +65,29 @@ public abstract class WikiService extends AService {
     protected String durataLastDownload;
 
     /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected AttivitaService attivitaService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected NazionalitaService nazionalitaService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected ProfessioneService professioneService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected GenereService genereService;
+    /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
@@ -90,6 +117,7 @@ public abstract class WikiService extends AService {
     public WikiService(MongoRepository repository) {
         super(repository);
     }// end of Spring constructor
+
 
 
     /**

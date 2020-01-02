@@ -3,10 +3,7 @@ package it.algos.vaadwiki.statistiche;
 import it.algos.vaadflow.modules.anno.AnnoService;
 import it.algos.vaadflow.modules.giorno.GiornoService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
-import it.algos.vaadflow.service.AArrayService;
-import it.algos.vaadflow.service.ADateService;
-import it.algos.vaadflow.service.AMongoService;
-import it.algos.vaadflow.service.ATextService;
+import it.algos.vaadflow.service.*;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
@@ -158,6 +155,15 @@ public abstract class Statistiche {
      */
     @Autowired
     protected AArrayService array;
+
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile dopo il metodo beforeEnter() invocato da @Route al termine dell'init() di questa classe <br>
+     * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    protected AMathService math;
 
     @Autowired
     protected AMongoService mongo;
