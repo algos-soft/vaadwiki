@@ -25,6 +25,7 @@ import it.algos.vaadflow.ui.list.AGridViewList;
 import it.algos.vaadflow.wrapper.AFiltro;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.schedule.TaskUpdate;
+import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.statistiche.StatisticheService;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.wiki.Pagina.count;
 
 /**
@@ -47,6 +48,16 @@ public class ElaboraService extends ABioService {
      */
     public void esegue() {
         esegueAll();
+    }// end of method
+
+    /**
+     * Elabora una pagina biografica <br>
+     * Scarica dal server l'ultima versione della voce <br>
+     * Parte dal mongoDB e costruisce i relativi parametri <br>
+     * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
+     * Quello che resta è affidabile ed utilizzabile per le liste <br>
+     */
+    public void reverse() {
     }// end of method
 
 
@@ -275,6 +286,81 @@ public class ElaboraService extends ABioService {
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
         }// fine del blocco try-catch
+
+    }// end of method
+
+
+    /**
+     * Dalla pagina wiki recupera una voce e registra la entity sul mongoDB <br>
+     */
+    public void downloadSave(String wikiTitle) {
+        Bio bio = creaBioMemory(wikiTitle);
+        String tmpl = getTmplBioServer(bio);
+        bioService.save(bio);
+    }// end of method
+
+
+    /**
+     * Dal server wiki al bio (non registrato) <br>
+     */
+    public Bio creaBioMemory(String wikiTitle) {
+        return api.leggeBio(wikiTitle);
+    }// end of method
+
+
+    /**
+     * Dal bio il tmplBioServer <br>
+     */
+    public String getTmplBioServer(Bio bio) {
+        return bio.getTmplBioServer();
+    }// end of method
+
+
+    /**
+     * Dalla entity mongoDB al tmplBioMongo <br>
+     * Costruisce un template con SOLO i parametri gestiti <br>
+     */
+    public String getTmplBioMongo(Bio bio) {
+        String tmplBioMongo = VUOTA;
+
+        return tmplBioMongo;
+    }// end of method
+
+
+    /**
+     * Merge dei template <br>
+     * Costruisce un template con i parametri di tmplBioMongo PIU quelli di tmplBioServer <br>
+     */
+    public String getTmplBioMongo(String tmplBioMongo, String tmplBioServer) {
+        String tmplNuovo = VUOTA;
+
+        return tmplNuovo;
+    }// end of method
+
+
+    /**
+     * Elabora una voce biografica del server wiki <br>
+     * Dalla pagina wiki recupera una voce e registra la entity sul mongoDB <br>
+     * Costruisce un template dalla entity sul mongoDB <br>
+     * Elabora la voce, modificando eventualmente alcuni parametri ed ordinandoli tutti <br>
+     * Merge il tmplBioServer scaricato ed il tmplBioServer elaborato <br>
+     */
+    public String getTmplNuovo(String wikiTitle) {
+        String tmplNuovo = VUOTA;
+
+        return tmplNuovo;
+    }// end of method
+
+
+    /**
+     * Elabora una voce biografica del server wiki <br>
+     * Dalla pagina wiki recupera una voce e registra la entity sul mongoDB <br>
+     * Costruisce un template dalla entity sul mongoDB <br>
+     * Elabora la voce, modificando eventualmente alcuni parametri ed ordinandoli tutti <br>
+     * Merge il tmplBioServer scaricato ed il tmplBioServer elaborato <br>
+     * Registra le modifiche sul server wiki <br>
+     */
+    public void elaboraVoce(String wikiTitle) {
 
     }// end of method
 

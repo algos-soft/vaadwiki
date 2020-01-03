@@ -69,6 +69,9 @@ public class CicloDownload extends ABioService {
         //--Download del modulo professione
         professioneService.download();
 
+        //--download del modulo genere
+        genereService.download();
+
         //--Recupera la lista delle pagine della categoria dal server wiki
         result.setNumVociCategoria(appContext.getBean(AQueryCatInfo.class, result.getNomeCategoria()).numVoci());
         result.setVociDaCreare(appContext.getBean(AQueryCatPaginePageid.class, result.getNomeCategoria()).listaPageid);

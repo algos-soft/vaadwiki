@@ -4,8 +4,8 @@ package it.algos.wiki;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ATextService;
-import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.download.PageService;
+import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.wiki.request.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,30 +33,29 @@ public class Api {
      */
     public AArrayService array = AArrayService.getInstance();
 
-    //    @Autowired
-    protected RequestWikiCat requestCat;
-
-    @Autowired
-    protected RequestWikiReadPages requestMultiPages;
-
-    @Autowired
-    protected RequestWikiTimestamp requestTimestamp;
-
-//    @Autowired
-//    protected CategoriaService categoriaService;
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     public PageService pageService;
 
-
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
     @Autowired
     public ATextService text;
+
+    //    @Autowired
+    protected RequestWikiCat requestCat;
+
+//    @Autowired
+//    protected CategoriaService categoriaService;
+
+    @Autowired
+    protected RequestWikiReadPages requestMultiPages;
+
+    @Autowired
+    protected RequestWikiTimestamp requestTimestamp;
 
 
     public Api() {

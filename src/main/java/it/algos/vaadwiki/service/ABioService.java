@@ -5,16 +5,17 @@ import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.*;
 import it.algos.vaadwiki.download.*;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
+import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.genere.GenereService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
-import it.algos.vaadwiki.modules.wiki.WikiService;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.BIO_NEEDED_MINUMUM_SIZE;
 
 /**
@@ -63,7 +64,6 @@ public abstract class ABioService {
      */
     @Autowired
     public Api api;
-
 
 
     /**
@@ -178,5 +178,7 @@ public abstract class ABioService {
     protected boolean checkBioScarso() {
         return bioService.count() < BIO_NEEDED_MINUMUM_SIZE;
     }// end of method
+
+
 
 }// end of class

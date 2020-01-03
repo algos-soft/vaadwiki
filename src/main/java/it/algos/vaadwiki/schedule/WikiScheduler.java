@@ -94,6 +94,7 @@ public class WikiScheduler extends Scheduler {
 //            this.task(update);
 
             this.task(download);
+            this.task(update);
 
             this.task(giorni);
             this.task(anni);
