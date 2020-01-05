@@ -239,7 +239,7 @@ public class StatisticheDidascalie extends Statistiche {
             if (text.isValid(title)) {
                 didascalia = didascaliaService.getBiografie(bio);
                 linkPagina = LibWiki.setQuadre(title);
-                testo += "Nell'incipit della pagina biografica " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+                testo += "Nell'incipit della pagina biografica " + SEP_DOPPIO + linkPagina + SEP_DOPPIO + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
 
@@ -262,7 +262,7 @@ public class StatisticheDidascalie extends Statistiche {
                 didascalia = didascaliaService.getGiornoNatoCon(bio);
                 linkPagina = uploadService.getTitoloGiornoNato(giorno);
                 linkPagina = LibWiki.setQuadre(linkPagina.toLowerCase());
-                testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+                testo += "Nella pagina con la lista dei " + SEP_DOPPIO + linkPagina + SEP_DOPPIO + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
 
@@ -285,7 +285,7 @@ public class StatisticheDidascalie extends Statistiche {
                 didascalia = didascaliaService.getGiornoMortoCon(bio);
                 linkPagina = uploadService.getTitoloGiornoMorto(giorno);
                 linkPagina = LibWiki.setQuadre(linkPagina.toLowerCase());
-                testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+                testo += "Nella pagina con la lista dei " + SEP_DOPPIO + linkPagina + SEP_DOPPIO + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
 
@@ -308,7 +308,7 @@ public class StatisticheDidascalie extends Statistiche {
                 didascalia = didascaliaService.getAnnoNatoCon(bio);
                 linkPagina = uploadService.getTitoloAnnoNato(anno);
                 linkPagina = LibWiki.setQuadre(linkPagina.toLowerCase());
-                testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+                testo += "Nella pagina con la lista dei " + SEP_DOPPIO + linkPagina + SEP_DOPPIO + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
 
@@ -331,7 +331,7 @@ public class StatisticheDidascalie extends Statistiche {
                 didascalia = didascaliaService.getAnnoMortoCon(bio);
                 linkPagina = uploadService.getTitoloAnnoMorto(anno);
                 linkPagina = LibWiki.setQuadre(linkPagina.toLowerCase());
-                testo += "Nella pagina con la lista dei " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+                testo += "Nella pagina con la lista dei " + SEP_DOPPIO + linkPagina + SEP_DOPPIO + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
 
@@ -353,7 +353,7 @@ public class StatisticheDidascalie extends Statistiche {
             if (text.isValid(nome)) {
                 didascalia = didascaliaService.getListeSenza(bio);
                 linkPagina = LibWiki.setQuadre("persone di nome " + nome);
-                testo += "Nella pagina con la lista delle " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+                testo += "Nella pagina con la lista delle " + SEP_DOPPIO + linkPagina + SEP_DOPPIO + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
 
@@ -375,7 +375,7 @@ public class StatisticheDidascalie extends Statistiche {
             if (text.isValid(cognome)) {
                 didascalia = didascaliaService.getListeSenza(bio);
                 linkPagina = LibWiki.setQuadre("persone di cognome " + cognome);
-                testo += "Nella pagina con la lista delle " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+                testo += "Nella pagina con la lista delle " + SEP_DOPPIO + linkPagina + SEP_DOPPIO + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
 
@@ -397,7 +397,7 @@ public class StatisticheDidascalie extends Statistiche {
             if (text.isValid(attivita)) {
                 didascalia = didascaliaService.getListeSenza(bio);
                 linkPagina = LibWiki.setQuadre("Progetto:Biografie/Attività/" + text.primaMaiuscola(attivita) + "|" + attivita);
-                testo += "Nella pagina con la lista di " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+                testo += "Nella pagina con la lista di " + SEP_DOPPIO + linkPagina + SEP_DOPPIO + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
 
@@ -419,7 +419,7 @@ public class StatisticheDidascalie extends Statistiche {
             if (text.isValid(nazionalita)) {
                 didascalia = didascaliaService.getListeSenza(bio);
                 linkPagina = LibWiki.setQuadre("Progetto:Biografie/Nazionalità/" + text.primaMaiuscola(nazionalita) + "|" + nazionalita);
-                testo += "Nella pagina con la lista di " + SEP + linkPagina + SEP + LibBio.setBold(didascalia);
+                testo += "Nella pagina con la lista di " + SEP_DOPPIO + linkPagina + SEP_DOPPIO + LibBio.setBold(didascalia);
             }// end of if cycle
         }// end of if cycle
 

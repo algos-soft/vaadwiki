@@ -65,7 +65,7 @@ public class WikiBoot extends ABoot {
 
     private final static String PROJECT_NAME = "vaadwiki";
 
-    private final static double PROJECT_VERSION = 8.9;
+    private final static double PROJECT_VERSION = 9;
 
     private final static LocalDate VERSION_DATE = LocalDate.of(2020, 1, 5);
 
