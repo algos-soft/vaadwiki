@@ -27,7 +27,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     usaDaemonCognomi(USA_DAEMON_COGNOMI, "Crono per upload cognomi", EAPrefType.bool, true),
     usaDaemonAttivita(USA_DAEMON_ATTIVITA, "Crono per download attività, extra-ciclo", EAPrefType.bool, true),
     usaDaemonNazionalita(USA_DAEMON_NAZIONALITA, "Crono per download nazionalità, extra-ciclo", EAPrefType.bool, true),
-    usaDaemonStatistiche(USA_DAEMON_STATISTICHE, "Crono per upload statistiche", EAPrefType.bool, false),
+    usaDaemonStatistiche(USA_DAEMON_STATISTICHE, "Crono per upload statistiche", EAPrefType.bool, true),
 
     lastDownloadAttivita(LAST_DOWNLOAD_ATTIVITA, "Ultimo download del modulo attività", EAPrefType.localdatetime, null),
     lastDownloadNazionalita(LAST_DOWNLOAD_NAZIONALITA, "Ultimo download del modulo nazionalità", EAPrefType.localdatetime, null),
