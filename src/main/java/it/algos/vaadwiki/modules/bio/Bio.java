@@ -99,7 +99,7 @@ public class Bio extends AEntity {
 
     @Lob
     @Field("tmpl")
-    @AIField(type = EAFieldType.textarea, required = true, help = "Template effettivamente presente sul server.")
+    @AIField(type = EAFieldType.textarea, required = true, help = "Template effettivamente presente sul server.", widthEM = 48)
     public String tmplBioServer;
 
 

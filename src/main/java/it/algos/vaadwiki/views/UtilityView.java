@@ -803,11 +803,19 @@ public class UtilityView extends VerticalLayout {
      * Lista di voci biografiche che sono PROBABILMENTE di genere femminile
      */
     public void esegueListMF() {
+        List<Bio> lista = null;
         List<Bio> listaAll = bioSenzaSesso();
-        List<Bio> lista = listaAll.subList(0, 20);
-        pageSessoResult.add(new Label("Elenco delle prime " + lista.size() + " voci biografiche che non hanno genere sul totale di " + listaAll.size()));
-        allRighe(lista, "M");
+
+        if (listaAll != null && listaAll.size() > 0) {
+            lista = listaAll.subList(0, 20);
+            if (lista != null) {
+                pageSessoResult.add(new Label("Elenco delle prime " + lista.size() + " voci biografiche che non hanno genere sul totale di " + listaAll.size()));
+                allRighe(lista, "M");
+            }// end of if cycle
+        }// end of if cycle
+
     }// end of method
+
 
 
     public void allRighe(List<Bio> listaGenere, String genere) {

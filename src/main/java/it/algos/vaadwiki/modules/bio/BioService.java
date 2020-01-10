@@ -66,6 +66,12 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 public class BioService extends WikiService {
 
 
+    public final static List<String> FORM_PROPERTIES_LEFT =
+            Arrays.asList("pageid", "wikiTitle", "lastModifica", "lastLettura", "tmplBioServer");
+
+    public final static List<String> FORM_PROPERTIES_RIGHT =
+            Arrays.asList("nome", "cognome", "sesso", "luogoNato", "luogoNatoLink", "giornoNascita", "annoNascita", "luogoMorto", "luogoMortoLink", "giornoMorte", "annoMorte", "attivita", "attivita2", "attivita3", "nazionalita");
+
     /**
      * versione della classe per la serializzazione
      */
@@ -1088,7 +1094,7 @@ public class BioService extends WikiService {
             }// end of for cycle
         }// end of if cycle
 
-       return anni;
+        return anni;
     }// end of method
 
 

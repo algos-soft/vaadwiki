@@ -2230,7 +2230,7 @@ public class LibBio {
         testoValido = text.levaDopoGraffe(testoValido);
         testoValido = text.levaDopoVirgola(testoValido);
         testoValido = text.levaDopoInterrogativo(testoValido);
-        testoValido = this.setNoQuadre(testoValido);
+        testoValido = LibWiki.setNoQuadre(testoValido);
         testoValido = testoValido.trim();
 
         if (testoValido.length() > 253) {
@@ -2285,7 +2285,7 @@ public class LibBio {
         testoValido = text.levaDopoNote(testoValido);
         testoValido = text.levaDopoGraffe(testoValido);
         testoValido = text.levaDopoInterrogativo(testoValido);
-        testoValido = this.setNoQuadre(testoValido);
+        testoValido = LibWiki.setNoQuadre(testoValido);
         testoValido = testoValido.trim();
 
         if (testoValido.length() > 253) {
@@ -2304,6 +2304,7 @@ public class LibBio {
      * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese)
      * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese)
      * Controlla che il valore esista nella collezione Giorno
+     * Elimina la prima maiuscola del mese
      *
      * @param testoGrezzo in entrata da elaborare
      *
@@ -2358,11 +2359,15 @@ public class LibBio {
             testoValido = testoValido.replaceFirst(tagDoppio, SPAZIO);
         }// end of if cycle
 
+
+        testoValido = testoValido.toLowerCase();
+
         if (text.isValid(testoValido) && mongo.isEsisteByProperty(Giorno.class, "titolo", testoValido)) {
             return testoValido.trim();
         } else {
             return VUOTA;
         }// end of if/else cycle
+
     } // // end of method
 
 
@@ -2920,7 +2925,6 @@ public class LibBio {
         }// end of if cycle
 
     } // fine del metodo
-
 
 
 //    public void sendUpdate(DownloadResult result) {

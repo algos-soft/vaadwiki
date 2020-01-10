@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static it.algos.vaadflow.application.FlowCost.A_CAPO;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
-import static it.algos.wiki.Pagina.count;
 
 /**
  * Project vaadbio2
@@ -49,6 +49,7 @@ public class ElaboraService extends ABioService {
     public void esegue() {
         esegueAll();
     }// end of method
+
 
     /**
      * Elabora una pagina biografica <br>
@@ -256,7 +257,7 @@ public class ElaboraService extends ABioService {
 
 
     //--Inserisce i valori nella entity Bio
-    private void setValue(Bio bio, HashMap<String, String> mappa, boolean registra) {
+    public void setValue(Bio bio, HashMap<String, String> mappa, boolean registra) {
         String value = null;
 
         try { // prova ad eseguire il codice
@@ -322,6 +323,23 @@ public class ElaboraService extends ABioService {
      */
     public String getTmplBioMongo(Bio bio) {
         String tmplBioMongo = VUOTA;
+        String value = VUOTA;
+        String iniTemplate = "{{Bio";
+        String endTemplate = "}}";
+
+        if (bio != null) {
+            tmplBioMongo = iniTemplate;
+            tmplBioMongo += A_CAPO;
+
+            for (ParBio par : ParBio.values()) {
+                value = par.getValue(bio);
+                if (text.isValid(value) || par.isCampoNormale()) {
+                    tmplBioMongo += par.getRiga(bio);
+                }// end of if cycle
+            }// end of for cycle
+
+            tmplBioMongo += endTemplate;
+        }// end of if cycle
 
         return tmplBioMongo;
     }// end of method
@@ -331,10 +349,38 @@ public class ElaboraService extends ABioService {
      * Merge dei template <br>
      * Costruisce un template con i parametri di tmplBioMongo PIU quelli di tmplBioServer <br>
      */
-    public String getTmplBioMongo(String tmplBioMongo, String tmplBioServer) {
-        String tmplNuovo = VUOTA;
+    public String getTmplMerged(String tmplBioMongo, String tmplBioServer) {
+        String tmplMerged = VUOTA;
+        HashMap<String, String> mappaServer = null;
+        HashMap<String, String> mappaMongo = null;
+        String iniTemplate = "{{Bio";
+        String endTemplate = "}}";
+        String tag = "|";
 
-        return tmplNuovo;
+        if (text.isValid(tmplBioMongo) && text.isValid(tmplBioServer)) {
+            mappaMongo = libBio.getMappaBio(tmplBioMongo);
+            mappaServer = libBio.getMappaBio(tmplBioServer);
+
+            tmplMerged = iniTemplate;
+            tmplMerged += A_CAPO;
+
+            for (ParBio par : ParBio.values()) {
+                if (mappaMongo.get(par.getTag()) != null) {
+                    tmplMerged += par.getRiga(mappaMongo.get(par.getTag()));
+                } else {
+                    if (mappaServer.get(par.getTag()) != null&&text.isValid(mappaServer.get(par.getTag()))) {
+                        tmplMerged += par.getRiga(mappaServer.get(par.getTag()));
+                    } else {
+                        if (par.isCampoNormale()) {
+                        } else {
+                        }// end of if/else cycle
+                    }// end of if/else cycle
+                }// end of if/else cycle
+            }// end of for cycle
+            tmplMerged += endTemplate;
+        }// end of if cycle
+
+        return tmplMerged;
     }// end of method
 
 
@@ -363,5 +409,7 @@ public class ElaboraService extends ABioService {
     public void elaboraVoce(String wikiTitle) {
 
     }// end of method
+
+
 
 }// end of class

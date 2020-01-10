@@ -2,6 +2,7 @@ package it.algos.vaadwiki.modules.bio;
 
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -30,6 +31,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
 
@@ -192,17 +194,31 @@ public class BioDialog extends AViewDialog<Bio> {
 
 
     /**
-     * Eventuali aggiustamenti finali al layout
-     * Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap)
-     * Sovrascritto nella sottoclasse
+     * Aggiunge ogni singolo field della fieldMap al layout grafico
      */
-    @Override
-    protected void fixLayout() {
-        DidascaliaBiografie didascalia = appContext.getBean(DidascaliaBiografie.class, currentItem);
+    protected void addFieldsToLayout() {
+        getFormLayout().removeAll();
+        FormLayout left = new FormLayout();
+        FormLayout right = new FormLayout();
+        DidascaliaBiografie didascalia = null;
+        Label label = null;
 
-        String didascaliaTxt = didascalia.testoSenza;
+        for (String name : ((BioService) service).FORM_PROPERTIES_LEFT) {
+            left.add(fieldMap.get(name));
+            if (name.equals("tmplBioServer")) {
+                fieldMap.get(name).getElement().setAttribute("colspan", "2");
+            }// end of if cycle
+        }// end of for cycle
+        didascalia = appContext.getBean(DidascaliaBiografie.class, currentItem);
+        label = new Label(didascalia.testoSenza);
+        label.getElement().setAttribute("colspan", "2");
+        left.add(label);
 
-        getFormLayout().add(new Label(didascaliaTxt));
+        for (String name : ((BioService) service).FORM_PROPERTIES_RIGHT) {
+            right.add(fieldMap.get(name));
+        }// end of for cycle
+
+        getFormLayout().add(left, right);
     }// end of method
 
 
