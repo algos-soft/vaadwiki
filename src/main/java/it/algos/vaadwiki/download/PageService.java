@@ -16,7 +16,8 @@ import org.springframework.context.annotation.Scope;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import static it.algos.vaadwiki.application.WikiCost.WIKI_PAGE_LIMIT;
+import static it.algos.vaadflow.application.FlowCost.USA_DEBUG;
+import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Project vaadbio2
@@ -59,7 +60,7 @@ public class PageService extends ABioService {
             for (int k = 0; k < numCicliLetturaPagine; k++) {
                 bloccoPage = array.estraeSublista(result.getVociDaCreare(), dimBloccoLettura, k + 1);
                 result = downloadSingoloBlocco(result, bloccoPage);
-                if (pref.isBool(FlowCost.USA_DEBUG)) {
+                if (pref.isBool(USA_DEBUG)) {
                     teorico = (k + 1) * dimBloccoLettura;
                     totale = result.getVociDaCreare().size();
                     teorico = Math.min(teorico, totale);
@@ -126,10 +127,11 @@ public class PageService extends ABioService {
      */
     private DownloadResult singoloBlocco(DownloadResult result, ArrayList<Long> arrayPageid, EACicloType type) {
         DeleteResult deleteResult = null;
-        ArrayList<Page> pages = null; // di norma 500
+        ArrayList<Page> pages = null; // di norma 2505
         Bio entity;
         ArrayList<Long> vociDaCancellarePrimaDiReinserirle = new ArrayList<>();
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
+        boolean checkUpload = pref.isBool(USA_UPLOAD_SINGOLA_VOCE_ELABORATA);
 
         pages = ((AQueryPages) appContext.getBean("AQueryPages", arrayPageid)).pagesResponse();
 
@@ -138,7 +140,7 @@ public class PageService extends ABioService {
         }// end of if cycle
 
         for (Page page : pages) {
-            entity = creaBio(page);
+            entity = creaBio(page, checkUpload);
             if (entity != null) {
                 listaBio.add(entity);
                 vociDaCancellarePrimaDiReinserirle.add(page.getPageid());
@@ -195,6 +197,11 @@ public class PageService extends ABioService {
 
 
     public Bio creaBio(Page page) {
+        return creaBio(page, false);
+    }// end of method
+
+
+    public Bio creaBio(Page page, boolean checkUpload) {
         Bio entity = null;
         long pageid = 0;
         String wikiTitle = "";
@@ -222,9 +229,30 @@ public class PageService extends ABioService {
             }// end of if cycle
         }// end of if/else cycle
 
+        if (checkUpload) {
+            uploadPagina(wikiTitle, template);
+        }// end of if cycle
+
         return entity;
     }// end of method
 
+
+    /**
+     * Controlla se il tmpl arrivato dal server wiki è uguale a quello 'previsto' <br>
+     * Se è diverso, lo modifica sul server <br>
+     */
+    public void uploadPagina(String wikiTitle, String templateOriginale) {
+        String tmplOrdinato = elaboraService.riordina(templateOriginale);
+
+        if (!tmplOrdinato.equals(templateOriginale)) {
+            uploadService.uploadTmpl(wikiTitle, tmplOrdinato);
+
+            if (pref.isBool(USA_DEBUG)) {
+                logger.debug("Riordinata voce " + wikiTitle + " con con template non 'allineato'");
+            }// end of if cycle
+        }// end of if cycle
+
+    }// end of method
 
 
     public void registraPagina(long pageid) {

@@ -10,6 +10,7 @@ import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.genere.GenereService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
+import it.algos.vaadwiki.upload.UploadService;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,12 @@ public abstract class ABioService {
      */
     @Autowired
     public ElaboraService elaboraService;
+
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected UploadService uploadService;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

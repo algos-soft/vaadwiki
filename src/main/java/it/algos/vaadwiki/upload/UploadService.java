@@ -307,6 +307,32 @@ public class UploadService extends ABioService {
 
 
     /**
+     * Modifica sul server wiki il template della bio indicata
+     * <p>
+     * 2) Recupera dal server il testo della voce
+     * 2) Recupera il tmplOld dal testo della voce
+     * 5) Sostituisce il tmplNew al tmplOld nel testo della voce
+     * 6) Aggiorna la voce
+     *
+     * @param wikiTitle della pagina wiki (obbligatorio, unico)
+     * @param tmplNew   da sostituire a quello esistente
+     */
+    public void uploadTmpl(String wikiTitle, String tmplNew) {
+        String summary = "fixTmplBio";
+        String testoServerOld = Api.leggeVoce(wikiTitle);
+        String tmplOld = Api.estraeTmplBio(testoServerOld);
+        String  testoServerNew = text.sostituisce(testoServerOld, tmplOld, tmplNew);
+
+        if (pref.isBool(FlowCost.USA_DEBUG)) {
+            appContext.getBean(AQueryWrite.class, Upload.PAGINA_PROVA, testoServerNew, summary);
+        } else {
+            appContext.getBean(AQueryWrite.class, wikiTitle, testoServerNew, summary);
+        }// end of if/else cycle
+
+    }// end of method
+
+
+    /**
      * Carica sul server wiki la entity indicata
      * <p>
      * 1) Recupera la entity dal mongoDB (parametri eventualmente modificati dal programma)
@@ -383,7 +409,6 @@ public class UploadService extends ABioService {
 
         return status;
     } // fine del metodo
-
 
 
     public void uploadGiornoNato(Giorno giorno) {

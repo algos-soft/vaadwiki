@@ -518,13 +518,11 @@ public enum ParBio {
         String riga = VUOTA;
         String ini = "|";
 
-        if (value != null) {
-            riga = ini;
-            riga += getTag();
-            riga += " = ";
-            riga += value;
-            riga += A_CAPO;
-        }// end of if cycle
+        riga = ini;
+        riga += getTag();
+        riga += " = ";
+        riga += value != null ? value : VUOTA;
+        riga += A_CAPO;
 
         return riga;
     }// end of getter method

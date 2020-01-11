@@ -2,7 +2,9 @@ package it.algos.vaadwiki.enumeration;
 
 
 import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.enumeration.EAMenu;
 import it.algos.vaadflow.enumeration.EAPrefType;
+import it.algos.vaadflow.enumeration.IAEnum;
 import it.algos.vaadflow.modules.preferenza.IAPreferenza;
 import it.algos.vaadflow.modules.role.EARole;
 
@@ -146,9 +148,15 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     statisticheAttivita(STATISTICHE_ATTIVITA, "Numero di attività presenti nel database Mongo, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
     statisticheNazionalita(STATISTICHE_NAZIONALITA, "Numero di nazionalità presenti nel database Mongo, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
     statisticheAttesa(STATISTICHE_ATTESA, "Numero di giorni di attesa previsti, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
+
+    usaSingolaVoceElaborata(USA_UPLOAD_SINGOLA_VOCE_ELABORATA, "Upload di ogni voce elaborata", EAPrefType.bool, false),
+    typeElaborazione(TYPE_ELABORAZIONE, "Elaborazione più o meno 'invasiva' dei parametri", EAPrefType.enumeration, EARole.developer, EAElabora.ordinaNormaliNoLoss),
     ;
 
 
+
+
+    //--codice di riferimento. Se è true il flag companySpecifica, contiene anche il code della company come prefisso.
     private String code;
 
     private String desc;
@@ -156,6 +164,9 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     private EAPrefType type;
 
     private Object value;
+
+    //--chi la può vedere
+    private EARole show;
 
 
     EAPreferenzaWiki(String code, String desc, EAPrefType type, Object value) {
@@ -165,6 +176,12 @@ public enum EAPreferenzaWiki implements IAPreferenza {
         this.setValue(value);
     }// fine del costruttore
 
+    EAPreferenzaWiki(String code, String desc, EAPrefType type, EARole show, Object value) {
+        this.setCode(code);
+        this.setDesc(desc);
+        this.setType(type);
+        this.setValue(type != EAPrefType.enumeration ? value : ((IAEnum) value).getPref());
+    }// fine del costruttore
 
     public String getCode() {
         return code;

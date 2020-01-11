@@ -10,11 +10,11 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.dialog.AViewDialog;
+import it.algos.vaadflow.ui.fields.ATextArea;
 import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadwiki.didascalia.DidascaliaBiografie;
 import it.algos.vaadwiki.download.DeleteService;
@@ -169,6 +169,11 @@ public class BioDialog extends AViewDialog<Bio> {
         elaboraOnlyButton.addClickListener(event -> elabora());
         bottomLayout.add(elaboraOnlyButton);
 
+        Button riordinaButton = new Button("Riordina");
+        riordinaButton.setIcon(new Icon(VaadinIcon.REFRESH));
+        riordinaButton.addClickListener(event -> riordina());
+        bottomLayout.add(riordinaButton);
+
         Button reverseButton = new Button("Reverse");
         reverseButton.setIcon(new Icon(VaadinIcon.ARROW_LEFT));
         reverseButton.addClickListener(event -> reverse());
@@ -287,9 +292,17 @@ public class BioDialog extends AViewDialog<Bio> {
     }// end of method
 
 
-    protected void reverse() {
+    protected void riordina() {
+        String tmplOrdinato;
+        ATextArea tmplField = getTmplField();
+        String tmplValue = tmplField.getValue();
+        tmplOrdinato = elaboraService.riordina(tmplValue);
+        tmplField.setValue(tmplOrdinato);
     }// end of method
 
+
+    protected void reverse() {
+    }// end of method
 
 //    protected void showWikiPage() {
 //        String wikiTitle = this.getWikiTitle();
@@ -309,8 +322,9 @@ public class BioDialog extends AViewDialog<Bio> {
         String wikiTitle = this.getWikiTitle();
 
         if (text.isValid(wikiTitle)) {
-            saveClicked(EAOperation.edit);
-            uploadService.uploadBio(wikiTitle);
+//            saveClicked(EAOperation.edit);
+//            uploadService.uploadBio(wikiTitle);
+            uploadService.uploadTmpl(wikiTitle, getTmplValue());
         }// end of if cycle
 
         super.close();
@@ -329,7 +343,7 @@ public class BioDialog extends AViewDialog<Bio> {
 
 
     /**
-     * Utilizza il valore della form-property 'wikititle' e NON quello della enity <br>
+     * Utilizza il valore della form-property 'wikititle' e NON quello della entity <br>
      */
     protected String getWikiTitle() {
         String title = "";
@@ -341,6 +355,29 @@ public class BioDialog extends AViewDialog<Bio> {
         }// end of if cycle
 
         return title;
+    }// end of method
+
+
+    /**
+     * Recupera il field <br>
+     */
+    protected ATextArea getTmplField() {
+        String fieldName = "tmplBioServer";
+        ATextArea tmplField = (ATextArea) getField(fieldName);
+
+        return tmplField;
+    }// end of method
+
+
+    protected String getTmplValue() {
+        String value = VUOTA;
+        ATextArea tmplField = getTmplField();
+
+        if (tmplField != null) {
+            value = tmplField.getValue();
+        }// end of if cycle
+
+        return value;
     }// end of method
 
 }// end of class

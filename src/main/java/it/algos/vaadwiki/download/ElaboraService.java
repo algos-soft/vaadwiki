@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
@@ -368,7 +369,7 @@ public class ElaboraService extends ABioService {
                 if (mappaMongo.get(par.getTag()) != null) {
                     tmplMerged += par.getRiga(mappaMongo.get(par.getTag()));
                 } else {
-                    if (mappaServer.get(par.getTag()) != null&&text.isValid(mappaServer.get(par.getTag()))) {
+                    if (mappaServer.get(par.getTag()) != null && text.isValid(mappaServer.get(par.getTag()))) {
                         tmplMerged += par.getRiga(mappaServer.get(par.getTag()));
                     } else {
                         if (par.isCampoNormale()) {
@@ -410,6 +411,36 @@ public class ElaboraService extends ABioService {
 
     }// end of method
 
+
+    /**
+     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
+     * Riordina i parametri <br>
+     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
+     * Elimina quelli esistenti vuoti, senza valore <br>
+     */
+    public String riordina(String tmplEntrata) {
+        String tmplOrdinato = VUOTA;
+        LinkedHashMap<String, String> mappa = null;
+        String iniTemplate = "{{Bio";
+        String endTemplate = "}}";
+
+        if (text.isValid(tmplEntrata)) {
+            mappa = libBio.getMappaBio(tmplEntrata);
+        }// end of if cycle
+
+        if (mappa != null) {
+            tmplOrdinato = iniTemplate;
+            tmplOrdinato += A_CAPO;
+            for (ParBio par : ParBio.values()) {
+                if (par.isCampoNormale() || text.isValid(mappa.get(par.getTag()))) {
+                    tmplOrdinato += par.getRiga(mappa.get(par.getTag()));
+                }// end of if cycle
+            }// end of for cycle
+            tmplOrdinato += endTemplate;
+        }// end of if cycle
+
+        return tmplOrdinato;
+    }// end of method
 
 
 }// end of class

@@ -34,13 +34,13 @@ public class ElaboraServiceIntegrationTest extends ATest {
     private static String BIO_UNO = "Utente:Gac/Bio/Complessa3";
 
     private static String BIO_SORGENTE = "{{Bio\n" +
-            "|Nome = Crystle Danae\n" +
+            "    |Nome = Crystle Danae\n" +
             "|Cognome = [[Stewart]]\n" +
             "|GiornoMeseMorte=\n" +
-            "|PostCognome = \n" +
+            "    |PostCognome = \n" +
             "|Sesso = F\n" +
-            "|LuogoNascita = [[Wilmington]]\n" +
-            "|GiornoMeseNascita = 1º Settembre\n" +
+            " | LuogoNascita = [[Wilmington]]\n" +
+            " | GiornoMeseNascita = 1º Settembre\n" +
             "|AnnoNascita = [[1981]]\n" +
             "|AnnoMorte=\n" +
             "|LuogoMorte = ? \n" +
@@ -58,12 +58,32 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|Didascalia=\n" +
             "}}";
 
+    private static String BIO_ORDINATO = "{{Bio\n" +
+            "|Nome = Crystle Danae\n" +
+            "|Cognome = [[Stewart]]\n" +
+            "|Sesso = F\n" +
+            "|LuogoNascita = [[Wilmington]]\n" +
+            "|GiornoMeseNascita = 1º Settembre\n" +
+            "|AnnoNascita = [[1981]]\n" +
+            "|LuogoMorte = ?\n" +
+            "|GiornoMeseMorte = \n" +
+            "|AnnoMorte = \n" +
+            "|Attività = modella<ref>Dal 2000</ref>\n" +
+            "|Nazionalità = statunitense ?\n" +
+            "|PostNazionalità = {{sp}}incoronata [[Miss USA]] [[2008]]<ref>{{cite web\n" +
+            "|url= http://www.washingtonpost.com/wp-dyn/content/article/2008/04/12/AR2008041200018.html\n" +
+            "|title= Texan Takes Miss {{sp}} USA Crown in Las Vegas\n" +
+            "|accessdate= 2008-05-10\n" +
+            "|date= 2008-04-12\n" +
+            "|publisher= Washington Post\n" +
+            "}}</ref>\n" +
+            "}}";
     private static String BIO_MERGED = "{{Bio\n" +
             "|Nome = Crystle Danae\n" +
             "|Cognome = Stewart\n" +
             "|Sesso = F\n" +
             "|LuogoNascita = Wilmington\n" +
-            "|GiornoMeseNascita = 20 settembre\n" +
+            "|GiornoMeseNascita = 1º settembre\n" +
             "|AnnoNascita = 1981\n" +
             "|LuogoMorte = \n" +
             "|GiornoMeseMorte = \n" +
@@ -78,6 +98,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|publisher= Washington Post\n" +
             "}}</ref>\n" +
             "}}";
+
 
     @Autowired
     protected LibBio libBio;
@@ -203,6 +224,25 @@ public class ElaboraServiceIntegrationTest extends ATest {
         System.out.println("tmplBioMerged");
         System.out.println("*************");
         System.out.println(tmplBioMerged);
+        System.out.println("");
+    }// end of method
+
+
+    /**
+     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
+     * Riordina i parametri <br>
+     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
+     * Elimina quelli esistenti vuoti, senza valore <br>
+     */
+    @Test
+    public void riordina() {
+        String tmplOrdinato = service.riordina(BIO_SORGENTE);
+        Assert.assertEquals(tmplOrdinato, BIO_ORDINATO);
+
+        System.out.println("*************");
+        System.out.println("tmplOrdinato");
+        System.out.println("*************");
+        System.out.println(tmplOrdinato);
         System.out.println("");
     }// end of method
 
