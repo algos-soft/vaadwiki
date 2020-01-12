@@ -319,7 +319,7 @@ public class LogService extends AService {
      */
     @Override
     public List<? extends AEntity> findAll() {
-        return repository.findAll();
+        return repository.findAllByOrderByEventoDesc();
     }// end of method
 
 

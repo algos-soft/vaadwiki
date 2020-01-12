@@ -7,6 +7,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.List;
+
 import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 
 /**
@@ -29,5 +31,6 @@ import static it.algos.vaadflow.application.FlowCost.TAG_LOG;
 public interface LogRepository extends MongoRepository<Log, String> {
 
     public Log findByDescrizione(String descrizione);
+    public List<Log> findAllByOrderByEventoDesc();
 
 }// end of class

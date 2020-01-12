@@ -790,7 +790,7 @@ public class UtilityView extends VerticalLayout {
 
 
     /**
-     * Lista di voci biografiche che sono PROBABILMENTE di genere femminile
+     * Lista di voci biografiche che sono PROBABILMENTE di genere maschile
      */
     public void esegueListM() {
         List<Bio> listaMaschi = bioProbabilmente(elencoNomiMaschili);
@@ -800,16 +800,18 @@ public class UtilityView extends VerticalLayout {
 
 
     /**
-     * Lista di voci biografiche che sono PROBABILMENTE di genere femminile
+     * Lista di voci biografiche che sono senza indicazione di sesso
      */
     public void esegueListMF() {
-        List<Bio> lista = null;
-        List<Bio> listaAll = bioSenzaSesso();
+        List<Bio> lista = bioSenzaSesso();
 
-        if (listaAll != null && listaAll.size() > 0) {
-            lista = listaAll.subList(0, 20);
+        if (lista != null && lista.size() > 0) {
+            if (lista.size() > 20) {
+                lista = lista.subList(0, 20);
+            }// end of if cycle
+
             if (lista != null) {
-                pageSessoResult.add(new Label("Elenco delle prime " + lista.size() + " voci biografiche che non hanno genere sul totale di " + listaAll.size()));
+                pageSessoResult.add(new Label("Elenco delle prime " + lista.size() + " voci biografiche che non hanno genere sul totale di " + lista.size()));
                 allRighe(lista, "M");
             }// end of if cycle
         }// end of if cycle

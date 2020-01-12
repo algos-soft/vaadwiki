@@ -78,27 +78,57 @@ public class StatisticheParametri extends Statistiche {
     protected void elaboraBody() {
         String testo = VUOTA;
 
+        //--prima tabella (15 parametri)
+        testo += A_CAPO;
+        testo += tabellaParametriBase();
+
+        //--seconda tabella
+        testo += tabellaAltriParametri();
+
+        testoPagina += testo.trim();
+    }// fine del metodo
+
+
+    protected String tabellaParametriBase() {
+        String testo = VUOTA;
+
         //--tabella
         testo += A_CAPO;
-        testo += testoPreTabella();
+        testo += testoTabellaBase();
         testo += inizioTabella();
-        testo += colonneTabella();
-        testo += corpoTabella();
+        testo += colonneTabella(true);
+        testo += corpoTabella(true);
         testo += fineTabella();
         testo += A_CAPO;
 
-        testoPagina += testo.trim();
+        return testo;
+    }// fine del metodo
+
+
+    protected String tabellaAltriParametri() {
+        String testo = VUOTA;
+
+        //--tabella
+        testo += A_CAPO;
+        testo += testoTabellaAltri();
+        testo += inizioTabella();
+        testo += colonneTabella(false);
+        testo += corpoTabella(false);
+        testo += fineTabella();
+        testo += A_CAPO;
+
+        return testo;
     }// fine del metodo
 
 
     /*
      * testo descrittivo <br>
      */
-    protected String testoPreTabella() {
+    protected String testoTabellaBase() {
         String testo = VUOTA;
 
         testo += A_CAPO;
-        testo += "==Utilizzo==";
+        testo += "==Parametri base==";
         testo += A_CAPO;
         testo += "Il '''[[template:Bio|template Bio]]''' prevede ";
         testo += LibWiki.setBold(ParBio.values().length);
@@ -113,7 +143,7 @@ public class StatisticheParametri extends Statistiche {
     }// fine del metodo
 
 
-    protected String colonneTabella() {
+    protected String colonneTabella(boolean estesa) {
         String testo = "";
         String color = "! style=\"background-color:#CCC;\" |";
 
@@ -125,38 +155,50 @@ public class StatisticheParametri extends Statistiche {
         testo += LibWiki.setBold("Parametro");
         testo += A_CAPO;
 
-        testo += color;
-        testo += LibWiki.setBold("Voci che non lo usano");
-        testo += A_CAPO;
+        if (estesa) {
+            testo += color;
+            testo += LibWiki.setBold("Voci che non lo usano");
+            testo += A_CAPO;
 
-        testo += color;
-        testo += LibWiki.setBold("Voci che lo usano");
-        testo += A_CAPO;
+            testo += color;
+            testo += LibWiki.setBold("Voci che lo usano");
+            testo += A_CAPO;
 
-        testo += color;
-        testo += LibWiki.setBold("Perc. di utilizzo");
-        testo += A_CAPO;
+            testo += color;
+            testo += LibWiki.setBold("Perc. di utilizzo");
+            testo += A_CAPO;
+        }// end of if cycle
 
         return testo;
     }// fine del metodo
 
 
-    protected String corpoTabella() {
+    protected String corpoTabella(boolean visibile) {
         StringBuilder testo = new StringBuilder(VUOTA);
         int k = 1;
         int totVoci = bioService.count();
 
         for (ParBio par : ParBio.values()) {
-            if (par.isVisibileLista()) {
-                testo.append(riga(totVoci, par, k++));
-                testo.append(A_CAPO);
-            }// end of if cycle
+            if (visibile) {
+                if (par.isVisibileLista()) {
+                    testo.append(riga(totVoci, par, k++));
+                    testo.append(A_CAPO);
+                }// end of if cycle
+            } else {
+                if (!par.isVisibileLista()) {
+                    testo.append(riga(par, k++));
+                    testo.append(A_CAPO);
+                }// end of if cycle
+            }// end of if/else cycle
         }// end of for cycle
 
         return testo.toString();
     }// fine del metodo
 
 
+    /*
+     * Riga parametri delle liste <br>
+     */
     protected String riga(int totVoci, ParBio par, int pos) {
         String testo = VUOTA;
         int usati = usati(par);
@@ -197,8 +239,44 @@ public class StatisticheParametri extends Statistiche {
         query.addCriteria(Criteria.where(par.getDbName()).exists(true));
         numVoci = mongo.mongoOp.count(query, Bio.class);
 
-
         return (int) numVoci;
+    }// fine del metodo
+
+
+    /*
+     * Riga parametri non utilizzati nelle liste e non presenti nel mongoDB <br>
+     */
+    protected String riga(ParBio par, int pos) {
+        String testo = VUOTA;
+
+        testo += SEP_INI;
+        testo += A_CAPO;
+
+        testo += SEP;
+        testo += pos;
+
+        testo += SEP_DOPPIO;
+        testo += SINISTRA;
+        testo += SEP;
+        testo += LibWiki.setBold(par.getTag());
+
+        return testo;
+    }// fine del metodo
+
+
+    /*
+     * testo descrittivo <br>
+     */
+    protected String testoTabellaAltri() {
+        String testo = VUOTA;
+
+        testo += A_CAPO;
+        testo += "==Altri parametri==";
+        testo += A_CAPO;
+        testo += "Oltre ai 15 parametri utilizzati nelle liste, il '''[[template:Bio|template Bio]]''' prevede ";
+        testo += "altri 26 parametri, tutti facoltativi.";
+
+        return testo;
     }// fine del metodo
 
 }// end of class
