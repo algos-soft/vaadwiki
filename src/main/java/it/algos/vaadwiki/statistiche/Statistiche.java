@@ -9,6 +9,7 @@ import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.nome.NomeService;
 import it.algos.vaadwiki.service.LibBio;
+import it.algos.vaadwiki.upload.Upload;
 import it.algos.vaadwiki.upload.UploadService;
 import it.algos.wiki.LibWiki;
 import it.algos.wiki.web.AQueryWrite;
@@ -45,8 +46,6 @@ public abstract class Statistiche {
 
 
     protected static String SINISTRA = "style=\"text-align: left;\"";
-
-    protected static String TAG_HEAD_INDICE = "__FORCETOC__";
 
     protected static String TAG_HEAD_TEMPLATE_AVVISO = "StatBio";
 
@@ -265,8 +264,10 @@ public abstract class Statistiche {
         String testo = VUOTA;
 
         if (usaTagIndice) {
-            testo += TAG_HEAD_INDICE;
-        }// end of if cycle
+            testo += Upload.TAG_INDICE;
+        } else {
+            testo += Upload.TAG_NO_INDICE;
+        }// end of if/else cycle
 
         //--Posizione il template di avviso
         testo += elaboraTemplateAvviso();

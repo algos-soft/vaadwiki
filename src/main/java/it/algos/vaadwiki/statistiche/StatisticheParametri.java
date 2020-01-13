@@ -55,7 +55,6 @@ public class StatisticheParametri extends Statistiche {
      */
     protected void inizia() {
         super.inizia();
-        appContext.getBean(StatisticheSingoloParametro.class, ParBio.sesso.name());
     }// end of method
 
 
@@ -201,8 +200,8 @@ public class StatisticheParametri extends Statistiche {
      */
     protected String riga(int totVoci, ParBio par, int pos) {
         String testo = VUOTA;
-        int usati = usati(par);
-        int nonUsati = totVoci - usati;
+        int usate = usate(par);
+        int nonUsate = totVoci - usate;
 
         testo += SEP_INI;
         testo += A_CAPO;
@@ -220,19 +219,20 @@ public class StatisticheParametri extends Statistiche {
         }// end of if/else cycle
 
         testo += SEP_DOPPIO;
-        testo += text.format(nonUsati);
+        testo += text.format(nonUsate);
 
         testo += SEP_DOPPIO;
-        testo += text.format(usati);
+        testo += text.format(usate);
 
         testo += SEP_DOPPIO;
-        testo += LibWiki.setBold(math.percentualeDueDecimali(usati, totVoci));
+        testo += LibWiki.setBold(math.percentualeDueDecimali(usate, totVoci));
 
+        appContext.getBean(StatisticheSingoloParametro.class, par, nonUsate, usate);
         return testo;
     }// fine del metodo
 
 
-    protected int usati(ParBio par) {
+    protected int usate(ParBio par) {
         long numVoci = 0;
 
         Query query = new Query();

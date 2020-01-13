@@ -55,9 +55,9 @@ public abstract class Upload {
 
     protected final static String TAG_NON_SCRIVERE = "<!-- NON MODIFICATE DIRETTAMENTE QUESTA PAGINA - GRAZIE -->";
 
-    protected final static String TAG_INDICE = "__FORCETOC__";
+    public final static String TAG_INDICE = "__FORCETOC__";
 
-    protected final static String TAG_NO_INDICE = "__NOTOC__";
+    public final static String TAG_NO_INDICE = "__NOTOC__";
 
     //--property
     public boolean usaRigheRaggruppate;
