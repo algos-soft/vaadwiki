@@ -1,11 +1,16 @@
 package it.algos.vaadwiki.integration;
 
+import it.algos.vaadflow.service.ADateService;
+import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadwiki.ATest;
 import it.algos.vaadwiki.download.ElaboraService;
+import it.algos.vaadwiki.download.PageService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.service.ParBio;
+import it.algos.vaadwiki.upload.UploadService;
+import it.algos.wiki.Api;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,9 +18,14 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
@@ -25,6 +35,13 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * User: gac
  * Date: gio, 02-gen-2020
  * Time: 20:04
+ * <p>
+ * Elaborazione:
+ * da mongoDB elaborazione EAElabora.ordinaNormaliNoLoss
+ * parte dal tmpl e lo riordina (aggiunge normali mancanti ed elimina quelli vuoti) SENZA modificare i valori o i parametri presenti nel mongoDB
+ * da mongoDB elaborazione EAElabora.parametriRipuliti
+ * parte dal tmpl e lo riordina (aggiunge normali mancanti ed elimina quelli vuoti) SENZA modificare i valori o i parametri presenti nel mongoDB
+ * da mongoDB elaborazione EAElabora.parametriModificati
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -78,6 +95,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|publisher= Washington Post\n" +
             "}}</ref>\n" +
             "}}";
+
     private static String BIO_MERGED = "{{Bio\n" +
             "|Nome = Crystle Danae\n" +
             "|Cognome = Stewart\n" +
@@ -99,6 +117,11 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "}}</ref>\n" +
             "}}";
 
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    public ADateService date;
 
     @Autowired
     protected LibBio libBio;
@@ -109,6 +132,24 @@ public class ElaboraServiceIntegrationTest extends ATest {
     @Autowired
     protected ElaboraService service;
 
+    /**
+     * La injection viene fatta da SpringBoot in automatico <br>
+     */
+    @Autowired
+    protected AMongoService mongo;
+
+    @Autowired
+    protected ApplicationContext appContext;
+
+    @Autowired
+    protected UploadService uploadService;
+
+    @Autowired
+    protected PageService pageService;
+
+    @Autowired
+    protected Api api;
+
 
     @Before
     public void setUpIniziale() {
@@ -116,6 +157,11 @@ public class ElaboraServiceIntegrationTest extends ATest {
         Assert.assertNotNull(service);
         Assert.assertNotNull(libBio);
         Assert.assertNotNull(bioService);
+        Assert.assertNotNull(mongo);
+        Assert.assertNotNull(appContext);
+        Assert.assertNotNull(api);
+        Assert.assertNotNull(pageService);
+        Assert.assertNotNull(date);
     }// end of method
 
 
@@ -193,7 +239,6 @@ public class ElaboraServiceIntegrationTest extends ATest {
         for (ParBio par : ParBio.getCampiNormali()) {
             System.out.println(par.getTag());
         }// end of for cycle
-
     }// end of single test
 
 
@@ -225,25 +270,111 @@ public class ElaboraServiceIntegrationTest extends ATest {
         System.out.println("*************");
         System.out.println(tmplBioMerged);
         System.out.println("");
-    }// end of method
+    }// end of single test
 
 
     /**
+     * EAElabora.ordinaNormaliNoLoss
+     * <p>
      * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
      * Riordina i parametri <br>
      * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
      * Elimina quelli esistenti vuoti, senza valore <br>
      */
     @Test
-    public void riordina() {
-        String tmplOrdinato = service.riordina(BIO_SORGENTE);
+    public void ordinaNormaliNoLoss() {
+        String tmplOrdinato = service.ordinaNormaliNoLoss(BIO_SORGENTE);
         Assert.assertEquals(tmplOrdinato, BIO_ORDINATO);
 
         System.out.println("*************");
-        System.out.println("tmplOrdinato");
+        System.out.println("ordinaNormaliNoLoss");
         System.out.println("*************");
         System.out.println(tmplOrdinato);
         System.out.println("");
-    }// end of method
+    }// end of single test
 
-}// end of class
+
+//    /**
+//     * EAElabora.ordinaNormaliNoLoss
+//     * <p>
+//     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
+//     * Riordina i parametri <br>
+//     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
+//     * Elimina quelli esistenti vuoti, senza valore <br>
+//     * Registra le modifiche sul mongoDB <br>
+//     */
+//    @Test
+//    public void ordinaNormaliNoLoss2() {
+//        Sort sort = new Sort(Sort.Direction.ASC, "_id");
+//        List<Bio> lista = mongo.mongoOp.find(new Query().with(PageRequest.of(0, 10, sort)), Bio.class);
+//        String oldTmpl;
+//
+//        System.out.println("*************");
+//        System.out.println("ordinaNormaliNoLoss");
+//        System.out.println("*************");
+//        System.out.println("");
+//        for (Bio bio : lista) {
+//            oldTmpl = bio.getTmplBioServer();
+//            if (service.ordinaNormaliNoLoss(bio)) {
+//                System.out.println("*************");
+//                System.out.println("prima");
+//                System.out.println("*************");
+//                System.out.println(oldTmpl);
+//                System.out.println("");
+//                System.out.println("*************");
+//                System.out.println("dopo");
+//                System.out.println("*************");
+//                System.out.println(bio.getTmplBioServer());
+//                System.out.println("");
+//            } else {
+//                System.out.println("Non modificato - " + bio.getWikiTitle());
+//            }// end of if/else cycle
+//
+//
+//        }// end of for cycle
+//}// end of single test
+
+
+    /**
+     * EAElabora.ordinaNormaliNoLoss
+     * <p>
+     * Parte da una entity Bio esistente sul mongoDB <br>
+     * Il tmpl del mongoDB è diverso da quello 'previsto' <br>
+     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
+     * Riordina i parametri <br>
+     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
+     * Elimina quelli esistenti vuoti, senza valore <br>
+     * Registra le modifiche sul server wiki <br>
+     */
+    @Test
+    public void ordinaNormaliNoLoss2() {
+//        long inizio;
+//        List<Bio> lista;
+//        Sort sort = new Sort(Sort.Direction.ASC, "_id");
+////        List<Bio> lista = mongo.mongoOp.find(new Query().with(PageRequest.of(20, 100, sort)), Bio.class);
+//        lista= bioService.findAll();
+//        int cont = 0;
+//
+//        inizio = System.currentTimeMillis();
+//        if (lista != null && lista.size() > 0) {
+//            for (Bio bio : lista) {
+//                if (service.check(bio)) {
+////                    service.uploadNormaliNoLoss(bio);
+//                    cont++;
+//                }// end of if cycle
+//            }// end of for cycle
+//        }// end of if cycle
+//
+//        System.out.println("Modificati " + cont + " su " + lista.size() + " in " + date.deltaText(inizio));
+    }// end of single test
+
+    /**
+     * Controlla se il tmpl del mongoDB di tutte le istanze è uguale a quello 'previsto' <br>
+     * Se è diverso, lo modifica sul server <br>
+     */
+    @Test
+    public void checkAll() {
+        service.checkAll();
+    }// end of single test
+
+    }// end of class

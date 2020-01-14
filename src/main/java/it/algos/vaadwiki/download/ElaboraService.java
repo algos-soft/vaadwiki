@@ -1,11 +1,13 @@
 package it.algos.vaadwiki.download;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.FlowCost;
+import it.algos.vaadflow.enumeration.EALogType;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.ABioService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.service.ParBio;
+import it.algos.wiki.Page;
+import it.algos.wiki.web.AQueryWrite;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -19,8 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static it.algos.vaadflow.application.FlowCost.A_CAPO;
-import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import static it.algos.vaadflow.application.FlowCost.*;
 
 /**
  * Project vaadbio2
@@ -28,6 +29,13 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
  * User: gac
  * Date: sab, 11-ago-2018
  * Time: 15:44
+ * <p>
+ * Elaborazione:
+ * da mongoDB elaborazione EAElabora.ordinaNormaliNoLoss
+ * - parte dal tmpl e lo riordina (aggiunge parametri normali mancanti ed elimina quelli vuoti)
+ * - SENZA modificare i valori o i parametri presenti nel mongoDB
+ * da mongoDB elaborazione EAElabora.parametriRipuliti
+ * da mongoDB elaborazione EAElabora.parametriModificati
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -85,7 +93,116 @@ public class ElaboraService extends ABioService {
             }// end of for cycle
             log.info("ELABORA - Elaborate " + text.format(tot) + " voci biografiche su " + text.format(totale) + " in " + date.deltaText(inizio));
         }// end of for cycle
+    }// end of method
 
+
+    /**
+     * Controlla se il tmpl del mongoDB di tutte le istanze è uguale a quello 'previsto' <br>
+     */
+    public void checkAll() {
+        long inizio = System.currentTimeMillis();
+        int size = 1000;
+        int totale = bioService.count();
+        Sort sort = new Sort(Sort.Direction.ASC, "pageid");
+        List<Bio> lista = null;
+        int tot = 0;
+
+        for (int k = 0; k < array.numCicli(totale, size); k++) {
+            lista = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Bio.class);
+            for (Bio bio : lista) {
+                if (check(bio)) {
+                    tot++;
+                }// end of if cycle
+            }// end of for cycle
+        }// end of for cycle
+
+        logger.crea(EALogType.elabora, "Su " + text.format(totale) + " voci ci sono " + text.format(tot) + " template diversi. Controllati", inizio);
+    }// end of method
+
+
+    /**
+     * Controlla se il tmpl del mongoDB di tutte le istanze è uguale a quello 'previsto' <br>
+     * Se è diverso, lo modifica sul server <br>
+     */
+    public void uploadAllNormaliNoLoss() {
+        long inizio = System.currentTimeMillis();
+        int size = 1000;
+        int totale = bioService.count();
+        Sort sort = new Sort(Sort.Direction.ASC, "pageid");
+        List<Bio> lista = null;
+        int tot = 0;
+
+        for (int k = 0; k < array.numCicli(totale, size); k++) {
+            lista = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Bio.class);
+            for (Bio bio : lista) {
+                if (check(bio)) {
+                    tot++;
+                    uploadNormaliNoLoss(bio);
+                }// end of if cycle
+            }// end of for cycle
+        }// end of for cycle
+
+        logger.crea(EALogType.upload, "Su " + text.format(totale) + " voci ci sono " + text.format(tot) + " template diversi. Uploadati sul server", inizio);
+    }// end of method
+
+
+    /**
+     * Controlla se il tmpl del mongoDB è uguale a quello 'previsto' <br>
+     */
+    public boolean check(Bio bio) {
+        return check(bio.getTmplBioServer());
+    }// end of method
+
+
+    /**
+     * Controlla se il tmpl del mongoDB è uguale a quello 'previsto' <br>
+     */
+    public boolean check(String templateOriginale) {
+        boolean diverso = false;
+        String tmplOrdinato = elaboraService.ordinaNormaliNoLoss(templateOriginale);
+
+        if (!tmplOrdinato.equals(templateOriginale)) {
+            diverso = true;
+        }// end of if cycle
+
+        return diverso;
+    }// end of method
+
+
+    /**
+     * EAElabora.ordinaNormaliNoLoss
+     * <p>
+     * Parte da una entity Bio esistente sul mongoDB <br>
+     * Il tmpl del mongoDB è diverso da quello 'previsto' <br>
+     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
+     * Riordina i parametri <br>
+     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
+     * Elimina quelli esistenti vuoti, senza valore <br>
+     * Registra le modifiche sul server wiki <br>
+     */
+    public void uploadNormaliNoLoss(Bio bioEsistente) {
+        String wikiTitle = bioEsistente.getWikiTitle();
+        String summary = "fixTmpl";
+        Page page;
+        Bio bio;
+        String oldTmpl;
+        String newTmpl;
+        String oldTesto;
+        String newTesto;
+
+        page = api.leggePage(wikiTitle);
+
+        if (page != null && page.isBioValida()) {
+            oldTesto = page.getText();
+            bio = pageService.creaBio(page);
+            oldTmpl = bio.getTmplBioServer();
+            if (ordinaNormaliNoLoss(bio)) {
+                newTmpl = bio.getTmplBioServer();
+                bioService.save(bio);
+                newTesto = text.sostituisce(oldTesto, oldTmpl, newTmpl);
+                appContext.getBean(AQueryWrite.class, wikiTitle, newTesto, summary);
+            }// end of if cycle
+        }// end of if cycle
     }// end of method
 
 
@@ -117,7 +234,7 @@ public class ElaboraService extends ABioService {
         int tot = 0;
 
         if (array.isValid(lista)) {
-            if (pref.isBool(FlowCost.USA_DEBUG)) {
+            if (pref.isBool(USA_DEBUG)) {
                 log.info("ELABORA - Inizio dell'elaborazione dei parametri di tutte le " + text.format(lista.size()) + " biografie");
             }// end of if cycle
 
@@ -133,7 +250,7 @@ public class ElaboraService extends ABioService {
             }// end of for cycle
 
             log.debug("ELABORA - elaborati i parametri delle nuove pagine (" + text.format(lista.size()) + " elementi) in " + date.deltaText(inizio));
-            if (pref.isBool(FlowCost.USA_DEBUG)) {
+            if (pref.isBool(USA_DEBUG)) {
                 log.info("ELABORA - finito in " + date.deltaText(inizio));
             }// end of if cycle
         }// end of if cycle
@@ -413,13 +530,39 @@ public class ElaboraService extends ABioService {
 
 
     /**
+     * EAElabora.ordinaNormaliNoLoss
+     * <p>
+     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
+     * Riordina i parametri <br>
+     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
+     * Elimina quelli esistenti vuoti, senza valore <br>
+     * Registra le modifiche sul mongoDB <br>
+     */
+    public boolean ordinaNormaliNoLoss(Bio bio) {
+        boolean modificato = false;
+        String oldTmpl = bio.getTmplBioServer();
+        String newTmpl = ordinaNormaliNoLoss(oldTmpl);
+
+        if (!newTmpl.equals(oldTmpl)) {
+            bio.setTmplBioServer(newTmpl);
+            bioService.save(bio);
+            modificato = true;
+        }// end of if cycle
+
+        return modificato;
+    }// end of method
+
+
+    /**
+     * EAElabora.ordinaNormaliNoLoss
+     * <p>
      * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
      * Riordina i parametri <br>
      * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
      * Elimina quelli esistenti vuoti, senza valore <br>
      */
-    public String riordina(String tmplEntrata) {
-        String tmplOrdinato = VUOTA;
+    public String ordinaNormaliNoLoss(String tmplEntrata) {
+        StringBuilder tmplOrdinato = new StringBuilder(VUOTA);
         LinkedHashMap<String, String> mappa = null;
         String iniTemplate = "{{Bio";
         String endTemplate = "}}";
@@ -429,17 +572,17 @@ public class ElaboraService extends ABioService {
         }// end of if cycle
 
         if (mappa != null) {
-            tmplOrdinato = iniTemplate;
-            tmplOrdinato += A_CAPO;
+            tmplOrdinato = new StringBuilder(iniTemplate);
+            tmplOrdinato.append(A_CAPO);
             for (ParBio par : ParBio.values()) {
                 if (par.isCampoNormale() || text.isValid(mappa.get(par.getTag()))) {
-                    tmplOrdinato += par.getRiga(mappa.get(par.getTag()));
+                    tmplOrdinato.append(par.getRiga(mappa.get(par.getTag())));
                 }// end of if cycle
             }// end of for cycle
-            tmplOrdinato += endTemplate;
+            tmplOrdinato.append(endTemplate);
         }// end of if cycle
 
-        return tmplOrdinato;
+        return tmplOrdinato.toString();
     }// end of method
 
 

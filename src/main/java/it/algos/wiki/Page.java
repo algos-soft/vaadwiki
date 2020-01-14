@@ -1,10 +1,8 @@
 package it.algos.wiki;
 
 
-import it.algos.vaadwiki.service.AWikiService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -169,6 +167,14 @@ public class Page implements Serializable {
 
     public Timestamp getTimestamp() {
         return (Timestamp) mappaReadObj.get(PagePar.timestamp.toString());
+    }// fine del metodo
+
+
+    public boolean isBioValida() {
+        String contenuto = (String) mappaReadObj.get(PagePar.content.toString());
+        String testoTemplate = LibWiki.estraeTmplBioCompresi(contenuto);
+
+        return testoTemplate.length() > 0;
     }// fine del metodo
 
 

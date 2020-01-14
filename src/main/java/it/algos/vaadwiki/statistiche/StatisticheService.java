@@ -135,7 +135,6 @@ public class StatisticheService extends ABioService {
             return;
         }// end of if cycle
 
-        updateBiografie();
         updateDidascalie();
         updateGiorni();
         updateAnni();

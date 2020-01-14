@@ -296,7 +296,7 @@ public class BioDialog extends AViewDialog<Bio> {
         String tmplOrdinato;
         ATextArea tmplField = getTmplField();
         String tmplValue = tmplField.getValue();
-        tmplOrdinato = elaboraService.riordina(tmplValue);
+        tmplOrdinato = elaboraService.ordinaNormaliNoLoss(tmplValue);
         tmplField.setValue(tmplOrdinato);
     }// end of method
 

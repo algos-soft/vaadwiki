@@ -25,6 +25,7 @@ public enum EALogType {
     importo("import"),
     download("download"),
     update("update"),
+    elabora("elabora"),
     upload("upload"),
     reset("reset"),
     utente("utente"),

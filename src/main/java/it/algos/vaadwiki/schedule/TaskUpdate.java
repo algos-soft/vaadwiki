@@ -65,6 +65,7 @@ public class TaskUpdate extends WikiTask {
     public void execute(TaskExecutionContext context) throws RuntimeException {
         if (pref.isBool(USA_DAEMON_BIO)) {
             cicloUpdate.esegue();
+            statisticheService.updateBiografie();
         }// end of if cycle
     }// end of method
 

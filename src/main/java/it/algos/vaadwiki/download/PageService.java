@@ -242,7 +242,7 @@ public class PageService extends ABioService {
      * Se è diverso, lo modifica sul server <br>
      */
     public void uploadPagina(String wikiTitle, String templateOriginale) {
-        String tmplOrdinato = elaboraService.riordina(templateOriginale);
+        String tmplOrdinato = elaboraService.ordinaNormaliNoLoss(templateOriginale);
 
         if (!tmplOrdinato.equals(templateOriginale)) {
             uploadService.uploadTmpl(wikiTitle, tmplOrdinato);

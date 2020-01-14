@@ -264,6 +264,16 @@ public class BioService extends WikiService {
 
     /**
      * Returns all entities of the type <br>
+     *
+     * @return all ordered entities
+     */
+    public List<Bio> findAll() {
+        return (List) repository.findAll();
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
      * <p>
      * Ordinate secondo l'ordinamento previsto
      *
@@ -271,7 +281,7 @@ public class BioService extends WikiService {
      *
      * @return all ordered entities
      */
-    protected ArrayList<? extends AEntity> findAll(Sort sort) {
+    public ArrayList<? extends AEntity> findAll(Sort sort) {
         ArrayList<? extends AEntity> lista = null;
 
         try { // prova ad eseguire il codice

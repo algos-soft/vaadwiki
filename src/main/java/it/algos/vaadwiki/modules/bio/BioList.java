@@ -243,10 +243,15 @@ public class BioList extends AGridViewList {
         updateButton.addClickListener(e -> download());
         topPlaceholder.add(updateButton);
 
-        //--ri-elabora tutte le biografie
-        elaboraButton = new Button("Elabora", new Icon(VaadinIcon.ARROW_RIGHT));
-        elaboraButton.addClickListener(e -> elaboraService.esegue());
+        //--check dei templates - log del numero di quelli diversi - nessuna modifica
+        elaboraButton = new Button("Check", new Icon(VaadinIcon.SEARCH));
+        elaboraButton.addClickListener(e -> elaboraService.checkAll());
         topPlaceholder.add(elaboraButton);
+
+        //--ri-elabora tutte le biografie -upload sul server
+        uploadButton = new Button("Upload", new Icon(VaadinIcon.ARROW_UP));
+        uploadButton.addClickListener(e -> elaboraService.uploadAllNormaliNoLoss());
+        topPlaceholder.add(uploadButton);
 
         Button buttonShowDidascalie = new Button("Didascalie", new Icon(VaadinIcon.TABLE));
         buttonShowDidascalie.addClassName("view-toolbar__button");
