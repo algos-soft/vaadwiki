@@ -2,7 +2,6 @@ package it.algos.vaadwiki.download;
 
 import com.mongodb.client.result.DeleteResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadwiki.enumeration.EACicloType;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.ABioService;
@@ -17,7 +16,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static it.algos.vaadflow.application.FlowCost.USA_DEBUG;
-import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.USA_UPLOAD_SINGOLA_VOCE_ELABORATA;
+import static it.algos.vaadwiki.application.WikiCost.WIKI_PAGE_LIMIT;
 
 /**
  * Project vaadbio2
@@ -247,9 +247,7 @@ public class PageService extends ABioService {
         if (!tmplOrdinato.equals(templateOriginale)) {
             uploadService.uploadTmpl(wikiTitle, tmplOrdinato);
 
-            if (pref.isBool(USA_DEBUG)) {
-                logger.debug("Riordinata voce " + wikiTitle + " con con template non 'allineato'");
-            }// end of if cycle
+            logger.debug("Riordinata voce " + wikiTitle + " con con template non 'allineato'");
         }// end of if cycle
 
     }// end of method
