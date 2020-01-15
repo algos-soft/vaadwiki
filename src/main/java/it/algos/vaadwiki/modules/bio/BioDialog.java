@@ -292,6 +292,10 @@ public class BioDialog extends AViewDialog<Bio> {
     }// end of method
 
 
+    /**
+     * Parte dai tmpl visibile nel dialogo e costruisce un tmpl 'normale' <br>
+     * Modifica il tmpl a video ma NON nel mongoDB <br>
+     */
     protected void riordina() {
         String tmplOrdinato;
         ATextArea tmplField = getTmplField();
@@ -301,6 +305,10 @@ public class BioDialog extends AViewDialog<Bio> {
     }// end of method
 
 
+    /**
+     * Parte dai parametri visibili nel dialogo e costruisce un tmpl <br>
+     * Modifica il tmpl a video ma NON nel mongoDB <br>
+     */
     protected void reverse() {
     }// end of method
 

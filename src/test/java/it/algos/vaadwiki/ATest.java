@@ -10,8 +10,6 @@ import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.AReflectionService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.ui.IAView;
-import it.algos.vaadwiki.download.PageService;
-import it.algos.wiki.Api;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
@@ -20,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Project springvaadin
@@ -109,6 +108,7 @@ public class ATest {
     @InjectMocks
     public ATextService text;
 
+    protected HashMap<String, String> mappa = new HashMap<>();
 
     @InjectMocks
     protected AAnnotationService annotation;

@@ -445,45 +445,79 @@ public class ElaboraService extends ABioService {
     public String getTmplBioMongo(Bio bio) {
         String tmplBioMongo = VUOTA;
         String value = VUOTA;
-        String iniTemplate = "{{Bio";
-        String endTemplate = "}}";
 
         if (bio != null) {
-            tmplBioMongo = iniTemplate;
-            tmplBioMongo += A_CAPO;
-
             for (ParBio par : ParBio.values()) {
                 value = par.getValue(bio);
                 if (text.isValid(value) || par.isCampoNormale()) {
                     tmplBioMongo += par.getRiga(bio);
                 }// end of if cycle
             }// end of for cycle
-
-            tmplBioMongo += endTemplate;
         }// end of if cycle
 
-        return tmplBioMongo;
+        return addTagTemplate(tmplBioMongo);
+    }// end of method
+
+
+    /**
+     * Costruisce un template da una mappa di parametri <br>
+     * ATTENZIONE - Non è merged con eventuali parametri non normali <br>
+     */
+    public String getTmpl(HashMap<String, String> mappa) {
+        String tmplBio = VUOTA;
+        String value;
+        String defaultGenere = "M";
+
+        if (mappa.get(ParBio.sesso.getTag()) == null) {
+            mappa.put(ParBio.sesso.getTag(), defaultGenere);
+        }// end of if cycle
+
+        if (mappa != null) {
+            for (ParBio par : ParBio.values()) {
+                value = mappa.get(par.getTag());
+                if (value != null || par.isCampoNormale()) {
+                    tmplBio += (par.getRiga(value));
+                }// end of if cycle
+            } // fine del ciclo for-each
+        }// end of if cycle
+
+        return addTagTemplate(tmplBio);
+    }// end of method
+
+
+    /**
+     * Merge di una mappa di parametri PIU i parametri del tmplBioServer <br>
+     * Se esiste un parametro 'normale' di tmplBioMongo, lo usa <br>
+     * Se non esiste un parametro 'normale' di tmplBioMongo ma esiste di tmplBioServer, lo usa <br>
+     * Se non esiste un parametro 'normale' ne di tmplBioMongo ne di tmplBioServer, usa un stringa di valore VUOTA <br>
+     * Non esistono parametri 'extra' di tmplBioMongo <br>
+     * Se esiste un parametro 'extra' di tmplBioServer, lo usa <br>
+     * Se non esiste un parametro 'extra' di tmplBioServer, non inserisce la riga  <br>
+     */
+    public String getTmplMerged(HashMap<String, String> mappa, String tmplBioServer) {
+        return getTmplMerged(getTmpl(mappa), tmplBioServer);
     }// end of method
 
 
     /**
      * Merge dei template <br>
      * Costruisce un template con i parametri di tmplBioMongo PIU quelli di tmplBioServer <br>
+     * Se esiste un parametro 'normale' di tmplBioMongo, lo usa <br>
+     * Se non esiste un parametro 'normale' di tmplBioMongo ma esiste di tmplBioServer, lo usa <br>
+     * Se non esiste un parametro 'normale' ne di tmplBioMongo ne di tmplBioServer, usa un stringa di valore VUOTA <br>
+     * Non esistono parametri 'extra' di tmplBioMongo <br>
+     * Se esiste un parametro 'extra' di tmplBioServer, lo usa <br>
+     * Se non esiste un parametro 'extra' di tmplBioServer, non inserisce la riga  <br>
      */
     public String getTmplMerged(String tmplBioMongo, String tmplBioServer) {
         String tmplMerged = VUOTA;
         HashMap<String, String> mappaServer = null;
         HashMap<String, String> mappaMongo = null;
-        String iniTemplate = "{{Bio";
-        String endTemplate = "}}";
         String tag = "|";
 
         if (text.isValid(tmplBioMongo) && text.isValid(tmplBioServer)) {
             mappaMongo = libBio.getMappaBio(tmplBioMongo);
             mappaServer = libBio.getMappaBio(tmplBioServer);
-
-            tmplMerged = iniTemplate;
-            tmplMerged += A_CAPO;
 
             for (ParBio par : ParBio.values()) {
                 if (mappaMongo.get(par.getTag()) != null) {
@@ -498,10 +532,43 @@ public class ElaboraService extends ABioService {
                     }// end of if/else cycle
                 }// end of if/else cycle
             }// end of for cycle
-            tmplMerged += endTemplate;
         }// end of if cycle
 
-        return tmplMerged;
+        return addTagTemplate(tmplMerged);
+    }// end of method
+
+
+    /**
+     * Merge delle mappe (che rappresentano i template) <br>
+     * Costruisce un template con i parametri di mappaMongo PIU quelli di mappaServer <br>
+     * Se esiste un parametro 'normale' di mappaMongo, lo usa <br>
+     * Se non esiste un parametro 'normale' di mappaMongo ma esiste di mappaServer, lo usa <br>
+     * Se non esiste un parametro 'normale' ne di mappaMongo ne di mappaServer, usa un stringa di valore VUOTA <br>
+     * Non esistono parametri 'extra' di mappaMongo <br>
+     * Se esiste un parametro 'extra' di mappaServer, lo usa <br>
+     * Se non esiste un parametro 'extra' di mappaServer, non inserisce la riga  <br>
+     */
+    public String getMerged(HashMap<String, String> mappaMongo, HashMap<String, String> mappaServer) {
+        String tmplMerged = VUOTA;
+//        String tag = PIPE;
+
+        if (mappaMongo != null && mappaServer != null) {
+            for (ParBio par : ParBio.values()) {
+                if (mappaMongo.get(par.getTag()) != null) {
+                    tmplMerged += par.getRiga(mappaMongo.get(par.getTag()));
+                } else {
+                    if (mappaServer.get(par.getTag()) != null && text.isValid(mappaServer.get(par.getTag()))) {
+                        tmplMerged += par.getRiga(mappaServer.get(par.getTag()));
+                    } else {
+                        if (par.isCampoNormale()) {
+                        } else {
+                        }// end of if/else cycle
+                    }// end of if/else cycle
+                }// end of if/else cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return addTagTemplate(tmplMerged);
     }// end of method
 
 
@@ -565,28 +632,44 @@ public class ElaboraService extends ABioService {
      * Elimina quelli esistenti vuoti, senza valore <br>
      */
     public String ordinaNormaliNoLoss(String tmplEntrata) {
-        StringBuilder tmplOrdinato = new StringBuilder(VUOTA);
+        String tmplOrdinato = VUOTA;
+        StringBuilder builder = new StringBuilder(VUOTA);
         LinkedHashMap<String, String> mappa = null;
-        String iniTemplate = "{{Bio";
-        String endTemplate = "}}";
 
         if (text.isValid(tmplEntrata)) {
             mappa = libBio.getMappaBio(tmplEntrata);
         }// end of if cycle
 
         if (mappa != null) {
-            tmplOrdinato = new StringBuilder(iniTemplate);
-            tmplOrdinato.append(A_CAPO);
             for (ParBio par : ParBio.values()) {
                 if (par.isCampoNormale() || text.isValid(mappa.get(par.getTag()))) {
-                    tmplOrdinato.append(par.getRiga(mappa.get(par.getTag())));
+                    builder.append(par.getRiga(mappa.get(par.getTag())));
                 }// end of if cycle
             }// end of for cycle
-            tmplOrdinato.append(endTemplate);
         }// end of if cycle
 
-        return tmplOrdinato.toString();
+        tmplOrdinato = builder.toString();
+        tmplOrdinato = addTagTemplate(tmplOrdinato);
+        return tmplOrdinato;
     }// end of method
 
+
+    /**
+     * Aggiunge tag iniziali e finali del template <br>
+     */
+    public String addTagTemplate(String tmplGrezzo) {
+        String tmplFinale = VUOTA;
+        String iniTemplate = "{{Bio";
+        String endTemplate = "}}";
+
+        if (tmplGrezzo != null && tmplGrezzo.length() > 0) {
+            tmplFinale += iniTemplate;
+            tmplFinale += A_CAPO;
+            tmplFinale += tmplGrezzo;
+            tmplFinale += endTemplate;
+        }// end of if cycle
+
+        return tmplFinale;
+    }// end of method
 
 }// end of class

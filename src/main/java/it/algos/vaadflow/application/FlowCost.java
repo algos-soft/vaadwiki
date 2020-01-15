@@ -52,6 +52,8 @@ public abstract class FlowCost {
 
     public static final String VUOTA = "";
 
+    public static final String PIPE = "|";
+
     public static final String SPAZIO = " ";
 
     public static final String SEP = " - ";

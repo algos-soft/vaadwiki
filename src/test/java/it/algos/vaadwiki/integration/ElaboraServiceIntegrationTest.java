@@ -19,13 +19,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
@@ -115,6 +111,70 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|date= 2008-04-12\n" +
             "|publisher= Washington Post\n" +
             "}}</ref>\n" +
+            "}}";
+
+    private static String BIO_MINIMO = "{{Bio\n" +
+            "|Nome = \n" +
+            "|Cognome = \n" +
+            "|Sesso = M\n" +
+            "|LuogoNascita = \n" +
+            "|GiornoMeseNascita = \n" +
+            "|AnnoNascita = \n" +
+            "|LuogoMorte = \n" +
+            "|GiornoMeseMorte = \n" +
+            "|AnnoMorte = \n" +
+            "|Attività = \n" +
+            "|Nazionalità = \n" +
+            "}}";
+
+    private static String BIO_NORMALE = "{{Bio\n" +
+            "|Nome = Mario\n" +
+            "|Cognome = Rossi\n" +
+            "|Sesso = M\n" +
+            "|LuogoNascita = Milano\n" +
+            "|GiornoMeseNascita = 3 marzo\n" +
+            "|AnnoNascita = 1963\n" +
+            "|LuogoMorte = \n" +
+            "|GiornoMeseMorte = \n" +
+            "|AnnoMorte = \n" +
+            "|Attività = politico\n" +
+            "|Nazionalità = francese\n" +
+            "}}";
+
+    private static String BIO_SERVER_MAPPA = "{{Bio\n" +
+            "|Titolo = Sir\n" +
+            "|Nome = Aldo\n" +
+            "|Cognome = Rossi\n" +
+            "|Sesso = M\n" +
+            "|PostNazionalità = \n" +
+            "|LuogoNascita = Rozzano\n" +
+            "|LuogoNascitaLink = Milano\n" +
+            "|GiornoMeseNascita = 3 marzo\n" +
+            "|AnnoNascita = 1963\n" +
+            "|Nazionalità = francese\n" +
+            "|GiornoMeseMorte = \n" +
+            "|Categorie = No\n" +
+            "|Attività = attore\n" +
+            "|Immagine = \n" +
+            "|Didascalia = francese\n" +
+            "}}";
+
+    private static String BIO_MERGED_MAPPA = "{{Bio\n" +
+            "|Titolo = Sir\n" +
+            "|Nome = Mario\n" +
+            "|Cognome = Rossi\n" +
+            "|Sesso = M\n" +
+            "|LuogoNascita = Affori\n" +
+            "|LuogoNascitaLink = Milano\n" +
+            "|GiornoMeseNascita = 3 marzo\n" +
+            "|AnnoNascita = 1963\n" +
+            "|LuogoMorte = \n" +
+            "|GiornoMeseMorte = \n" +
+            "|AnnoMorte = \n" +
+            "|Attività = politico\n" +
+            "|Nazionalità = francese\n" +
+            "|Categorie = No\n" +
+            "|Didascalia = francese\n" +
             "}}";
 
     /**
@@ -243,37 +303,6 @@ public class ElaboraServiceIntegrationTest extends ATest {
 
 
     /**
-     * Merge dei template <br>
-     * Costruisce un template con i parametri di tmplBioMongo PIU quelli di tmplBioServer <br>
-     */
-    @Test
-    public void getTmplMerged() {
-        String tmplBioMerged = VUOTA;
-        String tmplBioMongo = VUOTA;
-        String tmplBioServer = VUOTA;
-        Bio entity = null;
-
-        entity = service.creaBioMemory(BIO_UNO);
-        Assert.assertNotNull(entity);
-        tmplBioMongo = service.getTmplBioMongo(entity);
-        tmplBioServer = service.getTmplBioServer(entity);
-
-//        tmplBioServer = BIO_SORGENTE;
-//        entity = bioService.newEntity(123456789, "NonRilevante", tmplBioServer);
-//        entity = service.esegueNoSave(entity);
-
-        tmplBioMerged = service.getTmplMerged(tmplBioMongo, tmplBioServer);
-        Assert.assertEquals(tmplBioMerged, BIO_MERGED);
-
-        System.out.println("*************");
-        System.out.println("tmplBioMerged");
-        System.out.println("*************");
-        System.out.println(tmplBioMerged);
-        System.out.println("");
-    }// end of single test
-
-
-    /**
      * EAElabora.ordinaNormaliNoLoss
      * <p>
      * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
@@ -368,13 +397,121 @@ public class ElaboraServiceIntegrationTest extends ATest {
 //        System.out.println("Modificati " + cont + " su " + lista.size() + " in " + date.deltaText(inizio));
     }// end of single test
 
+
     /**
      * Controlla se il tmpl del mongoDB di tutte le istanze è uguale a quello 'previsto' <br>
      * Se è diverso, lo modifica sul server <br>
      */
     @Test
     public void checkAll() {
-        service.checkAll();
+//        service.checkAll(); @todo provvisoriamente disabilitato perché leggermente lungo
     }// end of single test
 
-    }// end of class
+
+    /**
+     * Costruisce un template da una mappa di parametri <br>
+     */
+    @Test
+    public void getTmpl() {
+        mappa = new HashMap<>();
+        previsto = BIO_MINIMO;
+        ottenuto = service.getTmpl(mappa);
+        Assert.assertEquals(ottenuto, previsto);
+    }// end of single test
+
+
+    /**
+     * Costruisce un template da una mappa di parametri <br>
+     * ATTENZIONE - Non è merged con eventuali parametri non normali <br>
+     */
+    @Test
+    public void getTmpl2() {
+        mappa = new HashMap<>();
+        previsto = BIO_NORMALE;
+        mappa.put(ParBio.cognome.getTag(), "Rossi");
+        mappa.put(ParBio.giornoMeseNascita.getTag(), "3 marzo");
+        mappa.put(ParBio.attivita.getTag(), "politico");
+        mappa.put(ParBio.nazionalita.getTag(), "francese");
+        mappa.put(ParBio.annoNascita.getTag(), "1963");
+        mappa.put(ParBio.nome.getTag(), "Mario");
+        mappa.put(ParBio.luogoNascita.getTag(), "Milano");
+
+        ottenuto = service.getTmpl(mappa);
+        Assert.assertEquals(ottenuto, previsto);
+
+        System.out.println("*************");
+        System.out.println("getTmpl");
+        System.out.println("*************");
+        System.out.println(ottenuto);
+        System.out.println("");
+    }// end of single test
+
+
+    /**
+     * Merge dei template <br>
+     * Costruisce un template con i parametri di tmplBioMongo PIU quelli di tmplBioServer <br>
+     * Se esiste un parametro 'normale' di tmplBioMongo, lo usa <br>
+     * Se non esiste un parametro 'normale' di tmplBioMongo ma esiste di tmplBioServer, lo usa <br>
+     * Se non esiste un parametro 'normale' ne di tmplBioMongo ne di tmplBioServer, usa un stringa di valore VUOTA <br>
+     * Non esistono parametri 'extra' di tmplBioMongo <br>
+     * Se esiste un parametro 'extra' di tmplBioServer, lo usa <br>
+     * Se non esiste un parametro 'extra' di tmplBioServer, non inserisce la riga  <br>
+     */
+    @Test
+    public void getTmplMerged() {
+        String tmplBioMerged = VUOTA;
+        String tmplBioMongo = VUOTA;
+        String tmplBioServer = VUOTA;
+        Bio entity = null;
+
+        entity = service.creaBioMemory(BIO_UNO);
+        Assert.assertNotNull(entity);
+        tmplBioMongo = service.getTmplBioMongo(entity);
+        tmplBioServer = service.getTmplBioServer(entity);
+
+        tmplBioMerged = service.getTmplMerged(tmplBioMongo, tmplBioServer);
+        Assert.assertEquals(tmplBioMerged, BIO_MERGED);
+
+        System.out.println("*************");
+        System.out.println("tmplBioMerged");
+        System.out.println("*************");
+        System.out.println(tmplBioMerged);
+        System.out.println("");
+    }// end of single test
+
+
+    /**
+     * Merge di una mappa di parametri PIU i parametri del tmplBioServer <br>
+     * Se esiste un parametro 'normale' di tmplBioMongo, lo usa <br>
+     * Se non esiste un parametro 'normale' di tmplBioMongo ma esiste di tmplBioServer, lo usa <br>
+     * Se non esiste un parametro 'normale' ne di tmplBioMongo ne di tmplBioServer, usa un stringa di valore VUOTA <br>
+     * Non esistono parametri 'extra' di tmplBioMongo <br>
+     * Se esiste un parametro 'extra' di tmplBioServer, lo usa <br>
+     * Se non esiste un parametro 'extra' di tmplBioServer, non inserisce la riga  <br>
+     */
+    @Test
+    public void getTmplMerged2() {
+//        String tmplBioMerged = VUOTA;
+//        String tmplBioServer = VUOTA;
+//        mappa = new HashMap<>();
+//        previsto = BIO_NORMALE;
+//        mappa.put(ParBio.cognome.getTag(), "Rossi");
+//        mappa.put(ParBio.giornoMeseNascita.getTag(), "3 marzo");
+//        mappa.put(ParBio.attivita.getTag(), "politico");
+//        mappa.put(ParBio.nazionalita.getTag(), "francese");
+//        mappa.put(ParBio.annoNascita.getTag(), "1963");
+//        mappa.put(ParBio.nome.getTag(), "Mario");
+//        mappa.put(ParBio.luogoNascita.getTag(), "Milano");
+//
+//        tmplBioMerged = service.getTmplMerged(mappa, BIO_SERVER_MAPPA);
+//        Assert.assertEquals(tmplBioMerged, BIO_MERGED_MAPPA);
+//
+//        System.out.println("*************");
+//        System.out.println("tmplBioMergedMappa");
+//        System.out.println("*************");
+//        System.out.println(tmplBioMerged);
+//        System.out.println("");
+    }// end of single test
+
+
+}// end of class
