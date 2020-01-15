@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.download;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.enumeration.EALogLivello;
 import it.algos.vaadflow.enumeration.EALogType;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.service.ABioService;
@@ -116,7 +117,7 @@ public class ElaboraService extends ABioService {
             }// end of for cycle
         }// end of for cycle
 
-        log.info("Check EAElabora.ordinaNormaliNoLoss. Su " + text.format(totale) + " voci ce ne sono " + text.format(tot) + " col template diverso da quello standard");
+        logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss. Su " + text.format(totale) + " voci ce ne sono " + text.format(tot) + " col template diverso da quello standard", ElaboraService.class, "checkAll");
         logger.crea(EALogType.elabora, "Su " + text.format(totale) + " voci ci sono " + text.format(tot) + " template diversi. Controllati", inizio);
     }// end of method
 
@@ -133,7 +134,7 @@ public class ElaboraService extends ABioService {
         List<Bio> lista = null;
         int tot = 0;
 
-        log.info("Iniziato EAElabora.ordinaNormaliNoLoss con eventuale upload di " + text.format(totale) + " voci.");
+        logger.sendTerminale(EALogLivello.debug, "Iniziato EAElabora.ordinaNormaliNoLoss con eventuale upload di " + text.format(totale) + " voci.", ElaboraService.class, "uploadAllNormaliNoLoss");
         for (int k = 0; k < array.numCicli(totale, size); k++) {
             lista = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Bio.class);
             for (Bio bio : lista) {
@@ -143,6 +144,7 @@ public class ElaboraService extends ABioService {
                 }// end of if cycle
             }// end of for cycle
         }// end of for cycle
+        logger.sendTerminale(EALogLivello.debug, "Su " + text.format(totale) + " voci ci sono " + text.format(tot) + " template diversi. Uploadati sul server", ElaboraService.class, "uploadAllNormaliNoLoss");
         logger.crea(EALogType.upload, "Su " + text.format(totale) + " voci ci sono " + text.format(tot) + " template diversi. Uploadati sul server", inizio);
     }// end of method
 
