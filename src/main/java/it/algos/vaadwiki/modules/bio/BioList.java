@@ -250,6 +250,7 @@ public class BioList extends AGridViewList {
 
         //--ri-elabora tutte le biografie -upload sul server
         uploadButton = new Button("Upload", new Icon(VaadinIcon.ARROW_UP));
+        uploadButton.getElement().setAttribute("theme", "error");
         uploadButton.addClickListener(e -> elaboraService.uploadAllNormaliNoLoss());
         topPlaceholder.add(uploadButton);
 

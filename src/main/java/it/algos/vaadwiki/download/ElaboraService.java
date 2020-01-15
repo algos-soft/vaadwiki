@@ -116,6 +116,7 @@ public class ElaboraService extends ABioService {
             }// end of for cycle
         }// end of for cycle
 
+        log.info("Check EAElabora.ordinaNormaliNoLoss. Su " + text.format(totale) + " voci ce ne sono " + text.format(tot) + " col template diverso da quello standard");
         logger.crea(EALogType.elabora, "Su " + text.format(totale) + " voci ci sono " + text.format(tot) + " template diversi. Controllati", inizio);
     }// end of method
 
@@ -132,6 +133,7 @@ public class ElaboraService extends ABioService {
         List<Bio> lista = null;
         int tot = 0;
 
+        log.info("Iniziato EAElabora.ordinaNormaliNoLoss con eventuale upload di " + text.format(totale) + " voci.");
         for (int k = 0; k < array.numCicli(totale, size); k++) {
             lista = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Bio.class);
             for (Bio bio : lista) {
@@ -141,7 +143,6 @@ public class ElaboraService extends ABioService {
                 }// end of if cycle
             }// end of for cycle
         }// end of for cycle
-
         logger.crea(EALogType.upload, "Su " + text.format(totale) + " voci ci sono " + text.format(tot) + " template diversi. Uploadati sul server", inizio);
     }// end of method
 
