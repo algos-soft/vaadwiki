@@ -2463,7 +2463,7 @@ public class LibBio {
 
 
     /**
-     * Regola questo campo
+     * Regola questo campojhgjkh8<
      * <p>
      * Elimina il testo successivo a varii tag (fixPropertyBase)
      * Controlla che il valore esista nella collezione Attività

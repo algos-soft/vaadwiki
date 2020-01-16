@@ -22,7 +22,7 @@ public enum ParBio {
 
     titolo("Titolo", "Titolo", false, false, false, false, false) {
     },// end of single enumeration
-    nome("Nome", "Nome", true, true, true, false, false) {
+    nome("Nome", "nome", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setNome(value.equals("") ? null : libBio.fixNomeValido(value));
@@ -34,7 +34,7 @@ public enum ParBio {
             return bio.getNome() != null ? bio.getNome() : "";
         }// end of method
     },// end of single enumeration
-    cognome("Cognome", "Cognome", true, true, true, false, false) {
+    cognome("Cognome", "cognome", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setCognome(value.equals("") ? null : libBio.fixCognomeValido(value));
@@ -60,7 +60,7 @@ public enum ParBio {
     },// end of single enumeration
     preData("PreData", "PreData", false, false, false, false, false) {
     },// end of single enumeration
-    sesso("Sesso", "Sesso", true, true, true, false, false) {
+    sesso("Sesso", "sesso", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setSesso(value.equals("") ? null : value);
@@ -72,7 +72,7 @@ public enum ParBio {
             return bio.getSesso() != null ? bio.getSesso() : "";
         }// end of method
     },// end of single enumeration
-    luogoNascita("LuogoNascita", "luogoNato", true, true, true, false, false) {
+    luogoNascita("LuogoNascita", "luogoNato", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setLuogoNato(value.equals("") ? null : libBio.fixLuogoValido(value));
@@ -84,7 +84,7 @@ public enum ParBio {
             return bio.getLuogoNato() != null ? bio.getLuogoNato() : "";
         }// end of method
     },// end of single enumeration
-    luogoNascitaLink("LuogoNascitaLink", "luogoNatoLink", true, false, true, false, false) {
+    luogoNascitaLink("LuogoNascitaLink", "luogoNatoLink", true, false, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setLuogoNatoLink(value.equals("") ? null : libBio.fixLuogoValido(value));
@@ -96,9 +96,9 @@ public enum ParBio {
             return bio.getLuogoNatoLink() != null ? bio.getLuogoNatoLink() : "";
         }// end of method
     },// end of single enumeration
-    luogoNascitaAlt("LuogoNascitaAlt", "luogoNatoLink", false, false, true, false, false) {
+    luogoNascitaAlt("LuogoNascitaAlt", "luogoNatoAlt", false, false, true, false, false) {
     },// end of single enumeration
-    giornoMeseNascita("GiornoMeseNascita", "giornoNascita", true, true, true, false, false) {
+    giornoMeseNascita("GiornoMeseNascita", "giornoNascita", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setGiornoNascita(value.equals("") ? null : libBio.fixGiornoLink(value));
@@ -111,7 +111,7 @@ public enum ParBio {
             return giorno != null ? giorno.titolo : "";
         }// end of method
     },// end of single enumeration
-    annoNascita("AnnoNascita", "AnnoNascita", true, true, true, false, false) {
+    annoNascita("AnnoNascita", "annoNascita", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setAnnoNascita(value.equals("") ? null : libBio.fixAnnoLink(value));
@@ -126,7 +126,7 @@ public enum ParBio {
     },// end of single enumeration
     noteNascita("NoteNascita", "NoteNascita", false, false, true, false, false) {
     },// end of single enumeration
-    luogoMorte("LuogoMorte", "luogoMorto", true, true, true, false, false) {
+    luogoMorte("LuogoMorte", "luogoMorto", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setLuogoMorto(value.equals("") ? null : libBio.fixLuogoValido(value));
@@ -138,7 +138,7 @@ public enum ParBio {
             return bio.getLuogoMorto() != null ? bio.getLuogoMorto() : "";
         }// end of method
     },// end of single enumeration
-    luogoMorteLink("LuogoMorteLink", "luogoMortoLink", true, false, true, false, false) {
+    luogoMorteLink("LuogoMorteLink", "luogoMortoLink", true, false, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setLuogoMortoLink(value.equals("") ? null : libBio.fixLuogoValido(value));
@@ -150,9 +150,9 @@ public enum ParBio {
             return bio.getLuogoMortoLink() != null ? bio.getLuogoMortoLink() : "";
         }// end of method
     },// end of single enumeration
-    luogoMorteAlt("LuogoMorteAlt", "luogoMortoLink", false, false, true, false, false) {
+    luogoMorteAlt("LuogoMorteAlt", "luogoMortoAlt", false, false, true, false, false) {
     },// end of single enumeration
-    giornoMeseMorte("GiornoMeseMorte", "giornoMorte", true, true, true, false, false) {
+    giornoMeseMorte("GiornoMeseMorte", "giornoMorte", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setGiornoMorte(value.equals("") ? null : libBio.fixGiornoLink(value));
@@ -165,7 +165,7 @@ public enum ParBio {
             return giorno != null ? giorno.titolo : "";
         }// end of method
     },// end of single enumeration
-    annoMorte("AnnoMorte", "AnnoMorte", true, true, true, false, false) {
+    annoMorte("AnnoMorte", "AnnoMorte", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setAnnoMorte(value.equals("") ? null : libBio.fixAnnoLink(value));
@@ -186,7 +186,7 @@ public enum ParBio {
     },// end of single enumeration
     preAttivita("PreAttività", "PreAttività", false, false, true, false, false) {
     },// end of single enumeration
-    attivita("Attività", "attivita", true, true, true, false, false) {
+    attivita("Attività", "attivita", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setAttivita(value.equals("") ? null : libBio.fixAttivitaLink(value));
@@ -199,7 +199,7 @@ public enum ParBio {
             return attivita != null ? attivita.singolare : "";
         }// end of method
     },// end of single enumeration
-    attivita2("Attività2", "attivita2", true, false, true, false, false) {
+    attivita2("Attività2", "attivita2", true, false, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setAttivita2(value.equals("") ? null : libBio.fixAttivitaLink(value));
@@ -212,7 +212,7 @@ public enum ParBio {
             return attivita != null ? attivita.singolare : "";
         }// end of method
     },// end of single enumeration
-    attivita3("Attività3", "attivita3", true, false, true, false, false) {
+    attivita3("Attività3", "attivita3", true, false, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setAttivita3(value.equals("") ? null : libBio.fixAttivitaLink(value));
@@ -227,7 +227,7 @@ public enum ParBio {
     },// end of single enumeration
     attivitaAltre("AttivitàAltre", "AttivitàAltre", false, false, false, false, false) {
     },// end of single enumeration
-    nazionalita("Nazionalità", "nazionalita", true, true, true, false, false) {
+    nazionalita("Nazionalità", "nazionalita", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setNazionalita(value.equals("") ? null : libBio.fixNazionalitaLink(value));

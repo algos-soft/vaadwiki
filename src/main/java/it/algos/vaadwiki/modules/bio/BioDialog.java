@@ -10,17 +10,24 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.anno.Anno;
+import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.dialog.AViewDialog;
+import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.fields.ATextArea;
 import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadwiki.didascalia.DidascaliaBiografie;
 import it.algos.vaadwiki.download.DeleteService;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.download.PageService;
+import it.algos.vaadwiki.modules.attivita.Attivita;
+import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.service.LibBio;
+import it.algos.vaadwiki.service.ParBio;
 import it.algos.vaadwiki.upload.UploadService;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +37,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
@@ -310,7 +318,40 @@ public class BioDialog extends AViewDialog<Bio> {
      * Modifica il tmpl a video ma NON nel mongoDB <br>
      */
     protected void reverse() {
+        HashMap<String, String> mappa = new HashMap<>();
+        String tmplMongo;
+        String tmplServer;
+        String tmplMerged;
+        String tmpl = "tmplBioServer";
+
+        putMappa(mappa, ParBio.nome);
+        putMappa(mappa, ParBio.cognome);
+        putMappa(mappa, ParBio.sesso);
+        putMappa(mappa, ParBio.luogoNascita);
+        putMappa(mappa, ParBio.luogoNascitaLink);
+        putMappa(mappa, ParBio.giornoMeseNascita);
+        putMappa(mappa, ParBio.annoNascita);
+        putMappa(mappa, ParBio.luogoMorte);
+        putMappa(mappa, ParBio.luogoMorteLink);
+        putMappa(mappa, ParBio.giornoMeseMorte);
+        putMappa(mappa, ParBio.annoMorte);
+        putMappa(mappa, ParBio.attivita);
+        putMappa(mappa, ParBio.attivita2);
+        putMappa(mappa, ParBio.attivita3);
+        putMappa(mappa, ParBio.nazionalita);
+
+        tmplServer = ((ATextArea) getField(tmpl)).getValue();
+        tmplMerged = elaboraService.getMerged(mappa, tmplServer);
+        ((ATextArea) getField(tmpl)).setValue(tmplMerged);
     }// end of method
+
+
+    protected void putMappa(HashMap<String, String> mappa, ParBio par) {
+        String name = par.getDbName();
+        String value = getValue(name);
+        mappa.put(name, value);
+    }// end of method
+
 
 //    protected void showWikiPage() {
 //        String wikiTitle = this.getWikiTitle();
@@ -330,7 +371,7 @@ public class BioDialog extends AViewDialog<Bio> {
         String wikiTitle = this.getWikiTitle();
 
         if (text.isValid(wikiTitle)) {
-//            saveClicked(EAOperation.edit);
+            saveClicked(EAOperation.edit);
 //            uploadService.uploadBio(wikiTitle);
             uploadService.uploadTmpl(wikiTitle, getTmplValue());
         }// end of if cycle
@@ -383,6 +424,43 @@ public class BioDialog extends AViewDialog<Bio> {
 
         if (tmplField != null) {
             value = tmplField.getValue();
+        }// end of if cycle
+
+        return value;
+    }// end of method
+
+
+    protected String getValue(String fieldName) {
+        String value = VUOTA;
+        AbstractField field = getField(fieldName);
+        Object entity;
+
+        if (field instanceof ATextField) {
+            value = ((ATextField) field).getValue();
+        }// end of if cycle
+
+        if (field instanceof ATextArea) {
+            value = ((ATextArea) field).getValue();
+        }// end of if cycle
+
+        if (field instanceof AComboBox) {
+            entity = ((AComboBox) field).getValue();
+
+            if (entity instanceof Giorno) {
+                value = ((Giorno) entity).titolo;
+            }// end of if cycle
+
+            if (entity instanceof Anno) {
+                value = ((Anno) entity).titolo;
+            }// end of if cycle
+
+            if (entity instanceof Attivita) {
+                value = ((Attivita) entity).singolare;
+            }// end of if cycle
+
+            if (entity instanceof Nazionalita) {
+                value = ((Nazionalita) entity).singolare;
+            }// end of if cycle
         }// end of if cycle
 
         return value;

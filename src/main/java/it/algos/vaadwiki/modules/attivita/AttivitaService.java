@@ -2,6 +2,7 @@ package it.algos.vaadwiki.modules.attivita;
 
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadwiki.modules.genere.Genere;
 import it.algos.vaadwiki.modules.wiki.WikiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
@@ -84,10 +86,24 @@ public class AttivitaService extends WikiService {
      * @return la entity trovata o appena creata
      */
     public Attivita findOrCrea(String singolare, String plurale) {
+        return findOrCrea(singolare, plurale, false);
+    }// end of method
+
+
+    /**
+     * Ricerca di una entity (la crea se non la trova) <br>
+     *
+     * @param singolare maschile e femminile (obbligatorio ed unico)
+     * @param plurale   neutro (obbligatorio NON unico)
+     * @param aggiunta  oltre alle voci presenti nel modulo wiki
+     *
+     * @return la entity trovata o appena creata
+     */
+    public Attivita findOrCrea(String singolare, String plurale, boolean aggiunta) {
         Attivita entity = findByKeyUnica(singolare);
 
         if (entity == null) {
-            entity = crea(singolare, plurale);
+            entity = crea(singolare, plurale, aggiunta);
         }// end of if cycle
 
         return entity;
@@ -99,11 +115,12 @@ public class AttivitaService extends WikiService {
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
      * @param plurale   neutro (obbligatorio NON unico)
+     * @param aggiunta  oltre alle voci presenti nel modulo wiki
      *
      * @return la entity appena creata
      */
-    public Attivita crea(String singolare, String plurale) {
-        return (Attivita) save(newEntity(singolare, plurale));
+    public Attivita crea(String singolare, String plurale, boolean aggiunta) {
+        return (Attivita) save(newEntity(singolare, plurale, aggiunta));
     }// end of method
 
 
@@ -116,7 +133,7 @@ public class AttivitaService extends WikiService {
      */
     @Override
     public Attivita newEntity() {
-        return newEntity("", "");
+        return newEntity("", "", false);
     }// end of method
 
 
@@ -127,10 +144,11 @@ public class AttivitaService extends WikiService {
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
      * @param plurale   neutro (obbligatorio NON unico)
+     * @param aggiunta  oltre alle voci presenti nel modulo wiki
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Attivita newEntity(String singolare, String plurale) {
+    public Attivita newEntity(String singolare, String plurale, boolean aggiunta) {
         Attivita entity = null;
 
         entity = findByKeyUnica(singolare);
@@ -141,6 +159,7 @@ public class AttivitaService extends WikiService {
         entity = Attivita.builderAttivita()
                 .singolare(singolare.equals("") ? null : singolare)
                 .plurale(plurale.equals("") ? null : plurale)
+                .aggiunta(aggiunta)
                 .build();
 
         return entity;
@@ -240,6 +259,58 @@ public class AttivitaService extends WikiService {
         }// end of if cycle
 
         return lista.size();
+    }// end of method
+
+
+    /**
+     * Download completo del modulo da Wiki <br>
+     * Cancella tutte le precedenti entities <br>
+     * Registra su Mongo DB tutte le occorrenze di attività/nazionalità <br>
+     */
+    @Override
+    public void download() {
+        super.download();
+        this.aggiunge();
+    }// end of method
+
+
+    /**
+     * Aggiunge le ex-attività NON presenti nel modulo 'Modulo:Bio/Plurale attività' <br>
+     * Le recupera dal modulo 'Modulo:Bio/Plurale attività genere' <br>
+     * Le aggiunge se trova la corrispondenza tra il nome con e senza EX <br>
+     */
+    private void aggiunge() {
+        List<Genere> listaGenere = genereService.findAll();
+        String attivitaSingolare;
+        String genereSingolare;
+        String tag1 = "ex ";
+        String tag2 = "ex-";
+        Attivita entity;
+
+        if (array.isValid(listaGenere)) {
+            for (Genere genere : listaGenere) {
+                entity = null;
+                attivitaSingolare = VUOTA;
+                genereSingolare = genere.singolare;
+
+                if (genereSingolare.startsWith(tag1)) {
+                    attivitaSingolare = genereSingolare.substring(tag1.length());
+                }// end of if cycle
+                if (genereSingolare.startsWith(tag2)) {
+                    attivitaSingolare = genereSingolare.substring(tag2.length());
+                }// end of if cycle
+
+                if (text.isValid(attivitaSingolare)) {
+                    entity = findByKeyUnica(attivitaSingolare);
+                }// end of if cycle
+
+                if (entity != null) {
+                    crea(genereSingolare, entity.plurale, true);
+                }// end of if cycle
+
+            }// end of for cycle
+        }// end of if cycle
+
     }// end of method
 
 }// end of class

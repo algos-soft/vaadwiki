@@ -3,6 +3,7 @@ package it.algos.vaadwiki.modules.genere;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.wiki.WikiService;
 import it.algos.wiki.LibWiki;
 import it.algos.wiki.web.AQueryVoce;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -282,6 +284,11 @@ public class GenereService extends WikiService {
         return repository.findBySingolare(singolare);
     }// end of method
 
+
+    @Override
+    public List<Genere> findAll() {
+        return (List<Genere>) super.findAll();
+    }// end of method
 
     /**
      * Recupera tutte le istanze della Entity usando la query della property specifica <br>

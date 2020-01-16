@@ -90,6 +90,7 @@ public class Professione extends AEntity {
     @AIColumn(flexGrow = true)
     public String pagina;
 
+
     @AIField(type = EAFieldType.yesnobold)
     @AIColumn(name = "add",widthEM = 3)
     public boolean aggiunta;

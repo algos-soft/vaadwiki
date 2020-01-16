@@ -129,7 +129,6 @@ public class ProfessioneList extends WikiList {
 
         alertPlacehorder.add(getLabelBlue("Modulo:Bio/Link attività."));
         alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3, dal nome dell'attività a quello della voce corrispondente, per creare dei piped wikilink."));
-        alertPlacehorder.add(new Label("Quando l'attività corrisponde già al titolo della voce di destinazione NON serve inserirla qui."));
         alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
         alertPlacehorder.add(new Label("[\"attivitaforma1\"] = \"voce di riferimento\""));
         alertPlacehorder.add(new Label("[\"attivitaforma2\"] = \"voce di riferimento\""));

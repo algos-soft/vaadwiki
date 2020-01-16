@@ -162,6 +162,7 @@ public class AttivitaList extends WikiList {
         alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
         alertPlacehorder.add(new Label("[\"attivitaforma1\"] = \"attività al plurale\","));
         alertPlacehorder.add(new Label("[\"attivitaforma2\"] = \"attività al plurale\","));
+        alertPlacehorder.add(getLabelRed("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle EX-attività (non presenti nel Modulo su Wiki) recuperate dal modulo Modulo:Bio/Plurale attività genere."));
     }// end of method
 
 
