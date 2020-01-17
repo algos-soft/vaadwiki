@@ -54,6 +54,8 @@ public interface BioRepository extends MongoRepository<Bio, String> {
 
     public List<Bio> findAllByNome(String nome);
 
+    public List<Bio> findAllByNomeOrderByAttivitaAsc(String nome);
+
     public List<Bio> findAllByCognome(String cognome);
 
     public int countAllByAttivita(Attivita attivita);

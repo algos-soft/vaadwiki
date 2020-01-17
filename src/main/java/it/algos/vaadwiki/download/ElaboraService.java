@@ -496,8 +496,8 @@ public class ElaboraService extends ABioService {
      * Se esiste un parametro 'extra' di mappaServer, lo usa <br>
      * Se non esiste un parametro 'extra' di mappaServer, non inserisce la riga  <br>
      */
-    public String getMerged(String tmplBioMongo, String tmplBioServer) {
-        return getMerged(libBio.getMappaBio(tmplBioMongo), libBio.getMappaBio(tmplBioServer));
+    public String getMergedNoLoss(String tmplBioMongo, String tmplBioServer) {
+        return getMergedNoLoss(libBio.getMappaBio(tmplBioMongo), libBio.getMappaBio(tmplBioServer));
     }// end of method
 
 
@@ -511,8 +511,8 @@ public class ElaboraService extends ABioService {
      * Se esiste un parametro 'extra' di mappaServer, lo usa <br>
      * Se non esiste un parametro 'extra' di mappaServer, non inserisce la riga  <br>
      */
-    public String getMerged(HashMap<String, String> mappa, String tmplBioServer) {
-        return getMerged(mappa, libBio.getMappaBio(tmplBioServer));
+    public String getMergedNoLoss(HashMap<String, String> mappa, String tmplBioServer) {
+        return getMergedNoLoss(mappa, libBio.getMappaBio(tmplBioServer));
     }// end of method
 
 
@@ -526,7 +526,7 @@ public class ElaboraService extends ABioService {
      * Se esiste un parametro 'extra' di mappaServer, lo usa <br>
      * Se non esiste un parametro 'extra' di mappaServer, non inserisce la riga  <br>
      */
-    public String getMerged(HashMap<String, String> mappaMongo, HashMap<String, String> mappaServer) {
+    public String getMergedNoLoss(HashMap<String, String> mappaMongo, HashMap<String, String> mappaServer) {
         StringBuilder tmplMerged = new StringBuilder(VUOTA);
         String valueMongo;
         String valueServer;
@@ -534,8 +534,8 @@ public class ElaboraService extends ABioService {
 
         if (mappaMongo != null && mappaServer != null) {
 
-            if (mappaMongo.get(ParBio.sesso.getDbName()) == null) {
-                mappaMongo.put(ParBio.sesso.getTag(), DEFAULT_GENERE);
+            if (mappaServer.get(ParBio.sesso.getDbName()) == null) {
+                mappaServer.put(ParBio.sesso.getTag(), DEFAULT_GENERE);
             }// end of if cycle
 
             for (ParBio par : ParBio.values()) {
@@ -564,6 +564,14 @@ public class ElaboraService extends ABioService {
         }// end of if cycle
 
         return addTagTemplate(tmplMerged.toString());
+    }// end of method
+
+
+    public String sostituisceParteValida(String testoOriginale, String parteValidaNuova) {
+        String testoFinale = VUOTA;
+        String parteValidaVecchia = VUOTA;
+
+        return testoFinale;
     }// end of method
 
 

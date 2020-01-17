@@ -3,6 +3,8 @@ package it.algos.vaadwiki.integration;
 import com.mongodb.client.DistinctIterable;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadwiki.ATest;
+import it.algos.vaadwiki.enumeration.EADidascalia;
+import it.algos.vaadwiki.liste.ListaNomi;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nome.NomeService;
@@ -35,6 +37,8 @@ import java.util.List;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class NomeServiceIntegrationTest extends ATest {
 
+    private static String NOME_UNO = "Abdul";
+    protected ListaNomi listaNome;
 
     @Autowired
     public MongoOperations mongoOp;
@@ -71,11 +75,13 @@ public class NomeServiceIntegrationTest extends ATest {
         Assert.assertNotNull(appContext);
     }// end of method
 
+
     @Test
     public void nonFaNulla() {
     }// end of single test
 
-//    @Test
+
+    //    @Test
     public void check() {
         String tag = " ";
         int cont = 0;
@@ -161,6 +167,15 @@ public class NomeServiceIntegrationTest extends ATest {
         }// end of for cycle
 
         System.out.println("Tempo impiegato: " + date.deltaText(inizio));
+    }// end of single test
+
+
+    @Test
+    public void cercaNome() {
+//        listaNome = appContext.getBean(ListaNomi.class, NOME_UNO);
+     List<Bio> listaBio=bioService.findAllByNomeBio(NOME_UNO);
+
+        int a=87;
     }// end of single test
 
 }// end of class

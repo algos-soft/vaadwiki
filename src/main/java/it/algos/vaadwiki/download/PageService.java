@@ -247,7 +247,7 @@ public class PageService extends ABioService {
         if (!tmplOrdinato.equals(templateOriginale)) {
             uploadService.uploadTmpl(wikiTitle, tmplOrdinato);
 
-            logger.debug("Riordinata voce " + wikiTitle + " con con template non 'allineato'");
+            logger.debug("Riordinata voce " + wikiTitle + " con un template non 'allineato'");
         }// end of if cycle
 
     }// end of method

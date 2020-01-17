@@ -412,6 +412,7 @@ public class BioService extends WikiService {
     }// end of method
 
 
+
     /**
      * Seleziona tutte le biografie delle persone di un certo nome <br>
      * La lista viene ordinata per attività <br>
@@ -425,7 +426,6 @@ public class BioService extends WikiService {
         return orderByAttivitaAndNomeCognome(repository.findAllByNome(nome.nome), EADidascalia.listaNomi);
     }// end of method
 
-
     /**
      * Seleziona tutte le biografie delle persone di un certo nome <br>
      * La lista viene ordinata per attività <br>
@@ -437,6 +437,17 @@ public class BioService extends WikiService {
      */
     public List<Bio> findAllByNome(String nomeTxt) {
         return nomeService != null ? findAllByNome(nomeService.findByKeyUnica(nomeTxt)) : null;
+    }// end of method
+
+    /**
+     * Seleziona tutte le biografie delle persone di un certo nome <br>
+     *
+     * @param nomeTxt per la selezione
+     *
+     * @return ordered entities
+     */
+    public List<Bio> findAllByNomeBio(String nomeTxt) {
+        return repository.findAllByNomeOrderByAttivitaAsc(nomeTxt);
     }// end of method
 
 
