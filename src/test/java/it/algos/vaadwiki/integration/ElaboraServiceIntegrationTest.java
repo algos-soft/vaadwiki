@@ -71,7 +71,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|Didascalia=\n" +
             "}}";
 
-    private static String BIO_ORDINATO = "{{Bio\n" +
+    private static String BIO_MERGED_NO_LOSS = "{{Bio\n" +
             "|Nome = Crystle Danae\n" +
             "|Cognome = [[Stewart]]\n" +
             "|Sesso = F\n" +
@@ -92,7 +92,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "}}</ref>\n" +
             "}}";
 
-    private static String BIO_MERGED = "{{Bio\n" +
+    private static String BIO_MERGED_LOSS = "{{Bio\n" +
             "|Nome = Crystle Danae\n" +
             "|Cognome = Stewart\n" +
             "|Sesso = F\n" +
@@ -336,7 +336,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
     @Test
     public void ordinaNormaliNoLoss() {
         String tmplOrdinato = service.ordinaNormaliNoLoss(BIO_SORGENTE);
-        Assert.assertEquals(tmplOrdinato, BIO_ORDINATO);
+        Assert.assertEquals(tmplOrdinato, BIO_MERGED_NO_LOSS);
 
         System.out.println("*************");
         System.out.println("ordinaNormaliNoLoss");
@@ -443,24 +443,24 @@ public class ElaboraServiceIntegrationTest extends ATest {
      */
     @Test
     public void getTmplMerged() {
-//        String tmplBioMerged = VUOTA;
-//        String tmplBioMongo = VUOTA;
-//        String tmplBioServer = VUOTA;
-//        Bio entity = null;
-//
-//        entity = service.creaBioMemory(BIO_UNO);
-//        Assert.assertNotNull(entity);
-//        tmplBioMongo = service.getTmplBioMongo(entity);
-//        tmplBioServer = service.getTmplBioServer(entity);
-//
-//        tmplBioMerged = service.getMergedNoLoss(tmplBioMongo, tmplBioServer);
-//        Assert.assertEquals(tmplBioMerged, BIO_MERGED);
-//
-//        System.out.println("*************");
-//        System.out.println("tmplBioMerged");
-//        System.out.println("*************");
-//        System.out.println(tmplBioMerged);
-//        System.out.println("");
+        String tmplBioMerged = VUOTA;
+        String tmplBioMongo = VUOTA;
+        String tmplBioServer = VUOTA;
+        Bio entity = null;
+
+        entity = service.creaBioMemory(BIO_UNO);
+        Assert.assertNotNull(entity);
+        tmplBioMongo = service.getTmplBioMongo(entity);
+        tmplBioServer = service.getTmplBioServer(entity);
+
+        tmplBioMerged = service.getMergedNoLoss(tmplBioMongo, tmplBioServer);
+        Assert.assertEquals(tmplBioMerged, BIO_MERGED_NO_LOSS);
+
+        System.out.println("*************");
+        System.out.println("tmplBioMerged");
+        System.out.println("*************");
+        System.out.println(tmplBioMerged);
+        System.out.println("");
     }// end of single test
 
 
@@ -480,11 +480,11 @@ public class ElaboraServiceIntegrationTest extends ATest {
         String tmplBioServer = VUOTA;
         mappa = new HashMap<>();
         previsto = BIO_NORMALE;
-        mappa.put(ParBio.giornoMeseNascita.getDbName(), "3 marzo");
-        mappa.put(ParBio.attivita.getDbName(), "politico");
-        mappa.put(ParBio.annoNascita.getDbName(), "1963");
-        mappa.put(ParBio.nome.getDbName(), "Mario");
-        mappa.put(ParBio.luogoNascita.getDbName(), "Affori");
+        mappa.put(ParBio.giornoMeseNascita.getTag(), "3 marzo");
+        mappa.put(ParBio.attivita.getTag(), "politico");
+        mappa.put(ParBio.annoNascita.getTag(), "1963");
+        mappa.put(ParBio.nome.getTag(), "Mario");
+        mappa.put(ParBio.luogoNascita.getTag(), "Affori");
 
         tmplBioMerged = service.getMergedNoLoss(mappa, BIO_SERVER_MAPPA);
         Assert.assertEquals(tmplBioMerged, BIO_MERGED_MAPPA);

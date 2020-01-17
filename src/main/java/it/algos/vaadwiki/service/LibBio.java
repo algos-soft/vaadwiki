@@ -2222,7 +2222,7 @@ public class LibBio {
      *
      * @return testoValido regolato in uscita
      */
-    private String fixPropertyBase(String testoGrezzo) {
+    public String fixPropertyBase(String testoGrezzo) {
         String testoValido;
 
         if (text.isEmpty(testoGrezzo)) {

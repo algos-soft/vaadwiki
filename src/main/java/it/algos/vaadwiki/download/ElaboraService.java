@@ -534,17 +534,17 @@ public class ElaboraService extends ABioService {
 
         if (mappaMongo != null && mappaServer != null) {
 
-            if (mappaServer.get(ParBio.sesso.getDbName()) == null) {
+            if (mappaServer.get(ParBio.sesso.getTag()) == null) {
                 mappaServer.put(ParBio.sesso.getTag(), DEFAULT_GENERE);
             }// end of if cycle
 
             for (ParBio par : ParBio.values()) {
-                valueMongo = mappaMongo.get(par.getDbName());
+                valueMongo = mappaMongo.get(par.getTag());
                 valueServer = mappaServer.get(par.getTag());
 
                 if (par.isCampoValido()) {
                     if (text.isValid(valueMongo)) {
-                        valueMerged = valueMongo;
+                        valueMerged = sostituisceParteValida(valueServer, valueMongo);
                     } else {
                         if (text.isValid(valueServer)) {
                             valueMerged = valueServer;
@@ -568,10 +568,13 @@ public class ElaboraService extends ABioService {
 
 
     public String sostituisceParteValida(String testoOriginale, String parteValidaNuova) {
-        String testoFinale = VUOTA;
-        String parteValidaVecchia = VUOTA;
+        String parteValidaVecchia = libBio.fixPropertyBase(testoOriginale);
 
-        return testoFinale;
+        if (parteValidaVecchia.equalsIgnoreCase(parteValidaNuova)) {
+            return testoOriginale;
+        } else {
+            return text.sostituisce(testoOriginale, parteValidaVecchia, parteValidaNuova);
+        }// end of if/else cycle
     }// end of method
 
 
