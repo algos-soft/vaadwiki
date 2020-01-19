@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.views;
+package it.algos.vaadwiki.utility;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -803,21 +803,22 @@ public class UtilityView extends VerticalLayout {
      * Lista di voci biografiche che sono senza indicazione di sesso
      */
     public void esegueListMF() {
+        int max = 20;
         List<Bio> lista = bioSenzaSesso();
+        int tot = lista.size();
 
-        if (lista != null && lista.size() > 0) {
-            if (lista.size() > 20) {
-                lista = lista.subList(0, 20);
+        if (lista != null && tot > 0) {
+            if (tot > max) {
+                lista = lista.subList(0, max);
             }// end of if cycle
 
             if (lista != null) {
-                pageSessoResult.add(new Label("Elenco delle prime " + lista.size() + " voci biografiche che non hanno genere sul totale di " + lista.size()));
+                pageSessoResult.add(new Label("Elenco delle prime " + lista.size() + " voci biografiche che non hanno genere sul totale di " + tot));
                 allRighe(lista, "M");
             }// end of if cycle
         }// end of if cycle
 
     }// end of method
-
 
 
     public void allRighe(List<Bio> listaGenere, String genere) {
@@ -843,15 +844,15 @@ public class UtilityView extends VerticalLayout {
         buttonWikiEdit.getElement().setAttribute("theme", "secondary");
         buttonWikiEdit.addClickListener(e -> libBio.editWikiPage(wikiTitle));
 
-        Button buttonTest = new Button("Test", new Icon(VaadinIcon.MAGIC));
-        buttonTest.getElement().setAttribute("theme", "secondary");
-        buttonTest.addClickListener(e -> esegueTestSesso(wikiTitle, genere));
+//        Button buttonTest = new Button("Test", new Icon(VaadinIcon.MAGIC));
+//        buttonTest.getElement().setAttribute("theme", "secondary");
+//        buttonTest.addClickListener(e -> esegueTestSesso(wikiTitle, genere));
+//
+//        Button buttonUpload = new Button("Upload", new Icon(VaadinIcon.ARROW_UP));
+//        buttonUpload.getElement().setAttribute("theme", "error");
+//        buttonUpload.addClickListener(e -> esegueFixSesso(wikiTitle, genere));
 
-        Button buttonUpload = new Button("Upload", new Icon(VaadinIcon.ARROW_UP));
-        buttonUpload.getElement().setAttribute("theme", "error");
-        buttonUpload.addClickListener(e -> esegueFixSesso(wikiTitle, genere));
-
-        pageSessoResult.add(new HorizontalLayout(new Label(wikiTitle), buttonMongo, buttonWikiShow, buttonWikiEdit, buttonTest, buttonUpload));
+        pageSessoResult.add(new HorizontalLayout(new Label(wikiTitle), buttonMongo, buttonWikiShow, buttonWikiEdit));
     }// end of method
 
 

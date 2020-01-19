@@ -43,7 +43,7 @@ import static it.algos.vaadflow.application.FlowCost.*;
 @Slf4j
 public class ElaboraService extends ABioService {
 
-    private static String DEFAULT_GENERE = "M";
+    public static String DEFAULT_GENERE = "M";
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -534,7 +534,7 @@ public class ElaboraService extends ABioService {
 
         if (mappaMongo != null && mappaServer != null) {
 
-            if (mappaServer.get(ParBio.sesso.getTag()) == null) {
+            if (text.isEmpty(mappaServer.get(ParBio.sesso.getTag()))) {
                 mappaServer.put(ParBio.sesso.getTag(), DEFAULT_GENERE);
             }// end of if cycle
 
@@ -547,7 +547,7 @@ public class ElaboraService extends ABioService {
                         valueMerged = sostituisceParteValida(valueServer, valueMongo);
                     } else {
                         if (text.isValid(valueServer)) {
-                            valueMerged = valueServer;
+                            valueMerged = eliminaDopoVirgola(par, valueServer);
                         } else {
                             valueMerged = VUOTA;
                         }// end of if/else cycle
@@ -567,14 +567,35 @@ public class ElaboraService extends ABioService {
     }// end of method
 
 
+    /**
+     * <ref> viene mantenuto <br>
+     */
     public String sostituisceParteValida(String testoOriginale, String parteValidaNuova) {
         String parteValidaVecchia = libBio.fixPropertyBase(testoOriginale);
 
-        if (parteValidaVecchia.equalsIgnoreCase(parteValidaNuova)) {
-            return testoOriginale;
+        if (text.isValid(testoOriginale)) {
+            if (parteValidaVecchia.equalsIgnoreCase(parteValidaNuova)) {
+                return testoOriginale;
+            } else {
+                return text.sostituisce(testoOriginale, parteValidaVecchia, parteValidaNuova);
+            }// end of if/else cycle
         } else {
-            return text.sostituisce(testoOriginale, parteValidaVecchia, parteValidaNuova);
+            return parteValidaNuova;
         }// end of if/else cycle
+    }// end of method
+
+
+    /**
+     * testo dopo virgola scartato (in alcune property solamente) <br>
+     */
+    public String eliminaDopoVirgola(ParBio par, String testoOriginale) {
+        String testoValido = testoOriginale;
+
+        if (par == ParBio.luogoNascita || par == ParBio.luogoMorte) {
+            testoValido = text.levaCodaDa(testoValido, VIRGOLA);
+        }// end of if cycle
+
+        return testoValido;
     }// end of method
 
 

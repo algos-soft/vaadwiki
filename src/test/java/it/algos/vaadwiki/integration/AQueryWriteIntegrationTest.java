@@ -3,7 +3,7 @@ package it.algos.vaadwiki.integration;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadwiki.ATest;
-import it.algos.vaadwiki.views.UtilityView;
+import it.algos.vaadwiki.utility.UtilityView;
 import it.algos.wiki.web.AQueryWrite;
 import org.junit.Assert;
 import org.junit.Before;

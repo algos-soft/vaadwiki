@@ -22,7 +22,7 @@ import it.algos.vaadwiki.modules.nome.NomeList;
 import it.algos.vaadwiki.modules.professione.ProfessioneList;
 import it.algos.vaadwiki.modules.wiki.WikiAnnoList;
 import it.algos.vaadwiki.modules.wiki.WikiGiornoList;
-import it.algos.vaadwiki.views.UtilityView;
+import it.algos.vaadwiki.utility.UtilityView;
 import it.algos.wiki.web.AQueryLogin;
 import it.algos.wiki.web.WLogin;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.ServletContextEvent;
 import java.net.InetAddress;
 import java.time.LocalDate;
 
@@ -65,9 +64,9 @@ public class WikiBoot extends ABoot {
 
     private final static String PROJECT_NAME = "vaadwiki";
 
-    private final static double PROJECT_VERSION = 14;
+    private final static double PROJECT_VERSION = 15;
 
-    private final static LocalDate VERSION_DATE = LocalDate.of(2020, 1, 16);
+    private final static LocalDate VERSION_DATE = LocalDate.of(2020, 1, 19);
 
     private final static String PATH_LOGO = "frontend/images/Emblem-wiki-blue.svg.png";
 

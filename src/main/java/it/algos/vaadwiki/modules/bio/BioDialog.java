@@ -324,6 +324,10 @@ public class BioDialog extends AViewDialog<Bio> {
         String tmplMerged;
         String tmpl = "tmplBioServer";
 
+        if (text.isEmpty(getValue(ParBio.sesso.getDbName()))) {
+            getField(ParBio.sesso.getDbName()).setValue(ElaboraService.DEFAULT_GENERE);
+        }// end of if cycle
+
         putMappa(mappa, ParBio.nome);
         putMappa(mappa, ParBio.cognome);
         putMappa(mappa, ParBio.sesso);
@@ -349,7 +353,7 @@ public class BioDialog extends AViewDialog<Bio> {
     protected void putMappa(HashMap<String, String> mappa, ParBio par) {
         String name = par.getDbName();
         String value = getValue(name);
-        mappa.put(name, value);
+        mappa.put(par.getTag(), value);
     }// end of method
 
 

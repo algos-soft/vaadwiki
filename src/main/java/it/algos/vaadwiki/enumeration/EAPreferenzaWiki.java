@@ -149,7 +149,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     statisticheNazionalita(STATISTICHE_NAZIONALITA, "Numero di nazionalità presenti nel database Mongo, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
     statisticheAttesa(STATISTICHE_ATTESA, "Numero di giorni di attesa previsti, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
 
-    usaSingolaVoceElaborata(USA_UPLOAD_SINGOLA_VOCE_ELABORATA, "Upload di ogni voce elaborata", EAPrefType.bool, false),
+    usaSingolaVoceElaborata(USA_UPLOAD_SINGOLA_VOCE_ELABORATA, "Upload di ogni voce elaborata", EAPrefType.bool, true),
     typeElaborazione(TYPE_ELABORAZIONE, "Elaborazione più o meno 'invasiva' dei parametri", EAPrefType.enumeration, EARole.developer, EAElabora.ordinaNormaliNoLoss),
     ;
 

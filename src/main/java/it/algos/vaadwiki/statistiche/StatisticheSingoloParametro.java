@@ -29,9 +29,9 @@ public class StatisticheSingoloParametro extends Statistiche {
 
     protected static String TITOLO_PAGINA_WIKI = "Progetto:Biografie/Parametri/";
 
-    protected static int MIN = 20;
+    protected static int MIN = 50;
 
-    protected static int MAX = 50;
+    protected static int MAX = 100;
 
     protected static String DIRETTO = "Elenco diretto fino a " + MIN + " voci; oltre vengono cassettate.";
 
@@ -122,6 +122,7 @@ public class StatisticheSingoloParametro extends Statistiche {
         testo += " biografiche che utilizzano il [[template:Bio|template Bio]] e usano il parametro ";
         testo += LibWiki.setBold(par.getTag());
         testo += A_CAPO;
+        testo += A_CAPO;
 
         return testo;
     }// fine del metodo
@@ -143,7 +144,7 @@ public class StatisticheSingoloParametro extends Statistiche {
         testo += LibWiki.setBold(par.getTag());
         testo += A_CAPO;
 
-        testo += creaListaCassetto(false, nonUsate);
+        testo += creaLista(false, nonUsate);
 
         return testo;
     }// fine del metodo
@@ -163,9 +164,8 @@ public class StatisticheSingoloParametro extends Statistiche {
         testo += selezioneRef(usate);
         testo += " che  usano il parametro ";
         testo += LibWiki.setBold(par.getTag());
-        testo += A_CAPO;
 
-        testo += creaListaCassetto(true, usate);
+        testo += creaLista(true, usate);
 
         return testo;
     }// fine del metodo
@@ -194,15 +194,18 @@ public class StatisticheSingoloParametro extends Statistiche {
     /**
      * Lista o cassetto <br>
      */
-    protected String creaListaCassetto(boolean esistenti, int numeroVoci) {
+    protected String creaLista(boolean esistenti, int numeroVoci) {
         String testo = VUOTA;
 
-        if (numeroVoci < MIN) {
-            testo = creaDiretto(esistenti);
+        if (esistenti) {
         } else {
-            if (numeroVoci < MAX) {
-                testo = creaCassetto();
-            }// end of if cycle
+            if (numeroVoci < MIN) {
+                testo = creaDiretto(esistenti);
+            } else {
+                if (numeroVoci < MAX) {
+                    testo = creaCassetto(esistenti);
+                }// end of if cycle
+            }// end of if/else cycle
         }// end of if/else cycle
 
         return testo;
@@ -232,9 +235,11 @@ public class StatisticheSingoloParametro extends Statistiche {
     /**
      * Cassetto <br>
      */
-    protected String creaCassetto() {
-        String testo = VUOTA;
+    protected String creaCassetto(boolean esistenti) {
+        String testo = creaDiretto(esistenti);
 
+        testo = LibWiki.listaDueColonne(testo);
+        testo = libBio.setCassetto("Biografie", testo);
         return testo;
     }// fine del metodo
 

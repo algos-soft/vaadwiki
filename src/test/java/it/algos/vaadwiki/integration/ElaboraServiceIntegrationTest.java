@@ -151,6 +151,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|GiornoMeseNascita = 3 marzo\n" +
             "|AnnoNascita = 1963\n" +
             "|Nazionalità = francese\n" +
+            "|LuogoMorte = Milano, Italia\n" +
             "|GiornoMeseMorte = \n" +
             "|Categorie = No\n" +
             "|Attività = attore<ref>Vedi note</ref>\n" +
@@ -167,7 +168,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|LuogoNascitaLink = Milano\n" +
             "|GiornoMeseNascita = 3 marzo\n" +
             "|AnnoNascita = 1963\n" +
-            "|LuogoMorte = \n" +
+            "|LuogoMorte = Milano\n" +
             "|GiornoMeseMorte = \n" +
             "|AnnoMorte = \n" +
             "|Attività = politico<ref>Vedi note</ref>\n" +

@@ -3066,4 +3066,23 @@ public class LibBio {
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
+
+    public String setCassetto(String titolo, String testoOriginario) {
+        String testo = VUOTA;
+
+        if (text.isValid(titolo) && text.isValid(testoOriginario)) {
+            testo += "{{cassetto";
+            testo += A_CAPO;
+            testo += "|titolo = ";
+            testo += titolo;
+            testo += A_CAPO;
+            testo += "|testo = ";
+            testo += testoOriginario;
+            testo += "}}";
+            testo += A_CAPO;
+        }// end of if cycle
+
+        return testo;
+    }// end of method
+
 }// end of class

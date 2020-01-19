@@ -38,17 +38,6 @@ public class StatisticheParametri extends Statistiche {
     }// end of Spring constructor
 
 
-//    /**
-//     * Questa classe viene tipicamente costruita con appContext.getBean(StatisticheParametri.class) <br>
-//     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
-//     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired di questa classe <br>
-//     */
-//    @PostConstruct
-//    protected void initIstanzaDopoInitDiSpringBoot() {
-////        super.inizia();
-//    }// end of method
-
-
     /**
      * Costruisce la pagina <br>
      * Registra la pagina sul server wiki <br>
@@ -125,6 +114,7 @@ public class StatisticheParametri extends Statistiche {
      */
     protected String testoTabellaBase() {
         String testo = VUOTA;
+        int numVoci = bioService.count();
 
         testo += A_CAPO;
         testo += "==Parametri base==";
@@ -133,7 +123,10 @@ public class StatisticheParametri extends Statistiche {
         testo += LibWiki.setBold(ParBio.values().length);
         testo += " parametri; alcuni obbligatori ed altri facoltativi.";
         testo += LibWiki.setRef("Se nella voce biografica manca un parametro ''facoltativo'', ad esempio ''nome'', la relativa persona non verrà inserita nelle liste di ''persone di nome...''.");
-        testo += " Per la gestione delle ''liste'' effettuata dal '''[[Utente:Biobot|<span style=\"color:green;\">bot</span>]]''', sono utilizzati i seguenti ";
+        testo += " Per la gestione delle ''liste'' effettuata dal '''[[Utente:Biobot|<span style=\"color:green;\">bot</span>]]'''";
+        testo += " su ";
+        testo += LibWiki.setBold(text.format(numVoci));
+        testo += " voci, sono utilizzati i seguenti ";
         testo += LibWiki.setBold(15);
         testo += " parametri.";
         testo += LibWiki.setRef("Il parametro ''sesso'' è indispensabile per inserire correttamente le desinenze maschili e femminili nelle liste di attività e nazionalità; tutte le voci biografiche ''dovrebbero'' averlo. ");
@@ -212,11 +205,7 @@ public class StatisticheParametri extends Statistiche {
         testo += SEP_DOPPIO;
         testo += SINISTRA;
         testo += SEP;
-        if (par == ParBio.sesso) {
-            testo += LibWiki.setQuadreBold(TITOLO_PAGINA_WIKI + "/" + par.getTag() + "|" + par.getTag());
-        } else {
-            testo += LibWiki.setBold(par.getTag());
-        }// end of if/else cycle
+        testo += LibWiki.setQuadreBold(TITOLO_PAGINA_WIKI + "/" + par.getTag() + "|" + par.getTag());
 
         testo += SEP_DOPPIO;
         testo += text.format(nonUsate);
@@ -228,6 +217,7 @@ public class StatisticheParametri extends Statistiche {
         testo += LibWiki.setBold(math.percentualeDueDecimali(usate, totVoci));
 
         appContext.getBean(StatisticheSingoloParametro.class, par, nonUsate, usate);
+
         return testo;
     }// fine del metodo
 
