@@ -10,9 +10,11 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EALogLivello;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.service.IAService;
@@ -39,6 +41,7 @@ import org.springframework.context.annotation.Scope;
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 
+import static it.algos.vaadflow.application.FlowCost.USA_DEBUG;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.TAG_BIO;
 
@@ -81,6 +84,11 @@ public class BioDialog extends AViewDialog<Bio> {
     @Autowired
     protected PageService pageService;
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected LogService logger;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -310,6 +318,13 @@ public class BioDialog extends AViewDialog<Bio> {
         String tmplValue = tmplField.getValue();
         tmplOrdinato = elaboraService.ordinaNormaliNoLoss(tmplValue);
         tmplField.setValue(tmplOrdinato);
+
+        if (pref.isBool(USA_DEBUG) && !tmplOrdinato.equals(tmplValue)) {
+            logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss. La voce " + currentItem.getWikiTitle() + " ha il template diverso da quello standard.", BioDialog.class, "riordina");
+            logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss."+tmplValue, BioDialog.class, "riordina");
+            logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss."+tmplOrdinato, BioDialog.class, "riordina");
+        }// end of if cycle
+
     }// end of method
 
 

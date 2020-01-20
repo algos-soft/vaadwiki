@@ -2092,17 +2092,17 @@ public class LibBio {
             for (ParBio par : ParBio.values()) {
                 valore = par.getTag();
                 listaTag = new ArrayList();
-                listaTag.add(sep + valore + spazio);
+//                listaTag.add(sep + valore + spazio);
                 listaTag.add(sep + valore + uguale);
-                listaTag.add(sep + valore + tab);
+//                listaTag.add(sep + valore + tab);
                 listaTag.add(sep + valore + spazio + uguale);
-                listaTag.add(sep1 + valore + spazio);
+//                listaTag.add(sep1 + valore + spazio);
                 listaTag.add(sep1 + valore + uguale);
-                listaTag.add(sep1 + valore + tab);
+//                listaTag.add(sep1 + valore + tab);
                 listaTag.add(sep1 + valore + spazio + uguale);
-                listaTag.add(sep2 + valore + spazio);
+//                listaTag.add(sep2 + valore + spazio);
                 listaTag.add(sep2 + valore + uguale);
-                listaTag.add(sep2 + valore + tab);
+//                listaTag.add(sep2 + valore + tab);
                 listaTag.add(sep2 + valore + spazio + uguale);
 
                 try { // prova ad eseguire il codice

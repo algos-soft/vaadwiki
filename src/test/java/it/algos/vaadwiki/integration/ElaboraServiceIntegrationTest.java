@@ -177,6 +177,23 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|Didascalia = francese\n" +
             "}}";
 
+    private static String BIO_ERRORE_MERGED = "{{Bio\n" +
+            "|Nome = Charles Edward Maurice\n" +
+            "|Cognome = Spencer\n" +
+            "|PostCognomeVirgola = '''IX Conte Spencer''' <small>DL </small>\n" +
+            "|Sesso = M\n" +
+            "|LuogoNascita = Althorp\n" +
+            "|GiornoMeseNascita = 20 maggio\n" +
+            "|AnnoNascita = 1964\n" +
+            "|LuogoMorte = \n" +
+            "|GiornoMeseMorte = \n" +
+            "|AnnoMorte = \n" +
+            "|Attività = nobile\n" +
+            "|Nazionalità = inglese\n" +
+            "|Categorie = no\n" +
+            "|FineIncipit = designato con il [[Titoli di cortesia nel Regno Unito|Titolo di cortesia]] '''Visconte Althorp''' tra il [[1975]] ed il [[1992]], è un [[Paria del Regno Unito|pari]] [[Britannici|britannico]] e fratello di [[Diana Spencer|Diana, Principessa di Galles]]. È un autore, giornalista della carta stampata e televisiva\n" +
+            "}}";
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -301,6 +318,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
         }// end of for cycle
     }// end of single test
 
+
     @Test
     public void getCampiSignificativi() {
         System.out.println("");
@@ -312,6 +330,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             System.out.println(par.getTag());
         }// end of for cycle
     }// end of single test
+
 
     @Test
     public void getCampiNormali() {
@@ -347,8 +366,6 @@ public class ElaboraServiceIntegrationTest extends ATest {
     }// end of single test
 
 
-
-
     /**
      * EAElabora.ordinaNormaliNoLoss
      * <p>
@@ -360,8 +377,8 @@ public class ElaboraServiceIntegrationTest extends ATest {
      * Elimina quelli esistenti vuoti, senza valore <br>
      * Registra le modifiche sul server wiki <br>
      */
-    @Test
-    public void ordinaNormaliNoLoss2() {
+//    @Test
+//    public void ordinaNormaliNoLoss3() {
 //        long inizio;
 //        List<Bio> lista;
 //        Sort sort = new Sort(Sort.Direction.ASC, "_id");
@@ -380,7 +397,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
 //        }// end of if cycle
 //
 //        System.out.println("Modificati " + cont + " su " + lista.size() + " in " + date.deltaText(inizio));
-    }// end of single test
+//    }// end of single test
 
 
     /**
@@ -499,6 +516,30 @@ public class ElaboraServiceIntegrationTest extends ATest {
         System.out.println("tmplBioMergedMappa");
         System.out.println("*************");
         System.out.println(tmplBioMerged);
+        System.out.println("");
+    }// end of single test
+
+
+    /**
+     * EAElabora.ordinaNormaliNoLoss
+     * <p>
+     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
+     * Riordina i parametri <br>
+     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
+     * Elimina quelli esistenti vuoti, senza valore <br>
+     */
+    @Test
+    public void ordinaNormaliNoLoss2() {
+        String title = "Charles Spencer, IX conte Spencer";
+        String templServer = api.leggeTmplBio(title);
+
+        String tmplOrdinato = service.ordinaNormaliNoLoss(templServer);
+        Assert.assertEquals(tmplOrdinato, templServer);
+
+        System.out.println("*************");
+        System.out.println("ordinaNormaliNoLoss2");
+        System.out.println("*************");
+        System.out.println(tmplOrdinato);
         System.out.println("");
     }// end of single test
 

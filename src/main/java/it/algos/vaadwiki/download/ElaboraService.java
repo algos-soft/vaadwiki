@@ -108,19 +108,20 @@ public class ElaboraService extends ABioService {
         int totale = bioService.count();
         Sort sort = new Sort(Sort.Direction.ASC, "pageid");
         List<Bio> lista = null;
-        int tot = 0;
+        int cont = 0;
 
         for (int k = 0; k < array.numCicli(totale, size); k++) {
             lista = mongo.mongoOp.find(new Query().with(PageRequest.of(k, size, sort)), Bio.class);
             for (Bio bio : lista) {
                 if (check(bio)) {
-                    tot++;
+                    cont++;
+                    logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss. (" + cont + ") La voce " + bio.getWikiTitle() + " ha il template diverso da quello standard.", ElaboraService.class, "checkAll");
                 }// end of if cycle
             }// end of for cycle
         }// end of for cycle
 
-        logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss. Su " + text.format(totale) + " voci ce ne sono " + text.format(tot) + " col template diverso da quello standard", ElaboraService.class, "checkAll");
-        logger.crea(EALogType.elabora, "Su " + text.format(totale) + " voci ci sono " + text.format(tot) + " template diversi. Controllati", inizio);
+        logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss. Su " + text.format(totale) + " voci ce ne sono " + text.format(cont) + " col template diverso da quello standard", ElaboraService.class, "checkAll");
+        logger.crea(EALogType.elabora, "Su " + text.format(totale) + " voci ci sono " + text.format(cont) + " template diversi. Controllati", inizio);
     }// end of method
 
 
