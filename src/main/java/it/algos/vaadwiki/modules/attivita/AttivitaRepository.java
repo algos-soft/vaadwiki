@@ -42,6 +42,7 @@ public interface AttivitaRepository extends MongoRepository<Attivita, String> {
     public List<Attivita> findAllByOrderByPluraleAsc();
 
     public List<Attivita> findAllByPlurale(String plurale);
+    public List<Attivita> findAllByAggiuntaIsTrue();
 
     @Query("{ state : 'ACTIVE' }")
     public List<Attivita> findPage(Pageable pageable);

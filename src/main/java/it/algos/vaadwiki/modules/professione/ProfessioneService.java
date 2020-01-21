@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.wiki.WikiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,10 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.modules.attivita.AttivitaService.EX;
+import static it.algos.vaadwiki.modules.attivita.AttivitaService.EX2;
 
 /**
  * Project vaadwiki <br>
@@ -239,7 +243,8 @@ public class ProfessioneService extends WikiService {
     @Override
     public void download() {
         super.download();
-        this.aggiunge();
+        this.aggiungeAttivita();
+        this.aggiungeAttivitaEx();
     }// end of method
 
 
@@ -248,14 +253,44 @@ public class ProfessioneService extends WikiService {
      * Spazzola tutta la collezione <br>
      * Per ogni professione legge la pagina e crea (se non esiste) una entity con lo stesso nome <br>
      */
-    private void aggiunge() {
+    private void aggiungeAttivita() {
         List<Professione> lista = findAll();
         String pagina;
 
         if (array.isValid(lista)) {
             for (Professione professione : lista) {
                 pagina = professione.pagina;
-                findOrCrea(pagina, pagina,true);
+                findOrCrea(pagina, pagina, true);
+            }// end of for cycle
+        }// end of if cycle
+    }// end of method
+
+
+    /**
+     * Aggiunge le ex-attività (non presenti nel Modulo su Wiki) che sono state aggiunte nella collection Attivita su mongoDSB <br>
+     */
+    private void aggiungeAttivitaEx() {
+        List<Attivita> lista = attivitaService.findAllAggiunte();
+        String singolareAttivita;
+        String singolareProfessione = VUOTA;
+        String pagina = VUOTA;
+        Professione professione;
+
+        if (array.isValid(lista)) {
+            for (Attivita attivita : lista) {
+                singolareAttivita = attivita.singolare;
+
+                if (singolareAttivita.startsWith(EX)) {
+                    singolareProfessione = text.levaTesta(singolareAttivita, EX);
+                }// end of if cycle
+                if (singolareAttivita.startsWith(EX2)) {
+                    singolareProfessione = text.levaTesta(singolareAttivita, EX2);
+                }// end of if cycle
+
+                professione = findByKeyUnica(singolareProfessione);
+                if (professione != null) {
+                    findOrCrea(singolareAttivita, professione.pagina, true);
+                }// end of if cycle
             }// end of for cycle
         }// end of if cycle
 

@@ -43,6 +43,8 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @AIScript(sovrascrivibile = false)
 public class AttivitaService extends WikiService {
 
+    public static String EX = "ex ";
+    public static String EX2 = "ex-";
 
     /**
      * versione della classe per la serializzazione
@@ -220,6 +222,11 @@ public class AttivitaService extends WikiService {
     }// end of method
 
 
+    public List<Attivita> findAllAggiunte() {
+        return repository.findAllByAggiuntaIsTrue();
+    }// end of method
+
+
     public List<Attivita> findAllByPlurale(String plurale) {
         return repository.findAllByPlurale(plurale);
     }// end of method
@@ -283,8 +290,6 @@ public class AttivitaService extends WikiService {
         List<Genere> listaGenere = genereService.findAll();
         String attivitaSingolare;
         String genereSingolare;
-        String tag1 = "ex ";
-        String tag2 = "ex-";
         Attivita entity;
 
         if (array.isValid(listaGenere)) {
@@ -293,11 +298,11 @@ public class AttivitaService extends WikiService {
                 attivitaSingolare = VUOTA;
                 genereSingolare = genere.singolare;
 
-                if (genereSingolare.startsWith(tag1)) {
-                    attivitaSingolare = genereSingolare.substring(tag1.length());
+                if (genereSingolare.startsWith(EX)) {
+                    attivitaSingolare = genereSingolare.substring(EX.length());
                 }// end of if cycle
-                if (genereSingolare.startsWith(tag2)) {
-                    attivitaSingolare = genereSingolare.substring(tag2.length());
+                if (genereSingolare.startsWith(EX2)) {
+                    attivitaSingolare = genereSingolare.substring(EX2.length());
                 }// end of if cycle
 
                 if (text.isValid(attivitaSingolare)) {

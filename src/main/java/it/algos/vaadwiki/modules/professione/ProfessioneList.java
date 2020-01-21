@@ -135,6 +135,7 @@ public class ProfessioneList extends WikiList {
         alertPlacehorder.add(new Label("Viene utilizzata principalmente per convertire le attività da femminile (che può essere usato nell'incipit) a maschile (usato nel wikilink) e per orfanizzare i redirect"));
         alertPlacehorder.add(new Label("All'interno della tabella le attività sono in ordine alfabetico."));
         alertPlacehorder.add(getLabelRed("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle attività (maschili) che corrispondono alla pagina (non presenti nel Modulo su Wiki)."));
+        alertPlacehorder.add(getLabelRed("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle EX-attività (non presenti nel Modulo su Wiki) recuperate dalla collezione locale 'Attività' su mongoDB"));
         alertPlacehorder.add(getLabelRed("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività e le pagine sono convertite in minuscolo."));
     }// end of method
 

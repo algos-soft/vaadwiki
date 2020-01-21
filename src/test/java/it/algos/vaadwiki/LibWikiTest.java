@@ -6,16 +6,19 @@ import it.algos.wiki.LibWiki;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
-import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import static it.algos.wiki.LibWiki.VUOTA;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -172,10 +175,43 @@ public class LibWikiTest extends ATest {
         int a = 87;
 
 
-        sorgente="{\"error\":{\"code\":\"assertbotfailed\",\"info\":\"Assertion that the user has the \\\"bot\\\" right failed.\",\"docref\":\"See https://it.wikipedia.org/w/api.php for API usage. Subscribe to the mediawiki-api-announce mailing list at &lt;https://lists.wikimedia.org/mailman/listinfo/mediawiki-api-announce&gt; for notice of API deprecations and breaking changes.\"},\"servedby\":\"mw1233\"}";
+        sorgente = "{\"error\":{\"code\":\"assertbotfailed\",\"info\":\"Assertion that the user has the \\\"bot\\\" right failed.\",\"docref\":\"See https://it.wikipedia.org/w/api.php for API usage. Subscribe to the mediawiki-api-announce mailing list at &lt;https://lists.wikimedia.org/mailman/listinfo/mediawiki-api-announce&gt; for notice of API deprecations and breaking changes.\"},\"servedby\":\"mw1233\"}";
         mappa = LibWiki.creaMappaError(sorgente);
         ottenuto = LibWiki.getValueStr(mappa, "query");
     }// end of single test
 
+
+    /**
+     * Aggiunge il PIPE intermedio e le doppie quadre in testa ed in coda alla stringa. <br>
+     * Se è nullo 'paginaWiki', non aggiunge il PIPE e restituisce solo nomeVisibile <br>
+     *
+     * @param paginaWiki   da linkare
+     * @param nomeVisibile da mostrare
+     *
+     * @return stringa con PIPE intermedio e doppie quadre aggiunte
+     */
+    @Test
+    public void setLink() {
+        String paginaWiki = VUOTA;
+        String nomeVisibile = VUOTA;
+
+        paginaWiki = "Botanico";
+        nomeVisibile = "Botanici";
+        previsto = "[[Botanico|Botanici]]";
+        ottenuto = LibWiki.setLink(paginaWiki, nomeVisibile);
+        assertEquals(previsto, ottenuto);
+
+        paginaWiki = "Calciatore";
+        nomeVisibile = "Calciatori";
+        previsto = "[[Calciatore|Calciatori]]";
+        ottenuto = LibWiki.setLink(paginaWiki, nomeVisibile);
+        assertEquals(previsto, ottenuto);
+
+        paginaWiki = "";
+        nomeVisibile = "Calciatori";
+        previsto = "[[Calciatori]]";
+        ottenuto = LibWiki.setLink(paginaWiki, nomeVisibile);
+        assertEquals(previsto, ottenuto);
+    }// end of single test
 
 }// end of class

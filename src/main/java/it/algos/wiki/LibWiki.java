@@ -2881,19 +2881,20 @@ public abstract class LibWiki {
 
 
     /**
-     * Aggiunge doppie quadre in testa e coda alla stringa.
-     * Aggiunge SOLO se gia non esistono (ne doppie, ne singole)
-     * Se arriva una stringa vuota, restituisce una stringa vuota
-     * Elimina spazi vuoti iniziali e finali
-     * Elimina eventuali quadre già presenti, per evitare di metterle doppi
+     * Aggiunge il PIPE intermedio e le doppie quadre in testa ed in coda alla stringa. <br>
+     * Se è nullo 'paginaWiki', non aggiunge il PIPE e restituisce solo nomeVisibile <br>
      *
      * @param paginaWiki   da linkare
      * @param nomeVisibile da mostrare
      *
-     * @return stringa con doppie quadre aggiunte
+     * @return stringa con PIPE intermedio e doppie quadre aggiunte
      */
     public static String setLink(String paginaWiki, String nomeVisibile) {
-        return setQuadre(paginaWiki + PIPE + nomeVisibile);
+        if (paginaWiki != null && paginaWiki.length() > 0) {
+            return setQuadre(paginaWiki + PIPE + nomeVisibile);
+        } else {
+            return setQuadre(nomeVisibile);
+        }// end of if/else cycle
     } // fine del metodo
 
 
@@ -2922,6 +2923,7 @@ public abstract class LibWiki {
         return stringaOut.trim();
     } // fine del metodo
 
+
     /**
      * Aggiunge tripli apici (grassetto) in testa ed in coda alla stringa.
      * Aggiunge doppie quadre in testa e coda alla stringa.
@@ -2934,12 +2936,13 @@ public abstract class LibWiki {
         String stringaOut = stringaIn;
 
         if (stringaIn != null && stringaIn.length() > 0) {
-            stringaOut= setQuadre(stringaOut);
-            stringaOut= setBold(stringaOut);
+            stringaOut = setQuadre(stringaOut);
+            stringaOut = setBold(stringaOut);
         }// fine del blocco if
 
         return stringaOut.trim();
     } // fine del metodo
+
 
     /**
      * Aggiunge tripli apici (grassetto) in testa ed in coda al numero.
