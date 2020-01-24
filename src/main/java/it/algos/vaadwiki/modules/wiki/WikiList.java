@@ -246,6 +246,7 @@ public abstract class WikiList extends AGridViewList {
         super.usaPagination = true;
 
         //--bottoni vaadwiki
+        super.usaSecondTopPlaceholder = true;
         this.usaButtonDownload = false;
         this.usaButtonUpdate = false;
         this.usaButtonElabora = false;
@@ -331,21 +332,21 @@ public abstract class WikiList extends AGridViewList {
             buttonModulo = new Button("Modulo", new Icon(VaadinIcon.LIST));
             buttonModulo.addClassName("view-toolbar__button");
             buttonModulo.addClickListener(e -> showWikiPagina(titoloModulo));
-            topPlaceholder.add(buttonModulo);
+            secondTopPlaceholder.add(buttonModulo);
         }// end of if cycle
 
         if (usaButtonShowStatisticheA) {
             buttonShowStatisticheA = new Button("Statistiche", new Icon(VaadinIcon.TABLE));
             buttonShowStatisticheA.addClassName("view-toolbar__button");
             buttonShowStatisticheA.addClickListener(e -> showWikiPagina(titoloPaginaStatistiche));
-            topPlaceholder.add(buttonShowStatisticheA);
+            secondTopPlaceholder.add(buttonShowStatisticheA);
         }// end of if cycle
 
         if (usaButtonShowStatisticheB) {
             buttonShowStatisticheB = new Button("Statistiche 2", new Icon(VaadinIcon.TABLE));
             buttonShowStatisticheB.addClassName("view-toolbar__button");
             buttonShowStatisticheB.addClickListener(e -> showWikiPagina(titoloPaginaStatistiche2));
-            topPlaceholder.add(buttonShowStatisticheB);
+            secondTopPlaceholder.add(buttonShowStatisticheB);
         }// end of if cycle
 
         if (usaButtonUploadStatistiche) {
@@ -353,7 +354,7 @@ public abstract class WikiList extends AGridViewList {
             buttonUploadStatistiche.getElement().setAttribute("theme", "error");
             buttonUploadStatistiche.addClassName("view-toolbar__button");
             buttonUploadStatistiche.addClickListener(e -> uploadStatistiche(System.currentTimeMillis()));
-            topPlaceholder.add(buttonUploadStatistiche);
+            secondTopPlaceholder.add(buttonUploadStatistiche);
         }// end of if cycle
 
         sincroBottoniMenu(false);

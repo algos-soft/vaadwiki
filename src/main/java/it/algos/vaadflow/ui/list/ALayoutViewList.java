@@ -208,7 +208,7 @@ public abstract class ALayoutViewList extends APrefViewList {
             topPlaceholder.add(buttonNew);
         }// end of if cycle
 
-        //--eventuale campo o dialogo diu ricerca
+        //--eventuale campo o dialogo di ricerca
         switch (searchType) {
             case nonUsata:
                 break;

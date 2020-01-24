@@ -258,6 +258,13 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
                 chiaveCognome = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 break;
             case listaNomi:
+                if (bio.getWikiTitle().equals("Angelo Corbo")) {
+                    int a=87;
+                }// end of if cycle
+                if (bio.getWikiTitle().equals("Angelo Joppi")) {
+                    int a=87;
+                }// end of if cycle
+
                 didascalia = didascaliaService.getDidascaliaListe(bio);
                 chiave = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
 

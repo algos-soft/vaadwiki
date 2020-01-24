@@ -50,7 +50,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_PRO)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-@AIView(vaadflow = false, menuName = "professione", menuIcon = VaadinIcon.BOAT, searchProperty = "singolare", roleTypeVisibility = EARoleType.developer)
+@AIView(vaadflow = false, menuName = "professione", menuIcon = VaadinIcon.BOAT, searchProperty = "pagina", roleTypeVisibility = EARoleType.developer)
 public class ProfessioneList extends WikiList {
 
 

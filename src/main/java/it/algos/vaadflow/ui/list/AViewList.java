@@ -10,6 +10,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.shared.ui.LoadMode;
+import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.footer.AFooter;
@@ -27,14 +28,12 @@ import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadflow.ui.fields.IAField;
 import it.algos.vaadflow.wrapper.AFiltro;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
 
-import static it.algos.vaadflow.application.FlowCost.FLAG_TEXT_EDIT;
-import static it.algos.vaadflow.application.FlowCost.FLAG_TEXT_SHOW;
+import static it.algos.vaadflow.application.FlowCost.*;
 
 //import com.vaadin.flow.component.applayout.AppLayoutMenu;
 //import com.vaadin.flow.component.applayout.AppLayoutMenuItem;
@@ -357,6 +356,7 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
         return null;
     }// end of method
 
+
     /**
      * Costruisce un (eventuale) layout con bottoni aggiuntivi <br>
      * Facoltativo (assente di default) <br>
@@ -365,6 +365,7 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
      */
     protected void creaGridBottomLayout() {
     }// end of method
+
 
     /**
      * Navigazione verso un altra pagina
@@ -524,7 +525,12 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
 
 
     protected Button createEditButton(AEntity entityBean) {
-        Button edit = new Button(isEntityModificabile ? pref.getStr(FLAG_TEXT_EDIT) : pref.getStr(FLAG_TEXT_SHOW), event -> openDialog(entityBean));
+        String label = VUOTA;
+        if (pref.isBool(FlowCost.USA_TEXT_EDIT_BUTTON)) {
+            label = isEntityModificabile ? pref.getStr(FLAG_TEXT_EDIT) : pref.getStr(FLAG_TEXT_SHOW);
+        }// end of if cycle
+
+        Button edit = new Button(label, event -> openDialog(entityBean));
         edit.setIcon(new Icon("lumo", isEntityModificabile ? "edit" : "search"));
         edit.addClassName("review__edit");
         edit.getElement().setAttribute("theme", "tertiary");

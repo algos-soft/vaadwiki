@@ -12,7 +12,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Locale;
 
 /**
  * Project vaadflow
@@ -69,12 +68,6 @@ public class ADateTimePicker extends CustomField<LocalDateTime> {
 
     public void setStep(Duration step) {
         timePicker.setStep(step);
-    }// end of method
-
-
-    public void setLocale(String loc) {
-        datePicker.setLocale(new Locale(loc));
-        timePicker.setLocale(new Locale(loc));
     }// end of method
 
 }// end of class

@@ -387,7 +387,6 @@ public class AFieldService extends AbstractService {
                 break;
             case localdatetime:
                 field = new ADateTimePicker(caption);
-                ((ADateTimePicker)field).setLocale("it");
                 if (binder != null) {
                     binder.forField(field).bind(fieldName);
                 }// end of if cycle

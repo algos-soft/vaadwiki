@@ -64,7 +64,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Qualifier(TAG_ATT)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-@AIView(vaadflow = false, menuName = "attivita", menuIcon = VaadinIcon.BOAT, searchProperty = "singolare", roleTypeVisibility = EARoleType.developer)
+@AIView(vaadflow = false, menuName = "attivita", menuIcon = VaadinIcon.BOAT, searchProperty = "plurale", roleTypeVisibility = EARoleType.developer)
 public class AttivitaList extends WikiList {
 
 
