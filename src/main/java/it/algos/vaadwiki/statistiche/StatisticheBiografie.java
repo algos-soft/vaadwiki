@@ -175,12 +175,12 @@ public class StatisticheBiografie extends Statistiche {
 
         if (modificate) {
             testo += color;
-            testo += dataOld != null ? date.getDate(dataOld) : VUOTA;
+            testo += dataOld != null ? date.get(dataOld) : VUOTA;
             testo += A_CAPO;
         }// end of if cycle
 
         testo += color;
-        testo += dataNew != null ? date.getDate(dataNew) : VUOTA;
+        testo += dataNew != null ? date.get(dataNew) : VUOTA;
         testo += A_CAPO;
 
         if (modificate) {

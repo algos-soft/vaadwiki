@@ -66,15 +66,15 @@ public interface BioRepository extends MongoRepository<Bio, String> {
 
     public int countByAttivitaOrAttivita2OrAttivita3(Attivita attivita, Attivita attivita2, Attivita attivita3);
 
-    public List<Bio> findAllByAttivita(Attivita attivita);
+    public List<Bio> findAllByAttivitaOrderByCognomeAsc(Attivita attivita);
 
     public List<Bio> findAllByAttivita2(Attivita attivita);
 
     public List<Bio> findAllByAttivita3(Attivita attivita);
 
-    public List<Bio> findByAttivitaOrAttivita2OrAttivita3(Attivita attivita, Attivita attivita2, Attivita attivita3);
+    public List<Bio> findByAttivitaOrAttivita2OrAttivita3OrderByCognomeAsc(Attivita attivita, Attivita attivita2, Attivita attivita3);
 
-    public List<Bio> findAllByNazionalita(Nazionalita nazionalita);
+    public List<Bio> findAllByNazionalitaOrderByCognomeAsc(Nazionalita nazionalita);
 
 
     public int countAllByNazionalita(Nazionalita nazionalita);

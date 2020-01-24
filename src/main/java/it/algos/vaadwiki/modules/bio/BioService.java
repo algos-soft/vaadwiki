@@ -489,7 +489,7 @@ public class BioService extends WikiService {
      * @return ordered entities
      */
     public List<Bio> findAllByAttivita(Attivita attivita) {
-        return repository.findAllByAttivita(attivita);
+        return repository.findAllByAttivitaOrderByCognomeAsc(attivita);
     }// end of method
 
 
@@ -503,7 +503,7 @@ public class BioService extends WikiService {
      * @return ordered entities
      */
     public List<Bio> findAllByAttivita23(Attivita attivita) {
-        return repository.findByAttivitaOrAttivita2OrAttivita3(attivita, attivita, attivita);
+        return repository.findByAttivitaOrAttivita2OrAttivita3OrderByCognomeAsc(attivita, attivita, attivita);
     }// end of method
 
 
@@ -517,7 +517,7 @@ public class BioService extends WikiService {
      * @return ordered entities
      */
     public List<Bio> findAllByNazionalita(Nazionalita nazionalita) {
-        return repository.findAllByNazionalita(nazionalita);
+        return repository.findAllByNazionalitaOrderByCognomeAsc(nazionalita);
     }// end of method
 
 
