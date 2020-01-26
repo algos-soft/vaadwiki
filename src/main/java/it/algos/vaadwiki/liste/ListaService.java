@@ -367,7 +367,7 @@ public class ListaService extends ABioService {
         ArrayList<WrapDidascalia> listaChiaveDue = null;
 
         for (WrapDidascalia wrap : listaDidascalie) {
-            chiaveUno = wrap.chiaveParagrafo;
+            chiaveUno = wrap.getChiaveParagrafo();
 
             if (mappaParagrafi.get(chiaveUno) == null) {
                 listaChiaveDue = new ArrayList<WrapDidascalia>();

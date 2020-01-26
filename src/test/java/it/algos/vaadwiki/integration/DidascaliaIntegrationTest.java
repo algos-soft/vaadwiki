@@ -50,6 +50,7 @@ public class DidascaliaIntegrationTest extends ATest {
 
     private static String NOME_BIO_TRE = "Sonia Todd";
 
+
     @Autowired
     public MongoOperations mongoOp;
 
@@ -83,6 +84,7 @@ public class DidascaliaIntegrationTest extends ATest {
     private Bio bioUno;
 
     private Bio bioDue;
+
     private Bio bioTre;
 
     private Didascalia didascalia;
@@ -478,5 +480,7 @@ public class DidascaliaIntegrationTest extends ATest {
         System.out.println(ottenuto);
 
     }// end of method
+
+
 
 }// end of class

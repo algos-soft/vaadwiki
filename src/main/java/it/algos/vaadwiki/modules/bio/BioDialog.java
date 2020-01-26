@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.modules.bio;
 
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
@@ -23,9 +24,11 @@ import it.algos.vaadflow.ui.fields.AComboBox;
 import it.algos.vaadflow.ui.fields.ATextArea;
 import it.algos.vaadflow.ui.fields.ATextField;
 import it.algos.vaadwiki.didascalia.DidascaliaBiografie;
+import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.download.DeleteService;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.download.PageService;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
 import it.algos.vaadwiki.service.LibBio;
@@ -221,8 +224,6 @@ public class BioDialog extends AViewDialog<Bio> {
         getFormLayout().removeAll();
         FormLayout left = new FormLayout();
         FormLayout right = new FormLayout();
-        DidascaliaBiografie didascalia = null;
-        Label label = null;
 
         for (String name : ((BioService) service).FORM_PROPERTIES_LEFT) {
             left.add(fieldMap.get(name));
@@ -230,16 +231,53 @@ public class BioDialog extends AViewDialog<Bio> {
                 fieldMap.get(name).getElement().setAttribute("colspan", "2");
             }// end of if cycle
         }// end of for cycle
-        didascalia = appContext.getBean(DidascaliaBiografie.class, currentItem);
-        label = new Label(didascalia.testoSenza);
-        label.getElement().setAttribute("colspan", "2");
-        left.add(label);
+
+        WrapDidascalia wrap = appContext.getBean(WrapDidascalia.class, currentItem, EADidascalia.listaNomi);
+        left.add(addDidascalia());
+        left.add(addChiaveParagrafo(wrap));
+        left.add(addProfessione(wrap));
+        left.add(addPagina(wrap));
 
         for (String name : ((BioService) service).FORM_PROPERTIES_RIGHT) {
             right.add(fieldMap.get(name));
         }// end of for cycle
 
         getFormLayout().add(left, right);
+    }// end of method
+
+
+    protected Component addDidascalia() {
+        DidascaliaBiografie didascalia = appContext.getBean(DidascaliaBiografie.class, currentItem);
+        Label label = new Label("Didascalia: " + didascalia.testoSenza);
+        label.getElement().setAttribute("colspan", "2");
+
+        return label;
+    }// end of method
+
+
+    protected Component addChiaveParagrafo(WrapDidascalia wrap) {
+        String chiave = currentItem.getAttivita() != null ? currentItem.getAttivita().singolare : VUOTA;
+        Label label = new Label("Paragrafo: " + wrap.fixChiaveUno(chiave, currentItem.getSesso().equals("M")));
+        label.getElement().setAttribute("colspan", "2");
+
+        return label;
+    }// end of method
+
+
+    protected Component addProfessione(WrapDidascalia wrap) {
+        String chiave = currentItem.getAttivita() != null ? currentItem.getAttivita().singolare : VUOTA;
+        Label label = new Label("Professione: " + chiave);
+        label.getElement().setAttribute("colspan", "2");
+
+        return label;
+    }// end of method
+
+
+    protected Component addPagina(WrapDidascalia wrap) {
+        Label label = new Label("Pagina: " + wrap.getGenere(currentItem));
+        label.getElement().setAttribute("colspan", "2");
+
+        return label;
     }// end of method
 
 
@@ -321,8 +359,8 @@ public class BioDialog extends AViewDialog<Bio> {
 
         if (pref.isBool(USA_DEBUG) && !tmplOrdinato.equals(tmplValue)) {
             logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss. La voce " + currentItem.getWikiTitle() + " ha il template diverso da quello standard.", BioDialog.class, "riordina");
-            logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss."+tmplValue, BioDialog.class, "riordina");
-            logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss."+tmplOrdinato, BioDialog.class, "riordina");
+            logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss." + tmplValue, BioDialog.class, "riordina");
+            logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss." + tmplOrdinato, BioDialog.class, "riordina");
         }// end of if cycle
 
     }// end of method
