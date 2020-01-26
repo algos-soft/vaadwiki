@@ -190,6 +190,22 @@ public class ProfessioneService extends WikiService {
 
 
     /**
+     * Conta tutte le professioni NON aggiunte (quelle originariamente presenti nel modulo) <br>
+     */
+    public int countAggiunta() {
+        return repository.countAllByAggiuntaIsTrue();
+    }// end of method
+
+
+    /**
+     * Conta tutte le professioni aggiunte (quelle aggiunte nella collezione mongoDB) <br>
+     */
+    public int countAggiuntaFalsa() {
+        return repository.countAllByAggiuntaIsFalse();
+    }// end of method
+
+
+    /**
      * Returns all entities of the type <br>
      * <p>
      * Se esiste la property 'ordine', ordinate secondo questa property <br>
@@ -243,26 +259,38 @@ public class ProfessioneService extends WikiService {
     @Override
     public void download() {
         super.download();
-        this.aggiungeAttivita();
+        System.out.println("");
+        System.out.println("download - Ci sono " + count() + " professioni");
+
+        this.aggiungeProfessioni();
         this.aggiungeAttivitaEx();
+        this.aggiungeProfessioniMancanti();
     }// end of method
 
 
     /**
-     * Aggiunge le attività che NON corrispondono al titolo della pagina wiki di destinazione <br>
+     * Aggiunge le professioni che NON corrispondono al titolo della pagina wiki di destinazione <br>
      * Spazzola tutta la collezione <br>
      * Per ogni professione legge la pagina e crea (se non esiste) una entity con lo stesso nome <br>
      */
-    private void aggiungeAttivita() {
+    private void aggiungeProfessioni() {
         List<Professione> lista = findAll();
         String pagina;
+        int prima;
+        int dopo;
 
         if (array.isValid(lista)) {
+            prima = countAggiunta();
             for (Professione professione : lista) {
                 pagina = professione.pagina;
                 findOrCrea(pagina, pagina, true);
             }// end of for cycle
+
+            dopo = countAggiunta();
+            System.out.println("");
+            System.out.println("aggiungeProfessioni - Sono state aggiunte " + (dopo - prima) + " professioni");
         }// end of if cycle
+
     }// end of method
 
 
@@ -275,8 +303,11 @@ public class ProfessioneService extends WikiService {
         String singolareProfessione = VUOTA;
         String pagina = VUOTA;
         Professione professione;
+        int prima;
+        int dopo;
 
         if (array.isValid(lista)) {
+            prima = countAggiunta();
             for (Attivita attivita : lista) {
                 singolareAttivita = attivita.singolare;
 
@@ -292,8 +323,36 @@ public class ProfessioneService extends WikiService {
                     findOrCrea(singolareAttivita, professione.pagina, true);
                 }// end of if cycle
             }// end of for cycle
+
+            dopo = countAggiunta();
+            System.out.println("");
+            System.out.println("aggiungeAttivitaEx - Sono state aggiunte " + (dopo - prima) + " professioni");
         }// end of if cycle
 
+    }// end of method
+
+
+    /**
+     * Aggiunge le professioni che mancano recuperando la pagina <br>
+     * Aggiunge i plurali delle professioni per una ricerca più rapida <br>
+     * es.: poliziotto -> polizia <br>
+     * es.: carabiniere -> carabiniere <br>
+     * es.: academici -> accademico <br>
+     * es.: abati -> abate <br>
+     * es.: badesse -> badessa <br>
+     * es.: poliziotti -> poliziotto <br>
+     * es.: carabinieri -> carabiniere <br>
+     * es.:
+     */
+    private void aggiungeProfessioniMancanti() {
+        int prima;
+        int dopo;
+
+
+        prima = countAggiunta();
+        dopo = countAggiunta();
+        System.out.println("");
+        System.out.println("aggiungeProfessioniMancanti - Sono state aggiunte " + (dopo - prima) + " professioni");
     }// end of method
 
 }// end of class

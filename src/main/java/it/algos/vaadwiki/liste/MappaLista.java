@@ -216,9 +216,9 @@ public class MappaLista {
             mappaWrapUno = new LinkedHashMap<>();
             for (WrapDidascalia wrap : listaDidascalie) {
                 if (typeDidascalia.isProfessione) {
-                    key = wrap.chiaveParagrafo.toLowerCase();
+                    key = wrap.getChiaveParagrafo().toLowerCase();
                 } else {
-                    key = wrap.chiaveParagrafo;
+                    key = wrap.getChiaveParagrafo();
                 }// end of if/else cycle
                 add(mappaWrapUno, wrap, key);
             }// end of for cycle

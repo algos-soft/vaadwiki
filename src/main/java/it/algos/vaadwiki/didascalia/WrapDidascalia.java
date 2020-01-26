@@ -49,16 +49,6 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
     public Bio bio;
 
     /**
-     * Chiave principale del paragrafo (potrebbe anche non esserci) <br>
-     * Secolo per i giorni (opzionale, potrebbe anche non esserci) <br>
-     * Mesi per gli anni (opzionale, potrebbe anche non esserci) <br>
-     * Attività plurale maschile o femminile per i nomi, cognomi, nazionalità (obbligatoria) <br>
-     * Nazionalità per le attività (obbligatoria) <br>
-     * Esempio: Calciatori/Brasiliani -> chiaveParagrafo=Brasiliani
-     */
-    public String chiaveParagrafo;
-
-    /**
      * Chiave secondaria per la sottopagina (opzionale, potrebbe anche non esserci) <br>
      * Esempio: Calciatori/Brasiliani/C -> chiaveSottoParagrafo=C
      */
@@ -86,7 +76,6 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
      */
     public String chiaveRiga;
 
-
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
@@ -113,6 +102,31 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
      */
     @Autowired
     protected ATextService text;
+
+    /**
+     * Chiave principale del paragrafo (potrebbe anche non esserci) <br>
+     * Secolo per i giorni (opzionale, potrebbe anche non esserci) <br>
+     * Mesi per gli anni (opzionale, potrebbe anche non esserci) <br>
+     * Attività plurale maschile o femminile per i nomi, cognomi, nazionalità (obbligatoria) <br>
+     * Nazionalità per le attività (obbligatoria) <br>
+     * Esempio: Calciatori/Brasiliani -> chiaveParagrafo=Brasiliani
+     */
+    private String chiaveParagrafo;
+
+    /**
+     * L'attività della persona (se esiste) <br>
+     */
+    private String chiaveAttivita;
+
+    /**
+     * La pagina linkata dal titolo del paragrafo (se esiste) <br>
+     */
+    private String chiaveLista;
+
+    /**
+     * La pagina linkata dal titolo del paragrafo (se esiste) <br>
+     */
+    private String chiavePagina;
 
     /**
      * Riferimento (giorno o anno) a cui si riferisce la didascalia <br>
@@ -258,11 +272,11 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
                 chiaveCognome = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 break;
             case listaNomi:
-                if (bio.getWikiTitle().equals("Angelo Corbo")) {
-                    int a=87;
+                if (bio.getWikiTitle().equals("Ciro Capobianco")) {
+                    int a = 87;
                 }// end of if cycle
-                if (bio.getWikiTitle().equals("Angelo Joppi")) {
-                    int a=87;
+                if (bio.getWikiTitle().equals("Ciro Siciliano")) {
+                    int a = 87;
                 }// end of if cycle
 
                 didascalia = didascaliaService.getDidascaliaListe(bio);
@@ -273,6 +287,12 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
                 chiaveSottoPagina = text.isValid(chiaveCognome) ? chiaveCognome.substring(0, 1).toUpperCase() : "";
                 chiave = chiaveParagrafo.toLowerCase();
                 chiaveProfessione = getGenere(bio);
+
+                //test
+                chiaveAttivita = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
+                chiaveLista = fixChiaveLista();
+                chiavePagina = fixChiavePagina();
+
                 break;
             case listaCognomi:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
@@ -290,7 +310,7 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
 
                 chiaveParagrafo = chiave;
                 chiaveCognome = bio.getNazionalita() != null ? bio.getNazionalita().plurale : bio.getWikiTitle();
-                chiaveSottoPagina = text.isValid(bio.getCognome()) ? bio.getCognome().substring(0, 1) : bio.getWikiTitle().substring(0,1);
+                chiaveSottoPagina = text.isValid(bio.getCognome()) ? bio.getCognome().substring(0, 1) : bio.getWikiTitle().substring(0, 1);
                 chiaveProfessione = getGenere(bio);
                 break;
             case listaNazionalita:
@@ -299,7 +319,7 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
 
                 chiaveParagrafo = chiave;
                 chiaveCognome = bio.getAttivita() != null ? bio.getAttivita().plurale : bio.getWikiTitle();
-                chiaveSottoPagina = text.isValid(bio.getCognome()) ? bio.getCognome().substring(0, 1) : bio.getWikiTitle().substring(0,1);
+                chiaveSottoPagina = text.isValid(bio.getCognome()) ? bio.getCognome().substring(0, 1) : bio.getWikiTitle().substring(0, 1);
                 chiaveProfessione = getGenere(bio);
                 break;
             case biografie:
@@ -350,6 +370,21 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
 
         chiaveUno = text.primaMaiuscola(attivitaPlurale); //@todo PROVVISORIO  PROVA
         return chiaveUno;
+    }// end of method
+
+
+    public String fixChiaveLista() {
+        return "";
+    }// end of method
+
+
+    public String fixChiaveParagrafo() {
+        return "";
+    }// end of method
+
+
+    public String fixChiavePagina() {
+        return "";
     }// end of method
 
 
@@ -405,6 +440,26 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
 
     public String getTestoSenza() {
         return testoSenza;
+    }// end of method
+
+
+    public String getChiaveParagrafo() {
+        return chiaveParagrafo;
+    }// end of method
+
+
+    public String getChiaveLista() {
+        return chiaveLista;
+    }// end of method
+
+
+    public String getChiavePagina() {
+        return chiavePagina;
+    }// end of method
+
+
+    public String getChiaveAttivita() {
+        return chiaveAttivita;
     }// end of method
 
 

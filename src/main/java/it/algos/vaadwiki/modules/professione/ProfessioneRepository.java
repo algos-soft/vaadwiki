@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
+
 import static it.algos.vaadwiki.application.WikiCost.TAG_PRO;
 
 /**
@@ -26,6 +27,10 @@ import static it.algos.vaadwiki.application.WikiCost.TAG_PRO;
 @Qualifier(TAG_PRO)
 @AIScript(sovrascrivibile = false)
 public interface ProfessioneRepository extends MongoRepository<Professione, String> {
+
+    public int countAllByAggiuntaIsTrue();
+
+    public int countAllByAggiuntaIsFalse();
 
     public Professione findBySingolare(String singolare);
 
