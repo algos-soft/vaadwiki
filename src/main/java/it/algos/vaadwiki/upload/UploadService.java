@@ -318,7 +318,7 @@ public class UploadService extends ABioService {
      * @param tmplNew   da sostituire a quello esistente
      */
     public void uploadTmpl(String wikiTitle, String tmplNew) {
-        String summary = "fixTmplBio";
+        String summary = "[[utente:Biobot/fixTmplBio|fixTmplBio]]";
         String testoServerOld = Api.leggeVoce(wikiTitle);
         String tmplOld = Api.estraeTmplBio(testoServerOld);
         String  testoServerNew = text.sostituisce(testoServerOld, tmplOld, tmplNew);
