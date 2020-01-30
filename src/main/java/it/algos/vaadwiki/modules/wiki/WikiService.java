@@ -158,7 +158,7 @@ public abstract class WikiService extends AService {
                     singolare = text.estrae(singolare, tagApi);
                     plurale = parti[1].trim();
                     plurale = text.estrae(plurale, tagApi);
-                    this.findOrCrea(singolare.toLowerCase(), plurale.toLowerCase());
+                    this.findOrCrea(singolare.toLowerCase(), plurale);
                 }// end of if cycle
             }// end of for cycle
 

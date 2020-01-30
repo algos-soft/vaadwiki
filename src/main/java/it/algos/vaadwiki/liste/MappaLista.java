@@ -7,6 +7,8 @@ import it.algos.vaadflow.service.AArrayService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
 import it.algos.vaadwiki.enumeration.EADidascalia;
+import it.algos.vaadwiki.modules.attivita.AttivitaService;
+import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.LibWiki;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +73,20 @@ public class MappaLista {
      */
     @Autowired
     private ListaService listaService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    private AttivitaService attivitaService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    private ProfessioneService professioneService;
 
 
     //--parametro in ingresso
@@ -272,32 +288,85 @@ public class MappaLista {
 
 
     private Titolo creaTitoloNomiCognomi(String chiaveParagrafo) {
-        List<String> listaProfessioni = new ArrayList<>();
-        List<String> listaVisibili = new ArrayList<>();
-        String professione = VUOTA;
-        String pagina = VUOTA;
-        String visibile = VUOTA;
+        List<WrapDidascalia> listaWrap = mappaWrapUno.get(chiaveParagrafo);
+        List<String> listaPagine = new ArrayList<>();
+        String pagina;
+        String paginaLinkata = VUOTA;
 
-        for (WrapDidascalia wrap : mappaWrapUno.get(chiaveParagrafo)) {
-            professione = listaService.getProfessioneDaBio(wrap.bio);
-            if (!listaProfessioni.contains(professione)) {
-                listaProfessioni.add(professione);
-            }// end of if cycle
-            visibile = listaService.getGenereDaBio(wrap.bio);
-            if (!listaVisibili.contains(visibile)) {
-                listaVisibili.add(visibile);
-            }// end of if cycle
-        }// end of for cycle
+        if (array.isValid(listaWrap)) {
+            for (WrapDidascalia wrap : listaWrap) {
+                pagina = wrap.chiaveProfessione;
+                if (text.isValid(pagina)) {
+                    if (!listaPagine.contains(pagina)) {
+                        listaPagine.add(pagina);
+                    }// end of if cycle
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
 
-        if (listaProfessioni.size() == 1) {
-            pagina = listaProfessioni.get(0);
+        if (listaPagine.size() == 1) {
+            paginaLinkata = listaPagine.get(0);
         } else {
-            pagina = VUOTA;
+            paginaLinkata = chiaveParagrafo;
         }// end of if/else cycle
-        visibile = listaVisibili.get(0);
 
-        return new Titolo(chiaveParagrafo, pagina, visibile);
+        return new Titolo(chiaveParagrafo, paginaLinkata, text.primaMaiuscola(chiaveParagrafo));
     }// fine del metodo
+
+
+//    private Titolo creaTitoloNomiCognomi(String chiaveParagrafo) {
+//        List<Attivita> listaAttivita = attivitaService.findAllByPlurale(chiaveParagrafo);
+//        List<String> listaPagine = new ArrayList<>();
+//        Professione professione;
+//        String pagina;
+//
+//        if (array.isValid(listaAttivita)) {
+//            for (Attivita attivita : listaAttivita) {
+//                professione = professioneService.findByKeyUnica(attivita.singolare);
+//                if (professione != null) {
+//                    pagina = professione.getPagina();
+//                    if (!listaPagine.contains(pagina)) {
+//                        listaPagine.add(pagina);
+//                    }// end of if cycle
+//                }// end of if cycle
+//            }// end of for cycle
+//        }// end of if cycle
+//
+//        if (listaPagine.size() > 1) {
+//            int a = 87;
+//        }// end of if cycle
+//
+//        return new Titolo(chiaveParagrafo, chiaveParagrafo, text.primaMaiuscola(chiaveParagrafo));
+//    }// fine del metodo
+
+
+//    private Titolo creaTitoloNomiCognomi(String chiaveParagrafo) {
+//        List<String> listaProfessioni = new ArrayList<>();
+//        List<String> listaVisibili = new ArrayList<>();
+//        String professione = VUOTA;
+//        String pagina = VUOTA;
+//        String visibile = VUOTA;
+//
+//        for (WrapDidascalia wrap : mappaWrapUno.get(chiaveParagrafo)) {
+//            professione = listaService.getProfessioneDaBio(wrap.bio);
+//            if (!listaProfessioni.contains(professione)) {
+//                listaProfessioni.add(professione);
+//            }// end of if cycle
+//            visibile = listaService.getGenereDaBio(wrap.bio);
+//            if (!listaVisibili.contains(visibile)) {
+//                listaVisibili.add(visibile);
+//            }// end of if cycle
+//        }// end of for cycle
+//
+//        if (listaProfessioni.size() == 1) {
+//            pagina = listaProfessioni.get(0);
+//        } else {
+//            pagina = VUOTA;
+//        }// end of if/else cycle
+//        visibile = listaVisibili.get(0);
+//
+//        return new Titolo(chiaveParagrafo, pagina, visibile);
+//    }// fine del metodo
 
 
     private Titolo creaTitoloAttivita(String chiaveParagrafo) {

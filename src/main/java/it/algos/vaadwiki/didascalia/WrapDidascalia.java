@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Scope;
 import javax.annotation.PostConstruct;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import static it.algos.vaadwiki.modules.attivita.AttivitaService.EX;
+import static it.algos.vaadwiki.modules.attivita.AttivitaService.EX2;
 
 /**
  * Project vaadwiki
@@ -259,16 +261,31 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
                 break;
             case listaNomi:
                 if (bio.getWikiTitle().equals("Angelo Corbo")) {
-                    int a=87;
+                    int a = 87;
                 }// end of if cycle
                 if (bio.getWikiTitle().equals("Angelo Joppi")) {
-                    int a=87;
+                    int a = 87;
+                }// end of if cycle
+                if (bio.getWikiTitle().equals("Ciro De Vita")) {
+                    int a = 87;
+                }// end of if cycle
+                if (bio.getWikiTitle().equals("Ciro Sarno")) {
+                    int a = 87;
+                }// end of if cycle
+                if (bio.getWikiTitle().equals("Ciro Siciliano")) {
+                    int a = 87;
+                }// end of if cycle
+                if (bio.getWikiTitle().equals("Giuseppe Vinci")) {
+                    int a = 87;
+                }// end of if cycle
+                if (bio.getWikiTitle().equals("Giuseppe Biancani")) {
+                    int a = 87;
                 }// end of if cycle
 
                 didascalia = didascaliaService.getDidascaliaListe(bio);
                 chiave = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
 
-                chiaveParagrafo = fixChiaveUno(chiave, sessoMaschile);
+                chiaveParagrafo = bio.getAttivita() != null ? bio.getAttivita().plurale : "";
                 chiaveCognome = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 chiaveSottoPagina = text.isValid(chiaveCognome) ? chiaveCognome.substring(0, 1).toUpperCase() : "";
                 chiave = chiaveParagrafo.toLowerCase();
@@ -290,7 +307,7 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
 
                 chiaveParagrafo = chiave;
                 chiaveCognome = bio.getNazionalita() != null ? bio.getNazionalita().plurale : bio.getWikiTitle();
-                chiaveSottoPagina = text.isValid(bio.getCognome()) ? bio.getCognome().substring(0, 1) : bio.getWikiTitle().substring(0,1);
+                chiaveSottoPagina = text.isValid(bio.getCognome()) ? bio.getCognome().substring(0, 1) : bio.getWikiTitle().substring(0, 1);
                 chiaveProfessione = getGenere(bio);
                 break;
             case listaNazionalita:
@@ -299,7 +316,7 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
 
                 chiaveParagrafo = chiave;
                 chiaveCognome = bio.getAttivita() != null ? bio.getAttivita().plurale : bio.getWikiTitle();
-                chiaveSottoPagina = text.isValid(bio.getCognome()) ? bio.getCognome().substring(0, 1) : bio.getWikiTitle().substring(0,1);
+                chiaveSottoPagina = text.isValid(bio.getCognome()) ? bio.getCognome().substring(0, 1) : bio.getWikiTitle().substring(0, 1);
                 chiaveProfessione = getGenere(bio);
                 break;
             case biografie:
@@ -357,24 +374,31 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
      * La pagina della professione linkata dal titolo del paragrafo (se esiste) <br>
      */
     public String getGenere(Bio bio) {
-        String chiaveQuattro = "";
+        String chiave = "";
         Attivita attivita = bio.getAttivita();
-        String attivitaSingolare = "";
         Professione professione = null;
 
         if (attivita != null) {
-            attivitaSingolare = attivita.singolare;
+            chiave = attivita.singolare;
         }// end of if cycle
 
-        if (text.isValid(attivitaSingolare)) {
-            professione = professioneService.findByKeyUnica(attivitaSingolare);
+        if (chiave.startsWith(EX)) {
+            chiave = chiave.substring(EX.length());
+        }// end of if cycle
+
+        if (chiave.startsWith(EX2)) {
+            chiave = chiave.substring(EX2.length());
+        }// end of if cycle
+
+        if (text.isValid(chiave)) {
+            professione = professioneService.findByKeyUnica(chiave);
         }// end of if cycle
 
         if (professione != null) {
-            chiaveQuattro = professione.pagina;
+            chiave = professione.pagina;
         }// end of if cycle
 
-        return chiaveQuattro;
+        return chiave;
     }// end of method
 
 
