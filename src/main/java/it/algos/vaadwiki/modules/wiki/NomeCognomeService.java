@@ -52,7 +52,7 @@ public class NomeCognomeService extends  WikiService {
      * Registra la entity <br>
      * Non registra la entity col nome mancante <br>
      */
-    public void crea() {
+    public void elabora() {
     }// end of method
 
     /**

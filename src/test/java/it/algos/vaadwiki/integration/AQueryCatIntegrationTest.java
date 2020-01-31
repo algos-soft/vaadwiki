@@ -14,8 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-
 /**
  * Project vaadwiki
  * Created by Algos
@@ -45,7 +43,12 @@ public class AQueryCatIntegrationTest extends ATest {
 
     private final static String TITOLO_CAT_GRANDE = "BioBot";
 
-    private final static int NUM_VOCI = 1203;
+
+    private final static int NUM_MINIMA = 12;
+
+    private final static int NUM_PICCOLA = 284;
+
+    private final static int NUM_GRANDE = 1219;
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
@@ -67,70 +70,70 @@ public class AQueryCatIntegrationTest extends ATest {
 
     @Test
     public void queryCatInfo() {
-        previstoIntero = 13;
+        previstoIntero = NUM_MINIMA;
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_MINIMA).numVoci;
-        Assert.assertEquals(ottenutoIntero, previstoIntero);
+        Assert.assertEquals(previstoIntero, ottenutoIntero);
 
-        previstoIntero = 275;
+        previstoIntero = NUM_PICCOLA;
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_PICCOLA).numVoci;
-        Assert.assertEquals(ottenutoIntero, previstoIntero);
+        Assert.assertEquals(previstoIntero, ottenutoIntero);
 
-        previstoIntero = NUM_VOCI + 1;
+        previstoIntero = NUM_GRANDE + 1;
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_MEDIA).numVoci;
-        Assert.assertEquals(ottenutoIntero, previstoIntero);
+        Assert.assertEquals(previstoIntero, ottenutoIntero);
 
         previstoIntero = 371000;
         ottenutoIntero = appContext.getBean(AQueryCatInfo.class, TITOLO_CAT_GRANDE).numVoci;
-        Assert.assertEquals(Math.min(previstoIntero, ottenutoIntero), previstoIntero);
+        Assert.assertEquals(previstoIntero, Math.min(previstoIntero, ottenutoIntero));
 
     }// end of method
 
 
     @Test
     public void queryCatTitle() {
-        previstoIntero = 13;
+        previstoIntero = NUM_MINIMA;
         ottenutoList = appContext.getBean(AQueryCatPagineTitle.class, TITOLO_CAT_MINIMA).listaTitle;
         Assert.assertNotNull(ottenutoList);
-        Assert.assertEquals(ottenutoList.size(), previstoIntero);
+        Assert.assertEquals(previstoIntero, ottenutoList.size());
 
-        previstoIntero = 2;
+        previstoIntero = 3;
         ottenutoList = appContext.getBean(AQueryCatCategorie.class, TITOLO_CAT_MINIMA).listaTitle;
         Assert.assertNotNull(ottenutoList);
-        Assert.assertEquals(ottenutoList.size(), previstoIntero);
+        Assert.assertEquals(previstoIntero, ottenutoList.size());
 
         previstoIntero = 15;
         ottenutoList = appContext.getBean(AQueryCatAll.class, TITOLO_CAT_MINIMA).listaTitle;
         Assert.assertNotNull(ottenutoList);
-        Assert.assertEquals(ottenutoList.size(), previstoIntero);
+        Assert.assertEquals(previstoIntero, ottenutoList.size());
 
-        previstoIntero = 275;
+        previstoIntero = NUM_PICCOLA;
         ottenutoList = appContext.getBean(AQueryCatPagineTitle.class, TITOLO_CAT_PICCOLA).listaTitle;
         Assert.assertNotNull(ottenutoList);
-        Assert.assertEquals(ottenutoList.size(), previstoIntero);
+        Assert.assertEquals(previstoIntero, ottenutoList.size());
 
-        previstoIntero = NUM_VOCI;
+        previstoIntero = NUM_GRANDE;
         ottenutoList = appContext.getBean(AQueryCatPagineTitle.class, TITOLO_CAT_MEDIA).listaTitle;
         Assert.assertNotNull(ottenutoList);
-        Assert.assertEquals(ottenutoList.size(), previstoIntero);
+        Assert.assertEquals(previstoIntero, ottenutoList.size());
     }// end of method
 
 
     @Test
     public void queryCatPageid() {
-        previstoIntero = 13;
+        previstoIntero = NUM_MINIMA;
         ottenutoLongList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_MINIMA).listaPageid;
         Assert.assertNotNull(ottenutoLongList);
-        Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
+        Assert.assertEquals(previstoIntero, ottenutoLongList.size());
 
-        previstoIntero = 275;
+        previstoIntero = NUM_PICCOLA;
         ottenutoLongList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_PICCOLA).listaPageid;
         Assert.assertNotNull(ottenutoLongList);
-        Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
+        Assert.assertEquals(previstoIntero, ottenutoLongList.size());
 
-        previstoIntero = NUM_VOCI;
+        previstoIntero = NUM_GRANDE;
         ottenutoLongList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_MEDIA).listaPageid;
         Assert.assertNotNull(ottenutoLongList);
-        Assert.assertEquals(ottenutoLongList.size(), previstoIntero);
+        Assert.assertEquals(previstoIntero, ottenutoLongList.size());
 
 //        previstoIntero = 371000;
 //        ArrayList<Long> ottenutoList = appContext.getBean(AQueryCatPaginePageid.class, TITOLO_CAT_GRANDE).listaPageid;

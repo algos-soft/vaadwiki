@@ -2303,13 +2303,15 @@ public class LibBio {
 
 
     /**
-     * Regola questo campo
+     * Regola questa property <br>
      * <p>
-     * Elimina il testo successivo a varii tag (fixPropertyBase)
-     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese)
-     * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese)
-     * Controlla che il valore esista nella collezione Giorno
-     * Elimina la prima maiuscola del mese
+     * Elimina il testo successivo a varii tag (fixPropertyBase) <br>
+     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese) <br>
+     * Elimina eventuali TRIPLI spazi vuoti (tipico della data tra il giorno ed il mese) <br>
+     * Elimina eventuali DOPPI spazi vuoti (tipico della data tra il giorno ed il mese) <br>
+     * Forza a minuscolo il primo carattere del mese <br>
+     * Forza a ordinale un eventuale primo giorno del mese scritto come numero o come grado <br>
+     * Controlla che il valore esista nella collezione Giorno <br>
      *
      * @param testoGrezzo in entrata da elaborare
      *
@@ -2318,54 +2320,40 @@ public class LibBio {
     public String fixGiornoValido(String testoGrezzo) {
         String testoValido = fixPropertyBase(testoGrezzo);
         String tagDoppio = SPAZIO + SPAZIO;
+        String tagTriplo = SPAZIO + SPAZIO + SPAZIO;
+        int pos;
+        String primo;
+        String mese;
 
+        //--senza spazio
         if (text.isEmpty(testoValido) || !testoGrezzo.contains(SPAZIO)) {
             return VUOTA;
         }// end of if cycle
 
-        if (testoValido.equals("1 gennaio") || testoValido.equals("1° gennaio")) {
-            testoValido = "1º gennaio";
-        }// end of if cycle
-        if (testoValido.equals("1 febbraio") || testoValido.equals("1° febbraio")) {
-            testoValido = "1º febbraio";
-        }// end of if cycle
-        if (testoValido.equals("1 marzo") || testoValido.equals("1° marzo")) {
-            testoValido = "1º marzo";
-        }// end of if cycle
-        if (testoValido.equals("1 aprile") || testoValido.equals("1° aprile")) {
-            testoValido = "1º aprile";
-        }// end of if cycle
-        if (testoValido.equals("1 maggio") || testoValido.equals("1° maggio")) {
-            testoValido = "1º maggio";
-        }// end of if cycle
-        if (testoValido.equals("1 giugno") || testoValido.equals("1° giugno")) {
-            testoValido = "1º giugno";
-        }// end of if cycle
-        if (testoValido.equals("1 luglio") || testoValido.equals("1° luglio")) {
-            testoValido = "1º luglio";
-        }// end of if cycle
-        if (testoValido.equals("1 agosto") || testoValido.equals("1° agosto")) {
-            testoValido = "1º agosto";
-        }// end of if cycle
-        if (testoValido.equals("1 settembre") || testoValido.equals("1° settembre")) {
-            testoValido = "1º settembre";
-        }// end of if cycle
-        if (testoValido.equals("1 ottobre") || testoValido.equals("1° ottobre")) {
-            testoValido = "1º ottobre";
-        }// end of if cycle
-        if (testoValido.equals("1 novembre") || testoValido.equals("1° novembre")) {
-            testoValido = "1º novembre";
-        }// end of if cycle
-        if (testoValido.equals("1 dicembre") || testoValido.equals("1° dicembre")) {
-            testoValido = "1º dicembre";
+        //--triplo spazio
+        if (testoValido.contains(tagTriplo)) {
+            testoValido = testoValido.replaceFirst(tagTriplo, SPAZIO);
         }// end of if cycle
 
+        //--doppio spazio
         if (testoValido.contains(tagDoppio)) {
             testoValido = testoValido.replaceFirst(tagDoppio, SPAZIO);
         }// end of if cycle
 
-
+        //--minuscola
         testoValido = testoValido.toLowerCase();
+
+        //--Forza a ordinale un eventuale primo giorno del mese scritto come numero o come grado
+        if (testoValido.contains(SPAZIO)) {
+            pos = testoValido.indexOf(SPAZIO);
+            primo = testoValido.substring(0, pos);
+            mese = testoValido.substring(pos + SPAZIO.length());
+
+            if (primo.equals("1") || primo.equals("1°")) {
+                primo = "1º";
+                testoValido = primo + SPAZIO + mese;
+            }// end of if cycle
+        }// end of if cycle
 
         if (text.isValid(testoValido) && mongo.isEsisteByProperty(Giorno.class, "titolo", testoValido)) {
             return testoValido.trim();

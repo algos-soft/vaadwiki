@@ -201,7 +201,7 @@ public class UploadService extends ABioService {
 
         //--Ricrea al volo (per sicurezza di aggiornamento) tutta la collezione mongoDb dei nomi (circa due minuti)
         long inizio = System.currentTimeMillis();
-        nomeService.crea();
+        nomeService.elabora();
         listaNomi = nomeService.findAll();
 
         for (Nome nome : listaNomi) {

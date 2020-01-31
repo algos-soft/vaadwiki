@@ -8,8 +8,8 @@ import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadwiki.ATest;
 import it.algos.vaadwiki.application.WikiCost;
-import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.didascalia.WrapDidascalia;
+import it.algos.vaadwiki.enumeration.EADidascalia;
 import it.algos.vaadwiki.liste.*;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
@@ -211,13 +211,13 @@ public class ListeIntegrationTest extends ATest {
         USA_PARAGRAFI_GIORNI = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
         prefService.saveValue(WikiCost.USA_PARAGRAFI_GIORNI, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         previstoBooleano = true;
         USA_RIGHE_RAGGRUPPATE_GIORNI = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
         prefService.saveValue(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
         IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
@@ -232,31 +232,31 @@ public class ListeIntegrationTest extends ATest {
         USA_PARAGRAFI_GIORNI = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
         prefService.saveValue(WikiCost.USA_PARAGRAFI_GIORNI, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFI_GIORNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         previstoBooleano = true;
         USA_RIGHE_RAGGRUPPATE_GIORNI = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
         prefService.saveValue(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_GIORNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         previsto = "Senza anno di nascita conosciuto";
         TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
         prefService.saveValue(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA, previsto);
         ottenuto = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_GIORNI_NASCITA);
-        Assert.assertEquals(ottenuto, previsto);
+        Assert.assertEquals(previsto, ottenuto);
 
         previstoBooleano = false;
         IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
         prefService.saveValue(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_GIORNI_IN_CODA);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         previstoBooleano = true;
         USA_PARAGRAFO_SIZE_GIORNI = prefService.isBool(WikiCost.USA_PARAGRAFO_SIZE_GIORNI);
         prefService.saveValue(WikiCost.USA_PARAGRAFO_SIZE_GIORNI, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFO_SIZE_GIORNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         return getGiorno();
     }// end of method
@@ -541,13 +541,13 @@ public class ListeIntegrationTest extends ATest {
         USA_PARAGRAFI_ANNI = prefService.isBool(WikiCost.USA_PARAGRAFI_ANNI);
         prefService.saveValue(WikiCost.USA_PARAGRAFI_ANNI, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFI_ANNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         previstoBooleano = true;
         USA_RIGHE_RAGGRUPPATE_ANNI = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_ANNI);
         prefService.saveValue(WikiCost.USA_RIGHE_RAGGRUPPATE_ANNI, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_ANNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         TAG_PARAGRAFO_VUOTO_ANNI_NASCITA = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_ANNI_NASCITA);
         IS_PARAGRAFO_VUOTO_ANNI_IN_CODA = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_ANNI_IN_CODA);
@@ -561,25 +561,25 @@ public class ListeIntegrationTest extends ATest {
         USA_PARAGRAFI_ANNI = prefService.isBool(WikiCost.USA_PARAGRAFI_ANNI);
         prefService.saveValue(WikiCost.USA_PARAGRAFI_ANNI, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFI_ANNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         previstoBooleano = true;
         USA_RIGHE_RAGGRUPPATE_ANNI = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_ANNI);
         prefService.saveValue(WikiCost.USA_RIGHE_RAGGRUPPATE_ANNI, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.USA_RIGHE_RAGGRUPPATE_ANNI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         previsto = "Diabolik";
         TAG_PARAGRAFO_VUOTO_ANNI_NASCITA = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_ANNI_NASCITA);
         prefService.saveValue(WikiCost.TAG_PARAGRAFO_VUOTO_ANNI_NASCITA, previsto);
         ottenuto = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_ANNI_NASCITA);
-        Assert.assertEquals(ottenuto, previsto);
+        Assert.assertEquals(previsto, ottenuto);
 
         previstoBooleano = false;
         IS_PARAGRAFO_VUOTO_ANNI_IN_CODA = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_ANNI_IN_CODA);
         prefService.saveValue(WikiCost.IS_PARAGRAFO_VUOTO_ANNI_IN_CODA, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_ANNI_IN_CODA);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         return getAnno();
     }// end of method
@@ -706,19 +706,19 @@ public class ListeIntegrationTest extends ATest {
         TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
         prefService.saveValue(WikiCost.TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI, previsto);
         ottenuto = prefService.getStr(WikiCost.TAG_PARAGRAFO_VUOTO_NOMI_COGNOMI);
-        Assert.assertEquals(ottenuto, previsto);
+        Assert.assertEquals(previsto, ottenuto);
 
         previstoBooleano = true;
         IS_PARAGRAFO_VUOTO_NOMI_IN_CODA = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_NOMI_IN_CODA);
         prefService.saveValue(WikiCost.IS_PARAGRAFO_VUOTO_NOMI_IN_CODA, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.IS_PARAGRAFO_VUOTO_NOMI_IN_CODA);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         previstoBooleano = true;
         USA_PARAGRAFO_SIZE_NOMI = prefService.isBool(WikiCost.USA_PARAGRAFO_SIZE_NOMI);
         prefService.saveValue(WikiCost.USA_PARAGRAFO_SIZE_NOMI, previstoBooleano);
         ottenutoBooleano = prefService.isBool(WikiCost.USA_PARAGRAFO_SIZE_NOMI);
-        Assert.assertEquals(ottenutoBooleano, previstoBooleano);
+        Assert.assertEquals(previstoBooleano, ottenutoBooleano);
 
         return getNome();
     }// end of method
@@ -750,7 +750,10 @@ public class ListeIntegrationTest extends ATest {
         testUnico();
         listaDidascalie = listaNome.listaDidascalie;
 
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeNome, true, false, parAttivita, false, false, false, false);
+        TypeLista typeLista = new TypeLista(false);
+        typeLista.usaRigheRaggruppate = false;
+        mappaLista = appContext.getBean(MappaLista.class, nomeTextCorto, listaDidascalie, typeNome, typeLista, parVuoto);
+
         Assert.assertNotNull(mappaLista);
         System.out.println("*************");
         System.out.println("nomiTestaSenzalinkSenzasizeSenzasottopagine");
@@ -767,7 +770,10 @@ public class ListeIntegrationTest extends ATest {
         testUnico();
         listaDidascalie = listaNome.listaDidascalie;
 
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeNome, true, false, parAttivita, true, false, false, false);
+        TypeLista typeLista = new TypeLista(false);
+        typeLista.usaRigheRaggruppate = false;
+        mappaLista = appContext.getBean(MappaLista.class, nomeTextCorto, listaDidascalie, typeNome, typeLista, parVuoto);
+
         Assert.assertNotNull(mappaLista);
         System.out.println("*************");
         System.out.println("nomiCodaSenzalinkSenzasizeSenzasottopagine");
@@ -784,7 +790,10 @@ public class ListeIntegrationTest extends ATest {
         testUnico();
         listaDidascalie = listaNome.listaDidascalie;
 
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeNome, true, false, parAttivita, false, true, false, false);
+        TypeLista typeLista = new TypeLista(false);
+        typeLista.usaRigheRaggruppate = false;
+        mappaLista = appContext.getBean(MappaLista.class, nomeTextCorto, listaDidascalie, typeNome, typeLista, parVuoto);
+
         Assert.assertNotNull(mappaLista);
         System.out.println("*************");
         System.out.println("nomiTestaConlinkSenzasizeSenzasottopagine");
@@ -795,12 +804,16 @@ public class ListeIntegrationTest extends ATest {
         System.out.println("");
     }// end of single test
 
+
     @Test
     public void nomiTestaConlinkConsizeSenzasottopagine() {
         testUnico();
         listaDidascalie = listaNome.listaDidascalie;
 
-        mappaLista = appContext.getBean(MappaLista.class, listaDidascalie, typeNome, true, false, parAttivita, false, true, true, false);
+        TypeLista typeLista = new TypeLista(false);
+        typeLista.usaRigheRaggruppate = false;
+        mappaLista = appContext.getBean(MappaLista.class, nomeTextCorto, listaDidascalie, typeNome, typeLista, parVuoto);
+
         Assert.assertNotNull(mappaLista);
         System.out.println("*************");
         System.out.println("nomiTestaConlinkConsizeSenzasottopagine");
@@ -810,6 +823,7 @@ public class ListeIntegrationTest extends ATest {
         System.out.println(testo);
         System.out.println("");
     }// end of single test
+
 
     /**
      * Lista dei nomi attiva da preferenze della lista.
@@ -849,16 +863,16 @@ public class ListeIntegrationTest extends ATest {
 
         sorgente = "attivista";
         ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
-        Assert.assertEquals(ottenuto, previsto);
+        Assert.assertEquals(previsto, ottenuto);
 
         sorgente = "Attivista";
         ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
-        Assert.assertEquals(ottenuto, previsto);
+        Assert.assertEquals(previsto, ottenuto);
 
-        previsto = "Accademico";
+        previsto = "Accademia";
         sorgente = "Accademica";
         ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
-        Assert.assertEquals(ottenuto, previsto);
+        Assert.assertEquals(previsto, ottenuto);
         sorgente = "Accademico";
         ottenuto = listaService.getProfessioneDaAttivitaSingolare(sorgente);
 //        Assert.assertEquals(ottenuto, previsto);
@@ -943,7 +957,7 @@ public class ListeIntegrationTest extends ATest {
         previsto = "[[Allenatore|Allenatori di calcio]]";
         sorgente = "allenatori di calcio";
         ottenuto = listaService.getTitoloParagrafo(sorgente);
-        Assert.assertEquals(ottenuto, previsto);
+        Assert.assertEquals(previsto, ottenuto);
 
 //        previsto = "[[Danzatori]]";
 //        sorgente = "danzatori";

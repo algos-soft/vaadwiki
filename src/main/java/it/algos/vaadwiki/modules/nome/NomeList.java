@@ -136,7 +136,7 @@ public class NomeList extends WikiList {
         this.eaTempoTypeDownload = EATempo.nessuno;
         super.lastElaborazione = LAST_ELABORA_NOME;
         super.durataLastElaborazione = DURATA_ELABORA_NOMI;
-        super.eaTempoTypeElaborazione = EATempo.secondi;
+        super.eaTempoTypeElaborazione = EATempo.minuti;
         super.lastUpload = LAST_UPLOAD_NOMI;
         super.durataLastUpload = DURATA_UPLOAD_NOMI;
         super.eaTempoTypeUpload = EATempo.minuti;

@@ -2,7 +2,6 @@ package it.algos.vaadwiki.enumeration;
 
 
 import it.algos.vaadflow.application.FlowCost;
-import it.algos.vaadflow.enumeration.EAMenu;
 import it.algos.vaadflow.enumeration.EAPrefType;
 import it.algos.vaadflow.enumeration.IAEnum;
 import it.algos.vaadflow.modules.preferenza.IAPreferenza;
@@ -114,7 +113,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     usaLinkParagrafoNomi(USA_LINK_PARAGRAFO_NOMI, "Titolo del paragrafo col wikilink alla pagina della attività, nelle liste di nomi", EAPrefType.bool, true),
     usaParagrafoSizeNomi(USA_PARAGRAFO_SIZE_NOMI, "Numero delle voci contenute nel paragrafo per i nomi", EAPrefType.bool, true),
     lastElaboraNomi(LAST_ELABORA_NOME, "Ultima elaborazione dei nomi", EAPrefType.localdatetime, null),
-    durataElaboraNomi(DURATA_ELABORA_NOMI, "Durata in secondi dell'elaborazione dei nomi", EAPrefType.integer, 0),
+    durataElaboraNomi(DURATA_ELABORA_NOMI, "Durata in minuti dell'elaborazione dei nomi", EAPrefType.integer, 0),
 
     sogliaCognomiMongo(SOGLIA_COGNOMI_MONGO, "Soglia minima per creare una entity nella collezione Cognomi sul mongoDB", EAPrefType.integer, 30),
     sogliaCognomiWiki(SOGLIA_COGNOMI_PAGINA_WIKI, "Soglia minima per creare la pagina di un cognome sul server wiki", EAPrefType.integer, 50),
@@ -123,7 +122,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     usaLinkParagrafoCognomi(USA_LINK_PARAGRAFO_COGNOMI, "Titolo del paragrafo col wikilink alla pagina della attività, nelle liste di cognomi", EAPrefType.bool, true),
     usaParagrafoSizeCognomi(USA_PARAGRAFO_SIZE_COGNOMI, "Dimensione del paragrafo nel titolo per i cognomi", EAPrefType.bool, true),
     lastElaboraCognomi(LAST_ELABORA_COGNOME, "Ultima elaborazione dei cognomi", EAPrefType.localdatetime, null),
-    durataElaboraCognomi(DURATA_ELABORA_COGNOMI, "Durata in secondi dell'elaborazione dei nocognomimi", EAPrefType.integer, 0),
+    durataElaboraCognomi(DURATA_ELABORA_COGNOMI, "Durata in minuti dell'elaborazione dei cognomi", EAPrefType.integer, 0),
 
     isParagrafoVuotoAttivitaCoda(IS_PARAGRAFO_VUOTO_ATTIVITA_IN_CODA, "Posiziona come ultimo il paragrafo per le biografie senza nazionalità specificata nelle liste per attività", EAPrefType.bool, true),
     usaLinkParagrafoAttivita(USA_LINK_PARAGRAFO_ATTIVITA, "Titolo del paragrafo col wikilink alla pagina della nazionalità, nelle liste di attività", EAPrefType.bool, true),
@@ -154,8 +153,6 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     ;
 
 
-
-
     //--codice di riferimento. Se è true il flag companySpecifica, contiene anche il code della company come prefisso.
     private String code;
 
@@ -176,12 +173,14 @@ public enum EAPreferenzaWiki implements IAPreferenza {
         this.setValue(value);
     }// fine del costruttore
 
+
     EAPreferenzaWiki(String code, String desc, EAPrefType type, EARole show, Object value) {
         this.setCode(code);
         this.setDesc(desc);
         this.setType(type);
         this.setValue(type != EAPrefType.enumeration ? value : ((IAEnum) value).getPref());
     }// fine del costruttore
+
 
     public String getCode() {
         return code;

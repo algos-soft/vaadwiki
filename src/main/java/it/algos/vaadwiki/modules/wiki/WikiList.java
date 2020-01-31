@@ -5,9 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
@@ -20,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadflow.service.ADateService.INFERIORE_MINUTO;
@@ -372,6 +369,7 @@ public abstract class WikiList extends AGridViewList {
         updateGrid();
     }// end of method
 
+
     /**
      * Update standard. <br>
      * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
@@ -379,12 +377,15 @@ public abstract class WikiList extends AGridViewList {
     protected void update(long inizio) {
     }// end of method
 
+
     /**
      * Elabora standard. <br>
      * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
      */
     protected void elabora(long inizio) {
+        ((NomeCognomeService) wikiService).elabora();
     }// end of method
+
 
     /**
      * Upload standard. <br>
@@ -394,6 +395,7 @@ public abstract class WikiList extends AGridViewList {
         setLastUpload(inizio);
         super.updateGrid();
     }// end of method
+
 
     /**
      * Upload standard delle statistiche. <br>
@@ -441,9 +443,6 @@ public abstract class WikiList extends AGridViewList {
 //    }// end of method
 
 
-
-
-
     protected void showWikiPagina(String titoloPagina) {
         String link = "\"" + PATH_WIKI + titoloPagina + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
@@ -458,8 +457,6 @@ public abstract class WikiList extends AGridViewList {
             buttonUploadOneMorto.setEnabled(enabled);
         }// end of if cycle
     }// end of method
-
-
 
 
     /**
@@ -659,10 +656,10 @@ public abstract class WikiList extends AGridViewList {
                 message += date.toText(durata);
                 break;
             case secondi:
-                message += durata < 1 ? date.toTextSecondi(durata) : INFERIORE_SECONDO;
+                message += durata > 1 ? date.toTextSecondi(durata) : INFERIORE_SECONDO;
                 break;
             case minuti:
-                message += durata < 1 ? date.toTextMinuti(durata) : INFERIORE_MINUTO;
+                message += durata > 1 ? date.toTextMinuti(durata) : INFERIORE_MINUTO;
                 break;
             case ore:
                 message += date.toText(durata);

@@ -26,7 +26,6 @@ import org.vaadin.klaudeta.PaginatedGrid;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.*;
-import static it.algos.vaadwiki.modules.nome.NomeService.TITOLO_TEMPLATE_INCIPIT_NOMI;
 
 /**
  * Project vaadwiki <br>
@@ -127,7 +126,7 @@ public class CognomeList extends WikiList {
         this.eaTempoTypeDownload = EATempo.nessuno;
         super.lastElaborazione = LAST_ELABORA_COGNOME;
         super.durataLastElaborazione = DURATA_ELABORA_COGNOMI;
-        super.eaTempoTypeElaborazione = EATempo.secondi;
+        super.eaTempoTypeElaborazione = EATempo.minuti;
         super.lastUpload = LAST_UPLOAD_COGNOMI;
         super.durataLastUpload = DURATA_UPLOAD_COGNOMI;
         super.eaTempoTypeUpload = EATempo.minuti;
@@ -150,8 +149,8 @@ public class CognomeList extends WikiList {
         alertPlacehorder.add(getLabelBlue("Progetto:Antroponimi/Cognomi."));
         alertPlacehorder.add(getLabelBlue("Progetto:Antroponimi/Liste cognomi."));
         alertPlacehorder.add(new Label("Sono elencati i cognomi usati nelle biografie"));
-        alertPlacehorder.add(new Label("La lista prevede cognomi utilizzati da almeno 'sogliaCognomiMongo' biografie"));
-        alertPlacehorder.add(new Label("Upload crea una pagina su wiki per ogni cognome che supera 'sogliaCognomiWiki' biografie"));
+        alertPlacehorder.add(new Label("La lista prevede cognomi utilizzati da almeno " + pref.getInt(SOGLIA_COGNOMI_MONGO) + " (sogliaCognomiMongo) biografie"));
+        alertPlacehorder.add(new Label("Upload crea una pagina su wiki per ogni cognome che supera " + pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI) + " (sogliaCognomiWiki) biografie"));
     }// end of method
 
 

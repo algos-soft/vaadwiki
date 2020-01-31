@@ -3,6 +3,7 @@ package it.algos.vaadwiki.modules.wiki;
 import it.algos.vaadflow.application.AContext;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.preferenza.PreferenzaService;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.AService;
@@ -64,6 +65,10 @@ public abstract class WikiService extends AService {
 
     protected String durataLastDownload;
 
+    protected String codeLastElabora;
+
+    protected String durataLastElabora;
+
     /**
      * La injection viene fatta da SpringBoot in automatico <br>
      */
@@ -87,6 +92,7 @@ public abstract class WikiService extends AService {
      */
     @Autowired
     protected GenereService genereService;
+
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
@@ -117,7 +123,6 @@ public abstract class WikiService extends AService {
     public WikiService(MongoRepository repository) {
         super(repository);
     }// end of Spring constructor
-
 
 
     /**
@@ -211,8 +216,86 @@ public abstract class WikiService extends AService {
         } else {
             value = 1;
         }// end of if/else cycle
+
         pref.saveValue(durataLastDownload, value);
     }// end of method
+
+
+    /**
+     * Registra nelle preferenze la data dell'ultima elaborazione effettuata <br>
+     * Registra nelle preferenze la durata dell'ultima elaborazione effettuata <br>
+     */
+    protected void setLastElabora(EATempo eaTempoType, long inizio) {
+        int delta = 1;
+        LocalDateTime lastDownload = LocalDateTime.now();
+        pref.saveValue(codeLastElabora, lastDownload);
+
+        long fine = System.currentTimeMillis();
+        long durata = fine - inizio;
+        int value = 0;
+
+        switch (eaTempoType) {
+            case nessuno:
+            case millisecondi:
+                break;
+            case secondi:
+                delta = 1000;
+                break;
+            case minuti:
+                delta = 1000 * 60;
+                break;
+            case ore:
+                delta = 1000 * 60 * 60;
+                break;
+            case giorni:
+                delta = 1000 * 60 * 60 * 24;
+                break;
+            default:
+                log.warn("Switch - caso non definito");
+                break;
+        } // end of switch statement
+
+        if (durata > delta) {
+            value = (int) durata / delta;
+        } else {
+            value = 1;
+        }// end of if/else cycle
+
+        pref.saveValue(durataLastElabora, value);
+    }// end of method
+
+
+//    String message = VUOTA;
+//    int durata = 0;
+//
+//        if (eaTempoType == EATempo.nessuno || text.isEmpty(flagDurata)) {
+//        return VUOTA;
+//    }// end of if cycle
+//
+//    durata = pref.getInt(flagDurata);
+//    message = ", in ";
+//
+//        switch (eaTempoType) {
+//        case nessuno:
+//        case millisecondi:
+//            message += date.toText(durata);
+//            break;
+//        case secondi:
+//            message += durata > 1 ? date.toTextSecondi(durata) : INFERIORE_SECONDO;
+//            break;
+//        case minuti:
+//            message += durata > 1 ? date.toTextMinuti(durata) : INFERIORE_MINUTO;
+//            break;
+//        case ore:
+//            message += date.toText(durata);
+//            break;
+//        case giorni:
+//            message += date.toText(durata);
+//            break;
+//        default:
+//            log.warn("Switch - caso non definito");
+//            break;
+//    } // end of switch statement
 
 
     /**

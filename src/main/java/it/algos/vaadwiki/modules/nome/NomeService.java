@@ -3,6 +3,7 @@ package it.algos.vaadwiki.modules.nome;
 import com.mongodb.client.DistinctIterable;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.doppinomi.DoppinomiService;
@@ -88,6 +89,8 @@ public class NomeService extends NomeCognomeService {
         super(repository);
         super.entityClass = Nome.class;
         this.repository = (NomeRepository) repository;
+        super.codeLastElabora = LAST_ELABORA_NOME;
+        super.durataLastElabora = DURATA_ELABORA_NOMI;
     }// end of Spring constructor
 
 
@@ -336,7 +339,7 @@ public class NomeService extends NomeCognomeService {
      * Recupera una lista di 'nomi doppi' speciali ed ammessi <br>
      * Aggiunge (se già non ci sono) i nomi doppi speciali <br>
      */
-    public void crea() {
+    public void elabora() {
         long inizio = System.currentTimeMillis();
         List<String> listaDoppi = null;
         int tot = 0;
@@ -377,7 +380,7 @@ public class NomeService extends NomeCognomeService {
             }// end of for cycle
         }// end of if cycle
 
-        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
+        super.setLastElabora(EATempo.minuti, inizio);
         log.info("Creazione di " + text.format(cont) + " nomi su un totale di " + text.format(tot) + " nomi distinti. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 

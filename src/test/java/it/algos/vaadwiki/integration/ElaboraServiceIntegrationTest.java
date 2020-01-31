@@ -53,7 +53,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "    |PostCognome = \n" +
             "|Sesso = F\n" +
             " | LuogoNascita = [[Wilmington]]\n" +
-            " | GiornoMeseNascita = 1º Settembre\n" +
+            " | GiornoMeseNascita = 1 Settembre\n" +
             "|AnnoNascita = [[1981]]\n" +
             "|AnnoMorte=\n" +
             "|LuogoMorte = ? \n" +
@@ -76,7 +76,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|Cognome = [[Stewart]]\n" +
             "|Sesso = F\n" +
             "|LuogoNascita = [[Wilmington]]\n" +
-            "|GiornoMeseNascita = 1º Settembre\n" +
+            "|GiornoMeseNascita = 1º settembre\n" +
             "|AnnoNascita = [[1981]]\n" +
             "|LuogoMorte = ?\n" +
             "|GiornoMeseMorte = \n" +
@@ -353,7 +353,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
      * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
      * Elimina quelli esistenti vuoti, senza valore <br>
      */
-    @Test
+//    @Test
     public void ordinaNormaliNoLoss() {
         String tmplOrdinato = service.ordinaNormaliNoLoss(BIO_SORGENTE);
         Assert.assertEquals(tmplOrdinato, BIO_MERGED_NO_LOSS);
@@ -543,5 +543,33 @@ public class ElaboraServiceIntegrationTest extends ATest {
         System.out.println("");
     }// end of single test
 
+
+//    /**
+//     * Regola questo campo
+//     * <p>
+//     * Elimina il testo successivo a varii tag (fixPropertyBase)
+//     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese)
+//     * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese)
+//     * Controlla che il valore esista nella collezione Giorno
+//     * Elimina la prima maiuscola del mese
+//     *
+//     * @param testoGrezzo in entrata da elaborare
+//     *
+//     * @return testoValido regolato in uscita
+//     */
+//    @Test
+//    public void fixGiornoValido() {
+//        sorgente = "3 Marzo";
+//        previsto = "3 marzo";
+//        ottenuto = libBio.fixGiornoValido(sorgente);
+//        Assert.assertEquals(ottenuto, previsto);
+//
+//        sorgente = "1° Marzo";
+//        previsto = "1º marzo";
+//        ottenuto = libBio.fixGiornoValido(sorgente);
+//        Assert.assertEquals(previsto, ottenuto);
+//
+//
+//    }// end of single test
 
 }// end of class

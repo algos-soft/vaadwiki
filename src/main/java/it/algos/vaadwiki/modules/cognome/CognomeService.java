@@ -3,6 +3,7 @@ package it.algos.vaadwiki.modules.cognome;
 import com.mongodb.client.DistinctIterable;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
+import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.wiki.NomeCognomeService;
 import lombok.extern.slf4j.Slf4j;
@@ -77,6 +78,8 @@ public class CognomeService extends NomeCognomeService {
         super(repository);
         super.entityClass = Cognome.class;
         this.repository = (CognomeRepository) repository;
+        super.codeLastElabora = LAST_ELABORA_COGNOME;
+        super.durataLastElabora = DURATA_ELABORA_COGNOMI;
     }// end of Spring constructor
 
 
@@ -243,7 +246,7 @@ public class CognomeService extends NomeCognomeService {
      * Registra la entity <br>
      * Non registra la entity col cognomi mancante <br>
      */
-    public void crea() {
+    public void elabora() {
         long inizio = System.currentTimeMillis();
         int tot = 0;
         int cont = 0;
@@ -262,7 +265,7 @@ public class CognomeService extends NomeCognomeService {
             }// end of if cycle
         }// end of for cycle
 
-        pref.saveValue(LAST_ELABORA_COGNOME, LocalDateTime.now());
+        super.setLastElabora(EATempo.minuti, inizio);
         log.info("Creazione di " + text.format(cont) + " cognomi su un totale di " + text.format(tot) + " cognomi distinti. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 

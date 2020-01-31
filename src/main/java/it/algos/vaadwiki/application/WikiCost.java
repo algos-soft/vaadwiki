@@ -99,6 +99,8 @@ public class WikiCost {
 
     public final static String CODE_DOWNLOAD = "lastDownload";
 
+    public final static String CODE_ELABORA = "lastElabora";
+
     public final static String CODE_UPDATE = "lastUpdate";
 
     public final static String CODE_UPLOAD = "lastUpload";
@@ -163,9 +165,9 @@ public class WikiCost {
 
     public final static String LAST_DOWNLOAD_DOPPI_NOMI = CODE_DOWNLOAD + "DoppiNomi";
 
-    public final static String LAST_ELABORA_NOME = CODE_DOWNLOAD + NOME;
+    public final static String LAST_ELABORA_NOME = CODE_ELABORA + "Nome";
 
-    public final static String LAST_ELABORA_COGNOME = CODE_DOWNLOAD + COGNOME;
+    public final static String LAST_ELABORA_COGNOME = CODE_ELABORA + "Cognome";
 
     public final static String LAST_UPLOAD_GIORNI = CODE_UPLOAD + GIORNI;
 
@@ -218,9 +220,9 @@ public class WikiCost {
 
     public final static String DURATA_UPLOAD_NAZIONALITA = DURATA + NAZ;
 
-    public final static String DURATA_ELABORA_NOMI = DURATA_ELABORA + NOME;
+    public final static String DURATA_ELABORA_NOMI = DURATA_ELABORA + "Nome";
 
-    public final static String DURATA_ELABORA_COGNOMI = DURATA_ELABORA + NOME;
+    public final static String DURATA_ELABORA_COGNOMI = DURATA_ELABORA + "Cognome";
 
     public final static String DURATA_UPLOAD_STATISTICHE_GIORNI = DURATA_UPLOAD + GIORNI;
 

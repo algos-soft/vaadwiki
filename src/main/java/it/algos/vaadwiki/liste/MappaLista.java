@@ -144,7 +144,11 @@ public class MappaLista {
      * Usa: appContext.getBean(MappaLista.class, ..., ...) <br>
      * Senza paragrafi <br>
      */
-    public MappaLista(List<WrapDidascalia> listaDidascalie, EADidascalia typeDidascalia, boolean usaRigheRaggruppate, boolean paragrafoVuotoInCoda) {
+    public MappaLista(
+            List<WrapDidascalia> listaDidascalie,
+            EADidascalia typeDidascalia,
+            boolean usaRigheRaggruppate,
+            boolean paragrafoVuotoInCoda) {
         this(VUOTA, listaDidascalie, typeDidascalia, new TypeLista(false, usaRigheRaggruppate, paragrafoVuotoInCoda, false, false, false), VUOTA, 0);
     }// end of constructor
 
