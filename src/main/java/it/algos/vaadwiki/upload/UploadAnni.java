@@ -2,6 +2,7 @@ package it.algos.vaadwiki.upload;
 
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.anno.AnnoService;
+import it.algos.wiki.LibWiki;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
@@ -70,6 +71,7 @@ public abstract class UploadAnni extends UploadCrono {
     protected void fixPreferenze() {
         super.fixPreferenze();
         super.usaHeadTocIndice = pref.isBool(USA_PARAGRAFI_ANNI);
+        super.summary= LibWiki.setQuadre("Utente:Biobot/anniBio|anniBio");
     }// end of method
 
 
