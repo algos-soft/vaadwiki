@@ -15,7 +15,6 @@ import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
-import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.wiki.Api;
 import it.algos.wiki.LibWiki;
@@ -53,11 +52,11 @@ public abstract class Upload {
 
     public final static String PAGINA_PROVA = "Utente:Biobot/2";
 
-    protected final static String TAG_NON_SCRIVERE = "<!-- NON MODIFICATE DIRETTAMENTE QUESTA PAGINA - GRAZIE -->";
-
     public final static String TAG_INDICE = "__FORCETOC__";
 
     public final static String TAG_NO_INDICE = "__NOTOC__";
+
+    protected final static String TAG_NON_SCRIVERE = "<!-- NON MODIFICATE DIRETTAMENTE QUESTA PAGINA - GRAZIE -->";
 
     //--property
     public boolean usaRigheRaggruppate;
@@ -312,6 +311,8 @@ public abstract class Upload {
 
     protected String notaSottoPagina;
 
+    protected String summary;
+
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -352,6 +353,7 @@ public abstract class Upload {
         usaRigheRaggruppate = true; //--normalmente true. Sovrascrivibile da preferenze
         usaBodyDoppiaColonna = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         usaBodyTemplate = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
+        summary = LibWiki.setQuadre(LibWiki.getSummary());
 
         // footer
         usaNote = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
@@ -386,7 +388,6 @@ public abstract class Upload {
      * Registra la pagina <br>
      */
     protected void elaboraPagina() {
-        String summary = LibWiki.getSummary();
         testoPagina = VUOTA;
 
         //header
@@ -411,7 +412,7 @@ public abstract class Upload {
 
             //--nelle sottopagine non eseguo il controllo e le registro sempre (per adesso)
             if (checkPossoRegistrare(titoloPagina, testoPagina) || pref.isBool(FlowCost.USA_DEBUG)) {
-                appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina);
+                appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina, summary);
                 log.info("Registrata la pagina: " + titoloPagina);
             } else {
                 log.info("Non modificata la pagina: " + titoloPagina);

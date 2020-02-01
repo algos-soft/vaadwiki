@@ -3,6 +3,7 @@ package it.algos.vaadwiki.upload;
 
 import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadflow.modules.giorno.GiornoService;
+import it.algos.wiki.LibWiki;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
@@ -64,6 +65,7 @@ public abstract class UploadGiorni extends UploadCrono {
     protected void fixPreferenze() {
         super.fixPreferenze();
         super.usaHeadTocIndice = pref.isBool(USA_PARAGRAFI_GIORNI);
+        super.summary= LibWiki.setQuadre("Utente:Biobot/giorniBio|giorniBio");
     }// end of method
 
 
