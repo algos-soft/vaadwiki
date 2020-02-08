@@ -13,7 +13,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA;
 import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_GENERE;
 
 /**

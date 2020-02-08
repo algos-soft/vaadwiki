@@ -112,7 +112,7 @@ public class GenereList extends WikiList {
 
         super.titoloModulo = wikiService.titoloModuloGenere;
         super.usaPagination = true;
-        super.task = taskGenere;
+        super.taskDownload = taskGenere;
         super.flagDaemon = USA_DAEMON_GENERE;
 
         super.lastDownload = LAST_DOWNLOAD_GENERE;

@@ -114,14 +114,14 @@ public class WikiGiornoList extends WikiList {
         super.usaButtonUploadStatistiche = true;
 
         super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheGiorni;
-        super.task = taskGiorni;
+        super.taskUpload = taskGiorni;
         super.flagDaemon = USA_DAEMON_GIORNI;
 
         super.lastUpload = LAST_UPLOAD_GIORNI;
         super.durataLastUpload = DURATA_UPLOAD_GIORNI;
         super.eaTempoTypeUpload = EATempo.minuti;
-        super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_GIORNI;
-        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_GIORNI;
+        super.lastUploadStatistica = LAST_UPLOAD_STATISTICHE_GIORNI;
+        super.durataLastUploadStatistica = DURATA_UPLOAD_STATISTICHE_GIORNI;
         super.eaTempoTypeStatistiche = EATempo.minuti;
     }// end of method
 

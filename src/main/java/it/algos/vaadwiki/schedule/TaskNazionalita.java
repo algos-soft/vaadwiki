@@ -15,7 +15,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import javax.annotation.PostConstruct;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
-import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA;
 
 /**
  * Project vaadwiki

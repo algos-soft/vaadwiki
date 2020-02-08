@@ -7,7 +7,6 @@ import com.vaadin.flow.shared.ui.LoadMode;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.application.FlowVar;
 import it.algos.vaadflow.ui.MainLayout;
-import it.algos.vaadwiki.modules.Pippoz;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -49,14 +48,14 @@ public class WikiLayout extends MainLayout {
 //    }// end of method
 
 
-    /**
-     * Creazione iniziale del menu
-     */
-    protected void creaVaadindMenu() {
-        FlowVar.menuClazzList.add(Pippoz.class);
-        super.creaVaadindMenu();
-//        appLayout.setToolbarIconButtons(new MenuItem("Logout", "exit-to-app", () -> UI.getCurrent().getPage().executeJavaScript("location.assign('logout')")));
-    }// end of method
+//    /**
+//     * Creazione iniziale del menu
+//     */
+//    protected void creaVaadindMenu() {
+//        FlowVar.menuClazzList.add(Pippoz.class);
+//        super.creaVaadindMenu();
+////        appLayout.setToolbarIconButtons(new MenuItem("Logout", "exit-to-app", () -> UI.getCurrent().getPage().executeJavaScript("location.assign('logout')")));
+//    }// end of method
 
 //    /**
 //     * Menu logout sempre presente

@@ -106,7 +106,7 @@ public class ProfessioneList extends WikiList {
 
         super.titoloModulo = wikiService.titoloModuloProfessione;
         super.usaPagination = true;
-        super.task = taskProfessione;
+        super.taskDownload = taskProfessione;
         super.flagDaemon = USA_DAEMON_PROFESSIONE;
 
         super.lastDownload = LAST_DOWNLOAD_PROFESSIONE;

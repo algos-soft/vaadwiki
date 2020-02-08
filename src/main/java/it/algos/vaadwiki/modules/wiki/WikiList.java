@@ -181,24 +181,38 @@ public abstract class WikiList extends AGridViewList {
 
     protected String durataLastDownload;
 
-    protected String lastElaborazione;
+    protected String lastElabora;
 
-    protected String durataLastElaborazione;
+    protected String durataLastElabora;
 
     protected String lastUpload;
 
     protected String durataLastUpload;
 
-    protected String lastUploadStatistiche;
+    protected String lastUploadStatistica;
 
-    protected String durataLastUploadStatistiche;
+    protected String durataLastUploadStatistica;
 
     protected String infoColor = "green";
 
 
     protected WikiService wikiService;
 
-    protected ATask task;
+    protected boolean previstoDownload;
+
+    protected boolean previstoElabora;
+
+    protected boolean previstoUpload;
+
+    protected boolean previstoStatistica;
+
+    protected ATask taskDownload;
+
+    protected ATask taskElabora;
+
+    protected ATask taskUpload;
+
+    protected ATask taskStatistica;
 
     protected EATempo eaTempoTypeDownload;
 
@@ -256,14 +270,14 @@ public abstract class WikiList extends AGridViewList {
         this.lastDownload = VUOTA;
         this.durataLastDownload = VUOTA;
         this.eaTempoTypeDownload = EATempo.nessuno;
-        this.lastElaborazione = VUOTA;
-        this.durataLastElaborazione = VUOTA;
+        this.lastElabora = VUOTA;
+        this.durataLastElabora = VUOTA;
         this.eaTempoTypeElaborazione = EATempo.nessuno;
         this.lastUpload = VUOTA;
         this.durataLastUpload = VUOTA;
         this.eaTempoTypeUpload = EATempo.nessuno;
-        this.lastUploadStatistiche = VUOTA;
-        this.durataLastUploadStatistiche = VUOTA;
+        this.lastUploadStatistica = VUOTA;
+        this.durataLastUploadStatistica = VUOTA;
         this.eaTempoTypeStatistiche = EATempo.nessuno;
     }// end of method
 
@@ -278,10 +292,10 @@ public abstract class WikiList extends AGridViewList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        creaInfoDownload(task, flagDaemon, lastDownload, durataLastDownload);
-        creaInfoElaborazione(task, flagDaemon, lastElaborazione, durataLastElaborazione);
-        creaInfoUpload(task, flagDaemon, lastUpload, durataLastUpload);
-        creaInfoStatistiche(lastUploadStatistiche, durataLastUploadStatistiche);
+        creaInfo("download", previstoDownload, taskDownload, flagDaemon, lastDownload, durataLastDownload);
+        creaInfo("elabora", previstoElabora, taskElabora, flagDaemon, lastElabora, durataLastElabora);
+        creaInfo("upload", previstoUpload, taskUpload, flagDaemon, lastUpload, durataLastUpload);
+        creaInfo("statistica", previstoStatistica, taskStatistica, flagDaemon, lastUploadStatistica, durataLastUploadStatistica);
     }// end of method
 
 
@@ -492,32 +506,34 @@ public abstract class WikiList extends AGridViewList {
     /**
      * Eventuale caption sopra la grid
      */
-    protected void creaInfoDownload(ATask task, String flagDaemon, String flagLastDownload, String flagDurataDownload) {
-        String testo;
-        String message = "";
-        String tag = "Download automatico";
+    protected void creaInfo(String type, boolean previsto, ATask task, String flagDaemon, String flagLastDownload, String flagDurataDownload) {
+        boolean continua = true;
+        String tag = " Scheduled ";
+        String message = text.primaMaiuscola(type) + ".";
         LocalDateTime lastDownload = pref.getDateTime(flagLastDownload);
+        lastDownload=null;
 
-        if (text.isEmpty(flagLastDownload)) {
-            message = "Download non previsto.";
-        } else {
-            if (task == null) {
-                testo = tag + " non previsto.";
+        //--Prima parte
+        if (previsto) {
+            if (task != null) {
+                message += tag;
+                message += task.getNota();
             } else {
-                if (pref.isBool(flagDaemon)) {
-                    testo = tag + ": " + task.getNota() + ".";
-                } else {
-                    testo = tag + " disattivato.";
-                }// end of if/else cycle
+                message += tag + "non previsto.";
             }// end of if/else cycle
+        } else {
+            message += " Non previsto.";
+            continua = false;
+        }// end of if/else cycle
 
+        if (continua) {
             if (lastDownload != null) {
-                message = testo + " Ultimo download il " + date.getTime(lastDownload);
+                message += " Ultimo " + type + " il " + date.getTime(lastDownload);
             } else {
                 if (pref.isBool(flagDaemon)) {
-                    message = tag + ": " + task.getNota() + "." + " Non ancora effettuato.";
+                    message += ": " + task.getNota() + "." + " Non ancora effettuato.";
                 } else {
-                    message = testo;
+                    message = message;
                 }// end of if/else cycle
             }// end of if/else cycle
 
@@ -525,57 +541,104 @@ public abstract class WikiList extends AGridViewList {
             message += getDurata(eaTempoTypeDownload, flagDurataDownload);
         }// end of if cycle
 
-        if (text.isValid(message)) {
-            alertPlacehorder.add(getLabelGreen(message));
-        }// end of if cycle
+        alertPlacehorder.add(getLabelGreen(message));
     }// end of method
 
 
     /**
      * Eventuale caption sopra la grid
      */
-    protected void creaInfoElaborazione(ATask task, String flagDaemon, String flagLastElaborazione, String flagDurataElaborazione) {
-        String testo = "";
-        String message = "";
-        String tag = "Elaborazione automatica: ";
+    protected void creaInfoDownload(boolean previsto, ATask task, String flagDaemon, String flagLastDownload, String flagDurataDownload) {
+        boolean continua = true;
+        String message = "Download";
+        LocalDateTime lastDownload = pref.getDateTime(flagLastDownload);
+
+        //--Prima parte
+        if (previsto) {
+            if (task != null) {
+
+            } else {
+                message += " automatico non previsto.";
+            }// end of if/else cycle
+        } else {
+            message += " non previsto.";
+            continua = false;
+        }// end of if/else cycle
+
+        if (continua) {
+            if (lastDownload != null) {
+                message += " Ultimo download il " + date.getTime(lastDownload);
+            } else {
+                if (pref.isBool(flagDaemon)) {
+                    message += ": " + task.getNota() + "." + " Non ancora effettuato.";
+                } else {
+                    message = message;
+                }// end of if/else cycle
+            }// end of if/else cycle
+
+            //--durata
+            message += getDurata(eaTempoTypeDownload, flagDurataDownload);
+        }// end of if cycle
+
+        alertPlacehorder.add(getLabelGreen(message));
+    }// end of method
+
+
+    /**
+     * Eventuale caption sopra la grid
+     */
+    protected void creaInfoElaborazione(boolean previsto, ATask task, String flagDaemon, String flagLastElaborazione, String flagDurataElaborazione) {
+        boolean continua = true;
+        String message = "Elaborazione";
         String nota;
         LocalDateTime lastUpload;
         int durata;
-        testo = tag;
 
-        if (text.isEmpty(flagDaemon) || text.isEmpty(flagLastElaborazione)) {
-            message = "Elaborazione non prevista.";
+        //--Prima parte
+        if (previsto) {
+            if (task != null) {
+
+            } else {
+                message += " automatica non prevista.";
+            }// end of if/else cycle
+
+
         } else {
-            nota = task != null ? task.getNota() : "";
-            lastUpload = pref.getDateTime(flagLastElaborazione);
-            if (pref.isBool(flagDaemon)) {
-                testo += nota;
-            } else {
-                testo += "disattivato.";
-            }// end of if/else cycle
-
-            if (lastUpload != null) {
-                message += testo + " Ultima elaborazione il " + date.getTime(lastUpload);
-                message += getDurata(eaTempoTypeElaborazione, flagDurataElaborazione);
-            } else {
-                if (pref.isBool(flagDaemon)) {
-                    message = tag + nota + " Non ancora effettuata.";
-                } else {
-                    message = testo;
-                }// end of if/else cycle
-            }// end of if/else cycle
+            message += " non prevista.";
+            continua = false;
         }// end of if/else cycle
 
-        if (text.isValid(message)) {
-            alertPlacehorder.add(getLabelGreen(message));
-        }// end of if cycle
+//        if (text.isEmpty(flagDaemon) || text.isEmpty(flagLastElaborazione)) {
+//            message = "Elaborazione non prevista.";
+//        } else {
+//            nota = task != null ? task.getNota() : "";
+//            lastUpload = pref.getDateTime(flagLastElaborazione);
+//            if (pref.isBool(flagDaemon)) {
+//                testo += nota;
+//            } else {
+//                testo += "disattivato.";
+//            }// end of if/else cycle
+//
+//            if (lastUpload != null) {
+//                message += testo + " Ultima elaborazione il " + date.getTime(lastUpload);
+//                message += getDurata(eaTempoTypeElaborazione, flagDurataElaborazione);
+//            } else {
+//                if (pref.isBool(flagDaemon)) {
+//                    message = tag + nota + " Non ancora effettuata.";
+//                } else {
+//                    message = testo;
+//                }// end of if/else cycle
+//            }// end of if/else cycle
+//        }// end of if/else cycle
+//
+        alertPlacehorder.add(getLabelGreen(message));
     }// end of method
 
 
     /**
      * Eventuale caption sopra la grid
      */
-    protected void creaInfoUpload(ATask task, String flagDaemon, String flagLastUpload, String flagDurataLastUpload) {
+    protected void creaInfoUpload(boolean previsto, ATask task, String flagDaemon, String flagLastUpload, String flagDurataLastUpload) {
         String testo = "";
         String message = "";
         String tag = "Upload automatico: ";
@@ -615,7 +678,7 @@ public abstract class WikiList extends AGridViewList {
     /**
      * Eventuale caption sopra la grid
      */
-    protected void creaInfoStatistiche(String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
+    protected void creaInfoStatistiche(boolean previsto, ATask task, String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
         String message = "";
         LocalDateTime lastDownload = pref.getDateTime(flagLastUploadStatistiche);
 

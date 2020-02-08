@@ -128,20 +128,20 @@ public class NomeList extends WikiList {
         this.sogliaWiki = pref.getInt(SOGLIA_NOMI_PAGINA_WIKI, 50);
         super.usaPagination = true;
         super.usaPopupFiltro = true;
-        super.task = taskNomi;
+        super.taskUpload = taskNomi;
         super.flagDaemon = USA_DAEMON_NOMI;
 
         this.lastDownload = VUOTA;
         this.durataLastDownload = VUOTA;
         this.eaTempoTypeDownload = EATempo.nessuno;
-        super.lastElaborazione = LAST_ELABORA_NOME;
-        super.durataLastElaborazione = DURATA_ELABORA_NOMI;
+        super.lastElabora = LAST_ELABORA_NOME;
+        super.durataLastElabora = DURATA_ELABORA_NOMI;
         super.eaTempoTypeElaborazione = EATempo.minuti;
         super.lastUpload = LAST_UPLOAD_NOMI;
         super.durataLastUpload = DURATA_UPLOAD_NOMI;
         super.eaTempoTypeUpload = EATempo.minuti;
-        super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_NOMI;
-        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_NOMI;
+        super.lastUploadStatistica = LAST_UPLOAD_STATISTICHE_NOMI;
+        super.durataLastUploadStatistica = DURATA_UPLOAD_STATISTICHE_NOMI;
         super.eaTempoTypeStatistiche = EATempo.secondi;
     }// end of method
 

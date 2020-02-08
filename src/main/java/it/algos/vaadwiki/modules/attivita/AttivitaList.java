@@ -17,10 +17,8 @@ import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
-import it.algos.vaadwiki.modules.nome.Nome;
 import it.algos.vaadwiki.modules.wiki.WikiList;
 import it.algos.vaadwiki.schedule.TaskAttivita;
-import it.algos.vaadwiki.statistiche.StatisticheAttivita;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -127,7 +125,10 @@ public class AttivitaList extends WikiList {
         super.titoloModulo = wikiService.titoloModuloAttivita;
         super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheAttivita;
         super.usaPagination = true;
-        super.task = taskAttivita;
+        super.previstoDownload = true;
+        super.previstoUpload = true;
+        super.previstoStatistica = true;
+        super.taskUpload = taskAttivita;
         super.flagDaemon = USA_DAEMON_ATTIVITA;
 
         super.lastDownload = LAST_DOWNLOAD_ATTIVITA;
@@ -136,8 +137,8 @@ public class AttivitaList extends WikiList {
         super.lastUpload = VUOTA;
         super.durataLastUpload = VUOTA;
         super.eaTempoTypeUpload = EATempo.nessuno;
-        super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_ATTIVITA;
-        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_ATTIVITA;
+        super.lastUploadStatistica = LAST_UPLOAD_STATISTICHE_ATTIVITA;
+        super.durataLastUploadStatistica = DURATA_UPLOAD_STATISTICHE_ATTIVITA;
         super.eaTempoTypeStatistiche = EATempo.minuti;
     }// end of method
 
@@ -221,6 +222,7 @@ public class AttivitaList extends WikiList {
         return uploadButton;
     }// end of method
 
+
     protected void viewAttivita(Attivita attivita) {
         getUI().ifPresent(ui -> ui.navigate(ROUTE_VIEW_ATTIVITA + "/" + attivita.id));
     }// end of method
@@ -231,6 +233,7 @@ public class AttivitaList extends WikiList {
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }// end of method
 
+
     /**
      * Upload standard. <br>
      * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
@@ -239,6 +242,7 @@ public class AttivitaList extends WikiList {
         uploadService.uploadAllAttivita();
         super.upload(inizio);
     }// end of method
+
 
     /**
      * Creazione ed apertura del dialogo per una nuova entity oppure per una esistente <br>

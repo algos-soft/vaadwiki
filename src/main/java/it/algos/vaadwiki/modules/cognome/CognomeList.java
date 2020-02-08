@@ -118,20 +118,20 @@ public class CognomeList extends WikiList {
         this.sogliaWiki = pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI, 50);
         super.usaPagination = true;
         super.usaPopupFiltro = true;
-        super.task = taskCognomi;
+        super.taskUpload = taskCognomi;
         super.flagDaemon = USA_DAEMON_COGNOMI;
 
         this.lastDownload = VUOTA;
         this.durataLastDownload = VUOTA;
         this.eaTempoTypeDownload = EATempo.nessuno;
-        super.lastElaborazione = LAST_ELABORA_COGNOME;
-        super.durataLastElaborazione = DURATA_ELABORA_COGNOMI;
+        super.lastElabora = LAST_ELABORA_COGNOME;
+        super.durataLastElabora = DURATA_ELABORA_COGNOMI;
         super.eaTempoTypeElaborazione = EATempo.minuti;
         super.lastUpload = LAST_UPLOAD_COGNOMI;
         super.durataLastUpload = DURATA_UPLOAD_COGNOMI;
         super.eaTempoTypeUpload = EATempo.minuti;
-        super.lastUploadStatistiche = LAST_UPLOAD_STATISTICHE_COGNOMI;
-        super.durataLastUploadStatistiche = DURATA_UPLOAD_STATISTICHE_COGNOMI;
+        super.lastUploadStatistica = LAST_UPLOAD_STATISTICHE_COGNOMI;
+        super.durataLastUploadStatistica = DURATA_UPLOAD_STATISTICHE_COGNOMI;
         super.eaTempoTypeStatistiche = EATempo.secondi;
     }// end of method
 
