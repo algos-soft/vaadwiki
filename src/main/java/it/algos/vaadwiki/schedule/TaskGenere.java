@@ -13,7 +13,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_GENERE;
+import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_GENERE_DOWNLOAD;
+
 
 /**
  * Project vaadwiki
@@ -50,13 +51,13 @@ public class TaskGenere extends WikiTask {
     @PostConstruct
     protected void inizia() {
         super.eaSchedule = EASchedule.giornoPrimoMinuto;
-        super.usaDaemon = pref.isBool(USA_DAEMON_GENERE);
+        super.usaDaemon = pref.isBool(USA_DAEMON_GENERE_DOWNLOAD);
     }// end of method
 
 
     @Override
     public void execute(TaskExecutionContext context) throws RuntimeException {
-        if (pref.isBool(USA_DAEMON_GENERE)) {
+        if (pref.isBool(USA_DAEMON_GENERE_DOWNLOAD)) {
             service.download();
         }// end of if cycle
     }// end of method

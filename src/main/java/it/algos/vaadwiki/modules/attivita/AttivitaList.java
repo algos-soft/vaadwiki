@@ -19,6 +19,7 @@ import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.MainLayout14;
 import it.algos.vaadwiki.modules.wiki.WikiList;
 import it.algos.vaadwiki.schedule.TaskAttivita;
+import it.algos.vaadwiki.schedule.TaskStatistiche;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -73,6 +74,13 @@ public class AttivitaList extends WikiList {
     @Autowired
     private TaskAttivita taskAttivita;
 
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    private TaskStatistiche taskStatistica;
+
 
     /**
      * Costruttore @Autowired <br>
@@ -125,18 +133,23 @@ public class AttivitaList extends WikiList {
         super.titoloModulo = wikiService.titoloModuloAttivita;
         super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheAttivita;
         super.usaPagination = true;
-        super.previstoDownload = true;
-        super.previstoUpload = true;
-        super.previstoStatistica = true;
-        super.taskUpload = taskAttivita;
-        super.flagDaemon = USA_DAEMON_ATTIVITA;
 
+        super.flagDaemon = USA_DAEMON_ATTIVITA_UPLOAD;
+        super.previstoDownload = true;
+        super.taskDownload = null;
         super.lastDownload = LAST_DOWNLOAD_ATTIVITA;
         super.durataLastDownload = DURATA_DOWNLOAD_ATTIVITA;
         super.eaTempoTypeDownload = EATempo.secondi;
-        super.lastUpload = VUOTA;
-        super.durataLastUpload = VUOTA;
-        super.eaTempoTypeUpload = EATempo.nessuno;
+
+        super.previstoElabora = false;
+
+        super.previstoUpload = true;
+        super.taskUpload = taskAttivita;
+        super.lastUpload = LAST_UPLOAD_ATTIVITA;
+        super.durataLastUpload = DURATA_UPLOAD_ATTIVITA;
+        super.eaTempoTypeUpload = EATempo.minuti;
+
+        super.previstoStatistica = true;
         super.lastUploadStatistica = LAST_UPLOAD_STATISTICHE_ATTIVITA;
         super.durataLastUploadStatistica = DURATA_UPLOAD_STATISTICHE_ATTIVITA;
         super.eaTempoTypeStatistiche = EATempo.minuti;

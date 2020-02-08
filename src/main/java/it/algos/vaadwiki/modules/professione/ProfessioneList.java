@@ -106,12 +106,18 @@ public class ProfessioneList extends WikiList {
 
         super.titoloModulo = wikiService.titoloModuloProfessione;
         super.usaPagination = true;
-        super.taskDownload = taskProfessione;
-        super.flagDaemon = USA_DAEMON_PROFESSIONE;
 
+        super.flagDaemon = USA_DAEMON_PROFESSIONE_DOWNLOAD;
+
+        super.previstoDownload = true;
+        super.taskDownload = taskProfessione;
         super.lastDownload = LAST_DOWNLOAD_PROFESSIONE;
         super.durataLastDownload = DURATA_DOWNLOAD_PROFESSIONE;
         super.eaTempoTypeDownload = EATempo.secondi;
+
+        super.previstoElabora = false;
+        super.previstoUpload = false;
+        super.previstoStatistica = false;
     }// end of method
 
 

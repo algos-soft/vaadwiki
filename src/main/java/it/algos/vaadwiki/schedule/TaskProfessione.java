@@ -1,20 +1,19 @@
 package it.algos.vaadwiki.schedule;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.enumeration.EASchedule;
-import it.algos.vaadflow.schedule.ATask;
-import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadwiki.application.WikiCost.*;
+import static it.algos.vaadwiki.application.WikiCost.TAG_PRO;
+import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_PROFESSIONE_DOWNLOAD;
 
 /**
  * Project vaadwiki
@@ -51,13 +50,13 @@ public class TaskProfessione extends WikiTask {
     @PostConstruct
     protected void inizia() {
         super.eaSchedule = EASchedule.giornoTerzoMinuto;
-        super.usaDaemon = pref.isBool(USA_DAEMON_PROFESSIONE);
+        super.usaDaemon = pref.isBool(USA_DAEMON_PROFESSIONE_DOWNLOAD);
     }// end of method
 
 
     @Override
     public void execute(TaskExecutionContext context) throws RuntimeException {
-        if (pref.isBool(USA_DAEMON_PROFESSIONE)) {
+        if (pref.isBool(USA_DAEMON_PROFESSIONE_DOWNLOAD)) {
             service.download();
         }// end of if cycle
     }// end of method

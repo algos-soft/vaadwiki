@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_NAZIONALITA;
-
 /**
  * Project vaadwiki
  * Created by Algos

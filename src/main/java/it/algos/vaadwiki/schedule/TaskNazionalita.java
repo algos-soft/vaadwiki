@@ -45,13 +45,13 @@ public class TaskNazionalita extends WikiTask {
     @PostConstruct
     protected void inizia() {
         super.eaSchedule = EASchedule.oreOttoVenerdi;
-        super.usaDaemon = pref.isBool(USA_DAEMON_NAZIONALITA);
+        super.usaDaemon = pref.isBool(USA_DAEMON_NAZIONALITA_UPLOAD);
     }// end of method
 
 
     @Override
     public void execute(TaskExecutionContext context) throws RuntimeException {
-        if (pref.isBool(USA_DAEMON_NAZIONALITA)) {
+        if (pref.isBool(USA_DAEMON_NAZIONALITA_UPLOAD)) {
             uploadService.uploadAllNazionalita();
         }// end of if cycle
     }// end of method

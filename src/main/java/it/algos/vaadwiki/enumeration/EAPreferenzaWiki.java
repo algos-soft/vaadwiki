@@ -19,15 +19,15 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 public enum EAPreferenzaWiki implements IAPreferenza {
 
     usaDaemonBio(USA_DAEMON_BIO, "Crono per ciclo bio di download", EAPrefType.bool, true),
-    usaDaemonProfessione(USA_DAEMON_PROFESSIONE, "Crono per download professione, extra-ciclo", EAPrefType.bool, false),
+    usaDaemonProfessioneDownload(USA_DAEMON_PROFESSIONE_DOWNLOAD, "Crono per download professione, extra-ciclo", EAPrefType.bool, false),
     usaDaemonCategoria(USA_DAEMON_CATEGORIA, "Crono per download categoria, extra-ciclo", EAPrefType.bool, false),
-    usaDaemonGenere(USA_DAEMON_GENERE, "Crono per download genere, extra-ciclo", EAPrefType.bool, false),
-    usaDaemonGiorni(USA_DAEMON_GIORNI, "Crono per upload giorni", EAPrefType.bool, true),
-    usaDaemonAnni(USA_DAEMON_ANNI, "Crono per upload anni", EAPrefType.bool, true),
+    usaDaemonGenereDownload(USA_DAEMON_GENERE_DOWNLOAD, "Crono per download genere, extra-ciclo", EAPrefType.bool, false),
+    usaDaemonGiorniUpload(USA_DAEMON_GIORNI_UPLOAD, "Crono per upload giorni", EAPrefType.bool, true),
+    usaDaemonAnniUpload(USA_DAEMON_ANNI_UPLOAD, "Crono per upload anni", EAPrefType.bool, true),
     usaDaemonNomi(USA_DAEMON_NOMI, "Crono per upload nomi", EAPrefType.bool, true),
     usaDaemonCognomi(USA_DAEMON_COGNOMI, "Crono per upload cognomi", EAPrefType.bool, true),
-    usaDaemonAttivita(USA_DAEMON_ATTIVITA, "Crono per upload attività", EAPrefType.bool, true),
-    usaDaemonNazionalita(USA_DAEMON_NAZIONALITA, "Crono per upload nazionalità", EAPrefType.bool, true),
+    usaDaemonAttivitaUpload(USA_DAEMON_ATTIVITA_UPLOAD, "Crono per upload attività", EAPrefType.bool, true),
+    usaDaemonNazionalitaUpload(USA_DAEMON_NAZIONALITA_UPLOAD, "Crono per upload nazionalità", EAPrefType.bool, true),
     usaDaemonStatistiche(USA_DAEMON_STATISTICHE, "Crono per upload statistiche", EAPrefType.bool, true),
 
     lastDownloadAttivita(LAST_DOWNLOAD_ATTIVITA, "Ultimo download del modulo attività", EAPrefType.localdatetime, null),

@@ -122,12 +122,20 @@ public class WikiAnnoList extends WikiList {
         super.usaButtonUploadStatistiche = true;
 
         super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheAnni;
-        super.taskUpload = taskAnni;
-        super.flagDaemon = USA_DAEMON_ANNI;
+        super.usaPagination = true;
 
+        super.flagDaemon = USA_DAEMON_ANNI_UPLOAD;
+        super.previstoDownload = false;
+
+        super.previstoElabora = false;
+
+        super.previstoUpload = true;
+        super.taskUpload = taskAnni;
         super.lastUpload = LAST_UPLOAD_ANNI;
         super.durataLastUpload = DURATA_UPLOAD_ANNI;
         super.eaTempoTypeUpload = EATempo.minuti;
+
+        super.previstoStatistica = true;
         super.lastUploadStatistica = LAST_UPLOAD_STATISTICHE_ANNI;
         super.durataLastUploadStatistica = DURATA_UPLOAD_STATISTICHE_ANNI;
         super.eaTempoTypeStatistiche = EATempo.minuti;

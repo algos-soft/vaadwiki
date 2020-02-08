@@ -97,6 +97,10 @@ public class WikiCost {
 
     public final static String COGNOME = "Cognome:";
 
+    public final static String DOWNLOAD = "Download";
+
+    public final static String UPLOAD = "Upload";
+
     public final static String CODE_DOWNLOAD = "lastDownload";
 
     public final static String CODE_ELABORA = "lastElabora";
@@ -130,19 +134,19 @@ public class WikiCost {
 
     public final static String USA_DAEMON_BIO = DAEMON + BIO;
 
-    public final static String USA_DAEMON_ATTIVITA = DAEMON + ATT;
+    public final static String USA_DAEMON_ATTIVITA_UPLOAD = DAEMON + ATT + UPLOAD;
 
-    public final static String USA_DAEMON_NAZIONALITA = DAEMON + NAZ;
+    public final static String USA_DAEMON_NAZIONALITA_UPLOAD = DAEMON + NAZ + UPLOAD;
 
-    public final static String USA_DAEMON_PROFESSIONE = DAEMON + PROF;
+    public final static String USA_DAEMON_PROFESSIONE_DOWNLOAD = DAEMON + PROF + DOWNLOAD;
 
     public final static String USA_DAEMON_CATEGORIA = DAEMON + CAT;
 
-    public final static String USA_DAEMON_GENERE = DAEMON + GEN;
+    public final static String USA_DAEMON_GENERE_DOWNLOAD = DAEMON + GEN + DOWNLOAD;
 
-    public final static String USA_DAEMON_GIORNI = DAEMON + GIORNI;
+    public final static String USA_DAEMON_GIORNI_UPLOAD = DAEMON + GIORNI + UPLOAD;
 
-    public final static String USA_DAEMON_ANNI = DAEMON + ANNI;
+    public final static String USA_DAEMON_ANNI_UPLOAD = DAEMON + ANNI + UPLOAD;
 
     public final static String USA_DAEMON_NOMI = DAEMON + "Nomi";
 

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Scope;
 import javax.annotation.PostConstruct;
 
 import static it.algos.vaadwiki.application.WikiCost.TASK_ATT;
-import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA;
+import static it.algos.vaadwiki.application.WikiCost.USA_DAEMON_ATTIVITA_UPLOAD;
 
 /**
  * Project vaadwiki
@@ -43,13 +43,13 @@ public class TaskAttivita extends WikiTask {
     @PostConstruct
     protected void inizia() {
         super.eaSchedule = EASchedule.oreOttoGiovedi;
-        super.usaDaemon = pref.isBool(USA_DAEMON_ATTIVITA);
+        super.usaDaemon = pref.isBool(USA_DAEMON_ATTIVITA_UPLOAD);
     }// end of method
 
 
     @Override
     public void execute(TaskExecutionContext context) throws RuntimeException {
-        if (pref.isBool(USA_DAEMON_ATTIVITA)) {
+        if (pref.isBool(USA_DAEMON_ATTIVITA_UPLOAD)) {
             uploadService.uploadAllAttivita();
         }// end of if cycle
     }// end of method

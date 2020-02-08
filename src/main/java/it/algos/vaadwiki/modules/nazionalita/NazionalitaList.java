@@ -120,15 +120,23 @@ public class NazionalitaList extends WikiList {
         super.titoloModulo = wikiService.titoloModuloNazionalita;
         super.titoloPaginaStatistiche = wikiService.titoloPaginaStatisticheNazionalita;
         super.usaPagination = true;
-        super.taskUpload = taskNazionalita;
-        super.flagDaemon = USA_DAEMON_NAZIONALITA;
 
+        super.flagDaemon = USA_DAEMON_NAZIONALITA_UPLOAD;
+        super.previstoDownload = true;
+        super.taskDownload = null;
         super.lastDownload = LAST_DOWNLOAD_NAZIONALITA;
         super.durataLastDownload = DURATA_DOWNLOAD_NAZIONALITA;
         super.eaTempoTypeDownload = EATempo.secondi;
-        super.lastUpload = VUOTA;
-        super.durataLastUpload = VUOTA;
-        super.eaTempoTypeUpload = EATempo.nessuno;
+
+        super.previstoElabora = false;
+
+        super.previstoUpload = true;
+        super.taskUpload = taskNazionalita;
+        super.lastUpload = LAST_UPLOAD_NAZIONALITA;
+        super.durataLastUpload = DURATA_UPLOAD_NAZIONALITA;
+        super.eaTempoTypeUpload = EATempo.minuti;
+
+        super.previstoStatistica = true;
         super.lastUploadStatistica = LAST_UPLOAD_STATISTICHE_NAZIONALITA;
         super.durataLastUploadStatistica = DURATA_UPLOAD_STATISTICHE_NAZIONALITA;
         super.eaTempoTypeStatistiche = EATempo.minuti;

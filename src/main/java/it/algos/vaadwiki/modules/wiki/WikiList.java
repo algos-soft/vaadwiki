@@ -10,6 +10,7 @@ import it.algos.vaadflow.enumeration.EATempo;
 import it.algos.vaadflow.schedule.ATask;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.list.AGridViewList;
+import it.algos.vaadwiki.schedule.TaskStatistiche;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.statistiche.StatisticheService;
 import it.algos.vaadwiki.upload.UploadService;
@@ -212,8 +213,6 @@ public abstract class WikiList extends AGridViewList {
 
     protected ATask taskUpload;
 
-    protected ATask taskStatistica;
-
     protected EATempo eaTempoTypeDownload;
 
     protected EATempo eaTempoTypeElaborazione;
@@ -221,6 +220,13 @@ public abstract class WikiList extends AGridViewList {
     protected EATempo eaTempoTypeUpload;
 
     protected EATempo eaTempoTypeStatistiche;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     * Disponibile solo dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
+     */
+    @Autowired
+    private TaskStatistiche taskStatistica;
 
 
     /**
@@ -420,43 +426,6 @@ public abstract class WikiList extends AGridViewList {
     }// end of method
 
 
-//    protected void apreDialogo(SingleSelectionEvent evento, EAOperation operation) {
-//        AEntity entitySelected = null;
-//        Set selezione = grid.getSelectedItems();
-//        boolean selezioneSingola = (selezione != null && selezione.size() == 1);
-//
-//        if (selezioneSingola) {
-//            entitySelected = (AEntity) grid.getSelectedItems().toArray()[0];
-//        }// end of if cycle
-//
-//        if (evento != null && evento.getOldValue() != evento.getValue()) {
-//            if (evento.getValue().getClass().getName().equals(entityClazz.getName())) {
-//                if (usaRouteFormView && text.isValid(routeNameFormEdit)) {
-//                    AEntity entity = (AEntity) evento.getValue();
-//                    routeVerso(routeNameFormEdit, entity);
-//                } else {
-////                    dialog.open((AEntity) evento.getValue(), operation, context); //@todo versione 14
-//                }// end of if/else cycle
-//            }// end of if cycle
-//        }// end of if cycle
-//
-//        if (selezioneSingola) {
-//            grid.select(entitySelected);
-//        }// end of if cycle
-//    }// end of method
-
-
-//    protected void deleteMongo() {
-//        this.service.deleteAll();
-//        updateFiltri();
-//        updateGrid();
-//    }// end of method
-
-
-//    protected void findOrCrea(String singolare, String plurale) {
-//    }// end of method
-
-
     protected void showWikiPagina(String titoloPagina) {
         String link = "\"" + PATH_WIKI + titoloPagina + "\"";
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
@@ -506,196 +475,41 @@ public abstract class WikiList extends AGridViewList {
     /**
      * Eventuale caption sopra la grid
      */
-    protected void creaInfo(String type, boolean previsto, ATask task, String flagDaemon, String flagLastDownload, String flagDurataDownload) {
-        boolean continua = true;
+    protected void creaInfo(String type, boolean operazionePrevista, ATask task, String flagDaemon, String flagLastDownload, String flagDurataDownload) {
         String tag = " Scheduled ";
+        boolean scheduledPrevisto = task != null;
+        boolean scheduledAttivo = false;
         String message = text.primaMaiuscola(type) + ".";
         LocalDateTime lastDownload = pref.getDateTime(flagLastDownload);
-        lastDownload=null;
 
-        //--Prima parte
-        if (previsto) {
-            if (task != null) {
-                message += tag;
-                message += task.getNota();
+        if (scheduledPrevisto && text.isValid(flagDaemon)) {
+            scheduledAttivo = pref.isBool(flagDaemon);
+        }// end of if cycle
+
+        if (operazionePrevista) {
+            if (scheduledPrevisto) {
+                if (scheduledAttivo) {
+                    message += tag;
+                    message += task.getNota();
+                } else {
+                    message += tag + "non attivo.";
+                    message += " Attivabile " + task.getNota() ;
+                }// end of if/else cycle
             } else {
                 message += tag + "non previsto.";
             }// end of if/else cycle
+
+            if (date.isValid(lastDownload)) {
+                message += " Ultimo " + type + (scheduledAttivo ? "" : " manuale") + " il " + date.getTime(lastDownload);
+                message += getDurata(eaTempoTypeDownload, flagDurataDownload);
+            } else {
+                message += " Non ancora effettuato.";
+            }// end of if/else cycle
         } else {
             message += " Non previsto.";
-            continua = false;
         }// end of if/else cycle
-
-        if (continua) {
-            if (lastDownload != null) {
-                message += " Ultimo " + type + " il " + date.getTime(lastDownload);
-            } else {
-                if (pref.isBool(flagDaemon)) {
-                    message += ": " + task.getNota() + "." + " Non ancora effettuato.";
-                } else {
-                    message = message;
-                }// end of if/else cycle
-            }// end of if/else cycle
-
-            //--durata
-            message += getDurata(eaTempoTypeDownload, flagDurataDownload);
-        }// end of if cycle
 
         alertPlacehorder.add(getLabelGreen(message));
-    }// end of method
-
-
-    /**
-     * Eventuale caption sopra la grid
-     */
-    protected void creaInfoDownload(boolean previsto, ATask task, String flagDaemon, String flagLastDownload, String flagDurataDownload) {
-        boolean continua = true;
-        String message = "Download";
-        LocalDateTime lastDownload = pref.getDateTime(flagLastDownload);
-
-        //--Prima parte
-        if (previsto) {
-            if (task != null) {
-
-            } else {
-                message += " automatico non previsto.";
-            }// end of if/else cycle
-        } else {
-            message += " non previsto.";
-            continua = false;
-        }// end of if/else cycle
-
-        if (continua) {
-            if (lastDownload != null) {
-                message += " Ultimo download il " + date.getTime(lastDownload);
-            } else {
-                if (pref.isBool(flagDaemon)) {
-                    message += ": " + task.getNota() + "." + " Non ancora effettuato.";
-                } else {
-                    message = message;
-                }// end of if/else cycle
-            }// end of if/else cycle
-
-            //--durata
-            message += getDurata(eaTempoTypeDownload, flagDurataDownload);
-        }// end of if cycle
-
-        alertPlacehorder.add(getLabelGreen(message));
-    }// end of method
-
-
-    /**
-     * Eventuale caption sopra la grid
-     */
-    protected void creaInfoElaborazione(boolean previsto, ATask task, String flagDaemon, String flagLastElaborazione, String flagDurataElaborazione) {
-        boolean continua = true;
-        String message = "Elaborazione";
-        String nota;
-        LocalDateTime lastUpload;
-        int durata;
-
-        //--Prima parte
-        if (previsto) {
-            if (task != null) {
-
-            } else {
-                message += " automatica non prevista.";
-            }// end of if/else cycle
-
-
-        } else {
-            message += " non prevista.";
-            continua = false;
-        }// end of if/else cycle
-
-//        if (text.isEmpty(flagDaemon) || text.isEmpty(flagLastElaborazione)) {
-//            message = "Elaborazione non prevista.";
-//        } else {
-//            nota = task != null ? task.getNota() : "";
-//            lastUpload = pref.getDateTime(flagLastElaborazione);
-//            if (pref.isBool(flagDaemon)) {
-//                testo += nota;
-//            } else {
-//                testo += "disattivato.";
-//            }// end of if/else cycle
-//
-//            if (lastUpload != null) {
-//                message += testo + " Ultima elaborazione il " + date.getTime(lastUpload);
-//                message += getDurata(eaTempoTypeElaborazione, flagDurataElaborazione);
-//            } else {
-//                if (pref.isBool(flagDaemon)) {
-//                    message = tag + nota + " Non ancora effettuata.";
-//                } else {
-//                    message = testo;
-//                }// end of if/else cycle
-//            }// end of if/else cycle
-//        }// end of if/else cycle
-//
-        alertPlacehorder.add(getLabelGreen(message));
-    }// end of method
-
-
-    /**
-     * Eventuale caption sopra la grid
-     */
-    protected void creaInfoUpload(boolean previsto, ATask task, String flagDaemon, String flagLastUpload, String flagDurataLastUpload) {
-        String testo = "";
-        String message = "";
-        String tag = "Upload automatico: ";
-        String nota;
-        LocalDateTime lastUpload;
-        testo = tag;
-
-        if (text.isEmpty(flagDaemon) || text.isEmpty(flagLastUpload)) {
-            message = "Upload non previsto.";
-        } else {
-            nota = task != null ? task.getNota() : "";
-            lastUpload = pref.getDateTime(flagLastUpload);
-            if (pref.isBool(flagDaemon)) {
-                testo += nota;
-            } else {
-                testo += "disattivato.";
-            }// end of if/else cycle
-
-            if (lastUpload != null) {
-                message += testo + " Ultimo upload il " + date.getTime(lastUpload);
-                message += getDurata(eaTempoTypeUpload, flagDurataLastUpload);
-            } else {
-                if (pref.isBool(flagDaemon)) {
-                    message = tag + nota + " Non ancora effettuato.";
-                } else {
-                    message = testo;
-                }// end of if/else cycle
-            }// end of if/else cycle
-        }// end of if/else cycle
-
-        if (text.isValid(message)) {
-            alertPlacehorder.add(getLabelGreen(message));
-        }// end of if cycle
-    }// end of method
-
-
-    /**
-     * Eventuale caption sopra la grid
-     */
-    protected void creaInfoStatistiche(boolean previsto, ATask task, String flagLastUploadStatistiche, String flagDurataLastUploadStatistiche) {
-        String message = "";
-        LocalDateTime lastDownload = pref.getDateTime(flagLastUploadStatistiche);
-
-        if (lastDownload != null) {
-            message = "Statistiche caricate l'ultima volta su wikipedia il " + date.getTime(lastDownload);
-            message += getDurata(eaTempoTypeStatistiche, flagDurataLastUploadStatistiche);
-        } else {
-            if (usaButtonUploadStatistiche) {
-                message = "Statistiche non ancora caricate su wikipedia.";
-            } else {
-                message = "Statistiche non previste.";
-            }// end of if/else cycle
-        }// end of if/else cycle
-
-        if (text.isValid(message)) {
-            alertPlacehorder.add(getLabelGreen(message));
-        }// end of if cycle
     }// end of method
 
 
