@@ -75,11 +75,11 @@ public class WrapDidascaliaIntegrationTest extends ATest {
         wrap = appContext.getBean(WrapDidascalia.class, bioUno, EADidascalia.listaNomi);
 
         previsto = "abate";
-        chiaveAttivita = wrap.getChiaveAttivita();
+        chiaveAttivita = wrap.c;
         assertEquals(previsto, chiaveAttivita);
 
         previsto = "Abati";
-        chiaveParagrafo = wrap.getChiaveParagrafo();
+        chiaveParagrafo = wrap.chiaveParagrafo;
         assertEquals(previsto, chiaveParagrafo);
 
 //        previsto = "abati e badesse";
@@ -87,7 +87,7 @@ public class WrapDidascaliaIntegrationTest extends ATest {
 //        assertEquals(previsto, chiaveLista);
 
         previsto = "abate";
-        chiavePagina = wrap.getChiavePagina();
+        chiavePagina = wrap.chiaveParagrafo;
         assertEquals(previsto, chiavePagina);
     }// end of method
 
