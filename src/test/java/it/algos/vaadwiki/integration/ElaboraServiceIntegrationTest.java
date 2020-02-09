@@ -58,7 +58,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|AnnoMorte=\n" +
             "|LuogoMorte = ? \n" +
             "|Nazionalità = statunitense ?\n" +
-            "|Attività = modella<ref>Dal 2000</ref>\n" +
+            "|Attività = Modella<ref>Dal 2000</ref>\n" +
             "|Attività2 = \n" +
             "|PostNazionalità = {{sp}}incoronata [[Miss USA]] [[2008]]<ref>{{cite web\n" +
             "|url= http://www.washingtonpost.com/wp-dyn/content/article/2008/04/12/AR2008041200018.html\n" +
