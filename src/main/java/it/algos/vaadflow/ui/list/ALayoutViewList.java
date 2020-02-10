@@ -391,4 +391,42 @@ public abstract class ALayoutViewList extends APrefViewList {
         }// end of if cycle
     }// end of method
 
+    /**
+     * Label colorata
+     */
+    protected Label getLabel(String message, String labelColor) {
+        Label label = null;
+
+        if (text.isValid(message)) {
+            label = new Label(message);
+            label.getElement().getStyle().set("color", labelColor);
+        }// end of if cycle
+
+        return label;
+    }// end of method
+
+
+    /**
+     * Label colorata
+     */
+    protected Label getLabelRed(String message) {
+        return getLabel(message, "red");
+    }// end of method
+
+
+    /**
+     * Label colorata
+     */
+    protected Label getLabelGreen(String message) {
+        return getLabel(message, "green");
+    }// end of method
+
+
+    /**
+     * Label colorata
+     */
+    protected Label getLabelBlue(String message) {
+        return getLabel(message, "blue");
+    }// end of method
+
 }// end of class
