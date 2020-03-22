@@ -398,7 +398,7 @@ public class BioDialog extends AViewDialog<Bio> {
         putMappa(mappa, ParBio.nazionalita);
 
         tmplServer = ((ATextArea) getField(tmpl)).getValue();
-        tmplMerged = elaboraService.getMergedNoLoss(mappa, tmplServer);
+        tmplMerged = elaboraService.getMerged(mappa, tmplServer);
         ((ATextArea) getField(tmpl)).setValue(tmplMerged);
     }// end of method
 

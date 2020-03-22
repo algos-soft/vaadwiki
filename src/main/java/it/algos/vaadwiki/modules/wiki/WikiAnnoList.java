@@ -152,8 +152,8 @@ public class WikiAnnoList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(getLabelBlue(" Progetto:Biografie/Anni"));
-        alertPlacehorder.add(getLabelBlue("Sovrascrive il modulo 'Anno' di vaadflow. Contiene i 1.000 anni A.C. ed i 2020 (estensibile) D.C.. Non modificabili."));
+        alertPlacehorder.add(getLabelAdmin(" Progetto:Biografie/Anni"));
+        alertPlacehorder.add(getLabelAdmin("Sovrascrive il modulo 'Anno' di vaadflow. Contiene i 1.000 anni A.C. ed i 2020 (estensibile) D.C.. Non modificabili."));
         alertPlacehorder.add(new Label("Upload crea le pagina wiki (2) 'Nati nel...' e 'Morti nel...' per ogni anno."));
         alertPlacehorder.add(new Label("Le statistiche contengono il numero delle biografie dei nati/morti per ogni anno."));
     }// end of method

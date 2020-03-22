@@ -497,8 +497,8 @@ public class ElaboraService extends ABioService {
      * Se esiste un parametro 'extra' di mappaServer, lo usa <br>
      * Se non esiste un parametro 'extra' di mappaServer, non inserisce la riga  <br>
      */
-    public String getMergedNoLoss(String tmplBioMongo, String tmplBioServer) {
-        return getMergedNoLoss(libBio.getMappaBio(tmplBioMongo), libBio.getMappaBio(tmplBioServer));
+    public String getMerged(String tmplBioMongo, String tmplBioServer) {
+        return getMerged(libBio.getMappaBio(tmplBioMongo), libBio.getMappaBio(tmplBioServer));
     }// end of method
 
 
@@ -512,8 +512,8 @@ public class ElaboraService extends ABioService {
      * Se esiste un parametro 'extra' di mappaServer, lo usa <br>
      * Se non esiste un parametro 'extra' di mappaServer, non inserisce la riga  <br>
      */
-    public String getMergedNoLoss(HashMap<String, String> mappa, String tmplBioServer) {
-        return getMergedNoLoss(mappa, libBio.getMappaBio(tmplBioServer));
+    public String getMerged(HashMap<String, String> mappa, String tmplBioServer) {
+        return getMerged(mappa, libBio.getMappaBio(tmplBioServer));
     }// end of method
 
 
@@ -527,11 +527,12 @@ public class ElaboraService extends ABioService {
      * Se esiste un parametro 'extra' di mappaServer, lo usa <br>
      * Se non esiste un parametro 'extra' di mappaServer, non inserisce la riga  <br>
      */
-    public String getMergedNoLoss(HashMap<String, String> mappaMongo, HashMap<String, String> mappaServer) {
+    public String getMerged(HashMap<String, String> mappaMongo, HashMap<String, String> mappaServer) {
         StringBuilder tmplMerged = new StringBuilder(VUOTA);
         String valueMongo;
         String valueServer;
         String valueMerged;
+        String valueRiga;
 
         if (mappaMongo != null && mappaServer != null) {
 
@@ -545,7 +546,7 @@ public class ElaboraService extends ABioService {
 
                 if (par.isCampoValido()) {
                     if (text.isValid(valueMongo)) {
-                        valueMerged = sostituisceParteValida(valueServer, valueMongo);
+                        valueMerged = sostituisceParteValida(par, valueServer, valueMongo);
                     } else {
                         if (text.isValid(valueServer)) {
                             valueMerged = eliminaDopoVirgola(par, valueServer);
@@ -554,11 +555,13 @@ public class ElaboraService extends ABioService {
                         }// end of if/else cycle
                     }// end of if/else cycle
                     if (text.isValid(valueMerged) || par.isCampoNormale()) {
-                        tmplMerged.append(par.getRiga(valueMerged));
+                        valueRiga = par.getRiga(valueMerged);
+                        tmplMerged.append(valueRiga);
                     }// end of if cycle
                 } else {
                     if (text.isValid(valueServer)) {
-                        tmplMerged.append(par.getRiga(valueServer));
+                        valueRiga = par.getRiga(valueServer);
+                        tmplMerged.append(valueRiga);
                     }// end of if cycle
                 }// end of if/else cycle
             }// end of for cycle
@@ -571,18 +574,24 @@ public class ElaboraService extends ABioService {
     /**
      * <ref> viene mantenuto <br>
      */
-    public String sostituisceParteValida(String testoOriginale, String parteValidaNuova) {
+    public String sostituisceParteValida(ParBio par, String testoOriginale, String parteValidaNuova) {
+        String valoreSostituito = VUOTA;
         String parteValidaVecchia = libBio.fixPropertyBase(testoOriginale);
+
+//        parteValidaVecchia = par.fix(parteValidaVecchia);
 
         if (text.isValid(testoOriginale)) {
             if (parteValidaVecchia.equalsIgnoreCase(parteValidaNuova)) {
-                return testoOriginale;
+//                return parteValidaNuova;
+                valoreSostituito = text.sostituisce(testoOriginale, parteValidaVecchia, parteValidaNuova);
             } else {
-                return text.sostituisce(testoOriginale, parteValidaVecchia, parteValidaNuova);
+                valoreSostituito = text.sostituisce(testoOriginale, parteValidaVecchia, parteValidaNuova);
             }// end of if/else cycle
         } else {
-            return parteValidaNuova;
+            valoreSostituito = parteValidaNuova;
         }// end of if/else cycle
+
+        return valoreSostituito;
     }// end of method
 
 
@@ -654,10 +663,11 @@ public class ElaboraService extends ABioService {
     /**
      * EAElabora.ordinaNormaliNoLoss
      * <p>
-     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
+     * Riordina il template SENZA nessuna modifica SIGNIFICATIVA dei valori preesistenti <br>
      * Riordina i parametri <br>
      * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
      * Elimina quelli esistenti vuoti, senza valore <br>
+     * Modifica i parametri secondo le regole base (minuscole, 1° del mese, parentesi quadre) <br>
      */
     public String ordinaNormaliNoLoss(String tmplEntrata) {
         String tmplOrdinato = VUOTA;

@@ -155,8 +155,8 @@ public class NazionalitaList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(getLabelBlue("Modulo:Bio/Plurale nazionalità."));
-        alertPlacehorder.add(getLabelBlue("Progetto:Biografie/Nazionalità."));
+        alertPlacehorder.add(getLabelAdmin("Modulo:Bio/Plurale nazionalità."));
+        alertPlacehorder.add(getLabelAdmin("Progetto:Biografie/Nazionalità."));
         alertPlacehorder.add(new Label("Contiene la tabella di conversione delle nazionalità passate via parametri Nazionalità/Cittadinanza/NazionalitàNaturalizzato,"));
         alertPlacehorder.add(new Label(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
         alertPlacehorder.add(new Label("All'interno della tabella le nazionalità sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse."));

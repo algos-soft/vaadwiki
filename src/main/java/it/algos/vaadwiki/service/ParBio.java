@@ -412,6 +412,18 @@ public enum ParBio {
     }// end of method
 
 
+    /**
+     * Elabora un valore valido <br>
+     *
+     * @param value valore da elaborare
+     *
+     * @return valore finale valido
+     */
+    public String fix(String value) {
+        return value;
+    }// end of method
+
+
 //    /**
 //     * Inserisce nell'istanza il valore passato come parametro
 //     * La property dell'istanza ha lo stesso nome della enumeration

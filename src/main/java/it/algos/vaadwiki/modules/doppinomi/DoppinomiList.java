@@ -107,11 +107,11 @@ public class DoppinomiList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(getLabelBlue("Progetto:Antroponimi/Nomi doppi."));
+        alertPlacehorder.add(getLabelAdmin("Progetto:Antroponimi/Nomi doppi."));
         alertPlacehorder.add(new Label("Sono elencati i nomi doppi (ad esempio 'Maria Teresa'), per i quali il BioBot deve fare una lista di biografati una volta superate le 50 biografie."));
         alertPlacehorder.add(new Label("Si veda anche la [[Categoria:Prenomi composti]]"));
-        alertPlacehorder.add(getLabelRed("La lista di 'Nomi' prevede SOLO nomi singoli a cui vengono aggiunti questi 'nomi doppi' accettabili."));
-        alertPlacehorder.add(getLabelRed("Quando si crea la lista di 'Nomi', i nomi doppi vengono scaricati ed aggiunti alla lista dei 'Nomi'"));
+        alertPlacehorder.add(getLabelDev("La lista di 'Nomi' prevede SOLO nomi singoli a cui vengono aggiunti questi 'nomi doppi' accettabili."));
+        alertPlacehorder.add(getLabelDev("Quando si crea la lista di 'Nomi', i nomi doppi vengono scaricati ed aggiunti alla lista dei 'Nomi'"));
     }// end of method
 
     /**

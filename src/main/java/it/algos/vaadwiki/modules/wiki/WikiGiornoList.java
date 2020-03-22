@@ -144,8 +144,8 @@ public class WikiGiornoList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(getLabelBlue(" Progetto:Biografie/Giorni"));
-        alertPlacehorder.add(getLabelBlue("Sovrascrive il modulo 'Giorno' di vaadflow. Contiene i 366 giorni dell'anno (29 febbraio compreso). Non modificabili."));
+        alertPlacehorder.add(getLabelAdmin(" Progetto:Biografie/Giorni"));
+        alertPlacehorder.add(getLabelAdmin("Sovrascrive il modulo 'Giorno' di vaadflow. Contiene i 366 giorni dell'anno (29 febbraio compreso). Non modificabili."));
         alertPlacehorder.add(new Label("Upload crea le pagina wiki (2) 'Nati il...' e 'Morti il...' per ogni giorno."));
         alertPlacehorder.add(new Label("Le statistiche contengono il numero delle biografie dei nati/morti per ogni giorno e la loro incidenza percentuale sul totale annuo degli stessi."));
     }// end of method

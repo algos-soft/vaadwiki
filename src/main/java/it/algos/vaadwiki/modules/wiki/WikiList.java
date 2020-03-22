@@ -509,7 +509,7 @@ public abstract class WikiList extends AGridViewList {
             message += " Non previsto.";
         }// end of if/else cycle
 
-        alertPlacehorder.add(getLabelGreen(message));
+        alertPlacehorder.add(getLabelUser(message));
     }// end of method
 
 

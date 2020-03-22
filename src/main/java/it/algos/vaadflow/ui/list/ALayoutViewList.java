@@ -391,6 +391,7 @@ public abstract class ALayoutViewList extends APrefViewList {
         }// end of if cycle
     }// end of method
 
+
     /**
      * Label colorata
      */
@@ -409,7 +410,7 @@ public abstract class ALayoutViewList extends APrefViewList {
     /**
      * Label colorata
      */
-    protected Label getLabelRed(String message) {
+    protected Label getLabelDev(String message) {
         return getLabel(message, "red");
     }// end of method
 
@@ -417,7 +418,7 @@ public abstract class ALayoutViewList extends APrefViewList {
     /**
      * Label colorata
      */
-    protected Label getLabelGreen(String message) {
+    protected Label getLabelUser(String message) {
         return getLabel(message, "green");
     }// end of method
 
@@ -425,7 +426,7 @@ public abstract class ALayoutViewList extends APrefViewList {
     /**
      * Label colorata
      */
-    protected Label getLabelBlue(String message) {
+    protected Label getLabelAdmin(String message) {
         return getLabel(message, "blue");
     }// end of method
 

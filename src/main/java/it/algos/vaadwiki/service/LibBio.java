@@ -2238,10 +2238,10 @@ public class LibBio {
         testoValido = LibWiki.setNoQuadre(testoValido);
         testoValido = testoValido.trim();
 
-        if (testoValido.length() > 253) {
-            testoValido = testoValido.substring(0, 252);
-            //@todo manca warning
-        }// fine del blocco if
+//        if (testoValido.length() > 253) {
+//            testoValido = testoValido.substring(0, 252);
+//            //@todo manca warning
+//        }// fine del blocco if
 
         return testoValido;
     }// end of method

@@ -138,12 +138,12 @@ public class GenereList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(getLabelBlue("Modulo:Bio/Plurale attività genere."));
+        alertPlacehorder.add(getLabelAdmin("Modulo:Bio/Plurale attività genere."));
         alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3, da singolare maschile e femminile (usati nell'incipit) al plurale maschile e femminile, per le intestazioni dei paragrafi nelle liste di antroponimi previste nel Progetto:Antroponimi."));
         alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
         alertPlacehorder.add(new Label("[\"attivita singolare maschile\"] = \"attività plurale maschile\""));
         alertPlacehorder.add(new Label("[\"attivita singolare femminile\"] = \"attività plurale femminile\""));
-        alertPlacehorder.add(getLabelRed("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in minuscolo."));
+        alertPlacehorder.add(getLabelDev("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in minuscolo."));
     }// end of method
 
 

@@ -73,22 +73,6 @@ public class WrapDidascaliaIntegrationTest extends ATest {
     @Test
     public void listaNomi() {
         wrap = appContext.getBean(WrapDidascalia.class, bioUno, EADidascalia.listaNomi);
-
-//        previsto = "abate";
-//        chiaveAttivita = wrap.chiaveAttivita;
-//        assertEquals(previsto, chiaveAttivita);
-
-        previsto = "Abati";
-        chiaveParagrafo = wrap.chiaveParagrafo;
-        assertEquals(previsto, chiaveParagrafo);
-
-//        previsto = "abati e badesse";
-//        chiaveLista = wrap.getChiaveLista();
-//        assertEquals(previsto, chiaveLista);
-
-        previsto = "abate";
-        chiavePagina = wrap.chiaveParagrafo;
-        assertEquals(previsto, chiavePagina);
     }// end of method
 
 }// end of class

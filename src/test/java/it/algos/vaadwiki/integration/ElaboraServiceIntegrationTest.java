@@ -21,7 +21,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
@@ -76,12 +78,12 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|Cognome = [[Stewart]]\n" +
             "|Sesso = F\n" +
             "|LuogoNascita = [[Wilmington]]\n" +
-            "|GiornoMeseNascita = 1º settembre\n" +
+            "|GiornoMeseNascita = 1 Settembre\n" +
             "|AnnoNascita = [[1981]]\n" +
             "|LuogoMorte = ?\n" +
             "|GiornoMeseMorte = \n" +
             "|AnnoMorte = \n" +
-            "|Attività = modella<ref>Dal 2000</ref>\n" +
+            "|Attività = Modella<ref>Dal 2000</ref>\n" +
             "|Nazionalità = statunitense ?\n" +
             "|PostNazionalità = {{sp}}incoronata [[Miss USA]] [[2008]]<ref>{{cite web\n" +
             "|url= http://www.washingtonpost.com/wp-dyn/content/article/2008/04/12/AR2008041200018.html\n" +
@@ -103,7 +105,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|GiornoMeseMorte = \n" +
             "|AnnoMorte = \n" +
             "|Attività = modella<ref>Dal 2000</ref>\n" +
-            "|Nazionalità = statunitense\n" +
+            "|Nazionalità = statunitense \n" +
             "|PostNazionalità = {{sp}}incoronata [[Miss USA]] [[2008]]<ref>{{cite web\n" +
             "|url= http://www.washingtonpost.com/wp-dyn/content/article/2008/04/12/AR2008041200018.html\n" +
             "|title= Texan Takes Miss {{sp}} USA Crown in Las Vegas\n" +
@@ -353,7 +355,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
      * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
      * Elimina quelli esistenti vuoti, senza valore <br>
      */
-//    @Test
+    @Test
     public void ordinaNormaliNoLoss() {
         String tmplOrdinato = service.ordinaNormaliNoLoss(BIO_SORGENTE);
         Assert.assertEquals(tmplOrdinato, BIO_MERGED_NO_LOSS);
@@ -471,8 +473,8 @@ public class ElaboraServiceIntegrationTest extends ATest {
         tmplBioMongo = service.getTmplBioMongo(entity);
         tmplBioServer = service.getTmplBioServer(entity);
 
-        tmplBioMerged = service.getMergedNoLoss(tmplBioMongo, tmplBioServer);
-        Assert.assertEquals(tmplBioMerged, BIO_MERGED_NO_LOSS);
+        tmplBioMerged = service.getMerged(tmplBioMongo, tmplBioServer);
+        Assert.assertEquals(BIO_MERGED_LOSS, tmplBioMerged);
 
         System.out.println("*************");
         System.out.println("tmplBioMerged");
@@ -504,7 +506,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
         mappa.put(ParBio.nome.getTag(), "Mario");
         mappa.put(ParBio.luogoNascita.getTag(), "Affori");
 
-        tmplBioMerged = service.getMergedNoLoss(mappa, BIO_SERVER_MAPPA);
+        tmplBioMerged = service.getMerged(mappa, BIO_SERVER_MAPPA);
         Assert.assertEquals(tmplBioMerged, BIO_MERGED_MAPPA);
 
         System.out.println("*************");
@@ -543,6 +545,42 @@ public class ElaboraServiceIntegrationTest extends ATest {
         System.out.println("");
     }// end of single test
 
+
+    /**
+     * 1) nome del parametro
+     * 2) valore valido elaborato dal programma e preso da mongoDB
+     * 3) valore originario preso dal server wiki
+     * 4) valore finale da reinserire sul server
+     */
+    @Test
+    public void sostituisceParteValida() {
+        String[] nome = {"nome", "Crystle Danae", "Crystle Danae", "Crystle Danae"};
+        String[] cognome = {"cognome", "Stewart", "[[Stewart]]", "Stewart"};
+        String[] luogoNascita = {"luogoNascita", "Wilmington", "[[Wilmington]]", "Wilmington"};
+        String[] giornoMeseNascita = {"giornoMeseNascita", "1º settembre", "1 Settembre", "1º settembre"};
+        String[] annoNascita = {"annoNascita", "1981", "[[1981]]", "1981"};
+        String[] luogoMorte = {"luogoMorte", "", "?", ""};
+        String[] attivita = {"attività", "modella", "Modella<ref>Dal 2000</ref>", "modella<ref>Dal 2000</ref>"};
+        String[] nazionalita = {"nazionalità", "statunitense", "statunitense ?", "statunitense"};
+
+        List<String[]> lista = new ArrayList<>();
+        lista.add(nome);
+        lista.add(cognome);
+        lista.add(luogoNascita);
+        lista.add(giornoMeseNascita);
+        lista.add(annoNascita);
+        lista.add(luogoMorte);
+        lista.add(attivita);
+        lista.add(nazionalita);
+
+        for (String[] riga : lista) {
+            previsto = riga[3];
+            ottenuto = service.sostituisceParteValida(null, riga[1], riga[2]);
+            Assert.assertEquals(previsto, ottenuto);
+            System.out.println("Parametro " + riga[0] + ": elaborato correttamente. Valore spedito sul server: " + ottenuto);
+        }// end of for cycle
+
+    }// end of single test
 
 //    /**
 //     * Regola questo campo
