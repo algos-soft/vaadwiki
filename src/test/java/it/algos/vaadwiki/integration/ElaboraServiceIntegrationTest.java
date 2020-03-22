@@ -554,16 +554,17 @@ public class ElaboraServiceIntegrationTest extends ATest {
      */
     @Test
     public void sostituisceParteValida() {
-        String[] nome = {"nome", "Crystle Danae", "Crystle Danae", "Crystle Danae"};
-        String[] cognome = {"cognome", "Stewart", "[[Stewart]]", "Stewart"};
-        String[] luogoNascita = {"luogoNascita", "Wilmington", "[[Wilmington]]", "Wilmington"};
-        String[] giornoMeseNascita = {"giornoMeseNascita", "1º settembre", "1 Settembre", "1º settembre"};
-        String[] annoNascita = {"annoNascita", "1981", "[[1981]]", "1981"};
-        String[] luogoMorte = {"luogoMorte", "", "?", ""};
-        String[] attivita = {"attività", "modella", "Modella<ref>Dal 2000</ref>", "modella<ref>Dal 2000</ref>"};
-        String[] nazionalita = {"nazionalità", "statunitense", "statunitense ?", "statunitense"};
+        ParBio parBio;
+        Object[] nome = {ParBio.nome, "Crystle Danae", "Crystle Danae", "Crystle Danae"};
+        Object[] cognome = {ParBio.cognome, "Stewart", "[[Stewart]]", "Stewart"};
+        Object[] luogoNascita = {ParBio.luogoNascita, "Wilmington", "[[Wilmington]]", "Wilmington"};
+        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1º settembre", "1 Settembre", "1º settembre"};
+        Object[] annoNascita = {ParBio.annoNascita, "1981", "[[1981]]", "1981"};
+        Object[] luogoMorte = {ParBio.luogoMorte, "", "?", ""};
+        Object[] attivita = {ParBio.attivita, "modella", "Modella<ref>Dal 2000</ref>", "modella<ref>Dal 2000</ref>"};
+        Object[] nazionalita = {ParBio.nazionalita, "statunitense", "statunitense ?", "statunitense"};
 
-        List<String[]> lista = new ArrayList<>();
+        List<Object[]> lista = new ArrayList<>();
         lista.add(nome);
         lista.add(cognome);
         lista.add(luogoNascita);
@@ -573,11 +574,12 @@ public class ElaboraServiceIntegrationTest extends ATest {
         lista.add(attivita);
         lista.add(nazionalita);
 
-        for (String[] riga : lista) {
-            previsto = riga[3];
-            ottenuto = service.sostituisceParteValida(null, riga[1], riga[2]);
+        for (Object[] riga : lista) {
+            parBio = (ParBio) riga[0];
+            previsto = (String) riga[3];
+            ottenuto = service.sostituisceParteValida(parBio, (String) riga[1], (String) riga[2]);
             Assert.assertEquals(previsto, ottenuto);
-            System.out.println("Parametro " + riga[0] + ": elaborato correttamente. Valore spedito sul server: " + ottenuto);
+            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore spedito sul server: " + ottenuto);
         }// end of for cycle
 
     }// end of single test
