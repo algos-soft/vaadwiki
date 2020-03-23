@@ -15,6 +15,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
@@ -53,6 +54,20 @@ import static it.algos.vaadflow.application.FlowCost.*;
  * User: gac
  * Date: sab, 05-mag-2018
  * Time: 19:10
+ * <p>
+ * Graficamente abbiamo in tutte (di solito) le XxxDialog:
+ * 1) una titolo (obbligatorio)
+ * 2) un topPlaceholder (eventuale, presente di default) di tipo HorizontalLayout
+ * - con o senza campo edit search, regolato da preferenza o da parametro
+ * - con o senza bottone New, regolato da preferenza o da parametro
+ * - con eventuali bottoni specifici, aggiuntivi o sostitutivi
+ * 3) un alertPlaceholder di avviso (eventuale) con label o altro per informazioni; di norma per il developer
+ * 4) un headerGridHolder della Grid (obbligatoria) con informazioni sugli elementi della lista
+ * 5) una Grid (obbligatoria); alcune regolazioni da preferenza o da parametro (bottone Edit, ad esempio)
+ * 6) un bottomPlacehorder della Grid (eventuale) con informazioni sugli elementi della lista; di norma delle somme
+ * 7) un bottomPlacehorder (eventuale) con bottoni aggiuntivi
+ * 8) un footer (obbligatorio) con informazioni generali
+ * <p>
  */
 @Slf4j
 public abstract class AViewDialog<T extends Serializable> extends Dialog implements IADialog {
@@ -79,11 +94,16 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected final FormLayout formLayout = new FormLayout();
 
     /**
+     * Corpo centrale del Form <br>
+     * Placeholder (eventuale, presente di default) <br>
+     */
+    protected final FormLayout formSubLayout = new FormLayout();
+
+    /**
      * Barra dei bottoni di comando <br>
      * Placeholder (eventuale, presente di default) <br>
      */
     protected final HorizontalLayout bottomLayout = new HorizontalLayout();
-
 
     private final String confirmText = "Conferma";
 
@@ -110,6 +130,19 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      */
     @Autowired
     public ADateService date;
+
+    /**
+     * Placeholder dopo il titolo e prima del form <br>
+     * Contenuto eventuale, non presente di default <br>
+     * Label o altro per informazioni specifiche; di norma per il developer <br>
+     */
+    protected VerticalLayout alertPlacehorder;
+
+    protected List<String> alertUser;
+
+    protected List<String> alertAdmin;
+
+    protected List<String> alertDev;
 
     @Autowired
     protected ApplicationContext appContext;
@@ -241,26 +274,42 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
     /**
-     * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
+     * Creazione iniziale (business logic) della view DOPO costruttore, init(), postConstruct() <br>
+     * <p>
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
      * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
-     * Le preferenze vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse <br>
      */
     @PostConstruct
+    protected void postConstruct() {
+        initView();
+    }// end of method
+
+
+    /**
+     * Qui va la logica inizale della view <br>
+     * Alcuni parametri sarannop regolabili solo dopo il metodo open(() <br>
+     */
     protected void initView() {
 
         //--Login and context della sessione
         fixLoginContext();
 
-        //--Le preferenze standard
-        //--Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse
+        //--Preferenze specifiche di questa view
         fixPreferenze();
 
         //--Titolo placeholder del dialogo, regolato dopo open()
         this.add(creaTitleLayout());
 
+        //--Costruisce gli oggetti base (placeholder) di questa view
+        this.fixLayout();
+
+        //--una o più righe di avvisi - verranno aggiunte dopo open()
+        this.add(alertPlacehorder);
+
         //--Form placeholder standard per i campi, creati dopo open()
         this.add(creaFormLayout());
+        this.add(new H3());
+        this.add(creaSubFormLayout());
 
         //--spazio per distanziare i bottoni dai campi
         this.add(new H3());
@@ -281,6 +330,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         this.saveButton.setText(confirmText);
     }// end of method
 
+
     /**
      * Regola login and context della sessione <br>
      * Può essere sovrascritto, per aggiungere e/o modificareinformazioni <br>
@@ -289,6 +339,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected void fixLoginContext() {
         context = vaadinService.getSessionContext();
     }// end of method
+
 
     /**
      * Preferenze standard e specifiche, eventualmente sovrascritte nella sottoclasse <br>
@@ -310,6 +361,10 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         //--Flag per differenziare i dialoghi di secondo livello, aperti dai primi. Normalmente true.
         isDialogoPrimoLivello = true;
+
+        alertUser = new ArrayList<>();
+        alertAdmin = new ArrayList<>();
+        alertDev = new ArrayList<>();
     }// end of method
 
 
@@ -323,7 +378,23 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
     /**
+     * Eventuali messaggi di avviso specifici di questo dialogo ed inseriti in 'alertPlacehorder' <br>
+     * Costruisce gli oggetti base (placeholder) di questa view <br>
+     * <p>
+     * Chiamato da AViewDialog.initView() <br>
+     * Placeholder per  gli avvisi
+     */
+    private void fixLayout() {
+        alertPlacehorder = new VerticalLayout();
+        alertPlacehorder.setMargin(false);
+        alertPlacehorder.setSpacing(false);
+        alertPlacehorder.setPadding(false);
+    }// end of method
+
+
+    /**
      * Body placeholder per i campi, creati dopo open()
+     * Normalmente colonna doppia <br>
      */
     protected Div creaFormLayout() {
         Div div;
@@ -336,6 +407,22 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         formLayout.addClassName("no-padding");
         div = new Div(formLayout);
+        div.addClassName("has-padding");
+
+        return div;
+    }// end of method
+
+
+    /**
+     * Body placeholder per un'eventuale spazio sotto il formLayout <br>
+     * Colonna singola <br>
+     */
+    protected Component creaSubFormLayout() {
+        Div div;
+        formSubLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("50em", 1));
+
+        formSubLayout.addClassName("no-padding");
+        div = new Div(formSubLayout);
         div.addClassName("has-padding");
 
         return div;
@@ -386,6 +473,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         return bottomLayout;
     }// end of method
 
+
     /**
      * Modalità di chiusura della finestra <br>
      */
@@ -398,25 +486,6 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
             }// end of if cycle
         });//end of lambda expressions and anonymous inner class
     }// end of method
-
-//    @Deprecated
-//    public void open(AEntity entityBean, EAOperation operation, AContext context) {
-//        open(entityBean, operation, context, "");
-//    }// end of method
-//
-//
-//    /**
-//     * Opens the given item for editing in the dialog.
-//     * Riceve la entityBean <br>
-//     * Crea i fields <br>
-//     *
-//     * @param entityBean The item to edit; it may be an existing or a newly created instance
-//     * @param operation  The operation being performed on the item
-//     * @param context    legato alla sessione
-//     */
-//    @Deprecated
-//    public void open(AEntity entityBean, EAOperation operation, AContext context, String title) {
-//    }// end of method
 
 
     /**
@@ -475,6 +544,8 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         this.fixTitleLayout();
 
+        this.fixAlertLayout();
+
         if (registrationForSave != null) {
             registrationForSave.remove();
         }
@@ -503,6 +574,35 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         titlePlaceholder.removeAll();
         titlePlaceholder.add(new H2(operation.getNameInTitle() + " " + title.toLowerCase()));
+    }// end of method
+
+
+    /**
+     * Eventuali messaggi di avviso specifici di questo dialogo ed inseriti in 'alertPlacehorder' <br>
+     * <p>
+     * Chiamato da AViewDialog.open() <br>
+     * Normalmente ad uso esclusivo del developer (eventualmente dell'admin) <br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * DOPO invocare il metodo della superclasse <br>
+     */
+    protected void fixAlertLayout() {
+        if (alertUser != null) {
+            for (String alert : alertUser) {
+                alertPlacehorder.add(text.getLabelUser(alert));
+            }// end of for cycle
+        }// end of if cycle
+
+        if (alertAdmin != null) {
+            for (String alert : alertAdmin) {
+                alertPlacehorder.add(text.getLabelAdmin(alert));
+            }// end of for cycle
+        }// end of if cycle
+
+        if (alertDev != null) {
+            for (String alert : alertDev) {
+                alertPlacehorder.add(text.getLabelDev(alert));
+            }// end of for cycle
+        }// end of if cycle
     }// end of method
 
 
@@ -558,7 +658,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         //--Eventuali aggiustamenti finali al layout
         //--Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap)
-        fixLayout();
+        fixLayoutFinal();
 
         //--Controlla l'esistenza del field company e ne regola i valori
         fixCompanyField();
@@ -571,6 +671,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         //--Regola in lettura l'eeventuale field company (un combo). Dal DB alla UI
         readCompanyField();
+
+        //--aggiunge eventuali listeners ai fields (dopo aver regolato il loro valore iniziale)
+        this.addListeners();
     }// end of method
 
 
@@ -653,7 +756,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap)
      * Sovrascritto nella sottoclasse
      */
-    protected void fixLayout() {
+    protected void fixLayoutFinal() {
     }// end of method
 
 
@@ -768,6 +871,17 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
     /**
+     * Aggiunge eventuali listeners ai fields che sono stati creati SENZA listeners <br>
+     * <p>
+     * Chiamato da AViewLDialog.creaFields()<br>
+     * Può essere sovrascritto, per aggiungere informazioni <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void addListeners() {
+    }// end of method
+
+
+    /**
      * Azione proveniente dal click sul bottone Registra
      * Inizio delle operazioni di registrazione
      */
@@ -798,7 +912,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * {@link #deleteConfirmed(Serializable)} if the Delete button is clicked.
      * Può essere sovrascritto dalla classe specifica se servono avvisi diversi <br>
      */
-    protected final void deleteClicked() {
+    protected void deleteClicked() {
         appContext.getBean(ADeleteDialog.class, currentItem.toString()).open(this::deleteConfirmed);
     }// end of method
 

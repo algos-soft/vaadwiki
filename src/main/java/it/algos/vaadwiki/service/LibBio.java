@@ -2053,11 +2053,11 @@ public class LibBio {
 //        return null;
 //    }// end of method
 
-
     /**
      * Estrae una mappa chiave valore per un fix di parametri, dal testo di una biografia
      * <p>
      * E impossibile sperare in uno schema fisso
+     * I parametri sono spesso scritti in ordine diverso da quello previsto
      * Occorre considerare le {{ graffe annidate, i | (pipe) annidati
      * i mancati ritorni a capo, ecc., ecc.
      * <p>
@@ -2073,6 +2073,101 @@ public class LibBio {
     public LinkedHashMap<String, String> getMappaBio(String testoTemplate) {
         LinkedHashMap<String, String> mappa = null;
         LinkedHashMap<Integer, String> mappaTmp = new LinkedHashMap<Integer, String>();
+        String chiave;
+//        String sep = PIPE;
+//        String sep1 = PIPE + SPAZIO;
+//        String sep2 = PIPE + SPAZIO + SPAZIO;
+//        String spazio = " ";
+        String uguale = "=";
+        String valore = "";
+        int pos = 0;
+        int posUgu;
+//        ArrayList listaTag;
+        int posEnd;
+
+        if (testoTemplate != null && !testoTemplate.equals("")) {
+            mappa = new LinkedHashMap();
+            for (ParBio par : ParBio.values()) {
+                valore = par.getTag();
+//                listaTag = new ArrayList();
+//                listaTag.add(sep + valore + uguale);
+//                listaTag.add(sep + valore + spazio + uguale);
+//                listaTag.add(sep1 + valore + uguale);
+//                listaTag.add(sep1 + valore + spazio + uguale);
+//                listaTag.add(sep2 + valore + uguale);
+//                listaTag.add(sep2 + valore + spazio + uguale);
+
+                try { // prova ad eseguire il codice
+                    pos = text.getPosFirstTag(testoTemplate, valore);
+                } catch (Exception unErrore) { // intercetta l'errore
+                }// fine del blocco try-catch
+                if (pos > 0) {
+                    mappaTmp.put(pos, valore);
+                }// fine del blocco if
+            } // fine del ciclo for-each
+
+            Object[] matrice = mappaTmp.keySet().toArray();
+            Arrays.sort(matrice);
+            ArrayList<Object> lista = new ArrayList<Object>();
+            for (Object lungo : matrice) {
+                lista.add(lungo);
+            } // fine del ciclo for-each
+
+            for (int k = 1; k <= lista.size(); k++) {
+                chiave = mappaTmp.get(lista.get(k - 1));
+
+                try { // prova ad eseguire il codice
+                    if (k < lista.size()) {
+                        posEnd = (Integer) lista.get(k);
+                    } else {
+                        posEnd = testoTemplate.length();
+                    }// fine del blocco if-else
+                    valore = testoTemplate.substring((Integer) lista.get(k - 1), posEnd);
+                } catch (Exception unErrore) { // intercetta l'errore
+                    int c = 76;
+                }// fine del blocco try-catch
+                if (!valore.equals("")) {
+                    valore = valore.trim();
+                    posUgu = valore.indexOf(uguale);
+                    if (posUgu != -1) {
+                        posUgu += uguale.length();
+                        valore = valore.substring(posUgu).trim();
+                    }// fine del blocco if
+                    valore = regValore(valore);
+                    if (!LibBio.isPariTag(valore, "{{", "}}")) {
+                        valore = regGraffe(valore);
+                    }// end of if cycle
+                    valore = regACapo(valore);
+                    valore = regBreakSpace(valore);
+                    valore = valore.trim();
+                    mappa.put(chiave, valore);
+                }// fine del blocco if
+            } // fine del ciclo for
+        }// fine del blocco if
+
+        return mappa;
+    }// end of method
+
+    /**
+     * Estrae una mappa chiave valore per un fix di parametri, dal testo di una biografia
+     * <p>
+     * E impossibile sperare in uno schema fisso
+     * I parametri sono spesso scritti in ordine diverso da quello previsto
+     * Occorre considerare le {{ graffe annidate, i | (pipe) annidati
+     * i mancati ritorni a capo, ecc., ecc.
+     * <p>
+     * Uso la lista dei parametri che può riconoscere
+     * (è meno flessibile, ma più sicuro)
+     * Cerco il primo parametro nel testo e poi spazzolo il testo per cercare
+     * il primo parametro noto e così via
+     *
+     * @param testoTemplate del template Bio
+     *
+     * @return mappa dei parametri esistenti nella enumeration e presenti nel testo
+     */
+    public LinkedHashMap<String, String> getMappaBioOld(String testoTemplate) {
+        LinkedHashMap<String, String> mappa = null;
+        LinkedHashMap<Integer, String> mappaTmp = new LinkedHashMap<Integer, String>();
 //        Collection lista = null;
         String chiave;
         String sep = PIPE;
@@ -2080,7 +2175,7 @@ public class LibBio {
         String sep2 = PIPE + SPAZIO + SPAZIO;
         String spazio = " ";
         String uguale = "=";
-        String tab = "\t";
+//        String tab = "\t";
         String valore = "";
         int pos = 0;
         int posUgu;

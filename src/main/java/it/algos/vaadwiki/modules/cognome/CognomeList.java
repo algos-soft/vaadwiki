@@ -146,8 +146,8 @@ public class CognomeList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(getLabelAdmin("Progetto:Antroponimi/Cognomi."));
-        alertPlacehorder.add(getLabelAdmin("Progetto:Antroponimi/Liste cognomi."));
+        alertPlacehorder.add(text.getLabelAdmin("Progetto:Antroponimi/Cognomi."));
+        alertPlacehorder.add(text.getLabelAdmin("Progetto:Antroponimi/Liste cognomi."));
         alertPlacehorder.add(new Label("Sono elencati i cognomi usati nelle biografie"));
         alertPlacehorder.add(new Label("La lista prevede cognomi utilizzati da almeno " + pref.getInt(SOGLIA_COGNOMI_MONGO) + " (sogliaCognomiMongo) biografie"));
         alertPlacehorder.add(new Label("Upload crea una pagina su wiki per ogni cognome che supera " + pref.getInt(SOGLIA_COGNOMI_PAGINA_WIKI) + " (sogliaCognomiWiki) biografie"));

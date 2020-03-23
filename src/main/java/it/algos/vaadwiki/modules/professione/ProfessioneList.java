@@ -133,16 +133,16 @@ public class ProfessioneList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(getLabelAdmin("Modulo:Bio/Link attività."));
+        alertPlacehorder.add(text.getLabelAdmin("Modulo:Bio/Link attività."));
         alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3, dal nome dell'attività a quello della voce corrispondente, per creare dei piped wikilink."));
         alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
         alertPlacehorder.add(new Label("[\"attivitaforma1\"] = \"voce di riferimento\""));
         alertPlacehorder.add(new Label("[\"attivitaforma2\"] = \"voce di riferimento\""));
         alertPlacehorder.add(new Label("Viene utilizzata principalmente per convertire le attività da femminile (che può essere usato nell'incipit) a maschile (usato nel wikilink) e per orfanizzare i redirect"));
         alertPlacehorder.add(new Label("All'interno della tabella le attività sono in ordine alfabetico."));
-        alertPlacehorder.add(getLabelDev("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle attività (maschili) che corrispondono alla pagina (non presenti nel Modulo su Wiki)."));
-        alertPlacehorder.add(getLabelDev("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle EX-attività (non presenti nel Modulo su Wiki) recuperate dalla collezione locale 'Attività' su mongoDB"));
-        alertPlacehorder.add(getLabelDev("Le attività e le pagine mantengono il maiuscolo/minuscolo previsto nel modulo."));
+        alertPlacehorder.add(text.getLabelDev("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle attività (maschili) che corrispondono alla pagina (non presenti nel Modulo su Wiki)."));
+        alertPlacehorder.add(text.getLabelDev("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle EX-attività (non presenti nel Modulo su Wiki) recuperate dalla collezione locale 'Attività' su mongoDB"));
+        alertPlacehorder.add(text.getLabelDev("Le attività e le pagine mantengono il maiuscolo/minuscolo previsto nel modulo."));
     }// end of method
 
 

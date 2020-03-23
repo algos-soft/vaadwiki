@@ -16,6 +16,7 @@ import it.algos.vaadflow.enumeration.EASearch;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.wrapper.AFiltro;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.util.ArrayList;
@@ -254,9 +255,7 @@ public abstract class AGridViewList extends ALayoutViewList {
      * Header text
      */
     protected String getGridHeaderText() {
-        int numRecCollezione = items.size();
-//        int numRecCollezione = service.count();
-        String filtro = text.format(items.size());
+        int numRecCollezione = items != null ? items.size() : 0;
         String totale = text.format(numRecCollezione);
         String testo = entityClazz != null ? entityClazz.getSimpleName() + " - " : "";
 
@@ -317,7 +316,7 @@ public abstract class AGridViewList extends ALayoutViewList {
         int intValue;
 
         //--ricerca iniziale
-        if (searchType == EASearch.editField && searchField != null) {
+        if (searchType == EASearch.editField && searchField != null && text.isValid(searchProperty)) {
             type = annotation.getFormType(entityClazz, searchProperty);
 
             switch (type) {
@@ -367,8 +366,13 @@ public abstract class AGridViewList extends ALayoutViewList {
      */
     @Override
     public void updateGrid() {
+        Sort sort = annotation.getSort(this.getClass());
         if (array.isValid(filtri)) {
-            items = mongo.findAllByProperty(entityClazz, filtri);
+            if (sort != null) {
+                items = mongo.findAllByProperty(entityClazz, filtri, sort);
+            } else {
+                items = mongo.findAllByProperty(entityClazz, filtri);
+            }// end of if/else cycle
         } else {
             items = service != null ? service.findAll() : null;
         }// end of if/else cycle
@@ -377,11 +381,11 @@ public abstract class AGridViewList extends ALayoutViewList {
             try { // prova ad eseguire il codice
                 grid.deselectAll();
                 grid.setItems(items);
-                headerGridHolder.setText(getGridHeaderText());
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
+        headerGridHolder.setText(getGridHeaderText());
 
         creaAlertLayout();
     }// end of method

@@ -158,14 +158,14 @@ public class NomeList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(getLabelAdmin("Progetto:Antroponimi/Nomi."));
-        alertPlacehorder.add(getLabelAdmin("Progetto:Antroponimi/Liste nomi."));
-        alertPlacehorder.add(getLabelAdmin(TITOLO_TEMPLATE_INCIPIT_NOMI));
+        alertPlacehorder.add(text.getLabelAdmin("Progetto:Antroponimi/Nomi."));
+        alertPlacehorder.add(text.getLabelAdmin("Progetto:Antroponimi/Liste nomi."));
+        alertPlacehorder.add(text.getLabelAdmin(TITOLO_TEMPLATE_INCIPIT_NOMI));
         alertPlacehorder.add(new Label("Sono elencati i nomi usati nelle biografie"));
         alertPlacehorder.add(new Label("La lista accetta SOLO nomi singoli"));
         alertPlacehorder.add(new Label("La lista prevede nomi utilizzati da almeno 'sogliaNomiMongo' biografie"));
         alertPlacehorder.add(new Label("Upload crea una pagina su wiki per ogni nome che supera 'sogliaNomiWiki' biografie"));
-        alertPlacehorder.add(getLabelDev("Quando si elabora la lista dei 'Nomi', i nomi doppi vengono scaricati da wikipedia ed aggiunti a questa lista"));
+        alertPlacehorder.add(text.getLabelDev("Quando si elabora la lista dei 'Nomi', i nomi doppi vengono scaricati da wikipedia ed aggiunti a questa lista"));
     }// end of method
 
 

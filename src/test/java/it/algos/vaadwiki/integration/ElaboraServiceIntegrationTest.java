@@ -105,7 +105,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|GiornoMeseMorte = \n" +
             "|AnnoMorte = \n" +
             "|Attività = modella<ref>Dal 2000</ref>\n" +
-            "|Nazionalità = statunitense \n" +
+            "|Nazionalità = statunitense\n" +
             "|PostNazionalità = {{sp}}incoronata [[Miss USA]] [[2008]]<ref>{{cite web\n" +
             "|url= http://www.washingtonpost.com/wp-dyn/content/article/2008/04/12/AR2008041200018.html\n" +
             "|title= Texan Takes Miss {{sp}} USA Crown in Las Vegas\n" +
@@ -194,6 +194,38 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|Nazionalità = inglese\n" +
             "|Categorie = no\n" +
             "|FineIncipit = designato con il [[Titoli di cortesia nel Regno Unito|Titolo di cortesia]] '''Visconte Althorp''' tra il [[1975]] ed il [[1992]], è un [[Paria del Regno Unito|pari]] [[Britannici|britannico]] e fratello di [[Diana Spencer|Diana, Principessa di Galles]]. È un autore, giornalista della carta stampata e televisiva\n" +
+            "}}";
+
+    private static String BIO_GUADAGNINO_SORGENTE = "{{Bio\n" +
+            "|Nome              = Francesco\n" +
+            "|Cognome           = Guadagnino\n" +
+            "|Sesso             = M\n" +
+            "|LuogoNascita      = Canicattì\n" +
+            "|GiornoMeseNascita = 26 dicembre\n" +
+            "|AnnoNascita       = 1755\n" +
+            "|LuogoMorte        = Canicattì\n" +
+            "|GiornoMeseMorte   = 12 maggio \n" +
+            "|AnnoMorte         = 1829\n" +
+            "|Epoca             = 1700\n" +
+            "|Attività          = pittore\n" +
+            "|Nazionalità       = italiano\n" +
+            "|PostNazionalità   = , attivo in [[Sicilia]] a partire dall'ultimo quarto del [[XVIII secolo]] e il primo quarto del successivo \n" +
+            "}}";
+
+    private static String BIO_GUADAGNINO_FINALE = "{{Bio\n" +
+            "|Nome = Francesco\n" +
+            "|Cognome = Guadagnino\n" +
+            "|Sesso = M\n" +
+            "|LuogoNascita = Canicattì\n" +
+            "|GiornoMeseNascita = 26 dicembre\n" +
+            "|AnnoNascita = 1755\n" +
+            "|LuogoMorte = Canicattì\n" +
+            "|GiornoMeseMorte = 12 maggio\n" +
+            "|AnnoMorte = 1829\n" +
+            "|Epoca = 1700\n" +
+            "|Attività = pittore\n" +
+            "|Nazionalità = italiano\n" +
+            "|PostNazionalità = , attivo in [[Sicilia]] a partire dall'ultimo quarto del [[XVIII secolo]] e il primo quarto del successivo\n" +
             "}}";
 
     /**
@@ -368,38 +400,6 @@ public class ElaboraServiceIntegrationTest extends ATest {
     }// end of single test
 
 
-    /**
-     * EAElabora.ordinaNormaliNoLoss
-     * <p>
-     * Parte da una entity Bio esistente sul mongoDB <br>
-     * Il tmpl del mongoDB è diverso da quello 'previsto' <br>
-     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
-     * Riordina i parametri <br>
-     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
-     * Elimina quelli esistenti vuoti, senza valore <br>
-     * Registra le modifiche sul server wiki <br>
-     */
-//    @Test
-//    public void ordinaNormaliNoLoss3() {
-//        long inizio;
-//        List<Bio> lista;
-//        Sort sort = new Sort(Sort.Direction.ASC, "_id");
-////        List<Bio> lista = mongo.mongoOp.find(new Query().with(PageRequest.of(20, 100, sort)), Bio.class);
-//        lista= bioService.findAll();
-//        int cont = 0;
-//
-//        inizio = System.currentTimeMillis();
-//        if (lista != null && lista.size() > 0) {
-//            for (Bio bio : lista) {
-//                if (service.check(bio)) {
-////                    service.uploadNormaliNoLoss(bio);
-//                    cont++;
-//                }// end of if cycle
-//            }// end of for cycle
-//        }// end of if cycle
-//
-//        System.out.println("Modificati " + cont + " su " + lista.size() + " in " + date.deltaText(inizio));
-//    }// end of single test
 
 
     /**
@@ -531,6 +531,26 @@ public class ElaboraServiceIntegrationTest extends ATest {
      * Elimina quelli esistenti vuoti, senza valore <br>
      */
     @Test
+    public void ordinaNormaliNoLoss3() {
+        String tmplOrdinato = service.ordinaNormaliNoLoss(BIO_GUADAGNINO_SORGENTE);
+        Assert.assertEquals(BIO_GUADAGNINO_FINALE,tmplOrdinato);
+
+        System.out.println("*************");
+        System.out.println("ordinaNormaliNoLoss - Guadagnino");
+        System.out.println("*************");
+        System.out.println(tmplOrdinato);
+        System.out.println("");
+    }// end of single test
+
+    /**
+     * EAElabora.ordinaNormaliNoLoss
+     * <p>
+     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
+     * Riordina i parametri <br>
+     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
+     * Elimina quelli esistenti vuoti, senza valore <br>
+     */
+    @Test
     public void ordinaNormaliNoLoss2() {
         String title = "Charles Spencer, IX conte Spencer";
         String templServer = api.leggeTmplBio(title);
@@ -547,22 +567,24 @@ public class ElaboraServiceIntegrationTest extends ATest {
 
 
     /**
-     * 1) nome del parametro
+     * 0) nome del parametro
+     * 1) valore originario preso dal server wiki
      * 2) valore valido elaborato dal programma e preso da mongoDB
-     * 3) valore originario preso dal server wiki
-     * 4) valore finale da reinserire sul server
+     * 3) valore finale da reinserire sul server
      */
     @Test
     public void sostituisceParteValida() {
         ParBio parBio;
+        String testoOriginale;
+        String parteValidaNuova;
         Object[] nome = {ParBio.nome, "Crystle Danae", "Crystle Danae", "Crystle Danae"};
-        Object[] cognome = {ParBio.cognome, "Stewart", "[[Stewart]]", "Stewart"};
-        Object[] luogoNascita = {ParBio.luogoNascita, "Wilmington", "[[Wilmington]]", "Wilmington"};
-        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1º settembre", "1 Settembre", "1º settembre"};
-        Object[] annoNascita = {ParBio.annoNascita, "1981", "[[1981]]", "1981"};
-        Object[] luogoMorte = {ParBio.luogoMorte, "", "?", ""};
-        Object[] attivita = {ParBio.attivita, "modella", "Modella<ref>Dal 2000</ref>", "modella<ref>Dal 2000</ref>"};
-        Object[] nazionalita = {ParBio.nazionalita, "statunitense", "statunitense ?", "statunitense"};
+        Object[] cognome = {ParBio.cognome, "[[Stewart]]", "Stewart", "Stewart"};
+        Object[] luogoNascita = {ParBio.luogoNascita, "[[Wilmington]]", "Wilmington", "Wilmington"};
+        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre", "1º settembre"};
+        Object[] annoNascita = {ParBio.annoNascita, "[[1981]]", "1981", "1981"};
+        Object[] luogoMorte = {ParBio.luogoMorte, "?", "", "?"};
+        Object[] attivita = {ParBio.attivita, "Modella<ref>Dal 2000</ref>", "modella", "modella<ref>Dal 2000</ref>"};
+        Object[] nazionalita = {ParBio.nazionalita, "statunitense ?", "statunitense", "statunitense"};
 
         List<Object[]> lista = new ArrayList<>();
         lista.add(nome);
@@ -576,8 +598,10 @@ public class ElaboraServiceIntegrationTest extends ATest {
 
         for (Object[] riga : lista) {
             parBio = (ParBio) riga[0];
+            testoOriginale = (String) riga[1];
+            parteValidaNuova = (String) riga[2];
             previsto = (String) riga[3];
-            ottenuto = service.sostituisceParteValida(parBio, (String) riga[1], (String) riga[2]);
+            ottenuto = service.sostituisceParteValida(parBio, testoOriginale, parteValidaNuova);
             Assert.assertEquals(previsto, ottenuto);
             System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore spedito sul server: " + ottenuto);
         }// end of for cycle

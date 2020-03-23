@@ -168,15 +168,15 @@ public class AttivitaList extends WikiList {
     protected void creaAlertLayout() {
         super.creaAlertLayout();
 
-        alertPlacehorder.add(getLabelAdmin("Modulo:Bio/Plurale attività."));
-        alertPlacehorder.add(getLabelAdmin("Progetto:Biografie/Attività."));
+        alertPlacehorder.add(text.getLabelAdmin("Modulo:Bio/Plurale attività."));
+        alertPlacehorder.add(text.getLabelAdmin("Progetto:Biografie/Attività."));
         alertPlacehorder.add(new Label("Contiene la tabella di conversione delle attività passate via parametri Attività/Attività2/Attività3,"));
         alertPlacehorder.add(new Label(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
         alertPlacehorder.add(new Label("All'interno della tabella le attività sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse."));
         alertPlacehorder.add(new Label("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
         alertPlacehorder.add(new Label("[\"attivitaforma1\"] = \"attività al plurale\","));
         alertPlacehorder.add(new Label("[\"attivitaforma2\"] = \"attività al plurale\","));
-        alertPlacehorder.add(getLabelDev("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle EX-attività (non presenti nel Modulo su Wiki) recuperate dal modulo Modulo:Bio/Plurale attività genere."));
+        alertPlacehorder.add(text.getLabelDev("Nella collezione locale mongoDB vengono aggiunte ANCHE le voci delle EX-attività (non presenti nel Modulo su Wiki) recuperate dal modulo Modulo:Bio/Plurale attività genere."));
     }// end of method
 
 

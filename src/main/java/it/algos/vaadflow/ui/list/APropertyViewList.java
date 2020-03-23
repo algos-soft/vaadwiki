@@ -424,6 +424,11 @@ public abstract class APropertyViewList extends VerticalLayout {
     protected boolean usaFiltroCompany;
 
     /**
+     * Flag di preferenza per mostrare il popup di filtro. Normalmente false. Elaborato in APrefViewList.postPreferenze() <br>
+     */
+    protected boolean mostraFiltroCompany;
+
+    /**
      * Flag di preferenza per selezionare il numero di righe visibili della Grid. <br>
      * Normalmente limit = pref.getInt(FlowCost.MAX_RIGHE_GRID). <br>
      */

@@ -215,6 +215,7 @@
             <version>1.0.0</version>
         </dependency>
 
+        <!-- JUnit 5 -->
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
