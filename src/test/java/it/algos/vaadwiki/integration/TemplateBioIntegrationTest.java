@@ -10,6 +10,7 @@ import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.service.ParBio;
 import it.algos.vaadwiki.upload.UploadService;
 import it.algos.wiki.Api;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -21,12 +22,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
+
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
  * Date: mar, 10-set-2019
  * Time: 10:16
+ * Assert.assertEquals(previsto, ottenuto);
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -69,6 +73,8 @@ public class TemplateBioIntegrationTest extends ATest {
 
     @Autowired
     protected AnnoService annoService;
+
+    private String[] listaSorgente;
 
 
     @BeforeClass
@@ -443,6 +449,187 @@ public class TemplateBioIntegrationTest extends ATest {
 
 
     /**
+     * Elabora un valore valido <br>
+     * Non serve la entity Bio <br>
+     * Con perdita di informazioni <br>
+     * NON deve essere usato per sostituire tout-court il valore del template ma per elaborarlo <br>
+     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
+     *
+     * @param value valore in ingresso da elaborare
+     *
+     * @return valore finale valido
+     */
+    @Test
+    public void fix() {
+        fixNome();
+        fixCognome();
+        fixSesso();
+        fixLuogoNascita();
+        fixGiornoMeseNascita();
+        fixAnnoNascita();
+    }// end of single test
+
+
+    private void fixNome() {
+        previsto = "Mario";
+        listaSorgente = new String[]{"[[Mario]]", "[Mario]", "Mario<ref>Pippoz</ref>", "Mario?", "Mario ?", "Mario{{template:pippoz}}"};
+
+        System.out.println("");
+        System.out.println("****nome****");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.nome, sorgente, previsto);
+        }// end of for cycle
+
+        stampaParInterrogativoNo(ParBio.nome);
+    }// end of single test
+
+
+    private void fixCognome() {
+        previsto = "Rossi";
+        listaSorgente = new String[]{"[[Rossi]]", "[Rossi]", "Rossi<ref>Pippoz</ref>", "Rossi?", "Rossi ?", "Rossi{{template:pippoz}}"};
+
+        System.out.println("");
+        System.out.println("****cognome****");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.cognome, sorgente, previsto);
+        }// end of for cycle
+
+        stampaParInterrogativoNo(ParBio.cognome);
+    }// end of single test
+
+
+    private void fixSesso() {
+        previsto = "M";
+        listaSorgente = new String[]{"m", "M?", "m?", "maschio", "uomo", "Uomo", "Maschio"};
+        System.out.println("");
+        System.out.println("****sesso****");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.sesso, sorgente, previsto);
+        }// end of for cycle
+
+        previsto = "F";
+        listaSorgente = new String[]{"f", "F?", "f?", "femmina", "donna", "Femmina", "Donna"};
+        System.out.println("");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.sesso, sorgente, previsto);
+        }// end of for cycle
+
+        previsto = VUOTA;
+        listaSorgente = new String[]{"trans", "incerto", "?", "non si sa", "dubbio"};
+        System.out.println("");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.sesso, sorgente, previsto);
+        }// end of for cycle
+
+        stampaParVuoto(ParBio.sesso);
+    }// end of single test
+
+
+    private void fixLuogoNascita() {
+        previsto = "Palermo";
+        listaSorgente = new String[]{"[[Palermo]]", "[Palermo]", "Palermo<ref>Pippoz</ref>", "Palermo?", "Palermo ?", "Palermo{{template:pippoz}}"};
+
+        System.out.println("");
+        System.out.println("****luogoNascita****");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.luogoNascita, sorgente, previsto);
+        }// end of for cycle
+
+        stampaParInterrogativoNo(ParBio.luogoNascita);
+    }// end of single test
+
+
+    private void fixGiornoMeseNascita() {
+        previsto = "2 febbraio";
+        System.out.println("");
+        System.out.println("****giornoMeseNascita****");
+
+        listaSorgente = new String[]{"2febbraio", "[[2 febbraio]]", "2 Febbraio", "[2 Febbraio]", "2  febbraio", "2 febbraio?", "2 febbraio ?", "2 febbraio circa", "2 febbraio, pippoz"};
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.giornoMeseNascita, sorgente, previsto);
+        }// end of for cycle
+
+        listaSorgente = new String[]{"2-febbraio", "[[2-febbraio]]", "[[2-Febbraio]]", "2-Febbraio", "2/febbraio", "2/Febbraio", "2-febbraio?"};
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.giornoMeseNascita, sorgente, previsto);
+        }// end of for cycle
+
+        previsto = VUOTA;
+        listaSorgente = new String[]{"2marzolino", "[[2 treno]]", "[[2tebbraio]]", "2 Pebbraio", "febbraio2", "febbraio 3"};
+        System.out.println("");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.giornoMeseNascita, sorgente, previsto);
+        }// end of for cycle
+
+        stampaParInterrogativoSi(ParBio.giornoMeseNascita);
+    }// end of single test
+
+
+    private void fixAnnoNascita() {
+        previsto = "1847";
+        listaSorgente = new String[]{"[[1847]]", "1847 <ref>Pippoz>", "1847?", "1847 ?", "1847, pippoz", "1847,pippoz", "[[1847]]?", "1847 circa", "[[1847]] circa"};
+
+        System.out.println("");
+        System.out.println("****annoNascita****");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.annoNascita, sorgente, previsto);
+        }// end of for cycle
+
+        stampaParInterrogativoSi(ParBio.annoNascita);
+    }// end of single test
+
+
+    private void stampaPar(ParBio par, String sorgente, String previsto) {
+        ottenuto = par.fix(sorgente, libBio);
+        Assert.assertEquals(previsto, ottenuto);
+        if (ottenuto.equals(VUOTA)) {
+            ottenuto = "'vuoto'";
+        }// end of if cycle
+        System.out.println(sorgente + " diventa " + ottenuto);
+    }// end of method
+
+
+    /**
+     * Per ogni parametro controlla che il valore vuoto venga gestito <br>
+     */
+    private void stampaParVuoto(ParBio par) {
+        ottenuto = par.fix(VUOTA, libBio);
+        Assert.assertEquals(VUOTA, ottenuto);
+        System.out.println("controllata validità del parametro vuoto in ingresso");
+    }// end of method
+
+
+    /**
+     * Per ogni parametro controlla che il valore vuoto venga gestito <br>
+     * Se il valore è un punto interrogativo, rimane un punto interrogativo <br>
+     */
+    private void stampaParInterrogativoSi(ParBio par) {
+        stampaParVuoto(par);
+
+        sorgente = LibBio.INTERROGATIVO;
+        previsto = LibBio.INTERROGATIVO;
+        ottenuto = par.fix(sorgente, libBio);
+        Assert.assertEquals(previsto, ottenuto);
+        System.out.println("il punto interrogativo (ammesso per il parametro " + par.getTag() + ") rimane punto interrogativo");
+    }// end of method
+
+
+    /**
+     * Per ogni parametro controlla che il valore vuoto venga gestito <br>
+     * Se il valore è un punto interrogativo, diventa un valore vuoto (il punto interrogativo non è ammesso) <br>
+     */
+    private void stampaParInterrogativoNo(ParBio par) {
+        stampaParVuoto(par);
+
+        sorgente = LibBio.INTERROGATIVO;
+        previsto = VUOTA;
+        ottenuto = par.fix(sorgente, libBio);
+        Assert.assertEquals(previsto, ottenuto);
+        System.out.println("il punto interrogativo (non ammesso per il parametro " + par.getTag() + ") diventa 'vuoto'");
+    }// end of method
+
+
+    /**
      * Carica sul server wiki la entity indicata
      * <p>
      * 1) Recupera la entity dal mongoDB (parametri eventualmente modificati dal programma)
@@ -457,6 +644,5 @@ public class TemplateBioIntegrationTest extends ATest {
         //--controllare che il flag di preferenze FlowCost.USA_DEBUG sia true
         uploadService.uploadBio(titoloBio3);
     }// end of single test
-
 
 }// end of class

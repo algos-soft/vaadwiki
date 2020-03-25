@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static it.algos.vaadflow.application.FlowCost.SPAZIO;
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -54,12 +57,10 @@ public class LibBioIntegrationTest extends ATest {
     @Test
     public void fixGiornoValido() {
         //--senza spazio
+        previsto = "12 ottobre";
         sorgente = "12ottobre";
-        previsto = "";
         ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
-
-        previsto = "12 ottobre";
 
         //--triplo spazio
         sorgente = "12   ottobre";
@@ -99,41 +100,77 @@ public class LibBioIntegrationTest extends ATest {
         Assert.assertEquals(previsto, ottenuto);
 
         //--grado e non ordinale
+        previsto = "1º aprile";
         sorgente = "1° aprile";
-        previsto = "1º aprile";
         ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--grado e non ordinale
+        previsto = "1º ottobre";
         sorgente = "1° Ottobre";
-        previsto = "1º ottobre";
         ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--grado e non ordinale
+        previsto = "1º luglio";
         sorgente = "1° luglio";
-        previsto = "1º luglio";
         ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--numero e non ordinale
+        previsto = "1º luglio";
         sorgente = "1 luglio";
-        previsto = "1º luglio";
         ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--numero e non ordinale
-        sorgente = "1 Ottobre";
         previsto = "1º ottobre";
+        sorgente = "1 Ottobre";
         ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--numero e non ordinale
-        sorgente = "1 aprile";
         previsto = "1º aprile";
+        sorgente = "1 aprile";
         ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
+    }// end of single test
 
+
+    @Test
+    public void separaMese() {
+        previsto = "8 settembre";
+
+        sorgente = "8settembre";
+        ottenuto = libBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+
+        sorgente = " 8settembre";
+        ottenuto = libBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+
+        previsto = "12 aprile";
+        sorgente = "12aprile";
+        ottenuto = libBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+
+        sorgente = "12 aprile";
+        ottenuto = libBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+
+        previsto = "27 ottobre";
+
+        sorgente = "27ottobre";
+        ottenuto = libBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+
+        sorgente = "27-ottobre";
+        ottenuto = libBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+
+        sorgente = "27/ottobre";
+        ottenuto = libBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
     }// end of single test
 
 }// end of class

@@ -28,6 +28,10 @@ public enum ParBio {
             bio.setNome(value.equals("") ? null : libBio.fixNomeValido(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixNomeValido(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -40,6 +44,10 @@ public enum ParBio {
             bio.setCognome(value.equals("") ? null : libBio.fixCognomeValido(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixCognomeValido(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -63,9 +71,13 @@ public enum ParBio {
     sesso("Sesso", "sesso", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.setSesso(value.equals("") ? null : value);
+            bio.setSesso(value.equals("") ? null : libBio.fixSessoValido(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixSessoValido(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -78,6 +90,10 @@ public enum ParBio {
             bio.setLuogoNato(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixLuogoValido(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -90,6 +106,10 @@ public enum ParBio {
             bio.setLuogoNatoLink(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixLuogoValido(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -104,6 +124,10 @@ public enum ParBio {
             bio.setGiornoNascita(value.equals("") ? null : libBio.fixGiornoLink(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixGiornoValido(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -117,6 +141,10 @@ public enum ParBio {
             bio.setAnnoNascita(value.equals("") ? null : libBio.fixAnnoLink(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixAnnoValido(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -132,6 +160,10 @@ public enum ParBio {
             bio.setLuogoMorto(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixLuogoValido(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -144,6 +176,10 @@ public enum ParBio {
             bio.setLuogoMortoLink(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixLuogoValido(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -158,6 +194,10 @@ public enum ParBio {
             bio.setGiornoMorte(value.equals("") ? null : libBio.fixGiornoLink(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixGiornoValido(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -171,6 +211,10 @@ public enum ParBio {
             bio.setAnnoMorte(value.equals("") ? null : libBio.fixAnnoLink(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixAnnoValido(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -192,6 +236,10 @@ public enum ParBio {
             bio.setAttivita(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixAttivitaValida(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -205,6 +253,10 @@ public enum ParBio {
             bio.setAttivita2(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixAttivitaValida(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -218,6 +270,10 @@ public enum ParBio {
             bio.setAttivita3(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixAttivitaValida(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -233,6 +289,10 @@ public enum ParBio {
             bio.setNazionalita(value.equals("") ? null : libBio.fixNazionalitaLink(value));
         }// end of method
 
+        @Override
+        public String fix(String value, LibBio libBio) {
+            return libBio.fixNazionalitaValida(value);
+        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -300,8 +360,6 @@ public enum ParBio {
         Attribute<?, ?>[] matrice;
         ArrayList<Attribute> lista = new ArrayList<Attribute>();
 
-//        lista.add(Bio_.pageid);
-//        lista.add(Bio_.title);
         for (ParBio par : ParBio.values()) {
             if (par.isVisibileLista()) {
                 lista.add(par.getAttributo());
@@ -317,8 +375,6 @@ public enum ParBio {
         Attribute<?, ?>[] matrice;
         ArrayList<Attribute> lista = new ArrayList<Attribute>();
 
-//        lista.add(Bio_.pageid);
-//        lista.add(Bio_.title);
         for (ParBio par : ParBio.values()) {
             lista.add(par.getAttributo());
         } // fine del ciclo for-each
@@ -332,8 +388,6 @@ public enum ParBio {
         Attribute<?, ?>[] matrice;
         ArrayList<Attribute> lista = new ArrayList<Attribute>();
 
-//        lista.add(Bio_.pageid);
-//        lista.add(Bio_.title);
         for (ParBio par : ParBio.values()) {
             if (par.isCampoSignificativo()) {
                 lista.add(par.getAttributo());
@@ -414,28 +468,20 @@ public enum ParBio {
 
     /**
      * Elabora un valore valido <br>
+     * Non serve la entity Bio <br>
+     * Con perdita di informazioni <br>
+     * NON deve essere usato per sostituire tout-court il valore del template ma per elaborarlo <br>
+     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
      *
-     * @param value valore da elaborare
+     * @param value valore in ingresso da elaborare
      *
      * @return valore finale valido
      */
-    public String fix(String value) {
+    public String fix(String value, LibBio libBio) {
         return value;
     }// end of method
 
 
-//    /**
-//     * Inserisce nell'istanza il valore passato come parametro
-//     * La property dell'istanza ha lo stesso nome della enumeration
-//     * DEVE essere sovrascritto (implementato)
-//     *
-//     * @param bio   istanza da regolare
-//     * @param value valore da inserire
-//     *
-//     * @return istanza regolata
-//     */
-//    public void setValue(Bio bio, String value) {
-//    }// end of method
 
 
     /**
@@ -475,7 +521,7 @@ public enum ParBio {
      */
     public String getValue(Bio bio) {
         return "";
-    }
+    }// end of method
 
 
     /**

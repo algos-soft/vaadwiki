@@ -133,6 +133,15 @@ public class LibBio {
      */
     public static final String PARAGRAFO = "==";
 
+    /**
+     * tag per i parametri bio
+     */
+    public static final String CIRCA = "circa";
+
+    /**
+     * tag per i parametri bio
+     */
+    public static final String INTERROGATIVO = "?";
 
     /**
      * Private final property
@@ -2053,6 +2062,7 @@ public class LibBio {
 //        return null;
 //    }// end of method
 
+
     /**
      * Estrae una mappa chiave valore per un fix di parametri, dal testo di una biografia
      * <p>
@@ -2147,6 +2157,7 @@ public class LibBio {
 
         return mappa;
     }// end of method
+
 
     /**
      * Estrae una mappa chiave valore per un fix di parametri, dal testo di una biografia
@@ -2373,6 +2384,33 @@ public class LibBio {
      *
      * @return testoValido regolato in uscita
      */
+    public String fixSessoValido(String testoGrezzo) {
+        String testoValido = fixPropertyBase(testoGrezzo);
+        testoValido = testoValido.toLowerCase();
+
+        if (testoValido.equals("m") || testoValido.equals("maschio") || testoValido.equals("uomo")) {
+            testoValido = "M";
+        }// end of if cycle
+
+        if (testoValido.equals("f") || testoValido.equals("femmina") || testoValido.equals("donna")) {
+            testoValido = "F";
+        }// end of if cycle
+
+        if (testoValido.equals("trans") || testoValido.equals("incerto") || testoValido.equals("non si sa") || testoValido.equals("dubbio") || testoValido.equals("?")) {
+            testoValido = VUOTA;
+        }// end of if cycle
+
+        return testoValido;
+    } // // end of method
+
+
+    /**
+     * Regola questo campo
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
     public String fixLuogoValido(String testoGrezzo) {
         String testoValido;
 
@@ -2414,25 +2452,31 @@ public class LibBio {
      */
     public String fixGiornoValido(String testoGrezzo) {
         String testoValido = fixPropertyBase(testoGrezzo);
-        String tagDoppio = SPAZIO + SPAZIO;
-        String tagTriplo = SPAZIO + SPAZIO + SPAZIO;
         int pos;
         String primo;
         String mese;
 
-        //--senza spazio
-        if (text.isEmpty(testoValido) || !testoGrezzo.contains(SPAZIO)) {
+        //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
+        if (testoGrezzo.trim().equals("?")) {
+            return testoGrezzo;
+        }// end of if cycle
+
+        if (text.isEmpty(testoValido)) {
             return VUOTA;
         }// end of if cycle
 
-        //--triplo spazio
-        if (testoValido.contains(tagTriplo)) {
-            testoValido = testoValido.replaceFirst(tagTriplo, SPAZIO);
+        testoValido = text.levaDopo(testoValido, CIRCA);
+
+        //--spazio singolo
+        testoValido = text.fixOneSpace(testoValido);
+
+        //--senza spazio
+        if (!testoValido.contains(SPAZIO)) {
+            testoValido = separaMese(testoValido);
         }// end of if cycle
 
-        //--doppio spazio
-        if (testoValido.contains(tagDoppio)) {
-            testoValido = testoValido.replaceFirst(tagDoppio, SPAZIO);
+        if (!testoValido.contains(SPAZIO)) {
+            return VUOTA;
         }// end of if cycle
 
         //--minuscola
@@ -2456,6 +2500,41 @@ public class LibBio {
             return VUOTA;
         }// end of if/else cycle
 
+    } // // end of method
+
+
+    public String separaMese(String testoTuttoAttaccato) {
+        String testoSeparato = testoTuttoAttaccato.trim();
+        String giorno = VUOTA;
+        String mese = VUOTA;
+        String inizio;
+
+        if (testoSeparato.contains(SPAZIO)) {
+            return testoSeparato;
+        }// end of if cycle
+
+        if (Character.isDigit(testoSeparato.charAt(0))) {
+            if (Character.isDigit(testoSeparato.charAt(1))) {
+                giorno = testoSeparato.substring(0, 2);
+                mese = testoSeparato.substring(2);
+            } else {
+                giorno = testoSeparato.substring(0, 1);
+                mese = testoSeparato.substring(1);
+            }// end of if/else cycle
+        } else {
+            return testoSeparato;
+        }// end of if/else cycle
+
+        inizio = mese.substring(0, 1);
+        if (inizio.equals(TRATTINO) || inizio.equals(SLASH)) {
+            mese = mese.substring(1);
+        }// end of if cycle
+
+        if (text.isValid(giorno) && text.isValid(mese)) {
+            testoSeparato = giorno + SPAZIO + mese;
+        }// end of if cycle
+
+        return testoSeparato;
     } // // end of method
 
 
@@ -2499,15 +2578,21 @@ public class LibBio {
      * @return testoValido regolato in uscita
      */
     public String fixAnnoValido(String testoGrezzo) {
-        String testoValido;
-        String tagCirca = "circa";
-        String tagInterrogativo = "?";
-        String tagVirgola = ",";
+        String testoValido = VUOTA;
 
-        if (text.isEmpty(testoGrezzo) || testoGrezzo.contains(tagCirca) || testoGrezzo.contains(tagInterrogativo) || testoGrezzo.contains(tagVirgola)) {
+        //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
+        if (testoGrezzo.trim().equals("?")) {
+            return testoGrezzo;
+        }// end of if cycle
+
+        if (text.isEmpty(testoGrezzo)) {
             return VUOTA;
         }// end of if cycle
-        testoValido = fixPropertyBase(testoGrezzo);
+
+        testoValido = testoGrezzo.trim();
+        testoValido = text.levaDopo(testoValido, CIRCA);
+
+        testoValido = fixPropertyBase(testoValido);
 
         if (text.isValid(testoValido) && annoService.isEsiste(testoValido)) {
             return testoValido.trim();

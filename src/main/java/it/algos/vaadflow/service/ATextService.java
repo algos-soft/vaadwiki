@@ -887,7 +887,7 @@ public class ATextService extends AbstractService {
      */
     public int getPosFirstTag(String line, String primoTag, String secondoTag, String terzoTag) {
         int pos = 0;
-        String regexSpazioVariabile = "\\s*";
+        String regexSpazioVariabile = "\\s*"; // zero o più occorrenze
         String firstChar = secondoTag.substring(0, 1);
         String rimanentiChars = secondoTag.substring(1);
         String firstInsensitiveChar = "[" + firstChar.toUpperCase() + firstChar.toLowerCase() + "]";
@@ -904,6 +904,21 @@ public class ATextService extends AbstractService {
         }// end of if cycle
 
         return pos;
+    }// end of method
+
+
+    /**
+     * Elimina gli spazi multipli eventualmente presenti <br>
+     * Tutti gli spazi multipli vengono ridotti ad uno spazio singolo <br>
+     *
+     * @param line in ingresso
+     *
+     * @return stringa elaborata con tutti gli spazi ridotti ad 1 ed eliminati spazi in testa ed in coda
+     */
+    public String fixOneSpace(String line) {
+        String regexSpazioVariabile = "\\s+"; // una o più occorrenze
+
+        return line.replaceAll(regexSpazioVariabile, SPAZIO).trim();
     }// end of method
 
 

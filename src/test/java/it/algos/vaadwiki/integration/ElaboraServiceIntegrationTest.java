@@ -212,6 +212,22 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|PostNazionalità   = , attivo in [[Sicilia]] a partire dall'ultimo quarto del [[XVIII secolo]] e il primo quarto del successivo \n" +
             "}}";
 
+    private static String BIO_GUADAGNINO_SORGENTE_BRUTTO = "{{Bio\n" +
+            "|Nome              = Francesco\n" +
+            "|Cognome           = Guadagnino\n" +
+            "|Sesso             = M\n" +
+            "|LuogoNascita      = Canicattì?\n" +
+            "|Attività          = Pittore\n" +
+            "|GiornoMeseNascita = 26 dicembre\n" +
+            "|AnnoNascita       = 1755\n" +
+            "|LuogoMorte        = Canicattì ?\n" +
+            "|GiornoMeseMorte   = 12 maggio \n" +
+            "|AnnoMorte         = [[1829]]\n" +
+            "|Epoca             = 1700\n" +
+            "|Nazionalità       = italiano\n" +
+            "|PostNazionalità   = , attivo in [[Sicilia]] a partire dall'ultimo quarto del [[XVIII secolo]] e il primo quarto del successivo \n" +
+            "}}";
+
     private static String BIO_GUADAGNINO_FINALE = "{{Bio\n" +
             "|Nome = Francesco\n" +
             "|Cognome = Guadagnino\n" +
@@ -452,6 +468,94 @@ public class ElaboraServiceIntegrationTest extends ATest {
 
 
     /**
+     * 0) nome del parametro
+     * 1) valore originario preso dal server wiki
+     * 2) valore valido elaborato dal programma e preso da mongoDB
+     * 3) valore finale da reinserire sul server
+     */
+    @Test
+    public void sostituisceParteValida() {
+        ParBio parBio;
+        String testoOriginale;
+        String parteValidaNuova;
+        Object[] nome = {ParBio.nome, "Crystle Danae", "Crystle Danae", "Crystle Danae"};
+        Object[] cognome = {ParBio.cognome, "[[Stewart]]", "Stewart", "Stewart"};
+        Object[] luogoNascita = {ParBio.luogoNascita, "[[Wilmington]]", "Wilmington", "Wilmington"};
+        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre", "1º settembre"};
+        Object[] annoNascita = {ParBio.annoNascita, "[[1981]]", "1981", "1981"};
+        Object[] luogoMorte = {ParBio.luogoMorte, "?", "", "?"};
+        Object[] attivita = {ParBio.attivita, "Modella<ref>Dal 2000</ref>", "modella", "modella<ref>Dal 2000</ref>"};
+        Object[] nazionalita = {ParBio.nazionalita, "statunitense ?", "statunitense", "statunitense"};
+
+        List<Object[]> lista = new ArrayList<>();
+        lista.add(nome);
+        lista.add(cognome);
+        lista.add(luogoNascita);
+        lista.add(giornoMeseNascita);
+        lista.add(annoNascita);
+        lista.add(luogoMorte);
+        lista.add(attivita);
+        lista.add(nazionalita);
+
+        for (Object[] riga : lista) {
+            parBio = (ParBio) riga[0];
+            testoOriginale = (String) riga[1];
+            parteValidaNuova = (String) riga[2];
+            previsto = (String) riga[3];
+            ottenuto = service.sostituisceParteValida(parBio, testoOriginale, parteValidaNuova);
+            Assert.assertEquals(previsto, ottenuto);
+            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore spedito sul server: " + ottenuto);
+        }// end of for cycle
+    }// end of single test
+
+
+    /**
+     * EAElabora.ordinaNormaliNoLoss
+     * <p>
+     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
+     * Riordina i parametri <br>
+     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
+     * Elimina quelli esistenti vuoti, senza valore <br>
+     */
+    @Test
+    public void ordinaNormaliNoLoss2() {
+        String title = "Charles Spencer, IX conte Spencer";
+        String templServer = api.leggeTmplBio(title);
+
+        String tmplOrdinato = service.ordinaNormaliNoLoss(templServer);
+        Assert.assertEquals(tmplOrdinato, templServer);
+
+        System.out.println("*************");
+        System.out.println("ordinaNormaliNoLoss2");
+        System.out.println("*************");
+        System.out.println(tmplOrdinato);
+        System.out.println("");
+    }// end of single test
+
+
+//    /**
+//     * EAElabora.ordinaNormaliNoLoss
+//     * <p>
+//     * Riordina il template CON modifiche ai valori preesistenti <br>
+//     * Riordina i parametri <br>
+//     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
+//     * Elimina quelli esistenti vuoti, senza valore <br>
+//     * Modifica i parametri secondo le regole base (minuscole, 1° del mese, parentesi quadre) <br>
+//     */
+//    @Test
+//    public void ordinaNormaliWithLoss() {
+//        String tmplOrdinato = service.ordinaNormaliNoLoss(BIO_GUADAGNINO_SORGENTE_BRUTTO);
+//        Assert.assertEquals(BIO_GUADAGNINO_FINALE,tmplOrdinato);
+//
+//        System.out.println("*************");
+//        System.out.println("ordinaNormaliNoLoss - Guadagnino brutto");
+//        System.out.println("*************");
+//        System.out.println(tmplOrdinato);
+//        System.out.println("");
+//    }// end of single test
+
+
+    /**
      * Merge di un template con i parametri di mappaMongo PIU quelli di mappaServer <br>
      * <p>
      * Se esiste un parametro 'normale' di mappaMongo, lo usa <br>
@@ -520,120 +624,5 @@ public class ElaboraServiceIntegrationTest extends ATest {
         System.out.println(tmplBioMerged);
         System.out.println("");
     }// end of single test
-
-
-    /**
-     * EAElabora.ordinaNormaliNoLoss
-     * <p>
-     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
-     * Riordina i parametri <br>
-     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
-     * Elimina quelli esistenti vuoti, senza valore <br>
-     */
-    @Test
-    public void ordinaNormaliNoLoss3() {
-        String tmplOrdinato = service.ordinaNormaliNoLoss(BIO_GUADAGNINO_SORGENTE);
-        Assert.assertEquals(BIO_GUADAGNINO_FINALE,tmplOrdinato);
-
-        System.out.println("*************");
-        System.out.println("ordinaNormaliNoLoss - Guadagnino");
-        System.out.println("*************");
-        System.out.println(tmplOrdinato);
-        System.out.println("");
-    }// end of single test
-
-    /**
-     * EAElabora.ordinaNormaliNoLoss
-     * <p>
-     * Riordina il template SENZA nessuna modifica dei valori preesistenti <br>
-     * Riordina i parametri <br>
-     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
-     * Elimina quelli esistenti vuoti, senza valore <br>
-     */
-    @Test
-    public void ordinaNormaliNoLoss2() {
-        String title = "Charles Spencer, IX conte Spencer";
-        String templServer = api.leggeTmplBio(title);
-
-        String tmplOrdinato = service.ordinaNormaliNoLoss(templServer);
-        Assert.assertEquals(tmplOrdinato, templServer);
-
-        System.out.println("*************");
-        System.out.println("ordinaNormaliNoLoss2");
-        System.out.println("*************");
-        System.out.println(tmplOrdinato);
-        System.out.println("");
-    }// end of single test
-
-
-    /**
-     * 0) nome del parametro
-     * 1) valore originario preso dal server wiki
-     * 2) valore valido elaborato dal programma e preso da mongoDB
-     * 3) valore finale da reinserire sul server
-     */
-    @Test
-    public void sostituisceParteValida() {
-        ParBio parBio;
-        String testoOriginale;
-        String parteValidaNuova;
-        Object[] nome = {ParBio.nome, "Crystle Danae", "Crystle Danae", "Crystle Danae"};
-        Object[] cognome = {ParBio.cognome, "[[Stewart]]", "Stewart", "Stewart"};
-        Object[] luogoNascita = {ParBio.luogoNascita, "[[Wilmington]]", "Wilmington", "Wilmington"};
-        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre", "1º settembre"};
-        Object[] annoNascita = {ParBio.annoNascita, "[[1981]]", "1981", "1981"};
-        Object[] luogoMorte = {ParBio.luogoMorte, "?", "", "?"};
-        Object[] attivita = {ParBio.attivita, "Modella<ref>Dal 2000</ref>", "modella", "modella<ref>Dal 2000</ref>"};
-        Object[] nazionalita = {ParBio.nazionalita, "statunitense ?", "statunitense", "statunitense"};
-
-        List<Object[]> lista = new ArrayList<>();
-        lista.add(nome);
-        lista.add(cognome);
-        lista.add(luogoNascita);
-        lista.add(giornoMeseNascita);
-        lista.add(annoNascita);
-        lista.add(luogoMorte);
-        lista.add(attivita);
-        lista.add(nazionalita);
-
-        for (Object[] riga : lista) {
-            parBio = (ParBio) riga[0];
-            testoOriginale = (String) riga[1];
-            parteValidaNuova = (String) riga[2];
-            previsto = (String) riga[3];
-            ottenuto = service.sostituisceParteValida(parBio, testoOriginale, parteValidaNuova);
-            Assert.assertEquals(previsto, ottenuto);
-            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore spedito sul server: " + ottenuto);
-        }// end of for cycle
-
-    }// end of single test
-
-//    /**
-//     * Regola questo campo
-//     * <p>
-//     * Elimina il testo successivo a varii tag (fixPropertyBase)
-//     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese)
-//     * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese)
-//     * Controlla che il valore esista nella collezione Giorno
-//     * Elimina la prima maiuscola del mese
-//     *
-//     * @param testoGrezzo in entrata da elaborare
-//     *
-//     * @return testoValido regolato in uscita
-//     */
-//    @Test
-//    public void fixGiornoValido() {
-//        sorgente = "3 Marzo";
-//        previsto = "3 marzo";
-//        ottenuto = libBio.fixGiornoValido(sorgente);
-//        Assert.assertEquals(ottenuto, previsto);
-//
-//        sorgente = "1° Marzo";
-//        previsto = "1º marzo";
-//        ottenuto = libBio.fixGiornoValido(sorgente);
-//        Assert.assertEquals(previsto, ottenuto);
-//
-//
-//    }// end of single test
 
 }// end of class

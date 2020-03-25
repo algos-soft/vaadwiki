@@ -577,7 +577,7 @@ public class ElaboraService extends ABioService {
     public String sostituisceParteValida(ParBio par, String testoOriginale, String parteValidaNuova) {
         String valoreSostituito = VUOTA;
         String parteValidaVecchia = libBio.fixPropertyBase(testoOriginale);
-        parteValidaVecchia = par.fix(parteValidaVecchia);
+        parteValidaVecchia = par.fix(parteValidaVecchia,libBio);
 
         if (text.isValid(testoOriginale)) {
             if (parteValidaVecchia.equals(parteValidaNuova)) {
@@ -669,12 +669,14 @@ public class ElaboraService extends ABioService {
      * Riordina i parametri <br>
      * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
      * Elimina quelli esistenti vuoti, senza valore <br>
-     * Modifica i parametri secondo le regole base (minuscole, 1° del mese, parentesi quadre) <br>
      */
     public String ordinaNormaliNoLoss(String tmplEntrata) {
         String tmplOrdinato = VUOTA;
         StringBuilder builder = new StringBuilder(VUOTA);
         LinkedHashMap<String, String> mappa = null;
+        String tag;
+        String value = VUOTA;
+        String riga = VUOTA;
 
         if (text.isValid(tmplEntrata)) {
             mappa = libBio.getMappaBio(tmplEntrata);
@@ -682,8 +684,50 @@ public class ElaboraService extends ABioService {
 
         if (mappa != null) {
             for (ParBio par : ParBio.values()) {
-                if (par.isCampoNormale() || text.isValid(mappa.get(par.getTag()))) {
-                    builder.append(par.getRiga(mappa.get(par.getTag())));
+                tag = par.getTag();
+                value = mappa.get(tag);
+                if (par.isCampoNormale() || text.isValid(value)) {
+                    riga = par.getRiga(value);
+                    builder.append(riga);
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        tmplOrdinato = builder.toString();
+        tmplOrdinato = addTagTemplate(tmplOrdinato);
+        return tmplOrdinato;
+    }// end of method
+
+
+    /**
+     * EAElabora.ordinaNormaliNoLoss
+     * <p>
+     * Riordina il template CON modifiche ai valori preesistenti <br>
+     * Riordina i parametri <br>
+     * Aggiunge quelli 'normali' mancanti vuoti (sono 11) <br>
+     * Elimina quelli esistenti vuoti, senza valore <br>
+     * Modifica i parametri secondo le regole base (minuscole, 1° del mese, parentesi quadre) <br>
+     */
+    public String ordinaNormaliWithLoss(String tmplEntrata) {
+        String tmplOrdinato = VUOTA;
+        StringBuilder builder = new StringBuilder(VUOTA);
+        LinkedHashMap<String, String> mappa = null;
+        String tag;
+        String value = VUOTA;
+        String riga = VUOTA;
+
+        if (text.isValid(tmplEntrata)) {
+            mappa = libBio.getMappaBio(tmplEntrata);
+        }// end of if cycle
+
+        if (mappa != null) {
+            for (ParBio par : ParBio.values()) {
+                tag = par.getTag();
+                value = mappa.get(tag);
+
+                if (par.isCampoNormale() || text.isValid(value)) {
+                    riga = par.getRiga(value);
+                    builder.append(riga);
                 }// end of if cycle
             }// end of for cycle
         }// end of if cycle
