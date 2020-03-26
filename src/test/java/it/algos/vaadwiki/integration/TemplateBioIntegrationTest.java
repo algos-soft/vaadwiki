@@ -467,6 +467,11 @@ public class TemplateBioIntegrationTest extends ATest {
         fixLuogoNascita();
         fixGiornoMeseNascita();
         fixAnnoNascita();
+        fixLuogoMorte();
+        fixGiornoMeseMorte();
+        fixAnnoMorte();
+        fixAttivita();
+        fixNazionalita();
     }// end of single test
 
 
@@ -579,6 +584,100 @@ public class TemplateBioIntegrationTest extends ATest {
     }// end of single test
 
 
+    private void fixLuogoMorte() {
+        previsto = "Barletta";
+        listaSorgente = new String[]{"[[Barletta]]", "[Barletta]", "Barletta<ref>Pippoz</ref>", "Barletta?", "Barletta ?", "Barletta{{template:pippoz}}"};
+
+        System.out.println("");
+        System.out.println("****luogoMorte****");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.luogoMorte, sorgente, previsto);
+        }// end of for cycle
+
+        stampaParInterrogativoNo(ParBio.luogoMorte);
+    }// end of single test
+
+
+    private void fixGiornoMeseMorte() {
+        previsto = "7 aprile";
+        System.out.println("");
+        System.out.println("****giornoMeseMorte****");
+
+        listaSorgente = new String[]{"7aprile", "[[7 aprile]]", "7 Aprile", "[7 Aprile]", "7  aprile", "7 aprile?", "7 aprile ?", "7 aprile circa", "7 aprile, pippoz"};
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.giornoMeseMorte, sorgente, previsto);
+        }// end of for cycle
+
+        listaSorgente = new String[]{"7-aprile", "[[7-aprile]]", "[[7-Aprile]]", "7-Aprile", "7/aprile", "7/Aprile", "7-aprile?"};
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.giornoMeseMorte, sorgente, previsto);
+        }// end of for cycle
+
+        previsto = VUOTA;
+        listaSorgente = new String[]{"7marzolino", "[[7 treno]]", "[[7tebbraio]]", "7 Pebbraio", "aprile7", "aprile 7"};
+        System.out.println("");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.giornoMeseMorte, sorgente, previsto);
+        }// end of for cycle
+
+        stampaParInterrogativoSi(ParBio.giornoMeseMorte);
+    }// end of single test
+
+
+    private void fixAnnoMorte() {
+        previsto = "1451";
+        listaSorgente = new String[]{"[[1451]]", "1451 <ref>Pippoz>", "1451?", "1451 ?", "1451, pippoz", "1451,pippoz", "[[1451]]?", "1451 circa", "[[1451]] circa"};
+
+        System.out.println("");
+        System.out.println("****annoMorte****");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.annoMorte, sorgente, previsto);
+        }// end of for cycle
+
+        stampaParInterrogativoSi(ParBio.annoMorte);
+    }// end of single test
+
+
+    private void fixAttivita() {
+        previsto = "attore";
+        listaSorgente = new String[]{" attore", " attore<ref>Pippox>", "attore?", "attore{{pert}}"};
+
+        System.out.println("");
+        System.out.println("****attivita****");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.attivita, sorgente, previsto);
+        }// end of for cycle
+        stampaParInterrogativoNo(ParBio.attivita);
+
+        System.out.println("");
+        System.out.println("****attivita2****");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.attivita2, sorgente, previsto);
+        }// end of for cycle
+        stampaParInterrogativoNo(ParBio.attivita2);
+
+        System.out.println("");
+        System.out.println("****attivita3****");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.attivita3, sorgente, previsto);
+        }// end of for cycle
+        stampaParInterrogativoNo(ParBio.attivita3);
+    }// end of single test
+
+
+    private void fixNazionalita() {
+        previsto = "francese";
+        listaSorgente = new String[]{" francese", " francese<ref>Pippox>", "francese?", "francese{{forse}}"};
+
+        System.out.println("");
+        System.out.println("****nazionalita****");
+        for (String sorgente : listaSorgente) {
+            stampaPar(ParBio.nazionalita, sorgente, previsto);
+        }// end of for cycle
+        stampaParInterrogativoNo(ParBio.nazionalita);
+    }// end of single test
+
+
     private void stampaPar(ParBio par, String sorgente, String previsto) {
         ottenuto = par.fix(sorgente, libBio);
         Assert.assertEquals(previsto, ottenuto);
@@ -604,10 +703,10 @@ public class TemplateBioIntegrationTest extends ATest {
      * Se il valore è un punto interrogativo, rimane un punto interrogativo <br>
      */
     private void stampaParInterrogativoSi(ParBio par) {
+        String previsto = LibBio.INTERROGATIVO;
         stampaParVuoto(par);
 
         sorgente = LibBio.INTERROGATIVO;
-        previsto = LibBio.INTERROGATIVO;
         ottenuto = par.fix(sorgente, libBio);
         Assert.assertEquals(previsto, ottenuto);
         System.out.println("il punto interrogativo (ammesso per il parametro " + par.getTag() + ") rimane punto interrogativo");
@@ -619,10 +718,10 @@ public class TemplateBioIntegrationTest extends ATest {
      * Se il valore è un punto interrogativo, diventa un valore vuoto (il punto interrogativo non è ammesso) <br>
      */
     private void stampaParInterrogativoNo(ParBio par) {
+        String previsto = VUOTA;
         stampaParVuoto(par);
 
         sorgente = LibBio.INTERROGATIVO;
-        previsto = VUOTA;
         ottenuto = par.fix(sorgente, libBio);
         Assert.assertEquals(previsto, ottenuto);
         System.out.println("il punto interrogativo (non ammesso per il parametro " + par.getTag() + ") diventa 'vuoto'");
