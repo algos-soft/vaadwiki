@@ -416,8 +416,6 @@ public class ElaboraServiceIntegrationTest extends ATest {
     }// end of single test
 
 
-
-
     /**
      * Controlla se il tmpl del mongoDB di tutte le istanze è uguale a quello 'previsto' <br>
      * Se è diverso, lo modifica sul server <br>
@@ -467,14 +465,8 @@ public class ElaboraServiceIntegrationTest extends ATest {
     }// end of single test
 
 
-    /**
-     * 0) nome del parametro
-     * 1) valore originario preso dal server wiki
-     * 2) valore valido elaborato dal programma e preso da mongoDB
-     * 3) valore finale da reinserire sul server
-     */
     @Test
-    public void sostituisceParteValida() {
+    public void estraeParteValida() {
         ParBio parBio;
         String testoOriginale;
         String parteValidaNuova;
@@ -483,6 +475,94 @@ public class ElaboraServiceIntegrationTest extends ATest {
         Object[] luogoNascita = {ParBio.luogoNascita, "[[Wilmington]]", "Wilmington", "Wilmington"};
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre", "1º settembre"};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]", "1981", "1981"};
+        Object[] luogoMorte = {ParBio.luogoMorte, "?", "", ""};
+        Object[] attivita = {ParBio.attivita, "modella<ref>Dal 2000</ref>", "modella", "modella"};
+        Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore", "pittore"};
+        Object[] nazionalita = {ParBio.nazionalita, "statunitense ?", "statunitense", "statunitense"};
+
+        List<Object[]> lista = new ArrayList<>();
+        lista.add(nome);
+        lista.add(cognome);
+        lista.add(luogoNascita);
+        lista.add(giornoMeseNascita);
+        lista.add(annoNascita);
+        lista.add(luogoMorte);
+        lista.add(attivita);
+        lista.add(attivita2);
+        lista.add(nazionalita);
+
+        for (Object[] riga : lista) {
+            parBio = (ParBio) riga[0];
+            testoOriginale = (String) riga[1];
+            parteValidaNuova = (String) riga[2];
+            previsto = (String) riga[3];
+            ottenuto = service.estraeParteValida(parBio, testoOriginale);
+            Assert.assertEquals(previsto, ottenuto);
+            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore valido: " + ottenuto);
+        }// end of for cycle
+    }// end of single test
+
+
+    /**
+     * 0) nome del parametro
+     * 1) valore originario preso dal server wiki
+     * 2) valore valido elaborato dal programma e preso da mongoDB
+     * 3) valore finale da reinserire sul server
+     */
+    @Test
+    public void sostituisceParteValidaFacile() {
+        ParBio parBio;
+        String testoOriginale;
+        String parteValidaNuova;
+        Object[] nome = {ParBio.nome, "Crystle Danae", "Crystle Danae", "Crystle Danae"};
+        Object[] cognome = {ParBio.cognome, "[[Stewart]]", "Stewart", "Stewart"};
+        Object[] luogoNascita = {ParBio.luogoNascita, "[[Wilmington]]", "Wilmington", "Wilmington"};
+        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre", "1º settembre"};
+        Object[] annoNascita = {ParBio.annoNascita, "[[1981]]", "1981", "1981"};
+        Object[] luogoMorte = {ParBio.luogoMorte, "?", "", ""};
+        Object[] attivita = {ParBio.attivita, "modella<ref>Dal 2000</ref>", "modella", "modella<ref>Dal 2000</ref>"};
+        Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore", "Pittore<ref>Dal 2000</ref>"};
+        Object[] nazionalita = {ParBio.nazionalita, "statunitense ?", "statunitense", "statunitense"};
+
+        List<Object[]> lista = new ArrayList<>();
+        lista.add(nome);
+        lista.add(cognome);
+        lista.add(luogoNascita);
+        lista.add(giornoMeseNascita);
+        lista.add(annoNascita);
+        lista.add(luogoMorte);
+        lista.add(attivita);
+        lista.add(attivita2);
+        lista.add(nazionalita);
+
+        for (Object[] riga : lista) {
+            parBio = (ParBio) riga[0];
+            testoOriginale = (String) riga[1];
+            parteValidaNuova = (String) riga[2];
+            previsto = (String) riga[3];
+            ottenuto = service.sostituisceParteValida(parBio, testoOriginale, parteValidaNuova);
+            Assert.assertEquals(previsto, ottenuto);
+            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore spedito sul server: " + ottenuto);
+        }// end of for cycle
+    }// end of single test
+
+
+    /**
+     * 0) nome del parametro
+     * 1) valore originario preso dal server wiki
+     * 2) valore valido elaborato dal programma e preso da mongoDB
+     * 3) valore finale da reinserire sul server
+     */
+//    @Test
+    public void sostituisceParteValidaDifficile() {
+        ParBio parBio;
+        String testoOriginale;
+        String parteValidaNuova;
+        Object[] nome = {ParBio.nome, "Crystle Danae", "Crystle Danae", "Crystle Danae"};
+        Object[] cognome = {ParBio.cognome, "[[Stewart]]", "Stewart", "Stewart"};
+        Object[] luogoNascita = {ParBio.luogoNascita, "[[Wilmington]]<ref>Pippoz</ref>", "Wilmington", "Wilmington<ref>Pippoz</ref>"};
+        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre", "1º settembre"};
+        Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "1981", "1981{{forse}}"};
         Object[] luogoMorte = {ParBio.luogoMorte, "?", "", "?"};
         Object[] attivita = {ParBio.attivita, "Modella<ref>Dal 2000</ref>", "modella", "modella<ref>Dal 2000</ref>"};
         Object[] nazionalita = {ParBio.nazionalita, "statunitense ?", "statunitense", "statunitense"};
