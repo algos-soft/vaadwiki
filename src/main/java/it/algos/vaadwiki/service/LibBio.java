@@ -40,6 +40,7 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 
 /**
  * Created by gac on 20 ago 2015.
+ * Alcuni metodi sono statici per poter essere usati da una Enumeration <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -152,7 +153,7 @@ public class LibBio {
      * Service (@Scope = 'singleton') iniettato da StaticContextAccessor e usato come libreria <br>
      * Unico per tutta l'applicazione. Usato come libreria.
      */
-    public ATextService text = ATextService.getInstance();
+    public static ATextService text = ATextService.getInstance();
 
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
@@ -1590,31 +1591,29 @@ public class LibBio {
 
 
     /**
-     * Elimina (eventuali) doppie quadre in testa e coda della stringa.
-     * <p>
-     * Funziona solo se le quadre sono esattamente in TESTA ed in CODA alla stringa
-     * Elimina spazi vuoti iniziali e finali
+     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
      *
-     * @param testoIn entrata da elaborare
+     * @param testoOriginario in entrata da elaborare
      *
-     * @return testoIn regolato in uscita con doppie quadre eliminate
+     * @return testoGrezzo troncato
      */
-    public String setNoQuadre(String testoIn) {
-        String testoOut = testoIn;
+    public static String troncaParteFinaleMenoPuntoInterrogativo(String testoOriginario) {
+        String testoGrezzo = VUOTA;
 
-        if (testoOut != null) {
-            if (testoIn.length() > 0) {
-                testoOut = testoIn.trim();
-                testoOut = text.levaTesta(testoOut, QUADRA_INI);
-                testoOut = text.levaTesta(testoOut, QUADRA_INI);
-                testoOut = text.levaCoda(testoOut, QUADRA_END);
-                testoOut = text.levaCoda(testoOut, QUADRA_END);
-                testoOut = testoOut.trim();
-            }// fine del blocco if
-        }// fine del blocco if
+        if (text.isEmpty(testoOriginario)) {
+            return VUOTA;
+        }// end of if cycle
 
-        return testoOut;
-    }// end of method
+        testoGrezzo = testoOriginario.trim();
+        testoGrezzo = text.levaDopoRef(testoGrezzo);
+        testoGrezzo = text.levaDopoNote(testoGrezzo);
+        testoGrezzo = text.levaDopoGraffe(testoGrezzo);
+        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
+        testoGrezzo = testoGrezzo.trim();
+
+        return testoGrezzo;
+    } // fine del metodo
 
 
 //    /**
@@ -1728,24 +1727,26 @@ public class LibBio {
 
 
     /**
-     * Estrae una mappa chiave valore per un fix di parametri, da una biografia
-     * <p>
-     * E impossibile sperare in uno schema fisso
-     * Occorre considerare le {{ graffe annidate, i | (pipe) annidati
-     * i mancati ritorni a capo, ecc., ecc.
-     * <p>
-     * Uso la lista dei parametri che può riconoscere
-     * (è meno flessibile, ma più sicuro)
-     * Cerco il primo parametro nel testo e poi spazzolo il testo per cercare
-     * il primo parametro noto e così via
+     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
      *
-     * @param bio istanza della Entity
+     * @param testoOriginario in entrata da elaborare
      *
-     * @return mappa dei parametri esistenti nella enumeration e presenti nel testo
+     * @return testoGrezzo troncato
      */
-    public LinkedHashMap<String, String> getMappaBio(Bio bio) {
-        return getMappaBio(bio.getTmplBioServer());
-    }// end of method
+    public static String troncaParteFinale(String testoOriginario) {
+        String testoGrezzo = VUOTA;
+
+        if (text.isEmpty(testoOriginario)) {
+            return VUOTA;
+        }// end of if cycle
+
+        testoGrezzo = troncaParteFinaleMenoPuntoInterrogativo(testoOriginario);
+        testoGrezzo = text.levaDopoInterrogativo(testoGrezzo);
+        testoGrezzo = testoGrezzo.trim();
+
+        return testoGrezzo;
+    } // fine del metodo
 
 
 //    /**
@@ -2064,6 +2065,241 @@ public class LibBio {
 
 
     /**
+     * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+     *
+     * @param valoreGrezzo in entrata da elaborare
+     *
+     * @return valore finale valido del parametro
+     */
+    public static String fixValoreGrezzo(String valoreGrezzo) {
+        String testoValido;
+
+        if (text.isEmpty(valoreGrezzo)) {
+            return VUOTA;
+        }// end of if cycle
+
+        testoValido = valoreGrezzo.trim();
+        testoValido = LibWiki.setNoQuadre(testoValido);
+        testoValido = testoValido.trim();
+
+        return testoValido;
+    }// end of method
+
+
+    /**
+     * Regola questo campo
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public static String fixNomeValido(String testoGrezzo) {
+        return fixValoreGrezzo(testoGrezzo);
+    } // // end of method
+
+
+    /**
+     * Regola questo campo
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public static String fixCognomeValido(String testoGrezzo) {
+        return fixValoreGrezzo(testoGrezzo);
+    } // // end of method
+
+
+    /**
+     * Regola questa property <br>
+     * <p>
+     * Elimina il testo successivo a varii tag (fixPropertyBase) <br>
+     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese) <br>
+     * Elimina eventuali TRIPLI spazi vuoti (tipico della data tra il giorno ed il mese) <br>
+     * Elimina eventuali DOPPI spazi vuoti (tipico della data tra il giorno ed il mese) <br>
+     * Forza a minuscolo il primo carattere del mese <br>
+     * Forza a ordinale un eventuale primo giorno del mese scritto come numero o come grado <br>
+     * NON controlla che il valore esista nella collezione Giorno <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public static String fixGiornoValido(String testoGrezzo) {
+        String testoValido = LibBio.fixValoreGrezzo(testoGrezzo);
+        int pos;
+        String primo;
+        String mese;
+
+        //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
+        if (testoGrezzo.trim().equals("?")) {
+            return testoGrezzo;
+        }// end of if cycle
+
+        if (text.isEmpty(testoValido)) {
+            return VUOTA;
+        }// end of if cycle
+
+        testoValido = text.levaDopo(testoValido, CIRCA);
+
+        //--spazio singolo
+        testoValido = text.fixOneSpace(testoValido);
+
+        //--senza spazio
+        if (!testoValido.contains(SPAZIO)) {
+            testoValido = separaMese(testoValido);
+        }// end of if cycle
+
+        if (!testoValido.contains(SPAZIO)) {
+            return VUOTA;
+        }// end of if cycle
+
+        //--minuscola
+        testoValido = testoValido.toLowerCase();
+
+        //--Forza a ordinale un eventuale primo giorno del mese scritto come numero o come grado
+        if (testoValido.contains(SPAZIO)) {
+            pos = testoValido.indexOf(SPAZIO);
+            primo = testoValido.substring(0, pos);
+            mese = testoValido.substring(pos + SPAZIO.length());
+
+            if (primo.equals("1") || primo.equals("1°")) {
+                primo = "1º";
+                testoValido = primo + SPAZIO + mese;
+            }// end of if cycle
+        }// end of if cycle
+
+//        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Giorno.class, "titolo", testoValido)) {
+        if (text.isValid(testoValido)) {
+            return testoValido.trim();
+        } else {
+            return VUOTA;
+        }// end of if/else cycle
+
+    } // // end of method
+
+
+    public static String separaMese(String testoTuttoAttaccato) {
+        String testoSeparato = testoTuttoAttaccato.trim();
+        String giorno = VUOTA;
+        String mese = VUOTA;
+        String inizio;
+
+        if (testoSeparato.contains(SPAZIO)) {
+            return testoSeparato;
+        }// end of if cycle
+
+        if (Character.isDigit(testoSeparato.charAt(0))) {
+            if (Character.isDigit(testoSeparato.charAt(1))) {
+                giorno = testoSeparato.substring(0, 2);
+                mese = testoSeparato.substring(2);
+            } else {
+                giorno = testoSeparato.substring(0, 1);
+                mese = testoSeparato.substring(1);
+            }// end of if/else cycle
+        } else {
+            return testoSeparato;
+        }// end of if/else cycle
+
+        inizio = mese.substring(0, 1);
+        if (inizio.equals(TRATTINO) || inizio.equals(SLASH)) {
+            mese = mese.substring(1);
+        }// end of if cycle
+
+        if (text.isValid(giorno) && text.isValid(mese)) {
+            testoSeparato = giorno + SPAZIO + mese;
+        }// end of if cycle
+
+        return testoSeparato;
+    } // // end of method
+
+
+    /**
+     * Regola questo campo
+     * <p>
+     * Elimina il testo successivo a varii tag (fixPropertyBase)
+     * Elimina il testo se contiene la dicitura 'circa' (tipico dell'anno)
+     * Non controlla che il valore esista nella collezione Anno
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public static String fixAnnoValido(String testoGrezzo) {
+        String testoValido = LibBio.fixValoreGrezzo(testoGrezzo);
+
+        //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
+        if (testoGrezzo.trim().equals("?")) {
+            return testoGrezzo;
+        }// end of if cycle
+
+        if (text.isEmpty(testoGrezzo)) {
+            return VUOTA;
+        }// end of if cycle
+
+        testoValido = text.levaDopo(testoValido, CIRCA);
+
+//        testoValido = fixPropertyBase(testoValido);
+
+//        if (text.isValid(testoValido) && annoService.isEsiste(testoValido)) {
+        if (text.isValid(testoValido)) {
+            return testoValido.trim();
+        } else {
+            return VUOTA;
+        }// end of if/else cycle
+    } // fine del metodo
+
+
+    /**
+     * Elimina (eventuali) doppie quadre in testa e coda della stringa.
+     * <p>
+     * Funziona solo se le quadre sono esattamente in TESTA ed in CODA alla stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param testoIn entrata da elaborare
+     *
+     * @return testoIn regolato in uscita con doppie quadre eliminate
+     */
+    public String setNoQuadre(String testoIn) {
+        String testoOut = testoIn;
+
+        if (testoOut != null) {
+            if (testoIn.length() > 0) {
+                testoOut = testoIn.trim();
+                testoOut = text.levaTesta(testoOut, QUADRA_INI);
+                testoOut = text.levaTesta(testoOut, QUADRA_INI);
+                testoOut = text.levaCoda(testoOut, QUADRA_END);
+                testoOut = text.levaCoda(testoOut, QUADRA_END);
+                testoOut = testoOut.trim();
+            }// fine del blocco if
+        }// fine del blocco if
+
+        return testoOut;
+    }// end of method
+
+
+    /**
+     * Estrae una mappa chiave valore per un fix di parametri, da una biografia
+     * <p>
+     * E impossibile sperare in uno schema fisso
+     * Occorre considerare le {{ graffe annidate, i | (pipe) annidati
+     * i mancati ritorni a capo, ecc., ecc.
+     * <p>
+     * Uso la lista dei parametri che può riconoscere
+     * (è meno flessibile, ma più sicuro)
+     * Cerco il primo parametro nel testo e poi spazzolo il testo per cercare
+     * il primo parametro noto e così via
+     *
+     * @param bio istanza della Entity
+     *
+     * @return mappa dei parametri esistenti nella enumeration e presenti nel testo
+     */
+    public LinkedHashMap<String, String> getMappaBio(Bio bio) {
+        return getMappaBio(bio.getTmplBioServer());
+    }// end of method
+
+
+    /**
      * Estrae una mappa chiave valore per un fix di parametri, dal testo di una biografia
      * <p>
      * E impossibile sperare in uno schema fisso
@@ -2328,6 +2564,7 @@ public class LibBio {
      *
      * @return testoValido regolato in uscita
      */
+    @Deprecated
     public String fixPropertyBase(String testoGrezzo) {
         String testoValido;
 
@@ -2344,37 +2581,8 @@ public class LibBio {
         testoValido = LibWiki.setNoQuadre(testoValido);
         testoValido = testoValido.trim();
 
-//        if (testoValido.length() > 253) {
-//            testoValido = testoValido.substring(0, 252);
-//            //@todo manca warning
-//        }// fine del blocco if
-
         return testoValido;
     }// end of method
-
-
-    /**
-     * Regola questo campo
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return testoValido regolato in uscita
-     */
-    public String fixNomeValido(String testoGrezzo) {
-        return fixPropertyBase(testoGrezzo);
-    } // // end of method
-
-
-    /**
-     * Regola questo campo
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return testoValido regolato in uscita
-     */
-    public String fixCognomeValido(String testoGrezzo) {
-        return fixPropertyBase(testoGrezzo);
-    } // // end of method
 
 
     /**
@@ -2436,109 +2644,6 @@ public class LibBio {
 
 
     /**
-     * Regola questa property <br>
-     * <p>
-     * Elimina il testo successivo a varii tag (fixPropertyBase) <br>
-     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese) <br>
-     * Elimina eventuali TRIPLI spazi vuoti (tipico della data tra il giorno ed il mese) <br>
-     * Elimina eventuali DOPPI spazi vuoti (tipico della data tra il giorno ed il mese) <br>
-     * Forza a minuscolo il primo carattere del mese <br>
-     * Forza a ordinale un eventuale primo giorno del mese scritto come numero o come grado <br>
-     * Controlla che il valore esista nella collezione Giorno <br>
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return testoValido regolato in uscita
-     */
-    public String fixGiornoValido(String testoGrezzo) {
-        String testoValido = fixPropertyBase(testoGrezzo);
-        int pos;
-        String primo;
-        String mese;
-
-        //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
-        if (testoGrezzo.trim().equals("?")) {
-            return testoGrezzo;
-        }// end of if cycle
-
-        if (text.isEmpty(testoValido)) {
-            return VUOTA;
-        }// end of if cycle
-
-        testoValido = text.levaDopo(testoValido, CIRCA);
-
-        //--spazio singolo
-        testoValido = text.fixOneSpace(testoValido);
-
-        //--senza spazio
-        if (!testoValido.contains(SPAZIO)) {
-            testoValido = separaMese(testoValido);
-        }// end of if cycle
-
-        if (!testoValido.contains(SPAZIO)) {
-            return VUOTA;
-        }// end of if cycle
-
-        //--minuscola
-        testoValido = testoValido.toLowerCase();
-
-        //--Forza a ordinale un eventuale primo giorno del mese scritto come numero o come grado
-        if (testoValido.contains(SPAZIO)) {
-            pos = testoValido.indexOf(SPAZIO);
-            primo = testoValido.substring(0, pos);
-            mese = testoValido.substring(pos + SPAZIO.length());
-
-            if (primo.equals("1") || primo.equals("1°")) {
-                primo = "1º";
-                testoValido = primo + SPAZIO + mese;
-            }// end of if cycle
-        }// end of if cycle
-
-        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Giorno.class, "titolo", testoValido)) {
-            return testoValido.trim();
-        } else {
-            return VUOTA;
-        }// end of if/else cycle
-
-    } // // end of method
-
-
-    public String separaMese(String testoTuttoAttaccato) {
-        String testoSeparato = testoTuttoAttaccato.trim();
-        String giorno = VUOTA;
-        String mese = VUOTA;
-        String inizio;
-
-        if (testoSeparato.contains(SPAZIO)) {
-            return testoSeparato;
-        }// end of if cycle
-
-        if (Character.isDigit(testoSeparato.charAt(0))) {
-            if (Character.isDigit(testoSeparato.charAt(1))) {
-                giorno = testoSeparato.substring(0, 2);
-                mese = testoSeparato.substring(2);
-            } else {
-                giorno = testoSeparato.substring(0, 1);
-                mese = testoSeparato.substring(1);
-            }// end of if/else cycle
-        } else {
-            return testoSeparato;
-        }// end of if/else cycle
-
-        inizio = mese.substring(0, 1);
-        if (inizio.equals(TRATTINO) || inizio.equals(SLASH)) {
-            mese = mese.substring(1);
-        }// end of if cycle
-
-        if (text.isValid(giorno) && text.isValid(mese)) {
-            testoSeparato = giorno + SPAZIO + mese;
-        }// end of if cycle
-
-        return testoSeparato;
-    } // // end of method
-
-
-    /**
      * Regola questo campo
      * <p>
      * Elimina il testo successivo a varii tag (fixPropertyBase)
@@ -2564,42 +2669,6 @@ public class LibBio {
 
         return giorno;
     } // // end of method
-
-
-    /**
-     * Regola questo campo
-     * <p>
-     * Elimina il testo successivo a varii tag (fixPropertyBase)
-     * Elimina il testo se contiene la dicitura 'circa' (tipico dell'anno)
-     * Controlla che il valore esista nella collezione Anno
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return testoValido regolato in uscita
-     */
-    public String fixAnnoValido(String testoGrezzo) {
-        String testoValido = VUOTA;
-
-        //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
-        if (testoGrezzo.trim().equals("?")) {
-            return testoGrezzo;
-        }// end of if cycle
-
-        if (text.isEmpty(testoGrezzo)) {
-            return VUOTA;
-        }// end of if cycle
-
-        testoValido = testoGrezzo.trim();
-        testoValido = text.levaDopo(testoValido, CIRCA);
-
-        testoValido = fixPropertyBase(testoValido);
-
-        if (text.isValid(testoValido) && annoService.isEsiste(testoValido)) {
-            return testoValido.trim();
-        } else {
-            return VUOTA;
-        }// end of if/else cycle
-    } // fine del metodo
 
 
     /**
@@ -2640,8 +2709,8 @@ public class LibBio {
      *
      * @return testoValido regolato in uscita
      */
-    public String fixAttivitaValida(String testoGrezzo) {
-        String testoValido = fixPropertyBase(testoGrezzo).toLowerCase();
+    public static String fixAttivitaValida(String testoGrezzo) {
+        String testoValido = LibBio.fixValoreGrezzo(testoGrezzo).toLowerCase();
         String tag1 = "ex ";
         String tag2 = "ex-";
 
@@ -2649,7 +2718,8 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
-        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
+//        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
+            if (text.isValid(testoValido) ) {
             return testoValido.trim();
         } else {
             if (testoValido.contains(tag1)) {
@@ -2658,7 +2728,8 @@ public class LibBio {
             if (testoValido.contains(tag2)) {
                 testoValido = testoValido.substring(testoValido.indexOf(tag2) + tag2.length()).trim();
             }// end of if cycle
-            if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
+//                if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
+                    if (text.isValid(testoValido) ) {
                 return testoValido.trim();
             } else {
                 return VUOTA;
@@ -2704,14 +2775,15 @@ public class LibBio {
      *
      * @return testoValido regolato in uscita
      */
-    public String fixNazionalitaValida(String testoGrezzo) {
-        String testoValido = fixPropertyBase(testoGrezzo).toLowerCase();
+    public static String fixNazionalitaValida(String testoGrezzo) {
+        String testoValido = LibBio.fixValoreGrezzo(testoGrezzo).toLowerCase();
 
         if (text.isEmpty(testoValido)) {
             return VUOTA;
         }// end of if cycle
 
-        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Nazionalita.class, "singolare", testoValido)) {
+//        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Nazionalita.class, "singolare", testoValido)) {
+            if (text.isValid(testoValido) ) {
             return testoValido.trim();
         } else {
             return VUOTA;

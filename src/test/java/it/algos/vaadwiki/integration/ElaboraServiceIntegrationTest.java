@@ -530,7 +530,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
         lista.add(luogoNascita);
         lista.add(giornoMeseNascita);
         lista.add(annoNascita);
-        lista.add(luogoMorte);
+//        lista.add(luogoMorte);
         lista.add(attivita);
         lista.add(attivita2);
         lista.add(nazionalita);

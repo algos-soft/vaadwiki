@@ -2,7 +2,7 @@ package it.algos.vaadwiki.integration;
 
 import it.algos.vaadwiki.ATest;
 import it.algos.vaadwiki.service.LibBio;
-import it.algos.wiki.Api;
+import it.algos.vaadwiki.service.ParBio;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static it.algos.vaadflow.application.FlowCost.SPAZIO;
-import static it.algos.vaadflow.application.FlowCost.VUOTA;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project vaadwiki
@@ -40,6 +40,104 @@ public class LibBioIntegrationTest extends ATest {
 
 
     /**
+     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+     *
+     * @param valoreOriginarioDelServer in entrata da elaborare
+     *
+     * @return valore grezzo troncato del parametro
+     */
+    @Test
+    public void troncaParteFinale() {
+        ParBio parBio;
+        String testoOriginale;
+        Object[] nome = {ParBio.nome, "Crystle Danae?", "Crystle Danae"};
+        Object[] cognome = {ParBio.cognome, "[[Stewart]]", "[[Stewart]]"};
+        Object[] luogoNascita = {ParBio.luogoNascita, "[Wilmington]", "[Wilmington]"};
+        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1 Settembre"};
+        Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "[[1981]]"};
+        Object[] annoMorte = {ParBio.annoMorte, "?", "?"};
+        Object[] luogoMorte = {ParBio.luogoMorte, "?", ""};
+        Object[] attivita = {ParBio.attivita, "modella<ref>Dal 2000</ref>", "modella"};
+        Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "Pittore"};
+        Object[] nazionalita = {ParBio.nazionalita, "Statunitense ?", "Statunitense"};
+
+        List<Object[]> lista = new ArrayList<>();
+        lista.add(nome);
+        lista.add(cognome);
+        lista.add(luogoNascita);
+        lista.add(giornoMeseNascita);
+        lista.add(annoNascita);
+        lista.add(annoMorte);
+        lista.add(luogoMorte);
+        lista.add(attivita);
+        lista.add(attivita2);
+        lista.add(nazionalita);
+
+        for (Object[] riga : lista) {
+            parBio = (ParBio) riga[0];
+            testoOriginale = (String) riga[1];
+            previsto = (String) riga[2];
+            ottenuto = parBio.troncaParteFinale(testoOriginale);
+
+            Assert.assertEquals(previsto, ottenuto);
+            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " troncato correttamente. Valore grezzo: " + ottenuto);
+
+        }// end of for cycle
+    }// end of single test
+
+
+    /**
+     * Restituisce un valore valido del parametro <br>
+     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+     *
+     * @param valoreOriginarioDelServer in entrata da elaborare
+     *
+     * @return valore finale valido del parametro
+     */
+    @Test
+    public void estraeParteValida() {
+        ParBio parBio;
+        String testoOriginale;
+        Object[] nome = {ParBio.nome, "Crystle Danae", "Crystle Danae"};
+        Object[] cognome = {ParBio.cognome, "[[Stewart]]", "Stewart"};
+        Object[] luogoNascita = {ParBio.luogoNascita, "[[Wilmington]]", "Wilmington"};
+        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "[[1 Settembre]]", "1º settembre"};
+        Object[] annoNascita = {ParBio.annoNascita, "[1981]", "1981"};
+        Object[] luogoMorte = {ParBio.luogoMorte, "?", ""};
+        Object[] attivita = {ParBio.attivita, "Modella<ref>Dal 2000</ref>", "modella"};
+        Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore"};
+        Object[] nazionalita = {ParBio.nazionalita, "Statunitense ?", "statunitense"};
+
+        List<Object[]> lista = new ArrayList<>();
+        lista.add(nome);
+        lista.add(cognome);
+        lista.add(luogoNascita);
+        lista.add(giornoMeseNascita);
+        lista.add(annoNascita);
+        lista.add(luogoMorte);
+        lista.add(attivita);
+        lista.add(attivita2);
+        lista.add(nazionalita);
+
+        for (Object[] riga : lista) {
+            parBio = (ParBio) riga[0];
+            testoOriginale = (String) riga[1];
+            previsto = (String) riga[2];
+            ottenuto = parBio.estraeParteValida(testoOriginale);
+
+            Assert.assertEquals(previsto, ottenuto);
+            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore valido: " + ottenuto);
+
+        }// end of for cycle
+    }// end of single test
+
+
+    /**
      * Regola questa property <br>
      * <p>
      * Elimina il testo successivo a varii tag (fixPropertyBase) <br>
@@ -59,80 +157,80 @@ public class LibBioIntegrationTest extends ATest {
         //--senza spazio
         previsto = "12 ottobre";
         sorgente = "12ottobre";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         //--triplo spazio
         sorgente = "12   ottobre";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         //--doppio spazio
         sorgente = "12  ottobre";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         //--spazio prima
         sorgente = " 12 ottobre";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         //--spazio dopo
         sorgente = "12 ottobre ";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         //--maiuscola
         sorgente = "12 Ottobre ";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         previsto = "1º marzo";
 
         //--maiuscola
         sorgente = "1º Marzo";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--grado e non ordinale
         sorgente = "1° Marzo";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--grado e non ordinale
         previsto = "1º aprile";
         sorgente = "1° aprile";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--grado e non ordinale
         previsto = "1º ottobre";
         sorgente = "1° Ottobre";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--grado e non ordinale
         previsto = "1º luglio";
         sorgente = "1° luglio";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--numero e non ordinale
         previsto = "1º luglio";
         sorgente = "1 luglio";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--numero e non ordinale
         previsto = "1º ottobre";
         sorgente = "1 Ottobre";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--numero e non ordinale
         previsto = "1º aprile";
         sorgente = "1 aprile";
-        ottenuto = libBio.fixGiornoValido(sorgente);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
     }// end of single test
 
@@ -142,35 +240,150 @@ public class LibBioIntegrationTest extends ATest {
         previsto = "8 settembre";
 
         sorgente = "8settembre";
-        ottenuto = libBio.separaMese(sorgente);
+        ottenuto = LibBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         sorgente = " 8settembre";
-        ottenuto = libBio.separaMese(sorgente);
+        ottenuto = LibBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         previsto = "12 aprile";
         sorgente = "12aprile";
-        ottenuto = libBio.separaMese(sorgente);
+        ottenuto = LibBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         sorgente = "12 aprile";
-        ottenuto = libBio.separaMese(sorgente);
+        ottenuto = LibBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         previsto = "27 ottobre";
 
         sorgente = "27ottobre";
-        ottenuto = libBio.separaMese(sorgente);
+        ottenuto = LibBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         sorgente = "27-ottobre";
-        ottenuto = libBio.separaMese(sorgente);
+        ottenuto = LibBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         sorgente = "27/ottobre";
-        ottenuto = libBio.separaMese(sorgente);
+        ottenuto = LibBio.separaMese(sorgente);
+        Assert.assertEquals(previsto, ottenuto);
+        ottenuto = LibBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
     }// end of single test
+
+
+//    /**
+//     * Regola questa property <br>
+//     * <p>
+//     * Elimina il testo successivo a varii tag (fixPropertyBase) <br>
+//     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese) <br>
+//     * Elimina eventuali TRIPLI spazi vuoti (tipico della data tra il giorno ed il mese) <br>
+//     * Elimina eventuali DOPPI spazi vuoti (tipico della data tra il giorno ed il mese) <br>
+//     * Forza a minuscolo il primo carattere del mese <br>
+//     * Forza a ordinale un eventuale primo giorno del mese scritto come numero o come grado <br>
+//     * Controlla che il valore esista nella collezione Giorno <br>
+//     *
+//     * @param testoGrezzo in entrata da elaborare
+//     *
+//     * @return testoValido regolato in uscita
+//     */
+//    @Test
+//    public void fixGiornoValido2() {
+//        ParBio par = ParBio.giornoMeseNascita;
+//
+//        //--senza spazio
+//        previsto = "12 ottobre";
+//        sorgente = "12ottobre";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(ottenuto, previsto);
+//
+//        //--triplo spazio
+//        sorgente = "12   ottobre";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(ottenuto, previsto);
+//
+//        //--doppio spazio
+//        sorgente = "12  ottobre";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(ottenuto, previsto);
+//
+//        //--spazio prima
+//        sorgente = " 12 ottobre";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(ottenuto, previsto);
+//
+//        //--spazio dopo
+//        sorgente = "12 ottobre ";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(ottenuto, previsto);
+//
+//        //--maiuscola
+//        sorgente = "12 Ottobre ";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(ottenuto, previsto);
+//
+//        previsto = "1º marzo";
+//
+//        //--maiuscola
+//        sorgente = "1º Marzo";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(previsto, ottenuto);
+//
+//        //--grado e non ordinale
+//        sorgente = "1° Marzo";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(previsto, ottenuto);
+//
+//        //--grado e non ordinale
+//        previsto = "1º aprile";
+//        sorgente = "1° aprile";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(previsto, ottenuto);
+//
+//        //--grado e non ordinale
+//        previsto = "1º ottobre";
+//        sorgente = "1° Ottobre";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(previsto, ottenuto);
+//
+//        //--grado e non ordinale
+//        previsto = "1º luglio";
+//        sorgente = "1° luglio";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(previsto, ottenuto);
+//
+//        //--numero e non ordinale
+//        previsto = "1º luglio";
+//        sorgente = "1 luglio";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(previsto, ottenuto);
+//
+//        //--numero e non ordinale
+//        previsto = "1º ottobre";
+//        sorgente = "1 Ottobre";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(previsto, ottenuto);
+//
+//        //--numero e non ordinale
+//        previsto = "1º aprile";
+//        sorgente = "1 aprile";
+//        ottenuto = par.fix(sorgente, libBio);
+//        Assert.assertEquals(previsto, ottenuto);
+//    }// end of single test
+
 
 }// end of class

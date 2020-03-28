@@ -6,6 +6,7 @@ import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
+import it.algos.wiki.LibWiki;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.SingularAttribute;
@@ -28,10 +29,6 @@ public enum ParBio {
             bio.setNome(value.equals("") ? null : libBio.fixNomeValido(value));
         }// end of method
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixNomeValido(value);
-        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -44,10 +41,6 @@ public enum ParBio {
             bio.setCognome(value.equals("") ? null : libBio.fixCognomeValido(value));
         }// end of method
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixCognomeValido(value);
-        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -74,10 +67,25 @@ public enum ParBio {
             bio.setSesso(value.equals("") ? null : libBio.fixSessoValido(value));
         }// end of method
 
+
+        /**
+         * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return valoreGrezzo;
+        }// end of method
+
+
         @Override
         public String fix(String value, LibBio libBio) {
             return libBio.fixSessoValido(value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -90,10 +98,6 @@ public enum ParBio {
             bio.setLuogoNato(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixLuogoValido(value);
-        }// end of method
 
         @Override
         public String getValue(Bio bio) {
@@ -106,10 +110,12 @@ public enum ParBio {
             bio.setLuogoNatoLink(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixLuogoValido(value);
-        }// end of method
+
+//        @Override
+//        public String fix(String value, LibBio libBio) {
+//            return libBio.fixLuogoValido(value);
+//        }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -124,10 +130,25 @@ public enum ParBio {
             bio.setGiornoNascita(value.equals("") ? null : libBio.fixGiornoLink(value));
         }// end of method
 
+
+        /**
+         * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return LibBio.fixGiornoValido(valoreGrezzo);
+        }// end of method
+
+
         @Override
         public String fix(String value, LibBio libBio) {
             return libBio.fixGiornoValido(value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -141,10 +162,39 @@ public enum ParBio {
             bio.setAnnoNascita(value.equals("") ? null : libBio.fixAnnoLink(value));
         }// end of method
 
+
+        /**
+         * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+         * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param testoOriginario in entrata da elaborare
+         *
+         * @return testoGrezzo troncato
+         */
+        public String troncaParteFinale(String testoOriginario) {
+            return LibBio.troncaParteFinaleMenoPuntoInterrogativo(testoOriginario);
+        } // fine del metodo
+
+
+        /**
+         * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return LibBio.fixAnnoValido(valoreGrezzo);
+        }// end of method
+
+
         @Override
         public String fix(String value, LibBio libBio) {
             return libBio.fixAnnoValido(value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -160,10 +210,25 @@ public enum ParBio {
             bio.setLuogoMorto(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
+
+        /**
+         * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return valoreGrezzo;
+        }// end of method
+
+
         @Override
         public String fix(String value, LibBio libBio) {
             return libBio.fixLuogoValido(value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -176,10 +241,25 @@ public enum ParBio {
             bio.setLuogoMortoLink(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
 
+
+        /**
+         * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return valoreGrezzo;
+        }// end of method
+
+
         @Override
         public String fix(String value, LibBio libBio) {
             return libBio.fixLuogoValido(value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -194,10 +274,25 @@ public enum ParBio {
             bio.setGiornoMorte(value.equals("") ? null : libBio.fixGiornoLink(value));
         }// end of method
 
+
+        /**
+         * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return valoreGrezzo;
+        }// end of method
+
+
         @Override
         public String fix(String value, LibBio libBio) {
             return libBio.fixGiornoValido(value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -211,10 +306,39 @@ public enum ParBio {
             bio.setAnnoMorte(value.equals("") ? null : libBio.fixAnnoLink(value));
         }// end of method
 
+
+        /**
+         * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+         * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param testoOriginario in entrata da elaborare
+         *
+         * @return testoGrezzo troncato
+         */
+        public String troncaParteFinale(String testoOriginario) {
+            return LibBio.troncaParteFinaleMenoPuntoInterrogativo(testoOriginario);
+        } // fine del metodo
+
+
+        /**
+         * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return valoreGrezzo;
+        }// end of method
+
+
         @Override
         public String fix(String value, LibBio libBio) {
             return libBio.fixAnnoValido(value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -236,10 +360,25 @@ public enum ParBio {
             bio.setAttivita(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
 
+
+        /**
+         * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return LibBio.fixAttivitaValida(valoreGrezzo);
+        }// end of method
+
+
         @Override
         public String fix(String value, LibBio libBio) {
             return libBio.fixAttivitaValida(value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -253,10 +392,25 @@ public enum ParBio {
             bio.setAttivita2(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
 
+
+        /**
+         * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return LibBio.fixAttivitaValida(valoreGrezzo);
+        }// end of method
+
+
         @Override
         public String fix(String value, LibBio libBio) {
             return libBio.fixAttivitaValida(value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -270,10 +424,25 @@ public enum ParBio {
             bio.setAttivita3(value.equals("") ? null : libBio.fixAttivitaLink(value));
         }// end of method
 
+
+        /**
+         * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return LibBio.fixAttivitaValida(valoreGrezzo);
+        }// end of method
+
+
         @Override
         public String fix(String value, LibBio libBio) {
             return libBio.fixAttivitaValida(value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -289,10 +458,25 @@ public enum ParBio {
             bio.setNazionalita(value.equals("") ? null : libBio.fixNazionalitaLink(value));
         }// end of method
 
+
+        /**
+         * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return LibBio.fixNazionalitaValida(valoreGrezzo);
+        }// end of method
+
+
         @Override
         public String fix(String value, LibBio libBio) {
             return libBio.fixNazionalitaValida(value);
         }// end of method
+
 
         @Override
         public String getValue(Bio bio) {
@@ -452,17 +636,46 @@ public enum ParBio {
 
 
     /**
-     * Inserisce nell'istanza il valore passato come parametro
-     * La property dell'istanza ha lo stesso nome della enumeration
-     * DEVE essere sovrascritto (implementato)
+     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      *
-     * @param bio   istanza da regolare
-     * @param value valore da inserire
+     * @param valoreOriginarioDelServer in entrata da elaborare
      *
-     * @return istanza regolata
+     * @return valore grezzo troncato del parametro
      */
-    public Bio setBio(Bio bio, Object value) {
-        return null;
+    public String troncaParteFinale(String valoreOriginarioDelServer) {
+        return LibBio.troncaParteFinale(valoreOriginarioDelServer);
+    } // fine del metodo
+
+
+    /**
+     * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+     *
+     * @param valoreGrezzo in entrata da elaborare
+     *
+     * @return valore finale valido del parametro
+     */
+    public String fixValoreGrezzo(String valoreGrezzo) {
+        return LibBio.fixValoreGrezzo(valoreGrezzo);
+    }// end of method
+
+
+    /**
+     * Restituisce un valore valido del parametro <br>
+     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+     *
+     * @param valoreOriginarioDelServer in entrata da elaborare
+     *
+     * @return valore finale valido del parametro
+     */
+    public String estraeParteValida(String valoreOriginarioDelServer) {
+        String valoreGrezzo = troncaParteFinale(valoreOriginarioDelServer);
+        return fixValoreGrezzo(valoreGrezzo);
     }// end of method
 
 
@@ -477,11 +690,25 @@ public enum ParBio {
      *
      * @return valore finale valido
      */
+    @Deprecated
     public String fix(String value, LibBio libBio) {
         return value;
     }// end of method
 
 
+    /**
+     * Inserisce nell'istanza il valore passato come parametro
+     * La property dell'istanza ha lo stesso nome della enumeration
+     * DEVE essere sovrascritto (implementato)
+     *
+     * @param bio   istanza da regolare
+     * @param value valore da inserire
+     *
+     * @return istanza regolata
+     */
+    public Bio setBio(Bio bio, Object value) {
+        return null;
+    }// end of method
 
 
     /**

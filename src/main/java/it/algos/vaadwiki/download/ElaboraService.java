@@ -585,14 +585,16 @@ public class ElaboraService extends ABioService {
     public String sostituisceParteValida(ParBio par, String testoOriginale, String parteValidaNuova) {
         String valoreSostituito = VUOTA;
         String parteValidaVecchia = par.fix(testoOriginale, libBio);
+        parteValidaVecchia = libBio.fixPropertyBase(testoOriginale);
 
         if (text.isValid(testoOriginale)) {
             if (parteValidaVecchia.equals(parteValidaNuova)) {
-                if (parteValidaVecchia.equals(VUOTA)) {
-                    return testoOriginale;
-                } else {
-                    return parteValidaNuova;
-                }// end of if/else cycle
+                return testoOriginale;
+//                if (parteValidaVecchia.equals(VUOTA)) {
+//                    return testoOriginale;
+//                } else {
+//                    return parteValidaNuova;
+//                }// end of if/else cycle
             } else {
                 valoreSostituito = text.sostituisce(testoOriginale, parteValidaVecchia, parteValidaNuova);
             }// end of if/else cycle
