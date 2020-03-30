@@ -1049,173 +1049,6 @@ public class LibBio {
         return stringaOut;
     } // fine del metodo
 
-//    /**
-//     * Restituisce il login registrato nella sessione
-//     */
-//    public static WikiLogin getLogin() {
-//        WikiLogin wikiLogin = null;
-//        Object obj;
-//
-//        obj = LibSession.getAttribute(WikiLogin.WIKI_LOGIN_KEY_IN_SESSION);
-//        if (obj != null && obj instanceof WikiLogin) {
-//            wikiLogin = (WikiLogin) obj;
-//        }// end of if cycle
-//
-//        return wikiLogin;
-//    } // fine del metodo
-//
-//    /**
-//     * Controllla che il login esista e sia loggato come bot
-//     */
-//    public static boolean isLoggatoBot() {
-//        boolean status = false;
-//        WikiLogin wikiLogin = getLogin();
-//
-//        if (wikiLogin != null && wikiLogin.isValido() && wikiLogin.isBot()) {
-//            status = true;
-//        }// end of if cycle
-//
-//        return status;
-//    } // fine del metodo
-//
-//    /**
-//     * Il ciclo necessita del login come bot per il funzionamento normale
-//     * <p>
-//     * Se è loggato come bot, ritorna true
-//     * Se non nè loggato o non è loggato come bot, controlla il flag USA_CICLI_ANCHE_SENZA_BOT
-//     * se è true, usa il limite normale (non bot) di mediawiki di 50 pagine
-//     * se è false, ritorna true e NON esegue il ciclo
-//     */
-//    public static boolean checkLoggin() {
-//        if (LibBio.isLoggatoBot()) {
-//            return true;
-//        } else {
-//            if (Pref.getBool(CostBio.USA_CICLI_ANCHE_SENZA_BOT, true)) {
-//                return true;
-//            } else {
-//                return false;
-//            }// end of if/else cycle
-//        }// end of if/else cycle
-//    }// end of static method
-
-//    /**
-//     * Regola la lunghezza del campo
-//     * <p>
-//     * Elimina il teasto successivo al ref
-//     * Elimina il testo successivo alle note
-//     * Elimina il testo successivo alle graffe
-//     * Elimina il testo successivo alla virgola
-//     * Elimina il testo successivo al punto interrogativo
-//     * Elimina eventuali quadre
-//     * Tronca comunque il testo a 255 caratteri
-//     *
-//     * @param testoIn entrata da elaborare
-//     * @return testoOut regolato in uscita
-//     */
-//    public static String fixCampoLuogo(String testoIn) {
-//        String testoOut = testoIn;
-//
-//        if (testoOut != null) {
-//            testoOut = testoOut.trim();
-//            testoOut = LibText.levaDopoRef(testoOut);
-//            testoOut = LibText.levaDopoNote(testoOut);
-//            testoOut = LibText.levaDopoGraffe(testoOut);
-//            testoOut = LibText.levaDopoVirgola(testoOut);
-//            testoOut = LibText.levaDopoInterrogativo(testoOut);
-//            testoOut = LibBio.setNoQuadre(testoOut);
-//            testoOut = testoOut.trim();
-//        }// fine del blocco if
-//
-//        if (testoOut != null && testoOut.length() > 253) {
-//            testoOut = testoOut.substring(0, 252);
-//        }// fine del blocco if
-//
-//        return testoOut;
-//    }// end of static method
-
-//    /**
-//     * Regola la lunghezza del campo
-//     * <p>
-//     * Elimina il teasto successivo al ref
-//     * Elimina il testo successivo alle note
-//     * Elimina il testo successivo alle graffe
-//     * Elimina il testo successivo alla virgola
-//     * Elimina il testo successivo al punto interrogativo
-//     * Elimina eventuali quadre
-//     * Tronca comunque il testo a 255 caratteri
-//     *
-//     * @param testoIn entrata da elaborare
-//     * @return testoOut regolato in uscita
-//     */
-//    public static String fixCampoLuogoLink(String testoIn) {
-//        String testoOut = testoIn;
-//
-//        if (testoOut != null) {
-//            testoOut = testoOut.trim();
-//            testoOut = LibText.levaDopoRef(testoOut);
-//            testoOut = LibText.levaDopoNote(testoOut);
-//            testoOut = LibText.levaDopoGraffe(testoOut);
-//            testoOut = LibText.levaDopoInterrogativo(testoOut);
-//            testoOut = LibBio.setNoQuadre(testoOut);
-//            testoOut = testoOut.trim();
-//        }// fine del blocco if
-//
-//        if (testoOut != null && testoOut.length() > 253) {
-//            testoOut = testoOut.substring(0, 252);
-//        }// fine del blocco if
-//
-//        return testoOut;
-//    }// end of static method
-
-//    /**
-//     * Regola la lunghezza del campo
-//     * <p>
-//     * Elimina il teasto successivo al ref
-//     * Elimina il testo successivo alle note
-//     * Elimina il testo successivo alle graffe
-//     * Elimina il testo successivo alla virgola
-//     * Elimina il testo successivo alla parentesi
-//     * Elimina eventuali quadre
-//     * Tronca comunque il testo a 255 caratteri
-//     *
-//     * @param testoIn entrata da elaborare
-//     * @return testoOut regolato in uscita
-//     */
-//    public static String fixCampo(String testoIn) {
-//        String testoOut = testoIn;
-//
-//        if (testoOut != null) {
-//            testoOut = testoOut.trim();
-//            testoOut = LibText.levaDopoParentesi(testoOut);
-//            testoOut = fixCampoLuogo(testoOut);
-//        }// fine del blocco if
-//
-//        return testoOut;
-//    }// end of static method
-
-//    /**
-//     * Elimina il testo successivo alla virgola
-//     *
-//     * @param testoIn entrata da elaborare
-//     * @return testoOut regolato in uscita
-//     */
-//    public static String fixCampoSesso(String testoIn) {
-//        String testoOut = testoIn;
-//
-//        if (testoOut != null) {
-//            testoOut = testoOut.trim();
-//            testoOut = fixCampo(testoOut);
-//            testoOut = testoOut.trim();
-//        }// fine del blocco if
-//
-//        if (testoOut != null && !testoOut.equals("M") && !testoOut.equals("F")) {
-//            testoOut = "";
-//        }// end of if cycle
-//
-//        return testoOut;
-//    }// end of static method
-
-
     /**
      * Aggiunge una parentesi tonda in testa e coda alla stringa.
      * Elimina spazi vuoti iniziali e finali
@@ -1590,15 +1423,42 @@ public class LibBio {
     } // fine del metodo
 
 
+//    /**
+//     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+//     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+//     * Mantiene il punto interrogativo, anche se da solo <br>
+//     * @param testoOriginario in entrata da elaborare
+//     *
+//     * @return testoGrezzo troncato
+//     */
+//    public static String troncaParteFinaleMenoPuntoInterrogativo(String testoOriginario) {
+//        String testoGrezzo = VUOTA;
+//
+//        if (text.isEmpty(testoOriginario)) {
+//            return VUOTA;
+//        }// end of if cycle
+//
+//        testoGrezzo = testoOriginario.trim();
+//        testoGrezzo = text.levaDopoRef(testoGrezzo);
+//        testoGrezzo = text.levaDopoNote(testoGrezzo);
+//        testoGrezzo = text.levaDopoGraffe(testoGrezzo);
+//        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
+//        testoGrezzo = testoGrezzo.trim();
+//
+//        return testoGrezzo;
+//    } // fine del metodo
+
+
     /**
      * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
      * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
-     *
+     * Elimina il punto interrogativo, se da solo <br>
+     * Mantiene il punto interrogativo, se da solo <br>
      * @param testoOriginario in entrata da elaborare
      *
      * @return testoGrezzo troncato
      */
-    public static String troncaParteFinaleMenoPuntoInterrogativo(String testoOriginario) {
+    public static String troncaParteFinalePuntoInterrogativo(String testoOriginario) {
         String testoGrezzo = VUOTA;
 
         if (text.isEmpty(testoOriginario)) {
@@ -1610,120 +1470,14 @@ public class LibBio {
         testoGrezzo = text.levaDopoNote(testoGrezzo);
         testoGrezzo = text.levaDopoGraffe(testoGrezzo);
         testoGrezzo = text.levaDopoVirgola(testoGrezzo);
+        if (!testoGrezzo.equals("?")) {
+            testoGrezzo = text.levaDopoInterrogativo(testoGrezzo);
+        }// end of if cycle
+
         testoGrezzo = testoGrezzo.trim();
 
         return testoGrezzo;
     } // fine del metodo
-
-
-//    /**
-//     * Controlla che esistano modifiche sostanziali (non solo la data)
-//     *
-//     * @param titoloVoce eventualmente da modificare
-//     * @param testoNew   della modifica
-//     * @param tagIni     inizio del testo iniziale (incipit) da considerare NON sostanziale
-//     * @param tagEnd     fine del testo iniziale (incipit) da considerare NON sostanziale
-//     * @return la modifica va effettuata
-//     */
-//    public static boolean checkModificaSostanziale(String titoloVoce, String testoNew, String tagIni, String tagEnd) {
-//        boolean status = false;
-//        String testoOldSignificativo = CostBio.VUOTO;
-//        String testoNewSignificativo = CostBio.VUOTO;
-//        String testoOld = Api.leggeVoce(titoloVoce);
-//        int pos1 = 0;
-//        int pos2 = 0;
-//
-//        if (testoOld.equals(CostBio.VUOTO)) {
-//            return true;
-//        }// fine del blocco if
-//
-//        if (!testoOld.equals(CostBio.VUOTO) && !testoNew.equals(CostBio.VUOTO)) {
-//            pos1 = testoOld.indexOf(tagIni);
-//            pos2 = testoOld.indexOf(tagEnd, pos1);
-//            try { // prova ad eseguire il codice
-//                testoOldSignificativo = testoOld.substring(pos2);
-//            } catch (Exception unErrore) { // intercetta l'errore
-//                int a = 87; //todo per ora niente (spedire mail)
-//            }// fine del blocco try-catch
-//
-//            pos1 = testoNew.indexOf(tagIni);
-//            pos2 = testoNew.indexOf(tagEnd, pos1);
-//            try { // prova ad eseguire il codice
-//                testoNewSignificativo = testoNew.substring(pos2);
-//            } catch (Exception unErrore) { // intercetta l'errore
-//                int a = 87; //todo per ora niente (spedire mail)
-//            }// fine del blocco try-catch
-//        }// fine del blocco if
-//
-//        if (!testoOldSignificativo.equals(CostBio.VUOTO) && !testoNewSignificativo.equals(CostBio.VUOTO)) {
-//            if (!testoNewSignificativo.equals(testoOldSignificativo)) {
-//                status = true;
-//            }// fine del blocco if
-//        }// fine del blocco if
-//
-//
-//        return status;
-//    } // fine del metodo
-
-
-//    /**
-//     * Recupera un oggetto Bio leggendolo dal server wiki.
-//     *
-//     * @param wikiTitle della pagina da cui estrarre il template Bio
-//     * @return istanza di Bio
-//     */
-//    public static Bio leggeBio(String wikiTitle) {
-//        Bio bio = null;
-//        Page pagina = null;
-//        WrapBio wrap = null;
-//
-//        if (!wikiTitle.equals(CostBio.VUOTO)) {
-//            pagina = Api.leggePage(wikiTitle);
-//        }// end of if cycle
-//
-//        if (pagina != null) {
-//            wrap = new WrapBio(pagina);
-//        }// end of if cycle
-//
-//        if (wrap != null) {
-//            bio = wrap.getBio();
-//        }// end of if cycle
-//
-//        return bio;
-//    } // fine del metodo
-
-
-//    /**
-//     * Estrae la parte visibile di un link
-//     */
-//    public static String estraeLink(String paginaCompleta) {
-//        String link;
-//
-//        link = paginaCompleta.substring(paginaCompleta.indexOf("|") + 1);
-//        link = LibWiki.setNoQuadre(link);
-//
-//        return link;
-//    }// fine del metodo
-
-//    /**
-//     * Semplifica un link, se la parte visibile è uguale al link effettivo
-//     */
-//    public static String fixLink(String paginaCompleta) {
-//        String link = LibWiki.setNoQuadre(paginaCompleta);
-//        String[] parti = null;
-//
-//        if (!link.equals(CostBio.VUOTO)) {
-//            parti = link.split("\\|");
-//        }// end of if cycle
-//
-//        if (parti != null && parti.length == 2) {
-//            if (parti[0].equals(parti[1])) {
-//                link = parti[0];
-//            }// end of if cycle
-//        }// end of if cycle
-//
-//        return LibWiki.setQuadre(link);
-//    }// fine del metodo
 
 
     /**
@@ -1741,327 +1495,13 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
-        testoGrezzo = troncaParteFinaleMenoPuntoInterrogativo(testoOriginario);
+        testoGrezzo = troncaParteFinalePuntoInterrogativo(testoOriginario);
         testoGrezzo = text.levaDopoInterrogativo(testoGrezzo);
         testoGrezzo = testoGrezzo.trim();
 
         return testoGrezzo;
     } // fine del metodo
 
-
-//    /**
-//     * Costruisce una chiave di suddivisione per attività
-//     */
-//    public static String getChiavePerAttivita(Bio bio, String tagParagrafoNullo) {
-//        String chiave = tagParagrafoNullo;
-//        Genere genere = null;
-//        String genereTxt;
-//        Attivita attivita = null;
-//        String attivitaSingolare = CostBio.VUOTO;
-//
-//        if (bio == null) {
-//            return CostBio.VUOTO;
-//        }// end of if cycle
-//
-//        attivita = bio.getAttivitaPunta();
-//        if (attivita != null) {
-//            attivitaSingolare = attivita.getSingolare();
-//            genere = Genere.findBySingolareAndSesso(attivitaSingolare, bio.getSesso());
-//        }// end of if cycle
-//
-//        if (genere != null) {
-//            genereTxt = genere.getPlurale();
-//            if (!genereTxt.equals(CostBio.VUOTO)) {
-//                chiave = LibText.primaMaiuscola(genereTxt);
-//            }// end of if cycle
-//        }// end of if cycle
-//
-//        return chiave;
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce un titolo di riferimento per attività
-//     */
-//    public static String getTitoloPerAttivita(Bio bio, String tagParagrafoNullo) {
-//        String titolo = tagParagrafoNullo;
-//        Attivita attivita = null;
-//
-//        if (bio == null) {
-//            return CostBio.VUOTO;
-//        }// end of if cycle
-//
-//        attivita = bio.getAttivitaPunta();
-//        if (attivita != null) {
-//            titolo = attivita.getPlurale();
-//        }// end of if cycle
-//
-//        return titolo;
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce una chiave di suddivisione per nazionalità
-//     */
-//    public static String getChiavePerNazionalita(Bio bio, String tagParagrafoNullo) {
-//        String chiave = tagParagrafoNullo;
-//        Nazionalita nazionalita = null;
-//        String nazionalitaSingolare = CostBio.VUOTO;
-//
-//        if (bio == null) {
-//            return CostBio.VUOTO;
-//        }// end of if cycle
-//
-//        nazionalita = bio.getNazionalitaPunta();
-//        if (nazionalita != null) {
-//            chiave = nazionalita.getPlurale();
-//        }// end of if cycle
-//
-//        return LibText.primaMaiuscola(chiave);
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce una chiave di suddivisione alfabetica per lettera iniziale del cognome
-//     */
-//    public static String getChiavePerCognome(Bio bio, String tagParagrafoNullo) {
-//        if (bio != null) {
-//            return getChiavePerAntro(bio.getCognomeValido(), tagParagrafoNullo);
-//        } else {
-//            return tagParagrafoNullo;
-//        }// end of if/else cycle
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce una chiave di suddivisione alfabetica per le prime due lettere iniziale del cognome
-//     */
-//    public static String getChiavePerCognomeDue(Bio bio, String tagParagrafoNullo) {
-//        if (bio != null) {
-//            return getChiavePerAntroDue(bio.getCognomeValido(), tagParagrafoNullo);
-//        } else {
-//            return tagParagrafoNullo;
-//        }// end of if/else cycle
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce una chiave di suddivisione alfabetica per lettera iniziale del nome
-//     */
-//    public static String getChiavePerNome(Bio bio, String tagParagrafoNullo) {
-//        if (bio != null) {
-//            return getChiavePerAntro(bio.getNomeValido(), tagParagrafoNullo);
-//        } else {
-//            return tagParagrafoNullo;
-//        }// end of if/else cycle
-//    }// fine del metodo
-
-
-//    /**
-//     * Costruisce una chiave di suddivisione alfabetica per lettera iniziale del nome o del cognome
-//     */
-//    private static String getChiavePerAntro(String value, String tagParagrafoNullo) {
-//        String chiave = tagParagrafoNullo;
-//
-//        if (value != null && value.length() > 0) {
-//            chiave = value.substring(0, 1);
-//            chiave = chiave.toUpperCase();
-//        }// end of if cycle
-//
-//        return chiave;
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce una chiave di suddivisione alfabetica per le prime due lettere iniziali del nome o del cognome
-//     */
-//    private static String getChiavePerAntroDue(String value, String tagParagrafoNullo) {
-//        String chiave = tagParagrafoNullo;
-//
-//        if (value != null && value.length() > 1) {
-//            chiave = value.substring(0, 1).toUpperCase();
-//            chiave += value.substring(1, 2).toLowerCase();
-//        }// end of if cycle
-//
-//        return chiave;
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce una chiave di suddivisione alfabetica per anno di nascita linkato
-//     */
-//    public static String getChiavePerAnnoNato(Bio bio, String tagParagrafoNullo) {
-//        if (bio != null) {
-//            return getChiavePerAnno(bio.getAnnoNatoPunta());
-//        } else {
-//            return tagParagrafoNullo;
-//        }// end of if/else cycle
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce una chiave di suddivisione alfabetica per anno di morte linkato
-//     */
-//    public static String getChiavePerAnnoMorto(Bio bio, String tagParagrafoNullo) {
-//        if (bio != null) {
-//            return getChiavePerAnno(bio.getAnnoMortoPunta());
-//        } else {
-//            return tagParagrafoNullo;
-//        }// end of if/else cycle
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce una chiave di suddivisione alfabetica per anno di nascita o morte linkato
-//     */
-//    private static String getChiavePerAnno(Anno anno) {
-//        String chiave = CostBio.VUOTO;
-//
-//        if (anno != null) {
-//            chiave = anno.getTitolo();
-//        }// end of if cycle
-//
-//        return chiave;
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce una chiave di suddivisione alfabetica per giorno di nascita linkato
-//     */
-//    public static String getChiavePerGiornoNato(Bio bio, String tagParagrafoNullo) {
-//        if (bio != null) {
-//            return getChiavePerGiorno(bio.getGiornoNatoPunta());
-//        } else {
-//            return tagParagrafoNullo;
-//        }// end of if/else cycle
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce una chiave di suddivisione alfabetica per giorno di morte linkato
-//     */
-//    public static String getChiavePerGiornoMorto(Bio bio, String tagParagrafoNullo) {
-//        if (bio != null) {
-//            return getChiavePerGiorno(bio.getGiornoMortoPunta());
-//        } else {
-//            return tagParagrafoNullo;
-//        }// end of if/else cycle
-//    }// fine del metodo
-
-//    /**
-//     * Costruisce una chiave di suddivisione alfabetica per giorno di nascita o morte linkato
-//     */
-//    private static String getChiavePerGiorno(Giorno giorno) {
-//        String chiave = CostBio.VUOTO;
-//
-//        if (giorno != null) {
-//            chiave = giorno.getTitolo();
-//        }// end of if cycle
-//
-//        return chiave;
-//    }// fine del metodo
-
-//    /**
-//     * Elimina la parte iniziale della didascalia, se presente
-//     */
-//    public static String troncaDidascalia(String didascaliaIn) {
-//        String didascaliaOut = didascaliaIn;
-//        String tag = "]]"+CostBio.TAG_SEPARATORE;
-//
-//        if (didascaliaIn.contains(tag)) {
-//            didascaliaOut = didascaliaIn.substring(didascaliaIn.indexOf(tag) + tag.length()).trim();
-//        }// end of if cycle
-//
-//        return didascaliaOut;
-//    }// fine del metodo
-
-//    /**
-//     * Spazio di separazione
-//     */
-//    public static com.vaadin.ui.Label spazio(int ripetizioni) {
-//        com.vaadin.ui.Label label;
-//        String tag = "";
-//
-//        for (int k = 0; k < ripetizioni; k++) {
-//            tag += CostBio.SPAZIO_HTML;
-//        }// end of for cycle
-//
-//        return new com.vaadin.ui.Label(tag, ContentMode.HTML);
-//    }// fine del metodo
-
-
-//    /**
-//     * Recupera una mappa completa (ordinata) dei nomi/cognomi e della loro frequenza
-//     *
-//     * @return mappa sigla (nomi/cognomi), numero di pagine
-//     */
-//    public static LinkedHashMap<String, Integer> findMappa(Vector vettoreAll, int taglio) {
-//        LinkedHashMap<String, Integer> mappa = new LinkedHashMap<>();
-//        LinkedHashMap<String, Object> mappaTmp = null;
-//        Object[] obj;
-//        String nomeText = "";
-//        long numVociBio = 0;
-//        String chiave;
-//        int valore;
-//
-//        if (vettoreAll != null) {
-//            mappaTmp = new LinkedHashMap<>();
-//            for (Object vect : vettoreAll) {
-//                if (vect instanceof Object[]) {
-//                    obj = (Object[]) vect;
-//                    nomeText = (String) obj[0];
-//                    numVociBio = (long) obj[1];
-//                    if (numVociBio >= taglio) {
-//                        if (!nomeText.equals("")) {
-//                            mappaTmp.put(nomeText, (int) numVociBio);
-//                        }// end of if cycle
-//                    }// end of if cycle
-//                }// end of if cycle
-//            }// end of for cycle
-//        }// end of if cycle
-//
-//        if (mappaTmp != null) {
-//            mappaTmp = LibArray.ordinaMappaAccentiSensibile(mappaTmp);
-//            for (Map.Entry<String, Object> elementoDellaMappa : mappaTmp.entrySet()) {
-//                chiave = elementoDellaMappa.getKey();
-//                valore = (int) elementoDellaMappa.getValue();
-//                mappa.put(chiave, valore);
-//            }// end of for cycle
-//        }// end of if cycle
-//
-//        return mappa;
-//    }// end of method
-
-//    /**
-//     * Recupera una mappa completa (ordinata) dei nomi/cognomi e della loro frequenza
-//     *
-//     * @return mappa sigla (nomi/cognomi), numero di pagine
-//     */
-//    public static LinkedHashMap<Attivita, ArrayList> findMappaAtt(Vector vettoreAll, int taglio) {
-//        LinkedHashMap<String, Integer> mappa = new LinkedHashMap<>();
-//        LinkedHashMap<String, Object> mappaTmp = null;
-//        Object[] obj;
-//        String nomeText = "";
-//        long numVociBio = 0;
-//        String chiave;
-//        int valore;
-//
-//        if (vettoreAll != null) {
-//            mappaTmp = new LinkedHashMap<>();
-//            for (Object vect : vettoreAll) {
-//                if (vect instanceof Object[]) {
-//                    obj = (Object[]) vect;
-//                    nomeText = (String) obj[0];
-//                    numVociBio = (long) obj[1];
-//                    if (numVociBio >= taglio) {
-//                        if (!nomeText.equals("")) {
-//                            mappaTmp.put(nomeText, (int) numVociBio);
-//                        }// end of if cycle
-//                    }// end of if cycle
-//                }// end of if cycle
-//            }// end of for cycle
-//        }// end of if cycle
-//
-//        if (mappaTmp != null) {
-//            mappaTmp = LibArray.ordinaMappaAccentiSensibile(mappaTmp);
-//            for (Map.Entry<String, Object> elementoDellaMappa : mappaTmp.entrySet()) {
-//                chiave = elementoDellaMappa.getKey();
-//                valore = (int) elementoDellaMappa.getValue();
-//                mappa.put(chiave, valore);
-//            }// end of for cycle
-//        }// end of if cycle
-//
-//        return null;
-//    }// end of method
 
 
     /**

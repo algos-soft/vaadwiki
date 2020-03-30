@@ -6,7 +6,6 @@ import it.algos.vaadflow.modules.giorno.Giorno;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
-import it.algos.wiki.LibWiki;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.SingularAttribute;
@@ -99,6 +98,20 @@ public enum ParBio {
         }// end of method
 
 
+        /**
+         * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+         * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param testoOriginario in entrata da elaborare
+         *
+         * @return testoGrezzo troncato
+         */
+        public String troncaParteFinale(String testoOriginario) {
+            return LibBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+        } // fine del metodo
+
+
         @Override
         public String getValue(Bio bio) {
             return bio.getLuogoNato() != null ? bio.getLuogoNato() : "";
@@ -109,12 +122,6 @@ public enum ParBio {
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setLuogoNatoLink(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
-
-
-//        @Override
-//        public String fix(String value, LibBio libBio) {
-//            return libBio.fixLuogoValido(value);
-//        }// end of method
 
 
         @Override
@@ -173,7 +180,7 @@ public enum ParBio {
          * @return testoGrezzo troncato
          */
         public String troncaParteFinale(String testoOriginario) {
-            return LibBio.troncaParteFinaleMenoPuntoInterrogativo(testoOriginario);
+            return LibBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
         } // fine del metodo
 
 
@@ -209,6 +216,20 @@ public enum ParBio {
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setLuogoMorto(value.equals("") ? null : libBio.fixLuogoValido(value));
         }// end of method
+
+
+        /**
+         * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+         * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param testoOriginario in entrata da elaborare
+         *
+         * @return testoGrezzo troncato
+         */
+        public String troncaParteFinale(String testoOriginario) {
+            return LibBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+        } // fine del metodo
 
 
         /**
@@ -317,7 +338,7 @@ public enum ParBio {
          * @return testoGrezzo troncato
          */
         public String troncaParteFinale(String testoOriginario) {
-            return LibBio.troncaParteFinaleMenoPuntoInterrogativo(testoOriginario);
+            return LibBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
         } // fine del metodo
 
 
@@ -636,7 +657,7 @@ public enum ParBio {
 
 
     /**
-     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
      * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
      * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
      * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
@@ -665,7 +686,7 @@ public enum ParBio {
 
     /**
      * Restituisce un valore valido del parametro <br>
-     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
      * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
      * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      *
@@ -676,6 +697,34 @@ public enum ParBio {
     public String estraeParteValida(String valoreOriginarioDelServer) {
         String valoreGrezzo = troncaParteFinale(valoreOriginarioDelServer);
         return fixValoreGrezzo(valoreGrezzo);
+    }// end of method
+
+
+    /**
+     * Restituisce un valore valido del parametro <br>
+     * MANTIENE gli eventuali contenuti IN CODA che vengono reinseriti dopo aver elaborato il valore valido del parametro <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+     * Usato per Upload sul server
+     *
+     * @param valoreOriginarioDelServer in entrata da elaborare
+     *
+     * @return valore finale valido completo del parametro
+     */
+    public String sostituisceParteValida(String valoreOriginarioDelServer) {
+        String valoreFinale = VUOTA;
+        String coda;
+        String parteIniziale = troncaParteFinale(valoreOriginarioDelServer).trim();
+        int lunghezzaParteIniziale = parteIniziale.length();
+        String parteFinale = valoreOriginarioDelServer.substring(lunghezzaParteIniziale).trim();
+        String valoreValido = fixValoreGrezzo(parteIniziale);
+
+        valoreFinale = valoreValido;
+        if (valoreValido.length() > 0 && !parteFinale.equals("?")) {
+            coda = valoreOriginarioDelServer.substring(parteIniziale.length());
+            valoreFinale += coda;
+        }// end of if cycle
+
+        return valoreFinale.trim();
     }// end of method
 
 
