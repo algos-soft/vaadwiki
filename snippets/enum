@@ -1,20 +1,23 @@
-public enum ReportType {
+    private LibBio libBio;
 
-    REPORT_1("name", "filename"),
-    REPORT_2("name", "filename");
+
+    public void setLibBio(LibBio libBio) {
+        this.libBio = libBio;
+    }// end of method
+
 
     @Component
-    public static class ReportTypeServiceInjector {
+    public static class ParBioServiceInjector {
+
         @Autowired
-        private DataPrepareService dataPrepareService;
+        private LibBio libBio;
+
 
         @PostConstruct
         public void postConstruct() {
-            for (ReportType rt : EnumSet.allOf(ReportType.class))
-               rt.setDataPrepareService(dataPrepareService);
-        }
-    }
+            for (ParBio parBio : ParBio.values()) {
+                parBio.setLibBio(libBio);
+            }// end of for cycle
+        }// end of method
 
-[...]
-
-}
+    }// end of class

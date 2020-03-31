@@ -681,7 +681,7 @@ public class TemplateBioIntegrationTest extends ATest {
 
     private void stampaPar(ParBio par, String sorgente, String previsto) {
 //        ottenuto = par.fix(sorgente, libBio);
-        ottenuto = par.estraeParteSignificativa(sorgente);
+        ottenuto = par.estraeValore(sorgente);
         Assert.assertEquals(previsto, ottenuto);
         if (ottenuto.equals(VUOTA)) {
             ottenuto = "'vuoto'";
@@ -694,7 +694,7 @@ public class TemplateBioIntegrationTest extends ATest {
      * Per ogni parametro controlla che il valore vuoto venga gestito <br>
      */
     private void stampaParVuoto(ParBio par) {
-        ottenuto = par.estraeParteSignificativa(VUOTA);
+        ottenuto = par.estraeValore(VUOTA);
         Assert.assertEquals(VUOTA, ottenuto);
         System.out.println("controllata validità del parametro vuoto in ingresso");
     }// end of method
@@ -709,7 +709,7 @@ public class TemplateBioIntegrationTest extends ATest {
         stampaParVuoto(par);
 
         sorgente = LibBio.INTERROGATIVO;
-        ottenuto = par.estraeParteSignificativa(sorgente);
+        ottenuto = par.estraeValore(sorgente);
         Assert.assertEquals(previsto, ottenuto);
         System.out.println("il punto interrogativo (ammesso per il parametro " + par.getTag() + ") rimane punto interrogativo");
     }// end of method
@@ -724,7 +724,7 @@ public class TemplateBioIntegrationTest extends ATest {
         stampaParVuoto(par);
 
         sorgente = LibBio.INTERROGATIVO;
-        ottenuto = par.estraeParteSignificativa(sorgente);
+        ottenuto = par.estraeValore(sorgente);
         Assert.assertEquals(previsto, ottenuto);
         System.out.println("il punto interrogativo (non ammesso per il parametro " + par.getTag() + ") diventa 'vuoto'");
     }// end of method

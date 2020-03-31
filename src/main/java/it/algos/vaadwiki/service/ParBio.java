@@ -3,10 +3,14 @@ package it.algos.vaadwiki.service;
 
 import it.algos.vaadflow.modules.anno.Anno;
 import it.algos.vaadflow.modules.giorno.Giorno;
+import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.ArrayList;
@@ -70,19 +74,30 @@ public enum ParBio {
         /**
          * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
          * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
          *
          * @param valoreGrezzo in entrata da elaborare
          *
          * @return valore finale valido del parametro
          */
         public String fixValore(String valoreGrezzo) {
-            return LibBio.fixSessoValido(valoreGrezzo);
+            return libBio.fixSessoValido(valoreGrezzo);
         }// end of method
 
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixSessoValido(value);
+        /**
+         * Elabora un valore GREZZO e restituisce un parametro VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixParametro(String valoreGrezzo) {
+            return libBio.fixSessoValido(valoreGrezzo);
         }// end of method
 
 
@@ -108,7 +123,7 @@ public enum ParBio {
          * @return testoGrezzo troncato
          */
         public String troncaParteFinale(String testoOriginario) {
-            return LibBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+            return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
         } // fine del metodo
 
 
@@ -141,19 +156,30 @@ public enum ParBio {
         /**
          * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
          * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
          *
          * @param valoreGrezzo in entrata da elaborare
          *
          * @return valore finale valido del parametro
          */
         public String fixValore(String valoreGrezzo) {
-            return LibBio.fixGiornoValido(valoreGrezzo);
+            return libBio.fixGiornoValido(valoreGrezzo, false);
         }// end of method
 
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixGiornoValido(value);
+        /**
+         * Elabora un valore GREZZO e restituisce un parametro VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixParametro(String valoreGrezzo) {
+            return libBio.fixGiornoValido(valoreGrezzo, true);
         }// end of method
 
 
@@ -180,12 +206,14 @@ public enum ParBio {
          * @return testoGrezzo troncato
          */
         public String troncaParteFinale(String testoOriginario) {
-            return LibBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+            return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
         } // fine del metodo
 
 
         /**
          * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
          * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
          *
          * @param valoreGrezzo in entrata da elaborare
@@ -193,13 +221,22 @@ public enum ParBio {
          * @return valore finale valido del parametro
          */
         public String fixValore(String valoreGrezzo) {
-            return LibBio.fixAnnoValido(valoreGrezzo);
+            return libBio.fixAnnoValido(valoreGrezzo, false);
         }// end of method
 
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixAnnoValido(value);
+        /**
+         * Elabora un valore GREZZO e restituisce un parametro VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixParametro(String valoreGrezzo) {
+            return libBio.fixAnnoValido(valoreGrezzo, true);
         }// end of method
 
 
@@ -228,7 +265,7 @@ public enum ParBio {
          * @return testoGrezzo troncato
          */
         public String troncaParteFinale(String testoOriginario) {
-            return LibBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+            return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
         } // fine del metodo
 
 
@@ -299,19 +336,30 @@ public enum ParBio {
         /**
          * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
          * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
          *
          * @param valoreGrezzo in entrata da elaborare
          *
          * @return valore finale valido del parametro
          */
         public String fixValore(String valoreGrezzo) {
-            return valoreGrezzo;
+            return libBio.fixGiornoValido(valoreGrezzo, false);
         }// end of method
 
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixGiornoValido(value);
+        /**
+         * Elabora un valore GREZZO e restituisce un parametro VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixParametro(String valoreGrezzo) {
+            return libBio.fixGiornoValido(valoreGrezzo, true);
         }// end of method
 
 
@@ -338,12 +386,14 @@ public enum ParBio {
          * @return testoGrezzo troncato
          */
         public String troncaParteFinale(String testoOriginario) {
-            return LibBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+            return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
         } // fine del metodo
 
 
         /**
          * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
          * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
          *
          * @param valoreGrezzo in entrata da elaborare
@@ -351,13 +401,22 @@ public enum ParBio {
          * @return valore finale valido del parametro
          */
         public String fixValore(String valoreGrezzo) {
-            return LibBio.fixAnnoValido(valoreGrezzo);
+            return libBio.fixAnnoValido(valoreGrezzo, false);
         }// end of method
 
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixAnnoValido(value);
+        /**
+         * Elabora un valore GREZZO e restituisce un parametro VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixParametro(String valoreGrezzo) {
+            return libBio.fixAnnoValido(valoreGrezzo, true);
         }// end of method
 
 
@@ -385,19 +444,30 @@ public enum ParBio {
         /**
          * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
          * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
          *
          * @param valoreGrezzo in entrata da elaborare
          *
          * @return valore finale valido del parametro
          */
         public String fixValore(String valoreGrezzo) {
-            return LibBio.fixAttivitaValida(valoreGrezzo);
+            return libBio.fixAttivitaValida(valoreGrezzo, false);
         }// end of method
 
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixAttivitaValida(value);
+        /**
+         * Elabora un valore GREZZO e restituisce un parametro VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixParametro(String valoreGrezzo) {
+            return libBio.fixAttivitaValida(valoreGrezzo, true);
         }// end of method
 
 
@@ -417,19 +487,30 @@ public enum ParBio {
         /**
          * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
          * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
          *
          * @param valoreGrezzo in entrata da elaborare
          *
          * @return valore finale valido del parametro
          */
         public String fixValore(String valoreGrezzo) {
-            return LibBio.fixAttivitaValida(valoreGrezzo);
+            return libBio.fixAttivitaValida(valoreGrezzo, false);
         }// end of method
 
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixAttivitaValida(value);
+        /**
+         * Elabora un valore GREZZO e restituisce un parametro VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixParametro(String valoreGrezzo) {
+            return libBio.fixAttivitaValida(valoreGrezzo, true);
         }// end of method
 
 
@@ -449,19 +530,30 @@ public enum ParBio {
         /**
          * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
          * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
          *
          * @param valoreGrezzo in entrata da elaborare
          *
          * @return valore finale valido del parametro
          */
         public String fixValore(String valoreGrezzo) {
-            return LibBio.fixAttivitaValida(valoreGrezzo);
+            return libBio.fixAttivitaValida(valoreGrezzo, false);
         }// end of method
 
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixAttivitaValida(value);
+        /**
+         * Elabora un valore GREZZO e restituisce un parametro VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixParametro(String valoreGrezzo) {
+            return libBio.fixAttivitaValida(valoreGrezzo, true);
         }// end of method
 
 
@@ -483,19 +575,30 @@ public enum ParBio {
         /**
          * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
          * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
          *
          * @param valoreGrezzo in entrata da elaborare
          *
          * @return valore finale valido del parametro
          */
         public String fixValore(String valoreGrezzo) {
-            return LibBio.fixNazionalitaValida(valoreGrezzo);
+            return libBio.fixNazionalitaValida(valoreGrezzo, false);
         }// end of method
 
 
-        @Override
-        public String fix(String value, LibBio libBio) {
-            return libBio.fixNazionalitaValida(value);
+        /**
+         * Elabora un valore GREZZO e restituisce un parametro VALIDO <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param valoreGrezzo in entrata da elaborare
+         *
+         * @return valore finale valido del parametro
+         */
+        public String fixParametro(String valoreGrezzo) {
+            return libBio.fixNazionalitaValida(valoreGrezzo, true);
         }// end of method
 
 
@@ -527,11 +630,12 @@ public enum ParBio {
     };// end of single enumeration
 
     private static String VUOTA = "";
-//    /**
-//     * La injection viene fatta da SpringBoot in automatico <br>
-//     */
-//    @Autowired
-//    private LibBio libBio;
+
+    // @Autowired nella classe statica interna  @Component ParBioServiceInjector
+    protected LibBio libBio;
+
+    // @Autowired nella classe statica interna  @Component ParBioServiceInjector
+    protected ATextService text;
 
     private String tag = "";
 
@@ -667,7 +771,7 @@ public enum ParBio {
      * @return valore grezzo troncato del parametro
      */
     public String troncaParteFinale(String valoreOriginarioDelServer) {
-        return LibBio.troncaParteFinale(valoreOriginarioDelServer);
+        return libBio.troncaParteFinale(valoreOriginarioDelServer);
     } // fine del metodo
 
 
@@ -675,13 +779,14 @@ public enum ParBio {
      * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
      * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      *
      * @param valoreGrezzo in entrata da elaborare
      *
      * @return valore finale valido del parametro
      */
     public String fixValore(String valoreGrezzo) {
-        return LibBio.fixValoreGrezzo(valoreGrezzo);
+        return libBio.fixValoreGrezzo(valoreGrezzo);
     }// end of method
 
 
@@ -689,27 +794,27 @@ public enum ParBio {
      * Elabora un valore GREZZO e restituisce un parametro VALIDO <br>
      * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      *
      * @param valoreGrezzo in entrata da elaborare
      *
      * @return valore finale valido del parametro
      */
-    public String fixParametro(String valoreGrezzo, LibBio libBio) {
-        return LibBio.fixValoreGrezzo(valoreGrezzo);
+    public String fixParametro(String valoreGrezzo) {
+        return libBio.fixValoreGrezzo(valoreGrezzo);
     }// end of method
 
 
     /**
-     * Restituisce un valore valido del parametro <br>
+     * Restituisce un valore valido <br>
      * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
-     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
      *
      * @param valoreOriginarioDelServer in entrata da elaborare
      *
      * @return valore finale valido del parametro
      */
-    public String estraeParteSignificativa(String valoreOriginarioDelServer) {
+    public String estraeValore(String valoreOriginarioDelServer) {
         String valoreGrezzo = troncaParteFinale(valoreOriginarioDelServer);
         return fixValore(valoreGrezzo);
     }// end of method
@@ -718,27 +823,24 @@ public enum ParBio {
     /**
      * Restituisce un valore valido del parametro <br>
      * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
-     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
-     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
      * Se manca la corrispondenza, restituisce VUOTA <br>
-     * <p>
-     * La differenza con estraeParteValida() riguarda solo i parametri Giorno, Anno, Attivita, Nazionalita <br>
+     * La differenza con estraeValore() riguarda solo i parametri Giorno, Anno, Attivita, Nazionalita <br>
      *
      * @param valoreOriginarioDelServer in entrata da elaborare
-     * @param libBio                    riferimento al Singleton della libreria
      *
      * @return valore finale valido del parametro
      */
-    public String estraeParametroValido(String valoreOriginarioDelServer, LibBio libBio) {
+    public String estraeParametro(String valoreOriginarioDelServer) {
         String valoreGrezzo = troncaParteFinale(valoreOriginarioDelServer);
-        return fixValore(valoreGrezzo);
+        return fixParametro(valoreGrezzo);
     }// end of method
 
 
     /**
      * Restituisce un valore valido del parametro <br>
      * MANTIENE gli eventuali contenuti IN CODA che vengono reinseriti dopo aver elaborato il valore valido del parametro <br>
+     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
      * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      * Usato per Upload sul server
      *
@@ -748,14 +850,24 @@ public enum ParBio {
      */
     public String sostituisceParteValida(String valoreOriginarioDelServer) {
         String valoreFinale = VUOTA;
+        String tag = "?";
         String testa = troncaParteFinale(valoreOriginarioDelServer).trim();
         String coda = valoreOriginarioDelServer.substring(testa.length()).trim();
         String valoreValido = fixValore(testa);
+        String parametroValido = fixParametro(testa);
 
-        valoreFinale = valoreValido;
-        if (valoreValido.length() > 0 && !coda.equals("?")) {
-            valoreFinale += coda;
-        }// end of if cycle
+        if (text.isValid(parametroValido)) {
+            valoreFinale = valoreValido;
+            if (valoreValido.length() > 0 && !coda.equals(tag)) {
+                valoreFinale += coda;
+            }// end of if cycle
+        } else {
+            if (valoreOriginarioDelServer.equals(tag)) {
+                valoreFinale = VUOTA;
+            } else {
+                valoreFinale = valoreOriginarioDelServer;
+            }// end of if/else cycle
+        }// end of if/else cycle
 
         return valoreFinale.trim();
     }// end of method
@@ -984,4 +1096,36 @@ public enum ParBio {
     public void setCampoPunta(boolean campoPunta) {
         this.campoPunta = campoPunta;
     }//end of setter method
-}
+
+
+    public void setLibBio(LibBio libBio) {
+        this.libBio = libBio;
+    }// end of method
+
+
+    public void setText(ATextService text) {
+        this.text = text;
+    }// end of method
+
+
+    @Component
+    public static class ParBioServiceInjector {
+
+        @Autowired
+        private ATextService text;
+
+        @Autowired
+        private LibBio libBio;
+
+
+        @PostConstruct
+        public void postConstruct() {
+            for (ParBio parBio : ParBio.values()) {
+                parBio.setText(text);
+                parBio.setLibBio(libBio);
+            }// end of for cycle
+        }// end of method
+
+    }// end of internal class
+
+}// end of enumeration

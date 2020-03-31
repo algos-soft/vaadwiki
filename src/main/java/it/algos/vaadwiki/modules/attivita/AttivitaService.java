@@ -43,14 +43,14 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @AIScript(sovrascrivibile = false)
 public class AttivitaService extends WikiService {
 
-    public static String EX = "ex ";
-    public static String EX2 = "ex-";
-
     /**
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
 
+    public static String EX = "ex ";
+
+    public static String EX2 = "ex-";
 
     /**
      * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
@@ -185,13 +185,29 @@ public class AttivitaService extends WikiService {
 
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     * Alcune attività ammettono il prefisso 'ex' oppure 'ex-' <br>
+     * Nella collection su mongoDB esiste solo la versione 'ex', la 'ex-' è implicita e valida <bR>
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
      *
      * @return istanza della Entity, null se non trovata
      */
-    public Attivita findByKeyUnica(String singolare) {
-        return repository.findBySingolare(singolare);
+    public Attivita findByKeyUnica(String parametroInIngresso) {
+        Attivita trovata = null;
+        String tag1 = "ex "; //--valida solo se esiste
+        String tag2 = "ex-";//--valida se esiste la versione 'ex'
+        String singolare = parametroInIngresso.toLowerCase().trim();
+        String queryTxt = singolare;
+
+        trovata = repository.findBySingolare(queryTxt);
+
+        if (trovata == null && singolare.startsWith(tag2)) {
+            queryTxt = text.levaTesta(singolare, tag2);
+            queryTxt = tag1 + queryTxt;
+            trovata = repository.findBySingolare(queryTxt);
+        }// end of if cycle
+
+        return trovata;
     }// end of method
 
 
@@ -234,6 +250,8 @@ public class AttivitaService extends WikiService {
 
     /**
      * Controlla l'esistenza di una Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     * Alcune attività ammettono il prefisso 'ex' oppure 'ex-' <br>
+     * Nella collection su mongoDB esiste solo la versione 'ex', la 'ex-' è implicita ma valida <bR>
      *
      * @param singolare maschile e femminile (obbligatorio ed unico)
      *

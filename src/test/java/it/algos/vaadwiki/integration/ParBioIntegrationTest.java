@@ -62,7 +62,8 @@ public class ParBioIntegrationTest extends ATest {
         Object[] luogoNascitai = {ParBio.luogoNascita, "?", "?"};
         Object[] luogoNascita2 = {ParBio.luogoNascita, "[Wilmington]?", "[Wilmington]"};
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1 Settembre"};
-        Object[] giornoMeseNascitax = {ParBio.giornoMeseNascita, "1 Brumaio", "1 Brumaio"};
+        Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", "1 Brumaio"};
+        Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", "1 Brumaio"};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "[[1981]]"};
         Object[] annoNascitai = {ParBio.annoNascita, "?", "?"};
         Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "[[1981]]"};
@@ -88,7 +89,8 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(luogoNascitai);
         lista.add(luogoNascita2);
         lista.add(giornoMeseNascita);
-        lista.add(giornoMeseNascitax);
+        lista.add(giornoMeseNascita2);
+        lista.add(giornoMeseNascita3);
         lista.add(annoNascita);
         lista.add(annoNascitai);
         lista.add(annoNascita2);
@@ -118,9 +120,8 @@ public class ParBioIntegrationTest extends ATest {
 
 
     /**
-     * Restituisce un valore valido del parametro <br>
+     * Restituisce un valore valido <br>
      * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
-     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
      *
      * @param valoreOriginarioDelServer in entrata da elaborare
@@ -128,7 +129,7 @@ public class ParBioIntegrationTest extends ATest {
      * @return valore finale valido del parametro
      */
     @Test
-    public void estraeParteValida() {
+    public void estraeValore() {
         ParBio parBio;
         String testoOriginale;
         Object[] nome = {ParBio.nome, "Crystle Danae?", "Crystle Danae"};
@@ -140,7 +141,8 @@ public class ParBioIntegrationTest extends ATest {
         Object[] luogoNascitai = {ParBio.luogoNascita, "?", "?"};
         Object[] luogoNascita2 = {ParBio.luogoNascita, "[Wilmington]?", "Wilmington"};
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre"};
-        Object[] giornoMeseNascitax = {ParBio.giornoMeseNascita, "1 Brumaio", "1º brumaio"};
+        Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", "1º brumaio"};
+        Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", "1º brumaio"};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "1981"};
         Object[] annoNascitai = {ParBio.annoNascita, "?", "?"};
         Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "1981"};
@@ -152,6 +154,11 @@ public class ParBioIntegrationTest extends ATest {
         Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore"};
         Object[] attivita3 = {ParBio.attivita2, "Pittore ?", "pittore"};
         Object[] attivitax = {ParBio.attivita2, "Paninaro<ref>Dal 2000</ref>", "paninaro"};
+        Object[] attivitaex = {ParBio.attivita, "ex-calciatore", "ex-calciatore"};
+        Object[] attivitaex2 = {ParBio.attivita, "ex calciatore", "ex calciatore"};
+        Object[] attivitaex3 = {ParBio.attivita, "ex-politico", "ex-politico"};
+        Object[] attivitaex4 = {ParBio.attivita, "ex politico", "ex politico"};
+        Object[] attivitaex5 = {ParBio.attivita, "ex politico<ref>Dal 2000</ref>", "ex politico"};
         Object[] nazionalita = {ParBio.nazionalita, "Statunitense ?", "statunitense"};
         Object[] nazionalitai = {ParBio.nazionalita, "?", ""};
         Object[] nazionalitax = {ParBio.nazionalita, "Sarmatese{{forse}}", "sarmatese"};
@@ -166,7 +173,8 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(luogoNascitai);
         lista.add(luogoNascita2);
         lista.add(giornoMeseNascita);
-        lista.add(giornoMeseNascitax);
+        lista.add(giornoMeseNascita2);
+        lista.add(giornoMeseNascita3);
         lista.add(annoNascita);
         lista.add(annoNascitai);
         lista.add(annoNascita2);
@@ -178,6 +186,11 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(attivita2);
         lista.add(attivita3);
         lista.add(attivitax);
+        lista.add(attivitaex);
+        lista.add(attivitaex2);
+        lista.add(attivitaex3);
+        lista.add(attivitaex4);
+        lista.add(attivitaex5);
         lista.add(nazionalita);
         lista.add(nazionalitai);
         lista.add(nazionalitax);
@@ -186,10 +199,10 @@ public class ParBioIntegrationTest extends ATest {
             parBio = (ParBio) riga[0];
             testoOriginale = (String) riga[1];
             previsto = (String) riga[2];
-            ottenuto = parBio.estraeParteSignificativa(testoOriginale);
+            ottenuto = parBio.estraeValore(testoOriginale);
 
             Assert.assertEquals(previsto, ottenuto);
-            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore valido: " + ottenuto);
+            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " estratto valore correttamente. Valore: " + ottenuto);
 
         }// end of for cycle
     }// end of single test
@@ -198,19 +211,16 @@ public class ParBioIntegrationTest extends ATest {
     /**
      * Restituisce un valore valido del parametro <br>
      * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
-     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
-     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
      * Se manca la corrispondenza, restituisce VUOTA <br>
-     * <p>
-     * La differenza con estraeParteValida() riguarda solo i parametri Giorno, Anno, Attivita, Nazionalita <br>
+     * La differenza con estraeValore() riguarda solo i parametri Giorno, Anno, Attivita, Nazionalita <br>
      *
      * @param valoreOriginarioDelServer in entrata da elaborare
      *
      * @return valore finale valido del parametro
      */
     @Test
-    public void estraeParametroValido() {
+    public void estraeParametro() {
         ParBio parBio;
         String testoOriginale;
         Object[] nome = {ParBio.nome, "Crystle Danae?", "Crystle Danae"};
@@ -222,7 +232,8 @@ public class ParBioIntegrationTest extends ATest {
         Object[] luogoNascitai = {ParBio.luogoNascita, "?", "?"};
         Object[] luogoNascita2 = {ParBio.luogoNascita, "[Wilmington]?", "Wilmington"};
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre"};
-        Object[] giornoMeseNascitax = {ParBio.giornoMeseNascita, "1 Brumaio", ""};
+        Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", ""};
+        Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", ""};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "1981"};
         Object[] annoNascitai = {ParBio.annoNascita, "?", "?"};
         Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "1981"};
@@ -234,6 +245,11 @@ public class ParBioIntegrationTest extends ATest {
         Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore"};
         Object[] attivita3 = {ParBio.attivita2, "Pittore ?", "pittore"};
         Object[] attivitax = {ParBio.attivita2, "Paninaro<ref>Dal 2000</ref>", ""};
+        Object[] attivitaex = {ParBio.attivita, "ex-calciatore", "ex-calciatore"};
+        Object[] attivitaex2 = {ParBio.attivita, "ex calciatore", "ex calciatore"};
+        Object[] attivitaex3 = {ParBio.attivita, "ex-politico", ""};
+        Object[] attivitaex4 = {ParBio.attivita, "ex politico", ""};
+        Object[] attivitaex5 = {ParBio.attivita, "ex politico<ref>Dal 2000</ref>", ""};
         Object[] nazionalita = {ParBio.nazionalita, "Statunitense ?", "statunitense"};
         Object[] nazionalitai = {ParBio.nazionalita, "?", ""};
         Object[] nazionalitax = {ParBio.nazionalita, "Sarmatese{{forse}}", ""};
@@ -248,7 +264,8 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(luogoNascitai);
         lista.add(luogoNascita2);
         lista.add(giornoMeseNascita);
-        lista.add(giornoMeseNascitax);
+        lista.add(giornoMeseNascita2);
+        lista.add(giornoMeseNascita3);
         lista.add(annoNascita);
         lista.add(annoNascitai);
         lista.add(annoNascita2);
@@ -260,6 +277,11 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(attivita2);
         lista.add(attivita3);
         lista.add(attivitax);
+        lista.add(attivitaex);
+        lista.add(attivitaex2);
+        lista.add(attivitaex3);
+        lista.add(attivitaex4);
+        lista.add(attivitaex5);
         lista.add(nazionalita);
         lista.add(nazionalitai);
         lista.add(nazionalitax);
@@ -268,10 +290,10 @@ public class ParBioIntegrationTest extends ATest {
             parBio = (ParBio) riga[0];
             testoOriginale = (String) riga[1];
             previsto = (String) riga[2];
-            ottenuto = parBio.estraeParametroValido(testoOriginale, libBio);
+            ottenuto = parBio.estraeParametro(testoOriginale);
 
             Assert.assertEquals(previsto, ottenuto);
-            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore valido: " + ottenuto);
+            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Parametro valido: " + ottenuto);
 
         }// end of for cycle
     }// end of single test
@@ -300,6 +322,8 @@ public class ParBioIntegrationTest extends ATest {
         Object[] luogoNascitai = {ParBio.luogoNascita, "?", "?"};
         Object[] luogoNascita2 = {ParBio.luogoNascita, "[Wilmington]?", "Wilmington"};
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre"};
+        Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", "1 Brumaio"};
+        Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", "1 Brumaio<ref>Dal 2000</ref>"};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "1981{{forse}}"};
         Object[] annoNascitai = {ParBio.annoNascita, "?", "?"};
         Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "1981"};
@@ -309,8 +333,16 @@ public class ParBioIntegrationTest extends ATest {
         Object[] attivitai = {ParBio.attivita, "?", ""};
         Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore<ref>Dal 2000</ref>"};
         Object[] attivita3 = {ParBio.attivita2, "Pittore ?", "pittore"};
+        Object[] attivita4 = {ParBio.attivita2, "Paninaro<ref>Dal 2000</ref>", "Paninaro<ref>Dal 2000</ref>"};
+        Object[] attivita5 = {ParBio.attivita, "ex-calciatore", "ex-calciatore"};
+        Object[] attivita6 = {ParBio.attivita, "ex calciatore", "ex calciatore"};
+        Object[] attivita7 = {ParBio.attivita, "ex-politico", "ex-politico"};
+        Object[] attivita8 = {ParBio.attivita, "ex politico", "ex politico"};
+        Object[] attivita9 = {ParBio.attivita, "ex politico<ref>Dal 2000</ref>", "ex politico<ref>Dal 2000</ref>"};
         Object[] nazionalita = {ParBio.nazionalita, "Statunitense ?", "statunitense"};
-        Object[] nazionalitai = {ParBio.nazionalita, "?", ""};
+        Object[] nazionalita2 = {ParBio.nazionalita, "Statunitense{{forse}}", "statunitense{{forse}}"};
+        Object[] nazionalita3 = {ParBio.nazionalita, "?", ""};
+        Object[] nazionalita4 = {ParBio.nazionalita, "Sarmatese{{forse}}", "Sarmatese{{forse}}"};
 
         List<Object[]> lista = new ArrayList<>();
         lista.add(nome);
@@ -322,6 +354,8 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(luogoNascitai);
         lista.add(luogoNascita2);
         lista.add(giornoMeseNascita);
+        lista.add(giornoMeseNascita2);
+        lista.add(giornoMeseNascita3);
         lista.add(annoNascita);
         lista.add(annoNascitai);
         lista.add(annoNascita2);
@@ -331,8 +365,16 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(attivitai);
         lista.add(attivita2);
         lista.add(attivita3);
+        lista.add(attivita4);
+        lista.add(attivita5);
+        lista.add(attivita6);
+        lista.add(attivita7);
+        lista.add(attivita8);
+        lista.add(attivita9);
         lista.add(nazionalita);
-        lista.add(nazionalitai);
+        lista.add(nazionalita2);
+        lista.add(nazionalita3);
+        lista.add(nazionalita4);
 
         for (Object[] riga : lista) {
             parBio = (ParBio) riga[0];
@@ -365,80 +407,80 @@ public class ParBioIntegrationTest extends ATest {
         //--senza spazio
         previsto = "12 ottobre";
         sorgente = "12ottobre";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         //--triplo spazio
         sorgente = "12   ottobre";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         //--doppio spazio
         sorgente = "12  ottobre";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         //--spazio prima
         sorgente = " 12 ottobre";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         //--spazio dopo
         sorgente = "12 ottobre ";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         //--maiuscola
         sorgente = "12 Ottobre ";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(ottenuto, previsto);
 
         previsto = "1º marzo";
 
         //--maiuscola
         sorgente = "1º Marzo";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--grado e non ordinale
         sorgente = "1° Marzo";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--grado e non ordinale
         previsto = "1º aprile";
         sorgente = "1° aprile";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--grado e non ordinale
         previsto = "1º ottobre";
         sorgente = "1° Ottobre";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--grado e non ordinale
         previsto = "1º luglio";
         sorgente = "1° luglio";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--numero e non ordinale
         previsto = "1º luglio";
         sorgente = "1 luglio";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--numero e non ordinale
         previsto = "1º ottobre";
         sorgente = "1 Ottobre";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         //--numero e non ordinale
         previsto = "1º aprile";
         sorgente = "1 aprile";
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
     }// end of single test
 
@@ -448,48 +490,48 @@ public class ParBioIntegrationTest extends ATest {
         previsto = "8 settembre";
 
         sorgente = "8settembre";
-        ottenuto = LibBio.separaMese(sorgente);
+        ottenuto = libBio.separaMese(sorgente);
         Assert.assertEquals(previsto, ottenuto);
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         sorgente = " 8settembre";
-        ottenuto = LibBio.separaMese(sorgente);
+        ottenuto = libBio.separaMese(sorgente);
         Assert.assertEquals(previsto, ottenuto);
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         previsto = "12 aprile";
         sorgente = "12aprile";
-        ottenuto = LibBio.separaMese(sorgente);
+        ottenuto = libBio.separaMese(sorgente);
         Assert.assertEquals(previsto, ottenuto);
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         sorgente = "12 aprile";
-        ottenuto = LibBio.separaMese(sorgente);
+        ottenuto = libBio.separaMese(sorgente);
         Assert.assertEquals(previsto, ottenuto);
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         previsto = "27 ottobre";
 
         sorgente = "27ottobre";
-        ottenuto = LibBio.separaMese(sorgente);
+        ottenuto = libBio.separaMese(sorgente);
         Assert.assertEquals(previsto, ottenuto);
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         sorgente = "27-ottobre";
-        ottenuto = LibBio.separaMese(sorgente);
+        ottenuto = libBio.separaMese(sorgente);
         Assert.assertEquals(previsto, ottenuto);
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
 
         sorgente = "27/ottobre";
-        ottenuto = LibBio.separaMese(sorgente);
+        ottenuto = libBio.separaMese(sorgente);
         Assert.assertEquals(previsto, ottenuto);
-        ottenuto = LibBio.fixGiornoValido(sorgente);
+        ottenuto = libBio.fixGiornoValido(sorgente);
         Assert.assertEquals(previsto, ottenuto);
     }// end of single test
 
