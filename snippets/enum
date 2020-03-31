@@ -1,0 +1,20 @@
+public enum ReportType {
+
+    REPORT_1("name", "filename"),
+    REPORT_2("name", "filename");
+
+    @Component
+    public static class ReportTypeServiceInjector {
+        @Autowired
+        private DataPrepareService dataPrepareService;
+
+        @PostConstruct
+        public void postConstruct() {
+            for (ReportType rt : EnumSet.allOf(ReportType.class))
+               rt.setDataPrepareService(dataPrepareService);
+        }
+    }
+
+[...]
+
+}

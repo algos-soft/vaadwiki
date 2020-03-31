@@ -1049,6 +1049,7 @@ public class LibBio {
         return stringaOut;
     } // fine del metodo
 
+
     /**
      * Aggiunge una parentesi tonda in testa e coda alla stringa.
      * Elimina spazi vuoti iniziali e finali
@@ -1454,6 +1455,7 @@ public class LibBio {
      * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
      * Elimina il punto interrogativo, se da solo <br>
      * Mantiene il punto interrogativo, se da solo <br>
+     *
      * @param testoOriginario in entrata da elaborare
      *
      * @return testoGrezzo troncato
@@ -1501,7 +1503,6 @@ public class LibBio {
 
         return testoGrezzo;
     } // fine del metodo
-
 
 
     /**
@@ -1682,6 +1683,99 @@ public class LibBio {
 //        testoValido = fixPropertyBase(testoValido);
 
 //        if (text.isValid(testoValido) && annoService.isEsiste(testoValido)) {
+        if (text.isValid(testoValido)) {
+            return testoValido.trim();
+        } else {
+            return VUOTA;
+        }// end of if/else cycle
+    } // fine del metodo
+
+
+    /**
+     * Regola questo campo
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public static String fixSessoValido(String testoGrezzo) {
+        String testoValido = fixValoreGrezzo(testoGrezzo);
+        testoValido = testoValido.toLowerCase();
+
+        if (testoValido.equals("m") || testoValido.equals("maschio") || testoValido.equals("uomo")) {
+            testoValido = "M";
+        }// end of if cycle
+
+        if (testoValido.equals("f") || testoValido.equals("femmina") || testoValido.equals("donna")) {
+            testoValido = "F";
+        }// end of if cycle
+
+        if (testoValido.equals("trans") || testoValido.equals("incerto") || testoValido.equals("non si sa") || testoValido.equals("dubbio") || testoValido.equals("?")) {
+            testoValido = VUOTA;
+        }// end of if cycle
+
+        return testoValido;
+    } // // end of method
+
+
+    /**
+     * Regola questo campojhgjkh8<
+     * <p>
+     * Elimina il testo successivo a varii tag (fixPropertyBase)
+     * Controlla che il valore esista nella collezione Attività
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public static String fixAttivitaValida(String testoGrezzo) {
+        String testoValido = LibBio.fixValoreGrezzo(testoGrezzo).toLowerCase();
+        String tag1 = "ex ";
+        String tag2 = "ex-";
+
+        if (text.isEmpty(testoValido)) {
+            return VUOTA;
+        }// end of if cycle
+
+//        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
+        if (text.isValid(testoValido)) {
+            return testoValido.trim();
+        } else {
+            if (testoValido.contains(tag1)) {
+                testoValido = testoValido.substring(testoValido.indexOf(tag1) + tag1.length()).trim();
+            }// end of if cycle
+            if (testoValido.contains(tag2)) {
+                testoValido = testoValido.substring(testoValido.indexOf(tag2) + tag2.length()).trim();
+            }// end of if cycle
+//                if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
+            if (text.isValid(testoValido)) {
+                return testoValido.trim();
+            } else {
+                return VUOTA;
+            }// end of if/else cycle
+
+        }// end of if/else cycle
+    } // fine del metodo
+
+
+    /**
+     * Regola questo campo
+     * <p>
+     * Elimina il testo successivo a varii tag (fixPropertyBase)
+     * Controlla che il valore esista nella collezione Nazionalità
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public static String fixNazionalitaValida(String testoGrezzo) {
+        String testoValido = LibBio.fixValoreGrezzo(testoGrezzo).toLowerCase();
+
+        if (text.isEmpty(testoValido)) {
+            return VUOTA;
+        }// end of if cycle
+
+//        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Nazionalita.class, "singolare", testoValido)) {
         if (text.isValid(testoValido)) {
             return testoValido.trim();
         } else {
@@ -2032,33 +2126,6 @@ public class LibBio {
      *
      * @return testoValido regolato in uscita
      */
-    public String fixSessoValido(String testoGrezzo) {
-        String testoValido = fixPropertyBase(testoGrezzo);
-        testoValido = testoValido.toLowerCase();
-
-        if (testoValido.equals("m") || testoValido.equals("maschio") || testoValido.equals("uomo")) {
-            testoValido = "M";
-        }// end of if cycle
-
-        if (testoValido.equals("f") || testoValido.equals("femmina") || testoValido.equals("donna")) {
-            testoValido = "F";
-        }// end of if cycle
-
-        if (testoValido.equals("trans") || testoValido.equals("incerto") || testoValido.equals("non si sa") || testoValido.equals("dubbio") || testoValido.equals("?")) {
-            testoValido = VUOTA;
-        }// end of if cycle
-
-        return testoValido;
-    } // // end of method
-
-
-    /**
-     * Regola questo campo
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return testoValido regolato in uscita
-     */
     public String fixLuogoValido(String testoGrezzo) {
         String testoValido;
 
@@ -2140,46 +2207,6 @@ public class LibBio {
 
 
     /**
-     * Regola questo campojhgjkh8<
-     * <p>
-     * Elimina il testo successivo a varii tag (fixPropertyBase)
-     * Controlla che il valore esista nella collezione Attività
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return testoValido regolato in uscita
-     */
-    public static String fixAttivitaValida(String testoGrezzo) {
-        String testoValido = LibBio.fixValoreGrezzo(testoGrezzo).toLowerCase();
-        String tag1 = "ex ";
-        String tag2 = "ex-";
-
-        if (text.isEmpty(testoValido)) {
-            return VUOTA;
-        }// end of if cycle
-
-//        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
-            if (text.isValid(testoValido) ) {
-            return testoValido.trim();
-        } else {
-            if (testoValido.contains(tag1)) {
-                testoValido = testoValido.substring(testoValido.indexOf(tag1) + tag1.length()).trim();
-            }// end of if cycle
-            if (testoValido.contains(tag2)) {
-                testoValido = testoValido.substring(testoValido.indexOf(tag2) + tag2.length()).trim();
-            }// end of if cycle
-//                if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
-                    if (text.isValid(testoValido) ) {
-                return testoValido.trim();
-            } else {
-                return VUOTA;
-            }// end of if/else cycle
-
-        }// end of if/else cycle
-    } // fine del metodo
-
-
-    /**
      * Regola questo campo
      * <p>
      * Elimina il testo successivo a varii tag (fixPropertyBase)
@@ -2213,32 +2240,6 @@ public class LibBio {
      *
      * @param testoGrezzo in entrata da elaborare
      *
-     * @return testoValido regolato in uscita
-     */
-    public static String fixNazionalitaValida(String testoGrezzo) {
-        String testoValido = LibBio.fixValoreGrezzo(testoGrezzo).toLowerCase();
-
-        if (text.isEmpty(testoValido)) {
-            return VUOTA;
-        }// end of if cycle
-
-//        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Nazionalita.class, "singolare", testoValido)) {
-            if (text.isValid(testoValido) ) {
-            return testoValido.trim();
-        } else {
-            return VUOTA;
-        }// end of if/else cycle
-    } // fine del metodo
-
-
-    /**
-     * Regola questo campo
-     * <p>
-     * Elimina il testo successivo a varii tag (fixPropertyBase)
-     * Controlla che il valore esista nella collezione Nazionalità
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
      * @return istanza di nazionalità valida
      */
     public Nazionalita fixNazionalitaLink(String testoGrezzo) {
@@ -2255,6 +2256,23 @@ public class LibBio {
 
         return nazionalita;
     } // fine del metodo
+
+
+    /**
+     * Restituisce un valore valido del parametro <br>
+     * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+     * Controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+     * Se manca la corrispondenza, restituisce VUOTA <br>
+     *
+     * @param valoreOriginarioDelServer in entrata da elaborare
+     *
+     * @return valore finale valido del parametro
+     */
+    public String estraeParteValida(ParBio par, String valoreOriginarioDelServer) {
+        return par.estraeParametroValido(valoreOriginarioDelServer, this);
+    }// end of method
 
 
     /**
