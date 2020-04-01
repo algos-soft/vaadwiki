@@ -64,12 +64,14 @@ public class ParBioIntegrationTest extends ATest {
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1 Settembre"};
         Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", "1 Brumaio"};
         Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", "1 Brumaio"};
+        Object[] giornoMeseNascita4 = {ParBio.giornoMeseNascita, "?", "?"};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "[[1981]]"};
         Object[] annoNascitai = {ParBio.annoNascita, "?", "?"};
         Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "[[1981]]"};
         Object[] luogoMorte = {ParBio.luogoMorte, "?", "?"};
         Object[] annoMorte = {ParBio.annoMorte, "?", "?"};
-        Object[] annoMortex = {ParBio.annoMorte, "[[2345]]", "[[2345]]"};
+        Object[] annoMorte2 = {ParBio.annoMorte, "[[2345]]", "[[2345]]"};
+        Object[] annoMorte3 = {ParBio.annoMorte, "[[1451]] circa", "[[1451]]"};
         Object[] attivita = {ParBio.attivita, "modella<ref>Dal 2000</ref>", "modella"};
         Object[] attivitai = {ParBio.attivita, "?", ""};
         Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "Pittore"};
@@ -91,12 +93,14 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(giornoMeseNascita);
         lista.add(giornoMeseNascita2);
         lista.add(giornoMeseNascita3);
+        lista.add(giornoMeseNascita4);
         lista.add(annoNascita);
         lista.add(annoNascitai);
         lista.add(annoNascita2);
         lista.add(luogoMorte);
         lista.add(annoMorte);
-        lista.add(annoMortex);
+        lista.add(annoMorte2);
+        lista.add(annoMorte3);
         lista.add(attivita);
         lista.add(attivitai);
         lista.add(attivita2);
@@ -143,12 +147,14 @@ public class ParBioIntegrationTest extends ATest {
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre"};
         Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", "1º brumaio"};
         Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", "1º brumaio"};
+        Object[] giornoMeseNascita4 = {ParBio.giornoMeseNascita, "?", "?"};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "1981"};
         Object[] annoNascitai = {ParBio.annoNascita, "?", "?"};
         Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "1981"};
         Object[] luogoMorte = {ParBio.luogoMorte, "?", "?"};
         Object[] annoMorte = {ParBio.annoMorte, "?", "?"};
-        Object[] annoMortex = {ParBio.annoMorte, "[[2345]]", "2345"};
+        Object[] annoMorte2 = {ParBio.annoMorte, "[[2345]]", "2345"};
+        Object[] annoMorte3 = {ParBio.annoMorte, "[[1451]] circa", "1451"};
         Object[] attivita = {ParBio.attivita, "modella<ref>Dal 2000</ref>", "modella"};
         Object[] attivitai = {ParBio.attivita, "?", ""};
         Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore"};
@@ -175,12 +181,14 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(giornoMeseNascita);
         lista.add(giornoMeseNascita2);
         lista.add(giornoMeseNascita3);
+        lista.add(giornoMeseNascita4);
         lista.add(annoNascita);
         lista.add(annoNascitai);
         lista.add(annoNascita2);
         lista.add(luogoMorte);
         lista.add(annoMorte);
-        lista.add(annoMortex);
+        lista.add(annoMorte2);
+        lista.add(annoMorte3);
         lista.add(attivita);
         lista.add(attivitai);
         lista.add(attivita2);
@@ -234,12 +242,14 @@ public class ParBioIntegrationTest extends ATest {
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre"};
         Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", ""};
         Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", ""};
+        Object[] giornoMeseNascita4 = {ParBio.giornoMeseNascita, "?", "?"};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "1981"};
         Object[] annoNascitai = {ParBio.annoNascita, "?", "?"};
         Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "1981"};
         Object[] luogoMorte = {ParBio.luogoMorte, "?", "?"};
         Object[] annoMorte = {ParBio.annoMorte, "?", "?"};
-        Object[] annoMortex = {ParBio.annoMorte, "[[2345]]", ""};
+        Object[] annoMorte2 = {ParBio.annoMorte, "[[2345]]", ""};
+        Object[] annoMorte3 = {ParBio.annoMorte, "[[1451]] circa", "1451"};
         Object[] attivita = {ParBio.attivita, "modella<ref>Dal 2000</ref>", "modella"};
         Object[] attivitai = {ParBio.attivita, "?", ""};
         Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore"};
@@ -266,12 +276,14 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(giornoMeseNascita);
         lista.add(giornoMeseNascita2);
         lista.add(giornoMeseNascita3);
+        lista.add(giornoMeseNascita4);
         lista.add(annoNascita);
         lista.add(annoNascitai);
         lista.add(annoNascita2);
         lista.add(luogoMorte);
         lista.add(annoMorte);
-        lista.add(annoMortex);
+        lista.add(annoMorte2);
+        lista.add(annoMorte3);
         lista.add(attivita);
         lista.add(attivitai);
         lista.add(attivita2);
@@ -324,11 +336,13 @@ public class ParBioIntegrationTest extends ATest {
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre"};
         Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", "1 Brumaio"};
         Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", "1 Brumaio<ref>Dal 2000</ref>"};
+        Object[] giornoMeseNascita4 = {ParBio.giornoMeseNascita, "?", "?"};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "1981{{forse}}"};
         Object[] annoNascitai = {ParBio.annoNascita, "?", "?"};
         Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "1981"};
         Object[] luogoMorte = {ParBio.luogoMorte, "?", "?"};
         Object[] annoMorte = {ParBio.annoMorte, "?", "?"};
+        Object[] annoMorte2 = {ParBio.annoMorte, "[[1451]] circa", "1451 circa"};
         Object[] attivita = {ParBio.attivita, "Modella<ref>Dal 2000</ref>", "modella<ref>Dal 2000</ref>"};
         Object[] attivitai = {ParBio.attivita, "?", ""};
         Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore<ref>Dal 2000</ref>"};
@@ -356,11 +370,13 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(giornoMeseNascita);
         lista.add(giornoMeseNascita2);
         lista.add(giornoMeseNascita3);
+        lista.add(giornoMeseNascita4);
         lista.add(annoNascita);
         lista.add(annoNascitai);
         lista.add(annoNascita2);
         lista.add(luogoMorte);
         lista.add(annoMorte);
+        lista.add(annoMorte2);
         lista.add(attivita);
         lista.add(attivitai);
         lista.add(attivita2);
@@ -402,7 +418,7 @@ public class ParBioIntegrationTest extends ATest {
      *
      * @return testoValido regolato in uscita
      */
-//    @Test
+    @Test
     public void fixGiornoValido() {
         //--senza spazio
         previsto = "12 ottobre";

@@ -16,6 +16,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import java.util.ArrayList;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
+import static it.algos.vaadflow.service.ATextService.SPAZIO;
 
 /**
  * Created by gac on 28 set 2015.
@@ -151,6 +152,20 @@ public enum ParBio {
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setGiornoNascita(value.equals("") ? null : libBio.fixGiornoLink(value));
         }// end of method
+
+
+        /**
+         * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+         * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param testoOriginario in entrata da elaborare
+         *
+         * @return testoGrezzo troncato
+         */
+        public String troncaParteFinale(String testoOriginario) {
+            return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+        } // fine del metodo
 
 
         /**
@@ -331,6 +346,20 @@ public enum ParBio {
         public void setValue(Bio bio, String value, LibBio libBio) {
             bio.setGiornoMorte(value.equals("") ? null : libBio.fixGiornoLink(value));
         }// end of method
+
+
+        /**
+         * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+         * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+         * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+         *
+         * @param testoOriginario in entrata da elaborare
+         *
+         * @return testoGrezzo troncato
+         */
+        public String troncaParteFinale(String testoOriginario) {
+            return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+        } // fine del metodo
 
 
         /**
@@ -852,14 +881,14 @@ public enum ParBio {
         String valoreFinale = VUOTA;
         String tag = "?";
         String testa = troncaParteFinale(valoreOriginarioDelServer).trim();
-        String coda = valoreOriginarioDelServer.substring(testa.length()).trim();
+        String coda = valoreOriginarioDelServer.substring(testa.length());
         String valoreValido = fixValore(testa);
         String parametroValido = fixParametro(testa);
 
         if (text.isValid(parametroValido)) {
             valoreFinale = valoreValido;
-            if (valoreValido.length() > 0 && !coda.equals(tag)) {
-                valoreFinale += coda;
+            if (valoreValido.length() > 0 && !coda.trim().equals(tag)) {
+                valoreFinale = valoreFinale  + coda;
             }// end of if cycle
         } else {
             if (valoreOriginarioDelServer.equals(tag)) {

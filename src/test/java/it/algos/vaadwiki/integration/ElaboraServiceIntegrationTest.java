@@ -475,7 +475,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
         Object[] luogoNascita = {ParBio.luogoNascita, "[[Wilmington]]", "Wilmington", "Wilmington"};
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre", "1º settembre"};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]", "1981", "1981"};
-        Object[] luogoMorte = {ParBio.luogoMorte, "?", "", ""};
+        Object[] luogoMorte = {ParBio.luogoMorte, "?", "?", "?"};
         Object[] attivita = {ParBio.attivita, "modella<ref>Dal 2000</ref>", "modella", "modella"};
         Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore", "pittore"};
         Object[] nazionalita = {ParBio.nazionalita, "statunitense ?", "statunitense", "statunitense"};
@@ -496,7 +496,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             testoOriginale = (String) riga[1];
             parteValidaNuova = (String) riga[2];
             previsto = (String) riga[3];
-            ottenuto = service.estraeParteValida(parBio, testoOriginale);
+            ottenuto = service.estraeValore(parBio, testoOriginale);
             Assert.assertEquals(previsto, ottenuto);
             System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore valido: " + ottenuto);
         }// end of for cycle
@@ -519,9 +519,9 @@ public class ElaboraServiceIntegrationTest extends ATest {
         Object[] luogoNascita = {ParBio.luogoNascita, "[[Wilmington]]", "Wilmington", "Wilmington"};
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre", "1º settembre"};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]", "1981", "1981"};
-        Object[] luogoMorte = {ParBio.luogoMorte, "?", "", ""};
+        Object[] luogoMorte = {ParBio.luogoMorte, "?", "?", "?"};
         Object[] attivita = {ParBio.attivita, "modella<ref>Dal 2000</ref>", "modella", "modella<ref>Dal 2000</ref>"};
-        Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore", "Pittore<ref>Dal 2000</ref>"};
+        Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore", "pittore<ref>Dal 2000</ref>"};
         Object[] nazionalita = {ParBio.nazionalita, "statunitense ?", "statunitense", "statunitense"};
 
         List<Object[]> lista = new ArrayList<>();
@@ -530,7 +530,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
         lista.add(luogoNascita);
         lista.add(giornoMeseNascita);
         lista.add(annoNascita);
-//        lista.add(luogoMorte);
+        lista.add(luogoMorte);
         lista.add(attivita);
         lista.add(attivita2);
         lista.add(nazionalita);

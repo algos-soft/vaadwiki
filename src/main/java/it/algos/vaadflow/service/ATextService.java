@@ -1048,6 +1048,21 @@ public class ATextService extends AbstractService {
 
 
     /**
+     * Elimina la parte di stringa successiva al tag -circa-, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoCirca(String entrata) {
+        return levaDopo(entrata, "circa");
+    }// end of method
+
+    /**
      * Confronta due numeri.
      *
      * @param primo   numero

@@ -574,8 +574,8 @@ public class ElaboraService extends ABioService {
     /**
      *
      */
-    public String estraeParteValida(ParBio par, String testoOriginale) {
-        return par.fix(testoOriginale, libBio);
+    public String estraeValore(ParBio par, String testoOriginale) {
+        return par.estraeValore(testoOriginale);
     }// end of method
 
 
@@ -583,26 +583,28 @@ public class ElaboraService extends ABioService {
      * <ref> viene mantenuto <br>
      */
     public String sostituisceParteValida(ParBio par, String testoOriginale, String parteValidaNuova) {
-        String valoreSostituito = VUOTA;
-        String parteValidaVecchia = par.fix(testoOriginale, libBio);
-        parteValidaVecchia = libBio.fixPropertyBase(testoOriginale);
 
-        if (text.isValid(testoOriginale)) {
-            if (parteValidaVecchia.equals(parteValidaNuova)) {
-                return testoOriginale;
-//                if (parteValidaVecchia.equals(VUOTA)) {
-//                    return testoOriginale;
-//                } else {
-//                    return parteValidaNuova;
-//                }// end of if/else cycle
-            } else {
-                valoreSostituito = text.sostituisce(testoOriginale, parteValidaVecchia, parteValidaNuova);
-            }// end of if/else cycle
-        } else {
-            valoreSostituito = parteValidaNuova;
-        }// end of if/else cycle
-
-        return valoreSostituito;
+        return par.sostituisceParteValida(testoOriginale);
+//        String valoreSostituito = VUOTA;
+//        String parteValidaVecchia = par.fix(testoOriginale, libBio);
+//        parteValidaVecchia = libBio.fixPropertyBase(testoOriginale);
+//
+//        if (text.isValid(testoOriginale)) {
+//            if (parteValidaVecchia.equals(parteValidaNuova)) {
+//                return testoOriginale;
+////                if (parteValidaVecchia.equals(VUOTA)) {
+////                    return testoOriginale;
+////                } else {
+////                    return parteValidaNuova;
+////                }// end of if/else cycle
+//            } else {
+//                valoreSostituito = text.sostituisce(testoOriginale, parteValidaVecchia, parteValidaNuova);
+//            }// end of if/else cycle
+//        } else {
+//            valoreSostituito = parteValidaNuova;
+//        }// end of if/else cycle
+//
+//        return valoreSostituito;
     }// end of method
 
 

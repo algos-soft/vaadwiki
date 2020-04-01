@@ -1473,6 +1473,7 @@ public class LibBio {
         testoGrezzo = text.levaDopoNote(testoGrezzo);
         testoGrezzo = text.levaDopoGraffe(testoGrezzo);
         testoGrezzo = text.levaDopoVirgola(testoGrezzo);
+        testoGrezzo = text.levaDopoCirca(testoGrezzo);
         if (!testoGrezzo.equals("?")) {
             testoGrezzo = text.levaDopoInterrogativo(testoGrezzo);
         }// end of if cycle
