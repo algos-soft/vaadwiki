@@ -549,7 +549,8 @@ public class ElaboraService extends ABioService {
                         valueMerged = sostituisceParteValida(par, valueServer, valueMongo);
                     } else {
                         if (text.isValid(valueServer)) {
-                            valueMerged = eliminaDopoVirgola(par, valueServer);
+//                            valueMerged = eliminaDopoVirgola(par, valueServer);
+                            valueMerged = par.elaboraParteValida(valueServer);
                         } else {
                             valueMerged = VUOTA;
                         }// end of if/else cycle
@@ -584,7 +585,7 @@ public class ElaboraService extends ABioService {
      */
     public String sostituisceParteValida(ParBio par, String testoOriginale, String parteValidaNuova) {
 
-        return par.sostituisceParteValida(testoOriginale);
+        return par.elaboraParteValida(testoOriginale);
 //        String valoreSostituito = VUOTA;
 //        String parteValidaVecchia = par.fix(testoOriginale, libBio);
 //        parteValidaVecchia = libBio.fixPropertyBase(testoOriginale);

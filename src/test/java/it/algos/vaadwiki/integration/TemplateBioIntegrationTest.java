@@ -683,7 +683,7 @@ public class TemplateBioIntegrationTest extends ATest {
         String troncato = par.troncaParteFinale(sorgente);
         String valore = par.estraeValore(sorgente);
         String parametro = par.estraeParametro(sorgente);
-        String finale = par.sostituisceParteValida(sorgente);
+        String finale = par.elaboraParteValida(sorgente);
 
         Assert.assertEquals(previsto, parametro);
         if (ottenuto.equals(VUOTA)) {
@@ -712,7 +712,7 @@ public class TemplateBioIntegrationTest extends ATest {
         stampaParVuoto(par);
 
         sorgente = LibBio.INTERROGATIVO;
-        ottenuto = par.sostituisceParteValida(sorgente);
+        ottenuto = par.elaboraParteValida(sorgente);
         Assert.assertEquals(previsto, ottenuto);
         System.out.println("il punto interrogativo (ammesso per il parametro " + par.getTag() + ") rimane punto interrogativo");
     }// end of method
@@ -727,7 +727,7 @@ public class TemplateBioIntegrationTest extends ATest {
         stampaParVuoto(par);
 
         sorgente = LibBio.INTERROGATIVO;
-        ottenuto = par.sostituisceParteValida(sorgente);
+        ottenuto = par.elaboraParteValida(sorgente);
         Assert.assertEquals(previsto, ottenuto);
         System.out.println("il punto interrogativo (non ammesso per il parametro " + par.getTag() + ") diventa 'vuoto'");
     }// end of method

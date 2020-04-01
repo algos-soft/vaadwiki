@@ -16,7 +16,6 @@ import javax.persistence.metamodel.SingularAttribute;
 import java.util.ArrayList;
 
 import static it.algos.vaadflow.application.FlowCost.A_CAPO;
-import static it.algos.vaadflow.service.ATextService.SPAZIO;
 
 /**
  * Created by gac on 28 set 2015.
@@ -867,17 +866,15 @@ public enum ParBio {
 
 
     /**
-     * Restituisce un valore valido del parametro <br>
+     * Elabora un valore valido del parametro <br>
      * MANTIENE gli eventuali contenuti IN CODA che vengono reinseriti dopo aver elaborato il valore valido del parametro <br>
-     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
-     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      * Usato per Upload sul server
      *
      * @param valoreOriginarioDelServer in entrata da elaborare
      *
      * @return valore finale valido completo del parametro
      */
-    public String sostituisceParteValida(String valoreOriginarioDelServer) {
+    public String elaboraParteValida(String valoreOriginarioDelServer) {
         String valoreFinale = VUOTA;
         String tag = "?";
         String testa = troncaParteFinale(valoreOriginarioDelServer).trim();
@@ -888,7 +885,41 @@ public enum ParBio {
         if (text.isValid(parametroValido)) {
             valoreFinale = valoreValido;
             if (valoreValido.length() > 0 && !coda.trim().equals(tag)) {
-                valoreFinale = valoreFinale  + coda;
+                valoreFinale = valoreFinale + coda;
+            }// end of if cycle
+        } else {
+            if (valoreOriginarioDelServer.equals(tag)) {
+                valoreFinale = VUOTA;
+            } else {
+                valoreFinale = valoreOriginarioDelServer;
+            }// end of if/else cycle
+        }// end of if/else cycle
+
+        return valoreFinale.trim();
+    }// end of method
+
+
+    /**
+     * Elabora un valore valido del parametro, utilizzando quello del mongoDB <br>
+     * MANTIENE gli eventuali contenuti IN CODA che vengono reinseriti dopo aver elaborato il valore valido del parametro <br>
+     *
+     * @param valoreOriginarioDelServer in entrata da elaborare
+     * @param valoreMongoDB             da sostituire al posto del valore valido del server
+     *
+     * @return valore finale valido completo del parametro
+     */
+    public String sostituisceParteValida(String valoreOriginarioDelServer, String valoreMongoDB) {
+        String valoreFinale = VUOTA;
+        String tag = "?";
+        String testa = troncaParteFinale(valoreOriginarioDelServer).trim();
+        String coda = valoreOriginarioDelServer.substring(testa.length());
+        String valoreValido = fixValore(testa);
+        String parametroValido = fixParametro(testa);
+
+        if (text.isValid(parametroValido)) {
+            valoreFinale = valoreValido;
+            if (valoreValido.length() > 0 && !coda.trim().equals(tag)) {
+                valoreFinale = valoreFinale + coda;
             }// end of if cycle
         } else {
             if (valoreOriginarioDelServer.equals(tag)) {

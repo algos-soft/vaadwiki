@@ -312,9 +312,8 @@ public class ParBioIntegrationTest extends ATest {
 
 
     /**
-     * Restituisce un valore valido del parametro <br>
+     * Elabora un valore valido del parametro <br>
      * MANTIENE gli eventuali contenuti IN CODA che vengono reinseriti dopo aver elaborato il valore valido del parametro <br>
-     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      * Usato per Upload sul server
      *
      * @param valoreOriginarioDelServer in entrata da elaborare
@@ -322,7 +321,7 @@ public class ParBioIntegrationTest extends ATest {
      * @return valore finale valido completo del parametro
      */
     @Test
-    public void sostituisceParteValida() {
+    public void elaboraParteValida() {
         ParBio parBio;
         String testoOriginale;
         Object[] nome = {ParBio.nome, "Crystle Danae?", "Crystle Danae"};
@@ -396,9 +395,102 @@ public class ParBioIntegrationTest extends ATest {
             parBio = (ParBio) riga[0];
             testoOriginale = (String) riga[1];
             previsto = (String) riga[2];
-            ottenuto = parBio.sostituisceParteValida(testoOriginale);
+            ottenuto = parBio.elaboraParteValida(testoOriginale);
             Assert.assertEquals(previsto, ottenuto);
             System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore spedito sul server: " + ottenuto);
+        }// end of for cycle
+    }// end of single test
+
+
+    /**
+     * Elabora un valore valido del parametro, utilizzando quello del mongoDB <br>
+     * MANTIENE gli eventuali contenuti IN CODA che vengono reinseriti dopo aver elaborato il valore valido del parametro <br>
+     *
+     * @param valoreOriginarioDelServer in entrata da elaborare
+     * @param valoreMongoDB             da sostituire al posto del valore valido del server
+     *
+     * @return valore finale valido completo del parametro
+     */
+    @Test
+    public void sostituisceParteValida() {
+        ParBio parBio;
+        String testoOriginaleServer;
+        String testoMongoDB;
+        Object[] nome = {ParBio.nome, "Crystle Danae?", "Crystle Danae",""};
+        Object[] nomei = {ParBio.nome, "?", "",""};
+        Object[] cognome = {ParBio.cognome, "[[Stewart]]", "Stewart",""};
+        Object[] cognomei = {ParBio.cognome, "?", "",""};
+        Object[] sesso = {ParBio.sesso, "m?", "M",""};
+        Object[] luogoNascita = {ParBio.luogoNascita, "[Wilmington]", "Wilmington",""};
+        Object[] luogoNascitai = {ParBio.luogoNascita, "?", "?",""};
+        Object[] luogoNascita2 = {ParBio.luogoNascita, "[Wilmington]?", "Wilmington",""};
+        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre",""};
+        Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", "1 Brumaio",""};
+        Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", "1 Brumaio<ref>Dal 2000</ref>",""};
+        Object[] giornoMeseNascita4 = {ParBio.giornoMeseNascita, "?", "?",""};
+        Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "1981{{forse}}",""};
+        Object[] annoNascitai = {ParBio.annoNascita, "?", "?",""};
+        Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "1981",""};
+        Object[] luogoMorte = {ParBio.luogoMorte, "?", "?",""};
+        Object[] annoMorte = {ParBio.annoMorte, "?", "?",""};
+        Object[] annoMorte2 = {ParBio.annoMorte, "[[1451]] circa", "1451 circa",""};
+        Object[] attivita = {ParBio.attivita, "Modella<ref>Dal 2000</ref>", "modella<ref>Dal 2000</ref>",""};
+        Object[] attivitai = {ParBio.attivita, "?", "",""};
+        Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore<ref>Dal 2000</ref>",""};
+        Object[] attivita3 = {ParBio.attivita2, "Pittore ?", "pittore",""};
+        Object[] attivita4 = {ParBio.attivita2, "Paninaro<ref>Dal 2000</ref>", "Paninaro<ref>Dal 2000</ref>",""};
+        Object[] attivita5 = {ParBio.attivita, "ex-calciatore", "ex-calciatore",""};
+        Object[] attivita6 = {ParBio.attivita, "ex calciatore", "ex calciatore",""};
+        Object[] attivita7 = {ParBio.attivita, "ex-politico", "ex-politico",""};
+        Object[] attivita8 = {ParBio.attivita, "ex politico", "ex politico",""};
+        Object[] attivita9 = {ParBio.attivita, "ex politico<ref>Dal 2000</ref>", "ex politico<ref>Dal 2000</ref>",""};
+        Object[] nazionalita = {ParBio.nazionalita, "Statunitense ?", "statunitense",""};
+        Object[] nazionalita2 = {ParBio.nazionalita, "Statunitense{{forse}}", "statunitense{{forse}}",""};
+        Object[] nazionalita3 = {ParBio.nazionalita, "?", "",""};
+        Object[] nazionalita4 = {ParBio.nazionalita, "Sarmatese{{forse}}", "Sarmatese{{forse}}",""};
+
+        List<Object[]> lista = new ArrayList<>();
+        lista.add(nome);
+        lista.add(nomei);
+        lista.add(cognome);
+        lista.add(cognomei);
+        lista.add(sesso);
+        lista.add(luogoNascita);
+        lista.add(luogoNascitai);
+        lista.add(luogoNascita2);
+        lista.add(giornoMeseNascita);
+        lista.add(giornoMeseNascita2);
+        lista.add(giornoMeseNascita3);
+        lista.add(giornoMeseNascita4);
+        lista.add(annoNascita);
+        lista.add(annoNascitai);
+        lista.add(annoNascita2);
+        lista.add(luogoMorte);
+        lista.add(annoMorte);
+        lista.add(annoMorte2);
+        lista.add(attivita);
+        lista.add(attivitai);
+        lista.add(attivita2);
+        lista.add(attivita3);
+        lista.add(attivita4);
+        lista.add(attivita5);
+        lista.add(attivita6);
+        lista.add(attivita7);
+        lista.add(attivita8);
+        lista.add(attivita9);
+        lista.add(nazionalita);
+        lista.add(nazionalita2);
+        lista.add(nazionalita3);
+        lista.add(nazionalita4);
+
+        for (Object[] riga : lista) {
+            parBio = (ParBio) riga[0];
+            testoOriginaleServer = (String) riga[1];
+            previsto = (String) riga[2];
+            testoMongoDB = (String) riga[3];
+            ottenuto = parBio.sostituisceParteValida(testoOriginaleServer, testoMongoDB);
+            Assert.assertEquals(previsto, ottenuto);
+            System.out.println("Parametro " + parBio.getTag().toLowerCase() + " sostituito correttamente. Valore spedito sul server: " + ottenuto);
         }// end of for cycle
     }// end of single test
 
