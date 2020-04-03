@@ -122,7 +122,7 @@ public enum ParBio {
          *
          * @return testoGrezzo troncato
          */
-        public String troncaParteFinale(String testoOriginario) {
+        public String estraeValoreInizialeGrezzo(String testoOriginario) {
             return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
         } // fine del metodo
 
@@ -162,8 +162,8 @@ public enum ParBio {
          *
          * @return testoGrezzo troncato
          */
-        public String troncaParteFinale(String testoOriginario) {
-            return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+            return libBio.troncaParteFinaleGiornoAnno(testoOriginario);
         } // fine del metodo
 
 
@@ -219,8 +219,8 @@ public enum ParBio {
          *
          * @return testoGrezzo troncato
          */
-        public String troncaParteFinale(String testoOriginario) {
-            return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+            return libBio.troncaParteFinaleGiornoAnno(testoOriginario);
         } // fine del metodo
 
 
@@ -278,7 +278,7 @@ public enum ParBio {
          *
          * @return testoGrezzo troncato
          */
-        public String troncaParteFinale(String testoOriginario) {
+        public String estraeValoreInizialeGrezzo(String testoOriginario) {
             return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
         } // fine del metodo
 
@@ -356,8 +356,8 @@ public enum ParBio {
          *
          * @return testoGrezzo troncato
          */
-        public String troncaParteFinale(String testoOriginario) {
-            return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+            return libBio.troncaParteFinaleGiornoAnno(testoOriginario);
         } // fine del metodo
 
 
@@ -413,8 +413,8 @@ public enum ParBio {
          *
          * @return testoGrezzo troncato
          */
-        public String troncaParteFinale(String testoOriginario) {
-            return libBio.troncaParteFinalePuntoInterrogativo(testoOriginario);
+        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+            return libBio.troncaParteFinaleGiornoAnno(testoOriginario);
         } // fine del metodo
 
 
@@ -789,17 +789,19 @@ public enum ParBio {
 
 
     /**
+     * Restituisce un valore grezzo troncato dopo alcuni tag chiave <br>
+     * <p>
      * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
      * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
      * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
      * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      *
-     * @param valoreOriginarioDelServer in entrata da elaborare
+     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
      *
-     * @return valore grezzo troncato del parametro
+     * @return valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
      */
-    public String troncaParteFinale(String valoreOriginarioDelServer) {
-        return libBio.troncaParteFinale(valoreOriginarioDelServer);
+    public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
+        return libBio.troncaParteFinale(valorePropertyTmplBioServer);
     } // fine del metodo
 
 
@@ -834,98 +836,91 @@ public enum ParBio {
 
 
     /**
-     * Restituisce un valore valido <br>
+     * Restituisce un valore valido troncato dopo alcuni tag chiave ed elaborato <br>
+     * <p>
      * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Elabora il valore grezzo (minuscole, quadre, ecc.)
      * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
      *
-     * @param valoreOriginarioDelServer in entrata da elaborare
+     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
      *
-     * @return valore finale valido del parametro
+     * @return valore valido troncato ed elaborato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
      */
-    public String estraeValore(String valoreOriginarioDelServer) {
-        String valoreGrezzo = troncaParteFinale(valoreOriginarioDelServer);
+    public String estraeValoreInizialeValido(String valorePropertyTmplBioServer) {
+        String valoreGrezzo = estraeValoreInizialeGrezzo(valorePropertyTmplBioServer);
         return fixValore(valoreGrezzo);
     }// end of method
 
 
     /**
      * Restituisce un valore valido del parametro <br>
+     * <p>
      * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Elabora il valore grezzo (minuscole, quadre, ecc.)
      * CONTROLLA la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
      * Se manca la corrispondenza, restituisce VUOTA <br>
-     * La differenza con estraeValore() riguarda solo i parametri Giorno, Anno, Attivita, Nazionalita <br>
+     * La differenza con estraeValoreInizialeValido() riguarda solo i parametri Giorno, Anno, Attivita, Nazionalita <br>
      *
-     * @param valoreOriginarioDelServer in entrata da elaborare
+     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
      *
-     * @return valore finale valido del parametro
+     * @return valore valido del parametro
      */
-    public String estraeParametro(String valoreOriginarioDelServer) {
-        String valoreGrezzo = troncaParteFinale(valoreOriginarioDelServer);
+    public String estraeValoreParametro(String valorePropertyTmplBioServer) {
+        String valoreGrezzo = estraeValoreInizialeGrezzo(valorePropertyTmplBioServer);
         return fixParametro(valoreGrezzo);
     }// end of method
 
 
     /**
-     * Elabora un valore valido del parametro <br>
+     * Restituisce un valore finale per upload del valore valido elaborato e con la 'coda' <br>
+     * <p>
      * MANTIENE gli eventuali contenuti IN CODA che vengono reinseriti dopo aver elaborato il valore valido del parametro <br>
      * Usato per Upload sul server
      *
-     * @param valoreOriginarioDelServer in entrata da elaborare
+     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
      *
-     * @return valore finale valido completo del parametro
+     * @return valore finale completo col valore valido elaborato e la 'coda' dalla property di tmplBioServer
      */
-    public String elaboraParteValida(String valoreOriginarioDelServer) {
-        String valoreFinale = VUOTA;
-        String tag = "?";
-        String testa = troncaParteFinale(valoreOriginarioDelServer).trim();
-        String coda = valoreOriginarioDelServer.substring(testa.length());
-        String valoreValido = fixValore(testa);
-        String parametroValido = fixParametro(testa);
-
-        if (text.isValid(parametroValido)) {
-            valoreFinale = valoreValido;
-            if (valoreValido.length() > 0 && !coda.trim().equals(tag)) {
-                valoreFinale = valoreFinale + coda;
-            }// end of if cycle
-        } else {
-            if (valoreOriginarioDelServer.equals(tag)) {
-                valoreFinale = VUOTA;
-            } else {
-                valoreFinale = valoreOriginarioDelServer;
-            }// end of if/else cycle
-        }// end of if/else cycle
-
-        return valoreFinale.trim();
+    public String elaboraParteValida(String valorePropertyTmplBioServer) {
+        return sostituisceParteValida(valorePropertyTmplBioServer, VUOTA);
     }// end of method
 
 
     /**
+     * Restituisce un valore finale per upload merged del parametro mongoDB e con la 'coda' <br>
+     * <p>
      * Elabora un valore valido del parametro, utilizzando quello del mongoDB <br>
      * MANTIENE gli eventuali contenuti IN CODA che vengono reinseriti dopo aver elaborato il valore valido del parametro <br>
+     * Usato per Upload sul server
      *
-     * @param valoreOriginarioDelServer in entrata da elaborare
-     * @param valoreMongoDB             da sostituire al posto del valore valido del server
+     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
+     * @param valoreMongoDB               da sostituire al posto del valore valido dalla property di tmplBioServer
      *
-     * @return valore finale valido completo del parametro
+     * @return valore finale completo col parametro mongoDB e la 'coda' dalla property di tmplBioServer
      */
-    public String sostituisceParteValida(String valoreOriginarioDelServer, String valoreMongoDB) {
+    public String sostituisceParteValida(String valorePropertyTmplBioServer, String valoreMongoDB) {
         String valoreFinale = VUOTA;
         String tag = "?";
-        String testa = troncaParteFinale(valoreOriginarioDelServer).trim();
-        String coda = valoreOriginarioDelServer.substring(testa.length());
+        String testa = estraeValoreInizialeGrezzo(valorePropertyTmplBioServer).trim();
+        String coda = valorePropertyTmplBioServer.trim().substring(testa.length());
         String valoreValido = fixValore(testa);
         String parametroValido = fixParametro(testa);
 
-        if (text.isValid(parametroValido)) {
+        if (text.isValid(valoreMongoDB)) {
+            valoreValido = valoreMongoDB;
+        }// end of if cycle
+
+        if (text.isValid(parametroValido) || text.isValid(valoreMongoDB)) {
             valoreFinale = valoreValido;
             if (valoreValido.length() > 0 && !coda.trim().equals(tag)) {
                 valoreFinale = valoreFinale + coda;
             }// end of if cycle
         } else {
-            if (valoreOriginarioDelServer.equals(tag)) {
+            if (valorePropertyTmplBioServer.equals(tag)) {
                 valoreFinale = VUOTA;
             } else {
-                valoreFinale = valoreOriginarioDelServer;
+                valoreFinale = valorePropertyTmplBioServer;
             }// end of if/else cycle
         }// end of if/else cycle
 

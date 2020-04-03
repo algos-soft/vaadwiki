@@ -185,6 +185,19 @@ public class BioService extends WikiService {
      * Eventuali regolazioni iniziali delle property <br>
      * Properties <br>
      *
+     * @param page scaricata dal server wiki
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Bio newEntity(Page page) {
+        return newEntity(page.getPageid(), page.getTitle(), api.estraeTmplBio(page), (LocalDateTime) null, (LocalDateTime) null);
+    }// end of method
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Properties <br>
+     *
      * @param pageid        della pagina wiki (obbligatorio, unico)
      * @param wikiTitle     della pagina wiki (obbligatorio, unico)
      * @param tmplBioServer template effettivamente presente sul server (obligatorio, unico)
@@ -194,6 +207,7 @@ public class BioService extends WikiService {
     public Bio newEntity(long pageid, String wikiTitle, String tmplBioServer) {
         return newEntity(pageid, wikiTitle, tmplBioServer, (LocalDateTime) null, (LocalDateTime) null);
     }// end of method
+
 
 
     /**
@@ -233,7 +247,7 @@ public class BioService extends WikiService {
                 .pageid(pageid)
                 .wikiTitle(wikiTitle.equals("") ? null : wikiTitle)
                 .tmplBioServer(tmplBioServer.equals("") ? null : tmplBioServer)
-                .lastModifica(lastWikiModifica != null ? lastWikiModifica : LocalDateTime.of(2000, 1, 1, 0, 0))
+                .lastModifica(lastWikiModifica != null ? lastWikiModifica : FlowCost.START_DATE_TIME)
                 .lastLettura(lastGacLettura != null ? lastGacLettura : LocalDateTime.now())
                 .build();
 

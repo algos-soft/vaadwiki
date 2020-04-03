@@ -196,6 +196,14 @@ public class PageService extends ABioService {
     }// end of method
 
 
+    /**
+     * Crea una entity Bio partendo da una Page <br>
+     * La entity NON viene salvata <br>
+     *
+     * @param page scaricata dal server wiki
+     *
+     * @return entity Bio
+     */
     public Bio creaBio(Page page) {
         return creaBio(page, false);
     }// end of method

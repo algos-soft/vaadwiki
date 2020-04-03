@@ -59,12 +59,14 @@ public class ParBioIntegrationTest extends ATest {
         Object[] cognomei = {ParBio.cognome, "?", ""};
         Object[] sesso = {ParBio.sesso, "m", "m"};
         Object[] luogoNascita = {ParBio.luogoNascita, "[Wilmington]", "[Wilmington]"};
-        Object[] luogoNascitai = {ParBio.luogoNascita, "?", "?"};
-        Object[] luogoNascita2 = {ParBio.luogoNascita, "[Wilmington]?", "[Wilmington]"};
+        Object[] luogoNascita2 = {ParBio.luogoNascita, "?", "?"};
+        Object[] luogoNascita3 = {ParBio.luogoNascita, "[Wilmington]?", "[Wilmington]"};
+        Object[] luogoNascita4 = {ParBio.luogoNascita, "Parigi, Francia", "Parigi, Francia"};
         Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1 Settembre"};
         Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", "1 Brumaio"};
         Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", "1 Brumaio"};
         Object[] giornoMeseNascita4 = {ParBio.giornoMeseNascita, "?", "?"};
+        Object[] giornoMeseNascita5 = {ParBio.giornoMeseNascita, "1 Settembre, forse", "1 Settembre"};
         Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "[[1981]]"};
         Object[] annoNascitai = {ParBio.annoNascita, "?", "?"};
         Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "[[1981]]"};
@@ -72,6 +74,7 @@ public class ParBioIntegrationTest extends ATest {
         Object[] annoMorte = {ParBio.annoMorte, "?", "?"};
         Object[] annoMorte2 = {ParBio.annoMorte, "[[2345]]", "[[2345]]"};
         Object[] annoMorte3 = {ParBio.annoMorte, "[[1451]] circa", "[[1451]]"};
+        Object[] annoMorte4 = {ParBio.annoMorte, "[[1451]], pippoz", "[[1451]]"};
         Object[] attivita = {ParBio.attivita, "modella<ref>Dal 2000</ref>", "modella"};
         Object[] attivitai = {ParBio.attivita, "?", ""};
         Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "Pittore"};
@@ -88,12 +91,14 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(sesso);
         lista.add(cognomei);
         lista.add(luogoNascita);
-        lista.add(luogoNascitai);
         lista.add(luogoNascita2);
+        lista.add(luogoNascita3);
+        lista.add(luogoNascita4);
         lista.add(giornoMeseNascita);
         lista.add(giornoMeseNascita2);
         lista.add(giornoMeseNascita3);
         lista.add(giornoMeseNascita4);
+        lista.add(giornoMeseNascita5);
         lista.add(annoNascita);
         lista.add(annoNascitai);
         lista.add(annoNascita2);
@@ -101,6 +106,7 @@ public class ParBioIntegrationTest extends ATest {
         lista.add(annoMorte);
         lista.add(annoMorte2);
         lista.add(annoMorte3);
+        lista.add(annoMorte4);
         lista.add(attivita);
         lista.add(attivitai);
         lista.add(attivita2);
@@ -114,7 +120,7 @@ public class ParBioIntegrationTest extends ATest {
             parBio = (ParBio) riga[0];
             testoOriginale = (String) riga[1];
             previsto = (String) riga[2];
-            ottenuto = parBio.troncaParteFinale(testoOriginale);
+            ottenuto = parBio.estraeValoreInizialeGrezzo(testoOriginale);
 
             Assert.assertEquals(previsto, ottenuto);
             System.out.println("Parametro " + parBio.getTag().toLowerCase() + " troncato correttamente. Valore grezzo: " + ottenuto);
@@ -207,7 +213,7 @@ public class ParBioIntegrationTest extends ATest {
             parBio = (ParBio) riga[0];
             testoOriginale = (String) riga[1];
             previsto = (String) riga[2];
-            ottenuto = parBio.estraeValore(testoOriginale);
+            ottenuto = parBio.estraeValoreInizialeValido(testoOriginale);
 
             Assert.assertEquals(previsto, ottenuto);
             System.out.println("Parametro " + parBio.getTag().toLowerCase() + " estratto valore correttamente. Valore: " + ottenuto);
@@ -302,7 +308,7 @@ public class ParBioIntegrationTest extends ATest {
             parBio = (ParBio) riga[0];
             testoOriginale = (String) riga[1];
             previsto = (String) riga[2];
-            ottenuto = parBio.estraeParametro(testoOriginale);
+            ottenuto = parBio.estraeValoreParametro(testoOriginale);
 
             Assert.assertEquals(previsto, ottenuto);
             System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Parametro valido: " + ottenuto);
@@ -416,38 +422,38 @@ public class ParBioIntegrationTest extends ATest {
         ParBio parBio;
         String testoOriginaleServer;
         String testoMongoDB;
-        Object[] nome = {ParBio.nome, "Crystle Danae?", "Crystle Danae",""};
-        Object[] nomei = {ParBio.nome, "?", "",""};
-        Object[] cognome = {ParBio.cognome, "[[Stewart]]", "Stewart",""};
-        Object[] cognomei = {ParBio.cognome, "?", "",""};
-        Object[] sesso = {ParBio.sesso, "m?", "M",""};
-        Object[] luogoNascita = {ParBio.luogoNascita, "[Wilmington]", "Wilmington",""};
-        Object[] luogoNascitai = {ParBio.luogoNascita, "?", "?",""};
-        Object[] luogoNascita2 = {ParBio.luogoNascita, "[Wilmington]?", "Wilmington",""};
-        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre",""};
-        Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", "1 Brumaio",""};
-        Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", "1 Brumaio<ref>Dal 2000</ref>",""};
-        Object[] giornoMeseNascita4 = {ParBio.giornoMeseNascita, "?", "?",""};
-        Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "1981{{forse}}",""};
-        Object[] annoNascitai = {ParBio.annoNascita, "?", "?",""};
-        Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "1981",""};
-        Object[] luogoMorte = {ParBio.luogoMorte, "?", "?",""};
-        Object[] annoMorte = {ParBio.annoMorte, "?", "?",""};
-        Object[] annoMorte2 = {ParBio.annoMorte, "[[1451]] circa", "1451 circa",""};
-        Object[] attivita = {ParBio.attivita, "Modella<ref>Dal 2000</ref>", "modella<ref>Dal 2000</ref>",""};
-        Object[] attivitai = {ParBio.attivita, "?", "",""};
-        Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore<ref>Dal 2000</ref>",""};
-        Object[] attivita3 = {ParBio.attivita2, "Pittore ?", "pittore",""};
-        Object[] attivita4 = {ParBio.attivita2, "Paninaro<ref>Dal 2000</ref>", "Paninaro<ref>Dal 2000</ref>",""};
-        Object[] attivita5 = {ParBio.attivita, "ex-calciatore", "ex-calciatore",""};
-        Object[] attivita6 = {ParBio.attivita, "ex calciatore", "ex calciatore",""};
-        Object[] attivita7 = {ParBio.attivita, "ex-politico", "ex-politico",""};
-        Object[] attivita8 = {ParBio.attivita, "ex politico", "ex politico",""};
-        Object[] attivita9 = {ParBio.attivita, "ex politico<ref>Dal 2000</ref>", "ex politico<ref>Dal 2000</ref>",""};
-        Object[] nazionalita = {ParBio.nazionalita, "Statunitense ?", "statunitense",""};
-        Object[] nazionalita2 = {ParBio.nazionalita, "Statunitense{{forse}}", "statunitense{{forse}}",""};
-        Object[] nazionalita3 = {ParBio.nazionalita, "?", "",""};
-        Object[] nazionalita4 = {ParBio.nazionalita, "Sarmatese{{forse}}", "Sarmatese{{forse}}",""};
+        Object[] nome = {ParBio.nome, "Crystle Danae?", "Pluto Paperino", "Pluto Paperino"};
+        Object[] nomei = {ParBio.nome, "?", "", ""};
+        Object[] cognome = {ParBio.cognome, "[[Stewart]]", "Stewart", ""};
+        Object[] cognomei = {ParBio.cognome, "?", "", ""};
+        Object[] sesso = {ParBio.sesso, "m?", "M", ""};
+        Object[] luogoNascita = {ParBio.luogoNascita, "[Wilmington]", "Barletta", "Barletta"};
+        Object[] luogoNascitai = {ParBio.luogoNascita, "?", "?", ""};
+        Object[] luogoNascita2 = {ParBio.luogoNascita, "[Wilmington]?", "Wilmington", ""};
+        Object[] giornoMeseNascita = {ParBio.giornoMeseNascita, "1 Settembre", "1º settembre", ""};
+        Object[] giornoMeseNascita2 = {ParBio.giornoMeseNascita, "1 Brumaio", "1 Brumaio", ""};
+        Object[] giornoMeseNascita3 = {ParBio.giornoMeseNascita, "1 Brumaio<ref>Dal 2000</ref>", "1º settembre<ref>Dal 2000</ref>", "1º settembre"};
+        Object[] giornoMeseNascita4 = {ParBio.giornoMeseNascita, "?", "?", ""};
+        Object[] annoNascita = {ParBio.annoNascita, "[[1981]]{{forse}}", "1981{{forse}}", "1981"};
+        Object[] annoNascitai = {ParBio.annoNascita, "?", "?", ""};
+        Object[] annoNascita2 = {ParBio.annoNascita, "[[1981]]?", "1981", ""};
+        Object[] luogoMorte = {ParBio.luogoMorte, "?", "?", ""};
+        Object[] annoMorte = {ParBio.annoMorte, "?", "?", ""};
+        Object[] annoMorte2 = {ParBio.annoMorte, "[[1451]] circa", "1451 circa", ""};
+        Object[] attivita = {ParBio.attivita, "Modella<ref>Dal 2000</ref>", "modella<ref>Dal 2000</ref>", "modella"};
+        Object[] attivitai = {ParBio.attivita, "?", "", ""};
+        Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "pittore<ref>Dal 2000</ref>", "pittore"};
+        Object[] attivita3 = {ParBio.attivita2, "Pittore ?", "pittore", ""};
+        Object[] attivita4 = {ParBio.attivita2, "Paninaro<ref>Dal 2000</ref>", "Paninaro<ref>Dal 2000</ref>", ""};
+        Object[] attivita5 = {ParBio.attivita, "ex-calciatore", "ex-calciatore", ""};
+        Object[] attivita6 = {ParBio.attivita, "ex calciatore", "ex calciatore", ""};
+        Object[] attivita7 = {ParBio.attivita, "ex-politico", "ex-politico", ""};
+        Object[] attivita8 = {ParBio.attivita, "ex politico", "ex politico", ""};
+        Object[] attivita9 = {ParBio.attivita, "ex politico<ref>Dal 2000</ref>", "ex politico<ref>Dal 2000</ref>", ""};
+        Object[] nazionalita = {ParBio.nazionalita, "Statunitense ?", "statunitense", ""};
+        Object[] nazionalita2 = {ParBio.nazionalita, "Statunitense{{forse}}", "statunitense{{forse}}", "statunitense"};
+        Object[] nazionalita3 = {ParBio.nazionalita, "?", "", ""};
+        Object[] nazionalita4 = {ParBio.nazionalita, "Sarmatese{{forse}}", "Sarmatese{{forse}}", ""};
 
         List<Object[]> lista = new ArrayList<>();
         lista.add(nome);
@@ -744,4 +750,4 @@ public class ParBioIntegrationTest extends ATest {
 //    }// end of single test
 
 
-}// end of class
+}// end of test class

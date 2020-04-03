@@ -170,7 +170,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             "|LuogoNascitaLink = Milano\n" +
             "|GiornoMeseNascita = 3 marzo\n" +
             "|AnnoNascita = 1963\n" +
-            "|LuogoMorte = Milano\n" +
+            "|LuogoMorte = Milano, Italia\n" +
             "|GiornoMeseMorte = \n" +
             "|AnnoMorte = \n" +
             "|Attività = politico<ref>Vedi note</ref>\n" +
@@ -540,7 +540,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             testoOriginale = (String) riga[1];
             parteValidaNuova = (String) riga[2];
             previsto = (String) riga[3];
-            ottenuto = service.sostituisceParteValida(parBio, testoOriginale, parteValidaNuova);
+            ottenuto = parBio.sostituisceParteValida(testoOriginale, parteValidaNuova);
             Assert.assertEquals(previsto, ottenuto);
             System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore spedito sul server: " + ottenuto);
         }// end of for cycle
@@ -582,7 +582,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
             testoOriginale = (String) riga[1];
             parteValidaNuova = (String) riga[2];
             previsto = (String) riga[3];
-            ottenuto = service.sostituisceParteValida(parBio, testoOriginale, parteValidaNuova);
+            ottenuto = parBio.sostituisceParteValida(testoOriginale, parteValidaNuova);
             Assert.assertEquals(previsto, ottenuto);
             System.out.println("Parametro " + parBio.getTag().toLowerCase() + " elaborato correttamente. Valore spedito sul server: " + ottenuto);
         }// end of for cycle

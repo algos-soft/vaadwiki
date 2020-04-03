@@ -44,7 +44,32 @@
                     bio.getTmplBioServer();
                     libBio.getMappaBio(tmplBioServer);
                 setValue(bio, mappa, registra);
+                
 1. Dalla Page estrae il tmpl
 2. Costruisce una entity Bio, con le informazioni base
 3. Crea una mappa HashMap<String, String> estraendola dal tmpl interno (originale) della entity Bio
 4. Utilizza i valori della mappa per regolare le singole property della entity Bio
+
+#Creazione entity Bio
+Due possibilità:
+1. entityBio = bioService.newEntity(Page page)
+2. entityBio = bioService.newEntity(pageid, wikiTitle, tmplBioServer)
+
+Viene creata 'grezza' Sono alcuni parametri sono validi:
+1. id
+2. pageid
+3. wikiTitle
+4. tmplBioServer
+5. lastLettura
+
+#Elaborazione entity Bio
+entityBio = elaboraService.esegueNoSave(entityBio);
+
+//--Recupera i valori base di tutti i parametri dal tmplBioServer<br>
+HashMap<String, String> mappaGrezza = libBio.getMappaGrezzaBio(bio);
+
+1. id
+2. pageid
+3. wikiTitle
+4. tmplBioServer
+5. lastLettura

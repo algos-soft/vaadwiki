@@ -1449,6 +1449,22 @@ public class LibBio {
         return stringaOut;
     } // fine del metodo
 
+    /**
+     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+     * Elimina il punto interrogativo, se da solo <br>
+     * Mantiene il punto interrogativo, se da solo <br>
+     *
+     * @param testoOriginario in entrata da elaborare
+     *
+     * @return testoGrezzo troncato
+     */
+    public String troncaParteFinaleGiornoAnno(String testoOriginario) {
+        String testoGrezzo = VUOTA;
+        testoGrezzo = text.levaDopoVirgola(testoOriginario);
+
+        return troncaParteFinalePuntoInterrogativo(testoGrezzo);
+    } // fine del metodo
 
 
     /**
@@ -1472,7 +1488,7 @@ public class LibBio {
         testoGrezzo = text.levaDopoRef(testoGrezzo);
         testoGrezzo = text.levaDopoNote(testoGrezzo);
         testoGrezzo = text.levaDopoGraffe(testoGrezzo);
-        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
+//        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
         testoGrezzo = text.levaDopoCirca(testoGrezzo);
         if (!testoGrezzo.equals("?")) {
             testoGrezzo = text.levaDopoInterrogativo(testoGrezzo);
@@ -1903,12 +1919,11 @@ public class LibBio {
      * @return mappa dei parametri esistenti nella enumeration e presenti nel testo
      */
     public LinkedHashMap<String, String> getMappaBio(Bio bio) {
-        return getMappaBio(bio.getTmplBioServer());
+        return getMappaGrezzaBio(bio.getTmplBioServer());
     }// end of method
 
-
     /**
-     * Estrae una mappa chiave valore per un fix di parametri, dal testo di una biografia
+     * Estrae una mappa chiave valore per un fix di parametri, dal testo di una biografia <br>
      * <p>
      * E impossibile sperare in uno schema fisso
      * I parametri sono spesso scritti in ordine diverso da quello previsto
@@ -1924,7 +1939,35 @@ public class LibBio {
      *
      * @return mappa dei parametri esistenti nella enumeration e presenti nel testo
      */
-    public LinkedHashMap<String, String> getMappaBio(String testoTemplate) {
+    public LinkedHashMap<String, String> getMappaGrezzaBio(Bio bio) {
+        LinkedHashMap<String, String> mappa = null;
+        String tmplBioServer = bio.getTmplBioServer();
+
+        if (text.isValid(tmplBioServer)) {
+            mappa = getMappaGrezzaBio(tmplBioServer);
+        }// end of if cycle
+
+        return mappa;
+    }// end of method
+
+    /**
+     * Estrae una mappa chiave valore per un fix di parametri, dal testo di una biografia <br>
+     * <p>
+     * E impossibile sperare in uno schema fisso
+     * I parametri sono spesso scritti in ordine diverso da quello previsto
+     * Occorre considerare le {{ graffe annidate, i | (pipe) annidati
+     * i mancati ritorni a capo, ecc., ecc.
+     * <p>
+     * Uso la lista dei parametri che può riconoscere
+     * (è meno flessibile, ma più sicuro)
+     * Cerco il primo parametro nel testo e poi spazzolo il testo per cercare
+     * il primo parametro noto e così via
+     *
+     * @param testoTemplate del template Bio
+     *
+     * @return mappa dei parametri esistenti nella enumeration e presenti nel testo
+     */
+    public LinkedHashMap<String, String> getMappaGrezzaBio(String testoTemplate) {
         LinkedHashMap<String, String> mappa = null;
         LinkedHashMap<Integer, String> mappaTmp = new LinkedHashMap<Integer, String>();
         String chiave;
@@ -2517,7 +2560,7 @@ public class LibBio {
         String valueServer;
         String valueMongo;
         String valueMerged;
-        HashMap<String, String> mappa = getMappaBio(tmplBioServer);
+        HashMap<String, String> mappa = getMappaGrezzaBio(tmplBioServer);
 
         //--spazzola TUTTI i parametri possibili in ordine
         for (ParBio parBio : ParBio.values()) {

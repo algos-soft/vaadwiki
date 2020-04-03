@@ -288,10 +288,10 @@ public class ElaboraService extends ABioService {
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
      */
     public Bio esegue(Bio bio, boolean registra) {
-        HashMap<String, String> mappa;
+        HashMap<String, String> mappaGrezza;
 
         //--Recupera i valori base di tutti i parametri dal tmplBioServer
-        mappa = getMappaBio(bio);
+        mappaGrezza = libBio.getMappaGrezzaBio(bio);
 
 //        //--Elabora valori validi dei parametri significativi
 //        if (mappa != null) {
@@ -300,8 +300,8 @@ public class ElaboraService extends ABioService {
 
         //--Elabora valori validi dei parametri significativi
         //--Inserisce i valori nella entity Bio
-        if (mappa != null) {
-            setValue(bio, mappa, registra);
+        if (mappaGrezza != null) {
+            setValue(bio, mappaGrezza, registra);
         }// end of if cycle
 
         //--Elabora i link alle tavole collegate
@@ -359,20 +359,20 @@ public class ElaboraService extends ABioService {
     }// end of method
 
 
-    /**
-     * Estrae dal templateServer una mappa di parametri corrispondenti ai campi della tavola Bio
-     */
-    public HashMap<String, String> getMappaBio(Bio bio) {
-        HashMap<String, String> mappa = null;
-        String tmplBioServer = bio.getTmplBioServer();
-
-        if (text.isValid(tmplBioServer)) {
-            mappa = new HashMap<>();
-            mappa = libBio.getMappaBio(tmplBioServer);
-        }// end of if cycle
-
-        return mappa;
-    }// end of method
+//    /**
+//     * Estrae dal templateServer una mappa di parametri corrispondenti ai campi della tavola Bio
+//     */
+//    public HashMap<String, String> getMappaGrezzaBio(Bio bio) {
+//        HashMap<String, String> mappa = null;
+//        String tmplBioServer = bio.getTmplBioServer();
+//
+//        if (text.isValid(tmplBioServer)) {
+//            mappa = new HashMap<>();
+//            mappa = libBio.getMappaGrezzaBio(tmplBioServer);
+//        }// end of if cycle
+//
+//        return mappa;
+//    }// end of method
 
 
     //--Elabora valori validi dei parametri significativi
@@ -498,7 +498,7 @@ public class ElaboraService extends ABioService {
      * Se non esiste un parametro 'extra' di mappaServer, non inserisce la riga  <br>
      */
     public String getMerged(String tmplBioMongo, String tmplBioServer) {
-        return getMerged(libBio.getMappaBio(tmplBioMongo), libBio.getMappaBio(tmplBioServer));
+        return getMerged(libBio.getMappaGrezzaBio(tmplBioMongo), libBio.getMappaGrezzaBio(tmplBioServer));
     }// end of method
 
 
@@ -513,7 +513,7 @@ public class ElaboraService extends ABioService {
      * Se non esiste un parametro 'extra' di mappaServer, non inserisce la riga  <br>
      */
     public String getMerged(HashMap<String, String> mappa, String tmplBioServer) {
-        return getMerged(mappa, libBio.getMappaBio(tmplBioServer));
+        return getMerged(mappa, libBio.getMappaGrezzaBio(tmplBioServer));
     }// end of method
 
 
@@ -546,7 +546,7 @@ public class ElaboraService extends ABioService {
 
                 if (par.isCampoValido()) {
                     if (text.isValid(valueMongo)) {
-                        valueMerged = sostituisceParteValida(par, valueServer, valueMongo);
+                        valueMerged = par.sostituisceParteValida(valueServer, valueMongo);
                     } else {
                         if (text.isValid(valueServer)) {
 //                            valueMerged = eliminaDopoVirgola(par, valueServer);
@@ -576,36 +576,7 @@ public class ElaboraService extends ABioService {
      *
      */
     public String estraeValore(ParBio par, String testoOriginale) {
-        return par.estraeValore(testoOriginale);
-    }// end of method
-
-
-    /**
-     * <ref> viene mantenuto <br>
-     */
-    public String sostituisceParteValida(ParBio par, String testoOriginale, String parteValidaNuova) {
-
-        return par.elaboraParteValida(testoOriginale);
-//        String valoreSostituito = VUOTA;
-//        String parteValidaVecchia = par.fix(testoOriginale, libBio);
-//        parteValidaVecchia = libBio.fixPropertyBase(testoOriginale);
-//
-//        if (text.isValid(testoOriginale)) {
-//            if (parteValidaVecchia.equals(parteValidaNuova)) {
-//                return testoOriginale;
-////                if (parteValidaVecchia.equals(VUOTA)) {
-////                    return testoOriginale;
-////                } else {
-////                    return parteValidaNuova;
-////                }// end of if/else cycle
-//            } else {
-//                valoreSostituito = text.sostituisce(testoOriginale, parteValidaVecchia, parteValidaNuova);
-//            }// end of if/else cycle
-//        } else {
-//            valoreSostituito = parteValidaNuova;
-//        }// end of if/else cycle
-//
-//        return valoreSostituito;
+        return par.estraeValoreInizialeValido(testoOriginale);
     }// end of method
 
 
@@ -691,7 +662,7 @@ public class ElaboraService extends ABioService {
         String riga = VUOTA;
 
         if (text.isValid(tmplEntrata)) {
-            mappa = libBio.getMappaBio(tmplEntrata);
+            mappa = libBio.getMappaGrezzaBio(tmplEntrata);
         }// end of if cycle
 
         if (mappa != null) {
@@ -729,7 +700,7 @@ public class ElaboraService extends ABioService {
         String riga = VUOTA;
 
         if (text.isValid(tmplEntrata)) {
-            mappa = libBio.getMappaBio(tmplEntrata);
+            mappa = libBio.getMappaGrezzaBio(tmplEntrata);
         }// end of if cycle
 
         if (mappa != null) {
