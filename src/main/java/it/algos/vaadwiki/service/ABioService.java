@@ -341,6 +341,12 @@ public class ABioService {
         WrapTreStringhe wrap;
         List<WrapTreStringhe> listaWrap = new ArrayList<>();
         String testoPrimaGraffa = VUOTA;
+        int posIniSeconda = 0;
+        int posEndSeconda = 0;
+        String testoSecondaGraffa = VUOTA;
+        int posIniTerza = 0;
+        int posEndTerza = 0;
+        String testoTerzaGraffa = VUOTA;
 
         //--reset con dati vuoti
         mappa.put(KEY_MAP_GRAFFE_ESISTONO, false);
@@ -391,7 +397,7 @@ public class ABioService {
         listaWrap.add(new WrapTreStringhe(testoPrimaGraffa, VUOTA, VUOTA));
         mappa.put(KEY_MAP_GRAFFE_LISTA_WRAPPER, listaWrap);
 
-        if (numIni == 1) {
+        if (numIni >0) {
             if (text.isValid(testoPrimaGraffa)) {
                 if (posIni == 2) {
                     mappa.put(KEY_MAP_GRAFFE_TYPE, EAGraffe.iniziale);
@@ -405,13 +411,24 @@ public class ABioService {
             } else {
                 mappa.put(KEY_MAP_GRAFFE_TYPE, EAGraffe.vuota);
             }// end of if/else cycle
-
-            return mappa;
         }// end of if cycle
 
-        if (numIni == 2) {
+        if (numIni > 1) {
+            posIniSeconda = testoDaSpazzolare.indexOf(DOPPIE_GRAFFE_INI,posIni) + DOPPIE_GRAFFE_INI.length();
+            posEndSeconda = testoDaSpazzolare.indexOf(DOPPIE_GRAFFE_END,posEnd+DOPPIE_GRAFFE_END.length());
+            testoSecondaGraffa = testoDaSpazzolare.substring(posIniSeconda, posEndSeconda);
+            listaWrap.add(new WrapTreStringhe(testoSecondaGraffa, VUOTA, VUOTA));
+            mappa.put(KEY_MAP_GRAFFE_LISTA_WRAPPER, listaWrap);
             mappa.put(KEY_MAP_GRAFFE_TYPE, EAGraffe.doppie);
-            return mappa;
+        }// end of if cycle
+
+        if (numIni >2) {
+            posIniTerza = testoDaSpazzolare.indexOf(DOPPIE_GRAFFE_INI,posIniSeconda) + DOPPIE_GRAFFE_INI.length();
+            posEndTerza = testoDaSpazzolare.indexOf(DOPPIE_GRAFFE_END,posEndSeconda+DOPPIE_GRAFFE_END.length());
+            testoTerzaGraffa = testoDaSpazzolare.substring(posIniTerza, posEndTerza);
+            listaWrap.add(new WrapTreStringhe(testoTerzaGraffa, VUOTA, VUOTA));
+            mappa.put(KEY_MAP_GRAFFE_LISTA_WRAPPER, listaWrap);
+            mappa.put(KEY_MAP_GRAFFE_TYPE, EAGraffe.triple);
         }// end of if cycle
 
 //        // spazzola il testo per ogni coppia di graffe

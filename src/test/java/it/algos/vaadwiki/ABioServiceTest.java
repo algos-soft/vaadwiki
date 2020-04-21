@@ -277,23 +277,27 @@ public class ABioServiceTest extends ATest {
     /**
      * Controlla le graffe interne al testo
      * <p>
-     * Casi da controllare (all'interno delle graffe principali, già eliminate):
+     * Casi da controllare (all'interno delle graffe principali, già eliminate); i primi 7 non sono validi:
      * 1-......                         (manca)
-     * 2-...{{..}}...                   (singola)
-     * 3-...{{}}...                     (vuota)
-     * 4-{{..}}...                      (iniziale)
-     * 5-...{{..}}                      (terminale)
-     * 6-...{{..{{...}}...}}...         (interna)
-     * 7-...{{..}}...{{...}}...         (doppie)
-     * 8-...{{..}}..{{..}}..{{...}}...  (tre o più)
-     * 9-...{{..}}..|..{{..}}...        (due in punti diversi)
-     * 10-...{{...|...}}...             (pipe interno)
-     * 11-...{{...|...|...}}...         (doppio pipe)
-     * 12-...{{..|...}}..|..{{..}}...   (due pipe in due graffe)
-     * 13-...{{....                     (singola apertura)
-     * 14-...}}....                     (singola chiusura)
+     * 2-...{{...                       (mezza apertura)
+     * 3-...{{...{{...}}...             (mezza apertura)
+     * 4-...{{...}}...{{...             (mezza apertura)
+     * 5-...}}...                       (mezza chiusura)
+     * 6-...}}...{{...}}...             (mezza chiusura)
+     * 7-...{{...}}...}}...             (mezza chiusura)
+     * 8-...{{..}}...                   (singola)
+     * 9-...{{}}...                     (vuota)
+     * 10-{{..}}...                     (iniziale)
+     * 11-...{{..}}                     (terminale)
+     * 12-...{{..{{...}}...}}...        (interna)
+     * 13-...{{..}}...{{...}}...        (doppie)
+     * 14-...{{..}}..{{..}}..{{...}}... (tre o più)
+     * 15-...{{..}}..|..{{..}}...       (due in punti diversi)
+     * 16-...{{...|...}}...             (pipe interno)
+     * 17-...{{...|...|...}}...         (doppio pipe)
+     * 18-...{{..|...}}..|..{{..}}...   (due pipe in due graffe)
      * <p>
-     * Se una o più graffe esistono, restituisce:
+     * Se una o più graffe valide esistono, restituisce:
      * <p>
      * keyMapGraffeEsistono = se esistono                                       (boolean)
      * keyMapGraffeType = type della/della graffe trovate                       (EAGraffe)
@@ -403,7 +407,7 @@ public class ABioServiceTest extends ATest {
         ottenuto = array.isValid(listaWrap) ? listaWrap.get(0).getPrima() : VUOTA;
         assertEquals("testo", ottenuto);
 
-        sorgente = "Qui {{esistono}} due graffe. Fine {{testo}}";
+        sorgente = "Qui {{esistono}} due graffe. Fine {{seconda}}";
         mappa = service.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
@@ -413,6 +417,23 @@ public class ABioServiceTest extends ATest {
         listaWrap = (List<WrapTreStringhe>) mappa.get(KEY_MAP_GRAFFE_LISTA_WRAPPER);
         ottenuto = array.isValid(listaWrap) ? listaWrap.get(0).getPrima() : VUOTA;
         assertEquals("esistono", ottenuto);
+        ottenuto = array.isValid(listaWrap) ? listaWrap.get(1).getPrima() : VUOTA;
+        assertEquals("seconda", ottenuto);
+
+        sorgente = "Qui {{esistono}} {{[[tre]]}} graffe. Fine {{terza}}";
+        mappa = service.checkGraffe(sorgente);
+        assertNotNull(mappa);
+        assertEquals(5, mappa.size());
+        assertTrue((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
+        assertEquals(3, mappa.get(KEY_MAP_GRAFFE_NUMERO));
+        assertEquals(EAGraffe.triple, mappa.get(KEY_MAP_GRAFFE_TYPE));
+        listaWrap = (List<WrapTreStringhe>) mappa.get(KEY_MAP_GRAFFE_LISTA_WRAPPER);
+        ottenuto = array.isValid(listaWrap) ? listaWrap.get(0).getPrima() : VUOTA;
+        assertEquals("esistono", ottenuto);
+        ottenuto = array.isValid(listaWrap) ? listaWrap.get(1).getPrima() : VUOTA;
+        assertEquals("[[tre]]", ottenuto);
+        ottenuto = array.isValid(listaWrap) ? listaWrap.get(2).getPrima() : VUOTA;
+        assertEquals("terza", ottenuto);
 
     }// end of single test
 
