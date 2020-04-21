@@ -321,6 +321,22 @@ public class WikiCost {
 
     public final static String KEY_MAP_ORDINE_GIORNO_MORTO = "keyMapOrdineGiornoMorto";
 
+    public final static String KEY_MAP_GRAFFE_ESISTONO = "keyMapGraffeEsistono";
+
+    public final static String KEY_MAP_GRAFFE_TYPE = "keyMapGraffeType";
+
+    public final static String KEY_MAP_GRAFFE_NUMERO = "keyMapGraffeNumero";
+
+    public final static String KEY_MAP_GRAFFE_VALORE_CONTENUTO = "keyMapGraffeValoreContenuto";
+
+    public final static String KEY_MAP_GRAFFE_TESTO_PRECEDENTE = "keyMapGraffeTestoPrecedente";
+
+    public final static String KEY_MAP_GRAFFE_NOME_PARAMETRO = "keyMapGraffeNomeParametro";
+
+    public final static String KEY_MAP_GRAFFE_VALORE_PARAMETRO = "keyMapGraffeValoreParametro";
+
+    public final static String KEY_MAP_GRAFFE_LISTA_WRAPPER = "keyMapGraffeListaWrapper";
+
     public final static String USA_REGISTRA_SEMPRE_CRONO = "salvaSempreCrono";
 
 
@@ -430,6 +446,46 @@ public class WikiCost {
     public final static String USA_UPLOAD_SINGOLA_VOCE_ELABORATA = "usaSingolaVoceElaborata";
 
     public final static String TYPE_ELABORAZIONE = "typeElaborazione";
+
+    /**
+     * tag per la singola graffa di apertura
+     */
+    public static final String GRAFFA_INI = "{";
+
+    /**
+     * tag per le doppie graffe di apertura
+     */
+    public static final String DOPPIE_GRAFFE_INI = GRAFFA_INI + GRAFFA_INI;
+
+    /**
+     * tag per la singola graffa di apertura
+     */
+    public static final String GRAFFA_END = "}";
+
+    /**
+     * tag per le doppie graffe di chiusura
+     */
+    public static final String DOPPIE_GRAFFE_END = GRAFFA_END + GRAFFA_END;
+
+    /**
+     * tag per la singola graffa di apertura
+     */
+    public static final String GRAFFA_INI_REGEX = "\\{";
+
+    /**
+     * tag per le doppie graffe di apertura
+     */
+    public static final String DOPPIE_GRAFFE_INI_REGEX = GRAFFA_INI_REGEX + GRAFFA_INI_REGEX;
+
+    /**
+     * tag per la singola graffa di apertura
+     */
+    public static final String GRAFFA_END_REGEX = "\\}";
+
+    /**
+     * tag per le doppie graffe di chiusura
+     */
+    public static final String DOPPIE_GRAFFE_END_REGEX = GRAFFA_END_REGEX + GRAFFA_END_REGEX;
 
     public static WikiLoginOld WIKI_LOGIN = null;
 

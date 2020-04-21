@@ -265,6 +265,7 @@ public abstract class LibWiki {
      *
      * @return numero di occorrenze - zero se non ce ne sono
      */
+    @Deprecated // sostituito da ABioService.getNumTag()
     public static int getNumTag(String testo, String tag) {
         int numTag = 0;
         int pos;

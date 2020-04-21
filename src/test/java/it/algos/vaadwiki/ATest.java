@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import static it.algos.vaadflow.application.FlowCost.VUOTA;
+
 /**
  * Project springvaadin
  * Created by Algos
@@ -122,13 +124,13 @@ public class ATest {
 //    protected EACompanyRequired previstoCompany;
 //    protected EACompanyRequired ottenutoCompany;
 
-    protected String sorgente = "";
+    protected String sorgente = VUOTA;
 
-    protected String previsto = "";
+    protected String previsto = VUOTA;
 
-    protected String ottenuto = "";
+    protected String ottenuto = VUOTA;
 
-    protected String contenuto = "";
+    protected String contenuto = VUOTA;
 
     protected boolean previstoBooleano;
 

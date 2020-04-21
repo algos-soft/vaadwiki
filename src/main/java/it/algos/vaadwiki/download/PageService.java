@@ -139,22 +139,39 @@ public class PageService extends ABioService {
             return result;
         }// end of if cycle
 
+        if (true) {
+            for (Page page : pages) {
+                entity = creaBio(page, checkUpload);
+                if (bioService.save(entity) != null) {
+                    logger.info("Registrata la entity " + entity.wikiTitle, PageService.class, "singoloBlocco");
+                } else {
+                    logger.error("Non registrata la entity " + entity.wikiTitle, PageService.class, "singoloBlocco");
+                }// end of if/else cycle
+            }// end of for cycle
+
+            return result;
+        }// end of if cycle
+
         for (Page page : pages) {
             entity = creaBio(page, checkUpload);
             if (entity != null) {
-                listaBio.add(entity);
-                vociDaCancellarePrimaDiReinserirle.add(page.getPageid());
-                switch (type) {
-                    case download:
-                        result.addVoceCreata();
-                        break;
-                    case update:
-                        result.addVoceAggiornata();
-                        break;
-                    default:
-                        log.warn("Switch - caso non definito");
-                        break;
-                } // end of switch statement
+                if (entity.pageid == page.getPageid()) {
+                    listaBio.add(entity);
+                    vociDaCancellarePrimaDiReinserirle.add(page.getPageid());
+                    switch (type) {
+                        case download:
+                            result.addVoceCreata();
+                            break;
+                        case update:
+                            result.addVoceAggiornata();
+                            break;
+                        default:
+                            log.warn("Switch - caso non definito");
+                            break;
+                    } // end of switch statement
+                } else {
+                    logger.error("I pageid sono differenti", PageService.class, "singoloBlocco");
+                }// end of if/else cycle
             } else {
                 result.addNo(page.getTitle());
             }// end of if/else cycle

@@ -16,6 +16,7 @@ import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.enumeration.EACicloType;
+import it.algos.vaadwiki.enumeration.EAGraffe;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.Bio;
@@ -389,8 +390,8 @@ public class LibBio {
 
         if (continua) {
             mappaGraffe = checkGraffe(testoTemplate);
-            if (mappaGraffe.containsKey("isGraffe")) {
-                testoTemplate = (String) mappaGraffe.get("testo");
+            if (mappaGraffe.containsKey(KEY_MAP_GRAFFE_ESISTONO)) {
+//                testoTemplate = (String) mappaGraffe.get(KEY_MAP_GRAFFE_TESTO); //@todo non chiaro
             }// fine del blocco if
         }// fine del blocco if
 
@@ -426,13 +427,13 @@ public class LibBio {
 
         // reinserisce il contenuto del parametro che eventualmente avesse avuto le doppie graffe
         if (continua) {
-            if (mappaGraffe.containsKey("isGraffe")) {
-                if ((Integer) mappaGraffe.get("numGraffe") == 1) {
-                    chiave = (String) mappaGraffe.get("nomeParGraffe");
-                    valore = (String) mappaGraffe.get("valParGraffe");
+            if (mappaGraffe.containsKey(KEY_MAP_GRAFFE_ESISTONO)) {
+                if ((Integer) mappaGraffe.get(KEY_MAP_GRAFFE_NUMERO) == 1) {
+                    chiave = (String) mappaGraffe.get(KEY_MAP_GRAFFE_NOME_PARAMETRO);
+                    valore = (String) mappaGraffe.get(KEY_MAP_GRAFFE_VALORE_PARAMETRO);
                     mappa.put(chiave, valore);
                 } else {
-                    for (int k = 0; k < (Integer) mappaGraffe.get("numGraffe"); k++) {
+                    for (int k = 0; k < (Integer) mappaGraffe.get(KEY_MAP_GRAFFE_NUMERO); k++) {
 //                        chiave = mappaGraffe.nomeParGraffe[k];
 //                        valore = mappaGraffe.valParGraffe[k];
 //                        mappa.put(chiave, valore);
@@ -449,22 +450,33 @@ public class LibBio {
      * Controlla le graffe interne al testo
      * <p>
      * Casi da controllare (all'interno delle graffe principali, già eliminate):
-     * 1-...{{..}}...               (singola)
-     * 2-...{{}}...                 (vuota)
-     * 3-...{{..}}                  (terminale)
-     * 4-...{{..{{...}}...}}...     (interna)
-     * 5-...{{..}}...{{...}}...     (doppie)
-     * 6-..{{..}}..{{..}}..{{...}}..(tre o più)
-     * 7-..{{..}}..|..{{..}}        (due in punti diversi)
-     * 8-..{{...|...}}              (pipe interni)
+     * 1-...{{..}}...                   (singola)
+     * 2-...{{}}...                     (vuota)
+     * 3-{{..}}...                      (iniziale)
+     * 3-...{{..}}                      (terminale)
+     * 4-...{{..{{...}}...}}...         (interna)
+     * 5-...{{..}}...{{...}}...         (doppie)
+     * 6-...{{..}}..{{..}}..{{...}}...  (tre o più)
+     * 7-...{{..}}..|..{{..}}...        (due in punti diversi)
+     * 8-...{{...|...}}...              (pipe interno)
+     * 8-...{{...|...|...}}...          (doppio pipe)
+     * 7-...{{..|...}}..|..{{..}}...    (due pipe in due graffe)
+     * 9-...{{....                      (singola apertura)
+     * 10-...}}....                     (singola chiusura)
      * <p>
-     * Se la graffe esistono, restituisce:
-     * testo = testo depurate delle graffe
-     * valGraffe = valore del contenuto delle graffe                (stringa o arry di stringhe)
-     * nomeParGraffe = nome del parametro interessato               (stringa o arry di stringhe)
-     * valParGraffe = valore completo del parametro che le contiene (stringa o arry di stringhe)
-     * isGraffe = boolean          //se esistono
-     * numGraffe = quante ce ne sono
+     * Se una o più graffe esistono, restituisce:
+     * <p>
+     * keyMapGraffeEsistono = se esistono                                       (boolean)
+     * keyMapGraffeNumero = quante ce ne sono                                   (integer)
+     * keyMapGraffeTestoPrecedente = testo che precede la prima graffa o testo originale se non ce ne sono
+     * keyMapGraffeListaWrapper = lista di WrapTreStringhe coi seguenti dati:   (list<WrapTreStringhe>)
+     * - prima = valore del contenuto delle graffe                              (stringa)
+     * - seconda = nome del parametro interessato                               (stringa)
+     * - terza = valore completo del parametro che le contiene                  (stringa)
+     *
+     * @param testoTemplate da analizzare
+     *
+     * @return mappa di risultati
      */
     public static LinkedHashMap checkGraffe(String testoTemplate) {
         LinkedHashMap mappa = null;
@@ -473,12 +485,12 @@ public class LibBio {
         String tagEnd = "}}";
 
         mappa = new LinkedHashMap();
-        mappa.put("isGraffe", false);
-        mappa.put("testo", testoTemplate);
-        mappa.put("numGraffe", 0);
-        mappa.put("valGraffe", "");
-        mappa.put("nomeParGraffe", "");
-        mappa.put("valParGraffe", "");
+        mappa.put(KEY_MAP_GRAFFE_ESISTONO, false);
+        mappa.put(KEY_MAP_GRAFFE_NUMERO, 0);
+        mappa.put(KEY_MAP_GRAFFE_TESTO_PRECEDENTE, testoTemplate);
+        mappa.put(KEY_MAP_GRAFFE_VALORE_CONTENUTO, VUOTA);
+        mappa.put(KEY_MAP_GRAFFE_NOME_PARAMETRO, VUOTA);
+        mappa.put(KEY_MAP_GRAFFE_VALORE_PARAMETRO, VUOTA);
 
         if (!testoTemplate.equals("")) {
             continua = true;
@@ -487,7 +499,7 @@ public class LibBio {
         // controllo di esistenza delle graffe
         if (continua) {
             if (testoTemplate.contains(tagIni) && testoTemplate.contains(tagEnd)) {
-                mappa.put("isGraffe", true);
+                mappa.put(KEY_MAP_GRAFFE_ESISTONO, true);
             } else {
                 continua = false;
             }// fine del blocco if-else
@@ -502,6 +514,8 @@ public class LibBio {
 
         return mappa;
     }// fine del metodo
+
+
 
 
     /**
@@ -552,7 +566,7 @@ public class LibBio {
                 if (posEnd != -1) {
                     testoGraffa = testoTemplate.substring(posIni, posEnd + tagEnd.length());
                 } else {
-                    mappa.put("isGraffe", false);
+                    mappa.put(KEY_MAP_GRAFFE_ESISTONO, false);
                     break;
                 }// fine del blocco if-else
             } //fine del ciclo while
@@ -597,7 +611,7 @@ public class LibBio {
 
         // controllo di congruità
         if (mappa != null && !testoTemplate.equals("") && !testoGraffa.equals("")) {
-            testoElaborato = LibBio.sostituisce(testoElaborato, testoGraffa, "");
+            testoElaborato = LibBio.sostituisce(testoTemplate, testoGraffa, "");
             continua = true;
         }// fine del blocco if
 
@@ -631,53 +645,53 @@ public class LibBio {
             }// fine del blocco if-else
         }// fine del blocco if
 
-        numGraffe = (Integer) mappa.get("numGraffe");
+        numGraffe = mappa.get(KEY_MAP_GRAFFE_NUMERO) != null ? (Integer) mappa.get(KEY_MAP_GRAFFE_NUMERO) : 0;
         numGraffe++;
         switch (numGraffe) {
             case 1:
-                mappa.put("valGraffe", testoGraffa);
-                mappa.put("nomeParGraffe", nomeParGraffe);
-                mappa.put("valParGraffe", valParGraffe);
+                mappa.put(KEY_MAP_GRAFFE_VALORE_CONTENUTO, testoGraffa);
+                mappa.put(KEY_MAP_GRAFFE_NOME_PARAMETRO, nomeParGraffe);
+                mappa.put(KEY_MAP_GRAFFE_VALORE_PARAMETRO, valParGraffe);
                 break;
             case 2:
                 arrayValGraffe = new ArrayList();
                 String oldValGraffe;
-                oldValGraffe = (String) mappa.get("valGraffe");
+                oldValGraffe = (String) mappa.get(KEY_MAP_GRAFFE_VALORE_CONTENUTO);
                 arrayValGraffe.add(oldValGraffe);
                 arrayValGraffe.add(testoGraffa);
-                mappa.put("valGraffe", arrayValGraffe);
+                mappa.put(KEY_MAP_GRAFFE_VALORE_CONTENUTO, arrayValGraffe);
 
                 arrayNomeParGraffe = new ArrayList();
                 String oldNomeParGraffe;
-                oldNomeParGraffe = (String) mappa.get("nomeParGraffe");
+                oldNomeParGraffe = (String) mappa.get(KEY_MAP_GRAFFE_VALORE_PARAMETRO);
                 arrayNomeParGraffe.add(oldNomeParGraffe);
                 arrayNomeParGraffe.add(nomeParGraffe);
-                mappa.put("nomeParGraffe", arrayNomeParGraffe);
+                mappa.put(KEY_MAP_GRAFFE_VALORE_PARAMETRO, arrayNomeParGraffe);
 
                 arrayvValParGraffe = new ArrayList();
                 String oldValParGraffe;
-                oldValParGraffe = (String) mappa.get("valParGraffe");
+                oldValParGraffe = (String) mappa.get(KEY_MAP_GRAFFE_VALORE_PARAMETRO);
                 arrayvValParGraffe.add(oldValParGraffe);
                 arrayvValParGraffe.add(valParGraffe);
-                mappa.put("valParGraffe", arrayvValParGraffe);
+                mappa.put(KEY_MAP_GRAFFE_VALORE_CONTENUTO, arrayvValParGraffe);
                 break;
             default: // caso non definito
-                arrayValGraffe = (ArrayList) mappa.get("valGraffe");
+                arrayValGraffe = (ArrayList) mappa.get(KEY_MAP_GRAFFE_VALORE_CONTENUTO);
                 arrayValGraffe.add(testoGraffa);
-                mappa.put("valGraffe", arrayValGraffe);
+                mappa.put(KEY_MAP_GRAFFE_VALORE_CONTENUTO, arrayValGraffe);
 
-                arrayNomeParGraffe = (ArrayList) mappa.get("nomeParGraffe");
+                arrayNomeParGraffe = (ArrayList) mappa.get(KEY_MAP_GRAFFE_VALORE_PARAMETRO);
                 arrayNomeParGraffe.add(nomeParGraffe);
-                mappa.put("nomeParGraffe", arrayNomeParGraffe);
+                mappa.put(KEY_MAP_GRAFFE_VALORE_PARAMETRO, arrayNomeParGraffe);
 
-                arrayvValParGraffe = (ArrayList) mappa.get("valParGraffe");
+                arrayvValParGraffe = (ArrayList) mappa.get(KEY_MAP_GRAFFE_VALORE_PARAMETRO);
                 arrayvValParGraffe.add(valParGraffe);
-                mappa.put("valParGraffe", arrayvValParGraffe);
+                mappa.put(KEY_MAP_GRAFFE_VALORE_PARAMETRO, arrayvValParGraffe);
                 break;
         } // fine del blocco switch
 
-        mappa.put("numGraffe", numGraffe);
-        mappa.put("testo", testoElaborato);
+        mappa.put(KEY_MAP_GRAFFE_NUMERO, numGraffe);
+        mappa.put(KEY_MAP_GRAFFE_TESTO_PRECEDENTE, testoElaborato);
 
         return testoElaborato;
     }// fine della closure
@@ -787,6 +801,7 @@ public class LibBio {
      * @return numero di occorrenze
      * zero se non ce ne sono
      */
+    @Deprecated // sostituito da ABioService.getNumTag()
     public static int getNumTag(String testo, String tag) {
         int numTag = 0;
         int pos;
@@ -892,7 +907,7 @@ public class LibBio {
         if (!valoreIn.equals("") && valoreIn.contains(pipeACapo)) {
             mappaGraffe = LibBio.checkGraffe(valoreIn);
 
-            if (mappaGraffe.containsKey("isGraffe")) {
+            if (mappaGraffe.containsKey(KEY_MAP_GRAFFE_ESISTONO)) {
             } else {
                 pos = valoreIn.indexOf(pipeACapo);
                 valoreOut = valoreIn.substring(0, pos);

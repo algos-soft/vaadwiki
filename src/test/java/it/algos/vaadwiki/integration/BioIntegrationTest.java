@@ -8,7 +8,6 @@ import it.algos.vaadwiki.modules.bio.Bio;
 import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.service.LibBio;
 import it.algos.vaadwiki.service.ParBio;
-import it.algos.vaadwiki.utility.UtilityView;
 import it.algos.wiki.Api;
 import it.algos.wiki.Page;
 import org.junit.Assert;
@@ -40,7 +39,11 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BioIntegrationTest extends ATest {
 
-    private final static String TITOLO = UtilityView.WIKI_TITLE_DEBUG;
+    private final static String TITOLO = "Utente:Biobot/7";
+
+    private final static String TITOLO_DUE = "Antonio Guerra (politico)";
+
+    private final static String TITOLO_TRE = "Pedro Muguruza";
 
     private static String BIO_UNO = "{{Bio\n" +
             "|Nome = Rudolf\n" +
@@ -112,16 +115,21 @@ public class BioIntegrationTest extends ATest {
     }// end of method
 
 
-    private Bio getBio() {
+    private Bio getBio(String titolo) {
         Bio bio;
 
-        page = api.leggePage(TITOLO);
+        page = api.leggePage(titolo);
         Assert.assertNotNull(page);
 
         bio = pageService.creaBio(page);
         Assert.assertNotNull(page);
 
         return bio;
+    }// end of single test
+
+
+    private Bio getBio() {
+        return getBio(TITOLO);
     }// end of single test
 
 
@@ -958,7 +966,7 @@ public class BioIntegrationTest extends ATest {
         mappa = libBio.getMappaTroncata(mappa);
         mappa = libBio.getMappaElaborata(mappa);
         System.out.println("*************");
-        System.out.println("getMappaTroncata");
+        System.out.println("getMappaElaborata");
         System.out.println("*************");
         System.out.println("");
 
@@ -972,7 +980,7 @@ public class BioIntegrationTest extends ATest {
         Assert.assertEquals(mappa.get(ParBio.luogoMorte.getTag()), "Watertown");
         Assert.assertEquals(mappa.get(ParBio.giornoMeseMorte.getTag()), "1º agosto");
         Assert.assertEquals(mappa.get(ParBio.annoMorte.getTag()), "1978");
-        Assert.assertEquals(mappa.get(ParBio.attivita.getTag()), "Violinista");
+        Assert.assertEquals(mappa.get(ParBio.attivita.getTag()), "violinista");
         Assert.assertEquals(mappa.get(ParBio.nazionalita.getTag()), "austriaco");
 
         stampaParametriMongo(entity);
@@ -1048,5 +1056,26 @@ public class BioIntegrationTest extends ATest {
             }// end of if cycle
         }// end of for cycle
     }// end of method
+
+
+    @Test
+    public void provaPaginaStrana() {
+        LinkedHashMap<String, String> mappa = null;
+        Bio entity = getBio(TITOLO_DUE);
+
+        mappa = libBio.getMappaDownload(entity);
+//        mappa = libBio.getMappaTroncata(mappa);
+//        mappa = libBio.getMappaElaborata(mappa);
+    }// end of single test
+
+    @Test
+    public void provaPaginaStrana2() {
+        LinkedHashMap<String, String> mappa = null;
+        Bio entity = getBio(TITOLO_TRE);
+
+        mappa = libBio.getMappaDownload(entity);
+//        mappa = libBio.getMappaTroncata(mappa);
+//        mappa = libBio.getMappaElaborata(mappa);
+    }// end of single test
 
 }// end of test class
