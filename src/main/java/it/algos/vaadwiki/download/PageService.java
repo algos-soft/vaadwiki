@@ -179,15 +179,16 @@ public class PageService extends ABioService {
             try { // prova ad eseguire il codice
                 mongo.insert(listaBio, Bio.class);
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(" ");
-                log.error(unErrore.toString());
-                log.error("Numero pagine (bio) da registrare: " + listaBio.size());
-                log.error(listaBio.toString());
-                for (int k = 0; k < 10; k++) {
-                    log.error(" ");
-                    log.error(listaBio.get(k).wikiTitle + " " + listaBio.get(k).pageid);
-                }// end of for cycle
-                log.error(" ");
+                logger.error(unErrore, PageService.class, "singoloBlocco");
+//                log.error(" ");
+//                log.error(unErrore.toString());
+//                log.error("Numero pagine (bio) da registrare: " + listaBio.size());
+//                log.error(listaBio.toString());
+//                for (int k = 0; k < 10; k++) {
+//                    log.error(" ");
+//                    log.error(listaBio.get(k).wikiTitle + " " + listaBio.get(k).pageid);
+//                }// end of for cycle
+//                log.error(" ");
 
             }// fine del blocco try-catch
         }// end of if cycle

@@ -62,7 +62,7 @@ import java.util.LinkedHashMap;
  * lgtoken=TOKEN
  * <p>
  * Indipendentemente da quanto scritto sopra (preso dal sito mediawiki API):
- * PreliminaryRequest:
+ * PreliminaryRequest: (https://www.mediawiki.org/wiki/API:Tokens)
  * urlDomain = "&action=query&meta=tokens&type=login"
  * GET
  * no testoPOST
@@ -94,7 +94,8 @@ public class AQueryLogin extends AQueryWiki {
 
     public static final String LG_NAME = "Biobot";
 
-    public static final String LG_PASSWORD = "fulvia68@lhgfmeb8ckefkniq85qmhul18r689nbq";
+//    public static final String LG_PASSWORD = "fulvia68@lhgfmeb8ckefkniq85qmhul18r689nbq";
+    public static final String LG_PASSWORD = "lhgfmeb8ckefkniq85qmhul18r689nbq";
 
     private final static String TAG_FIRST_REQUEST_GET = TAG_QUERY + "&meta=tokens&type=login";
 

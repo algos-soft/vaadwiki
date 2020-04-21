@@ -681,7 +681,7 @@ public class TemplateBioIntegrationTest extends ATest {
 
     private void stampaPar(ParBio par, String sorgente, String previsto) {
         String troncato = par.estraeValoreInizialeGrezzo(sorgente);
-        String valore = par.estraeValoreInizialeValido(sorgente);
+        String valore = par.regolaValoreInizialeValido(sorgente);
         String parametro = par.estraeValoreParametro(sorgente);
         String finale = par.elaboraParteValida(sorgente);
 
@@ -697,7 +697,7 @@ public class TemplateBioIntegrationTest extends ATest {
      * Per ogni parametro controlla che il valore vuoto venga gestito <br>
      */
     private void stampaParVuoto(ParBio par) {
-        ottenuto = par.estraeValoreInizialeValido(VUOTA);
+        ottenuto = par.regolaValoreInizialeValido(VUOTA);
         Assert.assertEquals(VUOTA, ottenuto);
         System.out.println("controllata validità del parametro vuoto in ingresso");
     }// end of method

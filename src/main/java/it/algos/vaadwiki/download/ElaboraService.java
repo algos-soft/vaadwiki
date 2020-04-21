@@ -265,7 +265,7 @@ public class ElaboraService extends ABioService {
 
 
     /**
-     * Elabora la singola voce biografica<br>
+     * Elabora la singola voce biografica <br>
      * Parte dal tmplBioServer e costruisce tutti parametri significativi <br>
      * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
@@ -282,7 +282,7 @@ public class ElaboraService extends ABioService {
 
 
     /**
-     * Elabora la singola voce biografica<br>
+     * Elabora la singola voce biografica <br>
      * Estrae dal tmplBioServer i singoli parametri previsti nella enumeration ParBio <br>
      * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
      * Quello che resta è affidabile ed utilizzabile per le liste <br>
@@ -291,7 +291,7 @@ public class ElaboraService extends ABioService {
         HashMap<String, String> mappaGrezza;
 
         //--Recupera i valori base di tutti i parametri dal tmplBioServer
-        mappaGrezza = libBio.getMappaGrezzaBio(bio);
+        mappaGrezza = libBio.getMappaDownload(bio);
 
 //        //--Elabora valori validi dei parametri significativi
 //        if (mappa != null) {
@@ -498,7 +498,7 @@ public class ElaboraService extends ABioService {
      * Se non esiste un parametro 'extra' di mappaServer, non inserisce la riga  <br>
      */
     public String getMerged(String tmplBioMongo, String tmplBioServer) {
-        return getMerged(libBio.getMappaGrezzaBio(tmplBioMongo), libBio.getMappaGrezzaBio(tmplBioServer));
+        return getMerged(libBio.getMappaDownload(tmplBioMongo), libBio.getMappaDownload(tmplBioServer));
     }// end of method
 
 
@@ -513,7 +513,7 @@ public class ElaboraService extends ABioService {
      * Se non esiste un parametro 'extra' di mappaServer, non inserisce la riga  <br>
      */
     public String getMerged(HashMap<String, String> mappa, String tmplBioServer) {
-        return getMerged(mappa, libBio.getMappaGrezzaBio(tmplBioServer));
+        return getMerged(mappa, libBio.getMappaDownload(tmplBioServer));
     }// end of method
 
 
@@ -576,7 +576,7 @@ public class ElaboraService extends ABioService {
      *
      */
     public String estraeValore(ParBio par, String testoOriginale) {
-        return par.estraeValoreInizialeValido(testoOriginale);
+        return par.regolaValoreInizialeValido(testoOriginale);
     }// end of method
 
 
@@ -662,7 +662,7 @@ public class ElaboraService extends ABioService {
         String riga = VUOTA;
 
         if (text.isValid(tmplEntrata)) {
-            mappa = libBio.getMappaGrezzaBio(tmplEntrata);
+            mappa = libBio.getMappaDownload(tmplEntrata);
         }// end of if cycle
 
         if (mappa != null) {
@@ -700,7 +700,7 @@ public class ElaboraService extends ABioService {
         String riga = VUOTA;
 
         if (text.isValid(tmplEntrata)) {
-            mappa = libBio.getMappaGrezzaBio(tmplEntrata);
+            mappa = libBio.getMappaDownload(tmplEntrata);
         }// end of if cycle
 
         if (mappa != null) {

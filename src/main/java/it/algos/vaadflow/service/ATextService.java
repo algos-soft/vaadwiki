@@ -69,6 +69,10 @@ public class ATextService extends AbstractService {
 
     public static final String INTERROGATIVO = "?";
 
+    public static final String CIRCA = "circa";
+
+    public static final String ECC = "ecc.";
+
     /**
      * versione della classe per la serializzazione
      */
@@ -984,6 +988,38 @@ public class ATextService extends AbstractService {
 
 
     /**
+     * Elimina la parte di stringa successiva al tag <!--, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoUguale(String entrata) {
+        return levaDopo(entrata, UGUALE);
+    }// end of method
+
+
+    /**
+     * Elimina la parte di stringa successiva al tag <!--, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoEccetera(String entrata) {
+        return levaDopo(entrata, ECC);
+    }// end of method
+
+
+    /**
      * Elimina la parte di stringa successiva al tag {{, se esiste.
      * <p>
      * Esegue solo se la stringa è valida
@@ -1061,6 +1097,7 @@ public class ATextService extends AbstractService {
     public String levaDopoCirca(String entrata) {
         return levaDopo(entrata, "circa");
     }// end of method
+
 
     /**
      * Confronta due numeri.

@@ -213,12 +213,13 @@ public abstract class AQuery {
      *
      * @param urlDomain indirizzo web usato nella urlRequest
      */
-    public String urlRequest(String urlDomain) {
+    public String urlRequest(String urlDomainGrezzo) {
         String urlResponse = "";
         URLConnection urlConn;
+        String urlDomain;
 
         try { // prova ad eseguire il codice
-            urlDomain = fixUrlDomain(urlDomain);
+            urlDomain = fixUrlDomain(urlDomainGrezzo);
             urlConn = creaGetConnection(urlDomain);
             uploadCookies(urlConn);
             addPostConnection(urlConn);
@@ -229,14 +230,14 @@ public abstract class AQuery {
             if (unErrore instanceof IOException) {
                 try { // prova ad eseguire il codice
                     log.info("Riprovo. Se non esce subito un altro errore, vuol dire che questa volta il collegamento ha funzionato");
-                    urlDomain = fixUrlDomain(urlDomain);
+                    urlDomain = fixUrlDomain(urlDomainGrezzo);
                     urlConn = creaGetConnection(urlDomain);
                     uploadCookies(urlConn);
                     addPostConnection(urlConn);
                     urlResponse = sendRequest(urlConn);
                     downlodSecondaryCookies(urlConn);
                 } catch (Exception unErrore2) { // intercetta l'errore
-                    log.error("Questo url non ha funzionato: " + urlDomain);
+                    log.error("Questo url non ha funzionato: " + urlDomainGrezzo);
                 }// fine del blocco try-catch
             }// end of if cycle
         }// fine del blocco try-catch

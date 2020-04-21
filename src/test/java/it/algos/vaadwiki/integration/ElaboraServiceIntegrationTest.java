@@ -45,7 +45,7 @@ import static it.algos.vaadflow.application.FlowCost.VUOTA;
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ElaboraServiceIntegrationTest extends ATest {
-
+//Antonio Guerra (politico)
     private static String BIO_UNO = "Utente:Gac/Bio/Complessa3";
 
     private static String BIO_SORGENTE = "{{Bio\n" +

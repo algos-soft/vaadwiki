@@ -1449,6 +1449,7 @@ public class LibBio {
         return stringaOut;
     } // fine del metodo
 
+
     /**
      * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
      * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
@@ -1499,27 +1500,110 @@ public class LibBio {
         return testoGrezzo;
     } // fine del metodo
 
+
+    /**
+     * Restituisce un valore grezzo troncato dopo alcuni tag chiave <br>
+     * <p>
+     * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+     *
+     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
+     *
+     * @return valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
+     */
+    public String estraeValoreInizialeGrezzoPuntoAmmesso(String valorePropertyTmplBioServer) {
+        return troncaDopoTag(valorePropertyTmplBioServer, true);
+    } // fine del metodo
+
+
+    /**
+     * Restituisce un valore grezzo troncato dopo alcuni tag chiave <br>
+     * <p>
+     * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+     *
+     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
+     *
+     * @return valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
+     */
+    public String estraeValoreInizialeGrezzoPuntoEscluso(String valorePropertyTmplBioServer) {
+        return troncaDopoTag(valorePropertyTmplBioServer, false);
+    } // fine del metodo
+
+
     /**
      * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
      * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+     * <p>
+     * Tag chiave di troncatura sempre validi:
+     * REF = "<ref"
+     * NOTE = "<!--"
+     * GRAFFE = "{{"
+     * UGUALE = "="
+     * CIRCA = "circa";
+     * ECC = "ecc."
+     * INTERROGATIVO = "?"
+     * <p>
+     * Tag chiave di troncatura opzionali a seconda del parametro:
+     * PARENTESI = "("
+     * VIRGOLA = ","
      *
-     * @param testoOriginario in entrata da elaborare
+     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
      *
-     * @return testoGrezzo troncato
+     * @return valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
      */
-    public String troncaParteFinale(String testoOriginario) {
-        String testoGrezzo = VUOTA;
+    public String troncaDopoTag(String valorePropertyTmplBioServer, boolean puntoAmmesso) {
+        String valoreGrezzo = valorePropertyTmplBioServer.trim();
 
-        if (text.isEmpty(testoOriginario)) {
+        if (text.isEmpty(valorePropertyTmplBioServer)) {
             return VUOTA;
         }// end of if cycle
 
-        testoGrezzo = troncaParteFinalePuntoInterrogativo(testoOriginario);
-        testoGrezzo = text.levaDopoInterrogativo(testoGrezzo);
-        testoGrezzo = testoGrezzo.trim();
+        if (valorePropertyTmplBioServer.equals(INTERROGATIVO) && puntoAmmesso) {
+            return INTERROGATIVO;
+        }// end of if cycle
 
-        return testoGrezzo;
+        valoreGrezzo = text.levaDopoRef(valoreGrezzo);
+        valoreGrezzo = text.levaDopoNote(valoreGrezzo);
+        valoreGrezzo = text.levaDopoGraffe(valoreGrezzo);
+        valoreGrezzo = text.levaDopoUguale(valoreGrezzo);
+        valoreGrezzo = text.levaDopoCirca(valoreGrezzo);
+        valoreGrezzo = text.levaDopoEccetera(valoreGrezzo);
+        valoreGrezzo = text.levaDopoInterrogativo(valoreGrezzo);
+
+//        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
+//        testoGrezzo = troncaParteFinalePuntoInterrogativo(valorePropertyTmplBioServer);
+//        testoGrezzo = text.levaDopoInterrogativo(testoGrezzo);
+//        testoGrezzo = testoGrezzo.trim();
+
+        return valoreGrezzo.trim();
     } // fine del metodo
+
+
+    /**
+     * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+     * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+     *
+     * @param valoreGrezzo in entrata da elaborare
+     *
+     * @return valore finale valido del parametro
+     */
+    public String fixValoreGrezzo(String valoreGrezzo) {
+        String valoreValido = valoreGrezzo.trim();
+
+        if (text.isEmpty(valoreGrezzo)) {
+            return VUOTA;
+        }// end of if cycle
+
+        valoreValido = LibWiki.setNoQuadre(valoreValido);
+
+        return valoreValido.trim();
+    }// end of method
 
 
     /**
@@ -1529,18 +1613,36 @@ public class LibBio {
      *
      * @return valore finale valido del parametro
      */
-    public String fixValoreGrezzo(String valoreGrezzo) {
-        String testoValido;
+    public String fixMaiuscola(String valoreGrezzo) {
+        String valoreValido = fixValoreGrezzo(valoreGrezzo);
 
         if (text.isEmpty(valoreGrezzo)) {
             return VUOTA;
         }// end of if cycle
 
-        testoValido = valoreGrezzo.trim();
-        testoValido = LibWiki.setNoQuadre(testoValido);
-        testoValido = testoValido.trim();
+        valoreValido = text.primaMaiuscola(valoreValido);
 
-        return testoValido;
+        return valoreValido.trim();
+    }// end of method
+
+
+    /**
+     * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+     *
+     * @param valoreGrezzo in entrata da elaborare
+     *
+     * @return valore finale valido del parametro
+     */
+    public String fixMinuscola(String valoreGrezzo) {
+        String valoreValido = fixValoreGrezzo(valoreGrezzo);
+
+        if (text.isEmpty(valoreGrezzo)) {
+            return VUOTA;
+        }// end of if cycle
+
+        valoreValido = text.primaMinuscola(valoreValido);
+
+        return valoreValido.trim();
     }// end of method
 
 
@@ -1699,7 +1801,6 @@ public class LibBio {
     } // // end of method
 
 
-
     /**
      * Regola questa property <br>
      * <p>
@@ -1744,7 +1845,6 @@ public class LibBio {
     } // fine del metodo
 
 
-
     /**
      * Regola questa property <br>
      * <p>
@@ -1758,7 +1858,7 @@ public class LibBio {
      *
      * @return testo/parametro regolato in uscita
      */
-    public String fixAttivitaValida(String testoGrezzo,boolean controlla) {
+    public String fixAttivitaValida(String testoGrezzo, boolean controlla) {
         String testoValido = fixValoreGrezzo(testoGrezzo).toLowerCase();
         String tag1 = "ex ";
         String tag2 = "ex-";
@@ -1816,7 +1916,7 @@ public class LibBio {
      *
      * @return testo/parametro regolato in uscita
      */
-    public String fixNazionalitaValida(String testoGrezzo,boolean controlla) {
+    public String fixNazionalitaValida(String testoGrezzo, boolean controlla) {
         String testoValido = fixValoreGrezzo(testoGrezzo).toLowerCase();
 
         if (text.isEmpty(testoValido)) {
@@ -1848,13 +1948,18 @@ public class LibBio {
 
 
     /**
-     * Regola questo campo
+     * Regola questa property <br>
+     * <p>
+     * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
+     * A seconda del flag:
+     * CONTROLLA che il valore sia valido - solo M o F <br>
      *
      * @param testoGrezzo in entrata da elaborare
+     * @param controlla   il valore nella collezione Anno
      *
-     * @return testoValido regolato in uscita
+     * @return testo/parametro regolato in uscita
      */
-    public String fixSessoValido(String testoGrezzo) {
+    public String fixSessoValido(String testoGrezzo, boolean controlla) {
         String testoValido = fixValoreGrezzo(testoGrezzo);
         testoValido = testoValido.toLowerCase();
 
@@ -1866,8 +1971,10 @@ public class LibBio {
             testoValido = "F";
         }// end of if cycle
 
-        if (testoValido.equals("trans") || testoValido.equals("incerto") || testoValido.equals("non si sa") || testoValido.equals("dubbio") || testoValido.equals("?")) {
-            testoValido = VUOTA;
+        if (controlla) {
+            if (testoValido.equals("trans") || testoValido.equals("incerto") || testoValido.equals("non si sa") || testoValido.equals("dubbio") || testoValido.equals("?")) {
+                testoValido = VUOTA;
+            }// end of if cycle
         }// end of if cycle
 
         return testoValido;
@@ -1919,8 +2026,9 @@ public class LibBio {
      * @return mappa dei parametri esistenti nella enumeration e presenti nel testo
      */
     public LinkedHashMap<String, String> getMappaBio(Bio bio) {
-        return getMappaGrezzaBio(bio.getTmplBioServer());
+        return getMappaDownload(bio.getTmplBioServer());
     }// end of method
+
 
     /**
      * Estrae una mappa chiave valore per un fix di parametri, dal testo di una biografia <br>
@@ -1935,23 +2043,28 @@ public class LibBio {
      * Cerco il primo parametro nel testo e poi spazzolo il testo per cercare
      * il primo parametro noto e così via
      *
-     * @param testoTemplate del template Bio
+     * @param bio entityBio da cui estrarre il tmplBioServer
      *
      * @return mappa dei parametri esistenti nella enumeration e presenti nel testo
      */
-    public LinkedHashMap<String, String> getMappaGrezzaBio(Bio bio) {
+    public LinkedHashMap<String, String> getMappaDownload(Bio bio) {
         LinkedHashMap<String, String> mappa = null;
-        String tmplBioServer = bio.getTmplBioServer();
+        String tmplBioServer = VUOTA;
+
+        if (bio != null) {
+            tmplBioServer = bio.getTmplBioServer();
+        }// end of if cycle
 
         if (text.isValid(tmplBioServer)) {
-            mappa = getMappaGrezzaBio(tmplBioServer);
+            mappa = getMappaDownload(tmplBioServer);
         }// end of if cycle
 
         return mappa;
     }// end of method
 
+
     /**
-     * Estrae una mappa chiave valore per un fix di parametri, dal testo di una biografia <br>
+     * Estrae una mappa chiave-valore per un fix di parametri, dal testo di una biografia <br>
      * <p>
      * E impossibile sperare in uno schema fisso
      * I parametri sono spesso scritti in ordine diverso da quello previsto
@@ -1963,11 +2076,11 @@ public class LibBio {
      * Cerco il primo parametro nel testo e poi spazzolo il testo per cercare
      * il primo parametro noto e così via
      *
-     * @param testoTemplate del template Bio
+     * @param valorePropertyTmplBioServer del template Bio
      *
      * @return mappa dei parametri esistenti nella enumeration e presenti nel testo
      */
-    public LinkedHashMap<String, String> getMappaGrezzaBio(String testoTemplate) {
+    public LinkedHashMap<String, String> getMappaDownload(String valorePropertyTmplBioServer) {
         LinkedHashMap<String, String> mappa = null;
         LinkedHashMap<Integer, String> mappaTmp = new LinkedHashMap<Integer, String>();
         String chiave;
@@ -1982,7 +2095,7 @@ public class LibBio {
 //        ArrayList listaTag;
         int posEnd;
 
-        if (testoTemplate != null && !testoTemplate.equals("")) {
+        if (valorePropertyTmplBioServer != null && !valorePropertyTmplBioServer.equals("")) {
             mappa = new LinkedHashMap();
             for (ParBio par : ParBio.values()) {
                 valore = par.getTag();
@@ -1995,7 +2108,7 @@ public class LibBio {
 //                listaTag.add(sep2 + valore + spazio + uguale);
 
                 try { // prova ad eseguire il codice
-                    pos = text.getPosFirstTag(testoTemplate, valore);
+                    pos = text.getPosFirstTag(valorePropertyTmplBioServer, valore);
                 } catch (Exception unErrore) { // intercetta l'errore
                 }// fine del blocco try-catch
                 if (pos > 0) {
@@ -2017,9 +2130,9 @@ public class LibBio {
                     if (k < lista.size()) {
                         posEnd = (Integer) lista.get(k);
                     } else {
-                        posEnd = testoTemplate.length();
+                        posEnd = valorePropertyTmplBioServer.length();
                     }// fine del blocco if-else
-                    valore = testoTemplate.substring((Integer) lista.get(k - 1), posEnd);
+                    valore = valorePropertyTmplBioServer.substring((Integer) lista.get(k - 1), posEnd);
                 } catch (Exception unErrore) { // intercetta l'errore
                     int c = 76;
                 }// fine del blocco try-catch
@@ -2041,6 +2154,94 @@ public class LibBio {
                 }// fine del blocco if
             } // fine del ciclo for
         }// fine del blocco if
+
+        return mappa;
+    }// end of method
+
+
+    /**
+     * Mappa chiave-valore con i valori 'troncati' <br>
+     * Valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) e senza la 'coda' risultante <br>
+     *
+     * @param mappaDownload coi valori originali provenienti dalla property tmplBioServer della entity Bio
+     *
+     * @return mappa con i valori 'troncati'
+     */
+    public LinkedHashMap<String, String> getMappaTroncata(LinkedHashMap<String, String> mappaDownload) {
+        LinkedHashMap<String, String> mappa = null;
+        ParBio par = null;
+        String key = VUOTA;
+        String value = VUOTA;
+
+        if (mappaDownload != null) {
+            mappa = new LinkedHashMap<String, String>();
+            for (Map.Entry<String, String> entry : mappaDownload.entrySet()) {
+                key = entry.getKey();
+                value = entry.getValue();
+                par = ParBio.getType(key);
+                value = par.estraeValoreInizialeGrezzo(value);
+                mappa.put(entry.getKey(), value);
+            }// end of for cycle
+        }// end of if cycle
+
+        return mappa;
+    }// end of method
+
+
+    /**
+     * Mappa chiave-valore con i valori 'elaborati' <br>
+     * Valore elaborato valido (minuscole, quadre, ecc.) <br>
+     *
+     * @param mappaTroncata dopo alcuni tag chiave (<ref>, {{, ecc.) e senza la 'coda' risultante
+     *
+     * @return mappa con i valori 'elaborati'
+     */
+    public LinkedHashMap<String, String> getMappaElaborata(LinkedHashMap<String, String> mappaTroncata) {
+        LinkedHashMap<String, String> mappa = null;
+        ParBio par = null;
+        String key = VUOTA;
+        String value = VUOTA;
+
+        if (mappaTroncata != null) {
+            mappa = new LinkedHashMap<String, String>();
+            for (Map.Entry<String, String> entry : mappaTroncata.entrySet()) {
+                key = entry.getKey();
+                value = entry.getValue();
+                par = ParBio.getType(key);
+                value = par.regolaValoreInizialeValido(value);
+                mappa.put(entry.getKey(), value);
+            }// end of for cycle
+        }// end of if cycle
+
+        return mappa;
+    }// end of method
+
+
+    /**
+     * Mappa chiave-valore con i valori 'validi' <br>
+     * Valore elaborato valido (minuscole, quadre, ecc.) <br>
+     *
+     * @param mappaElaborata con i valori validi (minuscole, quadre, ecc.)
+     *
+     * @return mappa con i valori 'validi'
+     */
+    public LinkedHashMap<String, String> getMappaValida(LinkedHashMap<String, String> mappaElaborata) {
+        LinkedHashMap<String, String> mappa = null;
+
+        return mappa;
+    }// end of method
+
+
+    /**
+     * Mappa chiave-valore con i valori 'validi' <br>
+     * Valore elaborato valido (minuscole, quadre, ecc.) <br>
+     *
+     * @param mappaElaborata con i valori validi (minuscole, quadre, ecc.)
+     *
+     * @return mappa con i valori
+     */
+    public LinkedHashMap<String, String> getMappaUpload(LinkedHashMap<String, String> mappaElaborata) {
+        LinkedHashMap<String, String> mappa = null;
 
         return mappa;
     }// end of method
@@ -2312,7 +2513,7 @@ public class LibBio {
         String testoValido = "";
 
         if (text.isValid(testoGrezzo)) {
-            testoValido = fixAnnoValido(testoGrezzo,true);
+            testoValido = fixAnnoValido(testoGrezzo, true);
         }// end of if cycle
 
         if (text.isValid(testoValido)) {
@@ -2338,7 +2539,7 @@ public class LibBio {
         String testoValido = "";
 
         if (text.isValid(testoGrezzo)) {
-            testoValido = fixAttivitaValida(testoGrezzo,true);
+            testoValido = fixAttivitaValida(testoGrezzo, true);
         }// end of if cycle
 
         if (text.isValid(testoValido)) {
@@ -2364,7 +2565,7 @@ public class LibBio {
         String testoValido = "";
 
         if (text.isValid(testoGrezzo)) {
-            testoValido = fixNazionalitaValida(testoGrezzo,true);
+            testoValido = fixNazionalitaValida(testoGrezzo, true);
         }// end of if cycle
 
         if (text.isValid(testoValido)) {
@@ -2560,7 +2761,7 @@ public class LibBio {
         String valueServer;
         String valueMongo;
         String valueMerged;
-        HashMap<String, String> mappa = getMappaGrezzaBio(tmplBioServer);
+        HashMap<String, String> mappa = getMappaDownload(tmplBioServer);
 
         //--spazzola TUTTI i parametri possibili in ordine
         for (ParBio parBio : ParBio.values()) {
