@@ -2,9 +2,18 @@ package it.algos.vaadwiki;
 
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadflow.wrapper.WrapTreStringhe;
+import it.algos.vaadwiki.download.ElaboraService;
+import it.algos.vaadwiki.download.PageService;
 import it.algos.vaadwiki.enumeration.EAGraffe;
+import it.algos.vaadwiki.modules.bio.Bio;
+import it.algos.vaadwiki.modules.bio.BioService;
 import it.algos.vaadwiki.service.ABioService;
+import it.algos.vaadwiki.service.LibBio;
+import it.algos.vaadwiki.service.ParBio;
+import it.algos.wiki.Api;
+import it.algos.wiki.Page;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
@@ -32,24 +42,81 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Test per la libreria LibBio")
 public class ABioServiceTest extends ATest {
 
+    private static String TITOLO_MURUGUZA = "Pedro Muguruza";
+
+    private static String TITOLO_GUERRA = "Antonio Guerra (politico)";
+
+    private static String TMPL_GUERRA = "{{Bio\n" +
+            "|Nome = Antonio\n" +
+            "|Cognome = Guerra\n" +
+            "|Sesso = M\n" +
+            "|LuogoNascita = Afragola\n" +
+            "|GiornoMeseNascita = 24 marzo\n" +
+            "|AnnoNascita = 1824\n" +
+            "|LuogoMorte = Afragola \n" +
+            "|GiornoMeseMorte = 20 maggio\n" +
+            "|AnnoMorte = 1890\n" +
+            "|NoteMorte = <ref name=\"LAF\">{{cita notizia|autore=Domenico Corcione|url=http://www.lafragolanapoli.it/giornale/afragola-sconosciuta-le-lapidi-cittadine/|titolo=Afragola sconosciuta: le lapidi cittadine|giornale=La Fragola Napoli|data=27 marzo 2014}}</ref>\n" +
+            "|Attività = politico\n" +
+            "|Nazionalità = italiano\n" +
+            "|PostNazionalità = , [[Deputati della XII legislatura del Regno d'Italia|deputato della XII legislatura del Regno d'Italia]]\n" +
+            "}}";
 
     @InjectMocks
-    public ABioService service;
+    public ABioService aBioService;
+
+    @InjectMocks
+    public BioService bioService;
 
     @InjectMocks
     public ATextService text;
 
+    @InjectMocks
+    public ElaboraService elaboraService;
+
+    @InjectMocks
+    public LibBio libBio;
+
+    @InjectMocks
+    private Api api;
+
+    @InjectMocks
+    private PageService pageService;
+
     private HashMap<String, Object> mappa;
+
+    private LinkedHashMap<String, String> linkMappa;
+
+    private Page page;
 
 
     @BeforeAll
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        assertNotNull(service);
+        MockitoAnnotations.initMocks(aBioService);
+        assertNotNull(aBioService);
+        MockitoAnnotations.initMocks(bioService);
+        assertNotNull(bioService);
+        MockitoAnnotations.initMocks(libBio);
+        assertNotNull(libBio);
+        MockitoAnnotations.initMocks(elaboraService);
+        assertNotNull(elaboraService);
+        MockitoAnnotations.initMocks(api);
+        assertNotNull(api);
+        MockitoAnnotations.initMocks(pageService);
+        assertNotNull(pageService);
         MockitoAnnotations.initMocks(text);
         assertNotNull(text);
-        service.text = text;
+        aBioService.text = text;
+        libBio.text = text;
+        elaboraService.text = text;
+        elaboraService.libBio = libBio;
+        pageService.text = text;
+        pageService.api = api;
+        pageService.bioService = bioService;
+        pageService.elaboraService = elaboraService;
+        api.text = text;
+        bioService.text = text;
     }// end of method
 
 
@@ -69,62 +136,62 @@ public class ABioServiceTest extends ATest {
 
         sorgente = VUOTA;
         previstoIntero = 0;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "forse";
         previstoIntero = 1;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "questo";
         previstoIntero = 2;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "/";
         previstoIntero = 2;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "}";
         previstoIntero = 1;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "{";
         previstoIntero = 3;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "{{";
         previstoIntero = 1;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = GRAFFA_INI;
         previstoIntero = 3;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = DOPPIE_GRAFFE_INI;
         previstoIntero = 1;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = GRAFFA_END;
         previstoIntero = 1;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = GRAFFA_END_REGEX;
         previstoIntero = 0;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = GRAFFA_INI_REGEX;
         previstoIntero = 0;
-        ottenutoIntero = service.getNumTag(contenuto, sorgente);
+        ottenutoIntero = aBioService.getNumTag(contenuto, sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
     }// end of single test
 
@@ -141,22 +208,22 @@ public class ABioServiceTest extends ATest {
     public void getNumGraffeIni() {
         sorgente = "Quante {questo doppie forse /ci sono} in {questo /testo";
         previstoIntero = 0;
-        ottenutoIntero = service.getNumGraffeIni(sorgente);
+        ottenutoIntero = aBioService.getNumGraffeIni(sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "Quante {{questo doppie forse /ci sono} in {questo /testo";
         previstoIntero = 1;
-        ottenutoIntero = service.getNumGraffeIni(sorgente);
+        ottenutoIntero = aBioService.getNumGraffeIni(sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "Quante {{questo doppie forse /ci sono{} in {questo /testo";
         previstoIntero = 1;
-        ottenutoIntero = service.getNumGraffeIni(sorgente);
+        ottenutoIntero = aBioService.getNumGraffeIni(sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "Quante {{questo doppie forse /ci sono{{adesso}} in {questo /testo";
         previstoIntero = 2;
-        ottenutoIntero = service.getNumGraffeIni(sorgente);
+        ottenutoIntero = aBioService.getNumGraffeIni(sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
     }// end of single test
 
@@ -173,22 +240,22 @@ public class ABioServiceTest extends ATest {
     public void getNumGraffeEnd() {
         sorgente = "Quante {questo doppie forse /ci sono} in {questo /testo";
         previstoIntero = 0;
-        ottenutoIntero = service.getNumGraffeEnd(sorgente);
+        ottenutoIntero = aBioService.getNumGraffeEnd(sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "Quante {{questo doppie forse /ci sono}} in {questo} /testo";
         previstoIntero = 1;
-        ottenutoIntero = service.getNumGraffeEnd(sorgente);
+        ottenutoIntero = aBioService.getNumGraffeEnd(sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "Quante {{questo doppie forse /ci sono{} in {questo /testo";
         previstoIntero = 0;
-        ottenutoIntero = service.getNumGraffeEnd(sorgente);
+        ottenutoIntero = aBioService.getNumGraffeEnd(sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
 
         sorgente = "Quante questo}} doppie forse /ci sono{{adesso}} in {questo /testo";
         previstoIntero = 2;
-        ottenutoIntero = service.getNumGraffeEnd(sorgente);
+        ottenutoIntero = aBioService.getNumGraffeEnd(sorgente);
         assertEquals(previstoIntero, ottenutoIntero);
     }// end of single test
 
@@ -212,33 +279,33 @@ public class ABioServiceTest extends ATest {
 
         sorgente = "Testo < xyz con | {{diverse}} possibilità}} ancora | da > sviluppare";
 
-        ottenutoBooleano = service.isPariTag(VUOTA, tagIni, tagEnd);
+        ottenutoBooleano = aBioService.isPariTag(VUOTA, tagIni, tagEnd);
         assertFalse(ottenutoBooleano);
 
         tagIni = prova;
         tagEnd = prova;
-        ottenutoBooleano = service.isPariTag(sorgente, tagIni, tagEnd);
+        ottenutoBooleano = aBioService.isPariTag(sorgente, tagIni, tagEnd);
         assertFalse(ottenutoBooleano);
 
         tagIni = pipe;
         tagEnd = pipe;
-        ottenutoBooleano = service.isPariTag(sorgente, tagIni, tagEnd);
+        ottenutoBooleano = aBioService.isPariTag(sorgente, tagIni, tagEnd);
         assertTrue(ottenutoBooleano);
 
         tagIni = DOPPIE_GRAFFE_INI;
         tagEnd = DOPPIE_GRAFFE_END;
-        ottenutoBooleano = service.isPariTag(sorgente, tagIni, tagEnd);
+        ottenutoBooleano = aBioService.isPariTag(sorgente, tagIni, tagEnd);
         assertFalse(ottenutoBooleano);
 
         tagIni = "<";
         tagEnd = ">";
-        ottenutoBooleano = service.isPariTag(sorgente, tagIni, tagEnd);
+        ottenutoBooleano = aBioService.isPariTag(sorgente, tagIni, tagEnd);
         assertTrue(ottenutoBooleano);
 
         sorgente = "Testo < xyz con | {{diverse}} possibilità}} {{ancora | da > sviluppare";
         tagIni = DOPPIE_GRAFFE_INI;
         tagEnd = DOPPIE_GRAFFE_END;
-        ottenutoBooleano = service.isPariTag(sorgente, tagIni, tagEnd);
+        ottenutoBooleano = aBioService.isPariTag(sorgente, tagIni, tagEnd);
         assertTrue(ottenutoBooleano);
     }// end of single test
 
@@ -251,25 +318,26 @@ public class ABioServiceTest extends ATest {
      *
      * @return vero se il numero di graffe di apertura è uguale al numero di graffe di chiusura
      */
+    @Test
     public void isPariGraffe() {
         sorgente = "Testo < xyz con | diverse possibilità ancora | da > sviluppare";
-        ottenutoBooleano = service.isPariGraffe(sorgente);
-        assertFalse(ottenutoBooleano);
+        ottenutoBooleano = aBioService.isPariGraffe(sorgente);
+        assertTrue(ottenutoBooleano);
 
         sorgente = "Testo < xyz con | {{diverse possibilità ancora | da > sviluppare";
-        ottenutoBooleano = service.isPariGraffe(sorgente);
+        ottenutoBooleano = aBioService.isPariGraffe(sorgente);
         assertFalse(ottenutoBooleano);
 
         sorgente = "Testo < xyz con | {diverse} possibilità ancora | da > sviluppare";
-        ottenutoBooleano = service.isPariGraffe(sorgente);
-        assertFalse(ottenutoBooleano);
+        ottenutoBooleano = aBioService.isPariGraffe(sorgente);
+        assertTrue(ottenutoBooleano);
 
         sorgente = "Testo < xyz con | {{diverse}} possibilità}} ancora | da > sviluppare";
-        ottenutoBooleano = service.isPariGraffe(sorgente);
+        ottenutoBooleano = aBioService.isPariGraffe(sorgente);
         assertFalse(ottenutoBooleano);
 
         sorgente = "Testo < xyz con | {{diverse}} possibilità}} {{ancora | da > sviluppare";
-        ottenutoBooleano = service.isPariGraffe(sorgente);
+        ottenutoBooleano = aBioService.isPariGraffe(sorgente);
         assertTrue(ottenutoBooleano);
     }// end of single test
 
@@ -316,7 +384,7 @@ public class ABioServiceTest extends ATest {
     public void checkGraffe() {
         List<WrapTreStringhe> listaWrap;
         sorgente = VUOTA;
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertFalse((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -324,7 +392,7 @@ public class ABioServiceTest extends ATest {
         assertEquals(EAGraffe.manca, mappa.get(KEY_MAP_GRAFFE_TYPE));
 
         sorgente = "Qui non ci sono graffe";
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertFalse((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -332,7 +400,7 @@ public class ABioServiceTest extends ATest {
         assertEquals(EAGraffe.manca, mappa.get(KEY_MAP_GRAFFE_TYPE));
 
         sorgente = "Qui {{esiste solo l'apertura di una graffa. Senza chiusura.";
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertFalse((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -340,7 +408,7 @@ public class ABioServiceTest extends ATest {
         assertEquals(EAGraffe.mezzaInizio, mappa.get(KEY_MAP_GRAFFE_TYPE));
 
         sorgente = "Qui {{esiste l'apertura di una {{graffa}}. Dispari.";
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertFalse((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -348,7 +416,7 @@ public class ABioServiceTest extends ATest {
         assertEquals(EAGraffe.mezzaInizio, mappa.get(KEY_MAP_GRAFFE_TYPE));
 
         sorgente = "Qui {{esiste}} l'apertura di una {{graffa. Dispari.";
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertFalse((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -356,7 +424,7 @@ public class ABioServiceTest extends ATest {
         assertEquals(EAGraffe.mezzaInizio, mappa.get(KEY_MAP_GRAFFE_TYPE));
 
         sorgente = "Qui esiste}} solo la chiusura di una graffa. Senza apertura.";
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertFalse((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -364,7 +432,7 @@ public class ABioServiceTest extends ATest {
         assertEquals(EAGraffe.mezzaFine, mappa.get(KEY_MAP_GRAFFE_TYPE));
 
         sorgente = "Qui {{esiste}} una graffa. In mezzo al testo.";
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertTrue((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -375,7 +443,7 @@ public class ABioServiceTest extends ATest {
         assertEquals("esiste", ottenuto);
 
         sorgente = "Qui {{}} una graffa. In mezzo al testo.";
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertTrue((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -386,7 +454,7 @@ public class ABioServiceTest extends ATest {
         assertEquals(VUOTA, ottenuto);
 
         sorgente = "{{Qui}} esiste una graffa. Inizio testo.";
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertTrue((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -397,7 +465,7 @@ public class ABioServiceTest extends ATest {
         assertEquals("Qui", ottenuto);
 
         sorgente = "Qui esiste una graffa. Fine {{testo}}";
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertTrue((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -408,7 +476,7 @@ public class ABioServiceTest extends ATest {
         assertEquals("testo", ottenuto);
 
         sorgente = "Qui {{esistono}} due graffe. Fine {{seconda}}";
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertTrue((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -421,7 +489,7 @@ public class ABioServiceTest extends ATest {
         assertEquals("seconda", ottenuto);
 
         sorgente = "Qui {{esistono}} {{[[tre]]}} graffe. Fine {{terza}}";
-        mappa = service.checkGraffe(sorgente);
+        mappa = aBioService.checkGraffe(sorgente);
         assertNotNull(mappa);
         assertEquals(5, mappa.size());
         assertTrue((boolean) mappa.get(KEY_MAP_GRAFFE_ESISTONO));
@@ -434,7 +502,88 @@ public class ABioServiceTest extends ATest {
         assertEquals("[[tre]]", ottenuto);
         ottenuto = array.isValid(listaWrap) ? listaWrap.get(2).getPrima() : VUOTA;
         assertEquals("terza", ottenuto);
-
     }// end of single test
+
+
+    /**
+     * Spostare da LibBio a ABioService
+     */
+//    @Test
+    public  void getMappaDownload() {
+        String valorePropertyTmplBioServer = TMPL_GUERRA;
+        linkMappa = libBio.getMappaDownload(valorePropertyTmplBioServer);
+
+        Assert.assertNotNull(linkMappa);
+        Assert.assertEquals("Antonio", linkMappa.get(ParBio.nome.getTag()));
+        Assert.assertEquals("Guerra", linkMappa.get(ParBio.cognome.getTag()));
+        Assert.assertEquals("M", linkMappa.get(ParBio.sesso.getTag()));
+        Assert.assertEquals("Afragola", linkMappa.get(ParBio.luogoNascita.getTag()));
+        Assert.assertEquals("24 marzo", linkMappa.get(ParBio.giornoMeseNascita.getTag()));
+        Assert.assertEquals("1824", linkMappa.get(ParBio.annoNascita.getTag()));
+        Assert.assertEquals("Afragola", linkMappa.get(ParBio.luogoMorte.getTag()));
+        Assert.assertEquals("20 maggio", linkMappa.get(ParBio.giornoMeseMorte.getTag()));
+        Assert.assertEquals("1890", linkMappa.get(ParBio.annoMorte.getTag()));
+        Assert.assertEquals("politico", linkMappa.get(ParBio.attivita.getTag()));
+        Assert.assertEquals("italiano", linkMappa.get(ParBio.nazionalita.getTag()));
+
+        stampaMappa(valorePropertyTmplBioServer, linkMappa);
+
+        Assert.assertEquals(VUOTA, linkMappa.get(ParBio.titolo.getTag()));
+        String noteMorte = "<ref name=\"LAF\">{{cita notizia|autore=Domenico Corcione|url=http://www.lafragolanapoli.it/giornale/afragola-sconosciuta-le-lapidi-cittadine/|titolo=Afragola sconosciuta: le lapidi cittadine|giornale=La Fragola Napoli|data=27 marzo 2014}}</ref>";
+        Assert.assertEquals(noteMorte, linkMappa.get(ParBio.noteMorte.getTag()));
+    }// end of single test
+
+
+    /**
+     * Spostare da LibBio a ABioService
+     */
+    @Test
+    public void getMappaDownload2() {
+        Bio entity = null;
+
+        page = api.leggePage(TITOLO_MURUGUZA);
+        Assert.assertNotNull(page);
+
+        entity = pageService.creaBio(page);
+        Assert.assertNotNull(page);
+        stampaParametriMongo(entity);
+    }// end of single test
+
+
+    private void stampaParametriMongo(Bio entity) {
+        System.out.println("");
+        System.out.println("*************");
+        System.out.println("stampa tutti i parametri" + " - sono " + ParBio.values().length);
+        System.out.println("*************");
+
+        for (ParBio par : ParBio.values()) {
+            System.out.println(par.getTag() + ": " + par.getValue(entity));
+        }// end of for cycle
+
+        System.out.println("");
+        System.out.println("*************");
+        System.out.println("stampa i parametri presenti");
+        System.out.println("*************");
+
+        for (ParBio par : ParBio.values()) {
+            if (text.isValid(par.getValue(entity))) {
+                System.out.println(par.getTag() + ": " + par.getValue(entity));
+            }// end of if cycle
+        }// end of for cycle
+    }// end of method
+    private void stampaMappa(String tmplBioServer, LinkedHashMap<String, String> mappa) {
+        System.out.println("");
+        System.out.println("*************");
+        System.out.println("stampa mappa" + " - sono " + mappa.size());
+        System.out.println("*************");
+
+        System.out.println("Template:");
+        System.out.println(tmplBioServer);
+        System.out.println("");
+
+        for (String key : mappa.keySet()) {
+            System.out.println(key + ": " + mappa.get(key));
+        }// end of for cycle
+    }// end of method
 
 }// end of test class

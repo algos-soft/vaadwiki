@@ -260,26 +260,29 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
                 chiaveCognome = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
                 break;
             case listaNomi:
-                if (bio.getWikiTitle().equals("Angelo Corbo")) {
-                    int a = 87;
-                }// end of if cycle
-                if (bio.getWikiTitle().equals("Angelo Joppi")) {
-                    int a = 87;
-                }// end of if cycle
-                if (bio.getWikiTitle().equals("Ciro De Vita")) {
-                    int a = 87;
-                }// end of if cycle
-                if (bio.getWikiTitle().equals("Ciro Sarno")) {
-                    int a = 87;
-                }// end of if cycle
-                if (bio.getWikiTitle().equals("Ciro Siciliano")) {
-                    int a = 87;
-                }// end of if cycle
-                if (bio.getWikiTitle().equals("Giuseppe Vinci")) {
-                    int a = 87;
-                }// end of if cycle
-                if (bio.getWikiTitle().equals("Giuseppe Biancani")) {
-                    int a = 87;
+                if (text.isValid(bio.getWikiTitle())) {
+
+                    if (bio.getWikiTitle().equals("Angelo Corbo")) {
+                        int a = 87;
+                    }// end of if cycle
+                    if (bio.getWikiTitle().equals("Angelo Joppi")) {
+                        int a = 87;
+                    }// end of if cycle
+                    if (bio.getWikiTitle().equals("Ciro De Vita")) {
+                        int a = 87;
+                    }// end of if cycle
+                    if (bio.getWikiTitle().equals("Ciro Sarno")) {
+                        int a = 87;
+                    }// end of if cycle
+                    if (bio.getWikiTitle().equals("Ciro Siciliano")) {
+                        int a = 87;
+                    }// end of if cycle
+                    if (bio.getWikiTitle().equals("Giuseppe Vinci")) {
+                        int a = 87;
+                    }// end of if cycle
+                    if (bio.getWikiTitle().equals("Giuseppe Biancani")) {
+                        int a = 87;
+                    }// end of if cycle
                 }// end of if cycle
 
                 didascalia = didascaliaService.getDidascaliaListe(bio);

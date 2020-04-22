@@ -257,7 +257,8 @@ public class BioDialog extends AViewDialog<Bio> {
 
     protected Component addChiaveParagrafo(WrapDidascalia wrap) {
         String chiave = currentItem.getAttivita() != null ? currentItem.getAttivita().singolare : VUOTA;
-        Label label = new Label("Paragrafo: " + wrap.fixChiaveUno(chiave, currentItem.getSesso().equals("M")));
+        String sesso = text.isValid(currentItem.getSesso()) ? currentItem.getSesso() : "M";
+        Label label = new Label("Paragrafo: " + wrap.fixChiaveUno(chiave, sesso.equals("M")));
         label.getElement().setAttribute("colspan", "2");
 
         return label;

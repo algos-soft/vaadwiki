@@ -506,7 +506,7 @@ public class BioIntegrationTest extends ATest {
         lista.add(new String[]{"[[1 Settembre]]", "[[1 Settembre]]", "1º settembre", "1º settembre", "1º settembre", "", "1º settembre"});
         lista.add(new String[]{"[[1 Brumaio]]", "[[1 Brumaio]]", "1º brumaio", "", "1º brumaio", "", "[[1 Brumaio]]"});
 
-        lista.add(new String[]{"[[12ottobre]]", "[[12ottobre]]", "12 ottobre", "12 ottobre", "12 ottobre", "", "12 ottobre"});
+        lista.add(new String[]{"[[12ottobre]]<ref>Forse</ref>", "[[12ottobre]]", "12 ottobre", "12 ottobre", "12 ottobre<ref>Forse</ref>", "", "12 ottobre<ref>Forse</ref>"});
         lista.add(new String[]{"[[12   ottobre]]", "[[12   ottobre]]", "12 ottobre", "12 ottobre", "12 ottobre", "", "12 ottobre"});
         lista.add(new String[]{"[12  ottobre]", "[12  ottobre]", "12 ottobre", "12 ottobre", "12 ottobre", "", "12 ottobre"});
         lista.add(new String[]{"[[ 12 ottobre]]", "[[ 12 ottobre]]", "12 ottobre", "12 ottobre", "12 ottobre", "", "12 ottobre"});
@@ -561,13 +561,11 @@ public class BioIntegrationTest extends ATest {
     private List<String[]> getListaParametroAttivita() {
         List<String[]> lista = new ArrayList<>();
 
-        Object[] attivita = {ParBio.attivita, "modella<ref>Dal 2000</ref>", "modella"};
-        Object[] attivitai = {ParBio.attivita, "?", ""};
-        Object[] attivita2 = {ParBio.attivita2, "Pittore<ref>Dal 2000</ref>", "Pittore"};
-        Object[] attivita3 = {ParBio.attivita2, "Pittore ?", "Pittore"};
-        Object[] attivitax = {ParBio.attivita2, "Paninaro<ref>Dal 2000</ref>", "Paninaro"};
-
         lista.add(new String[]{"[[Modella]]", "[[Modella]]", "modella", "modella", "modella", "", "modella"});
+        lista.add(new String[]{"Modella<ref>Dal 2000</ref>", "Modella", "modella", "modella", "modella<ref>Dal 2000</ref>", "", "modella<ref>Dal 2000</ref>"});
+        lista.add(new String[]{"Paninaro<ref>Dal 2000</ref>", "Paninaro", "paninaro", "", "paninaro<ref>Dal 2000</ref>", "", "Paninaro<ref>Dal 2000</ref>"});
+        lista.add(new String[]{"Paninaro<ref>Dal 2000</ref>", "Paninaro", "paninaro", "", "paninaro<ref>Dal 2000</ref>", "attore", "attore<ref>Dal 2000</ref>"});
+        lista.add(new String[]{"Pittore ?", "Pittore", "pittore", "pittore", "pittore", "", "pittore"});
 
         lista.add(new String[]{"?", "", "", "", "", "", ""}); //punto interrogativo NON ammesso. Viene cancellato dal server.
         lista.add(new String[]{"", "", "", "", "", "", ""});
@@ -614,7 +612,7 @@ public class BioIntegrationTest extends ATest {
      * @return valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
      */
     @Test
-    public void AAAestraeValoreInizialeGrezzo() {
+    public void estraeValoreInizialeGrezzo111() {
         ParBio parBio;
         String testoOriginale = VUOTA;
         List<String[]> lista;
@@ -630,7 +628,7 @@ public class BioIntegrationTest extends ATest {
 
         System.out.println("");
         System.out.println("******************");
-        System.out.println("estraeValoreInizialeGrezzo");
+        System.out.println("1) valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) e senza la 'coda' risultante");
         System.out.println("******************");
         for (Object[] riga : getAll()) {
             if (riga.length == 2) {
@@ -667,7 +665,7 @@ public class BioIntegrationTest extends ATest {
      * @return valore valido troncato ed elaborato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
      */
     @Test
-    public void BBBregolaValoreInizialeValido() {
+    public void regolaValoreInizialeValido222() {
         ParBio parBio;
         String testoOriginale = VUOTA;
         List<String[]> lista;
@@ -683,7 +681,7 @@ public class BioIntegrationTest extends ATest {
 
         System.out.println("");
         System.out.println("******************");
-        System.out.println("regolaValoreInizialeValido");
+        System.out.println("2) valore elaborato valido (minuscole, quadre, ecc.), restituibile al server non necessariamente registrabile sul mongoDB");
         System.out.println("******************");
         for (Object[] riga : getAll()) {
             if (riga.length == 2) {
@@ -721,7 +719,7 @@ public class BioIntegrationTest extends ATest {
      * @return valore valido del parametro
      */
     @Test
-    public void CCCestraeValoreParametro() {
+    public void estraeValoreParametro333() {
         ParBio parBio;
         String testoOriginale = VUOTA;
         List<String[]> lista;
@@ -737,7 +735,7 @@ public class BioIntegrationTest extends ATest {
 
         System.out.println("");
         System.out.println("******************");
-        System.out.println("estraeValoreParametro");
+        System.out.println("3) valore del parametro valido per la registrazione sul mongoDB (esiste Giorno, Anno, Attività, Nazionalità)");
         System.out.println("******************");
         for (Object[] riga : getAll()) {
             if (riga.length == 2) {
@@ -772,7 +770,7 @@ public class BioIntegrationTest extends ATest {
      * @return valore finale completo col valore valido elaborato e la 'coda' dalla property di tmplBioServer
      */
     @Test
-    public void DDDelaboraParteValida() {
+    public void elaboraParteValida444() {
         ParBio parBio;
         String testoOriginale = VUOTA;
         List<String[]> lista;
@@ -788,7 +786,7 @@ public class BioIntegrationTest extends ATest {
 
         System.out.println("");
         System.out.println("******************");
-        System.out.println("elaboraParteValida");
+        System.out.println("4) valore restituito per upload con la sola parte valida elaborata e la 'coda' mantenuta senza perdita di dati");
         System.out.println("******************");
         for (Object[] riga : getAll()) {
             if (riga.length == 2) {
@@ -825,7 +823,7 @@ public class BioIntegrationTest extends ATest {
      * @return valore finale completo col parametro mongoDB e la 'coda' dalla property di tmplBioServer
      */
     @Test
-    public void EEEsostituisceParteValida() {
+    public void sostituisceParteValida666() {
         ParBio parBio;
         String testoOriginale = VUOTA;
         String valoreMongoDB = VUOTA;
@@ -841,7 +839,7 @@ public class BioIntegrationTest extends ATest {
 //     * 6) valore finale per upload merged del mongoDB con la 'coda' <br>
         System.out.println("");
         System.out.println("******************");
-        System.out.println("sostituisceParteValida");
+        System.out.println("6) valore finale per upload merged del mongoDB con la 'coda'");
         System.out.println("******************");
         for (Object[] riga : getAll()) {
             if (riga.length == 2) {
@@ -1035,6 +1033,47 @@ public class BioIntegrationTest extends ATest {
     }// end of single test
 
 
+    @Test
+    public void provaPaginaStrana() {
+        LinkedHashMap<String, String> mappa = null;
+        Bio entity = getBio(TITOLO_DUE);
+
+        mappa = libBio.getMappaDownload(entity);
+//        mappa = libBio.getMappaTroncata(mappa);
+//        mappa = libBio.getMappaElaborata(mappa);
+
+        Assert.assertNotNull(mappa);
+        Assert.assertEquals("Antonio", mappa.get(ParBio.nome.getTag()));
+        Assert.assertEquals("Guerra", mappa.get(ParBio.cognome.getTag()));
+        Assert.assertEquals("M", mappa.get(ParBio.sesso.getTag()));
+        Assert.assertEquals("Afragola", mappa.get(ParBio.luogoNascita.getTag()));
+        Assert.assertEquals("24 marzo", mappa.get(ParBio.giornoMeseNascita.getTag()));
+        Assert.assertEquals("1824", mappa.get(ParBio.annoNascita.getTag()));
+        Assert.assertEquals("Afragola", mappa.get(ParBio.luogoMorte.getTag()));
+        Assert.assertEquals("20 maggio", mappa.get(ParBio.giornoMeseMorte.getTag()));
+        Assert.assertEquals("1890", mappa.get(ParBio.annoMorte.getTag()));
+        Assert.assertEquals("politico", mappa.get(ParBio.attivita.getTag()));
+        Assert.assertEquals("italiano", mappa.get(ParBio.nazionalita.getTag()));
+
+        stampaMappa(entity.tmplBioServer, mappa);
+
+        String noteMorte = "<ref name=\"LAF\">{{cita notizia|autore=Domenico Corcione|url=http://www.lafragolanapoli.it/giornale/afragola-sconosciuta-le-lapidi-cittadine/|titolo=Afragola sconosciuta: le lapidi cittadine|giornale=La Fragola Napoli|data=27 marzo 2014}}</ref>";
+        Assert.assertEquals(VUOTA, mappa.get(ParBio.titolo.getTag()));
+        Assert.assertEquals(noteMorte, mappa.get(ParBio.noteMorte.getTag()));
+    }// end of single test
+
+
+    @Test
+    public void provaPaginaStrana2() {
+        LinkedHashMap<String, String> mappa = null;
+//        Bio entity = getBio(TITOLO_TRE); //@todo QUI  SI  FERMA
+
+//        mappa = libBio.getMappaDownload(entity);
+//        mappa = libBio.getMappaTroncata(mappa);
+//        mappa = libBio.getMappaElaborata(mappa);
+    }// end of single test
+
+
     private void stampaParametriMongo(Bio entity) {
         System.out.println("");
         System.out.println("*************");
@@ -1058,24 +1097,19 @@ public class BioIntegrationTest extends ATest {
     }// end of method
 
 
-    @Test
-    public void provaPaginaStrana() {
-        LinkedHashMap<String, String> mappa = null;
-        Bio entity = getBio(TITOLO_DUE);
+    private void stampaMappa(String tmplBioServer, LinkedHashMap<String, String> mappa) {
+        System.out.println("");
+        System.out.println("*************");
+        System.out.println("stampa mappa" + " - sono " + mappa.size());
+        System.out.println("*************");
 
-        mappa = libBio.getMappaDownload(entity);
-//        mappa = libBio.getMappaTroncata(mappa);
-//        mappa = libBio.getMappaElaborata(mappa);
-    }// end of single test
+        System.out.println("Template:");
+        System.out.println(tmplBioServer);
+        System.out.println("");
 
-    @Test
-    public void provaPaginaStrana2() {
-        LinkedHashMap<String, String> mappa = null;
-        Bio entity = getBio(TITOLO_TRE);
-
-        mappa = libBio.getMappaDownload(entity);
-//        mappa = libBio.getMappaTroncata(mappa);
-//        mappa = libBio.getMappaElaborata(mappa);
-    }// end of single test
+        for (String key : mappa.keySet()) {
+            System.out.println(key + ": " + mappa.get(key));
+        }// end of for cycle
+    }// end of method
 
 }// end of test class

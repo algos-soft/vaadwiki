@@ -16,7 +16,6 @@ import it.algos.vaadflow.service.AMongoService;
 import it.algos.vaadflow.service.ATextService;
 import it.algos.vaadwiki.download.ElaboraService;
 import it.algos.vaadwiki.enumeration.EACicloType;
-import it.algos.vaadwiki.enumeration.EAGraffe;
 import it.algos.vaadwiki.modules.attivita.Attivita;
 import it.algos.vaadwiki.modules.attivita.AttivitaService;
 import it.algos.vaadwiki.modules.bio.Bio;
@@ -483,6 +482,8 @@ public class LibBio {
         boolean continua = false;
         String tagIni = "{{";
         String tagEnd = "}}";
+        int numIni = getNumTag(testoTemplate, DOPPIE_GRAFFE_INI);
+        int numEnd = getNumTag(testoTemplate, DOPPIE_GRAFFE_END);
 
         mappa = new LinkedHashMap();
         mappa.put(KEY_MAP_GRAFFE_ESISTONO, false);
@@ -507,15 +508,16 @@ public class LibBio {
 
         // spazzola il testo per ogni coppia di graffe
         if (continua) {
-            while (testoTemplate.contains(tagIni) && testoTemplate.contains(tagEnd)) {
-                testoTemplate = LibBio.levaGraffa(mappa, testoTemplate);
-            } //fine del ciclo while
+            if (numIni == numEnd) {
+                while (testoTemplate.contains(tagIni) && testoTemplate.contains(tagEnd)) {
+                    testoTemplate = LibBio.levaGraffa(mappa, testoTemplate);
+                } //fine del ciclo while
+            } else {
+            }// end of if/else cycle
         }// fine del blocco if
 
         return mappa;
     }// fine del metodo
-
-
 
 
     /**
@@ -668,12 +670,12 @@ public class LibBio {
                 arrayNomeParGraffe.add(nomeParGraffe);
                 mappa.put(KEY_MAP_GRAFFE_VALORE_PARAMETRO, arrayNomeParGraffe);
 
-                arrayvValParGraffe = new ArrayList();
-                String oldValParGraffe;
-                oldValParGraffe = (String) mappa.get(KEY_MAP_GRAFFE_VALORE_PARAMETRO);
-                arrayvValParGraffe.add(oldValParGraffe);
-                arrayvValParGraffe.add(valParGraffe);
-                mappa.put(KEY_MAP_GRAFFE_VALORE_CONTENUTO, arrayvValParGraffe);
+//                arrayvValParGraffe = new ArrayList();
+//                String oldValParGraffe;
+//                arrayValGraffe = (ArrayList) mappa.get(KEY_MAP_GRAFFE_VALORE_CONTENUTO);
+//                arrayvValParGraffe.add(oldValParGraffe);
+//                arrayvValParGraffe.add(valParGraffe);
+//                mappa.put(KEY_MAP_GRAFFE_VALORE_CONTENUTO, arrayvValParGraffe);
                 break;
             default: // caso non definito
                 arrayValGraffe = (ArrayList) mappa.get(KEY_MAP_GRAFFE_VALORE_CONTENUTO);
@@ -2125,6 +2127,7 @@ public class LibBio {
                 try { // prova ad eseguire il codice
                     pos = text.getPosFirstTag(valorePropertyTmplBioServer, valore);
                 } catch (Exception unErrore) { // intercetta l'errore
+                    int a = 87;
                 }// fine del blocco try-catch
                 if (pos > 0) {
                     mappaTmp.put(pos, valore);

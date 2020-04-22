@@ -128,7 +128,7 @@ public class PageService extends ABioService {
     private DownloadResult singoloBlocco(DownloadResult result, ArrayList<Long> arrayPageid, EACicloType type) {
         DeleteResult deleteResult = null;
         ArrayList<Page> pages = null; // di norma 2505
-        Bio entity;
+        Bio entity = null;
         ArrayList<Long> vociDaCancellarePrimaDiReinserirle = new ArrayList<>();
         ArrayList<Bio> listaBio = new ArrayList<Bio>();
         boolean checkUpload = pref.isBool(USA_UPLOAD_SINGOLA_VOCE_ELABORATA);
@@ -139,18 +139,20 @@ public class PageService extends ABioService {
             return result;
         }// end of if cycle
 
-        if (true) {
-            for (Page page : pages) {
-                entity = creaBio(page, checkUpload);
-                if (bioService.save(entity) != null) {
-                    logger.info("Registrata la entity " + entity.wikiTitle, PageService.class, "singoloBlocco");
-                } else {
-                    logger.error("Non registrata la entity " + entity.wikiTitle, PageService.class, "singoloBlocco");
-                }// end of if/else cycle
-            }// end of for cycle
-
-            return result;
-        }// end of if cycle
+//        if (true) {
+//            for (Page page : pages) {
+//                entity = creaBio(page, checkUpload);
+//                if (entity != null) {
+//                    if (bioService.save(entity) != null) {
+//                        logger.info("Registrata la entity " + entity.wikiTitle, PageService.class, "singoloBlocco");
+//                    } else {
+//                        logger.error("Non registrata la entity " + entity.wikiTitle, PageService.class, "singoloBlocco");
+//                    }// end of if/else cycle
+//                }// end of if cycle
+//            }// end of for cycle
+//
+//            return result;
+//        }// end of if cycle
 
         for (Page page : pages) {
             entity = creaBio(page, checkUpload);

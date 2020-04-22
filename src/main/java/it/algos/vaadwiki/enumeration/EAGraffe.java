@@ -12,9 +12,6 @@ import org.springframework.context.annotation.Scope;
  * Date: mar, 21-apr-2020
  * Time: 15:54
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Slf4j
 public enum EAGraffe {
     manca, singola, vuota, iniziale, finale, interna, doppie, triple, dueDiverse, pipe, doppioPipe, doppioPipeDoppieGraffe, mezzaInizio, mezzaFine
 }// end of enumeration class
