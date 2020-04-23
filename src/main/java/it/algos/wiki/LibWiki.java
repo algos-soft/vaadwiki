@@ -2892,7 +2892,11 @@ public abstract class LibWiki {
      */
     public static String setLink(String paginaWiki, String nomeVisibile) {
         if (paginaWiki != null && paginaWiki.length() > 0) {
-            return setQuadre(paginaWiki + PIPE + nomeVisibile);
+            if (paginaWiki.toLowerCase().equals(nomeVisibile.toLowerCase())) {
+                return setQuadre(nomeVisibile);
+            } else {
+                return setQuadre(paginaWiki + PIPE + nomeVisibile);
+            }// end of if/else cycle
         } else {
             return setQuadre(nomeVisibile);
         }// end of if/else cycle

@@ -7,5 +7,5 @@ ${AnsiColor.RED}
 
 VaadFlow FrameWork  (c)Algos
 SpringBoot ver: ${spring-boot.formatted-version}
-VaadFlow ver: ${application.formatted-version}
+VaadWiki ver: ${application.formatted-version}
 ${AnsiColor.DEFAULT}
