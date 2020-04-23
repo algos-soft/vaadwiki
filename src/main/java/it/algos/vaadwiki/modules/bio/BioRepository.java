@@ -76,6 +76,13 @@ public interface BioRepository extends MongoRepository<Bio, String> {
 
     public List<Bio> findAllByNazionalitaOrderByCognomeAsc(Nazionalita nazionalita);
 
+    public int countDistinctByAnnoNascitaIsNotNull();
+
+    public int countDistinctByAnnoMorteIsNotNull();
+
+    public List<Bio> findAllDistinctByAnnoNascitaIsNotNull();
+
+    public List<Bio> findAllDistinctByAnnoMorteIsNotNull();
 
     public int countAllByNazionalita(Nazionalita nazionalita);
 

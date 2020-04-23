@@ -193,6 +193,7 @@ public class BioService extends WikiService {
         return newEntity(page.getPageid(), page.getTitle(), api.estraeTmplBio(page), (LocalDateTime) null, (LocalDateTime) null);
     }// end of method
 
+
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
@@ -207,7 +208,6 @@ public class BioService extends WikiService {
     public Bio newEntity(long pageid, String wikiTitle, String tmplBioServer) {
         return newEntity(pageid, wikiTitle, tmplBioServer, (LocalDateTime) null, (LocalDateTime) null);
     }// end of method
-
 
 
     /**
@@ -426,7 +426,6 @@ public class BioService extends WikiService {
     }// end of method
 
 
-
     /**
      * Seleziona tutte le biografie delle persone di un certo nome <br>
      * La lista viene ordinata per attività <br>
@@ -440,6 +439,7 @@ public class BioService extends WikiService {
         return orderByAttivitaAndNomeCognome(repository.findAllByNome(nome.nome), EADidascalia.listaNomi);
     }// end of method
 
+
     /**
      * Seleziona tutte le biografie delle persone di un certo nome <br>
      * La lista viene ordinata per attività <br>
@@ -452,6 +452,7 @@ public class BioService extends WikiService {
     public List<Bio> findAllByNome(String nomeTxt) {
         return nomeService != null ? findAllByNome(nomeService.findByKeyUnica(nomeTxt)) : null;
     }// end of method
+
 
     /**
      * Seleziona tutte le biografie delle persone di un certo nome <br>
@@ -1114,22 +1115,18 @@ public class BioService extends WikiService {
 
 
     public int countAnniUsati() {
-        int anni = 0;
-        List<Anno> listaAnni = annoService.findAll();
-        int nati = 0;
-        int morti = 0;
+        Set setAnni = new HashSet();
+        List<Anno> nati = mongo.mongoOp.findDistinct("anato", Bio.class, Anno.class);
+        List<Anno> morti = mongo.mongoOp.findDistinct("amorto", Bio.class, Anno.class);
 
-        if (array.isValid(listaAnni)) {
-            for (Anno anno : listaAnni) {
-                nati = countByAnnoNascita(anno);
-                morti = countByAnnoMorte(anno);
-                if (nati > 0 || morti > 0) {
-                    anni++;
-                }// end of if cycle
-            }// end of for cycle
-        }// end of if cycle
+        for (Anno anno : nati) {
+            setAnni.add(anno.ordine);
+        }// end of for cycle
+        for (Anno anno : morti) {
+            setAnni.add(anno.ordine);
+        }// end of for cycle
 
-        return anni;
+        return setAnni.size();
     }// end of method
 
 
