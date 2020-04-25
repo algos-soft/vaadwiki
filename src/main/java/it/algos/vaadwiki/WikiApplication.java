@@ -41,9 +41,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * The @SpringBootApplication annotation is equivalent to using @Configuration, @EnableAutoConfiguration and @ComponentScan with their default attributes:
  * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script di algos <br>
  */
-@SpringBootApplication(scanBasePackages = {"it.algos.vaadflow", "it.algos.vaadwiki", "it.algos.wiki"}, exclude = {SecurityAutoConfiguration.class})
-@EnableVaadin({"it.algos.vaadflow.modules", "it.algos.vaadflow.backend", "it.algos.vaadflow.wizard", "it.algos.vaadflow.service", "it.algos.vaadflow.developer", "it.algos.vaadflow.ui",  "it.algos.vaadwiki",  "it.algos.wiki"})
-@EntityScan({"it.algos.vaadflow.modules", "it.algos.vaadwiki.modules"})
+@SpringBootApplication(scanBasePackages = {"it.algos"}, exclude = {SecurityAutoConfiguration.class})
+@EnableVaadin({"it.algos"})
+@EntityScan({"it.algos"})
 @EnableMongoRepositories({"it.algos"})
 @AIScript(sovrascrivibile = false)
 public class WikiApplication extends SpringBootServletInitializer {

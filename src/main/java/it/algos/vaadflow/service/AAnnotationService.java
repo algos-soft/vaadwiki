@@ -541,6 +541,45 @@ public class AAnnotationService extends AbstractService {
 
 
     /**
+     * Restituisce il nome della property per navigare verso il Form <br>
+     *
+     * @param viewClazz the view class
+     *
+     * @return the name of the property
+     */
+    public String getFormRouteName(final Class<? extends IAView> viewClazz) {
+        String routeFormName = "";
+        AIView annotationView = null;
+
+        annotationView = this.getAIView(viewClazz);
+        if (annotationView != null) {
+            routeFormName = annotationView.routeFormName();
+        }// end of if cycle
+
+        return routeFormName;
+    }// end of method
+
+
+    /**
+     * Restituisce il nome della property per navigare verso il Form <br>
+     *
+     * @param viewClazz the view class
+     *
+     * @return the name of the property
+     */
+    public boolean isStartListEmpty(final Class<? extends IAView> viewClazz) {
+        boolean status = false;
+        AIView annotation = this.getAIView(viewClazz);
+
+        if (annotation != null) {
+            status = annotation.startListEmpty();
+        }// end of if cycle
+
+        return status;
+    }// end of method
+
+
+    /**
      * Nomi delle properties della Grid, estratti dalle @Annotation della Entity
      * Se la classe AEntity->@AIList prevede una lista specifica, usa quella lista (con o senza ID)
      * Se l'annotation @AIList non esiste od è vuota,
@@ -2120,12 +2159,69 @@ public class AAnnotationService extends AbstractService {
      *
      * @return the method name
      */
-    public String getMethodName(Class<? extends AEntity> entityClazz, String fieldName) {
+    public String getMethodNameColumn(Class<? extends AEntity> entityClazz, String fieldName) {
         String methodName = "";
         AIColumn annotation = this.getAIColumn(entityClazz, fieldName);
 
         if (annotation != null) {
             methodName = annotation.methodName();
+        }// end of if cycle
+
+        return methodName;
+    }// end of method
+
+
+    /**
+     * Get the color of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the color of the field
+     */
+    public String xxxx(final Field reflectionJavaField) {
+        String color = "";
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            color = annotation.color();
+        }// end of if cycle
+
+        return color;
+    }// end of method
+
+
+    /**
+     * Get the method name for reflection.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the method name
+     */
+    public String getMethodNameField(final Field reflectionJavaField) {
+        String methodName = "";
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            methodName = annotation.methodName();
+        }// end of if cycle
+
+        return methodName;
+    }// end of method
+
+
+    /**
+     * Get the method name for reflection.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the method name
+     */
+    public String getPropertyLinkata(final Field reflectionJavaField) {
+        String methodName = "";
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            methodName = annotation.propertyLinkata();
         }// end of if cycle
 
         return methodName;

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static it.algos.vaadflow.application.FlowCost.SLASH;
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 
 /**
@@ -420,6 +421,68 @@ public class ATextService extends AbstractService {
     private boolean isNotNumber(char ch) {
         return !isNumber(ch);
     }// end of method
+
+
+    /**
+     * Controlla se il primo carattere della stringa passata come parametro è uno 'slash' <br>
+     *
+     * @param testoIngresso da elaborare
+     *
+     * @return true se NON è uno 'slash'
+     */
+    public boolean isNotSlasch(String testoIngresso) {
+        boolean status = true;
+        String primoCarattere;
+
+        if (isValid(testoIngresso)) {
+            primoCarattere = testoIngresso.substring(0, 1);
+            if (primoCarattere.equals(SLASH)) {
+                status = false;
+            }// end of if cycle
+        }// end of if cycle
+
+        return status;
+    } // fine del metodo
+
+
+    /**
+     * Controlla la stringa passata come parametro termina con un 'suffix' (3 caratteri terminali dopo un punto) <br>
+     *
+     * @param testoIngresso da elaborare
+     *
+     * @return true se MANCA il 'suffix'
+     */
+    public boolean isNotSuffix(String testoIngresso) {
+        boolean status = true;
+        String quartultimoCarattere;
+        int gap = 4;
+        int max;
+        String tagPatchProperties = ".properties";
+        String tagPatchGitIgnore = ".gitignore";
+        String tagPatchJava = ".java";
+
+        if (isValid(testoIngresso)) {
+            max = testoIngresso.length();
+            quartultimoCarattere = testoIngresso.substring(max - gap, max - gap + 1);
+            if (quartultimoCarattere.equals(PUNTO)) {
+                status = false;
+            }// end of if cycle
+        }// end of if cycle
+
+        if (testoIngresso.endsWith(tagPatchProperties)) {
+            status = false;
+        }// end of if cycle
+
+        if (testoIngresso.endsWith(tagPatchGitIgnore)) {
+            status = false;
+        }// end of if cycle
+
+        if (testoIngresso.endsWith(tagPatchJava)) {
+            status = false;
+        }// end of if cycle
+
+        return status;
+    } // fine del metodo
 
 
     public String getModifiche(Object oldValue, Object newValue) {
@@ -1157,6 +1220,14 @@ public class ATextService extends AbstractService {
     /**
      * Label colorata
      */
+    public Label getLabelHost(String message) {
+        return getLabel(message, "black");
+    }// end of method
+
+
+    /**
+     * Label colorata
+     */
     public Label getLabelDev(String message) {
         return getLabel(message, "red");
     }// end of method
@@ -1176,5 +1247,65 @@ public class ATextService extends AbstractService {
     public Label getLabelAdmin(String message) {
         return getLabel(message, "blue");
     }// end of method
+
+
+    /**
+     * Costruisce un array da una stringa multipla separata da virgole
+     */
+    public List<String> getArray(String stringaMultipla) {
+        List<String> lista = null;
+        String tag = VIRGOLA;
+        String[] parti = null;
+
+        if (isValid(stringaMultipla)) {
+            lista = new ArrayList<>();
+        } else {
+            return lista;
+        }// end of if/else cycle
+
+        if (stringaMultipla.contains(tag)) {
+            parti = stringaMultipla.split(tag);
+            if (parti != null) {
+                for (String value : parti) {
+                    lista.add(value);
+                }// end of for cycle
+            }// end of if cycle
+        } else {
+            lista.add(stringaMultipla);
+        }// end of if/else cycle
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Estrae delle singole stringhe separate da virgola
+     */
+    public String[] getMatrice(String stringaMultipla) {
+        String[] matrice = null;
+        List<String> lista = getArray(stringaMultipla);
+
+        if (lista != null) {
+            matrice = lista.toArray(new String[lista.size()]);
+        }// end of if cycle
+
+        return matrice;
+    }// end of method
+
+
+    /**
+     * Estrae delle singole stringhe separate da virgola
+     */
+    public Integer[] getMatriceInt(String stringaMultipla) {
+        Integer[] matrice = null;
+        List<String> lista = getArray(stringaMultipla);
+
+        if (lista != null) {
+            matrice = lista.toArray(new Integer[lista.size()]);
+        }// end of if cycle
+
+        return matrice;
+    }// end of method
+
 
 }// end of class

@@ -12,9 +12,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow.wiz.enumeration.Chiave;
+import it.algos.vaadflow.wiz.enumeration.Progetto;
 import it.algos.vaadflow.wizard.WizardView;
-import it.algos.vaadflow.wizard.enumeration.Chiave;
-import it.algos.vaadflow.wizard.enumeration.Progetto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -100,11 +100,12 @@ public class TDialogoPackage extends TDialogo {
         currentProject = currentProject.substring(currentProject.lastIndexOf("/") + 1);
         progettoBase = currentProject.equals(PROJECT_BASE_NAME);
 
+        creaFooter();//per avere disponibili i bottoni da regolare
         this.add(creaTop());
         this.add(creaRadio());
         this.add(creaBody());
         this.add(creaFlag());
-        this.add(creaFooter());
+        this.add(layoutBottoni);//aggiungre graficamente i bottoni
 
         sincroRadio(groupTitolo.getValue());
         addListeners();
@@ -318,43 +319,6 @@ public class TDialogoPackage extends TDialogo {
     }// end of method
 
 
-//    private Component creaFooter() {
-//        VerticalLayout layout = new VerticalLayout();
-//        HorizontalLayout layoutFooter = new HorizontalLayout();
-//        layoutFooter.setSpacing(true);
-//        layoutFooter.setMargin(true);
-//
-//        cancelButton = new NativeButton("Annulla", event -> {
-//            recipient.gotInput(null);
-//            dialog.close();
-//        });//end of lambda expressions
-//        cancelButton.setWidth(NORMAL_WIDTH);
-//        cancelButton.setHeight(NORMAL_HEIGHT);
-//
-//        confirmButton = new NativeButton("Conferma", event -> {
-//            if (fieldCheckBoxPropertyCode.getValue()) {
-//                chiudeDialogo();
-//            } else {
-////                Notification.show("Stai creando una EntityClass SENZA la property 'code'. È possibile, ma alcune linee di codice andranno riscritte.",2000,Notification.Position.MIDDLE);
-//                Notification.show("Stai tentando di creare una EntityClass SENZA la property 'code'. Non è possibile.", DURATA, Notification.Position.MIDDLE);
-//            }// end of if/else cycle
-//        });//end of lambda expressions
-//        confirmButton.setWidth(NORMAL_WIDTH);
-//        confirmButton.setHeight(NORMAL_HEIGHT);
-//
-//        layoutFooter.add(cancelButton, confirmButton);
-//        layout.add(layoutFooter);
-//        return layout;
-//    }// end of method
-//
-//
-//    private void chiudeDialogo() {
-//        setMappa();
-//        recipient.gotInput(mappaInput);
-//        dialog.close();
-//    }// end of method
-
-
     private void sincroRadio(String radioSelected) {
         if (radioSelected.equals(RADIO_NEW)) {
             newPackage = true;
@@ -561,7 +525,7 @@ public class TDialogoPackage extends TDialogo {
     private boolean isPackageEsistente() {
         boolean esiste = false;
         String pathModules = getPathModules();
-        List<String> packagesEsistenti = file.getSubdirectories(pathModules);
+        List<String> packagesEsistenti = file.getSubDirectoriesName(pathModules);
 
         if (packagesEsistenti != null && packagesEsistenti.contains(getPackage())) {
             esiste = true;
@@ -696,13 +660,13 @@ public class TDialogoPackage extends TDialogo {
             mappaInput.put(Chiave.flagCompany, fieldCheckBoxCompany.getValue());
             mappaInput.put(Chiave.flagGrid, fieldCheckBoPaginatedGrid.getValue());
             mappaInput.put(Chiave.flagList, fieldCheckBoListEstesa.getValue());
-            mappaInput.put(Chiave.flagSovrascrive, fieldCheckBoxSovrascrive.getValue());
+            mappaInput.put(Chiave.flagSovrascriveFile, fieldCheckBoxSovrascrive.getValue());
             mappaInput.put(Chiave.flagUsaAllPackages, fieldCheckBoxAllPackage.getValue());
         }// end of if cycle
     }// end of method
 
     private List<String> recuperaPackageEsistenti(String projectName) {
-        return file.getSubdirectories(getPathModules());
+        return file.getSubDirectoriesName(getPathModules());
     }// end of method
 
 }// end of class

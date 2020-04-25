@@ -1,4 +1,4 @@
-package it.algos.@MODULELOWER@.modules.@PACKAGE@;
+package it.algos.vaadflow.modules.regione;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -12,17 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import static it.algos.@MODULELOWER@.application.@COST@.@QUALIFIER@;
+import static it.algos.vaadflow.application.FlowCost.TAG_REGIONE;
 
 /**
- * Project @MODULELOWER@ <br>
+ * Project vaadflow <br>
  * Created by Algos
- * User: @USER@
- * Fix date: @TODAY@ <br>
+ * User: Gac
+ * Fix date: 6-apr-2020 10.15.25 <br>
  * <p>
  * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * Necessario per la tipizzazione del binder <br>
- * Costruita (nella List) con appContext.getBean(@ENTITY@Dialog.class, service, entityClazz);
+ * Costruita (nella List) con appContext.getBean(RegioneDialog.class, service, entityClazz);
  * <p>
  * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
  * Annotated with @SpringComponent (obbligatorio) <br>
@@ -35,10 +35,10 @@ import static it.algos.@MODULELOWER@.application.@COST@.@QUALIFIER@;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Qualifier(@QUALIFIER@)
+@Qualifier(TAG_REGIONE)
 @Slf4j
 @AIScript(sovrascrivibile = true)
-public class @ENTITY@Dialog extends AViewDialog<@ENTITY@> {
+public class RegioneDialog extends AViewDialog<Regione> {
 
 
     /**
@@ -46,22 +46,21 @@ public class @ENTITY@Dialog extends AViewDialog<@ENTITY@> {
      * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
      * Se manca, manda in rosso i parametri del costruttore usato <br>
      */
-    public @ENTITY@Dialog() {
+    public RegioneDialog() {
     }// end of constructor
 
 
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * L'istanza DEVE essere creata con appContext.getBean(@ENTITY@Dialog.class, service, entityClazz); <br>
+     * L'istanza DEVE essere creata con appContext.getBean(RegioneDialog.class, service, entityClazz); <br>
      *
      * @param service     business class e layer di collegamento per la Repository
      * @param binderClass di tipo AEntity usata dal Binder dei Fields
      */
-    public @ENTITY@Dialog(IAService service, Class<? extends AEntity> binderClass) {
+    public RegioneDialog(IAService service, Class<? extends AEntity> binderClass) {
         super(service, binderClass);
     }// end of constructor
 
-    @READCOMPANY@
+    
 }// end of class
-
