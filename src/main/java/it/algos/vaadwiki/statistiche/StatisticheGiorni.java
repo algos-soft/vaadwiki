@@ -138,12 +138,12 @@ public class StatisticheGiorni extends StatisticheAttNaz {
 
         testo += color;
         testo += "'''nati nel giorno'''";
-        testo += "<ref>Il [[template:Bio|template Bio]] della voce biografica deve avere un valore valido al parametro '''giornoMeseNascita'''.</ref>'''";
+        testo += "<ref>Il [[template:Bio|template Bio]] della voce biografica deve avere un valore valido al parametro '''giornoMeseNascita'''.</ref>";
         testo += A_CAPO;
 
         testo += color;
         testo += "'''morti nel giorno'''";
-        testo += "<ref>Il [[template:Bio|template Bio]] della voce biografica deve avere un valore valido al parametro '''giornoMeseMorte'''.</ref>'''";
+        testo += "<ref>Il [[template:Bio|template Bio]] della voce biografica deve avere un valore valido al parametro '''giornoMeseMorte'''.</ref>";
         testo += A_CAPO;
 
         testo += color;

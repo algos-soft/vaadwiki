@@ -105,7 +105,7 @@ public abstract class AQueryWiki extends AQuery {
             cookies = wLogin.getCookies();
         }// end of if cycle
     }// end of method
-
+    
 
     /**
      * Controlla la stringa della request
