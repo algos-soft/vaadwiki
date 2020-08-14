@@ -44,7 +44,10 @@ public class Titolo {
      */
     protected String costruisceTitolo(String paginaWiki, String linkVisibile) {
         String titoloParagrafo = LibWiki.setLink(paginaWiki, linkVisibile);
-        String link;
+
+        if (paginaWiki == null || paginaWiki.length() == 0) {
+            return linkVisibile;
+        }
 
         if (linkVisibile.equals(paginaWiki)) {
             return LibWiki.setQuadre(paginaWiki);

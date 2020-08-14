@@ -311,7 +311,8 @@ public class MappaLista {
         if (listaPagine.size() == 1) {
             paginaLinkata = listaPagine.get(0);
         } else {
-            paginaLinkata = chiaveParagrafo;
+//            paginaLinkata = chiaveParagrafo;// fa abbastanza casino
+            paginaLinkata = VUOTA;
         }// end of if/else cycle
 
         return new Titolo(chiaveParagrafo, paginaLinkata, text.primaMaiuscola(chiaveParagrafo));
