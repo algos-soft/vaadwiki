@@ -289,13 +289,13 @@ public class LibBio {
 
         if (!testoTemplate.equals("")) {
             mappa = LibBio.estraeTmpMappa(testoTemplate);
-//            mappa = WikiLib.regolaMappaPipe(mappa);
-//            mappa = WikiLib.regolaMappaGraffe(mappa);
+            //            mappa = WikiLib.regolaMappaPipe(mappa);
+            //            mappa = WikiLib.regolaMappaGraffe(mappa);
         }// fine del blocco if
 
         //--avviso di errore
         if (mappa == null && !titoloVoce.equals("")) {
-//            log.warn "getMappaRealiBio - La pagina ${titoloVoce}, non contiene ritorni a capo"
+            //            log.warn "getMappaRealiBio - La pagina ${titoloVoce}, non contiene ritorni a capo"
         }// fine del blocco if
 
         return mappa;
@@ -390,7 +390,7 @@ public class LibBio {
         if (continua) {
             mappaGraffe = checkGraffe(testoTemplate);
             if (mappaGraffe.containsKey(KEY_MAP_GRAFFE_ESISTONO)) {
-//                testoTemplate = (String) mappaGraffe.get(KEY_MAP_GRAFFE_TESTO); //@todo non chiaro
+                //                testoTemplate = (String) mappaGraffe.get(KEY_MAP_GRAFFE_TESTO); //@todo non chiaro
             }// fine del blocco if
         }// fine del blocco if
 
@@ -433,9 +433,9 @@ public class LibBio {
                     mappa.put(chiave, valore);
                 } else {
                     for (int k = 0; k < (Integer) mappaGraffe.get(KEY_MAP_GRAFFE_NUMERO); k++) {
-//                        chiave = mappaGraffe.nomeParGraffe[k];
-//                        valore = mappaGraffe.valParGraffe[k];
-//                        mappa.put(chiave, valore);
+                        //                        chiave = mappaGraffe.nomeParGraffe[k];
+                        //                        valore = mappaGraffe.valParGraffe[k];
+                        //                        mappa.put(chiave, valore);
                     } // fine del ciclo for
                 }// fine del blocco if-else
             }// fine del blocco if
@@ -670,12 +670,12 @@ public class LibBio {
                 arrayNomeParGraffe.add(nomeParGraffe);
                 mappa.put(KEY_MAP_GRAFFE_VALORE_PARAMETRO, arrayNomeParGraffe);
 
-//                arrayvValParGraffe = new ArrayList();
-//                String oldValParGraffe;
-//                arrayValGraffe = (ArrayList) mappa.get(KEY_MAP_GRAFFE_VALORE_CONTENUTO);
-//                arrayvValParGraffe.add(oldValParGraffe);
-//                arrayvValParGraffe.add(valParGraffe);
-//                mappa.put(KEY_MAP_GRAFFE_VALORE_CONTENUTO, arrayvValParGraffe);
+                //                arrayvValParGraffe = new ArrayList();
+                //                String oldValParGraffe;
+                //                arrayValGraffe = (ArrayList) mappa.get(KEY_MAP_GRAFFE_VALORE_CONTENUTO);
+                //                arrayvValParGraffe.add(oldValParGraffe);
+                //                arrayvValParGraffe.add(valParGraffe);
+                //                mappa.put(KEY_MAP_GRAFFE_VALORE_CONTENUTO, arrayvValParGraffe);
                 break;
             default: // caso non definito
                 arrayValGraffe = (ArrayList) mappa.get(KEY_MAP_GRAFFE_VALORE_CONTENUTO);
@@ -956,30 +956,30 @@ public class LibBio {
      */
     public static boolean delete(long pageid) {
         boolean status = false;
-//        BioWiki bioWiki;
-//        BioOriginale bioOriginale;
-//        BioValida bioValida;
-//        BioLista bioLista;
-//
-//        bioWiki = BioWiki.findPageid(pageid);
-//        if (bioWiki != null) {
-//            bioWiki.delete();
-//        }// fine del blocco if
-//
-//        bioOriginale = BioOriginale.findPageid(pageid);
-//        if (bioOriginale != null) {
-//            bioOriginale.delete();
-//        }// fine del blocco if
-//
-//        bioValida = BioValida.findPageid(pageid);
-//        if (bioValida != null) {
-//            bioValida.delete();
-//        }// fine del blocco if
-//
-//        bioLista = BioLista.findPageid(pageid);
-//        if (bioLista != null) {
-//            bioLista.delete();
-//        }// fine del blocco if
+        //        BioWiki bioWiki;
+        //        BioOriginale bioOriginale;
+        //        BioValida bioValida;
+        //        BioLista bioLista;
+        //
+        //        bioWiki = BioWiki.findPageid(pageid);
+        //        if (bioWiki != null) {
+        //            bioWiki.delete();
+        //        }// fine del blocco if
+        //
+        //        bioOriginale = BioOriginale.findPageid(pageid);
+        //        if (bioOriginale != null) {
+        //            bioOriginale.delete();
+        //        }// fine del blocco if
+        //
+        //        bioValida = BioValida.findPageid(pageid);
+        //        if (bioValida != null) {
+        //            bioValida.delete();
+        //        }// fine del blocco if
+        //
+        //        bioLista = BioLista.findPageid(pageid);
+        //        if (bioLista != null) {
+        //            bioLista.delete();
+        //        }// fine del blocco if
 
         return status;
     } // fine del metodo
@@ -994,22 +994,22 @@ public class LibBio {
      */
     public static boolean isTemplateDiversi(long pageid) {
         boolean status = true;
-//        BioWiki bioWiki;
-//        BioOriginale bioOrig;
+        //        BioWiki bioWiki;
+        //        BioOriginale bioOrig;
         String tmplBioWiki = "";
         String tmplBioOriginario = "";
         String tmplBioNew = "";
 
-//        bioWiki = BioWiki.findPageid(pageid);
-//        if (bioWiki != null) {
-//            tmplBioWiki = bioWiki.getTmplBio();
-//        }// end of if cycle
-//
-//        bioOrig = BioOriginale.findPageid(pageid);
-//        if (bioOrig != null) {
-//            tmplBioOriginario = bioOrig.getTmplBio();
-//            tmplBioNew = bioOrig.creaNewTmpl();
-//        }// end of if cycle
+        //        bioWiki = BioWiki.findPageid(pageid);
+        //        if (bioWiki != null) {
+        //            tmplBioWiki = bioWiki.getTmplBio();
+        //        }// end of if cycle
+        //
+        //        bioOrig = BioOriginale.findPageid(pageid);
+        //        if (bioOrig != null) {
+        //            tmplBioOriginario = bioOrig.getTmplBio();
+        //            tmplBioNew = bioOrig.creaNewTmpl();
+        //        }// end of if cycle
 
         if (tmplBioNew.equals(tmplBioWiki)) {
             status = false;
@@ -1106,42 +1106,42 @@ public class LibBio {
     } // fine del metodo
 
 
-//    /**
-//     * Elimina il testo successivo alla virgola
-//     *
-//     * @param testoIn entrata da elaborare
-//     * @return testoOut regolato in uscita
-//     * @deprecated
-//     */
-//    public static String fixCampoGiorno(String testoIn) {
-//        String testoOut = testoIn;
-//
-//        if (testoOut != null) {
-//            testoOut = testoOut.trim();
-//            testoOut = LibText.levaDopoInterrogativo(testoOut);
-//            testoOut = testoOut.trim();
-//        }// fine del blocco if
-//
-//        return testoOut;
-//    }// end of static method
+    //    /**
+    //     * Elimina il testo successivo alla virgola
+    //     *
+    //     * @param testoIn entrata da elaborare
+    //     * @return testoOut regolato in uscita
+    //     * @deprecated
+    //     */
+    //    public static String fixCampoGiorno(String testoIn) {
+    //        String testoOut = testoIn;
+    //
+    //        if (testoOut != null) {
+    //            testoOut = testoOut.trim();
+    //            testoOut = LibText.levaDopoInterrogativo(testoOut);
+    //            testoOut = testoOut.trim();
+    //        }// fine del blocco if
+    //
+    //        return testoOut;
+    //    }// end of static method
 
-//    /**
-//     * Elimina il testo successivo alla virgola
-//     *
-//     * @param testoIn entrata da elaborare
-//     * @return testoOut regolato in uscita
-//     */
-//    public static String fixCampoAnno(String testoIn) {
-//        String testoOut = testoIn;
-//
-//        if (testoOut != null) {
-//            testoOut = testoOut.trim();
-//            testoOut = LibText.levaDopoInterrogativo(testoOut);
-//            testoOut = testoOut.trim();
-//        }// fine del blocco if
-//
-//        return testoOut;
-//    }// end of static method
+    //    /**
+    //     * Elimina il testo successivo alla virgola
+    //     *
+    //     * @param testoIn entrata da elaborare
+    //     * @return testoOut regolato in uscita
+    //     */
+    //    public static String fixCampoAnno(String testoIn) {
+    //        String testoOut = testoIn;
+    //
+    //        if (testoOut != null) {
+    //            testoOut = testoOut.trim();
+    //            testoOut = LibText.levaDopoInterrogativo(testoOut);
+    //            testoOut = testoOut.trim();
+    //        }// fine del blocco if
+    //
+    //        return testoOut;
+    //    }// end of static method
 
 
     /**
@@ -1186,132 +1186,132 @@ public class LibBio {
     } // fine del metodo
 
 
-//    /**
-//     * Recupera i pageids di tutti i records, selezionati secondo la query ricevuta
-//     *
-//     * @param queryTxt per la selezione
-//     * @return lista di pageids (Long)
-//     */
-//    public synchronized static ArrayList<Long> queryFind(String queryTxt) {
-//        return queryFind(queryTxt, 0);
-//    }// end of static method
+    //    /**
+    //     * Recupera i pageids di tutti i records, selezionati secondo la query ricevuta
+    //     *
+    //     * @param queryTxt per la selezione
+    //     * @return lista di pageids (Long)
+    //     */
+    //    public synchronized static ArrayList<Long> queryFind(String queryTxt) {
+    //        return queryFind(queryTxt, 0);
+    //    }// end of static method
 
-//    /**
-//     * Recupera la property (text) di tutti i records, selezionati secondo la query ricevuta
-//     *
-//     * @param queryTxt per la selezione
-//     * @return lista di una property (String)
-//     */
-//    public synchronized static ArrayList<String> queryFindTxt(String queryTxt) {
-//        return queryFindTxt(queryTxt, 0);
-//    }// end of static method
+    //    /**
+    //     * Recupera la property (text) di tutti i records, selezionati secondo la query ricevuta
+    //     *
+    //     * @param queryTxt per la selezione
+    //     * @return lista di una property (String)
+    //     */
+    //    public synchronized static ArrayList<String> queryFindTxt(String queryTxt) {
+    //        return queryFindTxt(queryTxt, 0);
+    //    }// end of static method
 
-//    /**
-//     * Recupera i pageids dei primi (limit) records, selezionati secondo la query ricevuta
-//     *
-//     * @param queryTxt per la selezione
-//     * @param limit    di ricerca per la query
-//     *
-//     * @return lista di pageids (Long)
-//     */
-//    public synchronized static ArrayList<Long> queryFind(String queryTxt, int limit) {
-//        return queryFind(queryTxt, limit, 0);
-//    }// end of static method
+    //    /**
+    //     * Recupera i pageids dei primi (limit) records, selezionati secondo la query ricevuta
+    //     *
+    //     * @param queryTxt per la selezione
+    //     * @param limit    di ricerca per la query
+    //     *
+    //     * @return lista di pageids (Long)
+    //     */
+    //    public synchronized static ArrayList<Long> queryFind(String queryTxt, int limit) {
+    //        return queryFind(queryTxt, limit, 0);
+    //    }// end of static method
 
-//    /**
-//     * Recupera la property (text) di tutti i records, selezionati secondo la query ricevuta
-//     *
-//     * @param queryTxt per la selezione
-//     * @param limit    di ricerca per la query
-//     *
-//     * @return lista di una property (String)
-//     */
-//    public synchronized static ArrayList<String> queryFindTxt(String queryTxt, int limit) {
-//        return queryFindTxt(queryTxt, limit, 0);
-//    }// end of static method
+    //    /**
+    //     * Recupera la property (text) di tutti i records, selezionati secondo la query ricevuta
+    //     *
+    //     * @param queryTxt per la selezione
+    //     * @param limit    di ricerca per la query
+    //     *
+    //     * @return lista di una property (String)
+    //     */
+    //    public synchronized static ArrayList<String> queryFindTxt(String queryTxt, int limit) {
+    //        return queryFindTxt(queryTxt, limit, 0);
+    //    }// end of static method
 
-//    /**
-//     * Recupera i pageids dei primi (limit) records, partendo da offSet, selezionati secondo la query ricevuta
-//     *
-//     * @param queryTxt per la selezione
-//     * @param limit    di ricerca per la query
-//     * @param offSet   di inizio per la query
-//     * @return lista di pageids (Long)
-//     */
-//    public synchronized static ArrayList<Long> queryFind(String queryTxt, int limit, int offSet) {
-//        ArrayList<Long> lista = null;
-//        List vettore;
-//        EntityManager manager = EM.createEntityManager();
-//        Query query = manager.createQuery(queryTxt);
-//
-//        if (limit > 0) {
-//            query.setMaxResults(limit);
-//        }// fine del blocco if
-//
-//        if (offSet > 0) {
-//            query.setFirstResult(offSet);
-//        }// fine del blocco if
-//
-//        vettore = query.getResultList();
-//        if (vettore != null) {
-//            lista = new ArrayList<Long>(vettore);
-//        }// end of if cycle
-//        manager.close();
-//
-//        return lista;
-//    }// end of static method
+    //    /**
+    //     * Recupera i pageids dei primi (limit) records, partendo da offSet, selezionati secondo la query ricevuta
+    //     *
+    //     * @param queryTxt per la selezione
+    //     * @param limit    di ricerca per la query
+    //     * @param offSet   di inizio per la query
+    //     * @return lista di pageids (Long)
+    //     */
+    //    public synchronized static ArrayList<Long> queryFind(String queryTxt, int limit, int offSet) {
+    //        ArrayList<Long> lista = null;
+    //        List vettore;
+    //        EntityManager manager = EM.createEntityManager();
+    //        Query query = manager.createQuery(queryTxt);
+    //
+    //        if (limit > 0) {
+    //            query.setMaxResults(limit);
+    //        }// fine del blocco if
+    //
+    //        if (offSet > 0) {
+    //            query.setFirstResult(offSet);
+    //        }// fine del blocco if
+    //
+    //        vettore = query.getResultList();
+    //        if (vettore != null) {
+    //            lista = new ArrayList<Long>(vettore);
+    //        }// end of if cycle
+    //        manager.close();
+    //
+    //        return lista;
+    //    }// end of static method
 
-//    /**
-//     * Recupera la property (text) di tutti i records, selezionati secondo la query ricevuta
-//     *
-//     * @param queryTxt per la selezione
-//     * @param limit    di ricerca per la query
-//     * @param offSet   di inizio per la query
-//     * @return lista di una property (String)
-//     */
-//    public synchronized static ArrayList<String> queryFindTxt(String queryTxt, int limit, int offSet) {
-//        ArrayList<String> lista = null;
-//        List vettore;
-//        EntityManager manager = EM.createEntityManager();
-//        Query query = manager.createQuery(queryTxt);
-//
-//        if (limit > 0) {
-//            query.setMaxResults(limit);
-//        }// fine del blocco if
-//
-//        if (offSet > 0) {
-//            query.setFirstResult(offSet);
-//        }// fine del blocco if
-//
-//        vettore = query.getResultList();
-//        if (vettore != null) {
-//            lista = new ArrayList<String>(vettore);
-//        }// end of if cycle
-//        manager.close();
-//
-//        return lista;
-//    }// end of static method
+    //    /**
+    //     * Recupera la property (text) di tutti i records, selezionati secondo la query ricevuta
+    //     *
+    //     * @param queryTxt per la selezione
+    //     * @param limit    di ricerca per la query
+    //     * @param offSet   di inizio per la query
+    //     * @return lista di una property (String)
+    //     */
+    //    public synchronized static ArrayList<String> queryFindTxt(String queryTxt, int limit, int offSet) {
+    //        ArrayList<String> lista = null;
+    //        List vettore;
+    //        EntityManager manager = EM.createEntityManager();
+    //        Query query = manager.createQuery(queryTxt);
+    //
+    //        if (limit > 0) {
+    //            query.setMaxResults(limit);
+    //        }// fine del blocco if
+    //
+    //        if (offSet > 0) {
+    //            query.setFirstResult(offSet);
+    //        }// fine del blocco if
+    //
+    //        vettore = query.getResultList();
+    //        if (vettore != null) {
+    //            lista = new ArrayList<String>(vettore);
+    //        }// end of if cycle
+    //        manager.close();
+    //
+    //        return lista;
+    //    }// end of static method
 
-//    /**
-//     * Recupera il conteggio dei records, selezionati secondo la query ricevuta
-//     *
-//     * @param queryTxt per la selezione
-//     * @return numero di records
-//     */
-//    public synchronized static int queryCount(String queryTxt) {
-//        int numero = 0;
-//        List vettore;
-//        EntityManager manager = EM.createEntityManager();
-//        Query query = manager.createQuery(queryTxt);
-//
-//        vettore = query.getResultList();
-//        if (vettore != null) {
-//            numero = vettore.size();
-//        }// end of if cycle
-//        manager.close();
-//
-//        return numero;
-//    }// end of static method
+    //    /**
+    //     * Recupera il conteggio dei records, selezionati secondo la query ricevuta
+    //     *
+    //     * @param queryTxt per la selezione
+    //     * @return numero di records
+    //     */
+    //    public synchronized static int queryCount(String queryTxt) {
+    //        int numero = 0;
+    //        List vettore;
+    //        EntityManager manager = EM.createEntityManager();
+    //        Query query = manager.createQuery(queryTxt);
+    //
+    //        vettore = query.getResultList();
+    //        if (vettore != null) {
+    //            numero = vettore.size();
+    //        }// end of if cycle
+    //        manager.close();
+    //
+    //        return numero;
+    //    }// end of static method
 
 
     /**
@@ -1406,30 +1406,30 @@ public class LibBio {
     } // fine del metodo
 
 
-//    /**
-//     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
-//     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
-//     * Mantiene il punto interrogativo, anche se da solo <br>
-//     * @param testoOriginario in entrata da elaborare
-//     *
-//     * @return testoGrezzo troncato
-//     */
-//    public static String troncaParteFinaleMenoPuntoInterrogativo(String testoOriginario) {
-//        String testoGrezzo = VUOTA;
-//
-//        if (text.isEmpty(testoOriginario)) {
-//            return VUOTA;
-//        }// end of if cycle
-//
-//        testoGrezzo = testoOriginario.trim();
-//        testoGrezzo = text.levaDopoRef(testoGrezzo);
-//        testoGrezzo = text.levaDopoNote(testoGrezzo);
-//        testoGrezzo = text.levaDopoGraffe(testoGrezzo);
-//        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
-//        testoGrezzo = testoGrezzo.trim();
-//
-//        return testoGrezzo;
-//    } // fine del metodo
+    //    /**
+    //     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+    //     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+    //     * Mantiene il punto interrogativo, anche se da solo <br>
+    //     * @param testoOriginario in entrata da elaborare
+    //     *
+    //     * @return testoGrezzo troncato
+    //     */
+    //    public static String troncaParteFinaleMenoPuntoInterrogativo(String testoOriginario) {
+    //        String testoGrezzo = VUOTA;
+    //
+    //        if (text.isEmpty(testoOriginario)) {
+    //            return VUOTA;
+    //        }// end of if cycle
+    //
+    //        testoGrezzo = testoOriginario.trim();
+    //        testoGrezzo = text.levaDopoRef(testoGrezzo);
+    //        testoGrezzo = text.levaDopoNote(testoGrezzo);
+    //        testoGrezzo = text.levaDopoGraffe(testoGrezzo);
+    //        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
+    //        testoGrezzo = testoGrezzo.trim();
+    //
+    //        return testoGrezzo;
+    //    } // fine del metodo
 
 
     /**
@@ -1506,7 +1506,7 @@ public class LibBio {
         testoGrezzo = text.levaDopoRef(testoGrezzo);
         testoGrezzo = text.levaDopoNote(testoGrezzo);
         testoGrezzo = text.levaDopoGraffe(testoGrezzo);
-//        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
+        //        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
         testoGrezzo = text.levaDopoCirca(testoGrezzo);
         if (!testoGrezzo.equals("?")) {
             testoGrezzo = text.levaDopoInterrogativo(testoGrezzo);
@@ -1592,10 +1592,10 @@ public class LibBio {
         valoreGrezzo = text.levaDopoEccetera(valoreGrezzo);
         valoreGrezzo = text.levaDopoInterrogativo(valoreGrezzo);
 
-//        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
-//        testoGrezzo = troncaParteFinalePuntoInterrogativo(valorePropertyTmplBioServer);
-//        testoGrezzo = text.levaDopoInterrogativo(testoGrezzo);
-//        testoGrezzo = testoGrezzo.trim();
+        //        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
+        //        testoGrezzo = troncaParteFinalePuntoInterrogativo(valorePropertyTmplBioServer);
+        //        testoGrezzo = text.levaDopoInterrogativo(testoGrezzo);
+        //        testoGrezzo = testoGrezzo.trim();
 
         return valoreGrezzo.trim();
     } // fine del metodo
@@ -1884,23 +1884,23 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
-////        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
-//        if (text.isValid(testoValido)) {
-//            return testoValido.trim();
-//        } else {
-//            if (testoValido.contains(tag1)) {
-//                testoValido = testoValido.substring(testoValido.indexOf(tag1) + tag1.length()).trim();
-//            }// end of if cycle
-//            if (testoValido.contains(tag2)) {
-//                testoValido = testoValido.substring(testoValido.indexOf(tag2) + tag2.length()).trim();
-//            }// end of if cycle
-////                if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
-//            if (text.isValid(testoValido)) {
-//                return testoValido.trim();
-//            } else {
-//                return VUOTA;
-//            }// end of if/else cycle
-//        }// end of if/else cycle
+        ////        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
+        //        if (text.isValid(testoValido)) {
+        //            return testoValido.trim();
+        //        } else {
+        //            if (testoValido.contains(tag1)) {
+        //                testoValido = testoValido.substring(testoValido.indexOf(tag1) + tag1.length()).trim();
+        //            }// end of if cycle
+        //            if (testoValido.contains(tag2)) {
+        //                testoValido = testoValido.substring(testoValido.indexOf(tag2) + tag2.length()).trim();
+        //            }// end of if cycle
+        ////                if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
+        //            if (text.isValid(testoValido)) {
+        //                return testoValido.trim();
+        //            } else {
+        //                return VUOTA;
+        //            }// end of if/else cycle
+        //        }// end of if/else cycle
 
 
         if (text.isValid(testoValido)) {
@@ -1940,12 +1940,12 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
-////        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Nazionalita.class, "singolare", testoValido)) {
-//        if (text.isValid(testoValido)) {
-//            return testoValido.trim();
-//        } else {
-//            return VUOTA;
-//        }// end of if/else cycle
+        ////        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Nazionalita.class, "singolare", testoValido)) {
+        //        if (text.isValid(testoValido)) {
+        //            return testoValido.trim();
+        //        } else {
+        //            return VUOTA;
+        //        }// end of if/else cycle
 
         if (text.isValid(testoValido)) {
             if (controlla) {
@@ -2101,28 +2101,24 @@ public class LibBio {
         LinkedHashMap<String, String> mappa = null;
         LinkedHashMap<Integer, String> mappaTmp = new LinkedHashMap<Integer, String>();
         String chiave;
-//        String sep = PIPE;
-//        String sep1 = PIPE + SPAZIO;
-//        String sep2 = PIPE + SPAZIO + SPAZIO;
-//        String spazio = " ";
+        //        String sep = PIPE;
+        //        String sep1 = PIPE + SPAZIO;
+        //        String sep2 = PIPE + SPAZIO + SPAZIO;
+        //        String spazio = " ";
         String uguale = "=";
         String valore = "";
         int pos = 0;
         int posUgu;
-//        ArrayList listaTag;
+        //        ArrayList listaTag;
         int posEnd;
 
         if (valorePropertyTmplBioServer != null && !valorePropertyTmplBioServer.equals("")) {
             mappa = new LinkedHashMap();
             for (ParBio par : ParBio.values()) {
+                if (par == ParBio.titolo) {
+                    continue;
+                }
                 valore = par.getTag();
-//                listaTag = new ArrayList();
-//                listaTag.add(sep + valore + uguale);
-//                listaTag.add(sep + valore + spazio + uguale);
-//                listaTag.add(sep1 + valore + uguale);
-//                listaTag.add(sep1 + valore + spazio + uguale);
-//                listaTag.add(sep2 + valore + uguale);
-//                listaTag.add(sep2 + valore + spazio + uguale);
 
                 try { // prova ad eseguire il codice
                     pos = text.getPosFirstTag(valorePropertyTmplBioServer, valore);
@@ -2285,14 +2281,14 @@ public class LibBio {
     public LinkedHashMap<String, String> getMappaBioOld(String testoTemplate) {
         LinkedHashMap<String, String> mappa = null;
         LinkedHashMap<Integer, String> mappaTmp = new LinkedHashMap<Integer, String>();
-//        Collection lista = null;
+        //        Collection lista = null;
         String chiave;
         String sep = PIPE;
         String sep1 = PIPE + SPAZIO;
         String sep2 = PIPE + SPAZIO + SPAZIO;
         String spazio = " ";
         String uguale = "=";
-//        String tab = "\t";
+        //        String tab = "\t";
         String valore = "";
         int pos = 0;
         int posUgu;
@@ -2304,23 +2300,23 @@ public class LibBio {
             for (ParBio par : ParBio.values()) {
                 valore = par.getTag();
                 listaTag = new ArrayList();
-//                listaTag.add(sep + valore + spazio);
+                //                listaTag.add(sep + valore + spazio);
                 listaTag.add(sep + valore + uguale);
-//                listaTag.add(sep + valore + tab);
+                //                listaTag.add(sep + valore + tab);
                 listaTag.add(sep + valore + spazio + uguale);
-//                listaTag.add(sep1 + valore + spazio);
+                //                listaTag.add(sep1 + valore + spazio);
                 listaTag.add(sep1 + valore + uguale);
-//                listaTag.add(sep1 + valore + tab);
+                //                listaTag.add(sep1 + valore + tab);
                 listaTag.add(sep1 + valore + spazio + uguale);
-//                listaTag.add(sep2 + valore + spazio);
+                //                listaTag.add(sep2 + valore + spazio);
                 listaTag.add(sep2 + valore + uguale);
-//                listaTag.add(sep2 + valore + tab);
+                //                listaTag.add(sep2 + valore + tab);
                 listaTag.add(sep2 + valore + spazio + uguale);
 
                 try { // prova ad eseguire il codice
                     pos = text.getPos(testoTemplate, listaTag);
                 } catch (Exception unErrore) { // intercetta l'errore
-//                    log.error testoTemplate
+                    //                    log.error testoTemplate
                 }// fine del blocco try-catch
                 if (pos > 0) {
                     mappaTmp.put(pos, valore);
@@ -2366,53 +2362,53 @@ public class LibBio {
             } // fine del ciclo for
 
 
-//            for (int chiave : mappaTmp.keySet()) {
-////                chiave = (Integer)mappaTmp.get(posizione - 1);
-//                valore = testoTemplate.substring(chiave, chiave + mappaTmp.get(chiave).length());
-//                if (!valore.equals("")) {
-//                    valore = valore.trim();
-//                    posUgu = valore.indexOf(uguale);
-//                    if (posUgu != -1) {
-//                        posUgu += uguale.length();
-//                        valore = valore.substring(posUgu).trim();
-//                    }// fine del blocco if
-//                    valore = regValore(valore);
-//                    valore = regACapo(valore);
-//                    valore = regBreakSpace(valore);
-//                    valore = valore.trim();
-//                    mappa.put(chiave, valore);
-//                }// fine del blocco if
-//
-//            } // fine del ciclo for-each
+            //            for (int chiave : mappaTmp.keySet()) {
+            ////                chiave = (Integer)mappaTmp.get(posizione - 1);
+            //                valore = testoTemplate.substring(chiave, chiave + mappaTmp.get(chiave).length());
+            //                if (!valore.equals("")) {
+            //                    valore = valore.trim();
+            //                    posUgu = valore.indexOf(uguale);
+            //                    if (posUgu != -1) {
+            //                        posUgu += uguale.length();
+            //                        valore = valore.substring(posUgu).trim();
+            //                    }// fine del blocco if
+            //                    valore = regValore(valore);
+            //                    valore = regACapo(valore);
+            //                    valore = regBreakSpace(valore);
+            //                    valore = valore.trim();
+            //                    mappa.put(chiave, valore);
+            //                }// fine del blocco if
+            //
+            //            } // fine del ciclo for-each
 
 
-//            HashMap.Entry lis = mappaTmp.keySet();
-//            if (lista != null) {
-//                lista.add(testoTemplate.length());
-//
-//                for (int k = 1; k < lista.size(); k++) {
-//                    chiave = mappaTmp.get(lista.get(k - 1));
-//                    valore = testoTemplate.substring((int) lista.get(k - 1), (int) lista.get(k));
-//                    if (!valore.equals("")) {
-//                        valore = valore.trim();
-//                        posUgu = valore.indexOf(uguale);
-//                        if (posUgu != -1) {
-//                            posUgu += uguale.length();
-//                            valore = valore.substring(posUgu).trim();
-//                        }// fine del blocco if
-//                        valore = regValore(valore);
-//                        valore = regACapo(valore);
-//                        valore = regBreakSpace(valore);
-//                        valore = valore.trim();
-//                        mappa.put(chiave, valore);
-//                    }// fine del blocco if
-//
-//                } // fine del ciclo for
-//            }// fine del blocco if
+            //            HashMap.Entry lis = mappaTmp.keySet();
+            //            if (lista != null) {
+            //                lista.add(testoTemplate.length());
+            //
+            //                for (int k = 1; k < lista.size(); k++) {
+            //                    chiave = mappaTmp.get(lista.get(k - 1));
+            //                    valore = testoTemplate.substring((int) lista.get(k - 1), (int) lista.get(k));
+            //                    if (!valore.equals("")) {
+            //                        valore = valore.trim();
+            //                        posUgu = valore.indexOf(uguale);
+            //                        if (posUgu != -1) {
+            //                            posUgu += uguale.length();
+            //                            valore = valore.substring(posUgu).trim();
+            //                        }// fine del blocco if
+            //                        valore = regValore(valore);
+            //                        valore = regACapo(valore);
+            //                        valore = regBreakSpace(valore);
+            //                        valore = valore.trim();
+            //                        mappa.put(chiave, valore);
+            //                    }// fine del blocco if
+            //
+            //                } // fine del ciclo for
+            //            }// fine del blocco if
         }// fine del blocco if
 
-//        mappa = WikiLib.regolaMappaPipe(mappa);
-//        mappa = WikiLib.regolaMappaGraffe(mappa);
+        //        mappa = WikiLib.regolaMappaPipe(mappa);
+        //        mappa = WikiLib.regolaMappaGraffe(mappa);
 
         return mappa;
     } // fine del metodo
@@ -2603,7 +2599,7 @@ public class LibBio {
      * @return riga di testo
      */
     public String creaRigaTemplate(String parBioText, String value) {
-//        return PIPE + parBioText + UGUALE_SPAZIATO + value + A_CAPO;
+        //        return PIPE + parBioText + UGUALE_SPAZIATO + value + A_CAPO;
         return PIPE + parBioText + "=" + value + A_CAPO;//@todo versione 14
     } // fine del metodo
 
@@ -2846,29 +2842,29 @@ public class LibBio {
     }// end of method
 
 
-//    /**
-//     * Costruisce il template Bio come modificato nella entity
-//     * Merge tra il template del server ed i dati (eventualmente) modificati della entity
-//     * Aggiunge (vuoti) i parametri obbligatori mancanti
-//     * NON aggiunge altri parametri non presenti sul server e non obbligatori
-//     *
-//     * @param bioServer col template originale
-//     * @param bioMongo  coi parametri eventualemnte modificati
-//     *
-//     * @return testo del template bio merged comprensivo di graffe di apertura e chiusura
-//     */
-//    public String mergeTemplates(Bio bioServer, Bio bioMongo) {
-//        String templateText = "";
-//
-//        templateText += LibWiki.GRAFFE_INI;
-//        templateText += "Bio";
-//        templateText += A_CAPO;
-////        templateText += creaTemplateMergedSenzaGraffe(entity);
-//        templateText += A_CAPO;
-//        templateText += LibWiki.GRAFFE_END;
-//
-//        return templateText;
-//    }// end of method
+    //    /**
+    //     * Costruisce il template Bio come modificato nella entity
+    //     * Merge tra il template del server ed i dati (eventualmente) modificati della entity
+    //     * Aggiunge (vuoti) i parametri obbligatori mancanti
+    //     * NON aggiunge altri parametri non presenti sul server e non obbligatori
+    //     *
+    //     * @param bioServer col template originale
+    //     * @param bioMongo  coi parametri eventualemnte modificati
+    //     *
+    //     * @return testo del template bio merged comprensivo di graffe di apertura e chiusura
+    //     */
+    //    public String mergeTemplates(Bio bioServer, Bio bioMongo) {
+    //        String templateText = "";
+    //
+    //        templateText += LibWiki.GRAFFE_INI;
+    //        templateText += "Bio";
+    //        templateText += A_CAPO;
+    ////        templateText += creaTemplateMergedSenzaGraffe(entity);
+    //        templateText += A_CAPO;
+    //        templateText += LibWiki.GRAFFE_END;
+    //
+    //        return templateText;
+    //    }// end of method
 
 
     public void sendDownload(DownloadResult result) {
@@ -2949,56 +2945,56 @@ public class LibBio {
     } // fine del metodo
 
 
-//    public void sendUpdate(DownloadResult result) {
-//        LocalDateTime end;
-//        String tag = "update";
-//        String testo = "";
-//        testo += "Eseguito in automatico ";
-//        testo += EASchedule.oreQuattro.getNota();
-//        testo += A_CAPO;
-//        testo += A_CAPO;
-//        testo += "Aggiunge le pagine biografiche mancanti,";
-//        testo += A_CAPO;
-//        testo += " cancella quelle eccedenti ";
-//        testo += A_CAPO;
-//        testo += " e ricarica tutte quelle esistenti che sono state modificate dall'ultima lettura";
-//        testo += A_CAPO;
-//        testo += A_CAPO;
-//        testo += "Ciclo del " + date.get();
-//        testo += A_CAPO;
-//        testo += "Iniziato alle " + date.getOrario(result.inizio);
-//        testo += A_CAPO;
-//
-//
-//        if (pref.isBool(SEND_MAIL_CICLO)) {
-//            end = LocalDateTime.now();
-//            testo += "Terminato alle " + date.getOrario(end);
-//            testo += A_CAPO;
-//            testo += "Durata totale: " + date.deltaText(result.getInizio());
-//            testo += A_CAPO;
-//            testo += "Nella categoria " + result.nomeCategoria + " ci sono " + text.format(result.numVociCategoria) + " pagine biografiche";
-//            testo += A_CAPO;
-//            testo += "Nel mongoDB ci sono " + text.format(bio.count()) + " pagine biografiche";
-//
-//            if (result.vociEccedenti.size() > 0) {
-//                testo += A_CAPO;
-//                testo += "Sono state eliminate ";
-//                testo += text.format(result.vociEccedenti.size());
-//                testo += " pagine non più presenti nella categoria ";
-//                testo += result.nomeCategoria;
-//            }// end of if cycle
-//
-//            if (result.vociMancanti.size() > 0) {
-//                testo += A_CAPO;
-//                testo += "Sono state aggiunte ";
-//                testo += text.format(result.vociMancanti.size());
-//                testo += " nuove pagine della categoria ";
-//                testo += result.nomeCategoria;
-//            }// end of if cycle
-//
-//            mailService.send("Ciclo " + tag, testo);
-//        }// end of if cycle
-//    } // fine del metodo
+    //    public void sendUpdate(DownloadResult result) {
+    //        LocalDateTime end;
+    //        String tag = "update";
+    //        String testo = "";
+    //        testo += "Eseguito in automatico ";
+    //        testo += EASchedule.oreQuattro.getNota();
+    //        testo += A_CAPO;
+    //        testo += A_CAPO;
+    //        testo += "Aggiunge le pagine biografiche mancanti,";
+    //        testo += A_CAPO;
+    //        testo += " cancella quelle eccedenti ";
+    //        testo += A_CAPO;
+    //        testo += " e ricarica tutte quelle esistenti che sono state modificate dall'ultima lettura";
+    //        testo += A_CAPO;
+    //        testo += A_CAPO;
+    //        testo += "Ciclo del " + date.get();
+    //        testo += A_CAPO;
+    //        testo += "Iniziato alle " + date.getOrario(result.inizio);
+    //        testo += A_CAPO;
+    //
+    //
+    //        if (pref.isBool(SEND_MAIL_CICLO)) {
+    //            end = LocalDateTime.now();
+    //            testo += "Terminato alle " + date.getOrario(end);
+    //            testo += A_CAPO;
+    //            testo += "Durata totale: " + date.deltaText(result.getInizio());
+    //            testo += A_CAPO;
+    //            testo += "Nella categoria " + result.nomeCategoria + " ci sono " + text.format(result.numVociCategoria) + " pagine biografiche";
+    //            testo += A_CAPO;
+    //            testo += "Nel mongoDB ci sono " + text.format(bio.count()) + " pagine biografiche";
+    //
+    //            if (result.vociEccedenti.size() > 0) {
+    //                testo += A_CAPO;
+    //                testo += "Sono state eliminate ";
+    //                testo += text.format(result.vociEccedenti.size());
+    //                testo += " pagine non più presenti nella categoria ";
+    //                testo += result.nomeCategoria;
+    //            }// end of if cycle
+    //
+    //            if (result.vociMancanti.size() > 0) {
+    //                testo += A_CAPO;
+    //                testo += "Sono state aggiunte ";
+    //                testo += text.format(result.vociMancanti.size());
+    //                testo += " nuove pagine della categoria ";
+    //                testo += result.nomeCategoria;
+    //            }// end of if cycle
+    //
+    //            mailService.send("Ciclo " + tag, testo);
+    //        }// end of if cycle
+    //    } // fine del metodo
 
 
     public void sendMail(LocalDateTime start, String tag) {
@@ -3059,14 +3055,14 @@ public class LibBio {
             }// end of for cycle
         }// end of if cycle
 
-//        if (mappaTmp != null) {
-//            mappaTmp = LibArray.ordinaMappaAccentiSensibile(mappaTmp);
-//            for (Map.Entry<String, Object> elementoDellaMappa : mappaTmp.entrySet()) {
-//                chiave = elementoDellaMappa.getKey();
-//                valore = (int) elementoDellaMappa.getValue();
-//                mappa.put(chiave, valore);
-//            }// end of for cycle
-//        }// end of if cycle
+        //        if (mappaTmp != null) {
+        //            mappaTmp = LibArray.ordinaMappaAccentiSensibile(mappaTmp);
+        //            for (Map.Entry<String, Object> elementoDellaMappa : mappaTmp.entrySet()) {
+        //                chiave = elementoDellaMappa.getKey();
+        //                valore = (int) elementoDellaMappa.getValue();
+        //                mappa.put(chiave, valore);
+        //            }// end of for cycle
+        //        }// end of if cycle
 
         return mappa;
     }// end of method

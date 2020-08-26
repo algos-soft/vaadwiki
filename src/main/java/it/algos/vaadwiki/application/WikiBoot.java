@@ -64,9 +64,9 @@ public class WikiBoot extends ABoot {
 
     private final static String PROJECT_NAME = "vaadwiki";
 
-    private final static double PROJECT_VERSION = 26;
+    private final static double PROJECT_VERSION = 27;
 
-    private final static LocalDate VERSION_DATE = LocalDate.of(2020, 8, 14);
+    private final static LocalDate VERSION_DATE = LocalDate.of(2020, 8, 26);
 
     private final static String PATH_LOGO = "frontend/images/Emblem-wiki-blue.svg.png";
 

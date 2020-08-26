@@ -301,7 +301,11 @@ public class ElaboraService extends ABioService {
         //--Elabora valori validi dei parametri significativi
         //--Inserisce i valori nella entity Bio
         if (mappaGrezza != null) {
-            setValue(bio, mappaGrezza, registra);
+            try {
+                setValue(bio, mappaGrezza, registra);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "esegue");
+            }
         }// end of if cycle
 
         //--Elabora i link alle tavole collegate
