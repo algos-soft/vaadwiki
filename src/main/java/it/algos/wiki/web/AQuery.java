@@ -173,7 +173,7 @@ public abstract class AQuery {
             downlodPreliminaryCookies(urlConn);
             elaboraPreliminayResponse(urlResponse);
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+//            logger.error(unErrore.toString());
         }// fine del blocco try-catch
     } // fine del metodo
 
@@ -226,10 +226,10 @@ public abstract class AQuery {
             urlResponse = sendRequest(urlConn);
             downlodSecondaryCookies(urlConn);
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString()+". Probabili problemi di connessione");
+//            logger.error(unErrore.toString()+". Probabili problemi di connessione");
             if (unErrore instanceof IOException) {
                 try { // prova ad eseguire il codice
-                    log.info("Riprovo. Se non esce subito un altro errore, vuol dire che questa volta il collegamento ha funzionato");
+//                    logger.info("Riprovo. Se non esce subito un altro errore, vuol dire che questa volta il collegamento ha funzionato");
                     urlDomain = fixUrlDomain(urlDomainGrezzo);
                     urlConn = creaGetConnection(urlDomain);
                     uploadCookies(urlConn);
@@ -237,7 +237,7 @@ public abstract class AQuery {
                     urlResponse = sendRequest(urlConn);
                     downlodSecondaryCookies(urlConn);
                 } catch (Exception unErrore2) { // intercetta l'errore
-                    log.error("Questo url non ha funzionato: " + urlDomainGrezzo);
+//                    logger.error("Questo url non ha funzionato: " + urlDomainGrezzo);
                 }// fine del blocco try-catch
             }// end of if cycle
         }// fine del blocco try-catch

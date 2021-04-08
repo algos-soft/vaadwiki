@@ -130,13 +130,13 @@ public class AVaadinService {
                         if (roleType == null) {
                             roleType = service.getRoleType(utente);
                         }// end of if cycle
-                        login = (ALogin) appContext.getBean(FlowVar.loginClazz, utente, utente.getCompany(), roleType);
+                        login = (ALogin) appContext.getBean(FlowVar.loginClazz, utente, utente.company, roleType);
                         context = appContext.getBean(AContext.class, login);
                         context.setUsaLogin(true);
                         context.setLoginValido(true);
                     }// end of if cycle
                 } catch (Exception unErrore) { // intercetta l'errore
-                    log.error(unErrore.toString());
+//                    logger.error(unErrore.toString());
                 }// fine del blocco try-catch
             } else {
                 login = (ALogin) appContext.getBean(FlowVar.loginClazz, EARoleType.developer);
@@ -174,7 +174,7 @@ public class AVaadinService {
                 uniqueUsername = springUser.getUsername();
             }// end of if cycle
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+//            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return uniqueUsername;

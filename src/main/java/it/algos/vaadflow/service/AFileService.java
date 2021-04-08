@@ -931,7 +931,7 @@ public class AFileService extends AbstractService {
             try { // prova ad eseguire il codice
                 FileUtils.forceDelete(new File(destPath));
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
 
@@ -942,7 +942,7 @@ public class AFileService extends AbstractService {
                 FileUtils.copyDirectory(srcDir, destDir);
                 return true;
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if/else cycle
 
@@ -1098,14 +1098,14 @@ public class AFileService extends AbstractService {
                 fileWriter.flush();
                 status = true;
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             } finally {
                 try { // prova ad eseguire il codice
                     if (fileWriter != null) {
                         fileWriter.close();
                     }
                 } catch (Exception unErrore) { // intercetta l'errore
-                    log.error(unErrore.toString());
+                    logger.error(unErrore.toString());
                 }// fine del blocco try-catch
             }// fine del blocco try-catch-finally
         } else {
@@ -1137,7 +1137,7 @@ public class AFileService extends AbstractService {
 
             testo = text.levaCoda(testo, aCapo);
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return testo;

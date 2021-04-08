@@ -86,7 +86,7 @@ public class UpdateService extends ABioService {
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             message = "UPDATE - inizio ";
-            log.info(message);
+            logger.info(message);
         }// end of if cycle
 
         for (int k = 0; k < numCicliLetturaPagine; k++) {
@@ -97,14 +97,14 @@ public class UpdateService extends ABioService {
             if (cont >= soglia) {
                 message = "UPDATE - controllate " + text.format(pageLimit + pageLimit * k) + " pagine wiki e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
                 cont = 0;
-                log.info(message);
+                logger.info(message);
             }// end of if cycle
         }// end of for cycle
 
         message = "UPDATE - controllate " + text.format(pageLimit + pageLimit * numCicliLetturaPagine) + " pagine wiki e modificati in mongoDB.Bio " + text.format(result.getNumVociCreate()) + " elementi in " + date.deltaText(inizio);
-        log.info(message);
+        logger.info(message);
         message = "UPDATE - fine ";
-        log.info(message);
+        logger.info(message);
 
         return result;
     }// end of method

@@ -94,9 +94,9 @@ public abstract class ADataService {
 
         if (numRec == 0) {
             numRec = creaAll();
-            log.warn("Algos - Data. La collezione " + collectionName + " è stata creata: " + numRec + " schede");
+//            logger.warn("Algos - Data. La collezione " + collectionName + " è stata creata: " + numRec + " schede");
         } else {
-            log.info("Algos - Data. La collezione " + collectionName + " è già presente: " + numRec + " schede");
+//            logger.info("Algos - Data. La collezione " + collectionName + " è già presente: " + numRec + " schede");
         }// end of if/else cycle
     }// end of method
 

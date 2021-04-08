@@ -347,7 +347,7 @@ public class AFieldService extends AbstractService {
                             ((AComboBox) field).setItems(items);
                         }// end of if cycle
                     } catch (Exception unErrore) { // intercetta l'errore
-                        log.error(unErrore.toString());
+                        logger.error(unErrore.toString());
                     }// fine del blocco try-catch
                 }// end of if cycle
                 field.setReadOnly(false);

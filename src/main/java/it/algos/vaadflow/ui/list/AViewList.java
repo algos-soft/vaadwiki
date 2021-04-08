@@ -356,7 +356,7 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
      * Navigazione verso un altra pagina
      */
     protected void routeVerso(String location, AEntity entity) {
-        routeVerso(location, entity.getId());
+        routeVerso(location, entity.id);
     }// end of method
 
 

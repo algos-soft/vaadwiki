@@ -59,7 +59,7 @@ public class ViewAttivita extends ViewListe {
      */
     @Override
     protected void addInfoTitolo() {
-        this.add("Lista biografie di " + text.format(numVoci) + " persone con attività " + attivita.getPlurale() + A_CAPO);
+        this.add("Lista biografie di " + text.format(numVoci) + " persone con attività " + attivita.plurale + A_CAPO);
         super.addInfoTitolo();
     }// end of method
 

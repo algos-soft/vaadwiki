@@ -296,7 +296,7 @@ public class WikiBoot extends ABoot {
                     server = inetAddress.getHostName();
                 }// end of if cycle
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+//                logger.error(unErrore.toString());
             }// fine del blocco try-catch
 
             if (text.isValid(server) && server.equals(tag)) {

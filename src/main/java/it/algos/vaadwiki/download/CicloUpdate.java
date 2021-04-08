@@ -73,8 +73,8 @@ public class CicloUpdate extends ABioService {
         String message = "";
         ArrayList<Long> vociBio;
 
-        log.info("");
-        log.info("Inizio task di update: " + date.getTime(result.getInizio()));
+        logger.info("");
+        logger.info("Inizio task di update: " + date.getTime(result.getInizio()));
 
         //--download del modulo attività
         attivitaService.download();
@@ -93,12 +93,12 @@ public class CicloUpdate extends ABioService {
         result.setVociDaCreare(appContext.getBean(AQueryCatPaginePageid.class, result.getNomeCategoria()).listaPageid);
         if (result.getNumVociCategoria() == 0) {
             message = "Numero errato di pagine sul server";
-            log.warn(message);
+            logger.warn(message);
             logger.warn("Download - " + message);
         }// end of if cycle
         if (result.getVociDaCreare() == null) {
             message = "Non riesco a leggere le pagine dal server. Forse non sono loggato come bot";
-            log.warn(message);
+            logger.warn(message);
             logger.warn("Download - " + message);
             return result;
         }// end of if cycle
@@ -109,7 +109,7 @@ public class CicloUpdate extends ABioService {
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
         result.setVociDaCancellare(array.delta(vociBio, result.getVociDaCreare()));
-        log.info("Ci sono " + text.format(result.getVociDaCancellare().size()) + " biografie da cancellare");
+        logger.info("Ci sono " + text.format(result.getVociDaCancellare().size()) + " biografie da cancellare");
         logger.debug("Calcolate " + text.format(result.getVociDaCancellare().size()) + " vociDaCancellare in " + date.deltaText(inizio));
 
         //--Cancella dal mongoDB tutte le entities non più presenti nella categoria
@@ -119,7 +119,7 @@ public class CicloUpdate extends ABioService {
         inizio = System.currentTimeMillis();
         result.setVociDaCreare(array.delta(result.getVociDaCreare(), vociBio));
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Ci sono " + text.format(result.getVociDaCreare().size()) + " biografie da aggiungere");
+            logger.info("Ci sono " + text.format(result.getVociDaCreare().size()) + " biografie da aggiungere");
             logger.debug("Calcolate " + text.format(result.getVociDaCreare().size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
         }// end of if cycle
 
@@ -134,9 +134,9 @@ public class CicloUpdate extends ABioService {
         }// end of if cycle
         logger.crea(EALogType.update, "Update delle biografie", inizio);
 
-        log.info("Update - Ciclo totale attività, nazionalità, professione, categoria, nuove pagine in " + date.deltaText(result.getInizioLong()));
-        log.info("Fine task di update: " + date.getTime(LocalDateTime.now()));
-        log.info("");
+        logger.info("Update - Ciclo totale attività, nazionalità, professione, categoria, nuove pagine in " + date.deltaText(result.getInizioLong()));
+        logger.info("Fine task di update: " + date.getTime(LocalDateTime.now()));
+        logger.info("");
 
         return result;
     }// end of method

@@ -145,12 +145,11 @@ public class ProvinciaService extends AService {
     public Provincia newEntity(int ordine, Regione regione, String sigla, String nome) {
         Provincia entity = null;
 
-        entity = Provincia.builderProvincia()
-                .ordine(ordine > 0 ? ordine : getNewOrdine())
-                .sigla(text.isValid(sigla) ? sigla : null)
-                .regione(regione)
-                .nome(text.isValid(nome) ? nome : null)
-                .build();
+        entity = new Provincia();
+        entity.ordine = ordine > 0 ? ordine : getNewOrdine();
+        entity.sigla = text.isValid(sigla) ? sigla : null;
+        entity.regione = regione;
+        entity.nome = text.isValid(nome) ? nome : null;
 
         return (Provincia) creaIdKeySpecifica(entity);
     }// end of method
@@ -185,7 +184,7 @@ public class ProvinciaService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Provincia) entityBean).getSigla();
+        return ((Provincia) entityBean).sigla;
     }// end of method
 
 
@@ -240,7 +239,7 @@ public class ProvinciaService extends AService {
 
 
     public List<Provincia> findItems(AEntity entityBean) {
-        return findAllByRegione((Regione)entityBean);
+        return findAllByRegione((Regione) entityBean);
     }// end of method
 
 }// end of class

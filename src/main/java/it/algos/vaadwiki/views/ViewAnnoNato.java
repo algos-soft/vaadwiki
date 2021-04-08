@@ -59,7 +59,7 @@ public class ViewAnnoNato extends ViewListe {
      */
     @Override
     protected void addInfoTitolo() {
-        this.add("Lista biografie di " + text.format(numVoci) + " persone nate nel " + anno.getTitolo());
+        this.add("Lista biografie di " + text.format(numVoci) + " persone nate nel " + anno.titolo);
         super.addInfoTitolo();
     }// end of method
 

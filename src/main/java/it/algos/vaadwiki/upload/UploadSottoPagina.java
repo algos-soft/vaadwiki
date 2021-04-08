@@ -167,7 +167,7 @@ public class UploadSottoPagina extends Upload {
 
             //--nelle sottopagine non eseguo il controllo e le registro sempre (per adesso)
             appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina);
-            log.info("Registrata la pagina: " + titoloPagina);
+            logger.info("Registrata la pagina: " + titoloPagina);
         }// fine del blocco if
 
     }// fine del metodo
@@ -192,12 +192,12 @@ public class UploadSottoPagina extends Upload {
                 uploadValido = numVoci > pref.getInt(TAGLIO_SOTTOPAGINA_ATT_NAZ);
                 break;
             default:
-                log.warn("Switch - caso non definito");
+                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 
         if (!uploadValido) {
-            log.warn("La sottopagina " + titoloPagina + " non contiene un numero sufficiente di voci biografiche e non è stata creata");
+            logger.warn("La sottopagina " + titoloPagina + " non contiene un numero sufficiente di voci biografiche e non è stata creata");
         }// end of if cycle
 
         return uploadValido;

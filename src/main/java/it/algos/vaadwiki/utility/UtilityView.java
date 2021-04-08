@@ -16,6 +16,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow.annotation.AIView;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
+import it.algos.vaadflow.modules.log.LogService;
 import it.algos.vaadflow.modules.role.EARoleType;
 import it.algos.vaadflow.service.ADateService;
 import it.algos.vaadflow.service.ATextService;
@@ -150,6 +151,8 @@ public class UtilityView extends VerticalLayout {
 
     @Autowired
     public UploadService uploadService;
+    @Autowired
+    public LogService logger;
 
     @Autowired
     protected ApplicationContext appContext;
@@ -377,22 +380,22 @@ public class UtilityView extends VerticalLayout {
      */
     public void esegueTestDidascalieConsole() {
         String ottenuto = "";
-        log.info("");
-        log.info("Algos");
-        log.info("");
-        log.info("Tipi possibili di discalie");
-        log.info("Esempio '" + wikiTitle + "'");
-        log.info("");
+        logger.info("");
+        logger.info("Algos");
+        logger.info("");
+        logger.info("Tipi possibili di discalie");
+        logger.info("Esempio '" + wikiTitle + "'");
+        logger.info("");
         Bio bio = api.leggeBio(wikiTitle);
 
         for (EADidascalia type : EADidascalia.values()) {
             ottenuto = didascaliaService.getBaseCon(bio, type);
             if (text.isValid(ottenuto)) {
-                log.info(type.name() + ": " + ottenuto);
+                logger.info(type.name() + ": " + ottenuto);
             }// end of if cycle
         }// end of for cycle
 
-        log.info("");
+        logger.info("");
     }// end of method
 
 
@@ -454,57 +457,57 @@ public class UtilityView extends VerticalLayout {
         ArrayList<String> titoliVociCategoria;
 
 
-        log.info("");
-        log.info("Algos");
-        log.info("Integration test per alcune query");
-        log.info("");
+        logger.info("");
+        logger.info("Algos");
+        logger.info("Integration test per alcune query");
+        logger.info("");
 
         urlResponse = appContext.getBean(AQueryHTTP.class).urlRequest(urlDomain);
-        log.info("AQueryHTTP: " + urlDomain + " - Response: " + (text.isEmpty(urlResponse) ? "OK, response nulla" : "Qualcosa non ha funzionato"));
+        logger.info("AQueryHTTP: " + urlDomain + " - Response: " + (text.isEmpty(urlResponse) ? "OK, response nulla" : "Qualcosa non ha funzionato"));
 
         urlDomain = "quattroprovince.it";
         urlResponse = appContext.getBean(AQueryHTTP.class).urlRequest(urlDomain);
-        log.info("AQueryHTTP: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri" : "No buono"));
+        logger.info("AQueryHTTP: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri" : "No buono"));
 
         urlDomain = "quattroprovince.it";
         urlResponse = appContext.getBean(AQueryHTTP.class, urlDomain).urlResponse();
-        log.info("AQueryHTTP: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con urlDomain" : "No buono"));
+        logger.info("AQueryHTTP: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con urlDomain" : "No buono"));
 
         urlDomain = "eff.org/https-everywhere";
         urlResponse = appContext.getBean(AQueryHTTPS.class).urlRequest(urlDomain);
-        log.info("AQueryHTTPS: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri" : "No buono"));
+        logger.info("AQueryHTTPS: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri" : "No buono"));
 
         urlDomain = "eff.org/https-everywhere";
         urlResponse = appContext.getBean(AQueryHTTPS.class, urlDomain).urlResponse();
-        log.info("AQueryHTTPS: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con urlDomain" : "No buono"));
+        logger.info("AQueryHTTPS: " + urlDomain + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con urlDomain" : "No buono"));
 
         wikiTitle = "Sarmato";
         urlResponse = appContext.getBean(AQueryRaw.class).urlRequest(wikiTitle);
-        log.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
+        logger.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiTitle = "Sarmato";
         urlResponse = appContext.getBean(AQueryRaw.class, wikiTitle).urlResponse();
-        log.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
+        logger.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiTitle = "Neal Ascherson";
         urlResponse = appContext.getBean(AQueryRaw.class).urlRequest(wikiTitle);
-        log.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
+        logger.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiTitle = "Neal Ascherson";
         urlResponse = appContext.getBean(AQueryRaw.class, wikiTitle).urlResponse();
-        log.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
+        logger.info("AQueryRaw: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiTitle = "Neal Ascherson";
         queryPage = (AQueryPage) appContext.getBean("AQueryPage");
         if (queryPage != null) {
             page = queryPage.pageResponse(wikiTitle);
             if (page != null && page.isValida() && text.isValid(page.getText())) {
-                log.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore senza parametri - Costruita l'istanza AQueryPage con la Page");
+                logger.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore senza parametri - Costruita l'istanza AQueryPage con la Page");
             } else {
-                log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
+                logger.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
             }// end of if/else cycle
         } else {
-            log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la entity AQueryPage");
+            logger.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la entity AQueryPage");
         }// end of if/else cycle
 
         wikiTitle = "Neal Ascherson";
@@ -512,41 +515,41 @@ public class UtilityView extends VerticalLayout {
         if (queryPage != null) {
             page = queryPage.pageResponse();
             if (page != null && page.isValida() && text.isValid(page.getText())) {
-                log.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore con wikiTitle - Contenuto: " + page.getText().substring(0, 30));
+                logger.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore con wikiTitle - Contenuto: " + page.getText().substring(0, 30));
             } else {
-                log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
+                logger.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
             }// end of if/else cycle
         } else {
-            log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la entity AQueryPage");
+            logger.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la entity AQueryPage");
         }// end of if/else cycle
 
         wikiTitle = "Neal Ascherson";
         page = ((AQueryPage) appContext.getBean("AQueryPage", wikiTitle)).pageResponse();
         if (page != null && page.isValida() && text.isValid(page.getText())) {
-            log.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore con wikiTitle - Contenuto: " + page.getText().substring(0, 30));
+            logger.info("AQueryPage: " + wikiTitle + " - Response: " + "OK, costruttore con wikiTitle - Contenuto: " + page.getText().substring(0, 30));
         } else {
-            log.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
+            logger.info("AQueryPage: " + wikiTitle + " - Response: " + "No buono, non ha costruito la property Page nella entity AQueryPage");
         }// end of if/else cycle
 
         wikiTitle = "Riley Cooper";
         urlResponse = ((AQueryVoce) appContext.getBean("AQueryVoce")).urlRequest(wikiTitle);
-        log.info("AQueryVoce: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
+        logger.info("AQueryVoce: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiTitle = "Riley Cooper";
         urlResponse = ((AQueryVoce) appContext.getBean("AQueryVoce", wikiTitle)).urlRequest();
-        log.info("AQueryVoce: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
+        logger.info("AQueryVoce: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiTitle = "Riley Cooper";
         urlResponse = ((AQueryBio) appContext.getBean("AQueryBio")).urlRequest(wikiTitle);
-        log.info("AQueryBio: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
+        logger.info("AQueryBio: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore senza parametri - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiTitle = "Riley Cooper";
         urlResponse = ((AQueryBio) appContext.getBean("AQueryBio", wikiTitle)).urlRequest();
-        log.info("AQueryBio: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
+        logger.info("AQueryBio: " + wikiTitle + " - Response: " + (text.isValid(urlResponse) ? "OK, costruttore con wikiTitle - " + urlResponse.substring(0, 30) : "No buono"));
 
         wikiCat = "Nati nel 1225";
         titoliVociCategoria = appContext.getBean(AQueryCatPagine.class, wikiCat).listaTitle;
-        log.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore senza parametri - " + titoliVociCategoria.size() + " pagine" : "No buono"));
+        logger.info("AQueryCat: " + wikiCat + " - Response: " + (titoliVociCategoria != null ? "OK, costruttore senza parametri - " + titoliVociCategoria.size() + " pagine" : "No buono"));
 
         wikiTitle = Upload.PAGINA_PROVA;
         appContext.getBean(AQueryWrite.class, wikiTitle, "Quarta prova di scrittura del bot: " + "Biobot").urlRequest();
@@ -598,42 +601,42 @@ public class UtilityView extends VerticalLayout {
         testo += "Pagina di servizio per il '''controllo''' delle didascalie utilizzate nelle pagine delle liste di giorni ed anni. Le didascalie sono di diversi tipi:";
         testo += A_CAPO;
 
-        if (text.isValid(bio.getGiornoNascita())) {
+        if (text.isValid(bio.giornoNascita)) {
             testo += ASTERISCO;
             testo += pagina;
 //            testo += "[[Nati il " + bio.getGiornoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoNato) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
-        if (text.isValid(bio.getAnnoNascita())) {
+        if (text.isValid(bio.annoNascita)) {
             testo += ASTERISCO;
             testo += pagina;
 //            testo += "[[Nati nel " + bio.getAnnoNato() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoNato) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
-        if (text.isValid(bio.getGiornoMorte())) {
+        if (text.isValid(bio.giornoMorte)) {
             testo += ASTERISCO;
             testo += pagina;
 //            testo += "[[Morti il " + bio.getGiornoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.giornoMorto) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
-        if (text.isValid(bio.getAnnoMorte())) {
+        if (text.isValid(bio.annoMorte)) {
             testo += ASTERISCO;
             testo += pagina;
 //            testo += "[[Morti nel " + bio.getAnnoMorto() + "]]" + " -> " + "'''" + didascalia.esegue(bio, EADidascalia.annoMorto) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
-        if (text.isValid(bio.getAnnoMorte())) {
+        if (text.isValid(bio.annoMorte)) {
             testo += ASTERISCO;
             testo += "Nelle liste di attività, nazionalità, nome e cognomi";
 //            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.standard) + "'''";
             testo += A_CAPO;
         }// end of if cycle
 
-        if (text.isValid(bio.getAnnoMorte())) {
+        if (text.isValid(bio.annoMorte)) {
             testo += ASTERISCO;
             testo += "Completa (nella biografia)";
 //            testo += " -> " + "'''" + didascalia.esegue(bio, EADidascalia.completa) + "'''";
@@ -751,7 +754,7 @@ public class UtilityView extends VerticalLayout {
         List<Bio> lista = bioSenzaSesso();
 
         for (Bio bio : lista) {
-            nome = bio.getNome();
+            nome = bio.nome;
             if (listaControllo.contains(nome)) {
                 listaFemmine.add(bio);
             }// end of if cycle
@@ -829,8 +832,8 @@ public class UtilityView extends VerticalLayout {
 
 
     public void riga(Bio bio, String genere) {
-        final String nome = bio.getNome();
-        final String wikiTitle = bio.getWikiTitle();
+        final String nome = bio.nome;
+        final String wikiTitle = bio.wikiTitle;
 
         Button buttonMongo = new Button("Mongo", new Icon(VaadinIcon.DATABASE));
         buttonMongo.getElement().setAttribute("theme", "secondary");
@@ -869,7 +872,7 @@ public class UtilityView extends VerticalLayout {
 
     public void esegueTestSesso(String wikiTitle, String genere) {
         Bio bio = bioService.findByKeyUnica(wikiTitle);
-        bio.setSesso(genere);
+        bio.sesso=genere;
         uploadService.uploadBioDebug(bio);
     }// end of method
 
@@ -877,7 +880,7 @@ public class UtilityView extends VerticalLayout {
     public void esegueFixSesso(String wikiTitle, String genere) {
         Bio bio = bioService.findByKeyUnica(wikiTitle);
         bioService.save(bio);
-        bio.setSesso(genere);
+        bio.sesso=genere;
         uploadService.uploadBio(wikiTitle);
     }// end of method
 
@@ -909,8 +912,8 @@ public class UtilityView extends VerticalLayout {
 
 
     public void riga(Bio bio) {
-        final String nome = bio.getNome();
-        final String wikiTitle = bio.getWikiTitle();
+        final String nome = bio.nome;
+        final String wikiTitle = bio.wikiTitle;
 
         Button buttonMongo = new Button("Mongo", new Icon(VaadinIcon.DATABASE));
         buttonMongo.getElement().setAttribute("theme", "secondary");

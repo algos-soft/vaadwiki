@@ -239,7 +239,7 @@ public class NomeList extends WikiList {
                     filtri.add(new AFiltro(Criteria.where("doppio").is(true)));
                     break;
                 default:
-                    log.warn("Switch - caso non definito");
+                    logger.warn("Switch - caso non definito");
                     break;
             } // end of switch statement
         }// end of if cycle
@@ -266,7 +266,7 @@ public class NomeList extends WikiList {
                 grid.setItems(items);
                 headerGridHolder.setText(getGridHeaderText());
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
 
@@ -452,7 +452,7 @@ public class NomeList extends WikiList {
                     }// end of for cycle
                     break;
                 default:
-                    log.warn("Switch - caso non definito");
+                    logger.warn("Switch - caso non definito");
                     break;
             } // end of switch statement
         }// end of if cycle

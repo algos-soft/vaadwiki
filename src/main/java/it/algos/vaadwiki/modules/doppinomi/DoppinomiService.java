@@ -112,9 +112,8 @@ public class DoppinomiService extends WikiService {
             return entity;
         }// end of if cycle
 
-        entity = Doppinomi.builderDoppinomi()
-                .code(text.isValid(code) ? code : null)
-                .build();
+        entity = new Doppinomi();
+        entity .code=text.isValid(code) ? code : null;
 
         return (Doppinomi) creaIdKeySpecifica(entity);
     }// end of method
@@ -194,7 +193,6 @@ public class DoppinomiService extends WikiService {
                 message += date.deltaText(inizio);
                 message += "), con AQueryVoce, senza login, senza cookies, urlRequest di tipo GET";
 
-                log.debug(message);
                 logger.debug(message);
             }// end of if cycle
         } else {

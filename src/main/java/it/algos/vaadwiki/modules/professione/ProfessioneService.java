@@ -158,11 +158,10 @@ public class ProfessioneService extends WikiService {
             return findByKeyUnica(singolare);
         }// end of if cycle
 
-        entity = Professione.builderProfessione()
-                .singolare(singolare.equals("") ? null : singolare)
-                .pagina(pagina.equals("") ? null : pagina)
-                .aggiunta(aggiunta)
-                .build();
+        entity = new Professione();
+        entity.singolare=singolare.equals("") ? null : singolare;
+        entity.pagina=pagina.equals("") ? null : pagina;
+        entity.aggiunta=aggiunta;
 
         return entity;
     }// end of method
@@ -185,7 +184,7 @@ public class ProfessioneService extends WikiService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Professione) entityBean).getSingolare();
+        return ((Professione) entityBean).singolare;
     }// end of method
 
 

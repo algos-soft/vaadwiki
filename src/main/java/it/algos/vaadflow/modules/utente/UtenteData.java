@@ -4,9 +4,6 @@ import it.algos.vaadflow.backend.data.ADataService;
 import it.algos.vaadflow.modules.role.EARole;
 import it.algos.vaadflow.modules.role.Role;
 import it.algos.vaadflow.modules.role.RoleService;
-import it.algos.vaadflow.modules.utente.EAUtente;
-import it.algos.vaadflow.modules.utente.Utente;
-import it.algos.vaadflow.service.AAnnotationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,7 +11,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_UTE;
@@ -87,13 +83,12 @@ public class UtenteData extends ADataService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Utente newEntity(String userName, String passwordInChiaro, Set<Role> ruoli, String mail, boolean locked) {
-        Utente entity = Utente.builderUtente()
-                .username(text.isValid(userName) ? userName : null)
-                .password(text.isValid(passwordInChiaro) ? passwordInChiaro : null)
-                .ruoli(ruoli != null ? ruoli : role.getUserRole())
-                .mail(text.isValid(mail) ? mail : null)
-                .enabled(locked)
-                .build();
+        Utente entity = new Utente();
+        entity.username = text.isValid(userName) ? userName : null;
+        entity.password = text.isValid(passwordInChiaro) ? passwordInChiaro : null;
+        entity.ruoli = ruoli != null ? ruoli : role.getUserRole();
+        entity.mail = text.isValid(mail) ? mail : null;
+        entity.enabled = locked;
         entity.id = userName;
 
         return entity;

@@ -112,7 +112,7 @@ public abstract class Read {
             urlConn = urlGetConnection.esegue(indirizzoWebCompleto);
             risposta = urlRequest.esegue(urlConn);
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+//            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return risposta;

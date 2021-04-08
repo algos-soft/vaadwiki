@@ -177,10 +177,9 @@ public class CognomeService extends NomeCognomeService {
             return findByKeyUnica(cognome);
         }// end of if cycle
 
-        entity = Cognome.builderCognome()
-                .cognome(text.isValid(cognome) ? cognome : null)
-                .voci(voci != 0 ? voci : this.getNewOrdine())
-                .build();
+        entity = new Cognome();
+        entity.cognome=text.isValid(cognome) ? cognome : null;
+        entity.voci=voci != 0 ? voci : this.getNewOrdine();
 
         return (Cognome) creaIdKeySpecifica(entity);
     }// end of method
@@ -218,7 +217,7 @@ public class CognomeService extends NomeCognomeService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Cognome) entityBean).getCognome();
+        return ((Cognome) entityBean).cognome;
     }// end of method
 
 
@@ -250,7 +249,7 @@ public class CognomeService extends NomeCognomeService {
         long inizio = System.currentTimeMillis();
         int tot = 0;
         int cont = 0;
-        log.info("Creazione completa cognomi delle biografie. Circa 4 minuti.");
+        logger.info("Creazione completa cognomi delle biografie. Circa 4 minuti.");
 
         //--Cancella tutte le entities della collezione
         deleteAll();
@@ -266,7 +265,7 @@ public class CognomeService extends NomeCognomeService {
         }// end of for cycle
 
         super.setLastElabora(EATempo.minuti, inizio);
-        log.info("Creazione di " + text.format(cont) + " cognomi su un totale di " + text.format(tot) + " cognomi distinti. Tempo impiegato: " + date.deltaText(inizio));
+        logger.info("Creazione di " + text.format(cont) + " cognomi su un totale di " + text.format(tot) + " cognomi distinti. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 
@@ -276,14 +275,14 @@ public class CognomeService extends NomeCognomeService {
     @Deprecated
     public void update() {
         long inizio = System.currentTimeMillis();
-        log.info("Elaborazione cognomi delle biografie. Circa 1 minuto.");
+        logger.info("Elaborazione cognomi delle biografie. Circa 1 minuto.");
 
         for (Cognome cognome : findAll()) {
             saveNumVoci(cognome);
         }// end of for cycle
 
         pref.saveValue(LAST_ELABORA_COGNOME, LocalDateTime.now());
-        log.info("Elaborazione completa dei cognomi. Tempo impiegato: " + date.deltaText(inizio));
+        logger.info("Elaborazione completa dei cognomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 

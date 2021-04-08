@@ -125,7 +125,7 @@ public class PersonDialog extends AViewDialog<Person> {
      */
     protected void writeSpecificFields() {
         Person persona = super.getCurrentItem();
-        persona.setIndirizzo(indirizzoTemporaneo);
+        persona.indirizzo=indirizzoTemporaneo;
 //        service.save(persona);
     }// end of method
 
@@ -155,7 +155,7 @@ public class PersonDialog extends AViewDialog<Person> {
         Person persona = getCurrentItem();
 
         if (persona != null) {
-            indirizzo = persona.getIndirizzo();
+            indirizzo = persona.indirizzo;
         }// end of if cycle
 
         return indirizzo;

@@ -145,11 +145,10 @@ public class ComuneService extends AService {
     public Comune newEntity(Regione regione, Provincia provincia, String nome) {
         Comune entity = null;
 
-        entity = Comune.builderComune()
-                .regione(regione)
-                .provincia(provincia)
-                .nome(text.isValid(nome) ? nome : null)
-                .build();
+        entity = new Comune();
+        entity.regione = regione;
+        entity.provincia = provincia;
+        entity.nome = text.isValid(nome) ? nome : null;
 
         return (Comune) creaIdKeySpecifica(entity);
     }// end of method
@@ -172,7 +171,7 @@ public class ComuneService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Comune) entityBean).getNome();
+        return ((Comune) entityBean).nome;
     }// end of method
 
 
@@ -215,7 +214,7 @@ public class ComuneService extends AService {
 
         //--recupera una lista di tutte le provincie dal server di Wikipedia
         importService = appContext.getBean(ImportWiki.class);
-//        listaWrap = importService.comuni();
+        //        listaWrap = importService.comuni();
 
         for (EARegione eaRegione : EARegione.values()) {
             listaWrap = importService.singolaRegione(eaRegione);

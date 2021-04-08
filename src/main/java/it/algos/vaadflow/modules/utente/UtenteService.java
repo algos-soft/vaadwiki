@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 
 import static it.algos.vaadflow.application.FlowCost.TAG_UTE;
@@ -75,12 +74,11 @@ public class UtenteService extends AService {
      */
     private UtenteRepository repository;
 
-
     /**
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
-//    @Autowired
-//    private SecurityConfiguration securityConfiguration;
+    //    @Autowired
+    //    private SecurityConfiguration securityConfiguration;
 
 
     /**
@@ -211,13 +209,12 @@ public class UtenteService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Utente newEntity(Company company, String userName, String passwordInChiaro, Set<Role> ruoli, String mail, boolean enabled) {
-        Utente entity = Utente.builderUtente()
-                .username(text.isValid(userName) ? userName : null)
-                .password(text.isValid(passwordInChiaro) ? passwordInChiaro : null)
-                .ruoli(ruoli != null ? ruoli : roleService.getUserRole())
-                .mail(text.isValid(mail) ? mail : null)
-                .enabled(enabled)
-                .build();
+        Utente entity = new Utente();
+        entity.username = text.isValid(userName) ? userName : null;
+        entity.password = text.isValid(passwordInChiaro) ? passwordInChiaro : null;
+        entity.ruoli = ruoli != null ? ruoli : roleService.getUserRole();
+        entity.mail = text.isValid(mail) ? mail : null;
+        entity.enabled = enabled;
         entity.company = company;
 
         return (Utente) super.addCompanySeManca(entity);
@@ -229,7 +226,7 @@ public class UtenteService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Utente) entityBean).getUsername();
+        return ((Utente) entityBean).username;
     }// end of method
 
 
@@ -246,13 +243,13 @@ public class UtenteService extends AService {
     public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
         Utente entity = (Utente) super.beforeSave(entityBean, operation);
 
-        if (text.isEmpty(entity.getUsername())) {
+        if (text.isEmpty(entity.username)) {
             entity.id = FlowCost.STOP_SAVE;
-            log.error("userName è vuoto in UtenteService.beforeSave()");
+            logger.error("userName è vuoto in UtenteService.beforeSave()");
         }// end of if cycle
 
-        if (text.isEmpty(entity.getPassword())) {
-            entity.password = entity.getUsername() + SUFFIX;
+        if (text.isEmpty(entity.password)) {
+            entity.password = entity.username + SUFFIX;
         }// end of if cycle
 
         if (entity.ruoli == null) {
@@ -367,13 +364,16 @@ public class UtenteService extends AService {
         if (utente != null) {
             if (isDev(utente)) {
                 role = EARoleType.developer;
-            } else {
+            }
+            else {
                 if (isAdmin(utente)) {
                     role = EARoleType.admin;
-                } else {
+                }
+                else {
                     if (isUser(utente)) {
                         role = EARoleType.user;
-                    } else {
+                    }
+                    else {
                         role = EARoleType.guest;
                     }// end of if/else cycle
                 }// end of if/else cycle

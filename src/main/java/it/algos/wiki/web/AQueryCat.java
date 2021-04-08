@@ -191,7 +191,7 @@ public abstract class AQueryCat extends AQueryGet {
         try { // prova ad eseguire il codice
             numCicliPrevisti = (numVoci / limit) + 1;
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+//            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         do {
@@ -205,7 +205,7 @@ public abstract class AQueryCat extends AQueryGet {
             message += " (" + text.format(size) + " pagine in ";
             message += date.deltaText(inizio);
             message += "), con AQueryCat, loggato come " + wLogin.getLgusername() + ", upload cookies, urlRequest di tipo GET";
-            log.info(message);
+//            logger.info(message);
 
             message = "Download categoria: previste ";
             message += text.format(numVoci);
@@ -214,7 +214,7 @@ public abstract class AQueryCat extends AQueryGet {
             if (numVoci > size) {
                 message += " - Mancano " + (numVoci - size) + " voci";
             }// end of if cycle
-            log.info(message);
+//            logger.info(message);
 
         }// end of if cycle
 
@@ -259,7 +259,7 @@ public abstract class AQueryCat extends AQueryGet {
                 case info:
                     break;
                 default:
-                    log.warn("Switch - caso non definito");
+//                    logger.warn("Switch - caso non definito");
                     break;
             } // end of switch statement
         }// end of if cycle

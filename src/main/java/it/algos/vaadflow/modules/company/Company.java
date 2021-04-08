@@ -143,7 +143,7 @@ public class Company extends AEntity {
      */
     @Override
     public String toString() {
-        return getCode();
+        return code;
     }// end of method
 
 

@@ -85,7 +85,7 @@ public abstract class UploadAnni extends UploadCrono {
         String titolo = VUOTA;
 
         if (anno != null) {
-            titolo += anno.getTitolo();
+            titolo += anno.titolo;
         }// fine del blocco if
 
         return titolo;

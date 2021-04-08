@@ -172,7 +172,7 @@ public abstract class WizDialog extends Dialog {
         EAWiz.reset();
 
         if (FLAG_DEBUG_WIZ) {
-            WizCost.printInfo(log);
+//            WizCost.printInfo(logger);
         }// end of if cycle
 
         this.pathUserDir = System.getProperty("user.dir") + SLASH;

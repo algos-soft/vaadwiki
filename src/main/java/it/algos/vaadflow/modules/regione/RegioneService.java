@@ -3,7 +3,6 @@ package it.algos.vaadflow.modules.regione;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.importa.ImportWiki;
-import it.algos.vaadflow.modules.provincia.Provincia;
 import it.algos.vaadflow.service.AService;
 import it.algos.vaadflow.wrapper.WrapDueStringhe;
 import lombok.extern.slf4j.Slf4j;
@@ -136,11 +135,10 @@ public class RegioneService extends AService {
     public Regione newEntity(int ordine, String iso, String nome) {
         Regione entity = null;
 
-        entity = Regione.builderRegione()
-                .ordine(ordine > 0 ? ordine : getNewOrdine())
-                .iso(text.isValid(iso) ? iso : null)
-                .nome(text.isValid(nome) ? nome : null)
-                .build();
+        entity = new Regione();
+        entity.ordine = ordine > 0 ? ordine : getNewOrdine();
+        entity.iso = text.isValid(iso) ? iso : null;
+        entity.nome = text.isValid(nome) ? nome : null;
 
         return (Regione) creaIdKeySpecifica(entity);
     }// end of method
@@ -175,7 +173,7 @@ public class RegioneService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Regione) entityBean).getIso();
+        return ((Regione) entityBean).iso;
     }// end of method
 
 

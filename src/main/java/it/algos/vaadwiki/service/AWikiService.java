@@ -321,7 +321,7 @@ public class AWikiService {
             urlDomain = textBuffer.toString();
             urlDomain = text.levaCoda(urlDomain, sep);
         } else {
-            log.error("Qualcosa non ha funzionato in AWikiService.multiPages()");
+//            logger.error("Qualcosa non ha funzionato in AWikiService.multiPages()");
         }// end of if/else cycle
 
         return urlDomain;

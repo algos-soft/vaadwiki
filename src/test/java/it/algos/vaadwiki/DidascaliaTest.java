@@ -52,9 +52,8 @@ public class DidascaliaTest extends ATest {
     @InjectMocks
     public Api api;
 
-
-//    @InjectMocks
-//    public Didascalia didascalia;
+    //    @InjectMocks
+    //    public Didascalia didascalia;
 
     @InjectMocks
     public DidascaliaService didascaliaService;
@@ -134,7 +133,7 @@ public class DidascaliaTest extends ATest {
         MockitoAnnotations.initMocks(reflection);
         MockitoAnnotations.initMocks(mongoService);
         MockitoAnnotations.initMocks(text);
-//        MockitoAnnotations.initMocks(didascalia);
+        //        MockitoAnnotations.initMocks(didascalia);
         MockitoAnnotations.initMocks(giornoNato);
         MockitoAnnotations.initMocks(annoNato);
         MockitoAnnotations.initMocks(giornoMorto);
@@ -155,10 +154,10 @@ public class DidascaliaTest extends ATest {
         libBio.giorno = giorno;
         bioService.text = text;
         libBio.mongo = mongoService;
-//        mongoService.mongoOp = mongoOperations;
-//        mongoService.reflection = reflection;
-//        mongoService.text = text;
-//        didascalia.text = text;
+        //        mongoService.mongoOp = mongoOperations;
+        //        mongoService.reflection = reflection;
+        //        mongoService.text = text;
+        //        didascalia.text = text;
         giornoNato.annoService = annoService;
         giornoNato.text = text;
         annoNato.text = text;
@@ -166,12 +165,12 @@ public class DidascaliaTest extends ATest {
         annoMorto.text = text;
         standard.text = text;
         completa.text = text;
-//        didascalia.didascaliaCompleta = completa;
-//        didascalia.didascaliaGiornoNato = giornoNato;
-//        didascalia.didascaliaAnnoNato = annoNato;
-//        didascalia.didascaliaGiornoMorto = giornoMorto;
-//        didascalia.didascaliaAnnoMorto = annoMorto;
-//        didascalia.didascaliaStandard = standard;
+        //        didascalia.didascaliaCompleta = completa;
+        //        didascalia.didascaliaGiornoNato = giornoNato;
+        //        didascalia.didascaliaAnnoNato = annoNato;
+        //        didascalia.didascaliaGiornoMorto = giornoMorto;
+        //        didascalia.didascaliaAnnoMorto = annoMorto;
+        //        didascalia.didascaliaStandard = standard;
         bio = api.leggeBio(wikiTitle);
         didascaliaService.wikiTitle = wikiTitle;
         didascaliaService.pref = pref;
@@ -220,19 +219,18 @@ public class DidascaliaTest extends ATest {
         Attivita attivita = creaAttivita("attrice");
         Nazionalita nazionalita = creaNazionalita("australiana");
 
-        entity = Bio.builderBio()
-                .pageid(29999)
-                .wikiTitle(wikiTitle)
-                .nome("Sonia")
-                .cognome("Todd")
-                .sesso("F")
-                .luogoNato("Adelaide")
-                .luogoNatoLink("Adelaide (Australia)")
-                .giornoNascita(giorno)
-                .annoNascita(anno)
-                .attivita(attivita)
-                .nazionalita(nazionalita)
-                .build();
+        entity = new Bio();
+        entity.pageid = 29999;
+        entity.wikiTitle = wikiTitle;
+        entity.nome = "Sonia";
+        entity.cognome = "Todd";
+        entity.sesso = "F";
+        entity.luogoNato = "Adelaide";
+        entity.luogoNatoLink = "Adelaide (Australia)";
+        entity.giornoNascita = giorno;
+        entity.annoNascita = anno;
+        entity.attivita = attivita;
+        entity.nazionalita = nazionalita;
 
         return entity;
     }// end of method
@@ -245,14 +243,14 @@ public class DidascaliaTest extends ATest {
         System.out.println("Senza chiave");
         System.out.println("*************");
         for (EADidascalia dida : EADidascalia.values()) {
-//            ottenuto = didascalia.esegue(bio, dida, false);
+            //            ottenuto = didascalia.esegue(bio, dida, false);
             System.out.println(dida.name() + ": " + ottenuto);
         }// end of for cycle
         System.out.println("*************");
         System.out.println("Con chiave");
         System.out.println("*************");
         for (EADidascalia dida : EADidascalia.values()) {
-//            ottenuto = didascalia.esegue(bio, dida);
+            //            ottenuto = didascalia.esegue(bio, dida);
             System.out.println(dida.name() + ": " + ottenuto);
         }// end of for cycle
         System.out.println("*************");
@@ -263,7 +261,7 @@ public class DidascaliaTest extends ATest {
     /**
      * Test con uscita sul terminale di Idea
      */
-//    @Test
+    //    @Test
     public void esegueTestDidascalie() {
         System.out.println("");
         System.out.println("Algos");
@@ -276,20 +274,20 @@ public class DidascaliaTest extends ATest {
             ottenuto = didascaliaService.getBaseSenza(bio, type);
             if (text.isValid(ottenuto)) {
                 System.out.println(type.name() + ": " + ottenuto);
-            } else {
+            }
+            else {
                 System.out.println(type.name() + ": Manca");
             }// end of if/else cycle
         }// end of for cycle
         System.out.println("");
     }// end of single test
 
-
-//    /**
-//     * Pagina completa con uscita su pagina utente
-//     */
-//    @Test
-//    public void esegueTestUplod() {
-//        didascaliaService.esegue();
-//    }// end of single test
+    //    /**
+    //     * Pagina completa con uscita su pagina utente
+    //     */
+    //    @Test
+    //    public void esegueTestUplod() {
+    //        didascaliaService.esegue();
+    //    }// end of single test
 
 }// end of class

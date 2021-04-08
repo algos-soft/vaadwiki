@@ -1360,7 +1360,7 @@ public class ADateService extends AbstractService {
             try { // prova ad eseguire il codice
                 numGiorniDelta = Integer.decode(textGiorniDelta);
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
 

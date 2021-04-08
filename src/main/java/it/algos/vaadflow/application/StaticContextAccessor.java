@@ -24,7 +24,7 @@ public class StaticContextAccessor {
 
     @PostConstruct
     public void registerInstance() {
-        log.info("Algos - Crea uno StaticContext.");
+//        logger.info("Algos - Crea uno StaticContext.");
         instance = this;
     }// end of method
 

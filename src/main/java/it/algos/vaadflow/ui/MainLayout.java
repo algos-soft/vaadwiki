@@ -272,7 +272,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout, PageConf
                     break;
                 default:
                     utenteClazzList.add(viewClazz);
-                    log.warn("Switch - caso non definito");
+//                    logger.warn("Switch - caso non definito");
                     break;
             } // end of switch statement
         }// end of for cycle

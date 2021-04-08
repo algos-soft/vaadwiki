@@ -111,7 +111,7 @@ public class AMailService extends AbstractService {
             message += "Host Name:- " + inetAddress.getHostName();
             message += A_CAPO;
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         fullMessage = text.isValid(body) ? message + body : message;

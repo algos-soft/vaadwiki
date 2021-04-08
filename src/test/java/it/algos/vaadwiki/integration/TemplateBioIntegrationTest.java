@@ -368,7 +368,7 @@ public class TemplateBioIntegrationTest extends ATest {
         System.out.println("Nove. Merge tra il template del server ed i dati (eventualmente) modificati della entity");
         System.out.println("Nove. NON aggiunge altri parametri non presenti sul server e non obbligatori");
         System.out.println("*************templateOriginarioDelServer");
-        System.out.println(bio.getTmplBioServer());
+        System.out.println(bio.tmplBioServer);
         System.out.println("*************templateVirtualeInMemoriaConLePropertyDellaEntity");
         System.out.println(testoGrezzoEntity);
         System.out.println("*************templateMerged");
@@ -389,9 +389,9 @@ public class TemplateBioIntegrationTest extends ATest {
      */
     public void creaTemplateMerged2() {
         Bio bio = api.leggeBio(titoloBio2);
-        bio.setLuogoNato("Napoli"); //modificato
-        bio.setLuogoMorto("Palermo"); //aggiunto
-        bio.setAnnoMorte(annoService.findByKeyUnica("1948"));
+        bio.luogoNato="Napoli"; //modificato
+        bio.luogoMorto="Palermo"; //aggiunto
+        bio.annoMorte=annoService.findByKeyUnica("1948");
         String testoGrezzoEntity = libBio.creaTemplateBio(bio);
         String testoGrezzoMerged = libBio.mergeTemplates(bio.tmplBioServer, bio);
 
@@ -401,7 +401,7 @@ public class TemplateBioIntegrationTest extends ATest {
         System.out.println("Dieci. Merge tra il template del server ed i dati (eventualmente) modificati della entity");
         System.out.println("Dieci. NON aggiunge altri parametri non presenti sul server e non obbligatori");
         System.out.println("*************templateOriginarioDelServer");
-        System.out.println(bio.getTmplBioServer());
+        System.out.println(bio.tmplBioServer);
         System.out.println("*************propertyModificata");
         System.out.println("LuogoNascita -> Napoli (modificato)");
         System.out.println("LuogoMorte -> Palermo (aggiunto)");
@@ -426,7 +426,7 @@ public class TemplateBioIntegrationTest extends ATest {
      */
     public void creaTemplateMerged3() {
         Bio bio = api.leggeBio(titoloBio3);
-        bio.setSesso("M"); //aggiunto
+        bio.sesso="M"; //aggiunto
         String testoGrezzoEntity = libBio.creaTemplateBio(bio);
         String testoGrezzoMerged = libBio.mergeTemplates(bio.tmplBioServer, bio);
 
@@ -436,7 +436,7 @@ public class TemplateBioIntegrationTest extends ATest {
         System.out.println("Undici. Merge tra il template del server ed i dati (eventualmente) modificati della entity");
         System.out.println("Undici. NON aggiunge altri parametri non presenti sul server e non obbligatori");
         System.out.println("*************templateOriginarioDelServer");
-        System.out.println(bio.getTmplBioServer());
+        System.out.println(bio.tmplBioServer);
         System.out.println("*************propertyModificata");
         System.out.println("Sesso -> M (aggiunto)");
         System.out.println("*************templateVirtualeInMemoriaConLePropertyDellaEntity");

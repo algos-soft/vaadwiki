@@ -647,8 +647,8 @@ public class TElabora {
             this.firstCharProject = newEntityTag.substring(0, 1);
         }// end of if cycle
 
-        log.info("Conferma nome nuovo progetto: " + newProjectName);
-        log.info("Conferma directory nuovo progetto: " + projectPath);
+//        logger.info("Conferma nome nuovo progetto: " + newProjectName);
+//        logger.info("Conferma directory nuovo progetto: " + projectPath);
     }// end of method
 
 
@@ -728,7 +728,7 @@ public class TElabora {
     private void creaDirectory() {
         if (text.isValid(newPackageName)) {
             if (!file.isEsisteDirectory(entityPath)) {
-                log.warn("Non esisteva la directory " + ENTITIES_NAME + " nel progetto " + targetProjectName + " e l'ho creata");
+//                logger.warn("Non esisteva la directory " + ENTITIES_NAME + " nel progetto " + targetProjectName + " e l'ho creata");
                 file.creaDirectory(entityPath);
             }// end of if cycle
 

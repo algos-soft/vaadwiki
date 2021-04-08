@@ -86,7 +86,7 @@ public class ReadLogin extends ReadWiki {
 //            urlConn = urlLoginConnection.esegue();
 //            risposta = urlRequest.esegue(urlConn);
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+//            logger.error(unErrore.toString());
         }// fine del blocco try-catch
     } // fine del metodo
 

@@ -1,5 +1,6 @@
 package it.algos.vaadflow.service;
 
+import it.algos.vaadflow.modules.log.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -80,6 +81,13 @@ public abstract class AbstractService {
      * The class MUST be an instance of Singleton Class and is created at the time of class loading <br>
      */
     public AEnumerationService enumService;
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected LogService logger;
+
 
     @PostConstruct
     protected void postConstruct() {

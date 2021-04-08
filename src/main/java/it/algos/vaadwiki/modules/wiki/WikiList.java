@@ -545,7 +545,7 @@ public abstract class WikiList extends AGridViewList {
                 message += date.toText(durata);
                 break;
             default:
-                log.warn("Switch - caso non definito");
+                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 

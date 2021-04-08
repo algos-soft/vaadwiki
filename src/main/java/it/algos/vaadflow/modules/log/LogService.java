@@ -219,11 +219,13 @@ public class LogService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Log newEntity(Logtype type, String descrizione, long inizio) {
-        return Log.builderLog()
-                .type(type != null ? type : typeService.getEdit())
-                .descrizione(fixDesc(descrizione, inizio))
-                .evento(LocalDateTime.now())
-                .build();
+        Log log = new Log();
+
+        log.type = type != null ? type : typeService.getEdit();
+        log.descrizione = fixDesc(descrizione, inizio);
+        log.evento = LocalDateTime.now();
+
+        return log;
     }// end of method
 
 
@@ -235,8 +237,8 @@ public class LogService extends AService {
         String code = "";
         Log log = ((Log) entityBean);
 
-        code += log.getType() != null ? log.getType() : VUOTA;
-        code += log.getEvento().toString();
+        code += log.type != null ? log.type : VUOTA;
+        code += log.evento.toString();
 
         return code;
     }// end of method
@@ -256,7 +258,7 @@ public class LogService extends AService {
     public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
         Log entity = (Log) super.beforeSave(entityBean, operation);
 
-        if (entity.getType() == null || text.isEmpty(entity.descrizione)) {
+        if (entity.type == null || text.isEmpty(entity.descrizione)) {
             entity = null;
         }// end of if cycle
 
@@ -422,17 +424,16 @@ public class LogService extends AService {
         esegue(unErrore.getMessage(), EALogLivello.error, clazz, methodName);
     }// fine del metodo
 
-
-//    /**
-//     * Gestisce un log, con le modalità fissate nelle preferenze <br>
-//     *
-//     * @param descrizione della informazione da gestire
-//     * @param clazz       di provenienza della richiesta
-//     * @param methodName  di provenienza della richiesta
-//     */
-//    public void esegue(String descrizione, Class clazz, String methodName) {
-//        esegue(EALogAction.get(pref), descrizione, EALogLivello.clazz, methodName);
-//    }// fine del metodo
+    //    /**
+    //     * Gestisce un log, con le modalità fissate nelle preferenze <br>
+    //     *
+    //     * @param descrizione della informazione da gestire
+    //     * @param clazz       di provenienza della richiesta
+    //     * @param methodName  di provenienza della richiesta
+    //     */
+    //    public void esegue(String descrizione, Class clazz, String methodName) {
+    //        esegue(EALogAction.get(pref), descrizione, EALogLivello.clazz, methodName);
+    //    }// fine del metodo
 
 
     /**
@@ -470,16 +471,15 @@ public class LogService extends AService {
                 sendTerminale(logLevel, descrizione, clazz, methodName);
                 break;
             default:
-                log.warn("Switch - caso non definito");
+                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
     }// fine del metodo
 
-
-//    //--registra un avviso
-//    public void importo(String descrizione) {
-//        crea(EALogLivello.debug, logtype.getImport(), descrizione, 0);
-//    }// fine del metodo
+    //    //--registra un avviso
+    //    public void importo(String descrizione) {
+    //        crea(EALogLivello.debug, logtype.getImport(), descrizione, 0);
+    //    }// fine del metodo
 
 
     /**
@@ -544,7 +544,8 @@ public class LogService extends AService {
 
         if (logLevel == null) {
             return;
-        } else {
+        }
+        else {
             messaggio += logLevel.color + logLevel.name().toUpperCase() + RESET;
         }// end of if/else cycle
 

@@ -97,7 +97,7 @@ public class UploadNome extends Upload {
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_NOMI);
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
-        super.tagCategoria = LibWiki.setCat("Liste di persone per nome", nome.getNome());
+        super.tagCategoria = LibWiki.setCat("Liste di persone per nome", nome.nome);
         super.usaBodySottopagine = true;
     }// end of method
 

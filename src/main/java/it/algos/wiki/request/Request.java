@@ -82,7 +82,7 @@ public abstract class Request {
             try { // prova ad eseguire il codice
                 urlRequest();
             } catch (Exception unErrore) { // intercetta l'errore
-                log.info(unErrore.toString());
+//                logger.info(unErrore.toString());
                 int a=87;
             }// fine del blocco try-catch
             while (!tokenContinua.equals("")) {

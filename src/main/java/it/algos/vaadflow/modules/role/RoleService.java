@@ -115,10 +115,10 @@ public class RoleService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Role newEntity(int ordine, String code) {
-        return Role.builderRole()
-                .ordine(ordine != 0 ? ordine : getNewOrdine())
-                .code(text.isValid(code) ? code : null)
-                .build();
+        Role role = new Role();
+        role.ordine = ordine != 0 ? ordine : getNewOrdine();
+        role.code = text.isValid(code) ? code : null;
+        return role;
     }// end of method
 
 
@@ -127,7 +127,7 @@ public class RoleService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Role) entityBean).getCode();
+        return ((Role) entityBean).code;
     }// end of method
 
 
@@ -163,17 +163,17 @@ public class RoleService extends AService {
         return repository.findByCode(code);
     }// end of method
 
-//    /**
-//     * Returns all instances of the type <br>
-//     * La Entity è EACompanyRequired.nonUsata. Non usa Company. <br>
-//     * Lista ordinata <br>
-//     *
-//     * @return lista ordinata di tutte le entities
-//     */
-//    @Override
-//    public List<Role> findAll() {
-//        return repository.findAllByOrderByOrdineAsc();
-//    }// end of method
+    //    /**
+    //     * Returns all instances of the type <br>
+    //     * La Entity è EACompanyRequired.nonUsata. Non usa Company. <br>
+    //     * Lista ordinata <br>
+    //     *
+    //     * @return lista ordinata di tutte le entities
+    //     */
+    //    @Override
+    //    public List<Role> findAll() {
+    //        return repository.findAllByOrderByOrdineAsc();
+    //    }// end of method
 
 
     /**
@@ -310,7 +310,7 @@ public class RoleService extends AService {
                 break;
             default:
                 gruppo = getAllGuestRoles();
-                log.warn("Switch - caso non definito");
+                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 

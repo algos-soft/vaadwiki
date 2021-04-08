@@ -163,7 +163,7 @@ public class ViewDidascalie extends ALayoutViewList {
         String message = "";
 
         if (bioDidascalia != null) {
-            giornoNato = bioDidascalia.getGiornoNascita().titolo;
+            giornoNato = bioDidascalia.giornoNascita.titolo;
             if (text.isValid(giornoNato)) {
                 didascalia = didascaliaService.getGiornoNatoCon(bioDidascalia);
                 message = "Nati il " + giornoNato + " -> " + didascalia;
@@ -182,7 +182,7 @@ public class ViewDidascalie extends ALayoutViewList {
         String message = "";
 
         if (bioDidascalia != null) {
-            giornoMorto = bioDidascalia.getGiornoMorte()!=null?bioDidascalia.getGiornoMorte().titolo:"";
+            giornoMorto = bioDidascalia.giornoMorte!=null?bioDidascalia.giornoMorte.titolo:"";
             if (text.isValid(giornoMorto)) {
                 didascalia = didascaliaService.getGiornoMortoCon(bioDidascalia);
                 message = "Morti il " + giornoMorto + " -> " + didascalia;
@@ -201,7 +201,7 @@ public class ViewDidascalie extends ALayoutViewList {
         String message = "";
 
         if (bioDidascalia != null) {
-            annoNato = bioDidascalia.getAnnoNascita().titolo;
+            annoNato = bioDidascalia.annoNascita.titolo;
             if (text.isValid(annoNato)) {
                 didascalia = didascaliaService.getAnnoNatoCon(bioDidascalia);
                 message = "Nati nel " + annoNato + " -> " + didascalia;
@@ -220,7 +220,7 @@ public class ViewDidascalie extends ALayoutViewList {
         String message = "";
 
         if (bioDidascalia != null) {
-            annoMorto = bioDidascalia.getAnnoMorte()!=null?bioDidascalia.getAnnoMorte().titolo:"";
+            annoMorto = bioDidascalia.annoMorte!=null?bioDidascalia.annoMorte.titolo:"";
             if (text.isValid(annoMorto)) {
                 didascalia = didascaliaService.getAnnoMortoCon(bioDidascalia);
                 message = "Morti nel " + annoMorto + " -> " + didascalia;

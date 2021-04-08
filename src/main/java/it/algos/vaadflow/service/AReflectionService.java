@@ -129,7 +129,7 @@ public class AReflectionService extends AbstractService {
                 field.set(entityBean, value);
                 status = true;
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
 
@@ -297,7 +297,7 @@ public class AReflectionService extends AbstractService {
                     }// end of if cycle
                 }// end of for cycle
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
             clazz = clazz.getSuperclass();
         }// end of while cycle
@@ -326,7 +326,7 @@ public class AReflectionService extends AbstractService {
                 listaFields.add(field);
             }// end of for cycle
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return listaFields;
@@ -358,7 +358,7 @@ public class AReflectionService extends AbstractService {
                     }// end of if cycle
                 }// end of for cycle
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
             clazz = clazz.getSuperclass();
         }// end of while cycle
@@ -392,7 +392,7 @@ public class AReflectionService extends AbstractService {
                     }// end of if cycle
                 }// end of for cycle
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
             clazz = clazz.getSuperclass();
         }// end of while cycle
@@ -426,7 +426,7 @@ public class AReflectionService extends AbstractService {
                     }// end of if cycle
                 }// end of for cycle
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
             clazz = clazz.getSuperclass();
         }// end of while cycle
@@ -469,7 +469,7 @@ public class AReflectionService extends AbstractService {
                     }// end of if/else cycle
                 }// end of for cycle
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
             clazz = clazz.getSuperclass();
         }// end of while cycle

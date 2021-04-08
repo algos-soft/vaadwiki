@@ -157,7 +157,7 @@ public class AMongoService extends AbstractService {
      * @return entity
      */
     public AEntity findByEntity(Class<? extends AEntity> clazz, AEntity entityBean) {
-        return findById(clazz, entityBean.getId());
+        return findById(clazz, entityBean.id);
     }// end of method
 
 
@@ -212,7 +212,7 @@ public class AMongoService extends AbstractService {
         Query query = new Query();
 
         if (reflection.isNotEsiste(clazz, property)) {
-            log.error("Algos - Manca la property " + property + " nella classe " + clazz.getSimpleName());
+            logger.error("Algos - Manca la property " + property + " nella classe " + clazz.getSimpleName());
             return null;
         }// end of if cycle
 
@@ -391,7 +391,7 @@ public class AMongoService extends AbstractService {
                 mongoOp.insert(item, collectionName);
                 status = true;
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
 
@@ -413,7 +413,7 @@ public class AMongoService extends AbstractService {
             mongoOp.insert(item, collectionName);
             status = true;
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return status;
@@ -466,7 +466,7 @@ public class AMongoService extends AbstractService {
             insert(listaEntities, clazz);
             status = true;
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return status;
@@ -500,7 +500,7 @@ public class AMongoService extends AbstractService {
             if (entity != null) {
                 listaId.add(entity.id);
             } else {
-                log.error("Algos - Manca una entity in AMongoService.delete()");
+                logger.error("Algos - Manca una entity in AMongoService.delete()");
             }// end of if/else cycle
         }// end of for cycle
 
@@ -655,12 +655,12 @@ public class AMongoService extends AbstractService {
         value = text.format(numBytes);
 
         if (numBytes == AMongoService.STANDARD_MONGO_MAX_BYTES) {
-            log.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore standard iniziale settato da mongoDB: " + value);
+            logger.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore standard iniziale settato da mongoDB: " + value);
         } else {
             if (numBytes == AMongoService.EXPECTED_ALGOS_MAX_BYTES) {
-                log.info("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore richiesto da Algos: " + value);
+                logger.info("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore richiesto da Algos: " + value);
             } else {
-                log.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata a cazzo: " + value);
+                logger.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata a cazzo: " + value);
             }// end of if/else cycle
         }// end of if/else cycle
 
@@ -747,7 +747,7 @@ public class AMongoService extends AbstractService {
                     ordine = (Integer) value;
                 }// end of if cycle
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
 

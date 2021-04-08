@@ -164,16 +164,16 @@ public abstract class Didascalia {
      * Recupera dal record di biografia i valori anagrafici
      */
     private void recuperaDatiAnagrafici(Bio bio) {
-        if (bio.getWikiTitle() != null) {
-            this.wikiTitle = bio.getWikiTitle();
+        if (bio.wikiTitle != null) {
+            this.wikiTitle = bio.wikiTitle;
         }// fine del blocco if
 
-        if (bio.getNome() != null) {
-            this.nome = bio.getNome();
+        if (bio.nome != null) {
+            this.nome = bio.nome;
         }// fine del blocco if
 
-        if (bio.getCognome() != null) {
-            this.cognome = bio.getCognome();
+        if (bio.cognome != null) {
+            this.cognome = bio.cognome;
         }// fine del blocco if
     }// end of method
 
@@ -182,20 +182,20 @@ public abstract class Didascalia {
      * Recupera dal record di biografia i valori cronografici
      */
     private void recuperaDatiCrono(Bio bio) {
-        if (bio.getGiornoNascita() != null) {
-            this.giornoNato = bio.getGiornoNascita().titolo;
+        if (bio.giornoNascita != null) {
+            this.giornoNato = bio.giornoNascita.titolo;
         }// fine del blocco if
 
-        if (bio.getGiornoMorte() != null) {
-            this.giornoMorto = bio.getGiornoMorte().titolo;
+        if (bio.giornoMorte != null) {
+            this.giornoMorto = bio.giornoMorte.titolo;
         }// fine del blocco if
 
-        if (bio.getAnnoNascita() != null) {
-            this.annoNato = bio.getAnnoNascita().titolo;
+        if (bio.annoNascita != null) {
+            this.annoNato = bio.annoNascita.titolo;
         }// fine del blocco if
 
-        if (bio.getAnnoMorte() != null) {
-            this.annoMorto = bio.getAnnoMorte().titolo;
+        if (bio.annoMorte != null) {
+            this.annoMorto = bio.annoMorte.titolo;
         }// fine del blocco if
     }// end of method
 
@@ -204,12 +204,12 @@ public abstract class Didascalia {
      * Recupera dal record di biografia i valori delle località
      */
     private void recuperaDatiLocalita(Bio bio) {
-        if (bio.getLuogoNato() != null) {
-            this.luogoNato = bio.getLuogoNato();
+        if (bio.luogoNato != null) {
+            this.luogoNato = bio.luogoNato;
         }// fine del blocco if
 
-        if (bio.getLuogoNatoLink() != null) {
-            this.luogoNatoLink = bio.getLuogoNatoLink();
+        if (bio.luogoNatoLink != null) {
+            this.luogoNatoLink = bio.luogoNatoLink;
         }// fine del blocco if
 
         //--controllo per evitare la fastidiosa ripetiziopne [[Guantánamo|Guantánamo (città)]]
@@ -217,12 +217,12 @@ public abstract class Didascalia {
             luogoNatoLink = VUOTA;
         }// end of if cycle
 
-        if (bio.getLuogoMorto() != null) {
-            this.luogoMorto = bio.getLuogoMorto();
+        if (bio.luogoMorto != null) {
+            this.luogoMorto = bio.luogoMorto;
         }// fine del blocco if
 
-        if (bio.getLuogoMortoLink() != null) {
-            this.luogoMortoLink = bio.getLuogoMortoLink();
+        if (bio.luogoMortoLink != null) {
+            this.luogoMortoLink = bio.luogoMortoLink;
         }// fine del blocco if
 
         //--controllo per evitare la fastidiosa ripetiziopne [[Guantánamo|Guantánamo (città)]]
@@ -236,20 +236,20 @@ public abstract class Didascalia {
      * Recupera dal record di biografia i valori delle attività e della nazionalità
      */
     private void recuperaDatiAttNaz(Bio bio) {
-        if (bio.getAttivita() != null) {
-            this.attivita = bio.getAttivita().singolare;
+        if (bio.attivita != null) {
+            this.attivita = bio.attivita.singolare;
         }// fine del blocco if
 
-        if (bio.getAttivita2() != null) {
-            this.attivita2 = bio.getAttivita2().singolare;
+        if (bio.attivita2 != null) {
+            this.attivita2 = bio.attivita2.singolare;
         }// fine del blocco if
 
-        if (bio.getAttivita3() != null) {
-            this.attivita3 = bio.getAttivita3().singolare;
+        if (bio.attivita3 != null) {
+            this.attivita3 = bio.attivita3.singolare;
         }// fine del blocco if
 
-        if (bio.getNazionalita() != null) {
-            this.nazionalita = bio.getNazionalita().singolare;
+        if (bio.nazionalita != null) {
+            this.nazionalita = bio.nazionalita.singolare;
         }// fine del blocco if
     }// end of method
 

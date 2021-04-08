@@ -140,10 +140,9 @@ public class NazionalitaService extends WikiService {
             return findByKeyUnica(singolare);
         }// end of if cycle
 
-        entity = Nazionalita.builderNazionalita()
-                .singolare(singolare.equals("") ? null : singolare)
-                .plurale(plurale.equals("") ? null : plurale)
-                .build();
+        entity = new Nazionalita();
+        entity.singolare=singolare.equals("") ? null : singolare;
+        entity.plurale=plurale.equals("") ? null : plurale;
 
         return entity;
     }// end of method
@@ -222,7 +221,7 @@ public class NazionalitaService extends WikiService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Nazionalita) entityBean).getSingolare();
+        return ((Nazionalita) entityBean).singolare;
     }// end of method
 
     public int countDistinctPlurale() {

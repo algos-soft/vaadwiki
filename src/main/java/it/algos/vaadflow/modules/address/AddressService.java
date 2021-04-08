@@ -123,11 +123,11 @@ public class AddressService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Address newEntity(String indirizzo, String localita, String cap) {
-        return Address.builderAddress()
-                .indirizzo(text.isValid(indirizzo) ? indirizzo : null)
-                .localita(text.isValid(localita) ? localita : null)
-                .cap(text.isValid(cap) ? cap : null)
-                .build();
+        Address address = new Address();
+        address.indirizzo = text.isValid(indirizzo) ? indirizzo : null;
+        address.localita = text.isValid(localita) ? localita : null;
+        address.cap = text.isValid(cap) ? cap : null;
+        return address;
     }// end of method
 
 
@@ -136,7 +136,7 @@ public class AddressService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Address) entityBean).getIndirizzo();
+        return ((Address) entityBean).indirizzo;
     }// end of method
 
 

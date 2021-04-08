@@ -106,7 +106,7 @@ public class UploadAttivita extends Upload {
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_COGNOMI);
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
-        super.tagCategoria = LibWiki.setCat("Bio attività", text.primaMaiuscola(attivita.getPlurale()));
+        super.tagCategoria = LibWiki.setCat("Bio attività", text.primaMaiuscola(attivita.plurale));
         super.usaNote = true;
         super.usaVociCorrelate = true;
         super.usaBodySottopagine = true;

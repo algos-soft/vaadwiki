@@ -59,7 +59,7 @@ public class ViewGiornoMorto extends ViewListe {
      */
     @Override
     protected void addInfoTitolo() {
-        this.add("Lista biografie di " + text.format(numVoci) + " persone morte il " + giorno.getTitolo());
+        this.add("Lista biografie di " + text.format(numVoci) + " persone morte il " + giorno.titolo);
         super.addInfoTitolo();
     }// end of method
 

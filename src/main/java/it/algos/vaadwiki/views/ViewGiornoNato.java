@@ -56,7 +56,7 @@ public class ViewGiornoNato extends ViewListe {
      */
     @Override
     protected void addInfoTitolo() {
-        this.add("Lista biografie di " + text.format(numVoci) + " persone nate il " + giorno.getTitolo());
+        this.add("Lista biografie di " + text.format(numVoci) + " persone nate il " + giorno.titolo);
         super.addInfoTitolo();
     }// end of method
 

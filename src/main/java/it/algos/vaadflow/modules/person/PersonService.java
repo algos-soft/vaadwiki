@@ -245,18 +245,19 @@ public class PersonService extends AService {
             //--casting dalla superclasse alla classe attuale
             entity = (Person) super.cast(entityDellaSuperClasseUtente, new Person());
             entity.usaSuperClasse = true;
-        } else {
-            entity = Person.builderPerson().build();
-            entity.setMail(text.isValid(mail) ? mail : null);
+        }
+        else {
+            entity = new Person();
+            entity.mail = text.isValid(mail) ? mail : null;
             entity.usaSuperClasse = false;
         }// end of if/else cycle
 
         //--poi vengono aggiunte le property specifiche di Persona
         //--regola le property di questa classe
-        entity.setNome(text.isValid(nome) ? nome : null);
-        entity.setCognome(text.isValid(cognome) ? cognome : null);
-        entity.setTelefono(text.isValid(telefono) ? telefono : null);
-        entity.setIndirizzo(indirizzo);
+        entity.nome = text.isValid(nome) ? nome : null;
+        entity.cognome = text.isValid(cognome) ? cognome : null;
+        entity.telefono = text.isValid(telefono) ? telefono : null;
+        entity.indirizzo = indirizzo;
 
         return (Person) creaIdKeySpecifica(entity);
     }// end of method
@@ -293,7 +294,7 @@ public class PersonService extends AService {
         Person entity = (Person) super.beforeSave(entityBean, operation);
 
         if (entity == null) {
-            log.error("entity è nullo in PersonService.beforeSave()");
+            logger.error("entity è nullo in PersonService.beforeSave()");
             return null;
         }// end of if cycle
 
@@ -359,18 +360,17 @@ public class PersonService extends AService {
         return usaSecurity ? PROPERTIES_SECURED : PROPERTIES_NOT_SECURED;
     }// end of method
 
-
-//    /**
-//     * Costruisce una lista di nomi delle properties del Form nell'ordine:
-//     * 1) Cerca nell'annotation @AIForm della Entity e usa quella lista (con o senza ID)
-//     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse)
-//     * 3) Sovrascrive la lista nella sottoclasse specifica di xxxService
-//     *
-//     * @return lista di nomi di properties
-//     */
-//    @Override
-//    public List<String> getFormPropertyNamesList( AContext context) {
-//        return usaSecurity ? PROPERTIES_SECURED : PROPERTIES_NOT_SECURED;
-//    }// end of method
+    //    /**
+    //     * Costruisce una lista di nomi delle properties del Form nell'ordine:
+    //     * 1) Cerca nell'annotation @AIForm della Entity e usa quella lista (con o senza ID)
+    //     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse)
+    //     * 3) Sovrascrive la lista nella sottoclasse specifica di xxxService
+    //     *
+    //     * @return lista di nomi di properties
+    //     */
+    //    @Override
+    //    public List<String> getFormPropertyNamesList( AContext context) {
+    //        return usaSecurity ? PROPERTIES_SECURED : PROPERTIES_NOT_SECURED;
+    //    }// end of method
 
 }// end of class

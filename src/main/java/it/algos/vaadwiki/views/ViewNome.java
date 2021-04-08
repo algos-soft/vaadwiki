@@ -64,7 +64,7 @@ public class ViewNome extends ViewListe {
      */
     @Override
     protected void addInfoTitolo() {
-        this.add("Lista biografie di " + text.format(numVoci) + " persone di nome " + nome.getNome() + A_CAPO);
+        this.add("Lista biografie di " + text.format(numVoci) + " persone di nome " + nome.nome + A_CAPO);
         super.addInfoTitolo();
     }// end of method
 

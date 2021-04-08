@@ -126,7 +126,7 @@ public class Log extends ACEntity {
      */
     @Override
     public String toString() {
-        return getType().toString() + " - " + getDescrizione();
+        return type.toString() + " - " + descrizione;
     }// end of method
 
 }// end of entity class

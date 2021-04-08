@@ -2043,7 +2043,7 @@ public class LibBio {
      * @return mappa dei parametri esistenti nella enumeration e presenti nel testo
      */
     public LinkedHashMap<String, String> getMappaBio(Bio bio) {
-        return getMappaDownload(bio.getTmplBioServer());
+        return getMappaDownload(bio.tmplBioServer);
     }// end of method
 
 
@@ -2069,7 +2069,7 @@ public class LibBio {
         String tmplBioServer = VUOTA;
 
         if (bio != null) {
-            tmplBioServer = bio.getTmplBioServer();
+            tmplBioServer = bio.tmplBioServer;
         }// end of if cycle
 
         if (text.isValid(tmplBioServer)) {
@@ -2894,7 +2894,7 @@ public class LibBio {
             testo += "Host Name:- " + inetAddress.getHostName();
             testo += A_CAPO;
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         testo += "Ciclo del " + date.get();
