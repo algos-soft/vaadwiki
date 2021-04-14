@@ -1,9 +1,6 @@
 package it.algos.vaadwiki;
 
 import com.vaadin.flow.spring.annotation.EnableVaadin;
-import it.algos.vaadflow.annotation.AIScript;
-import it.algos.vaadwiki.security.SecurityConfiguration;
-import it.algos.wiki.web.AQueryLogin;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -11,41 +8,42 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import it.algos.vaadflow14.backend.annotation.AIScript;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: ven, 8-mag-2018
+ * Date: mer, 14-apr-2021
  * <p>
- * Spring boot web application initializer.
- * The entry point of the Spring Boot application.
+ * The entry point of the Spring Boot application. <br>
+ * Spring boot web application initializer. <br>
  * <p>
- * Questa classe contiene il metodo 'main' che è il punto di ingresso dell'applicazione Java
- * In fase di sviluppo si possono avere diverse configurazioni, ognuna delle quali punta un ''main' diverso
- * Nel JAR finale (runtime) si può avere una sola classe col metodo 'main'.
- * Nel WAR finale (runtime) occorre (credo) inserire dei servlet di context diversi
- * Senza @ComponentScan, SpringBoot non 'vede' le classi con @SpringView
- * che sono in una directory diversa da questo package
+ * Questa classe contiene il metodo 'main' che è il punto di ingresso di una applicazione Java <br>
+ * In fase di sviluppo si possono avere diverse configurazioni, ognuna delle quali punta un ''main' diverso <br>
+ * Nel JAR finale (runtime) si può avere una sola classe col metodo 'main' <br>
+ * Nel WAR finale (runtime) occorre (credo) inserire dei servlet di context diversi <br>
+ * Senza @ComponentScan, SpringBoot non 'vede' le classi con @SpringView che sono in una directory diversa da questo package <br>
  * <p>
- * Questa classe non fa praticamente niente se non avere le Annotation riportate qui
- * Annotated with @SpringBootApplication (obbligatorio)
- * Annotated with @ComponentScan (obbligatorio, se non già specificato il path in @SpringBootApplication)
- * Annotated with @EntityScan (obbligatorio, se non già specificato il path in @SpringBootApplication)
- * Annotated with @EnableMongoRepositories (obbligatorio, se non già specificato il path in @SpringBootApplication)
+ * Questa classe non fa praticamente niente se non avere le Annotation riportate qui <br>
+ * Annotated with @SpringBootApplication (obbligatorio) <br>
+ * Annotated with @EnableVaadin (obbligatorio) <br>
+ * Annotated with @EntityScan (obbligatorio) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  * <p>
- * Tutte le view devono essere comprese nel path di questa classe (directory interne incluse)
- * Una sola view può avere @Route("")
- * The @SpringBootApplication annotation is equivalent to using @Configuration, @EnableAutoConfiguration and @ComponentScan with their default attributes:
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script di algos <br>
+ * Tutte le view devono essere comprese nel path di questa classe (directory interne incluse) <br>
+ * Una sola view può avere @Route("") <br>
+ * <p>
+ * Spring Boot introduces the @SpringBootApplication annotation. <br>
+ * This single annotation is equivalent to using @Configuration, @EnableAutoConfiguration, and @ComponentScan. <br>
+ * Se l'applicazione NON usa la security, aggiungere exclude = {SecurityAutoConfiguration.class} a @SpringBootApplication <br>
  */
 @SpringBootApplication(scanBasePackages = {"it.algos"}, exclude = {SecurityAutoConfiguration.class})
 @EnableVaadin({"it.algos"})
 @EntityScan({"it.algos"})
-@EnableMongoRepositories({"it.algos"})
-@AIScript(sovrascrivibile = false)
+@AIScript(sovraScrivibile = false)
 public class WikiApplication extends SpringBootServletInitializer {
 
     /**
@@ -55,13 +53,7 @@ public class WikiApplication extends SpringBootServletInitializer {
      */
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(WikiApplication.class, args);
-//        context.getBean(AQueryLogin.class);
-    }// end of constructor
+    }// end of SpringBoot constructor
 
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder applicationBuilder) {
-        return applicationBuilder.sources(WikiApplication.class);
-    }// end of method
 
 }// end of main class

@@ -27,3 +27,7 @@ mongorestore -d test /Users/gac/Desktop/backup/test
 (terminale sul server) mongodump -d vaadwiki -o /Users/admin/Desktop/backup
 trasferire la cartella
 (terminale sul computer) mongorestore -d vaadwiki /Users/gac/Desktop/backup/vaadwiki
+
+
+    @Value("${spring.data.mongodb.database}")
+    private String databaseName;

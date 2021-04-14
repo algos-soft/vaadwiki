@@ -1,6 +1,5 @@
 ==A==
-@Autowired
-ApplicationContext appContext;
+@Autowired ApplicationContext appContext;
 
 ADialog dialogo = appContext.getBean(ADialog.class);
 

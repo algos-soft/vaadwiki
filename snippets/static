@@ -5,3 +5,10 @@
         System.out.println("This is a static block");
     }// end of static method
 
+
+
+
+    @Annotation public protected private static final transient volatile
+    @Annotation public protected private abstract static final synchronized native strictfp
+
+public static final

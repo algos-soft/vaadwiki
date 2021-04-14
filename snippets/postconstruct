@@ -1,18 +1,19 @@
   (preferito)
      /**
-      * Metodo invocato subito DOPO il costruttore
-      * L'istanza DEVE essere creata da SpringBoot con Object algos = appContext.getBean(AlgosClass.class);  <br>
+      * Performing the initialization in a constructor is not suggested <br>
+      * as the state of the UI is not properly set up when the constructor is invoked. <br>
       * <p>
-      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+      * La injection viene fatta da SpringBoot solo alla fine del metodo init() del costruttore <br>
       * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
       * <p>
+      * L'istanza può essere creata con  appContext.getBean(xxxClass.class);  oppure con @Autowired <br>
       * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
       * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
       */
      @PostConstruct
      protected void postConstruct() {
          ...
-     }// end of method
+     }
 
 
 

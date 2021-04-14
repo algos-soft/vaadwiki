@@ -1,9 +1,12 @@
+
+    //as - shortcut
     /**
-     * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con @Autowired <br>
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
+    //as - end
 
      /**
       * Costruttore @Autowired <br>
@@ -199,3 +202,23 @@
     @Autowired
     @Qualifier(TASK_CRO)
     private ATask task;
+
+
+
+     //    /**
+     //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     //     * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
+     //     * al termine del ciclo init() del costruttore di questa classe <br>
+     //     */
+     //    public SimpleData simpleData;
+
+
+    //    /**
+    //     * Set con @Autowired di una property chiamata dal costruttore <br>
+    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+    //     * Chiamata dal costruttore di questa classe con valore nullo <br>
+    //     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+    //     */
+    //    public void setSimpleData(SimpleData simpleData) {
+    //        this.simpleData = simpleData;
+    //    }

@@ -1,11 +1,10 @@
 ${AnsiColor.RED}
-                              _              _   _      _
- __   __   __ _    __ _    __| | __      __ (_) | | __ (_)
- \ \ / /  / _` |  / _` |  / _` | \ \ /\ / / | | | |/ / | |
-  \ V /  | (_| | | (_| | | (_| |  \ V  V /  | | |   <  | |
-   \_/    \__,_|  \__,_|  \__,_|   \_/\_/   |_| |_|\_\ |_|
-
+${AnsiColor.GREEN}WIKI${AnsiColor.RED}
 VaadFlow FrameWork  (c)Algos
-SpringBoot ver: ${spring-boot.formatted-version}
-VaadWiki ver: ${application.formatted-version}
+Java ver: ${AnsiColor.GREEN}${java.version}${AnsiColor.RED}
+SpringBoot ver: ${AnsiColor.GREEN}${spring-boot.formatted-version}${AnsiColor.RED}
+Vaadin ver: ${AnsiColor.GREEN}${vaadin.version}${AnsiColor.RED}
+VaadFlow ver: ${AnsiColor.GREEN}${algos.vaadflow.version}${AnsiColor.RED} di ${AnsiColor.GREEN}${algos.vaadflow.version.date}${AnsiColor.RED}
+Vaadwiki ver: ${AnsiColor.GREEN}${algos.wiki.version}${AnsiColor.RED} di ${AnsiColor.GREEN}${algos.wiki.version.date}${AnsiColor.RED}
+Tomcat port: ${AnsiColor.GREEN}${server.port}${AnsiColor.RED}
 ${AnsiColor.DEFAULT}
