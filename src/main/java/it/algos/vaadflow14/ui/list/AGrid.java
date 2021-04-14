@@ -192,7 +192,6 @@ public class AGrid {
 
         //--se usa la numerazione automatica, questa occupa la prima colonna
         if (annotation.usaRowIndex(entityClazz)) {
-//            indexWidth = annotation.getIndexWith(entityClazz);
             indexWidth = getWidth();
             grid.addColumn(item -> VUOTA).setKey(FIELD_INDEX).setHeader("#").setWidth(indexWidth).setFlexGrow(0);
         }

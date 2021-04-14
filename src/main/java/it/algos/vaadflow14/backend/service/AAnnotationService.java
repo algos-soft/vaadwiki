@@ -827,6 +827,7 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return the width of the index
      */
+    @Deprecated
     public String getIndexWith(final Class<? extends AEntity> entityClazz) {
         String widthTxt = VUOTA;
         double widthDouble = 0;

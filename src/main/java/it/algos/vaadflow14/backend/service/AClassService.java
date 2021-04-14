@@ -168,6 +168,18 @@ public class AClassService extends AAbstractService {
      * @return classe xxxLogicForm associata alla Entity
      */
     public Class getLogicFormClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) {
+        return getLogicFormClassFromEntityClazz(dovrebbeEssereUnaEntityClazz, false);
+    }
+
+    /**
+     * Classe xxxLogicForm associata alla Entity inviata  <br>
+     *
+     * @param dovrebbeEssereUnaEntityClazz the entity class
+     * @param printLog                     flag per mostrare l'eccezione (se non trova la classe specifica)
+     *
+     * @return classe xxxLogicForm associata alla Entity
+     */
+    public Class getLogicFormClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz, boolean printLog) {
         Class listClazz = null;
         String canonicalNameEntity;
         String canonicalNameLogicForm;
@@ -199,8 +211,10 @@ public class AClassService extends AAbstractService {
 
             listClazz = Class.forName(canonicalNameLogicForm);
         } catch (Exception unErrore) {
-            message = String.format("Nel package %s non esiste la classe %s", packageName, simpleNameLogicForm);
-            logger.info(message, this.getClass(), "getLogicFormClassFromEntityClazz");
+            if (printLog) {
+                message = String.format("Nel package %s non esiste la classe %s", packageName, simpleNameLogicForm);
+                logger.info(message, this.getClass(), "getLogicFormClassFromEntityClazz");
+            }
         }
 
         return listClazz;
