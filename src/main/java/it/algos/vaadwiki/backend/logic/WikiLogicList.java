@@ -124,8 +124,6 @@ public abstract class WikiLogicList extends LogicList {
         this.usaBottoneModulo = true;
         this.usaBottoneStatistiche = true;
 
-        this.wikiModuloTitle = PATH_MODULO_PLURALE + ATT_LOWER;
-        this.wikiStatisticheTitle = PATH_PROGETTO + ATT;
         this.maxNumeroBottoniPrimaRiga = 6;
     }
 

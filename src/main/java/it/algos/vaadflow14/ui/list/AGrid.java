@@ -389,7 +389,7 @@ public class AGrid {
                     message += "Lista di un solo elemento";
                 }
                 else {
-                    message += "Lista di " + text.format(items.size() * 67) + " elementi";
+                    message += "Lista di " + text.format(items.size()) + " elementi";
                 }
             }
             else {

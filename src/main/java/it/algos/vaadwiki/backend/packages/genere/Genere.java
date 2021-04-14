@@ -42,10 +42,10 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderGenere")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Genere", keyPropertyName = "singolare", usaCreazione = false, usaCompany = false)
+@AIEntity(recordName = "Genere", keyPropertyName = "singolare", usaCreazione = false, usaModifica = false, usaCompany = false)
 @AIView(menuName = "Genere", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
 @AIList(fields = "singolare,pluraleMaschile,pluraleFemminile", usaRowIndex = true)
-@AIForm(fields = "singolare,pluraleMaschile,pluraleFemminile", usaSpostamentoTraSchede = true)
+@AIForm(fields = "singolare,pluraleMaschile,pluraleFemminile", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
 public class Genere extends AEntity {
 
 
@@ -84,8 +84,8 @@ public class Genere extends AEntity {
      */
     @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 3, max = 50)
-    @AIField(type = AETypeField.text, firstCapital = true, caption = "plurale maschile", widthEM = WIDTHEM)
-    @AIColumn(header = "plurale maschile", widthEM = WIDTHEM)
+    @AIField(type = AETypeField.text, firstCapital = true, caption = "plurale femminile", widthEM = WIDTHEM)
+    @AIColumn(header = "plurale femminile", widthEM = WIDTHEM)
     public String pluraleFemminile;
 
 
