@@ -59,13 +59,14 @@ public class Genere extends AEntity {
      */
     private static final transient int WIDTHEM = 20;
 
+
     /**
      * singolare maschile e femminile (obbligatorio ed unico)
      */
     @NotBlank(message = "Il singolare è obbligatorio")
     @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 2, max = 50)
-    @AIField(type = AETypeField.text, required = true, focus = true, caption = "singolare", widthEM = WIDTHEM)
+    @AIField(type = AETypeField.text, firstCapital = true, focus = true, caption = "singolare", widthEM = WIDTHEM)
     @AIColumn(header = "singolare", widthEM = WIDTHEM)
     public String singolare;
 
