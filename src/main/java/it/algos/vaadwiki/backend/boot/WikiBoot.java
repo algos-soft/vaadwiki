@@ -5,6 +5,7 @@ import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.data.*;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.application.FlowVar;
+import it.algos.vaadwiki.backend.packages.genere.Genere;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -115,6 +116,7 @@ public class WikiBoot extends FlowBoot {
     @Override
     protected void fixMenuRoutes() {
         super.fixMenuRoutes();
+		FlowVar.menuRouteList.add(Genere.class);
     }
 
     /**
