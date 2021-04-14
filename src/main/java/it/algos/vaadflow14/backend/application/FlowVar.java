@@ -192,17 +192,35 @@ public class FlowVar {
     public static List<AIButton> bottoniSpecificiList;
 
     /**
-     * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>
+     * Mostra i 2 (incrementabili) packages di admin (preferenza, versione) <br>
+     * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
      * Di default (per sicurezza) uguale a false <br>
      * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
-    public static boolean usaCronoPackages;
+    public static boolean usaAdminPackages;
 
     /**
-     * Mostra i quattro packages geografici (stato, regione, provincia, comune) <br>
+     * Mostra i 3 (incrementabili) packages di gestione (address, via, persona) <br>
+     * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
+     * Di default (per sicurezza) uguale a false <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     */
+    public static boolean usaGestionePackages;
+
+    /**
+     * Mostra i 4 (fissi) packages geografici (stato, regione, provincia, comune) <br>
+     * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
      * Di default (per sicurezza) uguale a false <br>
      * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static boolean usaGeografiaPackages;
+
+    /**
+     * Mostra i 4 (fissi) packages cronologici (secolo, anno, mese, giorno) <br>
+     * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
+     * Di default (per sicurezza) uguale a false <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     */
+    public static boolean usaCronoPackages;
 
 }

@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.backend.packages.attivita;
+package it.algos.vaadwiki.backend.packages.nazionalita;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -22,7 +22,7 @@ import static java.awt.image.ImageObserver.WIDTH;
  * Created by Algos <br>
  * User: gac <br>
  * Fix date: mer, 14-apr-2021 <br>
- * Fix time: 17:58 <br>
+ * Fix time: 18:44 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
@@ -38,19 +38,19 @@ import static java.awt.image.ImageObserver.WIDTH;
  */
 @SpringComponent
 @QueryEntity
-@Document(collection = "attivita")
-@TypeAlias("attivita")
+@Document(collection = "nazionalita")
+@TypeAlias("nazionalita")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(builderMethodName = "builderAttivita")
+@Builder(builderMethodName = "builderNazionalita")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Attivita", keyPropertyName = "singolare", usaCreazione = false, usaModifica = false, usaCompany = false)
-@AIView(menuName = "Attivita", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
+@AIEntity(recordName = "Nazionalita", keyPropertyName = "singolare", usaCreazione = false, usaModifica = false, usaCompany = false)
+@AIView(menuName = "Nazionalita", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
 @AIList(fields = "singolare,plurale,aggiunta", usaRowIndex = true)
 @AIForm(fields = "singolare,plurale,aggiunta", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
-public class Attivita extends AEntity {
+public class Nazionalita extends AEntity {
 
 
     /**
@@ -67,29 +67,24 @@ public class Attivita extends AEntity {
     /**
      * singolare di riferimento (obbligatorio, unico) <br>
      */
-     @NotBlank(message = "Il singolare è obbligatorio")
-     @Indexed(unique = false, direction = IndexDirection.DESCENDING)
-     @Size(min = 2, max = 50)
-     @AIField(type = AETypeField.text, firstCapital = true, focus = true, caption = "singolare", widthEM = WIDTHEM)
-     @AIColumn(header = "singolare", widthEM = WIDTHEM)
-     public String singolare;
+    @NotBlank(message = "Il singolare è obbligatorio")
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
+    @Size(min = 2, max = 50)
+    @AIField(type = AETypeField.text, firstCapital = true, focus = true, caption = "singolare", widthEM = WIDTHEM)
+    @AIColumn(header = "singolare", widthEM = WIDTHEM)
+    public String singolare;
 
 
-     /**
+    /**
      * plurale (facoltativo, non unico) <br>
      */
-     @Indexed(unique = false, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 2, max = 50)
     @AIField(type = AETypeField.text, firstCapital = true, caption = "plurale", widthEM = WIDTHEM)
-     @AIColumn(header = "plurale", widthEM = WIDTHEM)
+    @AIColumn(header = "plurale", widthEM = WIDTHEM)
     public String plurale;
 
-     /**
-     * flag aggiunta (facoltativo, di default false) <br>
-     */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "aggiunta")
-    @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "Add")
-    public boolean aggiunta;
+     
 
 
     /**

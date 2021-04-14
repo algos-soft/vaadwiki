@@ -20,19 +20,29 @@ public abstract class WikiLogicList extends LogicList {
 
     public final static String PATH_MODULO = "Modulo:Bio/";
 
+    public final static String PATH_PROGETTO = "Progetto:Biografie/";
+
     public final static String PATH_MODULO_PLURALE = PATH_MODULO + "Plurale_";
+
+    public final static String GENERE = "genere";
 
     public final static String ATT = "Attività";
 
     public final static String ATT_LOWER = ATT.toLowerCase();
 
-    public final static String GENERE = "genere";
+    public final static String NAZ = "Nazionalità";
 
-    public final static String PATH_PROGETTO = "Progetto:Biografie/";
+    public final static String NAZ_LOWER = NAZ.toLowerCase();
+
+    public final static String PATH_MODULO_GENERE = PATH_MODULO_PLURALE + ATT_LOWER + SPAZIO + GENERE;
 
     public final static String PATH_MODULO_ATTIVITA = PATH_MODULO_PLURALE + ATT_LOWER;
 
-    public final static String PATH_MODULO_GENERE = PATH_MODULO_PLURALE + ATT_LOWER + SPAZIO + GENERE;
+    public final static String PATH_STATISTICHE_ATTIVITA = PATH_PROGETTO + ATT;
+
+    public final static String PATH_MODULO_NAZIONALITA = PATH_MODULO_PLURALE + NAZ_LOWER;
+
+    public final static String PATH_STATISTICHE_NAZIONALITA = PATH_PROGETTO + NAZ;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>

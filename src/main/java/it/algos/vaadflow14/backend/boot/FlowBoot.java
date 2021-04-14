@@ -203,7 +203,6 @@ public abstract class FlowBoot implements ServletContextListener {
          */
         FlowVar.usaSecurity = true;
 
-
         /**
          * Nome identificativo dell' applicazione <br>
          * Usato (eventualmente) nella barra di menu in testa pagina <br>
@@ -293,18 +292,36 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.bottoniSpecificiList = null;
 
         /**
-         * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>
+         * Mostra i 2 (incrementabili) packages di admin (preferenza, versione) <br>
+         * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
          * Di default (per sicurezza) uguale a false <br>
          * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
-        FlowVar.usaCronoPackages = false;
+        FlowVar.usaAdminPackages = false;
 
         /**
-         * Mostra i quattro packages geografici (stato, regione, provincia, comune) <br>
+         * Mostra i 3 (incrementabili) packages di gestione (address, via, persona) <br>
+         * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
+         * Di default (per sicurezza) uguale a false <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+         */
+        FlowVar.usaGestionePackages = false;
+
+        /**
+         * Mostra i 4 (fissi) packages geografici (stato, regione, provincia, comune) <br>
+         * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
          * Di default (per sicurezza) uguale a false <br>
          * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.usaGeografiaPackages = false;
+
+        /**
+         * Mostra i 4 (fissi) packages cronologici (secolo, anno, mese, giorno) <br>
+         * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
+         * Di default (per sicurezza) uguale a false <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+         */
+        FlowVar.usaCronoPackages = false;
     }
 
 
@@ -350,28 +367,33 @@ public abstract class FlowBoot implements ServletContextListener {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixMenuRoutes() {
-        if (AEPreferenza.usaMenuCrono.is()) {
-            FlowVar.menuRouteList.add(Secolo.class);
-            FlowVar.menuRouteList.add(Anno.class);
-            FlowVar.menuRouteList.add(Mese.class);
-            FlowVar.menuRouteList.add(Giorno.class);
-        }
 
         if (FlowVar.usaCompany) {
             FlowVar.menuRouteList.add(Utente.class);
             FlowVar.menuRouteList.add(Company.class);
         }
 
-        FlowVar.menuRouteList.add(Preferenza.class);
-        FlowVar.menuRouteList.add(Wizard.class);
-        FlowVar.menuRouteList.add(Versione.class);
-        FlowVar.menuRouteList.add(Via.class);
+        if (FlowVar.usaAdminPackages) {
+            FlowVar.menuRouteList.add(Preferenza.class);
+            FlowVar.menuRouteList.add(Wizard.class);
+            FlowVar.menuRouteList.add(Versione.class);
+        }
+
+        if (FlowVar.usaGestionePackages) {
+            FlowVar.menuRouteList.add(Via.class);
+        }
 
         if (AEPreferenza.usaMenuGeo.is()) {
             FlowVar.menuRouteList.add(Continente.class);
             FlowVar.menuRouteList.add(Stato.class);
             FlowVar.menuRouteList.add(Regione.class);
             FlowVar.menuRouteList.add(Provincia.class);
+        }
+        if (AEPreferenza.usaMenuCrono.is()) {
+            FlowVar.menuRouteList.add(Secolo.class);
+            FlowVar.menuRouteList.add(Anno.class);
+            FlowVar.menuRouteList.add(Mese.class);
+            FlowVar.menuRouteList.add(Giorno.class);
         }
 
     }
