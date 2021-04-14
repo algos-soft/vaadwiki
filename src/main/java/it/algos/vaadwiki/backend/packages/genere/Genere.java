@@ -42,7 +42,7 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderGenere")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Genere", keyPropertyName = "singolare", usaCompany = false)
+@AIEntity(recordName = "Genere", keyPropertyName = "singolare", usaCreazione = false, usaCompany = false)
 @AIView(menuName = "Genere", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
 @AIList(fields = "singolare,pluraleMaschile,pluraleFemminile", usaRowIndex = true)
 @AIForm(fields = "singolare,pluraleMaschile,pluraleFemminile", usaSpostamentoTraSchede = true)
@@ -63,7 +63,7 @@ public class Genere extends AEntity {
      * singolare maschile e femminile (obbligatorio ed unico)
      */
     @NotBlank(message = "Il singolare è obbligatorio")
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 2, max = 50)
     @AIField(type = AETypeField.text, required = true, focus = true, caption = "singolare", widthEM = WIDTHEM)
     @AIColumn(header = "singolare", widthEM = WIDTHEM)

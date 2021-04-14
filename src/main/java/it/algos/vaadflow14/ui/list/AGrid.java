@@ -64,6 +64,22 @@ public class AGrid {
     @Autowired
     public AHtmlService html;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ATextService text;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AMongoService mongo;
+
     protected AILogic entityLogic;
 
     protected List<String> gridPropertyNamesList;
@@ -132,7 +148,7 @@ public class AGrid {
     @PostConstruct
     protected void postConstruct() {
         grid.setHeightByRows(true);
-        this.grid.setDataProvider(dataProviderService.creaDataProvider(entityClazz,null));
+        this.grid.setDataProvider(dataProviderService.creaDataProvider(entityClazz, null));
         grid.setHeight("100%");
 
         if (AEPreferenza.usaDebug.is()) {
@@ -176,7 +192,8 @@ public class AGrid {
 
         //--se usa la numerazione automatica, questa occupa la prima colonna
         if (annotation.usaRowIndex(entityClazz)) {
-            indexWidth = annotation.getIndexWith(entityClazz);
+//            indexWidth = annotation.getIndexWith(entityClazz);
+            indexWidth = getWidth();
             grid.addColumn(item -> VUOTA).setKey(FIELD_INDEX).setHeader("#").setWidth(indexWidth).setFlexGrow(0);
         }
 
@@ -218,6 +235,34 @@ public class AGrid {
         }
     }
 
+    /**
+     * Larghezza della colonna di numerazione automatica in funzione della dimensione della collezione <br>
+     * Larghezza aggiustata al massimo valore numerico <br>
+     */
+    protected String getWidth() {
+        String indexWidth = VUOTA;
+        int dim1 = 100;
+        int dim2 = 1000;
+        String tag1 = "2.5" + TAG_EM;
+        String tag2 = "3.5" + TAG_EM;
+        String tag3 = "4.5" + TAG_EM;
+
+        int dim = mongo.count(entityClazz);
+
+        if (dim < dim1) {
+            indexWidth = tag1;
+        }
+        else {
+            if (dim < dim2) {
+                indexWidth = tag2;
+            }
+            else {
+                indexWidth = tag3;
+            }
+        }
+
+        return indexWidth;
+    }
 
     /**
      * Apre il dialog di detail <br>
@@ -333,6 +378,7 @@ public class AGrid {
      * Eventuale header text <br>
      * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>
      */
+    @Deprecated
     public void fixGridHeader(Collection items) {
         String message = VUOTA;
 
@@ -343,7 +389,7 @@ public class AGrid {
                     message += "Lista di un solo elemento";
                 }
                 else {
-                    message += "Lista di " + items.size() + " elementi";
+                    message += "Lista di " + text.format(items.size() * 67) + " elementi";
                 }
             }
             else {
@@ -372,7 +418,7 @@ public class AGrid {
                     message += "Lista di un solo elemento";
                 }
                 else {
-                    message += "Lista di " + items + " elementi";
+                    message += "Lista di " + text.format(items) + " elementi";
                 }
             }
             else {

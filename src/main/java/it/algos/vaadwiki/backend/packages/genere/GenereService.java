@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.logic.AService;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.wrapper.AResult;
+import static it.algos.vaadwiki.backend.logic.WikiLogicList.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -67,19 +68,6 @@ public class GenereService extends AService {
     }
 
 
-    /**
-     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     * Senza properties per compatibilità con la superclasse <br>
-     *
-     * @return la nuova entityBean appena creata (non salvata
-     */
-    @Override
-    public Genere newEntity() {
-        return newEntity(VUOTA, VUOTA);
-    }
-
 
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
@@ -102,24 +90,6 @@ public class GenereService extends AService {
         return (Genere) fixKey(newEntityBean);
     }
 
-    /**
-     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @param singolare di riferimento (obbligatorio, unico)
-	 * @param pluraleMaschile (facoltativo, non unico)
-     *
-     * @return la nuova entityBean appena creata (non salvata)
-     */
-    public Genere newEntity(final String singolare, final String pluraleMaschile) {
-        Genere newEntityBean = Genere.builderGenere()
-                .singolare(text.isValid(singolare) ? singolare : null)
-				.pluraleMaschile(text.isValid(pluraleMaschile) ? pluraleMaschile : null)
-                .build();
-
-        return (Genere) fixKey(newEntityBean);
-    }
 
     /**
      * Regola la chiave se esiste il campo keyPropertyName. <br>
@@ -210,7 +180,7 @@ public class GenereService extends AService {
      * @return true se l'azione è stata eseguita
      */
     public boolean download() {
-        return downloadModulo("Manca - Da Mettere");
+        return downloadModulo(PATH_MODULO_GENERE);
     }
 
 

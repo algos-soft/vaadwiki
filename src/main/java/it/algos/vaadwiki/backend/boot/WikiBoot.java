@@ -73,7 +73,7 @@ public class WikiBoot extends FlowBoot {
         FlowVar.dataClazz = WikiData.class;
         FlowVar.usaSecurity = false;
         FlowVar.projectName = "Vaadwiki";
-        FlowVar.projectDescrizione = "Cambia questa descrizione nel file WikiBoot";
+        FlowVar.projectDescrizione = "Gestione di BioBot";
         FlowVar.projectVersion = environment.getProperty("algos.wiki.version") != null ? Double.parseDouble(environment.getProperty("algos.wiki.version")) : 0.0;
         FlowVar.versionDate = LocalDate.of(2021,4,14);
         FlowVar.projectNote = "Sviluppo di una applicazione in Vaadin14";

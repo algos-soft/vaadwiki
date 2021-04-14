@@ -19,6 +19,7 @@ public enum AETypeHeight implements AIType, AIEnum {
     px10("10px"),
     px14("14px"),
     px18("18px"),
+    px22("22px"),
     cento80("80%"),
     cento120("120%"),
     ;

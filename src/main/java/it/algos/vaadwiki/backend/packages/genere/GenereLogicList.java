@@ -5,6 +5,9 @@ import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.ui.*;
+import it.algos.vaadwiki.backend.logic.*;
+import static it.algos.vaadwiki.backend.logic.WikiLogicList.*;
+
 import java.util.*;
 
 /**
@@ -26,7 +29,7 @@ import java.util.*;
  */
 @Route(value = "genere", layout = MainLayout.class)
 @AIScript(sovraScrivibile = false)
-public class GenereLogicList extends LogicList {
+public class GenereLogicList extends WikiLogicList {
 
 
     /**
@@ -54,8 +57,8 @@ public class GenereLogicList extends LogicList {
         super.fixPreferenze();
 
         super.usaBottoneUpload = false;
-//        super.usaBottoneStatistiche = false;
-//        super.wikiModuloTitle = PATH_MODULO_GENERE;
+        super.usaBottoneStatistiche = false;
+        super.wikiModuloTitle = PATH_MODULO_GENERE;
     }
 
 
