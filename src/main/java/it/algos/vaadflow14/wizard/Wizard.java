@@ -66,6 +66,13 @@ public class Wizard extends VerticalLayout {
     private WizDialogUpdateProject dialogUpdateProject;
 
     /**
+     * Utilizzato dall'interno di VaadFlow14 per aggiornare un progetto esistente <br>
+     * Utilizzato dall'interno di un qualsiasi progetto per importare/aggiornare il codice da VaadFlow14 <br>
+     */
+    @Autowired
+    private WizDialogUpdateModulo dialogUpdateModulo;
+
+    /**
      * Utilizzato dall'interno di un qualsiasi progetto per creare nuovi packages <br>
      */
     @Autowired
@@ -101,6 +108,13 @@ public class Wizard extends VerticalLayout {
      */
     @Autowired
     private WizElaboraUpdateProject elaboraUpdateProject;
+    /**
+     * Utilizzato dall'interno di VaadFlow14 per aggiornare un progetto esistente <br>
+     * Utilizzato dall'interno di un qualsiasi progetto per importare/aggiornare il codice da VaadFlow14 <br>
+     */
+    @Autowired
+    private WizElaboraUpdateModulo elaboraUpdateModulo;
+
 
     /**
      * Utilizzato dall'interno di un qualsiasi progetto per creare nuovi packages <br>
@@ -177,16 +191,15 @@ public class Wizard extends VerticalLayout {
 
         if (AEFlag.isBaseFlow.is()) {
             paragrafoNewProject();
-            paragrafoUpdateProject();
-            paragrafoNewPackage();
-            paragrafoUpdatePackage();
-            paragrafoDocPackages();
         }
-        else {
-            paragrafoUpdateProject();
-            paragrafoNewPackage();
-            paragrafoUpdatePackage();
-            paragrafoDocPackages();
+
+        paragrafoUpdateProject();
+        paragrafoUpdateModulo();
+        paragrafoNewPackage();
+        paragrafoUpdatePackage();
+        paragrafoDocPackages();
+
+        if (!AEFlag.isBaseFlow.is()) {
             paragrafoFeedBackWizard();
         }
     }
@@ -209,10 +222,8 @@ public class Wizard extends VerticalLayout {
         this.add(paragrafo);
 
         layout.add(new Label("Crea un nuovo project IntelliJIdea, nella directory 'IdeaProjects'"));
-        layout.add(new Label("Seleziona un progetto vuoto tra quelli esistenti"));
-        layout.add(new Label("Regola alcuni flags iniziali"));
-        layout.add(new Label("Il progetto va poi spostato nella directory 'operativi'"));
-        layout.add(new Label("Il progetto va poi aggiunto alla enumeration AEProgetto"));
+        layout.add(new Label("Seleziona un progetto vuoto tra quelli esistenti. Regola alcuni flags iniziali"));
+        layout.add(new Label("Il progetto va poi spostato nella directory 'operativi' e agiunto alla enumeration AEProgetto"));
 
         Button bottone = new Button("Crea project");
         bottone.getElement().setAttribute("theme", "primary");
@@ -237,6 +248,8 @@ public class Wizard extends VerticalLayout {
         layout.setSpacing(false);
         H3 paragrafo = new H3();
         String titolo;
+        String titoloIni;
+
         if (AEFlag.isBaseFlow.is()) {
             titolo = WizCost.TITOLO_MODIFICA_PROGETTO;
         }
@@ -249,12 +262,12 @@ public class Wizard extends VerticalLayout {
         this.add(paragrafo);
 
         if (AEFlag.isBaseFlow.is()) {
-            layout.add(new Label("Seleziona un progetto dalla enumeration AEProgetto"));
+            titoloIni = "Seleziona un progetto dalla enumeration AEProgetto.";
         }
         else {
-            layout.add(new Label("Update del modulo vaadflow14 di questo progetto"));
+            titoloIni = "Update del modulo vaadflow14 di questo progetto.";
         }
-        layout.add(new Label("Regola alcuni flags per le modifiche"));
+        layout.add(new Label(titoloIni + " Regola alcuni flags per le modifiche"));
 
         Button bottone = new Button("Update project");
         bottone.getElement().setAttribute("theme", "primary");
@@ -264,10 +277,45 @@ public class Wizard extends VerticalLayout {
         this.add(layout);
     }
 
-
     private void elaboraUpdateProject() {
         elaboraUpdateProject.esegue();
         dialogUpdateProject.close();
+    }
+
+    public void paragrafoUpdateModulo() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setPadding(false);
+        layout.setSpacing(false);
+        H3 paragrafo = new H3();
+        String titolo;
+        String titoloIni;
+
+        titolo = WizCost.TITOLO_MODIFICA_MODULO;
+
+        paragrafo.setText(titolo);
+        paragrafo.getElement().getStyle().set("color", "blue");
+        this.add(paragrafo);
+
+        if (AEFlag.isBaseFlow.is()) {
+            titoloIni = "Seleziona un modulo dalla enumeration AEProgetto.";
+        }
+        else {
+            titoloIni = "Update del modulo di questo progetto.";
+        }
+        layout.add(new Label(titoloIni + " Regola alcuni flags per le modifiche"));
+
+        Button bottone = new Button("Update modulo");
+        bottone.getElement().setAttribute("theme", "primary");
+        bottone.addClickListener(event -> dialogUpdateModulo.open(this::elaboraUpdateModulo));
+
+        layout.add(bottone);
+        this.add(layout);
+    }
+
+    private void elaboraUpdateModulo() {
+        elaboraUpdateModulo.esegue();
+        dialogUpdateModulo.close();
     }
 
 
@@ -280,8 +328,7 @@ public class Wizard extends VerticalLayout {
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
 
-        layout.add(new Label("Creazione di un nuovo package"));
-        layout.add(new Label("Regola alcuni flags di possibili opzioni"));
+        layout.add(new Label("Creazione di un nuovo package. Regola alcuni flags di possibili opzioni"));
 
         Button bottone = new Button("New package");
         bottone.getElement().setAttribute("theme", "primary");
@@ -309,8 +356,7 @@ public class Wizard extends VerticalLayout {
         this.add(paragrafo);
 
         layout.add(new Label("Update di un package esistente"));
-        layout.add(new Label("Seleziona il package dalla lista di quelli esistenti"));
-        layout.add(new Label("Regola alcuni flags di possibili opzioni"));
+        layout.add(new Label("Seleziona il package dalla lista di quelli esistenti. Regola alcuni flags di possibili opzioni"));
 
         Button bottone = new Button("Update package");
         bottone.getElement().setAttribute("theme", "primary");
@@ -336,8 +382,7 @@ public class Wizard extends VerticalLayout {
         this.add(paragrafo);
 
         layout.add(new Label("Documentazione delle classi standard dei package esistenti"));
-        layout.add(new Label("Seleziona quali classi standard modificare"));
-        layout.add(new Label("Si applica a tutti i packages"));
+        layout.add(new Label("Seleziona quali classi standard modificare. Si applica a tutti i packages"));
 
         Button bottone = new Button("Doc packages");
         bottone.getElement().setAttribute("theme", "primary");

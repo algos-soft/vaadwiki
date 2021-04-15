@@ -19,13 +19,15 @@ public enum AEModulo {
     dirBackend("Backend", "Directory backend del modulo target", true, false, AEWizCost.dirBackend.get()),
     dirApplication("Application", "Directory application del modulo target", true, false, AEWizCost.dirApplication.get()),
     dirBoot("Boot", "Directory boot del modulo target", true, false, AEWizCost.dirBoot.get()),
+    dirEnumeration("Enumeration", "Directory enumeration del modulo target", true, false, AEWizCost.dirEnumeration.get()),
     dirData("Data", "Directory data del modulo target", true, false, AEWizCost.dirData.get()),
     dirPackages("Packages", "Directory packages del modulo target", true, false, AEWizCost.dirPackages.get()),
     dirUI("UI", "Directory UI del modulo target", true, false, AEWizCost.dirUI.get()),
-    fileMain("Main", "File main del modulo target", false, true, VUOTA, APP_NAME),
-    fileCost("Cost", "File Cost del modulo target", false, true, AEWizCost.dirApplication.get(), FILE_COST),
-    fileBoot("Boot", "File Boot del modulo target", false, true, AEWizCost.dirBoot.get(), FILE_BOOT),
-    fileData("Data", "File Data del modulo target", false, true, AEWizCost.dirData.get(), FILE_DATA),
+    fileMain("Main", "File main del modulo target", false, true, VUOTA, VUOTA, VUOTA, APP_NAME),
+    fileCost("Cost", "File Cost del modulo target", false, true, AEWizCost.dirApplication.get(), FILE_COST, VUOTA, FILE_COST),
+    fileBoot("Boot", "File Boot del modulo target", false, true, AEWizCost.dirBoot.get(), FILE_BOOT, VUOTA, FILE_BOOT),
+    fileData("Data", "File Data del modulo target", false, true, AEWizCost.dirData.get(), FILE_DATA, VUOTA, FILE_DATA),
+    filePreferenza("Preferenza", "File AExxxPreferenza del modulo target", false, true, AEWizCost.dirEnumeration.get(), FILE_PREFERENZA, FILE_PREFIX_ENUMERATION, FILE_PREFERENZA),
     //            creaDirectorySecurity();
     ;
 
@@ -36,11 +38,13 @@ public enum AEModulo {
 
     private boolean isDirectory;
 
-    private boolean isSourceFile;
+    private boolean isFile;
 
     private String directory;
 
     private String sourcesName;
+
+    private String prefix;
 
     private String fileName;
 
@@ -48,38 +52,47 @@ public enum AEModulo {
 
     private String absolutePath;
 
+    private boolean acceso;
 
     /**
      * Costruttore parziale <br>
      */
-    AEModulo(String tag, String descrizione, boolean isDirectory, boolean isSourceFile, String directory) {
-        this(tag, descrizione, isDirectory, isSourceFile, directory, VUOTA, null);
+    AEModulo(String tag, String descrizione, boolean isDirectory, boolean isFile, String directory) {
+        this(tag, descrizione, isDirectory, isFile, directory, VUOTA, null);
     }
 
     /**
      * Costruttore parziale <br>
      */
-    AEModulo(String tag, String descrizione, boolean isDirectory, boolean isSourceFile, String directory, String sourcesName) {
-        this(tag, descrizione, isDirectory, isSourceFile, directory, sourcesName, sourcesName, null);
+    AEModulo(String tag, String descrizione, boolean isDirectory, boolean isFile, String directory, String sourcesName) {
+        this(tag, descrizione, isDirectory, isFile, directory, sourcesName, VUOTA, sourcesName, null);
     }
 
     /**
      * Costruttore parziale <br>
      */
-    AEModulo(String tag, String descrizione, boolean isDirectory, boolean isSourceFile, String directory, String sourcesName, String fileName) {
-        this(tag, descrizione, isDirectory, isSourceFile, directory, sourcesName, fileName, null);
+    AEModulo(String tag, String descrizione, boolean isDirectory, boolean isFile, String directory, String sourcesName, String fileName) {
+        this(tag, descrizione, isDirectory, isFile, directory, sourcesName, VUOTA, fileName, null);
+    }
+
+    /**
+     * Costruttore parziale <br>
+     */
+    AEModulo(String tag, String descrizione, boolean isDirectory, boolean isFile, String directory, String sourcesName, String prefix, String fileName) {
+        this(tag, descrizione, isDirectory, isFile, directory, sourcesName, prefix, fileName, null);
     }
 
     /**
      * Costruttore completo <br>
      */
-    AEModulo(String tag, String descrizione, boolean isDirectory, boolean isSourceFile, String directory, String sourcesName, String fileName, AECopyWiz copyWiz) {
+    AEModulo(String tag, String descrizione, boolean isDirectory, boolean isFile, String directory, String sourcesName, String prefix, String fileName, AECopyWiz copyWiz) {
         this.tag = tag;
         this.descrizione = descrizione;
         this.isDirectory = isDirectory;
-        this.isSourceFile = isSourceFile;
+        this.isFile = isFile;
         this.directory = directory;
         this.sourcesName = sourcesName;
+        this.prefix = prefix;
         this.fileName = fileName;
         this.copyWiz = copyWiz != null ? copyWiz : isDirectory ? AECopyWiz.dirAddingOnly : AECopyWiz.sourceCheckFlagSeEsiste;
         this.absolutePath = VALORE_MANCANTE;
@@ -99,11 +112,23 @@ public enum AEModulo {
     }
 
 
-    public static List<AEModulo> getSourceFiles() {
+    public static List<AEModulo> getFiles() {
         List<AEModulo> lista = new ArrayList<>();
 
         for (AEModulo mod : AEModulo.values()) {
-            if (mod.isSourceFile) {
+            if (mod.isFile) {
+                lista.add(mod);
+            }
+        }
+
+        return lista;
+    }
+
+    public static List<AEModulo> getFilesValidi() {
+        List<AEModulo> lista = new ArrayList<>();
+
+        for (AEModulo mod : AEModulo.values()) {
+            if (mod.isFile && mod.is()) {
                 lista.add(mod);
             }
         }
@@ -118,8 +143,8 @@ public enum AEModulo {
     public static void fixValues(String pathModulo, String project) {
         for (AEModulo mod : AEModulo.values()) {
             mod.absolutePath = pathModulo + mod.directory;
-            if (mod.isSourceFile) {
-                mod.absolutePath += project + mod.fileName + FlowCost.JAVA_SUFFIX;
+            if (mod.isFile) {
+                mod.absolutePath += mod.prefix + project + mod.fileName + FlowCost.JAVA_SUFFIX;
             }
         }
     }
@@ -152,21 +177,25 @@ public enum AEModulo {
         return isDirectory;
     }
 
-    public boolean isSourceFile() {
-        return isSourceFile;
+    public boolean isFile() {
+        return isFile;
     }
 
-        public String getDirectory() {
-            return directory;
-        }
+    public String getDirectory() {
+        return directory;
+    }
 
     public String getSourcesName() {
         return sourcesName;
     }
 
-        public String getFileName() {
-            return fileName;
-        }
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
 
     public AECopyWiz getCopyWiz() {
         return copyWiz;
@@ -176,4 +205,15 @@ public enum AEModulo {
         return absolutePath;
     }
 
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public boolean is() {
+        return acceso;
+    }
+
+    public void setAcceso(boolean acceso) {
+        this.acceso = acceso;
+    }
 }

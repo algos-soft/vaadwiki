@@ -201,31 +201,39 @@ public enum AEWizCost {
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirBoot(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory boot", "backend/boot/"),
+    dirBackend(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory backend", "backend/"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirPackages(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory packages del modulo target", "backend/packages/"),
+    dirApplication(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.path, "Nome della directory application del modulo target", dirBackend.get() + "application/"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirBackend(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory backend del modulo target", "backend/"),
+    dirBoot(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory boot", dirBackend.get() + "boot/"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirApplication(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.path, "Nome della directory application del modulo target", "backend/application/"),
+    dirData(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory data del modulo target", dirBackend.get() + "data/"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirData(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory data del modulo target", "backend/data/"),
+    dirEnumeration(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory enumeration del modulo target", dirBackend.get() + "enumeration/"),
+
+
+    /**
+     * Cartella. <br>
+     * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
+     */
+    dirPackages(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory packages del modulo target", dirBackend.get() + "packages/"),
+
 
     /**
      * Cartella. <br>

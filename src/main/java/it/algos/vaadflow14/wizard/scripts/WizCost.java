@@ -124,6 +124,8 @@ public abstract class WizCost {
 
     public static final String TITOLO_MODIFICA_PROGETTO = "Modifica di un progetto esistente";
 
+    public static final String TITOLO_MODIFICA_MODULO = "Modifica di un modulo esistente";
+
     public static final String TITOLO_MODIFICA_QUESTO_PROGETTO = "Modifica di questo progetto";
 
     public static final String TITOLO_NEW_PACKAGE = "Nuovo package";
@@ -151,6 +153,10 @@ public abstract class WizCost {
     public static final String FILE_BOOT = "Boot";
 
     public static final String FILE_DATA = "Data";
+
+    public static final String FILE_PREFIX_ENUMERATION = "AE";
+
+    public static final String FILE_PREFERENZA = "Preferenza";
 
     public static final String FILE_VERS = "Vers";
 

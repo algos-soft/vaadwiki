@@ -24,7 +24,6 @@ public enum AEProgetto {
     beta("beta", "Beta", "/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
     untitled("untitled", "Torino", "/Users/gac/Documents/IdeaProjects/untitled/"),
     moneglia("moneglia", "Moneglia", VUOTA),
-    bologna("bologna", "Modena", "/Users/gac/Documents/IdeaProjects/tutorial/sub/bologna"),
     gestione("gestione", "Gestione", VUOTA),
 
     ;

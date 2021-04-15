@@ -372,7 +372,6 @@ public abstract class WizElabora implements WizRecipient {
         fileName = fileName.toLowerCase();
         upperName = text.primaMaiuscola(fileName);
 
-
         AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(fileName));
         AEWizCost.nameTargetPackage.setValue(text.fixPuntoToSlash(fileName));
         AEWizCost.nameTargetFileUpper.setValue(upperName);
@@ -396,7 +395,7 @@ public abstract class WizElabora implements WizRecipient {
         String message = VUOTA;
         String path = VUOTA;
         String projectUpper = AEWizCost.nameTargetProjectUpper.get();
-        String projectLower = AEWizCost.nameTargetProjectLower.get();
+        String projectModulo = AEWizCost.nameTargetProjectModulo.get();
         String pathBreve;
 
         //--crea directory principale del modulo target (empty)
@@ -404,15 +403,12 @@ public abstract class WizElabora implements WizRecipient {
         //--crea subDirectory application (empty) in backend
         //--crea subDirectory boot (empty) in backend
         //--crea subDirectory data (empty) in backend
+        //--crea subDirectory enumeration (empty) in backend
         //--crea subDirectory packages (empty) in backend
         //--crea subDirectory ui (empty)
         for (AEModulo mod : AEModulo.getDirectories()) {
             path = mod.getAbsolutePath();
-            pathBreve = file.findPathBreveDa(path, projectLower);
-            if (pathBreve.equals(path)) {
-                pathBreve = "..";
-            }
-            pathBreve += FlowCost.SLASH;
+            pathBreve = getPathBreve(mod);
 
             if (text.isEmpty(path) || path.equals(VALORE_MANCANTE)) {
                 message = String.format("Nel target %s manca il path della directory %s", projectUpper, mod.getTag());
@@ -432,23 +428,41 @@ public abstract class WizElabora implements WizRecipient {
         }
 
         //--crea files del modulo target
-        //--crea file Cost
-        //--crea file Boot
-        //--crea file Data
-        for (AEModulo mod : AEModulo.getSourceFiles()) {
-            path = mod.getAbsolutePath();
-            String firstDir = "algos/" + projectLower;
-            pathBreve = file.findPathBreve(path, mod.getDirectory());
+        //--crea file xxxCost
+        //--crea file xxxBoot
+        //--crea file xxxData
+        //--crea file AExxxPreferenza
+        for (AEModulo mod : AEModulo.getFilesValidi()) {
+            pathBreve = getPathBreve(mod);
             if (text.isEmpty(path) || path.equals(VALORE_MANCANTE)) {
                 message = String.format("Nel target %s manca il path del file %s", projectUpper, mod.getTag());
                 logger.log(AETypeLog.wizard, message);
             }
             else {
+                String firstDir = "algos/" + projectModulo;
                 result = wizService.creaFile(mod.getCopyWiz(), mod.getSourcesName(), mod.getAbsolutePath(), firstDir);
                 message = String.format("Nel target %s ", projectUpper, pathBreve) + result.getMessage();
                 logger.log(AETypeLog.wizard, message);
             }
         }
+    }
+
+
+    /**
+     *
+     */
+    protected String getPathBreve(AEModulo mod) {
+        String pathBreve = VUOTA;
+        String path = VUOTA;
+        String projectModulo = AEWizCost.nameTargetProjectModulo.get();
+
+        path = mod.getAbsolutePath();
+        pathBreve = file.findPathBreveDa(path, projectModulo);
+        if (pathBreve.equals(path)) {
+            pathBreve = "..";
+        }
+
+        return pathBreve + FlowCost.SLASH;
     }
 
 }

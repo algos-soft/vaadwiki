@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
@@ -65,12 +64,10 @@ public class WizDialogUpdateProject extends WizDialog {
 
         if (AEFlag.isBaseFlow.is()) {
             topLayout.add(text.getLabelGreenBold("Update del progetto selezionato"));
-            topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " viene sovrascritto"));
-            topLayout.add(text.getLabelGreenBold("Eventuali modifiche locali vengono perse"));
+            topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " del progetto selezionato viene sovrascritto. Eventuali modifiche locali vengono perse"));
             topLayout.add(text.getLabelGreenBold("I sorgenti (che non vengono modificati) sono in  " + pathBreve));
             topLayout.add(text.getLabelRedBold("Il progetto deve esistere nella enum AEProgetto"));
-            topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante"));
-            topLayout.add(text.getLabelRedBold("Seleziona le cartelle/files da aggiornare"));
+            topLayout.add(text.getLabelRedBold("Seleziona il progetto dal comboBox sottostante e le cartelle/files da aggiornare"));
         }
         else {
             topLayout.add(text.getLabelGreenBold("Update di questo progetto"));
@@ -150,16 +147,16 @@ public class WizDialogUpdateProject extends WizDialog {
     }
 
 
-    protected void sincroAll() {
-        Checkbox checkAll = mappaWizBox.get(AECheck.all.name()).getBox();
-        boolean accesi = checkAll.getValue();
-
-        for (String key : mappaWizBox.keySet()) {
-            if (!key.equals(AECheck.all.name())) {
-                mappaWizBox.get(key).setValue(accesi);
-            }
-        }
-    }
+//    protected void sincroAll() {
+//        Checkbox checkAll = mappaWizBox.get(AECheck.all.name()).getBox();
+//        boolean accesi = checkAll.getValue();
+//
+//        for (String key : mappaWizBox.keySet()) {
+//            if (!key.equals(AECheck.all.name())) {
+//                mappaWizBox.get(key).setValue(accesi);
+//            }
+//        }
+//    }
 
     protected void creaBottoni() {
         super.creaBottoni();

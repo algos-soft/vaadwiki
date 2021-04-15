@@ -37,7 +37,7 @@ public class WizElaboraUpdateProject extends WizElabora {
             if (aeWizCost.isAcceso()) {
 
                 if (aeWizCost == AEWizCost.pathTargetProjectModulo) {
-                    super.creaModuloProgetto();
+                    //                    super.creaModuloProgetto();@//@todo Controllare
                     continue;
                 }
 

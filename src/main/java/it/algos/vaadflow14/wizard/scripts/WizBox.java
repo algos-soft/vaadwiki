@@ -50,6 +50,14 @@ public class WizBox extends HorizontalLayout {
         }
     }
 
+
+    public WizBox(AEModulo modulo) {
+        checkbox = new ACheckBox(modulo.getDescrizione());
+        this.setValue(true);
+        this.add(checkbox);
+        fieldCaption = modulo.getTag();
+    }
+
     @Deprecated
     public WizBox(AECheck check) {
         checkbox = new ACheckBox(check.getCaption(), check.getCaption());

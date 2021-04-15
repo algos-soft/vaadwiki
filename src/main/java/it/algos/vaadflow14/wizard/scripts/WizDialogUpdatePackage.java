@@ -74,7 +74,7 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
         this.add(topLayout);
 
         topLayout.add(text.getLabelGreenBold("Update di un package esistente in questo progetto"));
-        topLayout.add(text.getLabelRedBold("Seleziona il package da aggiornare"));
+        topLayout.add(text.getLabelRedBold("Seleziona nel comboBox il package da aggiornare"));
     }
 
 
