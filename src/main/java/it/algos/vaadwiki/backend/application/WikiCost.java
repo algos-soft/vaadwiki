@@ -1,6 +1,8 @@
 package it.algos.vaadwiki.backend.application;
 
-import it.algos.vaadflow14.backend.annotation.AIScript;
+import it.algos.vaadflow14.backend.annotation.*;
+
+import java.time.*;
 
 /**
  * Project vaadwiki
@@ -21,5 +23,15 @@ import it.algos.vaadflow14.backend.annotation.AIScript;
 public abstract class WikiCost {
 
     public static final String TAG_WIKI_DATA = "wikiData";
+
+    public static final String PREF_DATA_LAST_DOWLOAD_GENERE = "lastDownloadGenere";
+
+    public static final String PREF_DATA_LAST_DOWLOAD_ATTIVITA = "lastDownloadAttivita";
+
+    public static final String PREF_DATA_LAST_DOWLOAD_NAZIONALITA = "lastDownloadNazionalita";
+
+    public static final String PREF_DATA_LAST_DOWLOAD_PROFESSIONE = "lastDownloadProfessione";
+
+    public static final LocalDateTime DATA_TIME = LocalDateTime.of(2021, 4, 15, 12, 30);
 
 }// end of static class

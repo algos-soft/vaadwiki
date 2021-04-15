@@ -73,13 +73,13 @@ public class NazionalitaLogicList extends WikiLogicList {
         List<Span> lista = new ArrayList<>();
 
         lista.add(html.getSpanBlu("Modulo:Bio/Plurale nazionalità."));
-        lista.add(html.getSpanBlu("Progetto:Biografie/Nazionalità."));
         lista.add(html.getSpanVerde("Contiene la tabella di conversione delle nazionalità passate via parametri " + html.bold("Nazionalità/Cittadinanza/NazionalitàNaturalizzato")));
         lista.add(html.getSpanVerde(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
         lista.add(html.getSpanVerde("All'interno della tabella le nazionalità sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse"));
         lista.add(html.getSpanVerde("Le nazionalità sono elencate all'interno del modulo con la seguente sintassi:"));
         lista.add(html.getSpanVerde("[\"nazionalitaforma1\"] = \"nazionalità al plurale\","));
         lista.add(html.getSpanVerde("[\"nazionalitaforma2\"] = \"nazionalità al plurale\","));
+        lista.add(html.getSpanRosso("Progetto:Biografie/Nazionalità."));
 
         return lista;
     }
