@@ -381,9 +381,13 @@ public abstract class FlowCost {
 
     public static final String PREF_USA_MENU_RESET = "usaMenuReset";
 
-    public static final String PREF_USA_MENU_CRONO = "usaMenuCrono";
+    public static final String PREF_USA_MENU_ADMIN = "usaMenuAdmin";
+
+    public static final String PREF_USA_MENU_GESTIONE = "usaMenuGestione";
 
     public static final String PREF_USA_MENU_GEO = "usaMenuGeo";
+
+    public static final String PREF_USA_MENU_CRONO = "usaMenuCrono";
 
     public static final String PREF_ICONA_EDIT = "iconaEdit";
 

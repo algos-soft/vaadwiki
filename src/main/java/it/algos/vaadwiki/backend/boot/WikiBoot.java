@@ -5,6 +5,7 @@ import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.data.*;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.application.FlowVar;
+import it.algos.vaadwiki.backend.packages.professione.Professione;
 import it.algos.vaadwiki.backend.packages.nazionalita.Nazionalita;
 import it.algos.vaadwiki.backend.packages.attivita.Attivita;
 import it.algos.vaadwiki.backend.packages.genere.Genere;
@@ -122,6 +123,7 @@ public class WikiBoot extends FlowBoot {
         FlowVar.menuRouteList.add(Genere.class);
 		FlowVar.menuRouteList.add(Attivita.class);
         FlowVar.menuRouteList.add(Nazionalita.class);
+        FlowVar.menuRouteList.add(Professione.class);
     }
 
     /**

@@ -55,15 +55,15 @@ public class PreferenzaLogicList extends LogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-//        this.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
-//        this.searchProperty = annotation.getSearchPropertyName(entityClazz);//@todo Funzionalità ancora da implementare
-//        this.usaBottoneDelete = false;//@todo Funzionalità ancora da implementare
+        //        this.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
+        //        this.searchProperty = annotation.getSearchPropertyName(entityClazz);//@todo Funzionalità ancora da implementare
+        //        this.usaBottoneDelete = false;//@todo Funzionalità ancora da implementare
         this.usaBottoneResetList = true;
         this.usaBottoneNew = true;
         this.usaBottoneExport = false;
         this.usaBottonePaginaWiki = false;
-//        this.wikiPageTitle = VUOTA;//@todo Funzionalità ancora da implementare
-//        this.usaBottoneEdit = true;//@todo Funzionalità ancora da implementare
+        //        this.wikiPageTitle = VUOTA;//@todo Funzionalità ancora da implementare
+        //        this.usaBottoneEdit = true;//@todo Funzionalità ancora da implementare
     }
 
 
@@ -77,9 +77,9 @@ public class PreferenzaLogicList extends LogicList {
     protected List<Span> getSpanList() {
         List<Span> lista = new ArrayList<>();
 
-        lista.add(html.getSpanVerde("PreferenzaLogic è SCOPE_PROTOTYPE mentre APreferenzaService è SCOPE_SINGLETON"));
-        lista.add(html.getSpanVerde("PreferenzaLogic è usato come normale classe del package di preferenze e viene ricreato per ogni Grid e Form"));
-        lista.add(html.getSpanVerde("APreferenzaService è usato per 'leggere' le preferenze da qualsiasi 'service' singleton"));
+        lista.add(html.getSpanVerde("PreferenzaLogicList è @Scope " + html.bold("prototype") + " mentre PreferenzaService è " + html.bold("singleton")));
+        lista.add(html.getSpanVerde("PreferenzaLogicList è usato come normale classe del package di preferenze e viene ricreato per ogni Grid e Form"));
+        lista.add(html.getSpanVerde("PreferenzaService è usato per 'leggere' le preferenze da qualsiasi 'service' singleton"));
         lista.add(html.getSpanVerde("Alcune preferenze sono Enumeration e possono essere lette direttamente: AEPreferenza.usaDebug.is()"));
         lista.add(html.getSpanVerde("Altre preferenze sono inserite dall'utente e possono essere lette dal singleton APreferenzaService: pref.isBool(\"usaDebug\")"));
         lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed il comboBox 'Type'"));
@@ -91,9 +91,9 @@ public class PreferenzaLogicList extends LogicList {
      * Costruisce una mappa di ComboBox di selezione e filtro <br>
      * DEVE essere sovrascritto nella sottoclasse <br>
      */
-//    @Override
+    //    @Override
     protected void fixMappaComboBox() {
-//        super.creaComboBox("type");
+        //        super.creaComboBox("type");
     }
 
     /**
@@ -106,13 +106,12 @@ public class PreferenzaLogicList extends LogicList {
      *
      * @return wrapper di dati per il Form
      */
-//    @Override
-//    public WrapForm getWrapForm(AEntity entityBean) {
-//        WrapForm wrap = super.getWrapForm(entityBean);//@todo Funzionalità ancora da implementare
-//        wrap.setUsaBottomLayout(true);//@todo Funzionalità ancora da implementare
-//        return wrap;
-//    }
-
+    //    @Override
+    //    public WrapForm getWrapForm(AEntity entityBean) {
+    //        WrapForm wrap = super.getWrapForm(entityBean);//@todo Funzionalità ancora da implementare
+    //        wrap.setUsaBottomLayout(true);//@todo Funzionalità ancora da implementare
+    //        return wrap;
+    //    }
 
     /**
      * Costruisce un layout per il Form in bodyPlacehorder della view <br>
@@ -126,21 +125,21 @@ public class PreferenzaLogicList extends LogicList {
      *
      * @return componente grafico per il placeHolder
      */
-//    @Override
-//    public AForm getBodyFormLayout(AEntity entityBean) {
-//        currentForm = null;
-//
-//        //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
-//        if (entityBean != null) {
-//            try {
-//                currentForm = appContext.getBean(PreferenzaForm.class, this, getWrapForm(entityBean));
-//            } catch (Exception unErrore) {
-//                logger.error(unErrore, this.getClass(), "getBodyFormLayout");
-//            }
-//        }
-//
-//        return currentForm;
-//    }
+    //    @Override
+    //    public AForm getBodyFormLayout(AEntity entityBean) {
+    //        currentForm = null;
+    //
+    //        //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
+    //        if (entityBean != null) {
+    //            try {
+    //                currentForm = appContext.getBean(PreferenzaForm.class, this, getWrapForm(entityBean));
+    //            } catch (Exception unErrore) {
+    //                logger.error(unErrore, this.getClass(), "getBodyFormLayout");
+    //            }
+    //        }
+    //
+    //        return currentForm;
+    //    }
 
 
     /**
@@ -154,7 +153,7 @@ public class PreferenzaLogicList extends LogicList {
      *
      * @return lista di nomi di properties
      */
-//    @Override
+    //    @Override
     public List<String> getGridPropertyNamesList() {
         String matrice;
 

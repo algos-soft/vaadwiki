@@ -24,6 +24,8 @@ public abstract class WikiLogicList extends LogicList {
 
     public final static String PATH_MODULO_PLURALE = PATH_MODULO + "Plurale_";
 
+    public final static String PATH_MODULO_LINK = PATH_MODULO + "Link_";
+
     public final static String GENERE = "genere";
 
     public final static String ATT = "Attività";
@@ -43,6 +45,8 @@ public abstract class WikiLogicList extends LogicList {
     public final static String PATH_MODULO_NAZIONALITA = PATH_MODULO_PLURALE + NAZ_LOWER;
 
     public final static String PATH_STATISTICHE_NAZIONALITA = PATH_PROGETTO + NAZ;
+
+    public final static String PATH_MODULO_PROFESSIONE = PATH_MODULO_LINK + ATT_LOWER;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
