@@ -50,7 +50,7 @@ import java.util.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
-public class WikiBootOld extends FlowBoot {
+public class WikiBoot extends FlowBoot {
 
 
     /**
