@@ -45,7 +45,7 @@ import javax.validation.constraints.*;
 @AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaCompany = true, usaNote = true)
 @AIView(menuName = "Preferenza", menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
 @AIList(fields = "code,type,value,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione", usaRowIndex = true)
-@AIForm(fields = "code,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione,type,value", usaSpostamentoTraSchede = false)
+@AIForm(fields = "code,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione,type,value", usaSpostamentoTraSchede = true)
 public class Preferenza extends AEntity {
 
     /**

@@ -3,28 +3,32 @@ package it.algos.vaadwiki.ui.enumeration;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.icon.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.interfaces.*;
+import it.algos.vaadflow14.backend.annotation.*;
 
 /**
- * Project vaadflow15
+ * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: gio, 21-mag-2020
- * Time: 06:30
+ * Date: ven, 16-apr-2021
+ * Time: 14:54
+ * <p>
  * KeyModifier.META -> quarto da sinistra, mela, command
  * KeyModifier.CONTROL -> secondo da sinistra, control,  ^
  * KeyModifier.ALT -> boh?
  * KeyModifier.SHIFT -> fila a sinistra, secondo dal basso, freccia in su
  */
+@AIScript(sovraScrivibile = false)
 public enum AEWikiButton implements AIButton {
 
     update("Update", VaadinIcon.LIST, "error", AEWikiAction.update, true, "Update di una pagina", "cross", Key.KEY_R, null),
-    modulo("Modulo", VaadinIcon.LIST, "secondary", AEWikiAction.modulo, true, "Modulo di Wikipedia", "cross", Key.KEY_R, null),
+    modulo("Modulo", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.modulo, true, "Modulo di Wikipedia", "cross", Key.KEY_R, null),
     elabora("Elabora", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.elabora, true, "Elabora un documento", "cross", Key.KEY_R, null),
     check("Check", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.elabora, true, "Controlla un documento", "cross", Key.KEY_R, null),
     test("Test", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.test, true, "Test di una funzionalità", "cross", Key.KEY_R, null),
-    statistiche("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statistiche, true, "Visione statistiche", "cross", Key.KEY_R, null),
-    statisticheDue("Upload statistiche", VaadinIcon.UPLOAD, "error", AEWikiAction.statisticheDue, true, "Elaborazione statistiche", "cross", Key.KEY_R, null),
+    statistiche("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statistiche, true, "Elaborazione statistiche", "cross", Key.KEY_R, null),
+    statisticheDue("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statisticheDue, true, "Elaborazione statistiche", "cross", Key.KEY_R, null),
 
     ;
 

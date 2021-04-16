@@ -50,7 +50,7 @@ import java.util.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
-public class WikiBoot extends FlowBoot {
+public class WikiBootOld extends FlowBoot {
 
 
     /**
@@ -80,7 +80,7 @@ public class WikiBoot extends FlowBoot {
         FlowVar.projectName = "Vaadwiki";
         FlowVar.projectDescrizione = "Gestione di BioBot";
         FlowVar.projectVersion = environment.getProperty("algos.wiki.version") != null ? Double.parseDouble(environment.getProperty("algos.wiki.version")) : 0.0;
-        FlowVar.preferenzeSpecificheList = Arrays.asList(AEWikiPreferenza2.values());
+        FlowVar.preferenzeSpecificheList = Arrays.asList(AEWikiPreferenza.values());
         FlowVar.versionDate = LocalDate.of(2021,4,14);
         FlowVar.projectNote = "Sviluppo di una applicazione in Vaadin14";
         FlowVar.usaCronoPackages = false;

@@ -27,10 +27,10 @@ import java.time.*;
 @AIScript(sovraScrivibile = false)
 public enum AEWikiPreferenza implements AIPreferenza {
 
-    lastDownloadGenere(PREF_DATA_LAST_DOWLOAD_GENERE, "Data dell'ultimo download di Genere", AETypePref.localdatetime, DATA_TIME, false),
-    lastDownloadAttivita(PREF_DATA_LAST_DOWLOAD_ATTIVITA, "Data dell'ultimo download di Attivita", AETypePref.localdatetime, DATA_TIME, false),
-    lastDownloadNazionalita(PREF_DATA_LAST_DOWLOAD_NAZIONALITA, "Data dell'ultimo download di Nazionalita", AETypePref.localdatetime, DATA_TIME, false),
-    lastDownloadProfessione(PREF_DATA_LAST_DOWLOAD_PROFESSIONE, "Data dell'ultimo download di Professione", AETypePref.localdatetime, DATA_TIME, false),
+    lastDownloadGenere(PREF_DATA_LAST_DOWLOAD_GENERE, "Ultimo download di Genere", AETypePref.localdatetime, DATA_TIME, false,"Data dell'ultimo download di Genere dal Modulo:Bio/Plurale attività genere."),
+    lastDownloadAttivita(PREF_DATA_LAST_DOWLOAD_ATTIVITA, "Ultimo download di Attività", AETypePref.localdatetime, DATA_TIME, false,"Data dell'ultimo download di Attività dal Modulo:Bio/Plurale attività."),
+    lastDownloadNazionalita(PREF_DATA_LAST_DOWLOAD_NAZIONALITA, "Ultimo download di Nazionalità", AETypePref.localdatetime, DATA_TIME, false,"Data dell'ultimo download di Nazionalità dal Modulo:Bio/Plurale nazionalità."),
+    lastDownloadProfessione(PREF_DATA_LAST_DOWLOAD_PROFESSIONE, "Ultimo download di Professione", AETypePref.localdatetime, DATA_TIME, false,"Data dell'ultimo download di Professione dal Modulo:Bio/Link attività."),
 
     ;
 
@@ -77,6 +77,10 @@ public enum AEWikiPreferenza implements AIPreferenza {
 
     AEWikiPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany) {
         this(keyCode, descrizione, type, defaultValue, usaCompany, false, false, VUOTA);
+    }// fine del costruttore
+
+    AEWikiPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, String note) {
+        this(keyCode, descrizione, type, defaultValue, usaCompany, false, false, note);
     }// fine del costruttore
 
 

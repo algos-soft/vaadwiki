@@ -16,7 +16,7 @@ import it.algos.vaadflow14.backend.annotation.AIScript;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: mer, 14-apr-2021
+ * Date: ven, 16-apr-2021
  * <p>
  * The entry point of the Spring Boot application. <br>
  * Spring boot web application initializer. <br>

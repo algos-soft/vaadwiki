@@ -138,7 +138,7 @@ public enum AEWizCost {
      * Modulo del progetto target. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectModulo(AEWizValue.derivato, AEWizUso.flagProject, AEWizCopy.path, "Directory MODULO del progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly) {
+    pathTargetProjectModulo(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.path, "Directory MODULO del progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly) {
         @Override
         public void fixValue() {
             nameTargetProjectModulo.fixValue();
@@ -159,6 +159,12 @@ public enum AEWizCost {
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
+    dirEnum(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory backend", "enumeration/"),
+
+    /**
+     * Cartella. <br>
+     * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
+     */
     dirRootWizard(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Directory wizard", dirModuloVaadFlow14.value + "wizard/"),
 
     /**
@@ -171,7 +177,7 @@ public enum AEWizCost {
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootWizardEnumeration(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Directory wizard.enumeration", dirRootWizard.value + "enumeration/"),
+    dirRootWizardEnumeration(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Directory wizard.enumeration", dirRootWizard.value + dirEnum.value),
 
     /**
      * Cartella. <br>
@@ -225,7 +231,7 @@ public enum AEWizCost {
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirEnumeration(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory enumeration del modulo target", dirBackend.get() + "enumeration/"),
+    dirBackEnum(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory backend/enumeration del modulo target", dirBackend.get() + dirEnum.value),
 
 
     /**
@@ -240,6 +246,12 @@ public enum AEWizCost {
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
     dirUI(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory UI del modulo target", "ui/"),
+
+    /**
+     * Cartella. <br>
+     * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
+     */
+    dirUiEnum(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory ui/enumeration del modulo target", dirUI.get() + dirEnum.value),
 
     /**
      * Nome della directory sources. <br>

@@ -158,6 +158,8 @@ public abstract class WizCost {
 
     public static final String FILE_PREFERENZA = "Preferenza";
 
+    public static final String FILE_BUTTON = "Button";
+
     public static final String FILE_VERS = "Vers";
 
     public static final String FILE_HOME = "Home";

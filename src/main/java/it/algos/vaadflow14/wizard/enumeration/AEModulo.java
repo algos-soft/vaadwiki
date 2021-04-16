@@ -19,15 +19,18 @@ public enum AEModulo {
     dirBackend("Backend", "Directory backend del modulo target", true, false, AEWizCost.dirBackend.get()),
     dirApplication("Application", "Directory application del modulo target", true, false, AEWizCost.dirApplication.get()),
     dirBoot("Boot", "Directory boot del modulo target", true, false, AEWizCost.dirBoot.get()),
-    dirEnumeration("Enumeration", "Directory enumeration del modulo target", true, false, AEWizCost.dirEnumeration.get()),
+    dirBackEnum("Enumeration", "Directory backend/enumeration del modulo target", true, false, AEWizCost.dirBackEnum.get()),
+    dirUiEnum("Enumeration", "Directory ui/enumeration del modulo target", true, false, AEWizCost.dirUiEnum.get()),
     dirData("Data", "Directory data del modulo target", true, false, AEWizCost.dirData.get()),
     dirPackages("Packages", "Directory packages del modulo target", true, false, AEWizCost.dirPackages.get()),
     dirUI("UI", "Directory UI del modulo target", true, false, AEWizCost.dirUI.get()),
-    fileMain("Main", "File main del modulo target", false, true, VUOTA, VUOTA, VUOTA, APP_NAME),
+    fileMain("Main", "File main del modulo target", false, true, VUOTA, APP_NAME, VUOTA, APP_NAME),
     fileCost("Cost", "File Cost del modulo target", false, true, AEWizCost.dirApplication.get(), FILE_COST, VUOTA, FILE_COST),
     fileBoot("Boot", "File Boot del modulo target", false, true, AEWizCost.dirBoot.get(), FILE_BOOT, VUOTA, FILE_BOOT),
     fileData("Data", "File Data del modulo target", false, true, AEWizCost.dirData.get(), FILE_DATA, VUOTA, FILE_DATA),
-    filePreferenza("Preferenza", "File AExxxPreferenza del modulo target", false, true, AEWizCost.dirEnumeration.get(), FILE_PREFERENZA, FILE_PREFIX_ENUMERATION, FILE_PREFERENZA),
+    filePreferenza("Preferenza", "File AExxxPreferenza del modulo target", false, true, AEWizCost.dirBackEnum.get(), FILE_PREFERENZA, FILE_PREFIX_ENUMERATION, FILE_PREFERENZA),
+    fileButton("Button", "File AExxxButton del modulo target", false, true, AEWizCost.dirUiEnum.get(), FILE_BUTTON, FILE_PREFIX_ENUMERATION, FILE_BUTTON),
+
     //            creaDirectorySecurity();
     ;
 
