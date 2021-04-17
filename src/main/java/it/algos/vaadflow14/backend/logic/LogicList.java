@@ -10,7 +10,6 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.list.*;
