@@ -1,19 +1,14 @@
 package it.algos.vaadwiki.backend.packages.attivita;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.backend.enumeration.AETypeReset;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.wrapper.AResult;
-import static it.algos.vaadwiki.backend.logic.WikiLogicList.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadwiki.backend.enumeration.*;
+import it.algos.vaadwiki.backend.logic.*;
 import it.algos.vaadwiki.backend.packages.genere.*;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import org.springframework.stereotype.*;
 
 import java.util.*;
 
@@ -35,19 +30,19 @@ import java.util.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Service
+@Qualifier("AttivitaService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
-public class AttivitaService extends AService {
-
-    public static String EX = "ex ";
-
-    public static String EX2 = "ex-";
+public class AttivitaService extends WikiService {
 
     /**
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
 
+    public static String EX = "ex ";
+
+    public static String EX2 = "ex-";
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -64,6 +59,7 @@ public class AttivitaService extends AService {
      */
     public AttivitaService() {
         super(Attivita.class);
+        super.prefDownload = AEWikiPreferenza.lastDownloadAttivita;
     }
 
     /**
@@ -75,7 +71,7 @@ public class AttivitaService extends AService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Attivita creaOriginale(final String singolare, final String plurale) {
-        return (Attivita) mongo.insert(newEntity(singolare, plurale,false));
+        return (Attivita) mongo.insert(newEntity(singolare, plurale, false));
     }
 
     /**
@@ -87,7 +83,7 @@ public class AttivitaService extends AService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Attivita creaAggiunta(final String singolare, final String plurale) {
-        return (Attivita) mongo.insert(newEntity(singolare, plurale,true));
+        return (Attivita) mongo.insert(newEntity(singolare, plurale, true));
     }
 
     /**
@@ -175,6 +171,7 @@ public class AttivitaService extends AService {
         }
         status = aggiunge();
 
+        super.fixDataDownload();
         return status;
     }
 

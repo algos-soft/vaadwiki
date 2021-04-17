@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadwiki.backend.logic.*;
+import static it.algos.vaadwiki.backend.logic.WikiService.*;
 
 import java.util.*;
 

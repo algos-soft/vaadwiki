@@ -52,6 +52,7 @@ public abstract class AService extends AAbstractService implements AIService {
         this.entityClazz = entityClazz;
     }
 
+
     /**
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
      * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>

@@ -2,6 +2,7 @@ package it.algos.unit;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadwiki.backend.logic.*;
 import static it.algos.vaadwiki.backend.logic.WikiLogicList.*;
 import it.algos.vaadwiki.backend.packages.genere.*;
 import org.junit.*;
@@ -86,7 +87,7 @@ public class GenereServiceTest extends ATest {
     void downloadModuloGenere() {
         int cicloMax = 10;
         int ciclo = 0;
-        sorgente = PATH_MODULO_GENERE;
+        sorgente = WikiService.PATH_MODULO_GENERE;
         sorgente2 = "agronomo";
         previsto = "\"agronomi\",\"M\"";
         String singolare = VUOTA;
@@ -142,7 +143,7 @@ public class GenereServiceTest extends ATest {
         int maxMongo = 50; //errore non accettabile
         int minTest = 5; //accettabili, li mostro per avere un'idea della lunghezza
         int minMongo = 2; //errore non accettabile
-        sorgente = PATH_MODULO_GENERE;
+        sorgente = WikiService.PATH_MODULO_GENERE;
         String singolare = VUOTA;
         String pluraliGrezzi = VUOTA;
         String pluraleMaschile = VUOTA;

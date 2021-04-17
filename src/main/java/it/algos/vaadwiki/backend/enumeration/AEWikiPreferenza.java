@@ -27,10 +27,10 @@ import java.time.*;
 @AIScript(sovraScrivibile = false)
 public enum AEWikiPreferenza implements AIPreferenza {
 
-    lastDownloadGenere(PREF_DATA_LAST_DOWLOAD_GENERE, "Ultimo download di Genere", AETypePref.localdatetime, DATA_TIME, false,"Data dell'ultimo download di Genere dal Modulo:Bio/Plurale attività genere."),
-    lastDownloadAttivita(PREF_DATA_LAST_DOWLOAD_ATTIVITA, "Ultimo download di Attività", AETypePref.localdatetime, DATA_TIME, false,"Data dell'ultimo download di Attività dal Modulo:Bio/Plurale attività."),
-    lastDownloadNazionalita(PREF_DATA_LAST_DOWLOAD_NAZIONALITA, "Ultimo download di Nazionalità", AETypePref.localdatetime, DATA_TIME, false,"Data dell'ultimo download di Nazionalità dal Modulo:Bio/Plurale nazionalità."),
-    lastDownloadProfessione(PREF_DATA_LAST_DOWLOAD_PROFESSIONE, "Ultimo download di Professione", AETypePref.localdatetime, DATA_TIME, false,"Data dell'ultimo download di Professione dal Modulo:Bio/Link attività."),
+    lastDownloadGenere(PREF_DATA_LAST_DOWLOAD_GENERE, "Ultimo download di Genere", AETypePref.localdatetime, DATA_TIME, false, "Data dell'ultimo download di Genere dal Modulo:Bio/Plurale attività genere."),
+    lastDownloadAttivita(PREF_DATA_LAST_DOWLOAD_ATTIVITA, "Ultimo download di Attività", AETypePref.localdatetime, DATA_TIME, false, "Data dell'ultimo download di Attività dal Modulo:Bio/Plurale attività."),
+    lastDownloadNazionalita(PREF_DATA_LAST_DOWLOAD_NAZIONALITA, "Ultimo download di Nazionalità", AETypePref.localdatetime, DATA_TIME, false, "Data dell'ultimo download di Nazionalità dal Modulo:Bio/Plurale nazionalità."),
+    lastDownloadProfessione(PREF_DATA_LAST_DOWLOAD_PROFESSIONE, "Ultimo download di Professione", AETypePref.localdatetime, DATA_TIME, false, "Data dell'ultimo download di Professione dal Modulo:Bio/Link attività."),
 
     ;
 
@@ -181,6 +181,11 @@ public enum AEWikiPreferenza implements AIPreferenza {
         return javaValue;
     }
 
+    public void setValue(Object value) {
+        Preferenza pref = preferenzaService.findByKey(this.keyCode);
+        pref.setValue(pref.type.objectToBytes(value));
+//        preferenzaService.save(pref);
+    }
 
     public String getStr() {
         String valore = VUOTA;

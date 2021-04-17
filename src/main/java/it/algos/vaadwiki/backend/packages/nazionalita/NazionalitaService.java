@@ -2,6 +2,7 @@ package it.algos.vaadwiki.backend.packages.nazionalita;
 
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadwiki.backend.logic.*;
 import static it.algos.vaadwiki.backend.logic.WikiLogicList.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -29,7 +30,7 @@ import java.util.*;
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
-public class NazionalitaService extends AService {
+public class NazionalitaService extends WikiService {
 
 
     /**

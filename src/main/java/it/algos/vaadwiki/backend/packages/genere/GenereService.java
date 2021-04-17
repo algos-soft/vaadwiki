@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.logic.AService;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.wrapper.AResult;
+import it.algos.vaadwiki.backend.logic.*;
 import static it.algos.vaadwiki.backend.logic.WikiLogicList.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -36,7 +37,7 @@ import java.util.*;
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
-public class GenereService extends AService {
+public class GenereService extends WikiService {
 
 
     /**

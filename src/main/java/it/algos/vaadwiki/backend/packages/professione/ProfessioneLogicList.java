@@ -5,6 +5,7 @@ import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadwiki.backend.logic.*;
+import static it.algos.vaadwiki.backend.logic.WikiService.*;
 
 import java.util.*;
 
@@ -56,7 +57,7 @@ public class ProfessioneLogicList extends WikiLogicList {
 
         super.usaBottoneUpload = false;
         super.usaBottoneStatistiche = false;
-        super.wikiModuloTitle = PATH_MODULO_PROFESSIONE;
+        super.wikiModuloTitle =  PATH_MODULO_PROFESSIONE;
     }
 
 

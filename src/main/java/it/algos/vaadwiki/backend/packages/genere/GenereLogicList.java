@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadwiki.backend.logic.*;
 import static it.algos.vaadwiki.backend.logic.WikiLogicList.*;
+import static it.algos.vaadwiki.backend.logic.WikiService.*;
 
 import java.util.*;
 
@@ -58,7 +59,7 @@ public class GenereLogicList extends WikiLogicList {
 
         super.usaBottoneUpload = false;
         super.usaBottoneStatistiche = false;
-        super.wikiModuloTitle = PATH_MODULO_GENERE;
+        super.wikiModuloTitle =  PATH_MODULO_GENERE;
     }
 
 

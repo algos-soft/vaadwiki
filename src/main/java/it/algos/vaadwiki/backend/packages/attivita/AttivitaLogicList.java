@@ -5,6 +5,8 @@ import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadwiki.backend.logic.*;
+import static it.algos.vaadwiki.backend.logic.WikiService.*;
+import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
 
@@ -37,11 +39,15 @@ public class AttivitaLogicList extends WikiLogicList {
 
 
     /**
-     * Costruttore senza parametri <br>
+     * Costruttore con parametro <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+     * Il framework SpringBoot/Vaadin con l'Annotation @Autowired inietta automaticamente un riferimento al singleton WikiService <br>
+     * L'annotation @Autowired potrebbe essere omessa perché c'è un solo costruttore <br>
+     * Usa un @Qualifier perché la classe WikiService è astratta ed ha diverse sottoclassi concrete <br>
      */
-    public AttivitaLogicList() {
+    public AttivitaLogicList(@Autowired @Qualifier("AttivitaService") WikiService wikiService) {
         super.entityClazz = Attivita.class;
+        super.wikiService = wikiService;
     }// end of Vaadin/@Route constructor
 
 
