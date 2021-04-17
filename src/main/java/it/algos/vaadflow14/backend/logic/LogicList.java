@@ -10,6 +10,7 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.list.*;
@@ -46,10 +47,14 @@ public abstract class LogicList extends Logic {
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      * Nel costruttore della sottoclasse l'annotation @Autowired potrebbe essere omessa perché c'è un solo costruttore <br>
      * Nel costruttore della sottoclasse usa un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
+     * Riceve e regola la entityClazz (final) associata a questa logicView <br>
+     *
+     * @param entityService (obbligatorio) riferimento al service specifico correlato a questa istanza (prototype) di LogicList
+     * @param entityClazz   (obbligatorio)  the class of type AEntity
      */
-    public LogicList(final Class<? extends AEntity> entityClazz, final AIService entityService) {
-        super.entityClazz = entityClazz;
+    public LogicList(final AIService entityService, final Class<? extends AEntity> entityClazz) {
         super.entityService = entityService;
+        super.entityClazz = entityClazz;
     }// end of Vaadin/@Route constructor
 
 
@@ -96,19 +101,6 @@ public abstract class LogicList extends Logic {
     protected void fixOperationForm() {
         this.operationForm = annotation.getOperation(entityClazz);
     }
-
-    //    /**
-    //     * Controlla che esista il riferimento alla entityClazz <br>
-    //     * Se non esiste nella List, è un errore <br>
-    //     * Se non esiste nel Form, lo crea dall'url del browser <br>
-    //     * Deve essere sovrascritto, senza invocare il metodo della superclasse <br>
-    //     */
-    //    @Override
-    //    protected void fixEntityClazz() {
-    //        if (entityClazz == null) {
-    //            logger.error("Non esiste la entityClazz", LogicList.class, "fixEntityClazz");
-    //        }
-    //    }
 
 
     /**
@@ -176,30 +168,6 @@ public abstract class LogicList extends Logic {
         if (usaBottoneUpload) {
             listaBottoni.add(AEButton.upload);
         }
-        //        if (usaBottoneResetForm) {
-        //            listaBottoni.add(AEButton.resetForm);
-        //        }
-        //        if (usaBottoneBack) {
-        //            listaBottoni.add(AEButton.back);
-        //        }
-        //        if (usaBottoneAnnulla) {
-        //            listaBottoni.add(AEButton.annulla);
-        //        }
-        //        if (usaBottoneConferma) {
-        //            listaBottoni.add(AEButton.conferma);
-        //        }
-        //        if (usaBottoneRegistra) {
-        //            listaBottoni.add(AEButton.registra);
-        //        }
-        //        if (usaBottoneCancella) {
-        //            listaBottoni.add(AEButton.delete);
-        //        }
-        //        if (usaBottonePrima) {
-        //            listaBottoni.add(AEButton.prima);
-        //        }
-        //        if (usaBottoneDopo) {
-        //            listaBottoni.add(AEButton.dopo);
-        //        }
 
         return listaBottoni;
     }

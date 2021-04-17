@@ -28,6 +28,7 @@ import org.springframework.stereotype.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Service
+@Qualifier("viaService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = true)
 public class ViaService extends AService {

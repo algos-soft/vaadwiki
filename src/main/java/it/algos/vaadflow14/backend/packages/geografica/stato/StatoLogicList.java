@@ -7,7 +7,9 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
+import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
 
@@ -40,11 +42,17 @@ public class StatoLogicList extends LogicList {
 
 
     /**
-     * Costruttore senza parametri <br>
+     * Costruttore con parametro <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+     * Il framework SpringBoot/Vaadin con l'Annotation @Autowired inietta automaticamente un riferimento al singleton xxxService <br>
+     * L'annotation @Autowired potrebbe essere omessa perché c'è un solo costruttore <br>
+     * Usa un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
+     * Regola (nella superclasse) la entityClazz (final) associata a questa logicView <br>
+     *
+     * @param entityService (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicList
      */
-    public StatoLogicList() {
-        super.entityClazz = Stato.class;
+    public StatoLogicList(@Autowired @Qualifier("statoService") final AIService entityService) {
+        super(entityService, Stato.class);
     }// end of Vaadin/@Route constructor
 
 
