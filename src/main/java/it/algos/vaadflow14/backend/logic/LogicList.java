@@ -9,6 +9,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
@@ -30,6 +31,28 @@ public abstract class LogicList extends Logic {
      * The Grid  (obbligatoria per ViewList)
      */
     protected AGrid grid;
+
+
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro del costruttore usato <br>
+     */
+    public LogicList() {
+    }// end of Vaadin/@Route constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+     * Nel costruttore della sottoclasse l'annotation @Autowired potrebbe essere omessa perché c'è un solo costruttore <br>
+     * Nel costruttore della sottoclasse usa un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
+     */
+    public LogicList(final Class<? extends AEntity> entityClazz, final AIService entityService) {
+        super.entityClazz = entityClazz;
+        super.entityService = entityService;
+    }// end of Vaadin/@Route constructor
+
 
     /**
      * Preferenze usate da questa 'logica' <br>

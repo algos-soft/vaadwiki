@@ -197,6 +197,14 @@ public abstract class LogicProperty extends VerticalLayout {
     protected Class<? extends AEntity> entityClazz;
 
     /**
+     * The entityService obbligatorio, singleton di tipo xxxService che implementa l'interfaccia AIService <br>
+     * È il riferimento al service specifico correlato a questa istanza (prototype) di LogicList/FormList <br>
+     * Viene regolato nel costruttore della sottoclasse concreta xxxService <br>
+     * Tramite un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
+     */
+    protected AIService entityService;
+
+    /**
      * The entityBean, istanza di entityClazz obbligatorio solo per il form <br>
      */
     protected AEntity entityBean;
@@ -211,10 +219,6 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected String entityBeanNextID;
 
-    /**
-     * The entityService facoltativo, singleton di tipo xxxService <br>
-     */
-    protected AIService entityService;
 
     /**
      * The @route() of xxxLogicForm facoltativo  <br>
