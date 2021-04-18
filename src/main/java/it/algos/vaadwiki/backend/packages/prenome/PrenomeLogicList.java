@@ -1,9 +1,8 @@
-package it.algos.vaadwiki.backend.packages.attivita;
+package it.algos.vaadwiki.backend.packages.prenome;
 
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadwiki.backend.enumeration.*;
@@ -11,15 +10,14 @@ import it.algos.vaadwiki.backend.logic.*;
 import static it.algos.vaadwiki.backend.logic.WikiService.*;
 import org.springframework.beans.factory.annotation.*;
 
-import java.time.*;
 import java.util.*;
 
 /**
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: mer, 14-apr-2021 <br>
- * Fix time: 17:58 <br>
+ * Fix date: dom, 18-apr-2021 <br>
+ * Fix time: 7:42 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, si usa la classe GenericLogicList con @Route <br>
@@ -31,9 +29,9 @@ import java.util.*;
  * Annotated with @Route (obbligatorio) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Route(value = "attivita", layout = MainLayout.class)
+@Route(value = "prenome", layout = MainLayout.class)
 @AIScript(sovraScrivibile = false)
-public class AttivitaLogicList extends WikiLogicList {
+public class PrenomeLogicList extends WikiLogicList {
 
 
     /**
@@ -52,8 +50,8 @@ public class AttivitaLogicList extends WikiLogicList {
      *
      * @param entityService (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicList
      */
-    public AttivitaLogicList(@Autowired @Qualifier("attivitaService") final AIService entityService) {
-        super(entityService, Attivita.class);
+    public PrenomeLogicList(@Autowired @Qualifier("prenomeService") final AIService entityService) {
+        super(entityService, Prenome.class);
     }// end of Vaadin/@Route constructor
 
 
@@ -66,10 +64,9 @@ public class AttivitaLogicList extends WikiLogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneUpload = true;
+        super.usaBottoneUpload = false;
         super.usaBottoneStatistiche = true;
-        super.wikiModuloTitle = PATH_MODULO_ATTIVITA;
-        super.wikiStatisticheTitle = PATH_STATISTICHE_ATTIVITA;
+        super.wikiModuloTitle = PATH_MODULO_PRENOME;
     }
 
 
@@ -83,17 +80,12 @@ public class AttivitaLogicList extends WikiLogicList {
     protected List<Span> getSpanList() {
         List<Span> lista = new ArrayList<>();
 
-        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadAttivita));
-        lista.add(html.getSpanBlu("Modulo:Bio/Plurale attività."));
-        lista.add(html.getSpanVerde("Contiene la tabella di conversione delle attività passate via parametri " + html.bold("Attività/Attività2/Attività3")));
-        lista.add(html.getSpanVerde(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
-        lista.add(html.getSpanVerde("All'interno della tabella le attività sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse"));
-        lista.add(html.getSpanVerde("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
-        lista.add(html.getSpanVerde("[\"attivitaForma1\"] = \"attività al plurale\","));
-        lista.add(html.getSpanVerde("[\"attivitaForma2\"] = \"attività al plurale\","));
-        lista.add(html.getSpanRosso("Nella collezione locale mongoDB vengono aggiunte " + html.bold("anche") + " le voci delle " + html.bold("ex") + "-attività (non presenti nel Modulo su Wiki) recuperate dal modulo Modulo:Bio/Plurale attività genere"));
-        lista.add(html.getSpanRosso("Progetto:Biografie/Attività."));
-
+        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadPrenome));
+        lista.add(html.getSpanBlu("Progetto:Antroponimi/Nomi doppi."));
+        lista.add(html.getSpanVerde("Sono elencati i " + html.bold("nomi doppi") + " (ad esempio 'Maria Teresa'), per i quali il BioBot deve fare una lista di biografati una volta superate le " + html.bold("50") + " biografie."));
+        lista.add(html.getSpanVerde("Si veda anche la [[Categoria:Prenomi composti]]."));
+        lista.add(html.getSpanRosso("La lista " + html.bold("nome") + " prevede " + html.bold("solo") + " nomi singoli a cui vengono aggiunti questi " + html.bold("nomi doppi") + " accettabili."));
+        lista.add(html.getSpanRosso("Quando si crea la lista " + html.bold("nome") + ", i nomi doppi vengono scaricati ed aggiunti alla lista stessa."));
         return lista;
     }
 

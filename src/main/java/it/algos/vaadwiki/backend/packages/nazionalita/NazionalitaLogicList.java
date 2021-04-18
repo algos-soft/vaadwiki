@@ -4,9 +4,13 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.logic.*;
 import static it.algos.vaadwiki.backend.logic.WikiService.*;
+import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
 
@@ -39,11 +43,17 @@ public class NazionalitaLogicList extends WikiLogicList {
 
 
     /**
-     * Costruttore senza parametri <br>
+     * Costruttore con parametro <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+     * Il framework SpringBoot/Vaadin con l'Annotation @Autowired inietta automaticamente un riferimento al singleton xxxService <br>
+     * L'annotation @Autowired potrebbe essere omessa perché c'è un solo costruttore <br>
+     * Usa un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
+     * Regola (nella superclasse) la entityClazz (final) associata a questa logicView <br>
+     *
+     * @param entityService (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicList
      */
-    public NazionalitaLogicList() {
-        super.entityClazz = Nazionalita.class;
+    public NazionalitaLogicList(@Autowired @Qualifier("nazionalitaService") final AIService entityService) {
+        super(entityService, Nazionalita.class);
     }// end of Vaadin/@Route constructor
 
 
@@ -73,6 +83,7 @@ public class NazionalitaLogicList extends WikiLogicList {
     protected List<Span> getSpanList() {
         List<Span> lista = new ArrayList<>();
 
+        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadNazionalita));
         lista.add(html.getSpanBlu("Modulo:Bio/Plurale nazionalità."));
         lista.add(html.getSpanVerde("Contiene la tabella di conversione delle nazionalità passate via parametri " + html.bold("Nazionalità/Cittadinanza/NazionalitàNaturalizzato")));
         lista.add(html.getSpanVerde(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));

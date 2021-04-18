@@ -2,8 +2,10 @@ package it.algos.vaadwiki.backend.packages.nazionalita;
 
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.logic.*;
 import static it.algos.vaadwiki.backend.logic.WikiLogicList.*;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -28,6 +30,7 @@ import java.util.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Service
+@Qualifier("nazionalitaService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
 public class NazionalitaService extends WikiService {
@@ -45,6 +48,7 @@ public class NazionalitaService extends WikiService {
      */
     public NazionalitaService() {
         super(Nazionalita.class);
+        super.prefDownload = AEWikiPreferenza.lastDownloadNazionalita;
     }
 
     /**
@@ -121,8 +125,8 @@ public class NazionalitaService extends WikiService {
 
     /**
      * Legge la mappa di valori dal modulo di wiki <br>
-     * Cancella la (eventuale) precedente lista di attività <br>
-     * Elabora la lista di attività <br>
+     * Cancella la (eventuale) precedente lista di nazionalità <br>
+     * Elabora la lista di nazionalità <br>
      * Crea le entities e le integra da altro modulo <br>
      *
      * @param wikiTitle della pagina su wikipedia
@@ -141,6 +145,7 @@ public class NazionalitaService extends WikiService {
             status = true;
         }
 
+        super.fixDataDownload();
         return status;
     }
 

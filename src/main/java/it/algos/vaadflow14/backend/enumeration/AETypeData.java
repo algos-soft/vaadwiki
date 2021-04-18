@@ -97,6 +97,12 @@ public enum AETypeData {
     dataCompletaShort("data completa short", "EEE, d-MMM-yyy", "dom, 5-ott-2014", 14),
 
     /**
+     * Pattern: d-M-yy 'alle' H:mm <br>
+     * Esempio: 5-ott-14 alle 13:45 <br>
+     */
+    breveOrario("data e orario brevi", "d-M-yy 'alle' H:mm", "5-ott-14 alle 13:45", 20, false),
+
+    /**
      * Pattern: EEEE, d-MMMM-yyy 'alle' H:mm <br>
      * Esempio: domenica, 5-ottobre-2014 alle 13:45 <br>
      */

@@ -1,12 +1,16 @@
 package it.algos.vaadwiki.backend.logic;
 
+import com.vaadin.flow.component.html.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.interfaces.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.ui.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
+import java.time.*;
 import java.util.*;
 
 /**
@@ -18,35 +22,6 @@ import java.util.*;
  */
 public abstract class WikiLogicList extends LogicList {
 
-//    public final static String PATH_MODULO = "Modulo:Bio/";
-//
-//    public final static String PATH_PROGETTO = "Progetto:Biografie/";
-//
-//    public final static String PATH_MODULO_PLURALE = PATH_MODULO + "Plurale_";
-//
-//    public final static String PATH_MODULO_LINK = PATH_MODULO + "Link_";
-//
-//    public final static String GENERE = "genere";
-//
-//    public final static String ATT = "Attività";
-//
-//    public final static String ATT_LOWER = ATT.toLowerCase();
-//
-//    public final static String NAZ = "Nazionalità";
-//
-//    public final static String NAZ_LOWER = NAZ.toLowerCase();
-//
-//    public final static String PATH_MODULO_GENERE = PATH_MODULO_PLURALE + ATT_LOWER + SPAZIO + GENERE;
-//
-//    public final static String PATH_MODULO_ATTIVITA = PATH_MODULO_PLURALE + ATT_LOWER;
-//
-//    public final static String PATH_STATISTICHE_ATTIVITA = PATH_PROGETTO + ATT;
-//
-//    public final static String PATH_MODULO_NAZIONALITA = PATH_MODULO_PLURALE + NAZ_LOWER;
-//
-//    public final static String PATH_STATISTICHE_NAZIONALITA = PATH_PROGETTO + NAZ;
-//
-//    public final static String PATH_MODULO_PROFESSIONE = PATH_MODULO_LINK + ATT_LOWER;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -120,6 +95,21 @@ public abstract class WikiLogicList extends LogicList {
      * Flag di preferenza per specificare il titolo della pagina wiki da mostrare in lettura <br>
      */
     protected String wikiStatisticheDueTitle;
+
+    /**
+     * Costruttore con parametri <br>
+     * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+     * Nel costruttore della sottoclasse l'annotation @Autowired potrebbe essere omessa perché c'è un solo costruttore <br>
+     * Nel costruttore della sottoclasse usa un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
+     * Riceve e regola la entityClazz (final) associata a questa logicView <br>
+     *
+     * @param entityService (obbligatorio) riferimento al service specifico correlato a questa istanza (prototype) di LogicList
+     * @param entityClazz   (obbligatorio)  the class of type AEntity
+     */
+    public WikiLogicList(final AIService entityService, final Class<? extends AEntity> entityClazz) {
+        super(entityService, entityClazz);
+    }// end of Vaadin/@Route constructor
+
 
     /**
      * Preferenze usate da questa 'logica' <br>
@@ -230,6 +220,27 @@ public abstract class WikiLogicList extends LogicList {
         entityService.download();
         this.refreshGrid();
         return true;
+    }
+
+    /**
+     * Aggiunge informazioni sull'ultimo download effettuato <br>
+     * Se non è mai stato fatto (lastDownload=ROOT_DATE_TIME), lo evidenzia <br>
+     * Altrimenti formatta la data dell'ultimo download <br>
+     *
+     * @return un 'span' di colore rosso
+     */
+    protected Span fixInfoDownload(AEWikiPreferenza aePreferenza) {
+        String message;
+        LocalDateTime last = aePreferenza.getDate();
+
+        if (last.equals(ROOT_DATA_TIME)) {
+            message = "Download non ancora effettuato";
+        }
+        else {
+            message = "Ultimo download:" + SPAZIO + date.getDataOrarioCompleta(last);
+        }
+
+        return html.getSpanBlu(message);
     }
 
 }

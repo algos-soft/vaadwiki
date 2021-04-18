@@ -92,13 +92,14 @@ public abstract class AService extends AAbstractService implements AIService {
     }
 
     /**
-     * Crea e registra una entity solo se non esisteva <br>
-     * Controlla che la entity sia valida e superi i validators associati <br>
+     * Crea e registra una entityBean solo se non esisteva <br>
+     * Controlla che la entityBean sia valida e superi i validators associati <br>
      *
      * @param newEntityBean da registrare
      *
-     * @return la nuova entity appena creata e salvata
+     * @return la nuova entityBean appena creata e salvata, null se non creata o non salvata
      */
+    @Override
     public AEntity checkAndSave(final AEntity newEntityBean) {
         AEntity entityBean;
         boolean valido = false;
@@ -122,6 +123,18 @@ public abstract class AService extends AAbstractService implements AIService {
             logger.warn(message, this.getClass(), "checkAndSave");
             return newEntityBean;
         }
+    }
+
+    /**
+     * Crea e registra sempre una entityBean <br>
+     *
+     * @param entityBean da registrare (nuova o esistente)
+     *
+     * @return la entityBean appena salvata, null se non salvata
+     */
+    @Override
+    public AEntity save(AEntity entityBean) {
+        return mongo.save(entityBean);
     }
 
     /**

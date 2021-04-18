@@ -8,8 +8,10 @@ import it.algos.vaadflow14.backend.logic.AService;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.wrapper.AResult;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.logic.*;
 import static it.algos.vaadwiki.backend.logic.WikiLogicList.*;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,7 @@ import java.util.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Service
+@Qualifier("genereService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
 public class GenereService extends WikiService {
@@ -52,6 +55,7 @@ public class GenereService extends WikiService {
      */
     public GenereService() {
         super(Genere.class);
+        super.prefDownload = AEWikiPreferenza.lastDownloadGenere;
     }
 
 
@@ -187,8 +191,8 @@ public class GenereService extends WikiService {
 
     /**
      * Legge la mappa di valori dal modulo di wiki <br>
-     * Cancella la (eventuale) precedente lista di attività <br>
-     * Elabora la lista di attività <br>
+     * Cancella la (eventuale) precedente lista di genere <br>
+     * Elabora la lista di genere <br>
      * Crea le entities e le integra da altro modulo <br>
      *
      * @param wikiTitle della pagina su wikipedia
@@ -222,6 +226,7 @@ public class GenereService extends WikiService {
             status = true;
         }
 
+        super.fixDataDownload();
         return status;
     }
 

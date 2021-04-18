@@ -1,22 +1,16 @@
 package it.algos.vaadflow14.backend.service;
 
-import com.google.gson.JsonElement;
-import it.algos.vaadflow14.backend.enumeration.AEMese;
-import it.algos.vaadflow14.backend.enumeration.AETypeData;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
+import com.google.gson.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
+
+import java.text.*;
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
 
 
 /**
@@ -566,6 +560,22 @@ public class ADateService extends AAbstractService {
      */
     public String getDataOrarioCompleta(LocalDateTime localDateTime) {
         return get(localDateTime, AETypeData.completaOrario);
+    }
+
+
+    /**
+     * Restituisce la data e l' orario nella forma del pattern previsto. <br>
+     * <p>
+     * Returns a string representation of the date <br>
+     * Pattern: d-M-yy 'alle' H:mm <br>
+     * Esempio: 5-ott-14 alle 13:45 <br>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getDataOrarioBreve(LocalDateTime localDateTime) {
+        return get(localDateTime, AETypeData.breveOrario);
     }
 
 

@@ -27,10 +27,11 @@ import java.time.*;
 @AIScript(sovraScrivibile = false)
 public enum AEWikiPreferenza implements AIPreferenza {
 
-    lastDownloadGenere(PREF_DATA_LAST_DOWLOAD_GENERE, "Ultimo download di Genere", AETypePref.localdatetime, DATA_TIME, false, "Data dell'ultimo download di Genere dal Modulo:Bio/Plurale attività genere."),
-    lastDownloadAttivita(PREF_DATA_LAST_DOWLOAD_ATTIVITA, "Ultimo download di Attività", AETypePref.localdatetime, DATA_TIME, false, "Data dell'ultimo download di Attività dal Modulo:Bio/Plurale attività."),
-    lastDownloadNazionalita(PREF_DATA_LAST_DOWLOAD_NAZIONALITA, "Ultimo download di Nazionalità", AETypePref.localdatetime, DATA_TIME, false, "Data dell'ultimo download di Nazionalità dal Modulo:Bio/Plurale nazionalità."),
-    lastDownloadProfessione(PREF_DATA_LAST_DOWLOAD_PROFESSIONE, "Ultimo download di Professione", AETypePref.localdatetime, DATA_TIME, false, "Data dell'ultimo download di Professione dal Modulo:Bio/Link attività."),
+    lastDownloadGenere(PREF_DATA_LAST_DOWLOAD_GENERE, "Ultimo download di Genere", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Genere dal Modulo:Bio/Plurale attività genere."),
+    lastDownloadAttivita(PREF_DATA_LAST_DOWLOAD_ATTIVITA, "Ultimo download di Attività", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Attività dal Modulo:Bio/Plurale attività."),
+    lastDownloadNazionalita(PREF_DATA_LAST_DOWLOAD_NAZIONALITA, "Ultimo download di Nazionalità", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Nazionalità dal Modulo:Bio/Plurale nazionalità."),
+    lastDownloadProfessione(PREF_DATA_LAST_DOWLOAD_PROFESSIONE, "Ultimo download di Professione", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Professione dal Modulo:Bio/Link attività."),
+    lastDownloadPrenome(PREF_DATA_LAST_DOWLOAD_PRENOME, "Ultimo download dei Nomi Doppi", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di nomi doppi dal Progetto:Antroponimi/Nomi doppi."),
 
     ;
 
@@ -184,7 +185,7 @@ public enum AEWikiPreferenza implements AIPreferenza {
     public void setValue(Object value) {
         Preferenza pref = preferenzaService.findByKey(this.keyCode);
         pref.setValue(pref.type.objectToBytes(value));
-//        preferenzaService.save(pref);
+        preferenzaService.save(pref);
     }
 
     public String getStr() {
@@ -232,6 +233,7 @@ public enum AEWikiPreferenza implements AIPreferenza {
         return valore;
     }
 
+    @Override
     public boolean is() {
         String message;
 
@@ -245,7 +247,7 @@ public enum AEWikiPreferenza implements AIPreferenza {
         }
     }
 
-
+    @Override
     public int getInt() {
         String message;
 
@@ -256,6 +258,20 @@ public enum AEWikiPreferenza implements AIPreferenza {
             message = String.format("La preferenza %s è di type %s. Non puoi usare getInt()", keyCode, type);
             logger.error(message);
             return 0;
+        }
+    }
+
+    @Override
+    public LocalDateTime getDate() {
+        String message;
+
+        if (type == AETypePref.localdatetime) {
+            return getValue() != null ? (LocalDateTime) getValue() : null;
+        }
+        else {
+            message = String.format("La preferenza %s è di type %s. Non puoi usare getDate()", keyCode, type);
+            logger.error(message);
+            return null;
         }
     }
 

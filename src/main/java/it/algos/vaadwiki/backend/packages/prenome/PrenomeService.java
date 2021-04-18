@@ -1,7 +1,8 @@
-package it.algos.vaadwiki.backend.packages.professione;
+package it.algos.vaadwiki.backend.packages.prenome;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.AService;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
@@ -9,12 +10,10 @@ import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.logic.*;
-import static it.algos.vaadwiki.backend.logic.WikiLogicList.*;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 import java.util.*;
 
@@ -22,8 +21,8 @@ import java.util.*;
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: gio, 15-apr-2021 <br>
- * Fix time: 6:53 <br>
+ * Fix date: dom, 18-apr-2021 <br>
+ * Fix time: 7:42 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, si usa la classe EntityService <br>
@@ -32,14 +31,15 @@ import java.util.*;
  * L' istanza (SINGLETON) viene creata alla partenza del programma <br>
  * <p>
  * Annotated with @Service (obbligatorio) <br>
+ * Annotated with @Qualifier (obbligatorio) per iniettare questo singleton nel costruttore di xxxLogicList <br>
  * Annotated with @Scope (obbligatorio con SCOPE_SINGLETON) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Service
-@Qualifier("professioneService")
+@Qualifier("prenomeService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
-public class ProfessioneService extends WikiService {
+public class PrenomeService extends WikiService {
 
 
     /**
@@ -52,33 +52,20 @@ public class ProfessioneService extends WikiService {
      * Costruttore senza parametri <br>
      * Regola la entityClazz (final) associata a questo service <br>
      */
-    public ProfessioneService() {
-        super(Professione.class);
-        super.prefDownload = AEWikiPreferenza.lastDownloadProfessione;
+    public PrenomeService() {
+        super(Prenome.class);
+        super.prefDownload = AEWikiPreferenza.lastDownloadPrenome;
     }
 
     /**
      * Crea e registra una entityBean <br>
      *
-     * @param singolare di riferimento (obbligatorio, unico)
-     * @param plurale   (facoltativo, non unico)
+     * @param code di riferimento (obbligatorio, unico)
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public Professione creaOriginale(final String singolare, final String plurale) {
-        return (Professione) mongo.insert(newEntity(singolare, plurale,false));
-    }
-
-    /**
-     * Crea e registra una entityBean <br>
-     *
-     * @param singolare di riferimento (obbligatorio, unico)
-     * @param plurale   (facoltativo, non unico)
-     *
-     * @return la nuova entityBean appena creata e salvata
-     */
-    public Professione creaAggiunta(final String singolare, final String plurale) {
-        return (Professione) mongo.insert(newEntity(singolare, plurale,true));
+    public Prenome crea(final String code) {
+        return (Prenome) mongo.insert(newEntity(code));
     }
 
 
@@ -87,20 +74,16 @@ public class ProfessioneService extends WikiService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param singolare di riferimento (obbligatorio, unico)
-	 * @param pagina (facoltativo, non unico)
-	 * @param aggiunta flag (facoltativo, di default false)
+     * @param code di riferimento (obbligatorio, unico)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Professione newEntity(final String singolare, final String pagina, final boolean aggiunta) {
-        Professione newEntityBean = Professione.builderProfessione()
-                .singolare(text.isValid(singolare) ? singolare : null)
-				.pagina(text.isValid(pagina) ? pagina : null)
-				.aggiunta(aggiunta)
+    public Prenome newEntity(final String code) {
+        Prenome newEntityBean = Prenome.builderPrenome()
+                .code(text.isValid(code) ? code : null)
                 .build();
 
-        return (Professione) fixKey(newEntityBean);
+        return (Prenome) fixKey(newEntityBean);
     }
 
     /**
@@ -113,8 +96,8 @@ public class ProfessioneService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Professione findById(final String keyID) {
-        return (Professione) super.findById(keyID);
+    public Prenome findById(final String keyID) {
+        return (Prenome) super.findById(keyID);
     }
 
 
@@ -128,8 +111,8 @@ public class ProfessioneService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Professione findByKey(final String keyValue) {
-        return (Professione) super.findByKey(keyValue);
+    public Prenome findByKey(final String keyValue) {
+        return (Prenome) super.findByKey(keyValue);
     }
 
 
@@ -140,13 +123,13 @@ public class ProfessioneService extends WikiService {
      * @return true se l'azione è stata eseguita
      */
     public boolean download() {
-        return downloadModulo(PATH_MODULO_PROFESSIONE);
+        return downloadModulo(PATH_MODULO_PRENOME);
     }
 
     /**
-     * Legge la mappa di valori dal modulo di wiki <br>
-     * Cancella la (eventuale) precedente lista di professione <br>
-     * Elabora la lista di professione <br>
+     * Legge la mappa di valori dalla pagina wiki <br>
+     * Cancella la (eventuale) precedente lista di prenome <br>
+     * Elabora la lista di prenome <br>
      * Crea le entities e le integra da altro modulo <br>
      *
      * @param wikiTitle della pagina su wikipedia
@@ -155,16 +138,32 @@ public class ProfessioneService extends WikiService {
      */
     public boolean downloadModulo(String wikiTitle) {
         boolean status = false;
-        Map<String, String> mappa = wiki.leggeMappaModulo(wikiTitle);
+        String tag = A_CAPO + "\\*";
+        String[] righe = null;
+        String nome;
+        String testoPagina = wiki.legge(wikiTitle);
 
-        if (mappa != null && mappa.size() > 0) {
-            deleteAll();
-            for (Map.Entry<String, String> entry : mappa.entrySet()) {
-                this.creaOriginale(entry.getKey(), entry.getValue());
-            }
-            status = true;
+        if (text.isValid(testoPagina)) {
+            righe = testoPagina.split(tag);
         }
-//        status = aggiunge();
+
+        if (array.isAllValid(righe)) {
+            this.deleteAll();
+
+            //--il primo va eliminato (non pertinente)
+            for (int k = 1; k < righe.length; k++) {
+                nome = righe[k];
+
+                //--l'ultimo va troncato
+                if (k == righe.length - 1) {
+                    nome = nome.substring(0, nome.indexOf("\n\n"));
+                }
+
+                this.crea(nome);
+            }
+        } else {
+            logger.error( "downloadModulo - Qualcosa non ha funzionato");
+        }
 
         super.fixDataDownload();
         return status;

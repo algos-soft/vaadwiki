@@ -126,10 +126,6 @@ public enum AEPreferenza implements AIPreferenza {
         this.logger = logger;
     }
 
-    public void setDate(ADateService date) {
-        this.date = date;
-    }
-
     public void setEnumService(AEnumerationService enumService) {
         this.enumService = enumService;
     }
@@ -202,6 +198,11 @@ public enum AEPreferenza implements AIPreferenza {
         return javaValue;
     }
 
+    public void setValue(Object value) {
+        Preferenza pref = preferenzaService.findByKey(this.keyCode);
+        pref.setValue(pref.type.objectToBytes(value));
+        preferenzaService.save(pref);
+    }
 
     public String getStr() {
         String valore = VUOTA;
@@ -248,6 +249,7 @@ public enum AEPreferenza implements AIPreferenza {
         return valore;
     }
 
+    @Override
     public boolean is() {
         String message;
 
@@ -261,7 +263,7 @@ public enum AEPreferenza implements AIPreferenza {
         }
     }
 
-
+    @Override
     public int getInt() {
         String message;
 
@@ -275,6 +277,23 @@ public enum AEPreferenza implements AIPreferenza {
         }
     }
 
+    @Override
+    public LocalDateTime getDate() {
+        String message;
+
+        if (type == AETypePref.localdatetime) {
+            return getValue() != null ? (LocalDateTime) getValue() : null;
+        }
+        else {
+            message = String.format("La preferenza %s è di type %s. Non puoi usare getDate()", keyCode, type);
+            logger.error(message);
+            return null;
+        }
+    }
+
+    public void setDate(ADateService date) {
+        this.date = date;
+    }
 
     public String getNote() {
         return note;

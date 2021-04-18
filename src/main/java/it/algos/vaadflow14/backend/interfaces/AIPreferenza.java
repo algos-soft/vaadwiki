@@ -2,6 +2,8 @@ package it.algos.vaadflow14.backend.interfaces;
 
 import it.algos.vaadflow14.backend.enumeration.*;
 
+import java.time.*;
+
 /**
  * Project vaadflow
  * Created by Algos
@@ -33,6 +35,12 @@ public interface AIPreferenza {
     boolean isVisibileAdmin();
 
     String getDescrizione();
+
+    public boolean is();
+
+    public int getInt();
+
+    public LocalDateTime getDate();
 
     String getNote();
 

@@ -37,9 +37,19 @@ public interface AIService {
      *
      * @param newEntityBean da registrare
      *
-     * @return la nuova entityBean appena creata e salvata
+     * @return la nuova entityBean appena creata e salvata, null se non creata o non salvata
      */
     AEntity checkAndSave(final AEntity newEntityBean);
+
+
+    /**
+     * Crea e registra sempre una entityBean <br>
+     *
+     * @param entityBean da registrare (nuova o esistente)
+     *
+     * @return la entityBean appena salvata, null se non salvata
+     */
+    AEntity save(final AEntity entityBean);
 
 
     /**

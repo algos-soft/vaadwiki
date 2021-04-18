@@ -58,6 +58,8 @@ public abstract class WikiService extends AService {
 
     public final static String PATH_MODULO_PROFESSIONE = PATH_MODULO_LINK + ATT_LOWER;
 
+    public final static String PATH_MODULO_PRENOME = "Progetto:Antroponimi/Nomi doppi";
+
     protected AEWikiPreferenza prefDownload;
 
     /**
@@ -81,8 +83,6 @@ public abstract class WikiService extends AService {
 
         if (prefDownload != null) {
             prefDownload.setValue(LocalDateTime.now());
-//            AEWikiPreferenza.pippo.setValue("LocalDateTime.now()");
-//            AEWikiPreferenza.pippo.setValue("eliminato");
         }
 
     }
