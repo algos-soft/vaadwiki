@@ -5,6 +5,7 @@ import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.data.*;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.application.FlowVar;
+import it.algos.vaadwiki.backend.packages.bio.Bio;
 import it.algos.vaadwiki.backend.packages.prenome.Prenome;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.professione.Professione;
@@ -123,6 +124,7 @@ public class WikiBoot extends FlowBoot {
     @Override
     protected void fixMenuRoutes() {
         super.fixMenuRoutes();
+		FlowVar.menuRouteList.add(Bio.class);
 		FlowVar.menuRouteList.add(Prenome.class);
         FlowVar.menuRouteList.add(Genere.class);
         FlowVar.menuRouteList.add(Attivita.class);
