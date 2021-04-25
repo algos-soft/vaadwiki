@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
@@ -327,6 +328,10 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected AEOperation operationForm = AEOperation.listNoForm;
 
+    /**
+     * Filtri per dataProvider <br>
+     */
+    protected List<AFiltro> filtri;
 
     protected void fixProperty() {
         if (routeParameter == null && annotation.getRouteName(this.getClass()).equals(ROUTE_NAME_GENERIC_VIEW)) {
@@ -374,13 +379,18 @@ public abstract class LogicProperty extends VerticalLayout {
         this.routeNameForm = classService.getRouteNameForm(entityClazz);
     }
 
+    /**
+     * Regolazioni iniziali di alcuni oggetti <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void regolazioniIniziali() {
+    }
 
     /**
      * Costruisce i 5 oggetti base (placeholder) di questa view <br>
      * <p>
      * Chiamato da LogicList.initView() <br>
-     * Può essere sovrascritto, per modificare il layout standard <br>
-     * Invocare PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixLayout() {
         this.removeAll();
@@ -625,6 +635,16 @@ public abstract class LogicProperty extends VerticalLayout {
         }
         span = html.getSpanBlu(message, AETypeWeight.bold, AETypeSize.small);
         this.add(span);
+    }
+
+    /**
+     * The entityService obbligatorio, singleton di tipo xxxService che implementa l'interfaccia AIService <br>
+     * È il riferimento al service specifico correlato a questa istanza (prototype) di LogicList/FormList <br>
+     * Viene regolato nel costruttore della sottoclasse concreta xxxService <br>
+     * Tramite un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
+     */
+    public AIService getEntityService() {
+        return entityService;
     }
 
 }

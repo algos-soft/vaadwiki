@@ -1,9 +1,11 @@
 package it.algos.vaadflow14.ui.list;
 
+import com.mongodb.*;
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.grid.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.data.provider.*;
 import com.vaadin.flow.data.renderer.*;
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -12,6 +14,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.service.*;
 import org.springframework.beans.factory.annotation.*;
@@ -80,16 +83,6 @@ public class AGrid {
     @Autowired
     public AMongoService mongo;
 
-    protected AILogic entityLogic;
-
-    protected List<String> gridPropertyNamesList;
-
-    protected Class<? extends AEntity> entityClazz;
-
-    protected Span headerLabelPlaceHolder;
-
-    protected Map<String, Grid.Column<AEntity>> columnsMap;
-
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con @Autowired <br>
@@ -106,50 +99,77 @@ public class AGrid {
     @Autowired
     protected AAnnotationService annotation;
 
+    /**
+     * Filtri per dataProvider <br>
+     */
+    protected List<AFiltro> filtri;
+
+    private AILogic entityLogic;
+
+    private List<String> gridPropertyNamesList;
+
+    private Class<? extends AEntity> entityClazz;
+
+    private Span headerLabelPlaceHolder;
+
+    private Map<String, Grid.Column<AEntity>> columnsMap;
+
+    private DataProvider dataProvider;
+
     @Autowired
     private ADataProviderService dataProviderService;
 
     private Grid grid;
 
-
+    @Deprecated
     public AGrid() {
     }
 
-
+    @Deprecated
     public AGrid(Class<? extends AEntity> entityClazz) {
         super();
         this.grid = new Grid(entityClazz);
     }
 
 
-    public AGrid(Class<? extends AEntity> entityClazz, AILogic entityLogic) {
+    /**
+     * Costruttore con parametri <br>
+     * Questa istanza viene costruita partendo da LogicList nel metodo fixBodyLayout() <br>
+     * con -> grid = appContext.getBean(AGrid.class, entityClazz, this, filtri); <br>
+     * <p>
+     * La Grid viene costruita e regolata in postConstruct() <br>
+     * I filtri e la relativa dataProvider possono essere modificati in maniera dinamica <br>
+     *
+     * @param entityClazz (obbligatorio)  the class of type AEntity
+     * @param entityLogic (obbligatorio) riferimento alla istanza (prototype) di LogicList che crea questa Grid
+     * @param filtri      (obbligatorio)  per selezione e ordinamento
+     */
+    public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic, List<AFiltro> filtri) {
         super();
-        this.grid = new Grid(entityClazz, false);
-        this.entityLogic = entityLogic;
         this.entityClazz = entityClazz;
+        this.entityLogic = entityLogic;
+        this.filtri = filtri;
     }
 
 
     /**
-     * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
+     * Questa istanza viene costruita partendo da LogicList <br>
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() <br>
      * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
      * <p>
      * Prima viene chiamato il costruttore <br>
      * Prima viene chiamato init(); <br>
      * Viene chiamato @PostConstruct (con qualsiasi firma) <br>
-     * Dopo viene chiamato setParameter(); <br>
-     * Dopo viene chiamato beforeEnter(); <br>
-     * <p>
-     * Le preferenze vengono (eventualmente) lette da mongo e (eventualmente) sovrascritte nella sottoclasse
-     * Creazione e posizionamento dei componenti UI <br>
-     * Possono essere sovrascritti nelle sottoclassi <br>
      */
     @PostConstruct
     protected void postConstruct() {
+        grid = new Grid(entityClazz, false);
         grid.setHeightByRows(true);
-        this.grid.setDataProvider(dataProviderService.creaDataProvider(entityClazz, null));
-        grid.setHeight("100%");
+
+        String sortProperty = annotation.getSortProperty(entityClazz);
+        BasicDBObject sort = new BasicDBObject(sortProperty, 1);
+        dataProvider = dataProviderService.creaDataProvider(entityClazz, sort);
+        grid.setDataProvider(dataProvider);
 
         if (AEPreferenza.usaDebug.is()) {
             grid.getElement().getStyle().set("background-color", AEColor.blue.getEsadecimale());
@@ -169,22 +189,9 @@ public class AGrid {
         this.creaGridHeader();
     }
 
-    //    /**
-    //     * Costruisce una lista di nomi delle properties <br>
-    //     * 1) Cerca nell'annotation @AIList della Entity e usa quella lista (con o senza ID) <br>
-    //     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
-    //     * 3) Sovrascrive il metodo getGridPropertyNamesList() nella sottoclasse specifica di xxxService <br>
-    //     * Un eventuale modifica dell'ordine di presentazione delle colonne viene regolata nel metodo sovrascritto <br>
-    //     */
-    //    protected List<String> getGridPropertyNamesList() {
-    //        List<String> gridPropertyNamesList = service != null ? service.getGridPropertyNamesList() : null;
-    //        return gridPropertyNamesList;
-    //    }
-
 
     /**
      * Aggiunge in automatico le colonne previste in gridPropertyNamesList <br>
-     * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>@todo non è proprio cosi
      */
     protected void addColumnsGrid() {
         Grid.Column<AEntity> colonna = null;
@@ -375,7 +382,6 @@ public class AGrid {
 
     /**
      * Eventuale header text <br>
-     * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>
      */
     @Deprecated
     public void fixGridHeader(Collection items) {
@@ -405,8 +411,8 @@ public class AGrid {
 
     /**
      * Eventuale header text <br>
-     * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>
      */
+    @Deprecated
     public void fixGridHeader(int items) {
         String message = VUOTA;
 
@@ -418,6 +424,42 @@ public class AGrid {
                 }
                 else {
                     message += "Lista di " + text.format(items) + " elementi";
+                }
+            }
+            else {
+                message += "Al momento non ci sono elementi in questa collezione";
+            }
+
+            if (headerLabelPlaceHolder != null) {
+                headerLabelPlaceHolder.setText(message);
+                headerLabelPlaceHolder.getElement().getStyle().set(AETypeColor.verde.getTag(), AETypeColor.verde.get());
+                headerLabelPlaceHolder.getElement().getStyle().set(AETypeWeight.bold.getTag(), AETypeWeight.bold.get());
+            }
+        }
+    }
+
+
+    /**
+     * Eventuale header text <br>
+     */
+    public void fixGridHeader() {
+        int totRec = mongo.count(entityClazz);
+        int items = grid.getDataProvider().size(null); //@todo Funzionalità ancora da implementare coi filtri al posto di null
+        String message = VUOTA;
+
+        if (true) {//@todo Funzionalità ancora da implementare con preferenza locale
+            message = annotation.getTitleList(entityClazz).toUpperCase() + SEP;
+            if (items > 0) {
+                if (items == 1) {
+                    message += "Lista di un solo elemento";
+                }
+                else {
+                    if (items == totRec) {
+                        message += "Lista di " + text.format(items) + " elementi";
+                    }
+                    else {
+                        message += "Lista di " + text.format(items) + " elementi su " + text.format(totRec);
+                    }
                 }
             }
             else {
@@ -460,6 +502,13 @@ public class AGrid {
         grid.getDataProvider().refreshAll();
     }
 
+    public DataProvider getDataProvider() {
+        return dataProvider;
+    }
+
+    public void setDataProvider(DataProvider dataProvider) {
+        grid.setDataProvider(dataProvider);
+    }
 
     public void setItems(List<Mese> items) {
         grid.setItems(items);

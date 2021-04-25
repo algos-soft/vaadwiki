@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 
 import java.util.*;
@@ -73,5 +74,12 @@ public interface AILogic {
      * @return true se l'azione è stata eseguita
      */
     boolean download();
+
+
+    /**
+     * The entityService obbligatorio, singleton di tipo xxxService che implementa l'interfaccia AIService <br>
+     * È il riferimento al service specifico correlato a questa istanza (prototype) di LogicList/FormList <br>
+     */
+    AIService getEntityService();
 
 }

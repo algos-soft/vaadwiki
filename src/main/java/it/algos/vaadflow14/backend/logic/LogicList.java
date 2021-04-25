@@ -1,9 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
-import com.mongodb.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
-import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -75,6 +73,17 @@ public abstract class LogicList extends Logic {
         this.fixOperationForm();
     }
 
+    /**
+     * Regolazioni iniziali di alcuni oggetti <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void regolazioniIniziali() {
+        super.regolazioniIniziali();
+
+        //--costruisce una lista (vuota) di filtri per la Grid
+        super.filtri = new ArrayList<>();
+    }
 
     /**
      * Regola il modo di presentare la scheda (Form) prima di lanciare la @Route. <br>
@@ -178,19 +187,23 @@ public abstract class LogicList extends Logic {
      */
     @Override
     protected void fixBodyLayout() {
-        DataProvider dataProvider;
-        String sortProperty = annotation.getSortProperty(entityClazz);
-        BasicDBObject sort = null;
-        grid = appContext.getBean(AGrid.class, entityClazz, this);
-        sort = new BasicDBObject(sortProperty, 1);
+        //--con dataProvider standard - con filtro base (vuoto=tutta la collection) e sort di default della AEntity
+        //--può essere ri-filtrato successivamente
+        grid = appContext.getBean(AGrid.class, entityClazz, this,filtri);
 
-        dataProvider = dataService.creaDataProvider(entityClazz, sort);
-        grid.getGrid().setDataProvider(dataProvider);
-        grid.getGrid().setHeight("100%");
-        grid.fixGridHeader(dataProvider.size(null));
+        grid.fixGridHeader();
         this.addGridListeners();
 
+        /**
+         * Regolazioni INDISPENSABILI per usare DataProvider sui DB voluminosi <br>
+         * Deve essere MENO di 100% il VerticalLayout esterno <br
+         * Deve essere MENO di 100% il bodyPlaceHolder <br
+         * Deve essere ESATTAMENTE il 100% la Grid <br
+         */
         if (bodyPlaceHolder != null && grid != null) {
+            this.setHeight("95%");
+            bodyPlaceHolder.setHeight("95%");
+            grid.getGrid().setHeight("100%");
             bodyPlaceHolder.add(grid.getGrid());
         }
     }

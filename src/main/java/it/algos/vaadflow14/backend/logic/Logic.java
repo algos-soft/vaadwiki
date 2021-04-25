@@ -143,6 +143,9 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * Qui va tutta la logica iniziale della view <br>
      */
     protected void initView() {
+        //--Regolazioni iniziali di alcuni oggetti <br>
+        this.regolazioniIniziali();
+
         //--Costruisce gli oggetti base (placeholder) di questa view
         this.fixLayout();
 
@@ -168,7 +171,6 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         //--Regolazioni finali di alcuni oggetti <br>
         this.regolazioniFinali();
     }
-
 
 
     /**
