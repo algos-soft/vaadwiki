@@ -20,8 +20,8 @@ import java.util.*;
  * Fix time: 7:42 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe GenericLogicList con @Route <br>
- * Gestione della 'business logic' e della 'grafica' di @Route <br>
+ * Se manca, usa la classe GenericLogicList con @Route <br>
+ * Gestione della 'view' di @Route e della 'business logic' <br>
  * Mantiene lo 'stato' <br>
  * L' istanza (PROTOTYPE) viene creata ad ogni chiamata del browser <br>
  * Eventuali parametri (opzionali) devono essere passati nell'URL <br>
