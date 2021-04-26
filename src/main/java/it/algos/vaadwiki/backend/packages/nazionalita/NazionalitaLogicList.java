@@ -4,22 +4,17 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
-import it.algos.vaadwiki.backend.enumeration.*;
-import it.algos.vaadwiki.backend.logic.*;
-import static it.algos.vaadwiki.backend.logic.WikiService.*;
-import org.springframework.beans.factory.annotation.*;
-
 import java.util.*;
+import org.springframework.beans.factory.annotation.*;
 
 /**
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: mer, 14-apr-2021 <br>
- * Fix time: 18:44 <br>
+ * Fix date: lun, 26-apr-2021 <br>
+ * Fix time: 10:29 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe GenericLogicList con @Route <br>
@@ -33,7 +28,7 @@ import java.util.*;
  */
 @Route(value = "nazionalita", layout = MainLayout.class)
 @AIScript(sovraScrivibile = false)
-public class NazionalitaLogicList extends WikiLogicList {
+public class NazionalitaLogicList extends LogicList {
 
 
     /**
@@ -65,11 +60,6 @@ public class NazionalitaLogicList extends WikiLogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-
-        super.usaBottoneUpload = true;
-        super.usaBottoneStatistiche = true;
-        super.wikiModuloTitle = PATH_MODULO_NAZIONALITA;
-        super.wikiStatisticheTitle = PATH_STATISTICHE_NAZIONALITA;
     }
 
 
@@ -81,19 +71,7 @@ public class NazionalitaLogicList extends WikiLogicList {
      */
     @Override
     protected List<Span> getSpanList() {
-        List<Span> lista = new ArrayList<>();
-
-        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadNazionalita));
-        lista.add(html.getSpanBlu("Modulo:Bio/Plurale nazionalità."));
-        lista.add(html.getSpanVerde("Contiene la tabella di conversione delle nazionalità passate via parametri " + html.bold("Nazionalità/Cittadinanza/NazionalitàNaturalizzato")));
-        lista.add(html.getSpanVerde(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
-        lista.add(html.getSpanVerde("All'interno della tabella le nazionalità sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse"));
-        lista.add(html.getSpanVerde("Le nazionalità sono elencate all'interno del modulo con la seguente sintassi:"));
-        lista.add(html.getSpanVerde("[\"nazionalitaforma1\"] = \"nazionalità al plurale\","));
-        lista.add(html.getSpanVerde("[\"nazionalitaforma2\"] = \"nazionalità al plurale\","));
-        lista.add(html.getSpanRosso("Progetto:Biografie/Nazionalità."));
-
-        return lista;
+        return Collections.singletonList(html.getSpanVerde("Test"));
     }
 
 

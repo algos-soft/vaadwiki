@@ -36,7 +36,7 @@ import java.util.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Service
-@Qualifier("prenomeserviceService")
+@Qualifier("prenomeService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
 public class PrenomeService extends WikiService {

@@ -328,7 +328,7 @@ public abstract class WizElabora implements WizRecipient {
             for (AEPackage pack : AEPackage.getFiles()) {
                 if (pack.is()) {
                     suffix = pack.getSuffix();
-                    fileName = text.primaMaiuscola(packageName) + suffix;
+                    fileName = text.primaMaiuscola(packageName) ;
                     wizService.regolaAEToken(nameTargetProjectUpper, nameTargetProjectModulo, packageName, fileName);
                     risultato = elaboraDoc(packageName, pack, inizioFile);
                     if (risultato.isValido()) {

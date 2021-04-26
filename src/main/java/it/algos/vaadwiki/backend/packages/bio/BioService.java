@@ -17,8 +17,8 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: dom, 18-apr-2021 <br>
- * Fix time: 8:44 <br>
+ * Fix date: lun, 26-apr-2021 <br>
+ * Fix time: 13:45 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe EntityService <br>
@@ -78,7 +78,7 @@ public class BioService extends AService {
      */
     @Override
     public Bio newEntity() {
-        return newEntity(0, VUOTA);
+        return newEntity(VUOTA, VUOTA);
     }
 
     /**
@@ -91,7 +91,7 @@ public class BioService extends AService {
      * @return la nuova entityBean appena creata (non salvata)
      */
     private Bio newEntity(final String wikiTitle) {
-        return newEntity(0, wikiTitle);
+        return newEntity(wikiTitle, VUOTA);
     }
 
     /**
@@ -99,15 +99,15 @@ public class BioService extends AService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param pageId (obbligatorio, unico)
-	 * @param wikiTitle di riferimento (obbligatorio, unico)
+     * @param wikiTitle di riferimento (obbligatorio, unico)
+	 * @param nome (facoltativo, non unico)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Bio newEntity(final long pageId, final String wikiTitle) {
+    public Bio newEntity(final String wikiTitle, final String nome) {
         Bio newEntityBean = Bio.builderBio()
-                .pageId(pageId > 0 ? pageId : 0)
-				.wikiTitle(text.isValid(wikiTitle) ? wikiTitle : null)
+                .wikiTitle(text.isValid(wikiTitle) ? wikiTitle : null)
+				.nome(text.isValid(nome) ? nome : null)
                 .build();
 
         return (Bio) fixKey(newEntityBean);
@@ -143,5 +143,39 @@ public class BioService extends AService {
     }
 
 
+    /**
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * <p>
+     * 1) deve esistere lo specifico metodo sovrascritto
+     * 2) deve essere valida la entityClazz
+     * 3) deve esistere la collezione su mongoDB
+     * 4) la collezione non deve essere vuota
+     * <p>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return wrapper col risultato ed eventuale messaggio di errore
+     */
+    @Override
+    public AIResult resetEmptyOnly() {
+        AIResult result = super.resetEmptyOnly();
+        int numRec = 0;
+
+        if (result.isErrato()) {
+            return result;
+        }
+
+        //--da sostituire
+        String message;
+        message = String.format("Nel package %s la classe %s non ha ancora sviluppato il metodo resetEmptyOnly() ", "bio", "BioService");
+        return AResult.errato(message);
+
+        // return super.fixPostReset(AETypeReset.enumeration, numRec);
+    }
 
 }// end of singleton class
