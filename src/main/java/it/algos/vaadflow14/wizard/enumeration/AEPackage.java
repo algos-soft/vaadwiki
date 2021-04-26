@@ -18,7 +18,7 @@ public enum AEPackage {
 
     entity("Entity base del package", true, true, false, false, SOURCE_ENTITY, SUFFIX_ENTITY),
     logicList("Business logic list (Grid) del package", true, true, false, false, SOURCE_LIST, SUFFIX_LOGIC_LIST),
-    logicForm("Business logic form (Form) del package", false, true, false, false, SOURCE_FORM, SUFFIX_LOGIC_FORM),
+    logicForm("Business logic form (Form) del package", true, true, false, false, SOURCE_FORM, SUFFIX_LOGIC_FORM),
     service("Service specifico del package", true, true, false, false, SOURCE_SERVICE, SUFFIX_SERVICE),
     menu("Inserimento del package nel menu", true, false, false, false),
 

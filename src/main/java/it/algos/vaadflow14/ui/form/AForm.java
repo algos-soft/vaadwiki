@@ -641,4 +641,12 @@ public abstract class AForm extends VerticalLayout {
         return beanService.isModificata(entityBean);
     }
 
+    public HashMap<String, AField> getFieldsMap() {
+        return fieldsMap;
+    }
+
+    public AField getField(String name) {
+        return fieldsMap != null ? fieldsMap.get(name) : null;
+    }
+
 }

@@ -49,7 +49,7 @@ import javax.validation.constraints.*;
 @AIEntity(recordName = "Bio", keyPropertyName = "wikiTitle", usaCompany = false)
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "wikiTitle")
 @AIList(fields = "pageId,wikiTitle,nome,cognome", usaRowIndex = true)
-@AIForm(fields = "pageId,wikiTitle,nome,cognome", operationForm = AEOperation.edit, usaSpostamentoTraSchede = true)
+@AIForm(fields = "pageId,wikiTitle,tmpBioServer,nome,cognome", operationForm = AEOperation.edit, usaSpostamentoTraSchede = true)
 public class Bio extends AEntity {
 
 
@@ -97,9 +97,9 @@ public class Bio extends AEntity {
     public String cognome;
 
     @Lob
-    @Field("tmpl")
+    @Field("tmp")
     @AIField(type = AETypeField.textArea, required = true, help = "Template effettivamente presente sul server.", widthEM = 48)
-    public String tmplBioServer;
+    public String tmpBioServer;
 
     /**
      * @return a string representation of the object.

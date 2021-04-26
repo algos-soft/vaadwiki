@@ -270,7 +270,7 @@ public abstract class LogicForm extends Logic {
 
     /**
      * Regolazioni finali di alcuni oggetti <br>
-     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void regolazioniFinali() {
         Button bottone;
