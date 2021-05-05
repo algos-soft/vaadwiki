@@ -103,13 +103,13 @@ public abstract class ABoot implements ServletContextListener {
      */
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        this.resetPreferenze();
         this.iniziaDBMongo();
         this.iniziaVersioni();
         this.regolaInfo();
         this.regolaRiferimenti();
         this.iniziaDataPreliminari();
         this.creaPreferenze();
-        this.fixPreferenze();
         this.iniziaDataStandard();
         this.iniziaDataProgettoSpecifico();
         this.addRouteStandard();

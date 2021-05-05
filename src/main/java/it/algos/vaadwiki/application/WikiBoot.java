@@ -137,11 +137,11 @@ public class WikiBoot extends ABoot {
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
      * ma l'ordine con cui vengono chiamati NON è garantito
      * <p>
-     * Login inziale del bot
+     * Login iniziale del bot
      */
     @PostConstruct
     protected void inizia() {
-        appContext.getBean(AQueryLogin.class);
+//        appContext.getBean(AQueryLogin.class);
     }// end of method
 
 

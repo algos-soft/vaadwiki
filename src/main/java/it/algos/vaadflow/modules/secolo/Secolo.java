@@ -79,7 +79,7 @@ public class Secolo extends AEntity {
      * ordinamento (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Field("ord")
     @AIField(type = EAFieldType.integer, widthEM = 5)
     @AIColumn(name = "#", widthEM = 5)
@@ -101,7 +101,7 @@ public class Secolo extends AEntity {
      * inizio (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Field("inizio")
     @AIField(type = EAFieldType.integer, widthEM = 3)
     @AIColumn(name = "primo", widthEM = 5)
@@ -112,7 +112,7 @@ public class Secolo extends AEntity {
      * fine (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Field("fine")
     @AIField(type = EAFieldType.integer, widthEM = 3)
     @AIColumn(name = "ultimo", widthEM = 5)
@@ -123,7 +123,7 @@ public class Secolo extends AEntity {
      * titolo (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("tit")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
