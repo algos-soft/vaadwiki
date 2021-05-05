@@ -83,13 +83,5 @@ public class GiornoLogicList extends LogicList {
         return lista;
     }
 
-    /**
-     * Costruisce una mappa di ComboBox di selezione e filtro <br>
-     * DEVE essere sovrascritto nella sottoclasse <br>
-     */
-    protected void fixMappaComboBox() {
-        //@todo Funzionalità ancora da implementare
-//        super.creaComboBox("mese");
-    }
 
 }// end of Route class

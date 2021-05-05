@@ -152,6 +152,9 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         //--Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
         this.fixAlertLayout();
 
+        //--Regola una mappa di ComboBox (solo per la List e facoltativi) da affiancare ai bottoni di comando della view al Top <br>
+        this.fixMappaComboBox();
+
         //--Costruisce un layout (obbligatorio per la List) per i bottoni di comando della view al Top <br>
         //--Eventualmente i bottoni potrebbero andare su due righe <br>
         this.fixTopLayout();
@@ -167,6 +170,9 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
 
         //--Aggiunge i 5 oggetti base (placeholder) alla view, se sono utilizzati <br>
         this.addToLayout();
+
+        //--Aggiunge i listener ai vari oggetti <br>
+        this.fixListener();
 
         //--Regolazioni finali di alcuni oggetti <br>
         this.regolazioniFinali();
@@ -201,6 +207,35 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      */
     @Override
     public boolean performAction(final AIAction iAzione, final AEntity entityBean) {
+        return false;
+    }
+
+    /**
+     * Esegue l'azione del bottone. Azione che necessita di una stringa. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param iAzione          interfaccia dell'azione selezionata da eseguire
+     * @param searchFieldValue valore corrente del campo searchField (solo per List)
+     *
+     * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
+     */
+    @Override
+    public boolean performAction(AIAction iAzione, String searchFieldValue) {
+        return false;
+    }
+
+    /**
+     * Esegue l'azione del bottone. Azione che necessita di un field e di un valore. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param iAzione    interfaccia dell'azione selezionata da eseguire
+     * @param fieldName  nome del field
+     * @param fieldValue valore corrente del field
+     *
+     * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
+     */
+    @Override
+    public boolean performAction(final AIAction iAzione, final String fieldName, Object fieldValue) {
         return false;
     }
 

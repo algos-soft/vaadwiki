@@ -102,7 +102,7 @@ public class AGrid {
     /**
      * Filtri per dataProvider <br>
      */
-    protected List<AFiltro> filtri;
+    protected Map<String, AFiltro> mappaFiltri;
 
     private AILogic entityLogic;
 
@@ -142,13 +142,13 @@ public class AGrid {
      *
      * @param entityClazz (obbligatorio)  the class of type AEntity
      * @param entityLogic (obbligatorio) riferimento alla istanza (prototype) di LogicList che crea questa Grid
-     * @param filtri      (obbligatorio)  per selezione e ordinamento
+     * @param mappaFiltri (obbligatorio)  per selezione e ordinamento
      */
-    public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic, List<AFiltro> filtri) {
+    public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic, Map<String, AFiltro> mappaFiltri) {
         super();
         this.entityClazz = entityClazz;
         this.entityLogic = entityLogic;
-        this.filtri = filtri;
+        this.mappaFiltri = mappaFiltri;
     }
 
 
@@ -168,7 +168,7 @@ public class AGrid {
 
         String sortProperty = annotation.getSortProperty(entityClazz);
         BasicDBObject sort = new BasicDBObject(sortProperty, 1);
-        dataProvider = dataProviderService.creaDataProvider(entityClazz, sort);
+        dataProvider = dataProviderService.creaDataProvider(entityClazz, mappaFiltri);
         grid.setDataProvider(dataProvider);
 
         if (AEPreferenza.usaDebug.is()) {
@@ -304,14 +304,14 @@ public class AGrid {
         return buttonEdit;
     }
 
-
+@Deprecated
     public void setItems(Collection items) {
 
         //        grid.deselectAll();
         //        grid.setItems(items);
         grid.setHeight("100%");
 
-        fixGridHeader(items);
+        fixGridHeader();
     }
 
 
@@ -382,88 +382,35 @@ public class AGrid {
 
     /**
      * Eventuale header text <br>
-     */
-    @Deprecated
-    public void fixGridHeader(Collection items) {
-        String message = VUOTA;
-
-        if (true) {//@todo Funzionalità ancora da implementare con preferenza locale
-            message = annotation.getTitleList(entityClazz).toUpperCase() + SEP;
-            if (items != null && items.size() > 0) {
-                if (items.size() == 1) {
-                    message += "Lista di un solo elemento";
-                }
-                else {
-                    message += "Lista di " + text.format(items.size()) + " elementi";
-                }
-            }
-            else {
-                message += "Al momento non ci sono elementi in questa collezione";
-            }
-
-            if (headerLabelPlaceHolder != null) {
-                headerLabelPlaceHolder.setText(message);
-                headerLabelPlaceHolder.getElement().getStyle().set(AETypeColor.verde.getTag(), AETypeColor.verde.get());
-                headerLabelPlaceHolder.getElement().getStyle().set(AETypeWeight.bold.getTag(), AETypeWeight.bold.get());
-            }
-        }
-    }
-
-    /**
-     * Eventuale header text <br>
-     */
-    @Deprecated
-    public void fixGridHeader(int items) {
-        String message = VUOTA;
-
-        if (true) {//@todo Funzionalità ancora da implementare con preferenza locale
-            message = annotation.getTitleList(entityClazz).toUpperCase() + SEP;
-            if (items > 0) {
-                if (items == 1) {
-                    message += "Lista di un solo elemento";
-                }
-                else {
-                    message += "Lista di " + text.format(items) + " elementi";
-                }
-            }
-            else {
-                message += "Al momento non ci sono elementi in questa collezione";
-            }
-
-            if (headerLabelPlaceHolder != null) {
-                headerLabelPlaceHolder.setText(message);
-                headerLabelPlaceHolder.getElement().getStyle().set(AETypeColor.verde.getTag(), AETypeColor.verde.get());
-                headerLabelPlaceHolder.getElement().getStyle().set(AETypeWeight.bold.getTag(), AETypeWeight.bold.get());
-            }
-        }
-    }
-
-
-    /**
-     * Eventuale header text <br>
+     * DataProvider è già filtrato (a monte) e vuole una query nulla <br>
      */
     public void fixGridHeader() {
         int totRec = mongo.count(entityClazz);
-        int items = grid.getDataProvider().size(null); //@todo Funzionalità ancora da implementare coi filtri al posto di null
+        int itemsFiltrati = grid.getDataProvider().size(null);
         String message = VUOTA;
 
         if (true) {//@todo Funzionalità ancora da implementare con preferenza locale
             message = annotation.getTitleList(entityClazz).toUpperCase() + SEP;
-            if (items > 0) {
-                if (items == 1) {
+            if (itemsFiltrati > 0) {
+                if (itemsFiltrati == 1) {
                     message += "Lista di un solo elemento";
                 }
                 else {
-                    if (items == totRec) {
-                        message += "Lista di " + text.format(items) + " elementi";
+                    if (itemsFiltrati == totRec) {
+                        message += String.format("Lista di %s elementi", text.format(itemsFiltrati));
                     }
                     else {
-                        message += "Lista di " + text.format(items) + " elementi su " + text.format(totRec);
+                        message += String.format("Lista filtrata di %s elementi su %s totali", text.format(itemsFiltrati), text.format(totRec));
                     }
                 }
             }
             else {
-                message += "Al momento non ci sono elementi in questa collezione";
+                if (totRec > 0) {
+                    message += String.format("Lista filtrata senza elementi su %s totali", text.format(totRec));
+                }
+                else {
+                    message += "Lista senza elementi";
+                }
             }
 
             if (headerLabelPlaceHolder != null) {

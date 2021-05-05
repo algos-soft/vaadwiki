@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -132,6 +134,22 @@ public abstract class LogicProperty extends VerticalLayout {
     public AVaadinService vaadinService;
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected ADataProviderService dataService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AUtilityService utility;
+
+    /**
      * PlaceHolder iniziale per avvisi sopra la Grid (o Form) <br><br>
      * Label o altro per informazioni specifiche; di norma per il developer <br>
      * Contenuto facoltativo, assente di default <br>
@@ -185,14 +203,6 @@ public abstract class LogicProperty extends VerticalLayout {
 
 
     /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    protected ADataProviderService dataService;
-
-    /**
      * The entityClazz obbligatorio di tipo AEntity, per liste e form <br>
      */
     protected Class<? extends AEntity> entityClazz;
@@ -219,7 +229,6 @@ public abstract class LogicProperty extends VerticalLayout {
      * The entityBeanPrevID, keyID della entity successiva solo per il form (facoltativa) <br>
      */
     protected String entityBeanNextID;
-
 
     /**
      * The @route() of xxxLogicForm facoltativo  <br>
@@ -329,9 +338,18 @@ public abstract class LogicProperty extends VerticalLayout {
     protected AEOperation operationForm = AEOperation.listNoForm;
 
     /**
-     * Filtri per dataProvider <br>
+     * ComboBox usati in topLayout <br>
+     * La mappa si costruisce in regolazioniIniziali() della LogicList <br>
+     * I ComboBox vengono aggiunti in fixComboBox() della LogicList <br>
      */
-    protected List<AFiltro> filtri;
+    protected Map<String, ComboBox> mappaComboBox;
+
+    /**
+     * Filtri collegati a dataProvider <br>
+     * La mappa si costruisce in regolazioniIniziali() della LogicList <br>
+     */
+    protected Map<String,AFiltro> mappaFiltri;
+
 
     protected void fixProperty() {
         if (routeParameter == null && annotation.getRouteName(this.getClass()).equals(ROUTE_NAME_GENERIC_VIEW)) {
@@ -485,6 +503,13 @@ public abstract class LogicProperty extends VerticalLayout {
         }
     }
 
+    /**
+     * Regola una mappa di ComboBox (solo per la List e facoltativi) da usare nel wrapper getWrapButtonsTop() <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixMappaComboBox() {
+    }
+
 
     /**
      * Costruisce un wrapper (obbligatorio) di dati per i bottoni di comando al Top della view <br>
@@ -497,11 +522,12 @@ public abstract class LogicProperty extends VerticalLayout {
     protected WrapButtons getWrapButtonsTop() {
         List<AIButton> listaAEBottoni = this.getListaAEBottoniTop();
         //        WrapSearch wrapSearch = this.getWrapSearch();
-        //        LinkedHashMap<String, ComboBox> mappaComboBox = this.mappaComboBox;
+//                LinkedHashMap<String, ComboBox> mappaComboBox = this.mappaComboBox;
         //        List<Button> listaBottoniSpecifici = this.getListaBottoniSpecifici();
         //        AEOperation operationForm = null;
+//    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final LinkedHashMap<String, ComboBox> mappaComboBox, final List<Button> listaBottoniSpecifici, final int maxNumeroBottoniPrimaRiga) {
 
-        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null, null, maxNumeroBottoniPrimaRiga);
+            return appContext.getBean(WrapButtons.class, this, listaAEBottoni, (WrapSearch)null, mappaComboBox, (List<Button>)null, maxNumeroBottoniPrimaRiga);
     }
 
     /**
@@ -615,6 +641,15 @@ public abstract class LogicProperty extends VerticalLayout {
         }
 
         this.addFooterCopyright();
+    }
+
+    /**
+     * Aggiunge i listener ai vari oggetti <br>
+     */
+    protected void fixListener() {
+        if (topLayout != null) {
+            topLayout.setAllListener((AILogic) this);
+        }
     }
 
     /**

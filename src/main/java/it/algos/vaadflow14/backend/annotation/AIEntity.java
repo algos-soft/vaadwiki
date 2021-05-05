@@ -84,5 +84,13 @@ public @interface AIEntity {
      */
     boolean usaDelete() default true;
 
+    /**
+     * (Optional) possibilità di resettare i data alla partenza
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaResetIniziale() default false;
+
 
 }

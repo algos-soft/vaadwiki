@@ -1350,7 +1350,7 @@ public abstract class ALogicOld implements AILogicOld {
      */
     public AFiltro creaFiltroBaseEntity() {
         AFiltro filtro = null;
-        Sort sort = annotation.getSort(entityClazz);
+        Sort sort = annotation.getSortSpring(entityClazz);
 
         if (sort != null) {
             filtro = new AFiltro(sort);
@@ -2042,7 +2042,7 @@ public abstract class ALogicOld implements AILogicOld {
 
         if (type == AETypeField.combo) {
             comboEnumClazz = annotation.getComboClass(reflectionJavaField);
-            sort = annotation.getSort(comboEnumClazz);
+            sort = annotation.getSortSpring(comboEnumClazz);
             items = items != null ? items : comboEnumClazz != null ? mongo.findAll(comboEnumClazz, sort) : null;
             //            items = mongo.find(comboEnumClazz);
         }

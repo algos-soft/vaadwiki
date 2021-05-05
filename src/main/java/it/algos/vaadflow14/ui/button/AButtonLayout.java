@@ -9,7 +9,6 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
-import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import org.springframework.beans.factory.annotation.*;
 
@@ -137,7 +136,7 @@ public abstract class AButtonLayout extends VerticalLayout {
      * D - (facoltativo) una mappa di combobox di selezione e filtro, LinkedHashMap<String, ComboBox>
      * La chiave generalmente è il nome della property della entity con cui costruire il comboBox <br>
      */
-    protected LinkedHashMap<String, ComboBox> mappaComboBox;
+    protected Map<String, ComboBox> mappaComboBox;
 
     /**
      * E - (facoltativo) una serie di bottoni non-standard, sotto forma di List<Button>
@@ -302,8 +301,8 @@ public abstract class AButtonLayout extends VerticalLayout {
      * @param azione           selezionata da eseguire
      * @param searchFieldValue valore corrente del campo editText (solo per List)
      */
-    public void performAction(AEAction azione, String searchFieldValue) {
-        //        entityLogic.performAction(azione, searchFieldValue);@//@todo PROVVISORIO
+    public void performAction(AIAction azione, String searchFieldValue) {
+        entityLogic.performAction(azione, searchFieldValue);
     }
 
 
@@ -315,12 +314,30 @@ public abstract class AButtonLayout extends VerticalLayout {
      * @param azione     selezionata da eseguire
      * @param entityBean selezionata (solo per Form)
      */
-    public void performAction(AEAction azione, AEntity entityBean) {
+    public void performAction(AIAction azione, AEntity entityBean) {
         //        entityLogic.performAction(azione, entityBean);@//@todo PROVVISORIO
+    }
+
+    /**
+     * Esegue l'azione del bottone. Azione che necessita di un field e di un valore. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param iAzione    interfaccia dell'azione selezionata da eseguire
+     * @param fieldName  nome del field
+     * @param fieldValue valore corrente del field
+     *
+     * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
+     */
+    public void performAction(final AIAction iAzione, final String fieldName, final Object fieldValue) {
+        entityLogic.performAction(iAzione, fieldName, fieldValue);
     }
 
     public Map<AIButton, Button> getMappaBottoni() {
         return mappaBottoni;
+    }
+
+    public TextField getSearchField() {
+        return searchField;
     }
 
     /**

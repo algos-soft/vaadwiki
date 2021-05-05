@@ -93,15 +93,6 @@ public class StatoLogicList extends LogicList {
         return lista;
     }
 
-    /**
-     * Costruisce una mappa di ComboBox di selezione e filtro <br>
-     * DEVE essere sovrascritto nella sottoclasse <br>
-     */
-//    @Override
-    protected void fixMappaComboBox() {
-//        super.creaComboBox("continente", "europa");
-    }
-
 
     /**
      * Costruisce una lista ordinata di nomi delle properties del Form. <br>

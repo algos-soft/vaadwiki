@@ -99,7 +99,7 @@ public class PreferenzaLogicList extends LogicList {
      * Costruisce una mappa di ComboBox di selezione e filtro <br>
      * DEVE essere sovrascritto nella sottoclasse <br>
      */
-    //    @Override
+//        @Override
     protected void fixMappaComboBox() {
         //        super.creaComboBox("type");
     }

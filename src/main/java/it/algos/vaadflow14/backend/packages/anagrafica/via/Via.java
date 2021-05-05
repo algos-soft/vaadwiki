@@ -42,8 +42,8 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderVia")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Via", keyPropertyName = "nome", usaCompany = false, usaCreazione = true, usaModifica = true)
-@AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine")
+@AIEntity(recordName = "Via", keyPropertyName = "nome", usaCompany = false, usaCreazione = true, usaModifica = true, usaResetIniziale = true)
+@AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine", sortDirection = "ASC")
 @AIList(fields = "ordine,nome", usaRowIndex = false, usaReset = true)
 @AIForm(fields = "ordine,nome", usaSpostamentoTraSchede = true)
 public class Via extends AEntity {
@@ -70,7 +70,7 @@ public class Via extends AEntity {
     @Size(min = 3)
     @Indexed(unique = true)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn()
+    @AIColumn(widthEM = 20)
     public String nome;
 
 

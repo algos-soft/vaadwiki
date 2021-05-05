@@ -1,13 +1,17 @@
 package it.algos.vaadflow14.backend.logic;
 
+import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.component.textfield.*;
+import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
@@ -81,8 +85,11 @@ public abstract class LogicList extends Logic {
     protected void regolazioniIniziali() {
         super.regolazioniIniziali();
 
-        //--costruisce una lista (vuota) di filtri per la Grid
-        super.filtri = new ArrayList<>();
+        //--costruisce una mappa (vuota) di ComboBox per il topLayout
+        super.mappaComboBox = new HashMap<>();
+
+        //--costruisce una mappa (vuota) di filtri per la Grid
+        super.mappaFiltri = new HashMap<>();
     }
 
     /**
@@ -139,6 +146,17 @@ public abstract class LogicList extends Logic {
         return null;
     }
 
+    /**
+     * Regola una mappa di ComboBox (solo per la List e facoltativi) da usare nel wrapper getWrapButtonsTop() <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixMappaComboBox() {
+        for (String fieldName : annotation.getGridColumns(entityClazz)) {
+            if (annotation.usaComboBoxGrid(entityClazz, fieldName)) {
+                this.fixComboBox(fieldName);
+            }
+        }
+    }
 
     /**
      * Costruisce una lista di bottoni (enumeration) al Top della view <br>
@@ -149,16 +167,35 @@ public abstract class LogicList extends Logic {
     @Override
     protected List<AIButton> getListaAEBottoniTop() {
         List<AIButton> listaBottoni = super.getListaAEBottoniTop();
+        String message = VUOTA;
 
         if (usaBottoneDeleteAll) {
             listaBottoni.add(AEButton.deleteAll);
         }
+
         if (usaBottoneResetList && entityService != null) {
-            //--se manca la classe specifica il metodo è vuoto e il bottone non potrebbe funzionare
-            if (entityService.resetEmptyOnly().isErrato()) {
-                listaBottoni.add(AEButton.resetList);
+            //--se manca il metodo specifico il bottone non potrebbe funzionare
+            try {
+                if (entityService.getClass().getDeclaredMethod("resetEmptyOnly") != null) {
+                    listaBottoni.add(AEButton.resetList);
+                }
+            } catch (Exception unErrore) {
+                message = String.format("Non sono riuscito a controllare se esiste il metodo resetEmptyOnly() nella classe %s", entityService.getClass().getSimpleName());
+                logger.log(AETypeLog.checkData, message);
             }
         }
+
+        //        if (methodExists) {
+        //            result = entityService.resetEmptyOnly();
+        //            logger.log(AETypeLog.checkData, result.getMessage());
+        //        }
+        //        else {
+        //            if (!nameService.equals(TAG_GENERIC_SERVICE)) {
+        //                message = String.format("Nel package %s la classe %s non ha il metodo resetEmptyOnly() ", packageName, entityServicePrevista);
+        //                logger.log(AETypeLog.checkData, message);
+        //            }
+        //        }
+
         if (usaBottoneNew) {
             listaBottoni.add(AEButton.nuovo);
         }
@@ -181,6 +218,75 @@ public abstract class LogicList extends Logic {
         return listaBottoni;
     }
 
+    /**
+     * Crea un ComboBox e lo aggiunge alla mappa <br>
+     * Invoca un metodo del service <br>
+     * Aggiunge il ComboBox alla mappa <br>
+     *
+     * @param fieldName (obbligatorio) della property da utilizzare per il ComboBox
+     */
+    protected ComboBox fixComboBox(final String fieldName) {
+        return fixComboBox(fieldName, (DataProvider) null, COMBO_WIDTH, null);
+    }
+
+
+    /**
+     * Crea un ComboBox e lo aggiunge alla mappa <br>
+     * Invoca un metodo del service <br>
+     * Aggiunge il ComboBox alla mappa <br>
+     *
+     * @param fieldName    (obbligatorio) della property da utilizzare per il ComboBox
+     * @param dataProvider fornitore degli items. Se manca lo costruisce con la collezione completa
+     */
+    protected ComboBox fixComboBox(final String fieldName, final DataProvider dataProvider) {
+        return fixComboBox(fieldName, dataProvider, COMBO_WIDTH, null);
+    }
+
+
+    /**
+     * Crea un ComboBox e lo aggiunge alla mappa <br>
+     * Invoca un metodo del service <br>
+     * Aggiunge il ComboBox alla mappa <br>
+     *
+     * @param fieldName (obbligatorio) della property da utilizzare per il ComboBox
+     * @param width     larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
+     */
+    protected ComboBox fixComboBox(final String fieldName, final int width) {
+        return fixComboBox(fieldName, (DataProvider) null, width, null);
+    }
+
+
+    /**
+     * Crea un ComboBox e lo aggiunge alla mappa <br>
+     * Invoca un metodo del service <br>
+     * Aggiunge il ComboBox alla mappa <br>
+     *
+     * @param fieldName    (obbligatorio) della property da utilizzare per il ComboBox
+     * @param initialValue eventuale valore iniziale di selezione
+     */
+    protected ComboBox fixComboBox(final String fieldName, final Object initialValue) {
+        return fixComboBox(fieldName, (DataProvider) null, COMBO_WIDTH, initialValue);
+    }
+
+    /**
+     * Crea un ComboBox e lo aggiunge alla mappa <br>
+     * Invoca un metodo del service <br>
+     * Aggiunge il ComboBox alla mappa <br>
+     *
+     * @param fieldName    (obbligatorio) della property da utilizzare per il ComboBox
+     * @param dataProvider fornitore degli items. Se manca lo costruisce con la collezione completa
+     * @param width        larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
+     * @param initialValue eventuale valore iniziale di selezione
+     */
+    protected ComboBox fixComboBox(final String fieldName, final DataProvider dataProvider, final int width, final Object initialValue) {
+        ComboBox combo = utility.creaComboBox(entityClazz, fieldName, dataProvider, width, initialValue);
+
+        if (mappaComboBox != null && combo != null) {
+            mappaComboBox.put(fieldName, combo);
+        }
+
+        return combo;
+    }
 
     /**
      * Costruisce il corpo principale (obbligatorio) della Grid <br>
@@ -189,7 +295,7 @@ public abstract class LogicList extends Logic {
     protected void fixBodyLayout() {
         //--con dataProvider standard - con filtro base (vuoto=tutta la collection) e sort di default della AEntity
         //--può essere ri-filtrato successivamente
-        grid = appContext.getBean(AGrid.class, entityClazz, this,filtri);
+        grid = appContext.getBean(AGrid.class, entityClazz, this, mappaFiltri);
 
         grid.fixGridHeader();
         this.addGridListeners();
@@ -209,6 +315,20 @@ public abstract class LogicList extends Logic {
     }
 
     /**
+     * Regolazioni finali di alcuni oggetti <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
+     */
+    protected void regolazioniFinali() {
+        TextField searchField = this.topLayout.getSearchField();
+        String placeHolder = annotation.getSearchPropertyName(entityClazz);
+
+        if (searchField != null) {
+            searchField.setPlaceholder(text.primaMaiuscola(placeHolder) + TRE_PUNTI);
+        }
+    }
+
+
+    /**
      * Aggiunge tutti i listeners alla Grid di 'bodyPlaceHolder' che è stata creata SENZA listeners <br>
      */
     protected void addGridListeners() {
@@ -216,6 +336,7 @@ public abstract class LogicList extends Logic {
             grid.setAllListener(this);
         }
     }
+
 
     /**
      * Costruisce una lista ordinata di nomi delle properties della Grid. <br>
@@ -330,6 +451,123 @@ public abstract class LogicList extends Logic {
         return status;
     }
 
+    /**
+     * Esegue l'azione del bottone. Azione che necessita di una stringa. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param iAzione          interfaccia dell'azione selezionata da eseguire
+     * @param searchFieldValue valore corrente del campo searchField (solo per List)
+     *
+     * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
+     */
+    @Override
+    public boolean performAction(final AIAction iAzione, final String searchFieldValue) {
+        boolean status = true;
+        AEAction azione = iAzione instanceof AEAction ? (AEAction) iAzione : null;
+
+        if (azione == null) {
+            return false;
+        }
+
+        switch (azione) {
+            case searchField:
+                this.fixFiltroSearch(searchFieldValue);
+                this.grid.getGrid().getDataProvider().refreshAll();
+                grid.fixGridHeader();
+                break;
+            default:
+                status = false;
+                break;
+        }
+
+        return status;
+    }
+
+    /**
+     * Esegue l'azione del bottone. Azione che necessita di un field e di un valore. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param iAzione    interfaccia dell'azione selezionata da eseguire
+     * @param fieldName  nome del field
+     * @param fieldValue valore corrente del field
+     *
+     * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
+     */
+    @Override
+    public boolean performAction(final AIAction iAzione, final String fieldName, final Object fieldValue) {
+        boolean status = true;
+        AEAction azione = iAzione instanceof AEAction ? (AEAction) iAzione : null;
+        AFiltro filtro = null;
+
+        if (azione == null) {
+            return false;
+        }
+
+        switch (azione) {
+            case valueChanged:
+                this.fixFiltroCombo(fieldName, fieldValue);
+                this.grid.getGrid().getDataProvider().refreshAll();
+                grid.fixGridHeader();
+                break;
+            default:
+                status = false;
+                break;
+        }
+
+        return status;
+    }
+
+
+    /**
+     * Costruisce il filtro di un TextField. <br>
+     * Recupera il field su cui selezionare il valore <br>
+     * Filtro per caratteri iniziali <br>
+     *
+     * @param searchFieldValue valore corrente del campo searchField (solo per List)
+     */
+    protected AFiltro fixFiltroSearch(final String searchFieldValue) {
+        AFiltro filtro = null;
+        String searchFieldName = annotation.getSearchPropertyName(entityClazz);
+
+        if (text.isValid(searchFieldName)) {
+            filtro = AFiltro.start(searchFieldName, searchFieldValue);
+        }
+
+        if (mappaFiltri != null) {
+            mappaFiltri.remove(KEY_MAPPA_SEARCH);
+            if (filtro != null) {
+                mappaFiltri.put(KEY_MAPPA_SEARCH, filtro);
+            }
+        }
+
+        return filtro;
+    }
+
+
+    /**
+     * Costruisce il filtro di un ComboBox. <br>
+     * Recupera il field su cui selezionare il valore <br>
+     * Filtro per uguaglianza <br>
+     *
+     * @param fieldName  nome del field
+     * @param fieldValue valore corrente del field
+     */
+    protected AFiltro fixFiltroCombo(final String fieldName, final Object fieldValue) {
+        AFiltro filtro = null;
+
+        if (text.isValid(fieldName)) {
+            filtro = AFiltro.ugualeObj(fieldName, fieldValue);
+        }
+
+        if (mappaFiltri != null) {
+            mappaFiltri.remove(fieldName);
+            if (filtro != null) {
+                mappaFiltri.put(fieldName, filtro);
+            }
+        }
+
+        return filtro;
+    }
 
     protected void executeRoute() {
         executeRoute(VUOTA, VUOTA, VUOTA);

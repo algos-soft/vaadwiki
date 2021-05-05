@@ -40,8 +40,9 @@ public abstract class AService extends AAbstractService implements AIService {
 
     /**
      * Flag di preferenza per specificare la property della entity da usare come ID <br>
+     * (public perché usata in un test)
      */
-    protected String keyPropertyName;
+    public String keyPropertyName;
 
 
     /**
@@ -233,7 +234,7 @@ public abstract class AService extends AAbstractService implements AIService {
         }
 
         //--Ordinate secondo l'annotation @AIView(sortProperty) della entityClazz
-        sort = annotation.getSort(entityClazz);
+        sort = annotation.getSortSpring(entityClazz);
 
         //--Ordinate secondo la property 'ordine', se esiste
         if (sort == null) {

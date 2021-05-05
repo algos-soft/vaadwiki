@@ -5,10 +5,12 @@ import com.vaadin.flow.data.provider.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
@@ -42,6 +44,94 @@ public class ADataProviderService extends AAbstractService {
 
     @Autowired
     private AMongoService mongo;
+
+
+    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz) {
+        DataProvider dataProvider = DataProvider.fromCallbacks(
+
+                // First callback fetches items based on a query
+                fetchCallback -> {
+                    // The index of the first item to load
+                    int offset = fetchCallback.getOffset();
+
+                    // The number of items to load
+                    int limit = fetchCallback.getLimit();
+
+                    // Ordine delle colonne
+                    // Vaadin mi manda sempre UNA sola colonna. Perché?
+                    List<QuerySortOrder> sorts = fetchCallback.getSortOrders();
+
+                    return mongo.fetch(entityClazz, (Map<String, AFiltro>) null, sorts, offset, limit).stream();
+                },
+
+                // Second callback fetches the total number of items currently in the Grid.
+                // The grid can then use it to properly adjust the scrollbars.
+                countCallback -> mongo.count(entityClazz)
+        );
+
+        return dataProvider;
+    }
+
+
+    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, Map<String, AFiltro> mappaFiltri) {
+        DataProvider dataProvider = DataProvider.fromCallbacks(
+
+                // First callback fetches items based on a query
+                fetchCallback -> {
+                    // The index of the first item to load
+                    int offset = fetchCallback.getOffset();
+
+                    // The number of items to load
+                    int limit = fetchCallback.getLimit();
+
+                    // Ordine delle colonne
+                    // Vaadin/Grid mi manda sempre UNA sola colonna. Perché?
+                    List<QuerySortOrder> sortVaadinList = fetchCallback.getSortOrders();
+
+                    // Alla partenza (se l'ordinamento manca) usa l'ordine base della AEntity
+                    // le volte successive usa l'ordine selezionato da un header della Grid
+                    if (sortVaadinList != null && sortVaadinList.size() == 0) {
+                        sortVaadinList = annotation.getSortVaadinList(entityClazz);
+                        Sort sortSpring = annotation.getSortSpring(entityClazz);
+//                        Sort sortSpring2=utility.sortVaadinToSpring(sortVaadinList);
+                        int a=87;
+                    }
+
+                    return mongo.fetch(entityClazz, mappaFiltri, sortVaadinList, offset, limit).stream();
+                },
+
+                // Second callback fetches the total number of items currently in the Grid.
+                // The grid can then use it to properly adjust the scrollbars.
+                countCallback -> mongo.count(entityClazz, mappaFiltri)
+        );
+
+        return dataProvider;
+    }
+
+
+    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, BasicDBObject aQuery, BasicDBObject aSort) {
+
+        DataProvider dataProvider = DataProvider.fromCallbacks(
+
+                // First callback fetches items based on a query
+                query -> {
+                    // The index of the first item to load
+                    int offset = query.getOffset();
+
+                    // The number of items to load
+                    int limit = query.getLimit();
+                    //                    limit = 50;//@todo Funzionalità ancora da implementare
+                    //                    BasicDBObject sort = new BasicDBObject("nome", -1);
+                    return mongo.findSet(entityClazz, offset, limit, aQuery, aSort).stream();
+                },
+
+                // Second callback fetches the total number of items currently in the Grid.
+                // The grid can then use it to properly adjust the scrollbars.
+                query -> mongo.count(entityClazz)
+        );
+
+        return dataProvider;
+    }
 
 
     public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, BasicDBObject sort) {

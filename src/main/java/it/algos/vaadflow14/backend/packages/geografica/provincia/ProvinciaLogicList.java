@@ -69,6 +69,7 @@ public class ProvinciaLogicList extends LogicList {
         super.usaBottoneDeleteAll = false;
         super.usaBottoneResetList = true;
         super.usaBottoneNew = true;
+        super.usaBottoneSearch = true;
         super.usaBottonePaginaWiki = true;
 //        super.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
 //        super.wikiPageTitle = "ISO_3166-2";//@todo Funzionalità ancora da implementare

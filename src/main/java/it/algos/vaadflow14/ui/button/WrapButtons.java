@@ -51,7 +51,7 @@ public class WrapButtons {
     /**
      * D - (facoltativo) una mappa di combobox di selezione e filtro, LinkedHashMap<String, ComboBox>
      */
-    private LinkedHashMap<String, ComboBox> mappaComboBox;
+    private Map<String, ComboBox> mappaComboBox;
 
     /**
      * E - (facoltativo) una serie di bottoni non-standard, sotto forma di List<Button>
@@ -101,7 +101,7 @@ public class WrapButtons {
      * @param wrapSearch                wrapper di dati per la ricerca
      */
     public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch) {
-        this(entityLogic, listaABottoni, wrapSearch, (LinkedHashMap<String, ComboBox>) null, (List<Button>) null, NUMBER_BUTTONS_STANDARD);
+        this(entityLogic, listaABottoni, wrapSearch, (Map<String, ComboBox>) null, (List<Button>) null, NUMBER_BUTTONS_STANDARD);
     }
 
     /**
@@ -113,7 +113,7 @@ public class WrapButtons {
      * @param wrapSearch                wrapper di dati per la ricerca
      * @param mappaComboBox             di selezione e filtro
      */
-    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final LinkedHashMap<String, ComboBox> mappaComboBox) {
+    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final Map<String, ComboBox> mappaComboBox) {
         this(entityLogic, listaABottoni, wrapSearch, mappaComboBox, (List<Button>) null, NUMBER_BUTTONS_STANDARD);
     }
 
@@ -127,7 +127,7 @@ public class WrapButtons {
      * @param listaBottoniSpecifici              non-standard
      */
     public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final List<Button> listaBottoniSpecifici) {
-        this(entityLogic, listaABottoni, wrapSearch, (LinkedHashMap<String, ComboBox>) null, listaBottoniSpecifici, NUMBER_BUTTONS_STANDARD);
+        this(entityLogic, listaABottoni, wrapSearch, (Map<String, ComboBox>) null, listaBottoniSpecifici, NUMBER_BUTTONS_STANDARD);
     }
 
     /**
@@ -141,7 +141,7 @@ public class WrapButtons {
      * @param listaBottoniSpecifici              non-standard
      * @param maxNumeroBottoniPrimaRiga nella prima riga sopra la Grid
      */
-    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final LinkedHashMap<String, ComboBox> mappaComboBox, final List<Button> listaBottoniSpecifici, final int maxNumeroBottoniPrimaRiga) {
+    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final Map<String, ComboBox> mappaComboBox, final List<Button> listaBottoniSpecifici, final int maxNumeroBottoniPrimaRiga) {
         this.entityLogic = entityLogic;
         this.listaABottoni = listaABottoni;
         this.wrapSearch = wrapSearch;
@@ -159,7 +159,7 @@ public class WrapButtons {
         return listaABottoni;
     }
 
-    public LinkedHashMap<String, ComboBox> getMappaComboBox() {
+    public Map<String, ComboBox> getMappaComboBox() {
         return mappaComboBox;
     }
 

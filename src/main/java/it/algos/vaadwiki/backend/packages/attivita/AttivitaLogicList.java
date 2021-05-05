@@ -66,6 +66,7 @@ public class AttivitaLogicList extends WikiLogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.usaBottoneSearch = true;
         super.usaBottoneUpload = true;
         super.usaBottoneStatistiche = true;
         super.wikiModuloTitle = PATH_MODULO_ATTIVITA;

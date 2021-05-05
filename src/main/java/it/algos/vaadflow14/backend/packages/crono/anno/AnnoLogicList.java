@@ -5,6 +5,7 @@ import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import org.springframework.beans.factory.annotation.*;
@@ -38,6 +39,13 @@ public class AnnoLogicList extends LogicList {
      */
     private final static long serialVersionUID = 1L;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public SecoloService secoloService;
 
     /**
      * Costruttore con parametro <br>
@@ -62,6 +70,7 @@ public class AnnoLogicList extends LogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+        super.usaBottoneSearch = true;
     }
 
 
@@ -85,5 +94,13 @@ public class AnnoLogicList extends LogicList {
         return lista;
     }
 
+    /**
+     * Regola una mappa di ComboBox (solo per la List e facoltativi) da usare nel wrapper getWrapButtonsTop() <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixMappaComboBox() {
+        super.fixMappaComboBox();
+    }
 
 }// end of Route class

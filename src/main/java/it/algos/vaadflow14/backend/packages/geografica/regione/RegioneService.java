@@ -226,8 +226,8 @@ public class RegioneService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    @Override
-    public AIResult resetEmptyOnly() {
+//    @Override
+    public AIResult resetEmptyOnly2() {//@todo rimettere
         AIResult result = super.resetEmptyOnly();
         AIResult resultCollectionPropedeutica;
 

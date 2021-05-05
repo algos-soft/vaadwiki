@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.data.provider.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -641,10 +642,10 @@ public class AAnnotationService extends AAbstractService {
      *
      * @param entityViewClazz the class of type AEntity or AView
      *
-     * @return sort
+     * @return sortSpring
      */
-    public Sort getSort(final Class<?> entityViewClazz) {
-        Sort sort = null;
+    public Sort getSortSpring(final Class<?> entityViewClazz) {
+        Sort sortSpring = null;
         String sortDirectionTxt = VUOTA;
         Sort.Direction sortDirection = Sort.Direction.ASC;
         String sortPropertyTxt = VUOTA;
@@ -659,10 +660,42 @@ public class AAnnotationService extends AAbstractService {
         }
 
         if (text.isValid(sortPropertyTxt)) {
-            sort = Sort.by(sortDirection, sortPropertyTxt);
+            sortSpring = Sort.by(sortDirection, sortPropertyTxt);
         }
 
-        return sort;
+        return sortSpring;
+    }
+
+
+    /**
+     * Get the sorts used by DataProvider.
+     *
+     * @param entityViewClazz the class of type AEntity or AView
+     *
+     * @return sortVaadinList
+     */
+    public List<QuerySortOrder> getSortVaadinList(final Class<?> entityViewClazz) {
+        List<QuerySortOrder> sortVaadinList = new ArrayList<>();
+        QuerySortOrder sortVaadin = null;
+        String sortDirectionTxt = VUOTA;
+        SortDirection sortDirection = SortDirection.ASCENDING;
+        String sortPropertyTxt = VUOTA;
+        AIView annotation = this.getAIView(entityViewClazz);
+
+        if (annotation != null) {
+            sortPropertyTxt = annotation.sortProperty();
+            sortDirectionTxt = annotation.sortDirection();
+            if (text.isValid(sortDirectionTxt) && (sortDirectionTxt.equals("DESC") || sortDirectionTxt.equals("desc"))) {
+                sortDirection = SortDirection.DESCENDING;
+            }
+        }
+
+        if (text.isValid(sortPropertyTxt)) {
+            sortVaadin = new QuerySortOrder(sortPropertyTxt, sortDirection);
+            sortVaadinList = Collections.singletonList(sortVaadin);
+        }
+
+        return sortVaadinList;
     }
 
     /**
@@ -955,6 +988,18 @@ public class AAnnotationService extends AAbstractService {
     public boolean usaReset(final Class<? extends AEntity> entityClazz) {
         AIList annotation = this.getAIList(entityClazz);
         return annotation != null ? annotation.usaReset() : false;
+    }
+
+    /**
+     * Flag per la ri-creazione automatica della lista. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaResetIniziale(final Class<? extends AEntity> entityClazz) {
+        AIEntity annotation = this.getAIEntity(entityClazz);
+        return annotation != null ? annotation.usaResetIniziale() : false;
     }
 
 
@@ -1868,6 +1913,37 @@ public class AAnnotationService extends AAbstractService {
         return usaComboMethod;
     }
 
+
+    /**
+     * Get the status of specific method for comboBox in Grid.
+     *
+     * @param entityClazz the class of type AEntity
+     * @param fieldName   the property name
+     *
+     * @return status of field
+     */
+    public boolean usaComboBoxGrid(Class<? extends AEntity> entityClazz, String fieldName) {
+        return usaComboBoxGrid(reflection.getField(entityClazz, fieldName));
+    }
+
+
+    /**
+     * Get the status of specific method for comboBox in Grid.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return status of field
+     */
+    public boolean usaComboBoxGrid(final Field reflectionJavaField) {
+        boolean usaComboMethod = false;
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            usaComboMethod = annotation.usaComboBoxGrid();
+        }
+
+        return usaComboMethod;
+    }
 
     /**
      * Get the method name for reflection.

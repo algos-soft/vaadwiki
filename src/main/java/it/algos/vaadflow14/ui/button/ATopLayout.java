@@ -149,6 +149,7 @@ public class ATopLayout extends AButtonLayout {
             this.add(secondaRiga);
         }
     }
+
     protected HorizontalLayout fixSearchAndCombo() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.add(new Button("Pippo"));
@@ -244,6 +245,13 @@ public class ATopLayout extends AButtonLayout {
 
         if (buttonClearFilter != null) {
             buttonClearFilter.addClickListener(event -> searchField.clear());
+        }
+
+        if (mappaComboBox != null && mappaComboBox.size() > 0) {
+            for (Map.Entry<String, ComboBox> entry : mappaComboBox.entrySet()) {
+                ComboBox combo = entry.getValue();
+                combo.addValueChangeListener(event -> performAction(AEAction.valueChanged, entry.getKey(), combo.getValue()));
+            }
         }
     }
 

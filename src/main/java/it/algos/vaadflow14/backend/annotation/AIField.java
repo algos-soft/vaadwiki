@@ -1,16 +1,9 @@
 package it.algos.vaadflow14.backend.annotation;
 
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.enumeration.AETypeData;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.lang.annotation.*;
 
 /**
  * /**
@@ -253,6 +246,15 @@ public @interface AIField {
      */
     String methodName() default "findItems";
 
+
+    /**
+     * (Optional) Usa un comboBox di selezione come bottone nel header della Grid.
+     * Meaning sense only for AETypeField.combo.
+     * Defaults to false.
+     *
+     * @return the boolean
+     */
+    boolean usaComboBoxGrid() default false;
 
     /**
      * (Optional) placeholder for empty field

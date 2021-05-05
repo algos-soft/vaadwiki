@@ -61,8 +61,7 @@ public class ViaLogicList extends LogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-
-        //        super.operationForm= AEOperation.editDaLink;
+        super.usaBottoneSearch = true;
     }
 
     /**
@@ -73,8 +72,11 @@ public class ViaLogicList extends LogicList {
      */
     @Override
     protected List<Span> getSpanList() {
-        String message = "Codifica delle più comuni tipologie di indirizzi. Presentate nelle anagrafiche in un popup di selezione.";
-        return Collections.singletonList(html.getSpanVerde(message));
+        List<Span> lista = new ArrayList<>();
+        lista.add(html.getSpanVerde("Codifica delle più comuni tipologie di indirizzi."));
+        lista.add(html.getSpanVerde("Presentate nelle anagrafiche in un popup di selezione."));
+        lista.add(html.getSpanVerde("L'ordinamento del popup è quello riportato qui e non quello alfabetico."));
+        return lista;
     }
 
 }// end of Route class

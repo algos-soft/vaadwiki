@@ -147,8 +147,8 @@ public abstract class FlowBoot implements ServletContextListener {
 
         this.fixDBMongo();
         this.fixVariabili();
-        this.fixData();
         this.fixPreferenze();
+        this.fixData();
         this.fixMenuRoutes();
         this.fixSchedules();
         this.fixDemo();
@@ -325,19 +325,6 @@ public abstract class FlowBoot implements ServletContextListener {
     }
 
 
-    /**
-     * Primo ingresso nel programma nella classe concreta, tramite il <br>
-     * metodo FlowBoot.onContextRefreshEvent() della superclasse astratta <br>
-     * Crea i dati di alcune collections sul DB mongo <br>
-     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
-     * <p>
-     * Invoca il metodo fixData() di FlowData oppure della sottoclasse <br>
-     */
-    protected void fixData() {
-        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(FlowData.class)) {
-            dataInstance.fixData();
-        }
-    }
 
 
     /**
@@ -351,6 +338,21 @@ public abstract class FlowBoot implements ServletContextListener {
         AIResult result = preferenzaService.resetEmptyOnly();
         result.setErrorMessage("Le preferenze generali e specifiche esistono già e non c'è bisogno di modificarle");
         logger.log(AETypeLog.preferenze, result);
+    }
+
+
+    /**
+     * Primo ingresso nel programma nella classe concreta, tramite il <br>
+     * metodo FlowBoot.onContextRefreshEvent() della superclasse astratta <br>
+     * Crea i dati di alcune collections sul DB mongo <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
+     * <p>
+     * Invoca il metodo fixData() di FlowData oppure della sottoclasse <br>
+     */
+    protected void fixData() {
+        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(FlowData.class)) {
+            dataInstance.fixData();
+        }
     }
 
 

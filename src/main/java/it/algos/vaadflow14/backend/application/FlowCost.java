@@ -87,6 +87,14 @@ public abstract class FlowCost {
 
     public static final String TRE_PUNTI = "...";
 
+    public static final String SORT_VAADIN_ASC = "ASCENDING";
+
+    public static final String SORT_VAADIN_DESC = "DESCENDING";
+
+    public static final String SORT_SPRING_ASC = "ASC";
+
+    public static final String SORT_SPRING_DESC = "DESC";
+
     public static final String TAB = "\t";
 
     public static final String APICE = "\\\"";
@@ -306,6 +314,8 @@ public abstract class FlowCost {
     //--chiavi mappa eventi
     public static final String KEY_MAPPA_EVENTO_AZIONE = "eventoAzione";
 
+    public static final String KEY_MAPPA_SEARCH = "search";
+
     public static final String TXT_SUFFIX = ".txt";
 
     public static final String XML_SUFFIX = ".xml";
@@ -404,6 +414,8 @@ public abstract class FlowCost {
     public static final String BUTTONS_NUMBER = "buttonsNumber";
 
     public static final double ICON_WIDTH = 3.0;
+
+    public static final int COMBO_WIDTH = 10;
 
 
 }

@@ -7,6 +7,8 @@ import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
+import java.util.*;
+
 /**
  * Project vaadflow
  * Created by Algos
@@ -25,7 +27,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
     public void esegue() {
         super.esegue();
         super.isNuovoProgetto = false;
-        String srcPath ;
+        String srcPath;
         String destPath;
 
         this.copiaFileWizard();
@@ -33,12 +35,12 @@ public class WizElaboraFeedbackWizard extends WizElabora {
         //--enumeration
         srcPath = AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirRootWizardEnumeration.get();
         destPath = AEWizCost.pathVaadFlow14Root.get() + AEWizCost.dirRootWizardEnumeration.get();
-        this.copiaDirectories(srcPath,destPath,"enum");
+        this.copiaDirectories(srcPath, destPath, "enum");
 
         //--scripts
         srcPath = AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirRootWizardScripts.get();
         destPath = AEWizCost.pathVaadFlow14Root.get() + AEWizCost.dirRootWizardScripts.get();
-        this.copiaDirectories(srcPath,destPath,"scripts");
+        this.copiaDirectories(srcPath, destPath, "scripts");
     }
 
 
@@ -65,7 +67,9 @@ public class WizElaboraFeedbackWizard extends WizElabora {
         if (!file.isEsisteFile(destPath)) {
             logger.warn("Errato il path per il file Wizard da sostituire su VaadFlow14", this.getClass(), "copiaFileWizard");
         }
-
+        String x = "123";
+        String[] pippoz = new String[x.length()];
+List ak;
         wizService.copyFile(copyWiz, srcPath, destPath, DIR_VAADFLOW);
         message = String.format("Feedback del file %s %s che è stato completamente sostituito.", pathBreve, type);
         logger.log(AETypeLog.wizard, message);
