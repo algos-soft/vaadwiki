@@ -65,7 +65,7 @@ public class PrenomeLogicList extends WikiLogicList {
         super.fixPreferenze();
 
         super.usaBottoneUpload = false;
-        super.usaBottoneStatistiche = true;
+        this.usaBottoneStatistiche = false;
         super.wikiModuloTitle = PATH_MODULO_PRENOME;
     }
 

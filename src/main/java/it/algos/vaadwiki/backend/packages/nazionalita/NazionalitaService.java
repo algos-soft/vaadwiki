@@ -7,11 +7,15 @@ import it.algos.vaadflow14.backend.logic.AService;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.wrapper.AResult;
+import it.algos.vaadwiki.backend.logic.*;
+import static it.algos.vaadwiki.backend.logic.WikiService.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
+import java.util.*;
 
 /**
  * Project: vaadwiki <br>
@@ -35,7 +39,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @Qualifier("nazionalitaService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
-public class NazionalitaService extends AService {
+public class NazionalitaService extends WikiService {
 
 
     /**
@@ -53,46 +57,17 @@ public class NazionalitaService extends AService {
     }
 
     /**
-     * Crea e registra una entityBean solo se non esisteva <br>
-     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
-     * solo col valore di un parametro da usare anche come keyID <br>
-     * Controlla che non esista già una entityBean con lo stesso keyID <br>
-     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
+     * Crea e registra una entityBean <br>
      *
-     * @param keyPropertyValue obbligatorio
+     * @param singolare di riferimento (obbligatorio, unico)
+     * @param plurale (facoltativo, non unico)
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    @Override
-    public Nazionalita creaIfNotExist(final String keyPropertyValue) {
-        return (Nazionalita) checkAndSave(newEntity(keyPropertyValue));
+    public Nazionalita crea(final String singolare, final String plurale) {
+        return (Nazionalita) mongo.insert(newEntity(singolare, plurale));
     }
 
-    /**
-     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     * Senza properties per compatibilità con la superclasse <br>
-     *
-     * @return la nuova entityBean appena creata (non salvata
-     */
-    @Override
-    public Nazionalita newEntity() {
-        return newEntity(VUOTA, VUOTA);
-    }
-
-    /**
-     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @param singolare di riferimento (obbligatorio, unico)
-     *
-     * @return la nuova entityBean appena creata (non salvata)
-     */
-    private Nazionalita newEntity(final String singolare) {
-        return newEntity(singolare, VUOTA);
-    }
 
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
@@ -144,38 +119,41 @@ public class NazionalitaService extends AService {
 
 
     /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Esegue un azione di download, specifica del programma/package in corso <br>
+     * Deve essere sovrascritto <br>
      *
-     * @return wrapper col risultato ed eventuale messaggio di errore
+     * @return true se l'azione è stata eseguita
      */
-    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
-        int numRec = 0;
+    public boolean download() {
+        return downloadModulo(PATH_MODULO_NAZIONALITA);
+    }
 
-        if (result.isErrato()) {
-            return result;
+
+    /**
+     * Legge la mappa di valori dal modulo di wiki <br>
+     * Cancella la (eventuale) precedente lista di attività <br>
+     * Elabora la lista di attività <br>
+     * Crea le entities e le integra da altro modulo <br>
+     *
+     * @param wikiTitle della pagina su wikipedia
+     *
+     * @return true se l'azione è stata eseguita
+     */
+    public boolean downloadModulo(String wikiTitle) {
+        boolean status = false;
+        Map<String, String> mappa = wiki.leggeMappaModulo(wikiTitle);
+
+        if (mappa != null && mappa.size() > 0) {
+            deleteAll();
+            for (Map.Entry<String, String> entry : mappa.entrySet()) {
+                this.crea(entry.getKey(), entry.getValue());
+            }
+            status = true;
         }
 
-        //--da sostituire
-        String message;
-        message = String.format("Nel package %s la classe %s non ha ancora sviluppato il metodo resetEmptyOnly() ", "nazionalita", "NazionalitaService");
-        return AResult.errato(message);
-
-        // return super.fixPostReset(AETypeReset.enumeration, numRec);
+        super.fixDataDownload();
+        return status;
     }
+
 
 }// end of singleton class

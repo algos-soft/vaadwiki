@@ -51,8 +51,8 @@ import static java.awt.image.ImageObserver.WIDTH;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Nazionalita", keyPropertyName = "singolare", usaCreazione = false, usaModifica = false, usaCompany = false)
 @AIView(menuName = "Nazionalita", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
-@AIList(fields = "singolare,plurale,aggiunta", usaRowIndex = true)
-@AIForm(fields = "singolare,plurale,aggiunta", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
+@AIList(fields = "singolare,plurale", usaRowIndex = true)
+@AIForm(fields = "singolare,plurale", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
 public class Nazionalita extends AEntity {
 
 

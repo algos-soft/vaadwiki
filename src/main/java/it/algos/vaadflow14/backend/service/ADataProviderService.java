@@ -91,7 +91,7 @@ public class ADataProviderService extends AAbstractService {
                     // Alla partenza (se l'ordinamento manca) usa l'ordine base della AEntity
                     // le volte successive usa l'ordine selezionato da un header della Grid
                     if (sortVaadinList != null && sortVaadinList.size() == 0) {
-                        sortVaadinList = annotation.getSortVaadinList(entityClazz);
+//                        sortVaadinList = annotation.getSortVaadinList(entityClazz);
                         Sort sortSpring = annotation.getSortSpring(entityClazz);
 //                        Sort sortSpring2=utility.sortVaadinToSpring(sortVaadinList);
                         int a=87;

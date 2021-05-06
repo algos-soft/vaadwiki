@@ -22,13 +22,13 @@ import it.algos.vaadflow14.backend.annotation.*;
 @AIScript(sovraScrivibile = false)
 public enum AEWikiButton implements AIButton {
 
-    update("Update", VaadinIcon.LIST, "error", AEWikiAction.update, true, "Update di una pagina", "cross", Key.KEY_R, null),
-    modulo("Modulo", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.modulo, true, "Modulo di Wikipedia", "cross", Key.KEY_R, null),
-    elabora("Elabora", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.elabora, true, "Elabora un documento", "cross", Key.KEY_R, null),
-    check("Check", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.elabora, true, "Controlla un documento", "cross", Key.KEY_R, null),
-    test("Test", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.test, true, "Test di una funzionalità", "cross", Key.KEY_R, null),
-    statistiche("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statistiche, true, "Elaborazione statistiche", "cross", Key.KEY_R, null),
-    statisticheDue("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statisticheDue, true, "Elaborazione statistiche", "cross", Key.KEY_R, null),
+    update("Update", VaadinIcon.LIST, "error", AEWikiAction.update, true, "Update di una pagina", "cross"),
+    modulo("Modulo", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.modulo, true, "Modulo di Wikipedia", "cross"),
+    elabora("Elabora", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.elabora, true, "Elabora un documento", "cross"),
+    check("Check", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.elabora, true, "Controlla un documento", "cross"),
+    test("Test", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.test, true, "Test di una funzionalità", "cross"),
+    statistiche("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statistiche, true, "Elaborazione statistiche", "cross"),
+    statisticheDue("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statisticheDue, true, "Elaborazione statistiche", "cross"),
 
     ;
 

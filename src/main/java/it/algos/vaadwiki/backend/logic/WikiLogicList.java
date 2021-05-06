@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.backend.logic;
 
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.html.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -122,6 +123,7 @@ public abstract class WikiLogicList extends LogicList {
 
         super.usaBottoneDeleteAll = true;
         super.usaBottoneNew = false;
+        super.usaBottoneSearch = true;
         super.usaBottonePaginaWiki = false;
         super.usaBottoneDownload = true;
         super.usaBottoneUpload = true;
@@ -218,7 +220,8 @@ public abstract class WikiLogicList extends LogicList {
     @Override
     public boolean download() {
         entityService.download();
-        this.refreshGrid();
+        super.reload();
+
         return true;
     }
 

@@ -66,7 +66,7 @@ public class Prenome extends AEntity {
     /**
      * larghezza delle colonne
      */
-    private static final transient int WIDTHEM = 20;
+    private static final transient int WIDTHEM = 24;
 
 
     /**

@@ -397,7 +397,7 @@ public abstract class LogicForm extends Logic {
      * Azione proveniente dal click sul bottone Annulla
      */
     protected void back() {
-        UI.getCurrent().getPage().getHistory().back();
+        super.reload();
     }
 
     /**

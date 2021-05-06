@@ -250,6 +250,13 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
     }
 
     /**
+     * Ricarica interamente la pagina del browser (non solo la Grid) <br>
+     */
+    protected void reload() {
+        UI.getCurrent().getPage().reload();
+    }
+
+    /**
      *
      */
     @Override

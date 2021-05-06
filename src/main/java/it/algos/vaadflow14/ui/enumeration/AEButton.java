@@ -30,8 +30,8 @@ public enum AEButton implements AIButton {
     searchDialog("Cerca...", VaadinIcon.SEARCH, "secondary", AEAction.searchDialog, true, "Apre un dialogo di ricerca", "search", Key.KEY_F, KeyModifier.CONTROL),
     export("Export", VaadinIcon.DOWNLOAD, "error", AEAction.export, true, "Esporta la lista", "cross", null, null),
     wiki("Wiki", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.showWiki, true, "Apre una pagina di Wikipedia", "cross", Key.KEY_R, KeyModifier.CONTROL),
-    download("Download", VaadinIcon.DOWNLOAD, "primary", AEAction.download, true, "Download di una pagina", "cross", Key.KEY_R, null),
-    upload("Upload", VaadinIcon.UPLOAD, "error", AEAction.upload, true, "Upload di una pagina", "cross", Key.KEY_R, null),
+    download("Download", VaadinIcon.DOWNLOAD, "primary", AEAction.download, true, "Download di una pagina", "cross"),
+    upload("Upload", VaadinIcon.UPLOAD, "error", AEAction.upload, true, "Upload di una pagina", "cross"),
 
     //--Form
     resetForm("Reset", VaadinIcon.REFRESH, "secondary", AEAction.resetForm, true, "Ripristina tutte le properties della scheda", "cross", Key.KEY_R, KeyModifier.CONTROL),
