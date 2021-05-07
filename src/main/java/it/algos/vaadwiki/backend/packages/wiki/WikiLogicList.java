@@ -1,6 +1,5 @@
-package it.algos.vaadwiki.backend.logic;
+package it.algos.vaadwiki.backend.packages.wiki;
 
-import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.html.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;

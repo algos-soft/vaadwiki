@@ -1,8 +1,8 @@
 package it.algos.vaadwiki.backend.packages.bio;
 
 import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.data.value.*;
 import com.vaadin.flow.router.*;
-import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
@@ -15,26 +15,21 @@ import org.springframework.beans.factory.annotation.*;
 import java.util.*;
 
 /**
- * Project: vaadwiki <br>
- * Created by Algos <br>
- * User: gac <br>
- * Fix date: lun, 26-apr-2021 <br>
- * Fix time: 13:45 <br>
+ * Project vaadwiki
+ * Created by Algos
+ * User: gac
+ * Date: gio, 06-mag-2021
+ * Time: 16:29
  * <p>
- * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, usa la classe GenericLogicForm con @Route <br>
- * Gestione della 'view' di @Route e della 'business logic' <br>
- * Mantiene lo 'stato' <br>
- * L' istanza (PROTOTYPE) viene creata ad ogni chiamata del browser <br>
- * Eventuali parametri (opzionali) devono essere passati nell'URL <br>
- * <p>
- * Annotated with @Route (obbligatorio) <br>
- * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+@Route(value = "bioFormNew", layout = MainLayout.class)
+public class BioLogicFormNew extends WikiLogicForm {
 
-@Route(value = "bioForm", layout = MainLayout.class)
-@AIScript(sovraScrivibile = false)
-public class BioLogicForm extends WikiLogicForm {
+
+    /**
+     * Versione della classe per la serializzazione
+     */
+    private static final long serialVersionUID = 1L;
 
 
     /**
@@ -47,15 +42,9 @@ public class BioLogicForm extends WikiLogicForm {
      *
      * @param bioService (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicForm
      */
-    public BioLogicForm(@Autowired @Qualifier("ABioService") final AIService bioService) {
+    public BioLogicFormNew(@Autowired @Qualifier("ABioService") final AIService bioService) {
         super(bioService, Bio.class);
     }// end of Vaadin/@Route constructor
-
-
-    @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        super.beforeEnter(beforeEnterEvent);
-    }
 
 
     /**
@@ -68,7 +57,6 @@ public class BioLogicForm extends WikiLogicForm {
         super.fixPreferenze();
     }
 
-
     /**
      * Costruisce una lista di bottoni (enumeration) al Top della view <br>
      * Costruisce i bottoni come dai Flag regolati di default o nella sottoclasse <br>
@@ -77,6 +65,29 @@ public class BioLogicForm extends WikiLogicForm {
      */
     protected List<AIButton> getListaAEBottoniTop() {
         return Collections.singletonList(AEButton.download);
+    }
+
+    /**
+     * Costruisce una lista ordinata di nomi delle properties del Form. <br>
+     * La lista viene usata per la costruzione automatica dei campi e l' inserimento nel binder <br>
+     * Nell' ordine: <br>
+     * 1) Cerca nell' annotation @AIForm della Entity e usa quella lista (con o senza ID) <br>
+     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
+     * 3) Sovrascrive la lista nella sottoclasse specifica di xxxLogic <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Se serve, modifica l' ordine della lista oppure esclude una property che non deve andare nel binder <br>
+     * todo ancora da sviluppare
+     *
+     * @return lista di nomi di properties
+     */
+    @Override
+    public List<String> getFormPropertyNamesList() {
+        List<String> fieldsNameList = new ArrayList<>();
+
+        fieldsNameList.add("wikiTitle");
+        fieldsNameList.add("tmpBioServer");
+
+        return fieldsNameList;
     }
 
     /**
@@ -90,26 +101,29 @@ public class BioLogicForm extends WikiLogicForm {
         //--aggiunge un listener al field wikiTitle
         AField fieldWikiTitle = currentForm.getField("wikiTitle");
         if (fieldWikiTitle != null) {
-            fieldWikiTitle.addValueChangeListener(e -> sincroDownload());
+            fieldWikiTitle.addValueChangeListener(e -> sincroDownload((String) e.getValue()));
+            com.vaadin.flow.component.Component comp = fieldWikiTitle.get();
+            ((ATextField) comp).textField.setValueChangeMode(ValueChangeMode.EAGER);
         }
 
         //--disabilita inizialmente il bottone download
-        sincroDownload();
+        sincroDownload(VUOTA);
     }
 
     /**
      * Sincronizza lo stato del bottone download col contenuto del field wikiTitle <br>
      */
-    private void sincroDownload() {
+    private void sincroDownload(final String value) {
         Button bottoneDownload = topLayout.getMappaBottoni().get(AEButton.download);
         if (bottoneDownload != null) {
-            bottoneDownload.setEnabled(text.isValid(getWikiTitle()));
+            bottoneDownload.setEnabled(text.isValid(value) && value.length() > 2);
         }
     }
 
     /**
      * Titolo della pagina wiki <br>
      */
+    @Deprecated
     private String getWikiTitle() {
         String valueWikiTitle = VUOTA;
         AField fieldWikiTitle = currentForm.getField("wikiTitle");
@@ -134,13 +148,17 @@ public class BioLogicForm extends WikiLogicForm {
      * Scarica una singola biografia <br>
      */
     private void downloadBio() {
-        String allText;
+        String textTmpl;
 
-        String valueWikiTitle = getWikiTitle();
+        String wikiTitle = getWikiTitle();
         if (text.isValid(getWikiTitle())) {
-            allText = wiki.legge(valueWikiTitle);
-            System.out.println(allText);
+            textTmpl= bioService.leggeTmpl(wikiTitle);
+            System.out.println(textTmpl);
         }
     }
 
-}
+
+}// end of Route class
+
+
+

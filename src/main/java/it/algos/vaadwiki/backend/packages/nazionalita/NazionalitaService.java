@@ -1,19 +1,11 @@
 package it.algos.vaadwiki.backend.packages.nazionalita;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.backend.enumeration.AETypeReset;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.wrapper.AResult;
-import it.algos.vaadwiki.backend.logic.*;
-import static it.algos.vaadwiki.backend.logic.WikiService.*;
+import it.algos.vaadwiki.backend.packages.wiki.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 import java.util.*;
 

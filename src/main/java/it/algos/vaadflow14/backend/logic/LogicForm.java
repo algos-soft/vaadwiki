@@ -8,6 +8,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.header.*;
@@ -35,6 +36,30 @@ public abstract class LogicForm extends Logic {
     protected int backSteps = -1;
 
     protected String sortProperty;
+
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso il parametro del costruttore usato <br>
+     */
+    public LogicForm() {
+    }// end of Vaadin/@Route constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+     * Nel costruttore della sottoclasse l'annotation @Autowired potrebbe essere omessa perché c'è un solo costruttore <br>
+     * Nel costruttore della sottoclasse usa un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
+     * Riceve e regola la entityClazz (final) associata a questa logicView <br>
+     *
+     * @param entityService (obbligatorio) riferimento al service specifico correlato a questa istanza (prototype) di LogicList
+     * @param entityClazz   (obbligatorio)  the class of type AEntity
+     */
+    public LogicForm(final AIService entityService, final Class<? extends AEntity> entityClazz) {
+        super.entityService = entityService;
+        super.entityClazz = entityClazz;
+    }// end of Vaadin/@Route constructor
 
     /**
      * Property per il tipo di view (List o Form) <br>
@@ -78,7 +103,7 @@ public abstract class LogicForm extends Logic {
         super.usaBottoneResetForm = false;
         super.usaBottoneBack = true;
         super.usaBottoneAnnulla = false;
-        super.usaBottoneCancella = operationForm.isSaveEnabled();
+        super.usaBottoneCancella = operationForm.isDeleteEnabled();
         super.usaBottoneConferma = false;
         super.usaBottoneRegistra = operationForm.isSaveEnabled();
 
@@ -210,7 +235,7 @@ public abstract class LogicForm extends Logic {
      * 1) Cerca nell' annotation @AIForm della Entity e usa quella lista (con o senza ID) <br>
      * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
      * 3) Sovrascrive la lista nella sottoclasse specifica di xxxLogic <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, senza invocare il metodo della superclasse <br>
      * Se serve, modifica l' ordine della lista oppure esclude una property che non deve andare nel binder <br>
      * todo ancora da sviluppare
      *
@@ -369,7 +394,7 @@ public abstract class LogicForm extends Logic {
         VaadinIcon iconBack = VaadinIcon.ARROW_LEFT;
 
         if (operationForm == AEOperation.addNew) {
-            back();
+            backToList();
             return;
         }
 

@@ -381,8 +381,7 @@ public abstract class LogicList extends Logic {
                 this.openConfirmReset();
                 break;
             case nuovo:
-                this.operationForm = AEOperation.addNew;
-                this.executeRoute();
+                this.newForm();
                 break;
             case searchDialog:
                 //                Notification.show("Not yet. Coming soon.", 3000, Notification.Position.MIDDLE);
@@ -431,7 +430,7 @@ public abstract class LogicList extends Logic {
      * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
      */
     @Override
-    public boolean performAction(AIAction iAzione, AEntity entityBean) {
+    public boolean performAction(final AIAction iAzione, final AEntity entityBean) {
         boolean status = true;
         AEAction azione = iAzione instanceof AEAction ? (AEAction) iAzione : null;
 
@@ -441,7 +440,7 @@ public abstract class LogicList extends Logic {
 
         switch (azione) {
             case doubleClick:
-                this.executeRoute(entityBean);
+                this.openForm(entityBean);
                 break;
             default:
                 status = false;
@@ -515,6 +514,27 @@ public abstract class LogicList extends Logic {
         }
 
         return status;
+    }
+
+    /**
+     * Costruisce una nuova @route in modalità new <br>
+     * Seleziona (eventualmente) il Form da usare <br>
+     * Può essere sovrascritto, senza invocare il metodo della superclasse <br>
+     */
+    protected void newForm() {
+        this.operationForm = AEOperation.addNew;
+        this.executeRoute();
+    }
+
+    /**
+     * Costruisce una nuova @route in modalità new <br>
+     * Seleziona (eventualmente) il Form da usare <br>
+     * Può essere sovrascritto, senza invocare il metodo della superclasse <br>
+     *
+     * @param entityBean selezionata
+     */
+    protected void openForm(final AEntity entityBean) {
+        this.executeRoute(entityBean);
     }
 
 

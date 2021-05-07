@@ -1,21 +1,13 @@
 package it.algos.vaadwiki.backend.packages.prenome;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.backend.enumeration.AETypeReset;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadwiki.backend.enumeration.*;
-import it.algos.vaadwiki.backend.logic.*;
+import it.algos.vaadwiki.backend.packages.wiki.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * Project: vaadwiki <br>

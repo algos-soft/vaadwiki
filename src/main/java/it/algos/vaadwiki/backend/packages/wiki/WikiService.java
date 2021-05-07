@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.backend.logic;
+package it.algos.vaadwiki.backend.packages.wiki;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;

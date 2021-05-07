@@ -6,8 +6,8 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadwiki.backend.enumeration.*;
-import it.algos.vaadwiki.backend.logic.*;
-import static it.algos.vaadwiki.backend.logic.WikiService.*;
+import it.algos.vaadwiki.backend.packages.wiki.*;
+import static it.algos.vaadwiki.backend.packages.wiki.WikiService.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;

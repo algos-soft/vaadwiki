@@ -35,7 +35,7 @@ public enum AEButton implements AIButton {
 
     //--Form
     resetForm("Reset", VaadinIcon.REFRESH, "secondary", AEAction.resetForm, true, "Ripristina tutte le properties della scheda", "cross", Key.KEY_R, KeyModifier.CONTROL),
-    back("Back", VaadinIcon.ARROW_BACKWARD, "secondary", AEAction.back, true, "Torna indietro", "arrow-left", Key.ESCAPE, null),
+    back("Back", VaadinIcon.ARROW_BACKWARD, "secondary", AEAction.back, true, "Torna indietro", "arrow-left"),
     annulla("Annulla", VaadinIcon.ARROW_LEFT, "primary", AEAction.annulla, true, "Annulla l' operazione", "arrow-left", Key.ESCAPE, null),
     delete("Delete", VaadinIcon.CLOSE, "error", AEAction.delete, true, "Cancella la scheda", "cross", null, null),
     conferma("Conferma", VaadinIcon.CHECK, "secondary", AEAction.conferma, true, "Conferma l' operazione", "checkmark", Key.KEY_S, KeyModifier.CONTROL),

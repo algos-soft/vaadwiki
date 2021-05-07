@@ -2,8 +2,7 @@ package it.algos.unit;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadwiki.backend.logic.*;
-import static it.algos.vaadwiki.backend.logic.WikiLogicList.*;
+import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadwiki.backend.packages.genere.*;
 import org.junit.*;
 import org.junit.jupiter.api.Test;
