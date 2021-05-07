@@ -124,7 +124,7 @@ public abstract class AField<T> extends CustomField<T> implements AIField {
 
 
     @Override
-    public com.vaadin.flow.component.Component get() {
+    public Component get() {
         return this;
     }
 

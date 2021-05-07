@@ -819,12 +819,12 @@ public class WizService {
         printProgetto();
 
         System.out.println(VUOTA);
-        System.out.println(AEToken.packageNamePunti.getTokenTag()+SEP+AEToken.packageNamePunti.getValue());
-        System.out.println(AEToken.packageNameSlash.getTokenTag()+SEP+AEToken.packageNameSlash.getValue());
-        System.out.println(AEToken.packageNameLower.getTokenTag()+SEP+AEToken.packageNameLower.getValue());
-        System.out.println(AEToken.packageNameUpper.getTokenTag()+SEP+AEToken.packageNameUpper.getValue());
-        System.out.println(AEToken.entityLower.getTokenTag()+SEP+AEToken.entityLower.getValue());
-        System.out.println(AEToken.entityUpper.getTokenTag()+SEP+AEToken.entityUpper.getValue());
+        System.out.println(AEToken.packageNamePunti.getTokenTag() + SEP + AEToken.packageNamePunti.getValue());
+        System.out.println(AEToken.packageNameSlash.getTokenTag() + SEP + AEToken.packageNameSlash.getValue());
+        System.out.println(AEToken.packageNameLower.getTokenTag() + SEP + AEToken.packageNameLower.getValue());
+        System.out.println(AEToken.packageNameUpper.getTokenTag() + SEP + AEToken.packageNameUpper.getValue());
+        System.out.println(AEToken.entityLower.getTokenTag() + SEP + AEToken.entityLower.getValue());
+        System.out.println(AEToken.entityUpper.getTokenTag() + SEP + AEToken.entityUpper.getValue());
 
         return status;
     }
@@ -1154,57 +1154,22 @@ public class WizService {
         return listaWizCost;
     }
 
-    //    public List<AEWizCost> getFile() {
-    //        return getAllTypeFile(AEWizCopy.file);
-    //    }
-    //
-    //    public List<AEWizCost> getSource() {
-    //        return getAllTypeFile(AEWizCopy.source);
-    //    }
-    //
-    //    public List<AEWizCost> getDir() {
-    //        return getAllTypeFile(AEWizCopy.dir);
-    //    }
+    public List<AEWizCost> getFile() {
+        return getAllTypeFile(AEWizCopy.file);
+    }
+
+    public List<AEWizCost> getSource() {
+        return getAllTypeFile(AEWizCopy.source);
+    }
+
+    public List<AEWizCost> getDir() {
+        return getAllTypeFile(AEWizCopy.dir);
+    }
 
     public List<AEWizCost> getNome() {
         return getAllTypeFile(AEWizCopy.nome);
     }
 
-    //    public List<AEWizCost> getNewProject() {
-    //        List<AEWizCost> listaWizCost = new ArrayList<>();
-    //
-    //        for (AEWizCost aeWizCost : AEWizCost.values()) {
-    //            if (aeWizCost.isNewProject()) {
-    //                listaWizCost.add(aeWizCost);
-    //            }
-    //        }
-    //
-    //        return listaWizCost;
-    //    }
-    //
-    //    public List<AEWizCost> getUpdateProject() {
-    //        List<AEWizCost> listaWizCost = new ArrayList<>();
-    //
-    //        for (AEWizCost aeWizCost : AEWizCost.values()) {
-    //            if (aeWizCost.isUpdateProject()) {
-    //                listaWizCost.add(aeWizCost);
-    //            }
-    //        }
-    //
-    //        return listaWizCost;
-    //    }
-
-    //    public List<AEWizCost> getNewUpdateProject() {
-    //        List<AEWizCost> listaWizCost;
-    //        if (AEFlag.isBaseFlow.is()) {
-    //            listaWizCost = getNewProject();
-    //        }
-    //        else {
-    //            listaWizCost = getUpdateProject();
-    //        }
-    //
-    //        return listaWizCost;
-    //    }
 
     public List<AEWizCost> getPath() {
         return getAllTypeFile(AEWizCopy.path);

@@ -90,20 +90,20 @@ public class AWebService extends AAbstractService {
 
 
     /**
-     * Request di tipo GET
-     * Accetta SOLO un domain (indirizzo) completo
+     * Request di tipo GET <br>
+     * Accetta SOLO un urlDomain (indirizzo) completo <br>
      *
-     * @param indirizzoWeb completo
+     * @param urlDomain completo
      *
      * @return risposta grezza
      */
-    public String leggeWeb(String indirizzoWeb) {
-        String risposta = "";
+    public String leggeWeb(String urlDomain) {
+        String risposta = VUOTA;
         URLConnection urlConn;
         String tag = TAG_INIZIALE;
 
         try { // prova ad eseguire il codice
-            String indirizzoWebCompleto = indirizzoWeb.startsWith(tag) ? indirizzoWeb : tag + indirizzoWeb;
+            String indirizzoWebCompleto = urlDomain.startsWith(tag) ? urlDomain : tag + urlDomain;
             urlConn = getURLConnection(indirizzoWebCompleto);
             risposta = getUrlRequest(urlConn);
         } catch (Exception unErrore) { // intercetta l'errore
@@ -115,17 +115,17 @@ public class AWebService extends AAbstractService {
 
 
     /**
-     * Request di tipo GET
-     * Accetta SOLO un indirizzo di una pagina wiki
+     * Request di tipo GET <br>
+     * Accetta SOLO un indirizzo di una pagina wiki <br>
      *
-     * @param indirizzoWikiGrezzo
+     * @param wikiTitleGrezzo da controllare per riempire gli spazi vuoti
      *
      * @return risposta grezza
      */
-    public String leggeSorgenteWiki(String indirizzoWikiGrezzo) {
-        String indirizzoWikiElaborato = indirizzoWikiGrezzo.replaceAll(SPAZIO, UNDERSCORE);
-        return leggeWeb(TAG_WIKI + indirizzoWikiElaborato);
-    } // fine del metodo
+    public String leggeSorgenteWiki(String wikiTitleGrezzo) {
+        String wikiTitleElaborato = wikiTitleGrezzo.replaceAll(SPAZIO, UNDERSCORE);
+        return leggeWeb(TAG_WIKI + wikiTitleElaborato);
+    }
 
 
     /**

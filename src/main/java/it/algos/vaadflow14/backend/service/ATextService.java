@@ -705,10 +705,10 @@ public class ATextService extends AAbstractService {
             stringaOut = this.setNoQuadre(stringaIn);
             if (this.isValid(stringaOut)) {
                 if (!stringaOut.startsWith(QUADRA_INI)) {
-                    stringaOut = QUADRE_INI + stringaOut;
+                    stringaOut = DOPPIE_QUADRE_INI + stringaOut;
                 }
                 if (!stringaOut.endsWith(QUADRA_END)) {
-                    stringaOut = stringaOut + QUADRE_END;
+                    stringaOut = stringaOut + DOPPIE_QUADRE_END;
                 }
             }
         }

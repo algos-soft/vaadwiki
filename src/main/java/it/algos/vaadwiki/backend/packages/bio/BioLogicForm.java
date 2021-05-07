@@ -47,7 +47,7 @@ public class BioLogicForm extends WikiLogicForm {
      *
      * @param bioService (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicForm
      */
-    public BioLogicForm(@Autowired @Qualifier("ABioService") final AIService bioService) {
+    public BioLogicForm(@Autowired @Qualifier("bioService") final AIService bioService) {
         super(bioService, Bio.class);
     }// end of Vaadin/@Route constructor
 

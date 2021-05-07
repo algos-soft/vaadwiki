@@ -10,6 +10,7 @@ import org.springframework.stereotype.*;
 
 import java.net.*;
 import java.util.*;
+import java.util.regex.*;
 
 
 /**
@@ -82,6 +83,121 @@ public class AWikiService extends AAbstractService {
     //    @Autowired
     //    public RegioneLogic regioneLogic;
 
+    /**
+     * Estrae il testo di un template dal testo completo della voce <br>
+     * Esamina il PRIMO template che trova <br>
+     * Gli estremi sono COMPRESI <br>
+     * <p>
+     * Recupera il tag iniziale con o senza ''Template''
+     * Recupera il tag iniziale con o senza primo carattere maiuscolo
+     * Recupera il tag finale di chiusura con o senza ritorno a capo precedente
+     * Controlla che non esistano doppie graffe dispari all'interno del template
+     *
+     * @param wikiTitle della pagina wiki
+     */
+    public String leggeTmpl(final String wikiTitle, final String tag) {
+        return estraeTmpl(legge(wikiTitle), tag);
+    }
+
+    /**
+     * Estrae il testo di un template dal testo completo della voce <br>
+     * Esamina il PRIMO template che trova <br>
+     * Gli estremi sono COMPRESI <br>
+     * <p>
+     * Recupera il tag iniziale con o senza ''Template''
+     * Recupera il tag iniziale con o senza primo carattere maiuscolo
+     * Recupera il tag finale di chiusura con o senza ritorno a capo precedente
+     * Controlla che non esistano doppie graffe dispari all'interno del template
+     */
+    private String estraeTmpl(final String testoPagina, String tag) {
+        String templateTxt = VUOTA;
+        boolean continua = false;
+        String patternTxt = "";
+        Pattern patttern = null;
+        Matcher matcher = null;
+        int posIni;
+        int posEnd;
+        String tagIniTemplate = VUOTA;
+
+        // controllo di congruità
+        if (text.isValid(testoPagina) && text.isValid(tag)) {
+            // patch per nome template minuscolo o maiuscolo
+            // deve terminare con 'aCapo' oppure 'return' oppure 'tab' oppure '|'(pipe) oppure 'spazio'(u0020)
+            if (tag.equals("Bio")) {
+                tag = "[Bb]io[\n\r\t\\|\u0020(grafia)]";
+            }
+
+            // Create a Pattern text
+            patternTxt = "\\{\\{(Template:)?" + tag;
+
+            // Create a Pattern object
+            patttern = Pattern.compile(patternTxt);
+
+            // Now create matcher object.
+            matcher = patttern.matcher(testoPagina);
+            if (matcher.find() && matcher.groupCount() > 0) {
+                tagIniTemplate = matcher.group(0);
+            }
+
+            // controlla se esiste una doppia graffa di chiusura
+            // non si sa mai
+            if (!tagIniTemplate.equals("")) {
+                posIni = testoPagina.indexOf(tagIniTemplate);
+                posEnd = testoPagina.indexOf(DOPPIE_GRAFFE_END, posIni);
+                templateTxt = testoPagina.substring(posIni);
+                if (posEnd != -1) {
+                    continua = true;
+                }
+            }
+
+            // cerco la prima doppia graffa che abbia all'interno
+            // lo stesso numero di aperture e chiusure
+            // spazzola il testo fino a pareggiare le graffe
+            if (continua) {
+                templateTxt = chiudeTmpl(templateTxt);
+            }
+        }
+
+        return templateTxt;
+    }
+
+    /**
+     * Chiude il template <br>
+     * <p>
+     * Il testo inizia col template, ma prosegue (forse) anche oltre <br>
+     * Cerco la prima doppia graffa che abbia all'interno lo stesso numero di aperture e chiusure <br>
+     * Spazzola il testo fino a pareggiare le graffe <br>
+     * Se non riesce a pareggiare le graffe, ritorna una stringa nulla <br>
+     *
+     * @param templateTxt da spazzolare
+     *
+     * @return template completo
+     */
+    public String chiudeTmpl(String templateTxt) {
+        String templateOut;
+        int posIni = 0;
+        int posEnd = 0;
+        boolean pari = false;
+
+        templateOut = templateTxt.substring(posIni, posEnd + DOPPIE_GRAFFE_END.length()).trim();
+
+        while (!pari) {
+            posEnd = templateTxt.indexOf(DOPPIE_GRAFFE_END, posEnd + DOPPIE_GRAFFE_END.length());
+            if (posEnd != -1) {
+                templateOut = templateTxt.substring(posIni, posEnd + DOPPIE_GRAFFE_END.length()).trim();
+                pari = html.isPariTag(templateOut, DOPPIE_GRAFFE_INI, DOPPIE_GRAFFE_END);
+            }
+            else {
+                break;
+            }
+        }
+
+        if (!pari) {
+            templateOut = VUOTA;
+        }
+
+        return templateOut;
+    }
 
     /**
      * Estrae una wikitable da una pagina wiki <br>
@@ -146,61 +262,6 @@ public class AWikiService extends AAbstractService {
         }
 
         return lista;
-    }
-
-    /**
-     * Restituisce una lista degli stati <br>
-     *
-     * @return lista dei nome degli stati
-     */
-    public List<String> getSiglaStati() {
-        List<String> lista = new ArrayList<>();
-        List<List<String>> listaGrezza = getStati();
-
-        for (List<String> listaRiga : listaGrezza) {
-            lista.add(listaRiga.get(3));
-        }
-
-        return lista;
-    }
-
-    /**
-     * Estrae una wikitable da una pagina wiki <br>
-     * Restituisce una lista dei valori per ogni riga, esclusa la prima coi titoli <br>
-     *
-     * @return lista di valori per ogni riga significativa della wikitable
-     */
-    public Map<String, String> getTableStatiNumerico() {
-        Map<String, String> mappa = new HashMap<>();
-        List<List<String>> listaGrezza = null;
-        String[] partiRiga = null;
-        String sep = DOPPIO_PIPE_REGEX;
-        String codice;
-        String paese;
-
-        try {
-            listaGrezza = getTable(PAGINA_ISO_1_NUMERICO, 1);
-        } catch (Exception unErrore) {
-        }
-
-        if (listaGrezza != null && listaGrezza.size() > 1) {
-            for (List<String> riga : listaGrezza) {
-                codice = riga.get(0).trim();
-                paese = text.setNoQuadre(riga.get(1)).trim();
-                mappa.put(codice, paese);
-                //                partiRiga = rigaGrezza.get(0).split(sep);
-                //                if (partiRiga.length == 2) {
-                //                    codice = partiRiga[0].trim();
-                //                    if (codice.startsWith(PIPE)) {
-                //                        codice = text.levaTesta(codice, PIPE);
-                //                    }
-                //                    paese = text.setNoQuadre(partiRiga[1]).trim();
-                //                    mappa.put(codice, paese);
-                //                }
-            }
-        }
-
-        return mappa;
     }
 
     //    /**
@@ -446,6 +507,60 @@ public class AWikiService extends AAbstractService {
     //        return lista;
     //    }
 
+    /**
+     * Restituisce una lista degli stati <br>
+     *
+     * @return lista dei nome degli stati
+     */
+    public List<String> getSiglaStati() {
+        List<String> lista = new ArrayList<>();
+        List<List<String>> listaGrezza = getStati();
+
+        for (List<String> listaRiga : listaGrezza) {
+            lista.add(listaRiga.get(3));
+        }
+
+        return lista;
+    }
+
+    /**
+     * Estrae una wikitable da una pagina wiki <br>
+     * Restituisce una lista dei valori per ogni riga, esclusa la prima coi titoli <br>
+     *
+     * @return lista di valori per ogni riga significativa della wikitable
+     */
+    public Map<String, String> getTableStatiNumerico() {
+        Map<String, String> mappa = new HashMap<>();
+        List<List<String>> listaGrezza = null;
+        String[] partiRiga = null;
+        String sep = DOPPIO_PIPE_REGEX;
+        String codice;
+        String paese;
+
+        try {
+            listaGrezza = getTable(PAGINA_ISO_1_NUMERICO, 1);
+        } catch (Exception unErrore) {
+        }
+
+        if (listaGrezza != null && listaGrezza.size() > 1) {
+            for (List<String> riga : listaGrezza) {
+                codice = riga.get(0).trim();
+                paese = text.setNoQuadre(riga.get(1)).trim();
+                mappa.put(codice, paese);
+                //                partiRiga = rigaGrezza.get(0).split(sep);
+                //                if (partiRiga.length == 2) {
+                //                    codice = partiRiga[0].trim();
+                //                    if (codice.startsWith(PIPE)) {
+                //                        codice = text.levaTesta(codice, PIPE);
+                //                    }
+                //                    paese = text.setNoQuadre(partiRiga[1]).trim();
+                //                    mappa.put(codice, paese);
+                //                }
+            }
+        }
+
+        return mappa;
+    }
 
     /**
      * Estrae il contenuto del template bandierina indicato <br>
@@ -493,7 +608,6 @@ public class AWikiService extends AAbstractService {
         return wrap;
     }
 
-
     /**
      * Restituisce un wrapper di valori: sigla e nome estratti dal template bandierine <br>
      * '{{band div|FRA|Borgogna-Franca Contea}}<noinclude>[[Categoria:Template bandierine regionali francesi|BFC]]</noinclude>' <br>
@@ -525,7 +639,6 @@ public class AWikiService extends AAbstractService {
         return wrap;
     }
 
-
     /**
      * Restituisce un wrapper di valori: sigla e nome estratti dal template bandierine <br>
      * '[[File:Blason_Auvergne-Rhône-Alpes.svg|20px]] [[Alvernia-Rodano-Alpi]] <noinclude>[[Categoria:Template bandierine regionali francesi|ARA]]</noinclude>' <br>
@@ -547,11 +660,11 @@ public class AWikiService extends AAbstractService {
 
         //--estrae la seconda quadra
         if (text.isValid(testoQuadra)) {
-            testoQuadra = text.levaTestoPrimaDi(testoQuadra, QUADRE_END);
+            testoQuadra = text.levaTestoPrimaDi(testoQuadra, DOPPIE_QUADRE_END);
         }
 
         if (text.isValid(testoQuadra)) {
-            nome = text.estrae(testoQuadra, QUADRE_INI, QUADRE_END).trim();
+            nome = text.estrae(testoQuadra, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END).trim();
             if (nome.contains(PIPE)) {
                 nome = text.levaTestoPrimaDi(nome, PIPE);
             }
@@ -561,6 +674,21 @@ public class AWikiService extends AAbstractService {
         return wrap;
     }
 
+    //    /**
+    //     * Restituisce una lista di stringhe estratte dai template bandierine <br>
+    //     *
+    //     * @param wikiTitle             della pagina wiki
+    //     * @param posTabella            della wikitable nella pagina se ce ne sono più di una
+    //     * @param rigaIniziale          da cui estrarre le righe, scartando la testa della table
+    //     * @param numColonnaBandierine  da cui estrarre il template-bandierine
+    //     * @param numColonnaTerzoValore da cui estrarre il valore della terza stringa richiesta
+    //     *
+    //     * @return lista di tripletta di valori: sigla e nome e divisione amministrativa superiore
+    //     */
+    //    public List<WrapDueStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonnaBandierine, int numColonnaTerzoValore) {
+    //        List<WrapDueStringhe> lista = getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine,numColonnaTerzoValore);
+    //        return null;
+    //    }
 
     /**
      * Restituisce una lista di stringhe estratte dai template bandierine <br>
@@ -577,7 +705,6 @@ public class AWikiService extends AAbstractService {
         List<String> lista = getColonna(wikiTitle, posTabella, rigaIniziale, numColonna);
         return getTemplateList(lista);
     }
-
 
     /**
      * Restituisce una lista di stringhe estratte dai template bandierine <br>
@@ -603,23 +730,6 @@ public class AWikiService extends AAbstractService {
 
         return lista;
     }
-
-    //    /**
-    //     * Restituisce una lista di stringhe estratte dai template bandierine <br>
-    //     *
-    //     * @param wikiTitle             della pagina wiki
-    //     * @param posTabella            della wikitable nella pagina se ce ne sono più di una
-    //     * @param rigaIniziale          da cui estrarre le righe, scartando la testa della table
-    //     * @param numColonnaBandierine  da cui estrarre il template-bandierine
-    //     * @param numColonnaTerzoValore da cui estrarre il valore della terza stringa richiesta
-    //     *
-    //     * @return lista di tripletta di valori: sigla e nome e divisione amministrativa superiore
-    //     */
-    //    public List<WrapDueStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonnaBandierine, int numColonnaTerzoValore) {
-    //        List<WrapDueStringhe> lista = getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine,numColonnaTerzoValore);
-    //        return null;
-    //    }
-
 
     /**
      * Restituisce una lista di stringhe estratte dai template bandierine <br>
@@ -651,7 +761,6 @@ public class AWikiService extends AAbstractService {
 
         return listaTre.subList(1, listaTre.size() - 1);
     }
-
 
     /**
      * Restituisce una colonna estratta da una wiki table <br>
@@ -703,7 +812,6 @@ public class AWikiService extends AAbstractService {
 
         return colonna;
     }
-
 
     /**
      * Restituisce due colonne sincronizzate da una wiki table <br>
@@ -775,8 +883,8 @@ public class AWikiService extends AAbstractService {
                             prima = text.levaTestoPrimaDi(prima, PIPE);
                         }
                     }
-                    if (seconda.contains(QUADRE_INI) && seconda.contains(QUADRE_END)) {
-                        seconda = text.estrae(seconda, QUADRE_INI, QUADRE_END);
+                    if (seconda.contains(DOPPIE_QUADRE_INI) && seconda.contains(DOPPIE_QUADRE_END)) {
+                        seconda = text.estrae(seconda, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END);
                     }
                     if (seconda.contains(PIPE)) {
                         if (seconda.contains(DOPPIE_GRAFFE_INI) && seconda.contains(DOPPIE_GRAFFE_END)) {
@@ -795,7 +903,6 @@ public class AWikiService extends AAbstractService {
 
         return listaWrap;
     }
-
 
     /**
      * Import delle regioni (tutti gli stati) da una pagina di wikipedia <br>
@@ -894,8 +1001,8 @@ public class AWikiService extends AAbstractService {
             }
             titoloUno = titoloUno.trim();
 
-            if (titoloDue.contains(QUADRE_INI) && titoloDue.contains(QUADRE_END)) {
-                titoloDue = text.estrae(titoloDue, QUADRE_INI, QUADRE_END);
+            if (titoloDue.contains(DOPPIE_QUADRE_INI) && titoloDue.contains(DOPPIE_QUADRE_END)) {
+                titoloDue = text.estrae(titoloDue, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END);
             }
             if (titoloDue.contains(PIPE)) {
                 titoloDue = text.levaTestoPrimaDi(titoloDue, PIPE);
@@ -910,7 +1017,6 @@ public class AWikiService extends AAbstractService {
 
         return wrap;
     }
-
 
     /**
      * Estrae una coppia di valori significativi da una lista eterogenea <br>
@@ -948,20 +1054,20 @@ public class AWikiService extends AAbstractService {
         }
 
         //--finlandia
-        if (text.isEmpty(nome) && listaRiga.size() == 4 && !listaRiga.get(1).contains(QUADRE_INI) && !listaRiga.get(1).contains(QUADRE_INI) && listaRiga.get(3).contains(QUADRE_INI) && listaRiga.get(3).contains(QUADRE_END)) {
+        if (text.isEmpty(nome) && listaRiga.size() == 4 && !listaRiga.get(1).contains(DOPPIE_QUADRE_INI) && !listaRiga.get(1).contains(DOPPIE_QUADRE_INI) && listaRiga.get(3).contains(DOPPIE_QUADRE_INI) && listaRiga.get(3).contains(DOPPIE_QUADRE_END)) {
             nome = listaRiga.get(3);
         }
 
         //--azerbaigian
-        if (text.isEmpty(nome) && listaRiga.size() == 4 && listaRiga.get(3).contains(QUADRE_INI) && listaRiga.get(3).contains(QUADRE_END)) {
+        if (text.isEmpty(nome) && listaRiga.size() == 4 && listaRiga.get(3).contains(DOPPIE_QUADRE_INI) && listaRiga.get(3).contains(DOPPIE_QUADRE_END)) {
             nome = listaRiga.get(1);
         }
 
-        if (text.isEmpty(nome) && listaRiga.get(1).contains(QUADRE_INI) && listaRiga.get(1).contains(QUADRE_END)) {
+        if (text.isEmpty(nome) && listaRiga.get(1).contains(DOPPIE_QUADRE_INI) && listaRiga.get(1).contains(DOPPIE_QUADRE_END)) {
             nome = listaRiga.get(1);
         }
         else {
-            if (listaRiga.size() > 2 && listaRiga.get(2).contains(QUADRE_INI) && listaRiga.get(2).contains(QUADRE_END)) {
+            if (listaRiga.size() > 2 && listaRiga.get(2).contains(DOPPIE_QUADRE_INI) && listaRiga.get(2).contains(DOPPIE_QUADRE_END)) {
                 nome = listaRiga.get(2);
             }
         }
@@ -1000,7 +1106,7 @@ public class AWikiService extends AAbstractService {
 
         if (text.isValid(nome)) {
             nome = nome.trim();
-            nome = text.estrae(nome, QUADRE_INI, QUADRE_END);
+            nome = text.estrae(nome, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END);
             nome = text.levaTestoPrimaDi(nome, PIPE);
             wrap = new WrapDueStringhe(sigla, nome);
         }
@@ -1039,7 +1145,7 @@ public class AWikiService extends AAbstractService {
 
         sigla = listaRiga.get(0).trim();
         regione = listaRiga.get(2).trim();
-        regione = text.estrae(regione, QUADRE_INI, QUADRE_END);
+        regione = text.estrae(regione, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END);
 
         //--template bandierine per recuperare il nome
         if (sigla.contains(DOPPIE_GRAFFE_INI) && sigla.contains(DOPPIE_GRAFFE_END)) {
@@ -1084,7 +1190,6 @@ public class AWikiService extends AAbstractService {
     public List<List<String>> getTable(String wikiTitle) {
         return getTable(wikiTitle, 1);
     }
-
 
     /**
      * Estrae una wikitable da una pagina wiki <br>
@@ -1159,7 +1264,6 @@ public class AWikiService extends AAbstractService {
         return listaTable;
     }
 
-
     private String[] getParti(String testoRigaSingola) {
         String[] partiRiga = null;
         String tagUno = A_CAPO;
@@ -1182,15 +1286,14 @@ public class AWikiService extends AAbstractService {
         return partiRiga;
     }
 
-
     /**
      * Legge una wikitable da una pagina wiki <br>
      *
      * @param wikiTitle della pagina wiki
      *
-     * @return testo della wikitable
+     * @return testo completo della wikitable
      */
-    public String leggeTable(String wikiTitle) {
+    public String leggeTable(final String wikiTitle) {
         try {
             return leggeTable(wikiTitle, 1);
         } catch (Exception unErrore) {
@@ -1198,14 +1301,13 @@ public class AWikiService extends AAbstractService {
         return VUOTA;
     }
 
-
     /**
-     * Legge una wikitable da una pagina wiki <br>
+     * Legge una wikitable da una pagina wiki, selezionandola se ce n'è più di una <br>
      *
      * @param wikiTitle della pagina wiki
      * @param pos       della wikitable nella pagina se ce ne sono più di una
      *
-     * @return testo della wikitable
+     * @return testo completo della wikitable alla posizione indicata
      */
     public String leggeTable(String wikiTitle, int pos) {
         String testoTable = VUOTA;
@@ -1259,9 +1361,9 @@ public class AWikiService extends AAbstractService {
      *
      * @param wikiTitle della pagina wiki
      *
-     * @return testo del modulo, comprensivo delle graffe iniziale e finale
+     * @return testo completo del modulo, comprensivo delle graffe iniziale e finale
      */
-    public String leggeModulo(String wikiTitle) {
+    public String leggeModulo(final String wikiTitle) {
         String testoModulo = VUOTA;
         String testoPagina = legge(wikiTitle);
         String tag = "return";
@@ -1275,15 +1377,14 @@ public class AWikiService extends AAbstractService {
         return text.isValid(testoModulo) ? testoModulo.trim() : VUOTA;
     }
 
-
     /**
      * Legge la mappa dei valori di modulo di una pagina wiki <br>
      *
      * @param wikiTitle della pagina wiki
      *
-     * @return mappa chiave=valore
+     * @return mappa chiave=valore del modulo
      */
-    public Map<String, String> leggeMappaModulo(String wikiTitle) {
+    public Map<String, String> leggeMappaModulo(final String wikiTitle) {
         Map<String, String> mappa = null;
         String tagRighe = VIRGOLA_CAPO;
         String tagSezioni = UGUALE_SEMPLICE;
@@ -1319,14 +1420,13 @@ public class AWikiService extends AAbstractService {
         return mappa;
     }
 
-
     /**
      * Legge dal server wiki <br>
      * Testo in linguaggio wiki <br>
      *
      * @param wikiTitle della pagina wiki
      *
-     * @return testo visibile della pagina
+     * @return testo completo (visibile) della pagina wiki
      */
     public String legge(String wikiTitle) {
         String testoPagina = VUOTA;
@@ -1349,7 +1449,6 @@ public class AWikiService extends AAbstractService {
 
         return testoPagina;
     }
-
 
     /**
      * Recupera la mappa dei valori dal testo JSON di una singola pagina
@@ -1463,14 +1562,14 @@ public class AWikiService extends AAbstractService {
     /**
      * Sorgente completo di una pagina web <br>
      * Testo 'grezzo' <br>
+     * Invoca il corrispondente metodo di AWebService <br>
      *
-     * @param paginaWiki da leggere
+     * @param wikiTitle della pagina wiki
      *
-     * @return sorgente
+     * @return testo sorgente completo della pagina web
      */
-    @Deprecated
-    public String getSorgente(String paginaWiki) {
-        return web.leggeSorgenteWiki(paginaWiki);
+    public String getSorgente(final String wikiTitle) {
+        return web.leggeSorgenteWiki(wikiTitle);
     }
 
 

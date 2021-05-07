@@ -11,7 +11,6 @@ import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
-import it.algos.vaadwiki.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -43,13 +42,13 @@ public abstract class WikiLogicForm extends LogicForm {
     @Autowired
     public AWikiService wiki;
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public ABioService bioService;
+//    /**
+//     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+//     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+//     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+//     */
+//    @Autowired
+//    public ABioService bioService;
 
     /**
      * Costruttore con parametri <br>

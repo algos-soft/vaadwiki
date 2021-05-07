@@ -102,7 +102,6 @@ public class AHtmlService extends AAbstractService {
         return getSpanBase(AETypeColor.verde, message, typeSpan);
     }
 
-
     /**
      * Costruisce uno span colorato verde <br>
      *
@@ -157,7 +156,6 @@ public class AHtmlService extends AAbstractService {
     public Span getSpanRosso(final String message) {
         return getSpanRosso(message, null);
     }
-
 
     /**
      * Costruisce uno span html
@@ -262,7 +260,6 @@ public class AHtmlService extends AAbstractService {
         return stringaOut.trim();
     }
 
-
     /**
      * Contorna il testo con un uno span bold. <br>
      *
@@ -282,6 +279,61 @@ public class AHtmlService extends AAbstractService {
         }
 
         return stringaOut.trim();
+    }
+
+    /**
+     * Controlla che le occorrenze del tag iniziale e di quello finale si pareggino all'interno del testo. <br>
+     * Ordine ed annidamento NON considerato <br>
+     *
+     * @param testo  da spazzolare
+     * @param tagIni tag iniziale
+     * @param tagEnd tag finale
+     *
+     * @return vero se il numero di tagIni è uguale al numero di tagEnd
+     */
+    public boolean isPariTag(final String testo, final String tagIni, final String tagEnd) {
+        boolean pari = false;
+        int numIni;
+        int numEnd;
+
+        // controllo di congruità
+        if (testo != null && tagIni != null && tagEnd != null) {
+            numIni = getNumTag(testo, tagIni);
+            numEnd = getNumTag(testo, tagEnd);
+            pari = (numIni == numEnd);
+        }
+
+        return pari;
+    }
+
+    /**
+     * Restituisce il numero di occorrenze di un tag nel testo. <br>
+     * Il tag non viene trimmato ed è sensibile agli spazi prima e dopo <br>
+     *
+     * @param testo da spazzolare
+     * @param tag   da cercare
+     *
+     * @return numero di occorrenze - zero se non ce ne sono
+     */
+    public int getNumTag(final String testo, final String tag) {
+        int numTag = 0;
+        int pos;
+
+        // controllo di congruità
+        if (text.isValid(testo)&&text.isValid(tag)) {
+            if (testo.contains(tag)) {
+                pos = testo.indexOf(tag);
+                while (pos != -1) {
+                    pos = testo.indexOf(tag, pos + tag.length());
+                    numTag++;
+                }
+            }
+            else {
+                numTag = 0;
+            }
+        }
+
+        return numTag;
     }
 
 }

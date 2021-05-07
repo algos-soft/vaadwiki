@@ -51,7 +51,7 @@ public class BioLogicList extends LogicList {
      *
      * @param bioService (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicList
      */
-    public BioLogicList(@Autowired @Qualifier("ABioService") final AIService bioService) {
+    public BioLogicList(@Autowired @Qualifier("bioService") final AIService bioService) {
         super(bioService, Bio.class);
     }// end of Vaadin/@Route constructor
 

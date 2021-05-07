@@ -233,11 +233,11 @@ public abstract class FlowCost {
 
     public static final String QUADRA_INI = "[";
 
-    public static final String QUADRE_INI = QUADRA_INI + QUADRA_INI;
+    public static final String DOPPIE_QUADRE_INI = QUADRA_INI + QUADRA_INI;
 
     public static final String QUADRA_END = "]";
 
-    public static final String QUADRE_END = QUADRA_END + QUADRA_END;
+    public static final String DOPPIE_QUADRE_END = QUADRA_END + QUADRA_END;
 
     public static final String VERO = "true";
 

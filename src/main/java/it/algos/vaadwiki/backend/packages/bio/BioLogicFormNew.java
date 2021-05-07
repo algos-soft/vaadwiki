@@ -42,7 +42,7 @@ public class BioLogicFormNew extends WikiLogicForm {
      *
      * @param bioService (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicForm
      */
-    public BioLogicFormNew(@Autowired @Qualifier("ABioService") final AIService bioService) {
+    public BioLogicFormNew(@Autowired @Qualifier("bioService") final AIService bioService) {
         super(bioService, Bio.class);
     }// end of Vaadin/@Route constructor
 
@@ -149,11 +149,14 @@ public class BioLogicFormNew extends WikiLogicForm {
      */
     private void downloadBio() {
         String textTmpl;
+        AField fieldTmpBioServer = currentForm.getField("tmpBioServer");
 
         String wikiTitle = getWikiTitle();
         if (text.isValid(getWikiTitle())) {
-            textTmpl= bioService.leggeTmpl(wikiTitle);
-            System.out.println(textTmpl);
+            textTmpl= wiki.leggeTmpl(wikiTitle,"Bio");
+            if (text.isValid(textTmpl)) {
+                fieldTmpBioServer.setValue(textTmpl);
+            }
         }
     }
 
