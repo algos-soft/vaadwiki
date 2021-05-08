@@ -1,6 +1,9 @@
 package it.algos.vaadwiki.backend.packages.bio;
 
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.tabs.*;
 import com.vaadin.flow.data.value.*;
 import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -8,6 +11,7 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.fields.*;
+import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import org.springframework.beans.factory.annotation.*;
@@ -31,6 +35,7 @@ public class BioLogicFormNew extends WikiLogicForm {
      */
     private static final long serialVersionUID = 1L;
 
+    protected AForm secondForm;
 
     /**
      * Costruttore con parametro <br>
@@ -67,6 +72,44 @@ public class BioLogicFormNew extends WikiLogicForm {
         return Collections.singletonList(AEButton.download);
     }
 
+
+    /**
+     * Costruisce il corpo principale (obbligatorio) della Grid <br>
+     */
+    @Override
+    protected void fixBodyLayout() {
+        WrapForm wrapSimple = new WrapForm(entityBean, operationForm,Arrays.asList("wikiTitle", "tmpBioServer"));
+        currentForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSimple);
+
+        WrapForm wrapSecond = new WrapForm(entityBean, operationForm, Collections.singletonList("tmpBioServer"));
+        secondForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSecond);
+
+        Tab tab1 = new Tab("Simple");
+        Div page1 = new Div();
+        page1.add(currentForm);
+        page1.setVisible(false);
+
+        Tab tab2 = new Tab("Page");
+        Div page2 = new Div();
+        page2.add(secondForm);
+        page2.setVisible(false);
+
+        Map<Tab, Component> tabsToPages = new HashMap<>();
+        tabsToPages.put(tab1, page1);
+        tabsToPages.put(tab2, page2);
+        Tabs tabs = new Tabs(tab1, tab2);
+        tabs.setFlexGrowForEnclosedTabs(1);
+        Div pages = new Div(page1, page2);
+
+        tabs.addSelectedChangeListener(event -> {
+            tabsToPages.values().forEach(page -> page.setVisible(false));
+            Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
+            selectedPage.setVisible(true);
+        });
+
+        bodyPlaceHolder.add(tabs, pages);
+    }
+
     /**
      * Costruisce una lista ordinata di nomi delle properties del Form. <br>
      * La lista viene usata per la costruzione automatica dei campi e l' inserimento nel binder <br>
@@ -80,8 +123,8 @@ public class BioLogicFormNew extends WikiLogicForm {
      *
      * @return lista di nomi di properties
      */
-    @Override
-    public List<String> getFormPropertyNamesList() {
+//    @Override
+    public List<String> getFormPropertyNamesList2() {
         List<String> fieldsNameList = new ArrayList<>();
 
         fieldsNameList.add("wikiTitle");
@@ -153,7 +196,7 @@ public class BioLogicFormNew extends WikiLogicForm {
 
         String wikiTitle = getWikiTitle();
         if (text.isValid(getWikiTitle())) {
-            textTmpl= wiki.leggeTmpl(wikiTitle,"Bio");
+            textTmpl = wiki.leggeTmpl(wikiTitle, "Bio");
             if (text.isValid(textTmpl)) {
                 fieldTmpBioServer.setValue(textTmpl);
             }

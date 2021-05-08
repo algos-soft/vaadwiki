@@ -378,7 +378,7 @@ public abstract class AForm extends VerticalLayout {
     protected void creaFieldsBinder() {
         Field reflectionJavaField;
         AField field = null;
-        fieldsNameList = getPropertyNamesList();
+        fieldsNameList = fieldsNameList != null ? fieldsNameList : getPropertyNamesList();
 
         if (array.isAllValid(fieldsNameList)) {
             fieldsList = new ArrayList<>();

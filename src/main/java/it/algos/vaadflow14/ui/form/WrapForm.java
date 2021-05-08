@@ -63,6 +63,12 @@ public class WrapForm {
         this.operationForm = operationForm;
     }
 
+    public WrapForm(AEntity entityBean, AEOperation operationForm,List<String> fieldsName) {
+        this.entityBean = entityBean;
+        this.operationForm = operationForm;
+        this.fieldsName = fieldsName;
+    }
+
 
     public WrapForm(AEntity entityBean, Class<? extends AEntity> entityClazz, boolean usaTopLayout, int stepTopLayout, boolean usaBottomLayout, int stepBottomLayout, List<String> fieldsName, HashMap<String, AField> fieldsMap, String minWidthForm) {
         this.entityBean = entityBean;
