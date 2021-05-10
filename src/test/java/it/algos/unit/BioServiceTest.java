@@ -48,7 +48,7 @@ public class BioServiceTest extends ATest {
         Assertions.assertNotNull(service);
         service.text = text;
         service.array = array;
-        service.wikiUser = wikiUser;
+        service.wikiApi = wikiApi;
     }
 
 

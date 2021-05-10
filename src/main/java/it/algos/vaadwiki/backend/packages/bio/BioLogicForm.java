@@ -138,7 +138,7 @@ public class BioLogicForm extends WikiLogicForm {
 
         String valueWikiTitle = getWikiTitle();
         if (text.isValid(getWikiTitle())) {
-            allText = wikiUser.legge(valueWikiTitle);
+            allText = wikiApi.legge(valueWikiTitle);
             System.out.println(allText);
         }
     }

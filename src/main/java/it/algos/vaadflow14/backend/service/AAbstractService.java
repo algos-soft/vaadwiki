@@ -83,7 +83,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AWikiUserService wikiUser;
+    public AWikiApiService wikiApi;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>

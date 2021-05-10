@@ -125,7 +125,7 @@ public abstract class ATest {
     protected AWebService web;
 
     @InjectMocks
-    protected AWikiUserService wikiUser;
+    protected AWikiApiService wikiApi;
 
     @InjectMocks
     protected AFileService file;
@@ -340,8 +340,8 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(web);
         Assertions.assertNotNull(web);
 
-        MockitoAnnotations.initMocks(wikiUser);
-        Assertions.assertNotNull(wikiUser);
+        MockitoAnnotations.initMocks(wikiApi);
+        Assertions.assertNotNull(wikiApi);
 
         MockitoAnnotations.initMocks(file);
         Assertions.assertNotNull(file);
@@ -379,10 +379,10 @@ public abstract class ATest {
         mongo.reflection = reflection;
         web.text = text;
         web.logger = logger;
-        wikiUser.text = text;
-        wikiUser.web = web;
-        wikiUser.logger = logger;
-        wikiUser.html = html;
+        wikiApi.text = text;
+        wikiApi.web = web;
+        wikiApi.logger = logger;
+        wikiApi.html = html;
         file.text = text;
         file.array = array;
         file.logger = logger;

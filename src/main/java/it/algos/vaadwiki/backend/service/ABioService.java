@@ -43,7 +43,7 @@ public class ABioService extends AAbstractService {
      * @return template completo di doppie graffe iniziali e finali
      */
     public String leggeTmpl(final String wikiTitle) {
-        return wikiUser.leggeTmpl(wikiTitle, "Bio");
+        return wikiApi.leggeTmpl(wikiTitle, "Bio");
     }
 
     /**

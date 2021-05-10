@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static it.algos.vaadflow14.wiki.AWikiUserService.*;
+import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -51,7 +51,7 @@ public class AGeograficService extends AAbstractService {
         String locale = VUOTA;
 
         try {
-            listaGrezza = wikiUser.getTable(PAGINA_ISO_1);
+            listaGrezza = wikiApi.getTable(PAGINA_ISO_1);
         } catch (Exception unErrore) {
         }
 
@@ -370,7 +370,7 @@ public class AGeograficService extends AAbstractService {
         String paese;
 
         try {
-            listaGrezza = wikiUser.getTable(PAGINA_ISO_1_NUMERICO, 1);
+            listaGrezza = wikiApi.getTable(PAGINA_ISO_1_NUMERICO, 1);
         } catch (Exception unErrore) {
         }
 
@@ -421,7 +421,7 @@ public class AGeograficService extends AAbstractService {
             sigla = "0" + sigla;
         }
 
-        testoGrezzo = wikiUser.legge(tag + wikiTitle);
+        testoGrezzo = wikiApi.legge(tag + wikiTitle);
 
         if (text.isValid(testoGrezzo)) {
             if (testoGrezzo.startsWith(DOPPIE_GRAFFE_INI)) {
@@ -456,7 +456,7 @@ public class AGeograficService extends AAbstractService {
         String nome = VUOTA;
 
         if (text.isValid(testoGrezzo)) {
-            testoGraffa = wikiUser.estraeGraffa(testoGrezzo);
+            testoGraffa = wikiApi.estraeGraffa(testoGrezzo);
         }
 
         if (text.isValid(testoGraffa)) {
@@ -534,7 +534,7 @@ public class AGeograficService extends AAbstractService {
      */
     @Deprecated
     public List<WrapDueStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonna) {
-        List<String> lista = wikiUser.getColonna(wikiTitle, posTabella, rigaIniziale, numColonna);
+        List<String> lista = wikiApi.getColonna(wikiTitle, posTabella, rigaIniziale, numColonna);
         return getTemplateList(lista);
     }
 
@@ -578,7 +578,7 @@ public class AGeograficService extends AAbstractService {
         List<WrapTreStringhe> listaTre = null;
         WrapDueStringhe wrapBandierina;
         WrapTreStringhe wrapTre;
-        List<WrapDueStringhe> listaDue = wikiUser.getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine, numColonnaTerzoValore);
+        List<WrapDueStringhe> listaDue = wikiApi.getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine, numColonnaTerzoValore);
 
         if (array.isAllValid(listaDue)) {
             listaTre = new ArrayList<>();
@@ -606,9 +606,9 @@ public class AGeograficService extends AAbstractService {
         List<List<String>> listaTable = null;
         WrapDueStringhe wrap;
 
-        listaTable = wikiUser.getTable(wikiTitle);
+        listaTable = wikiApi.getTable(wikiTitle);
         if (listaTable == null || listaTable.size() < 1) {
-            listaTable = wikiUser.getTable(wikiTitle, 2);
+            listaTable = wikiApi.getTable(wikiTitle, 2);
         }
 
         if (listaTable != null && listaTable.size() > 0) {
@@ -641,7 +641,7 @@ public class AGeograficService extends AAbstractService {
         List<List<String>> listaTable = null;
         WrapTreStringhe wrap;
 
-        listaTable = wikiUser.getTable(wikiTitle);
+        listaTable = wikiApi.getTable(wikiTitle);
 
         if (listaTable != null && listaTable.size() > 0) {
             listaWrap = new ArrayList<>();
@@ -960,13 +960,13 @@ public class AGeograficService extends AAbstractService {
         String prima;
         String seconda;
 
-        listaWrapGrezzo = wikiUser.estraeListaDue(PAGINA_ISO_2, titoli, 1, 2);
+        listaWrapGrezzo = wikiApi.estraeListaDue(PAGINA_ISO_2, titoli, 1, 2);
         if (listaWrapGrezzo != null && listaWrapGrezzo.size() > 0) {
             listaWrap = new ArrayList<>();
             for (WrapDueStringhe wrap : listaWrapGrezzo) {
                 prima = wrap.getPrima();
                 seconda = wrap.getSeconda();
-                prima = wikiUser.fixCode(prima);
+                prima = wikiApi.fixCode(prima);
                 seconda = fixNome(seconda);
                 wrapValido = new WrapDueStringhe(prima, seconda);
                 listaWrap.add(wrapValido);

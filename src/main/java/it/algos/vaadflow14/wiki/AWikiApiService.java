@@ -35,7 +35,7 @@ import java.util.regex.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AWikiUserService extends AAbstractService {
+public class AWikiApiService extends AAbstractService {
 
     public static final String ENCODE = "UTF-8";
 
