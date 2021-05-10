@@ -49,7 +49,7 @@ public class GenereServiceTest extends ATest {
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
         service.text = text;
-        service.wiki = wiki;
+        service.wikiUser = wikiUser;
         service.array = array;
     }
 
@@ -96,7 +96,7 @@ public class GenereServiceTest extends ATest {
         String tagM = "M";
         String tagF = "F";
 
-        Map<String, String> mappa = wiki.leggeMappaModulo(sorgente);
+        Map<String, String> mappa = wikiUser.leggeMappaModulo(sorgente);
         if (mappa != null && mappa.size() > 0) {
             System.out.println("Entities create nella collection");
             System.out.println(VUOTA);
@@ -148,7 +148,7 @@ public class GenereServiceTest extends ATest {
         String pluraleMaschile = VUOTA;
         String pluraleFemminile = VUOTA;
 
-        Map<String, String> mappa = wiki.leggeMappaModulo(sorgente);
+        Map<String, String> mappa = wikiUser.leggeMappaModulo(sorgente);
         if (mappa != null && mappa.size() > 0) {
             System.out.println("Controllo dei valori più lunghi");
             System.out.println(VUOTA);

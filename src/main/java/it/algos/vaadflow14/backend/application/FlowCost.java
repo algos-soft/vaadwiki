@@ -27,6 +27,8 @@ public abstract class FlowCost {
 
     public static final int MAX = 2147483647;
 
+    public static Date DATA_NULLA = new Date(70, 0, 1);
+
     public static final String NAME_VAADFLOW = "vaadflow14";
 
     public static final String PATH_RISORSE = "src/main/resources/META-INF/resources/";

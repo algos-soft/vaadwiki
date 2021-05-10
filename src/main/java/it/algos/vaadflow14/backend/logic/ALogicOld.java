@@ -26,6 +26,7 @@ import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.list.*;
 import it.algos.vaadflow14.ui.service.*;
+import it.algos.vaadflow14.wiki.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
 import org.springframework.data.domain.*;
@@ -136,7 +137,7 @@ public abstract class ALogicOld implements AILogicOld {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AWikiService wiki;
+    public AWikiUserService wiki;
 
 
     /**

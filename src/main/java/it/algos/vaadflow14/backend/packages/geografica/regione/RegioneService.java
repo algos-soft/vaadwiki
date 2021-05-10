@@ -322,7 +322,7 @@ public class RegioneService extends AService {
             wikiPagina = tagWiki + alfaDue;
 
             try {
-                listaWrap = wiki.getRegioni(wikiPagina);
+                listaWrap = geografic.getRegioni(wikiPagina);
             } catch (Exception unErrore) {
                 return AResult.errato("Non sono riuscito a leggere la pagina di wikipedia");
             }

@@ -148,7 +148,7 @@ public class ProfessioneService extends WikiService {
      */
     public boolean downloadModulo(String wikiTitle) {
         boolean status = false;
-        Map<String, String> mappa = wiki.leggeMappaModulo(wikiTitle);
+        Map<String, String> mappa = wikiUser.leggeMappaModulo(wikiTitle);
 
         if (mappa != null && mappa.size() > 0) {
             deleteAll();

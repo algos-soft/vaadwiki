@@ -225,7 +225,7 @@ public class StatoService extends AService {
         }
 
         mappa = creaMappa();
-        List<List<String>> listaStati = wiki.getStati();
+        List<List<String>> listaStati = geografic.getStati();
         if (array.isAllValid(listaStati)) {
             for (List<String> riga : listaStati) {
                 continente = null;

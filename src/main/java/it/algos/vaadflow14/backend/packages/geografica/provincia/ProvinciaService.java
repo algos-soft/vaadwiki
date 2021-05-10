@@ -232,7 +232,7 @@ public class ProvinciaService extends AService {
         String iso;
         AETypeProvincia status = AETypeProvincia.provincia;
 
-        listaWrap = wiki.getProvince();
+        listaWrap = geografic.getProvince();
         if (listaWrap != null && listaWrap.size() > 0) {
             for (WrapTreStringhe wrap : listaWrap) {
                 nome = wrap.getSeconda();

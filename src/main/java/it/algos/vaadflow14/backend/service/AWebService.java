@@ -1,19 +1,13 @@
 package it.algos.vaadflow14.backend.service;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 /**
  * Project vaadflow
@@ -52,10 +46,10 @@ public class AWebService extends AAbstractService {
             urlConn.setDoOutput(true);
             urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
             urlConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; it-it) AppleWebKit/418.9 (KHTML, like Gecko) Safari/419.3");
-        }// end of if cycle
+        }
 
         return urlConn;
-    } // fine del metodo
+    }
 
 
     /**
@@ -76,7 +70,7 @@ public class AWebService extends AAbstractService {
         readBuffer = new BufferedReader(inputReader);
         while ((stringa = readBuffer.readLine()) != null) {
             textBuffer.append(stringa);
-        }// fine del blocco while
+        }
 
         //--close all
         readBuffer.close();
@@ -86,41 +80,46 @@ public class AWebService extends AAbstractService {
         risposta = textBuffer.toString();
 
         return risposta;
-    } // fine del metodo
+    }
 
 
     /**
      * Request di tipo GET <br>
      * Accetta SOLO un urlDomain (indirizzo) completo <br>
+     * Può essere un urlDomain generico di un sito web e restituisce il testo in formato html <br>
+     * Può essere un urlDomain di una pagina wiki in lettura normale (senza API) e restituisce il testo in formato html <br>
+     * Può essere un urlDomain che usa le API di Mediawiki e restituisce il testo in formato BSON <br>
      *
      * @param urlDomain completo
      *
-     * @return risposta grezza
+     * @return codiceSorgente grezzo in formato html oppure BSON
      */
     public String leggeWeb(String urlDomain) {
-        String risposta = VUOTA;
+        String codiceSorgente = VUOTA;
         URLConnection urlConn;
         String tag = TAG_INIZIALE;
 
-        try { // prova ad eseguire il codice
+        try {
             String indirizzoWebCompleto = urlDomain.startsWith(tag) ? urlDomain : tag + urlDomain;
             urlConn = getURLConnection(indirizzoWebCompleto);
-            risposta = getUrlRequest(urlConn);
-        } catch (Exception unErrore) { // intercetta l'errore
+            codiceSorgente = getUrlRequest(urlConn);
+        } catch (Exception unErrore) {
             logger.error(unErrore.toString());
-        }// fine del blocco try-catch
+        }
 
-        return risposta;
-    } // fine del metodo
+        return codiceSorgente;
+    }
 
 
     /**
      * Request di tipo GET <br>
-     * Accetta SOLO un indirizzo di una pagina wiki <br>
+     * Sorgente completo di una pagina wiki <br>
+     * Non usa le API di Mediawiki <br>
+     * Elabora il wikiTitle per eliminare gli spazi vuoti <br>
      *
      * @param wikiTitleGrezzo da controllare per riempire gli spazi vuoti
      *
-     * @return risposta grezza
+     * @return testo sorgente completo della pagina web in formato html
      */
     public String leggeSorgenteWiki(String wikiTitleGrezzo) {
         String wikiTitleElaborato = wikiTitleGrezzo.replaceAll(SPAZIO, UNDERSCORE);
@@ -149,12 +148,12 @@ public class AWebService extends AAbstractService {
                 testoTable += tagIni;
                 testoTable += titolo;
                 testoTable += tagEnd;
-            }// end of for cycle
-        }// end of if cycle
+            }
+        }
 
         testoTable = text.levaCoda(testoTable, tagEnd);
         return testoTable;
-    } // fine del metodo
+    }
 
 
     /**

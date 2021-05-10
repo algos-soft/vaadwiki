@@ -195,7 +195,7 @@ public class GenereService extends WikiService {
      */
     public boolean downloadModulo(String wikiTitle) {
         boolean status = false;
-        Map<String, String> mappa = wiki.leggeMappaModulo(wikiTitle);
+        Map<String, String> mappa = wikiUser.leggeMappaModulo(wikiTitle);
         String singolare = VUOTA;
         String pluraliGrezzi = VUOTA;
         String pluraleMaschile = VUOTA;

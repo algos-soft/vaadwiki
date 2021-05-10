@@ -7,9 +7,11 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
+import java.sql.*;
 import java.text.*;
 import java.time.*;
 import java.time.format.*;
+import java.util.Date;
 import java.util.*;
 
 
@@ -35,6 +37,37 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class ADateService extends AAbstractService {
 
+    public static final String INFERIORE_SECONDO = "meno di un secondo";
+
+    public static final String INFERIORE_MINUTO = "meno di un minuto";
+
+    private static final String MILLI_SECONDI = " millisecondi";
+
+    private static final String SECONDI = " sec.";
+
+    private static final String MINUTI = " min.";
+
+    private static final String ORA = " ora";
+
+    private static final String ORE = " ore";
+
+    private static final String GIORNO = " giorno";
+
+    private static final String GIORNI = " gg.";
+
+    private static final String ANNO = " anno";
+
+    private static final String ANNI = " anni";
+
+    private static final long MAX_MILLISEC = 1000;
+
+    private static final long MAX_SECONDI = 60 * MAX_MILLISEC;
+
+    private static final long MAX_MINUTI = 60 * MAX_SECONDI;
+
+    private static final long MAX_ORE = 24 * MAX_MINUTI;
+
+    private static final long MAX_GIORNI = 365 * MAX_ORE;
 
     /**
      * Convert java.util.Date to java.time.LocalDate <br>
@@ -807,6 +840,226 @@ public class ADateService extends AAbstractService {
         parti = parti[3].split(DUE_PUNTI);
 
         return LocalTime.of(Integer.parseInt(parti[0]), Integer.parseInt(parti[1]), Integer.parseInt(parti[2]));
+    }
+
+    /**
+     * Converte il valore stringa della data in una data
+     * Formato: 2015-06-30T10:18:05Z
+     *
+     * @param dataTxt in ingresso
+     *
+     * @return data in uscita
+     */
+    public Date convertTxtData(String dataTxt) {
+        String zero = "0";
+        String annoStr;
+        String meseStr;
+        String giornoStr;
+        String oraStr;
+        String minutoStr;
+        String secondoStr;
+        int anno = 0;
+        int mese = 0;
+        int giorno = 0;
+        int ora = 0;
+        int minuto = 0;
+        int secondo = 0;
+
+        annoStr = dataTxt.substring(0, 4);
+        if (dataTxt.substring(5, 6).equals(zero)) {
+            meseStr = dataTxt.substring(6, 7);
+        }
+        else {
+            meseStr = dataTxt.substring(5, 7);
+        }
+
+        if (dataTxt.substring(8, 9).equals(zero)) {
+            giornoStr = dataTxt.substring(9, 10);
+        }
+        else {
+            giornoStr = dataTxt.substring(8, 10);
+        }
+
+        if (dataTxt.substring(11, 12).equals(zero)) {
+            oraStr = dataTxt.substring(12, 13);
+        }
+        else {
+            oraStr = dataTxt.substring(11, 13);
+        }
+
+        if (dataTxt.substring(14, 15).equals(zero)) {
+            minutoStr = dataTxt.substring(15, 16);
+        }
+        else {
+            minutoStr = dataTxt.substring(14, 16);
+        }
+
+        if (dataTxt.substring(17, 18).equals(zero)) {
+            secondoStr = dataTxt.substring(18, 19);
+        }
+        else {
+            secondoStr = dataTxt.substring(17, 19);
+        }
+
+        try {
+            anno = Integer.decode(annoStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }
+        try {
+            mese = Integer.decode(meseStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }
+        try {
+            giorno = Integer.decode(giornoStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }
+        try {
+            ora = Integer.decode(oraStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }
+        try {
+            minuto = Integer.decode(minutoStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }
+        try {
+            secondo = Integer.decode(secondoStr);
+        } catch (Exception unErrore) { // intercetta l'errore
+        }
+
+        //--patch
+        anno = anno - 1900;
+        mese = mese - 1;
+
+        return new Date(anno, mese, giorno, ora, minuto, secondo);
+    }
+
+
+    /**
+     * Converte il valore stringa del timestamp in un timestamp
+     * Formato: 2015-06-30T10:18:05Z
+     *
+     * @param timestampText in ingresso
+     *
+     * @return data in uscita
+     */
+    public Timestamp convertTxtTime(String timestampText) {
+        return new Timestamp(convertTxtData(timestampText).getTime());
+    }
+
+
+    /**
+     * Restituisce come stringa (intelligente) un durata espressa in long <br>
+     *
+     * @return tempo esatto in millisecondi
+     */
+    public String deltaTextEsatto(long inizio) {
+        long fine = System.currentTimeMillis();
+        return (fine - inizio) + MILLI_SECONDI;
+    }
+
+    /**
+     * Restituisce come stringa (intelligente) un durata espressa in long <br>
+     * Esegue degli arrotondamenti <br>
+     *
+     * @return tempo arrotondato in forma leggibile
+     */
+    public String deltaText(long inizio) {
+        long fine = System.currentTimeMillis();
+        return toText(fine - inizio);
+    }
+
+
+    /**
+     * Restituisce come stringa (intelligente) una durata espressa in long
+     * - Meno di 1 secondo
+     * - Meno di 1 minuto
+     * - Meno di 1 ora
+     * - Meno di 1 giorno
+     * - Meno di 1 anno
+     *
+     * @param durata in millisecondi
+     *
+     * @return durata (arrotondata e semplificata) in forma leggibile
+     */
+    public String toText(long durata) {
+        String tempo = "null";
+        long div;
+        long mod;
+
+        if (durata < MAX_MILLISEC) {
+            tempo = INFERIORE_SECONDO;
+        }
+        else {
+            if (durata < MAX_SECONDI) {
+                div = Math.floorDiv(durata, MAX_MILLISEC);
+                mod = Math.floorMod(durata, MAX_MILLISEC);
+                if (div < 60) {
+                    tempo = div + SECONDI;
+                }
+                else {
+                    tempo = "1" + MINUTI;
+                }
+            }
+            else {
+                if (durata < MAX_MINUTI) {
+                    div = Math.floorDiv(durata, MAX_SECONDI);
+                    mod = Math.floorMod(durata, MAX_SECONDI);
+                    if (div < 60) {
+                        tempo = div + MINUTI;
+                    }
+                    else {
+                        tempo = "1" + ORA;
+                    }
+                }
+                else {
+                    if (durata < MAX_ORE) {
+                        div = Math.floorDiv(durata, MAX_MINUTI);
+                        mod = Math.floorMod(durata, MAX_MINUTI);
+                        if (div < 24) {
+                            if (div == 1) {
+                                tempo = div + ORA;
+                            }
+                            else {
+                                tempo = div + ORE;
+                            }
+                            tempo += " e " + toText(durata - (div * MAX_MINUTI));
+                        }
+                        else {
+                            tempo = "1" + GIORNO;
+                        }
+                    }
+                    else {
+                        if (durata < MAX_GIORNI) {
+                            div = Math.floorDiv(durata, MAX_ORE);
+                            mod = Math.floorMod(durata, MAX_ORE);
+                            if (div < 365) {
+                                if (div == 1) {
+                                    tempo = div + GIORNO;
+                                }
+                                else {
+                                    tempo = div + GIORNI;
+                                }
+                            }
+                            else {
+                                tempo = "1" + ANNO;
+                            }
+                        }
+                        else {
+                            div = Math.floorDiv(durata, MAX_GIORNI);
+                            mod = Math.floorMod(durata, MAX_GIORNI);
+                            if (div == 1) {
+                                tempo = div + ANNO;
+                            }
+                            else {
+                                tempo = div + ANNI;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return tempo;
     }
 
 }

@@ -196,13 +196,12 @@ public class BioLogicFormNew extends WikiLogicForm {
 
         String wikiTitle = getWikiTitle();
         if (text.isValid(getWikiTitle())) {
-            textTmpl = wiki.leggeTmpl(wikiTitle, "Bio");
+            textTmpl = bio.leggeTmpl(wikiTitle);
             if (text.isValid(textTmpl)) {
                 fieldTmpBioServer.setValue(textTmpl);
             }
         }
     }
-
 
 }// end of Route class
 
