@@ -25,23 +25,9 @@ public abstract class WizDialogPackage extends WizDialog {
         AEFlag.isProject.set(false);
         AEFlag.isPackage.set(true);
 
-        this.regolazioniIniziali();
         super.inizia();
     }
 
-    protected void regolazioniIniziali() {
-        //-recupera il progetto target
-        if (AEFlag.isBaseFlow.is()) {
-        }
-        else {
-            AEWizCost.pathTargetProjectRoot.setValue(AEWizCost.pathCurrentProjectRoot.get());
-            AEWizCost.nameTargetProjectModulo.setValue(AEWizCost.nameCurrentProjectModulo.get());
-            AEWizCost.nameTargetProjectUpper.setValue(AEWizCost.nameCurrentProjectUpper.get());
-        }
-
-        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
-        AEWizCost.fixValoriDerivati();
-    }
 
     /**
      * Chiamato alla dismissione del dialogo <br>

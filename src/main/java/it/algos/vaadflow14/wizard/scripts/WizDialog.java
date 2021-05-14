@@ -138,6 +138,7 @@ public abstract class WizDialog extends Dialog {
         this.setCloseOnEsc(true);
         this.setCloseOnOutsideClick(true);
         this.removeAll();
+        this.regolazioniIniziali();
 
         //--creazione iniziale dei bottoni (chiamati anche da selezioneLayout)
         this.creaBottoni();
@@ -158,6 +159,22 @@ public abstract class WizDialog extends Dialog {
         super.open();
     }// end of method
 
+    protected void regolazioniIniziali() {
+        //--pulisce le costanti dei packages
+        AEPackage.reset();
+
+        //--recupera il progetto target
+        if (AEFlag.isBaseFlow.is()) {
+        }
+        else {
+            AEWizCost.pathTargetProjectRoot.setValue(AEWizCost.pathCurrentProjectRoot.get());
+            AEWizCost.nameTargetProjectModulo.setValue(AEWizCost.nameCurrentProjectModulo.get());
+            AEWizCost.nameTargetProjectUpper.setValue(AEWizCost.nameCurrentProjectUpper.get());
+        }
+
+        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
+        AEWizCost.fixValoriDerivati();
+    }
 
     /**
      * Controlla che il dialogo possa usare alcuni flag compatibili (tra di loro) <br>
@@ -276,10 +293,7 @@ public abstract class WizDialog extends Dialog {
     protected boolean regolazioniFinali() {
         boolean status = true;
 
-        AEWizCost.print(AEWizValue.inserito);
         status = status && this.regolaAEWizCost();
-        AEWizCost.print(AEWizValue.inserito);
-        AEWizCost.print(AEWizValue.derivato);
 
         //        status = status && this.regolaAEDir();
         status = status && this.regolaAECheck();
@@ -287,9 +301,7 @@ public abstract class WizDialog extends Dialog {
         status = status && this.regolaAEToken();
         AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.nameTargetProjectUpper.get());
 
-//        AEWizCost.print(AEWizValue.inserito);
-//        AEWizCost.print(AEWizValue.derivato);
-//        wizService.printInfoStart();
+        wizService.printInfoCheck();
         return status;
     }
 
@@ -381,7 +393,6 @@ public abstract class WizDialog extends Dialog {
                 }
             }
         }
-        AEPackage.printInfo("test");
         return true;
     }
 

@@ -704,13 +704,15 @@ public enum AEWizCost {
      * Stampa tutte le enumeration del gruppo di valore <br>
      */
     public static void print(AEWizValue aeWizValue) {
+        String message;
         List<AEWizCost> listaWiz = getWizCostByValue(aeWizValue);
         System.out.println(VUOTA);
         System.out.println("********************");
         System.out.println(aeWizValue.getDescrizione() + " (" + listaWiz.size() + ")");
         System.out.println("********************");
         for (AEWizCost aeWizCost : listaWiz) {
-            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.getDescrizione() + "\" " + FlowCost.UGUALE_SPAZIATO + aeWizCost.get());
+            message = String.format("AEWizCost.%s: \"%s\"%s%s", aeWizCost.name(), aeWizCost.getDescrizione(), FlowCost.UGUALE_SPAZIATO, aeWizCost.get());
+            System.out.print(message);
             System.out.println(VUOTA);
         }
         System.out.println(VUOTA);

@@ -31,22 +31,6 @@ public class WizDialogDocPackages extends WizDialog {
         super.inizia();
     }
 
-    protected void regolazioniIniziali() {
-        String pathProject = VUOTA;
-        String projectNameUpper = VUOTA;
-
-        //--recupera il path completo del progetto in esecuzione
-        //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
-        pathProject = AEWizCost.pathCurrentProjectRoot.get();
-
-        //-recupera il nome (maiuscolo) del progetto in esecuzione, usando il valore del file xxxApplication
-        //--estraendo la parte del nome precedente il tag 'Application'
-        //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
-        projectNameUpper = wizService.estraeProjectFromApplication();
-
-        //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
-        super.fixValoriInseriti(pathProject, projectNameUpper, VUOTA);
-    }
 
 
     /**

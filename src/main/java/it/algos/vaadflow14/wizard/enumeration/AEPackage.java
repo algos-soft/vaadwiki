@@ -18,7 +18,7 @@ public enum AEPackage {
 
     entity("Entity base del package", true, true, false, false, SOURCE_ENTITY, SUFFIX_ENTITY),
     logicList("Business logic list (Grid) del package", true, true, false, false, SOURCE_LIST, SUFFIX_LOGIC_LIST),
-    logicForm("Business logic form (Form) del package", true, true, false, false, SOURCE_FORM, SUFFIX_LOGIC_FORM),
+    logicForm("Business logic form (Form) del package", false, true, false, false, SOURCE_FORM, SUFFIX_LOGIC_FORM),
     service("Service specifico del package", true, true, false, false, SOURCE_SERVICE, SUFFIX_SERVICE),
     menu("Inserimento del package nel menu", true, false, false, false),
 
@@ -106,6 +106,13 @@ public enum AEPackage {
         this.fieldName = fieldName;
     }
 
+    public static void reset() {
+        for (AEPackage pack : AEPackage.values()) {
+            pack.isAcceso = pack.isAccesoInizialmente;
+            pack.fieldName = VUOTA;
+        }
+    }
+
     public static List<AEPackage> getFiles() {
         List<AEPackage> listaPackages = new ArrayList<>();
 
@@ -121,17 +128,18 @@ public enum AEPackage {
     /**
      * Visualizzazione di controllo <br>
      */
-    public static void printInfo(String posizione) {
+    public static void print(String titolo) {
+        String message;
         System.out.println("********************");
-        System.out.println("AEPackage  - " + posizione);
+        System.out.println("AEPackage  - " + titolo);
         System.out.println("********************");
         for (AEPackage pack : AEPackage.values()) {
-            System.out.print("AEPackage.");
-            System.out.print(pack.name()+ ": ");
-            System.out.print("Acceso=");
-            System.out.print(pack.is());
-            System.out.print(" FieldName=");
-            System.out.print(pack.fieldName);
+            message = String.format("AEPackage.%s: Acceso=%s", pack.name(), pack.is());
+            System.out.print(message);
+            if (pack.isFieldAssociato && pack.is()) {
+                message = String.format(" FieldName=%s", pack.getFieldName());
+                System.out.print(message);
+            }
             System.out.println(VUOTA);
         }
         System.out.println(VUOTA);

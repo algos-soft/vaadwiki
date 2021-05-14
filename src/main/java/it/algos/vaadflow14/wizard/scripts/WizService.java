@@ -166,16 +166,16 @@ public class WizService {
         AEDir.printInfo(message);
         AEFlag.printInfo(message);
         AECheck.printInfo(message);
-        AEPackage.printInfo(message);
+        AEPackage.print(message);
     }
 
-    /**
-     * Visualizzazione finale di controllo <br>
-     */
-    public void printInfoCompleto(String message) {
-        printInfo(message);
-        AEToken.printInfo(message);
-    }
+//    /**
+//     * Visualizzazione finale di controllo <br>
+//     */
+//    public void printInfoCompleto(String message) {
+//        printInfo(message);
+//        AEToken.printInfo(message);
+//    }
 
     /**
      * Copia una cartella da VaadFlow al progetto <br>
@@ -828,15 +828,14 @@ public class WizService {
         AEToken.codeRinvio.setValue(fixCodeRinvio());
         AEToken.newEntityKeyUnica.setValue(fixNewEntityUnica());
         AEToken.toString.setValue(fixString());
-        //        printProgetto();
 
-        System.out.println(VUOTA);
-        System.out.println(AEToken.packageNamePunti.getTokenTag() + SEP + AEToken.packageNamePunti.getValue());
-        System.out.println(AEToken.packageNameSlash.getTokenTag() + SEP + AEToken.packageNameSlash.getValue());
-        System.out.println(AEToken.packageNameLower.getTokenTag() + SEP + AEToken.packageNameLower.getValue());
-        System.out.println(AEToken.packageNameUpper.getTokenTag() + SEP + AEToken.packageNameUpper.getValue());
-        System.out.println(AEToken.entityLower.getTokenTag() + SEP + AEToken.entityLower.getValue());
-        System.out.println(AEToken.entityUpper.getTokenTag() + SEP + AEToken.entityUpper.getValue());
+//        System.out.println(VUOTA);
+//        System.out.println(AEToken.packageNamePunti.getTokenTag() + SEP + AEToken.packageNamePunti.getValue());
+//        System.out.println(AEToken.packageNameSlash.getTokenTag() + SEP + AEToken.packageNameSlash.getValue());
+//        System.out.println(AEToken.packageNameLower.getTokenTag() + SEP + AEToken.packageNameLower.getValue());
+//        System.out.println(AEToken.packageNameUpper.getTokenTag() + SEP + AEToken.packageNameUpper.getValue());
+//        System.out.println(AEToken.entityLower.getTokenTag() + SEP + AEToken.entityLower.getValue());
+//        System.out.println(AEToken.entityUpper.getTokenTag() + SEP + AEToken.entityUpper.getValue());
 
         return status;
     }
@@ -1345,6 +1344,7 @@ public class WizService {
     public void printInfoCheck() {
         AEWizCost.print(AEWizValue.inserito);
         AEWizCost.print(AEWizValue.derivato);
+        AEPackage.print("Valori correnti all'uscita dal dialogo");
     }
 
     //    public List<AEWizCost> getWizCostByValue(AEWizValue wizValue) {
