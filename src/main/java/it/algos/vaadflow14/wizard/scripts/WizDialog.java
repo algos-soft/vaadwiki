@@ -276,6 +276,7 @@ public abstract class WizDialog extends Dialog {
     protected boolean regolazioniFinali() {
         boolean status = true;
 
+        AEWizCost.print(AEWizValue.inserito);
         status = status && this.regolaAEWizCost();
         AEWizCost.print(AEWizValue.inserito);
         AEWizCost.print(AEWizValue.derivato);
@@ -416,6 +417,7 @@ public abstract class WizDialog extends Dialog {
      *
      * @return false se manca uno dei due parametri obbligatori
      */
+    @Deprecated
     protected boolean fixValoriInseriti(final String pathProject, final String nameTargetProjectUpper, final String packageName) {
 
         if (text.isEmpty(pathProject) || text.isEmpty(nameTargetProjectUpper)) {

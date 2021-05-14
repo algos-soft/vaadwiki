@@ -25,34 +25,12 @@ public class WizDialogNewPackage extends WizDialogPackage {
      * Apertura del dialogo <br>
      */
     public void open(WizRecipient wizRecipient) {
-        super.wizRecipient = wizRecipient;
-        super.isNuovoProgetto = false;
-        super.titoloCorrente = new H3();
-
-        AEFlag.isProject.set(false);
-        AEFlag.isPackage.set(true);
         AEFlag.isNewPackage.set(true);
         AEFlag.isUpdatePackage.set(false);
 
-        //        this.regolazioniIniziali();
-        super.inizia();
+        super.open(wizRecipient);
     }
 
-    //    protected void regolazioniIniziali() {
-    //        String pathProject;
-    //        String projectNameUpper;
-    //
-    //        //--recupera il path completo del progetto in esecuzione
-    //        //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
-    //        pathProject = AEWizCost.pathCurrentProjectRoot.get();
-    //
-    //        //--recupera il nome (maiuscolo) del progetto in esecuzione
-    //        //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
-    //        projectNameUpper = AEWizCost.nameCurrentProjectUpper.get();
-    //
-    //        //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
-    //        super.fixValoriInseriti(pathProject, projectNameUpper, VUOTA);
-    //    }
 
     /**
      * Legenda iniziale <br>
