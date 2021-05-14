@@ -3,6 +3,7 @@ package it.algos.vaadflow14.wizard.enumeration;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.annotation.*;
@@ -27,22 +28,24 @@ import java.util.*;
  */
 public enum AEWizCost {
 
+    //==========================================================================
+    // Valori costanti. Hardcoded su di un singolo computer.
+    //==========================================================================
     /**
-     * Root iniziale. Hardcoded su di un singolo computer. <br>
-     * Valore standard che verrà controllato in funzione di AEDIR.pathCurrent effettivo <br>
-     * Potrebbe essere diverso <br>
+     * Root iniziale. Hardcoded su di un singolo computer. Nei Documents di Gac. <br>
+     * Valore standard <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
     pathRoot(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.path, "Root iniziale del computer utilizzato", "/Users/gac/Documents/"),
 
     /**
-     * Cartella base dei progetti. <br>
+     * Cartella base dei progetti. Hardcoded su di un singolo computer. Nei Documents di Gac. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
     dirProjects(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Cartella di partenza dei projects Idea", "IdeaProjects/"),
 
     /**
-     * Percorso base dei progetti. Nei Documents di Gac <br>
+     * Percorso base dei progetti. Nei Documents di Gac. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
     pathProjectsDirStandard(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.path, "Path base dei projects Idea", pathRoot.value + dirProjects.value),
@@ -135,21 +138,6 @@ public enum AEWizCost {
     dirModuloVaadFlow14(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory modulo BASE %s (da %s, Wizard compreso)", nameVaadFlow14.value, nameVaadFlow14.value), dirModulo.value + dirVaadFlow14.value, AECopyWiz.dirDeletingAll, VUOTA, VUOTA),
 
     /**
-     * Modulo del progetto target. <br>
-     * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
-     */
-    pathTargetProjectModulo(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.path, "Directory MODULO del progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly) {
-        @Override
-        public void fixValue() {
-            nameTargetProjectModulo.fixValue();
-            if (nameTargetProjectModulo.valida) {
-                this.value = pathTargetProjectRoot.get() + AEWizCost.dirModulo.get() + nameTargetProjectModulo.get() + FlowCost.SLASH;
-                this.setValida(true);
-            }
-        }
-    },
-
-    /**
      * Percorso del modulo base vaadflow14. Nei Documents di Gac <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
@@ -233,13 +221,11 @@ public enum AEWizCost {
      */
     dirBackEnum(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory backend/enumeration del modulo target", dirBackend.get() + dirEnum.value),
 
-
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
     dirPackages(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Nome della directory packages del modulo target", dirBackend.get() + "packages/"),
-
 
     /**
      * Cartella. <br>
@@ -307,70 +293,186 @@ public enum AEWizCost {
      */
     fileRootTEST(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.file, String.format("File root/test ATEST (da %s)", nameVaadFlow14.value), "src/test/java/it/algos/test/ATest.java", AECopyWiz.fileCheckFlagSeEsiste),
 
-    /////////////////
+    //==========================================================================
+    // Valori calcolati automaticamente dal programma alla partenza del Wizard.
+    //==========================================================================
+    /**
+     * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
+     * Programmatore (magari serve) <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    nameUser(AEWizValue.calcolato, AEWizUso.nullo, AEWizCopy.nome, "Programmatore. Ricavato dal path della directory corrente.", VALORE_MANCANTE) {
+        @Override
+        public void fixValue() {
+            String pathCurrent = System.getProperty("user.dir") + SLASH;
+            String user = pathCurrent.substring(1);
+            user = text.levaTestoPrimaDi(user, SLASH);
+            this.value = user.substring(0, user.indexOf(SLASH));
+            this.setValida(true);
+        }
+    },
 
     /**
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathCurrent(AEWizValue.calcolato, AEWizUso.nullo, AEWizCopy.path, "Directory dove gira il programma in uso. Recuperata dal System", VALORE_MANCANTE),
+    pathCurrentProjectRoot(AEWizValue.calcolato, AEWizUso.nullo, AEWizCopy.path, "Path dove gira il programma in uso. Recuperata dal System", VALORE_MANCANTE) {
+        @Override
+        public void fixValue() {
+            this.value = System.getProperty("user.dir") + SLASH;
+            this.setValida(true);
+        }
+    },
 
     /**
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
+     * Ricavato da backend.boot.xxxBoot.fixVariabili() <br>
+     * Confrontato col valore estratto da pathCurrentProject che deve essere uguale <br>
+     * In caso contrario genera un errore <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameUser(AEWizValue.calcolato, AEWizUso.nullo, AEWizCopy.nome, "Programmatore. Ricavato dal path della directory corrente.", VALORE_MANCANTE),
+    nameCurrentProjectDirectoryIdea(AEWizValue.calcolato
+            , AEWizUso.nullo, AEWizCopy.nome, "Directory del progetto Idea. Ricavato da backend.boot.xxxBoot.fixVariabili()", VALORE_MANCANTE) {
+        @Override
+        public void fixValue() {
+            String valueSystem;
+            String message;
+            this.value = FlowVar.projectNameDirectoryIdea;
+            this.setValida(true);
 
-    /**
-     * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
-     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
-     */
-    nameProjectCurrentUpper(AEWizValue.inserito
-            , AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE) {
+            pathCurrentProjectRoot.fixValue();
+            if (pathCurrentProjectRoot.valida) {
+                valueSystem = file.estraeDirectoryFinaleSenzaSlash(pathCurrentProjectRoot.get()).toLowerCase();
+                if (text.isValid(this.value)) {
+                    if (!valueSystem.equals(this.value)) {
+                        message = String.format("FlowVar.projectNameDirectoryIdea=%s mentre il programma gira in %s", this.value, valueSystem);
+                        logger.log(AETypeLog.wizard, message);
+                        this.value = ERRORE;
+                    }
+                }
+                else {
+                    message = String.format("Il programma gira in %s ma manca il valore di FlowVar.projectNameDirectoryIdea come controllo", valueSystem);
+                    logger.log(AETypeLog.wizard, message);
+                    this.value = ERRORE;
+                }
+            }
+        }
     },
 
     /**
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameProjectCurrentLower(AEWizValue.calcolato
-            , AEWizUso.nullo, AEWizCopy.nome, "Nome minuscolo del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE) {
+    nameCurrentProjectModulo(AEWizValue.calcolato
+            , AEWizUso.nullo, AEWizCopy.nome, "Nome del modulo del progetto. Ricavato da backend.boot.xxxBoot.fixVariabili()", VALORE_MANCANTE) {
         @Override
         public void fixValue() {
-            if (nameProjectCurrentUpper.valida) {
-                this.value = nameProjectCurrentUpper.get().toLowerCase();
+            String valueSystem;
+            String message;
+            this.value = FlowVar.projectNameModulo;
+            this.setValida(true);
+
+            pathCurrentProjectRoot.fixValue();
+            if (pathCurrentProjectRoot.valida) {
+                valueSystem = file.estraeDirectoryFinaleSenzaSlash(pathCurrentProjectRoot.get()).toLowerCase();
+                if (text.isValid(this.value)) {
+                    if (!valueSystem.equals(this.value)) {
+                        message = String.format("FlowVar.projectNameModulo=%s mentre il programma gira in %s", this.value, valueSystem);
+                        logger.log(AETypeLog.wizard, message);
+                        this.value = ERRORE;
+                    }
+                }
+                else {
+                    message = String.format("Il programma gira in %s ma manca il valore di FlowVar.projectNameModulo come controllo", valueSystem);
+                    logger.log(AETypeLog.wizard, message);
+                    this.value = ERRORE;
+                }
+            }
+        }
+    },
+
+    /**
+     * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
+     * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
+     */
+    pathCurrentProjectModulo(AEWizValue.calcolato, AEWizUso.nullo, AEWizCopy.path, "Path dove gira il programma in uso. Recuperata dal System", VALORE_MANCANTE) {
+        @Override
+        public void fixValue() {
+            pathCurrentProjectRoot.fixValue();
+            nameCurrentProjectModulo.fixValue();
+            if (pathCurrentProjectRoot.valida && nameCurrentProjectModulo.valida) {
+                this.value = pathCurrentProjectRoot.get() + AEWizCost.dirModulo.get() + nameCurrentProjectModulo.get() + SLASH;
                 this.setValida(true);
             }
         }
     },
 
-    /////////////////
+    /**
+     * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    nameCurrentProjectUpper(AEWizValue.calcolato
+            , AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo dell' applicazione. Ricavato da backend.boot.xxxBoot.fixVariabili()", VALORE_MANCANTE) {
+        @Override
+        public void fixValue() {
+            if (text.isValid(FlowVar.projectNameUpper)) {
+                this.value = FlowVar.projectNameUpper;
+                this.setValida(true);
+            }
+            else {
+                logger.log(AETypeLog.wizard, "Manca il nome del progetto in FlowVar.projectNameUpper");
+                this.value = ERRORE;
+                this.setValida(false);
+            }
+        }
+    },
 
+    //==========================================================================
+    // Valori inseriti dall'utente nei dialoghi.
+    //==========================================================================
     /**
      * Root del progetto target. <br>
+     * Può essere diverso dal valore di nameTargetProjectUpper (Es. ../vaadFlow14 e ../simple, ../company, ../security) <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
     pathTargetProjectRoot(AEWizValue.inserito, AEWizUso.nullo, AEWizCopy.path, "Path root del progetto target", VALORE_MANCANTE),
 
     /**
-     * Nome della directory e del modulo del progetto target. Può essere diverso dal valore di nameTargetProjectUpper (Es. vaadwiki e Wiki) <br>
+     * Nome della directory e del modulo del progetto target. <br>
+     * Può essere diverso dal valore di nameTargetProjectUpper (Es. vaadwiki e Wiki) <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameTargetProjectModulo(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome minuscolo della directory e del modulo target", VALORE_MANCANTE) {
+    nameTargetProjectModulo(AEWizValue.inserito, AEWizUso.nullo, AEWizCopy.nome, "Nome minuscolo del modulo target", VALORE_MANCANTE),
+
+    /**
+     * Nome del progetto target. <br>
+     * Può essere diverso dal valore di nameTargetProjectModulo (Es. vaadwiki e Wiki)  <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    nameTargetProjectUpper(AEWizValue.inserito, AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo del progetto target", VALORE_MANCANTE),
+
+    /**
+     * Nome del package da creare. Eventualmente con sub-directory (separatore punto) <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    nameTargetPackagePunto(AEWizValue.inserito, AEWizUso.nullo, AEWizCopy.nome, "Nome del package da creare/modificare usando punto", VALORE_MANCANTE),
+
+    //==========================================================================
+    // Valori derivati in automatico dai valori inseriti dall'utente.
+    //==========================================================================
+    /**
+     * Modulo del progetto target. <br>
+     * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
+     */
+    pathTargetProjectModulo(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.path, "Directory MODULO del progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly) {
         @Override
         public void fixValue() {
-            if (pathTargetProjectRoot.valida) {
-                this.value = file.estraeClasseFinale(pathTargetProjectRoot.get()).toLowerCase(Locale.ROOT);
+            if (text.isValid(pathTargetProjectRoot.get()) && text.isValid(nameTargetProjectModulo.get())) {
+                this.value = pathTargetProjectRoot.get() + AEWizCost.dirModulo.get() + nameTargetProjectModulo.get() + FlowCost.SLASH;
                 this.setValida(true);
             }
         }
     },
-
-    /**
-     * Nome del progetto target. Di norma è uguale a nameTargetProjectModulo <br>
-     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
-     */
-    nameTargetProjectUpper(AEWizValue.inserito, AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo del progetto target", VALORE_MANCANTE),
 
     /**
      * Nome minuscolo del progetto target. Di norma ( e sempre per i nuovi progetti) è uguale a nameTargetProjectModulo. <br>
@@ -380,8 +482,7 @@ public enum AEWizCost {
     nameTargetProjectLower(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome minuscolo del progetto target", VALORE_MANCANTE) {
         @Override
         public void fixValue() {
-            nameTargetProjectUpper.fixValue();
-            if (nameTargetProjectUpper.valida) {
+            if (text.isValid(nameTargetProjectUpper.get())) {
                 this.value = text.primaMinuscola(nameTargetProjectUpper.get());
                 this.setValida(true);
             }
@@ -434,18 +535,13 @@ public enum AEWizCost {
     },
 
     /**
-     * Nome del package da creare. Eventualmente con sub-directory (separatore punto) <br>
-     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
-     */
-    nameTargetPackagePunto(AEWizValue.inserito, AEWizUso.nullo, AEWizCopy.nome, "Nome del package da creare/modificare usando punto", VALORE_MANCANTE),
-
-    /**
      * Nome del package da creare. Eventualmente con sub-directory (separatore slash) <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
     nameTargetPackage(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome del package da creare/modificare usando slash", VALORE_MANCANTE) {
         @Override
         public void fixValue() {
+            nameTargetPackagePunto.fixValue();
             if (nameTargetPackagePunto.valida) {
                 this.value = text.fixPuntoToSlash(nameTargetPackagePunto.get());
                 this.setValida(true);
@@ -497,6 +593,8 @@ public enum AEWizCost {
     protected AFileService file;
 
     protected ATextService text;
+
+    protected ALogService logger;
 
     private AEWizValue wizValue;
 
@@ -573,19 +671,51 @@ public enum AEWizCost {
         }
     }
 
+    //    /**
+    //     * Visualizzazione di controllo <br>
+    //     */
+    //    public static void print(String titolo) {
+    //        System.out.println(VUOTA);
+    //        System.out.println("********************");
+    //        System.out.println("AEWizCost  - " + titolo);
+    //        System.out.println("********************");
+    //        for (AEWizCost wiz : AEWizCost.values()) {
+    //            System.out.println("AEDir." + wiz.name() + " \"" + wiz.getDescrizione() + "\" = " + wiz.get());
+    //        }
+    //        System.out.println(VUOTA);
+    //    }
+
     /**
-     * Visualizzazione di controllo <br>
+     * Estrae tutte le enumeration di un gruppo di valore <br>
      */
-    public static void print(String titolo) {
+    public static List<AEWizCost> getWizCostByValue(AEWizValue wizValue) {
+        List<AEWizCost> listaWiz = new ArrayList<>();
+
+        for (AEWizCost wizCost : AEWizCost.values()) {
+            if (wizCost.getWizValue() == wizValue) {
+                listaWiz.add(wizCost);
+            }
+        }
+
+        return listaWiz;
+    }
+
+    /**
+     * Stampa tutte le enumeration del gruppo di valore <br>
+     */
+    public static void print(AEWizValue aeWizValue) {
+        List<AEWizCost> listaWiz = getWizCostByValue(aeWizValue);
         System.out.println(VUOTA);
         System.out.println("********************");
-        System.out.println("AEWizCost  - " + titolo);
+        System.out.println(aeWizValue.getDescrizione() + " (" + listaWiz.size() + ")");
         System.out.println("********************");
-        for (AEWizCost wiz : AEWizCost.values()) {
-            System.out.println("AEDir." + wiz.name() + " \"" + wiz.getDescrizione() + "\" = " + wiz.get());
+        for (AEWizCost aeWizCost : listaWiz) {
+            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.getDescrizione() + "\" " + FlowCost.UGUALE_SPAZIATO + aeWizCost.get());
+            System.out.println(VUOTA);
         }
         System.out.println(VUOTA);
     }
+
 
     public void fixValue() {
     }
@@ -659,6 +789,10 @@ public enum AEWizCost {
         this.text = text;
     }
 
+    public void setLogger(ALogService logger) {
+        this.logger = logger;
+    }
+
     @Component
     public static class WizCostServiceInjector {
 
@@ -668,12 +802,16 @@ public enum AEWizCost {
         @Autowired
         private ATextService text;
 
+        @Autowired
+        private ALogService logger;
+
 
         @PostConstruct
         public void postConstruct() {
             for (AEWizCost aeWizCost : AEWizCost.values()) {
                 aeWizCost.setFile(file);
                 aeWizCost.setText(text);
+                aeWizCost.setLogger(logger);
             }
         }
 

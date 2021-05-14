@@ -26,7 +26,7 @@ import javax.validation.constraints.*;
  * Unica classe obbligatoria per un package. Le altre servono solo per personalizzare. <br>
  * <p>
  * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
- * Annotated with Algos: @AIScript per controllare la ri-creazione di questo file dal Wizard <br>
+ * Annotated with Algos: @AIScript per controllare il typo di file e la ri-creazione con Wizard <br>
  * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
  * Annotated with Algos: @AIView per info su menu, icon, route, search e sort <br>
  * Annotated with Algos: @AIList per info sulle colonne della Grid <br>
@@ -41,10 +41,10 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @Builder(builderMethodName = "builderVia")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity)
 @AIEntity(recordName = "Via", keyPropertyName = "nome", usaCompany = false, usaCreazione = true, usaModifica = true, usaResetIniziale = true)
 @AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine", sortDirection = "ASC")
-@AIList(fields = "ordine,nome", usaRowIndex = false, usaReset = true)
+@AIList(fields = "ordine,nome", usaDeleteMenu = true, usaResetMenu = true, usaRowIndex = true)
 @AIForm(fields = "ordine,nome", usaSpostamentoTraSchede = true)
 public class Via extends AEntity {
 

@@ -90,19 +90,11 @@ public class UtenteLogicList extends LogicList {
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     *
-     * @return una lista di elementi html di tipo 'span'
      */
     @Override
-    protected List<Span> getSpanList() {
-        List<Span> lista = new ArrayList<>();
-
-        if (AEPreferenza.usaDebug.is()) {
-            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'"));
-            lista.add(html.getSpanRosso("Di norma utilizzato solo in applicazioni con usaSecurity=true"));
-        }
-
-        return lista;
+    protected void fixSpanList() {
+        addSpanRosso("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'");
+        addSpanRosso("Di norma utilizzato solo in applicazioni con usaSecurity=true");
     }
 
 

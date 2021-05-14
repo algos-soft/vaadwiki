@@ -67,16 +67,13 @@ public class ViaLogicList extends LogicList {
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     *
-     * @return una lista di elementi html di tipo 'span'
      */
     @Override
-    protected List<Span> getSpanList() {
-        List<Span> lista = new ArrayList<>();
-        lista.add(html.getSpanVerde("Codifica delle più comuni tipologie di indirizzi."));
-        lista.add(html.getSpanVerde("Presentate nelle anagrafiche in un popup di selezione."));
-        lista.add(html.getSpanVerde("L'ordinamento del popup è quello riportato qui e non quello alfabetico."));
-        return lista;
+    protected void fixSpanList() {
+        addSpanBlu("Codifica delle più comuni tipologie di indirizzi.");
+        addSpanBlu("Presentate nelle anagrafiche in un popup di selezione.");
+        addSpanBlu("L'ordinamento del popup è quello numerico riportato qui e non quello alfabetico.");
     }
+
 
 }// end of Route class

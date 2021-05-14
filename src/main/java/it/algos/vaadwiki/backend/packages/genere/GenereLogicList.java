@@ -70,28 +70,28 @@ public class GenereLogicList extends WikiLogicList {
     }
 
 
-    /**
-     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto <br>
-     *
-     * @return una liste di 'span'
-     */
-    @Override
-    protected List<Span> getSpanList() {
-        List<Span> lista = new ArrayList<>();
-
-        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadGenere));
-        lista.add(html.getSpanBlu("Modulo:Bio/Plurale attività genere."));
-        lista.add(html.getSpanVerde("Contiene la tabella di conversione delle attività passate via parametri <b>Attività/Attività2/Attività3</b>"));
-        lista.add(html.getSpanVerde(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
-        lista.add(html.getSpanVerde("All'interno della tabella le attività sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse"));
-        lista.add(html.getSpanVerde("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
-        lista.add(html.getSpanVerde("[\"attività singolare maschile\"] = \"attività plurale maschile\","));
-        lista.add(html.getSpanVerde("[\"attività singolare femminile\"] = \"attività plurale femminile\","));
-        lista.add(html.getSpanRosso("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in maiuscolo"));
-
-        return lista;
-    }
+//    /**
+//     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+//     * DEVE essere sovrascritto <br>
+//     *
+//     * @return una liste di 'span'
+//     */
+//    @Override
+//    protected List<Span> getSpanList() {
+//        List<Span> lista = new ArrayList<>();
+//
+//        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadGenere));
+//        lista.add(html.getSpanBlu("Modulo:Bio/Plurale attività genere."));
+//        lista.add(html.getSpanVerde("Contiene la tabella di conversione delle attività passate via parametri <b>Attività/Attività2/Attività3</b>"));
+//        lista.add(html.getSpanVerde(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
+//        lista.add(html.getSpanVerde("All'interno della tabella le attività sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse"));
+//        lista.add(html.getSpanVerde("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
+//        lista.add(html.getSpanVerde("[\"attività singolare maschile\"] = \"attività plurale maschile\","));
+//        lista.add(html.getSpanVerde("[\"attività singolare femminile\"] = \"attività plurale femminile\","));
+//        lista.add(html.getSpanRosso("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in maiuscolo"));
+//
+//        return lista;
+//    }
 
 
 }// end of Route class

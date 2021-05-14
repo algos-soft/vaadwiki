@@ -148,7 +148,7 @@ public class ALogService extends AAbstractService {
      */
     public void startupEnd() {
         String message = VUOTA;
-        message += FlowVar.projectName;
+        message += FlowVar.projectNameUpper;
         message += SEP;
         message += FlowVar.projectDescrizione;
         message += SEP;
@@ -565,7 +565,7 @@ public class ALogService extends AAbstractService {
         String adesso = LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy"));//@todo Funzionalità ancora da implementare in libreria
         String sep = SEP;
         sep = SPAZIO;
-        String appName = FlowVar.projectName;
+        String appName = FlowVar.projectNameUpper;
 
         if (logLevel == null) {
             return;

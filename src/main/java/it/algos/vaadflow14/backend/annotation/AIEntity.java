@@ -41,7 +41,7 @@ public @interface AIEntity {
      *
      * @return the status
      */
-    boolean usaCompany() default true;
+    boolean usaCompany() default false;
 
     /**
      * (Optional) il campo della superclasse

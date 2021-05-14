@@ -14,44 +14,71 @@ import java.lang.annotation.*;
  * Date: lun, 27-apr-2020
  * Time: 14:55
  * <p>
- * Annotation per le Entity Class <br>
- * Lista dei fields automatici nella Grid delle liste <br>
+ * Annotation Algos per le Entity Class <br>
+ * <p>
+ * Regola:
+ * title()=VUOTA -> Titolo della lista se diverso da @AIEntity.recordName
+ * usaDeleteMenu()=false -> Flag per la cancellazione completa della lista dal bottone del menu
+ * usaResetMenu()=false -> Flag per la creazione automatica della lista dal bottone del menu
+ * spanHeader()=VUOTA -> Singolo span di alert sopra la lista
+ * usaRowIndex()=false -> Mostra la prima colonna indice a sinistra della grid
+ * rowIndexWidthEM()=2.5 -> The width of the index
+ * fields()="all fields" -> List of visible fields on Grid
+ * widthID()=250 -> The width of the ID columnService
+ * <p>
+ * Standard:
+ * AIList(fields = "code,descrizione", usaRowIndex = true)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE) //--Class, interface (including annotation type), or enum declaration
+@Target(ElementType.TYPE)
+//--Class, interface (including annotation type), or enum declaration
 public @interface AIList {
 
 
     /**
-     * (Optional) Alert sopra la lista
-     * Di default VUOTA
-     *
-     * @return the string
-     */
-    String headerAlert() default VUOTA;
-    /**
-     * (Optional) Title della lista
+     * (Optional) Titolo della lista se diverso da @AIEntity.recordName
      * Di default VUOTA
      *
      * @return the string
      */
     String title() default VUOTA;
 
+
     /**
-     * (Optional) prima colonna indice a sinistra della grid
+     * (Optional) Flag per la cancellazione completa della lista dal bottone del menu
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaDeleteMenu() default false;
+
+
+    /**
+     * (Optional) Flag per la creazione automatica della lista dal bottone del menu
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaResetMenu() default false;
+
+
+    /**
+     * (Optional) Singolo span di alert sopra la lista
+     * Di default VUOTA
+     *
+     * @return the string
+     */
+    String spanHeader() default VUOTA;
+
+
+    /**
+     * (Optional) Mostra la prima colonna indice a sinistra della grid
      * Di default false
      *
      * @return the status
      */
     boolean usaRowIndex() default false;
 
-    /**
-     * (Optional) ri-creazione automatica della lista
-     * Di default false
-     *
-     * @return the status
-     */
-    boolean usaReset() default false;
 
     /**
      * (Optional) The width of the index.

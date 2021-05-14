@@ -15,8 +15,7 @@ import javax.annotation.PostConstruct;
 import java.util.Collections;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_LOGIN;
-import static it.algos.vaadflow14.backend.application.FlowVar.projectDescrizione;
-import static it.algos.vaadflow14.backend.application.FlowVar.projectName;
+import static it.algos.vaadflow14.backend.application.FlowVar.*;
 
 /**
  * The Login view
@@ -36,7 +35,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		loginOverlay.setAction(ROUTE_NAME_LOGIN);
 
 		// personalizza il branding
-		loginOverlay.setTitle(projectName);
+		loginOverlay.setTitle(projectNameUpper);
 		loginOverlay.setDescription(projectDescrizione);
 
 		// non mostra bottone lost password

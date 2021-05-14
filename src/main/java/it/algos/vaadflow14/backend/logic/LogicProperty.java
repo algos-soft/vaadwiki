@@ -139,7 +139,7 @@ public abstract class LogicProperty extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    protected ADataProviderService dataService;
+    public AUtilityService utility;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -147,7 +147,7 @@ public abstract class LogicProperty extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AUtilityService utility;
+    protected ADataProviderService dataService;
 
     /**
      * PlaceHolder iniziale per avvisi sopra la Grid (o Form) <br><br>
@@ -240,6 +240,11 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected Parametro routeParameter;
 
+
+    /**
+     * Flag di preferenza per l' utilizzo degli span in rosso nell'header della lista. Di default false. <br>
+     */
+    protected boolean usaSpanHeaderRossi;
 
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
@@ -348,8 +353,13 @@ public abstract class LogicProperty extends VerticalLayout {
      * Filtri collegati a dataProvider <br>
      * La mappa si costruisce in regolazioniIniziali() della LogicList <br>
      */
-    protected Map<String,AFiltro> mappaFiltri;
+    protected Map<String, AFiltro> mappaFiltri;
 
+    /**
+     * Lista (eventuale) di 'span' da mostrare come header della view <br>
+     * La lista si costruisce in regolazioniIniziali() della LogicList <br>
+     */
+    protected List<Span> spanHeaderList;
 
     protected void fixProperty() {
         if (routeParameter == null && annotation.getRouteName(this.getClass()).equals(ROUTE_NAME_GENERIC_VIEW)) {
@@ -375,6 +385,7 @@ public abstract class LogicProperty extends VerticalLayout {
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
+        this.usaSpanHeaderRossi = AEPreferenza.usaSpanHeaderRossi.is();
         this.usaBottoneDeleteAll = false;
         this.usaBottoneResetList = false;
         this.usaBottoneNew = false;
@@ -522,12 +533,12 @@ public abstract class LogicProperty extends VerticalLayout {
     protected WrapButtons getWrapButtonsTop() {
         List<AIButton> listaAEBottoni = this.getListaAEBottoniTop();
         //        WrapSearch wrapSearch = this.getWrapSearch();
-//                LinkedHashMap<String, ComboBox> mappaComboBox = this.mappaComboBox;
+        //                LinkedHashMap<String, ComboBox> mappaComboBox = this.mappaComboBox;
         //        List<Button> listaBottoniSpecifici = this.getListaBottoniSpecifici();
         //        AEOperation operationForm = null;
-//    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final LinkedHashMap<String, ComboBox> mappaComboBox, final List<Button> listaBottoniSpecifici, final int maxNumeroBottoniPrimaRiga) {
+        //    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final LinkedHashMap<String, ComboBox> mappaComboBox, final List<Button> listaBottoniSpecifici, final int maxNumeroBottoniPrimaRiga) {
 
-            return appContext.getBean(WrapButtons.class, this, listaAEBottoni, (WrapSearch)null, mappaComboBox, (List<Button>)null, maxNumeroBottoniPrimaRiga);
+        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, (WrapSearch) null, mappaComboBox, (List<Button>) null, maxNumeroBottoniPrimaRiga);
     }
 
     /**
@@ -660,7 +671,7 @@ public abstract class LogicProperty extends VerticalLayout {
         Span span;
         String message;
         String copy = DEVELOPER_COMPANY;
-        String project = FlowVar.projectName;
+        String project = FlowVar.projectNameUpper;
         String version = String.valueOf(FlowVar.projectVersion);
         String data = date.get(FlowVar.versionDate);
 

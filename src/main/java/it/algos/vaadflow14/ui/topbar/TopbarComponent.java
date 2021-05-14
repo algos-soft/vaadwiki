@@ -192,7 +192,7 @@ TopbarComponent extends HorizontalLayout {
         Div div = new Div();
         Company company;
         String commonStyle = "line-height:120%; white-space:nowrap; overflow:hidden; color:" + LUMO_PRIMARY_COLOR;
-        Label primaRiga = new Label(FlowVar.projectName);
+        Label primaRiga = new Label(FlowVar.projectNameUpper);
         Label secondaRiga = new Label(FlowVar.projectDescrizione);
 
         if (FlowVar.usaCompany) {

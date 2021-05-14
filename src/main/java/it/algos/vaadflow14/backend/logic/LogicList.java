@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.component.combobox.*;
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.data.provider.*;
@@ -70,8 +69,8 @@ public abstract class LogicList extends Logic {
         super.fixPreferenze();
 
         super.operationForm = annotation.getOperation(entityClazz);
-        super.usaBottoneDeleteAll = AEPreferenza.usaMenuReset.is() && annotation.usaReset(entityClazz);
-        super.usaBottoneResetList = AEPreferenza.usaMenuReset.is() && annotation.usaReset(entityClazz);
+        super.usaBottoneDeleteAll = AEPreferenza.usaMenuReset.is() && annotation.usaDeleteMenu(entityClazz);
+        super.usaBottoneResetList = AEPreferenza.usaMenuReset.is() && annotation.usaResetMenu(entityClazz);
         super.usaBottoneNew = AEPreferenza.usaMenuReset.is() && annotation.usaCreazione(entityClazz);
 
         this.fixOperationForm();
@@ -84,6 +83,9 @@ public abstract class LogicList extends Logic {
     @Override
     protected void regolazioniIniziali() {
         super.regolazioniIniziali();
+
+        //--costruisce una lista (vuota) di Span per l'header della lista
+        super.spanHeaderList = new ArrayList<>();
 
         //--costruisce una mappa (vuota) di ComboBox per il topLayout
         super.mappaComboBox = new HashMap<>();
@@ -132,18 +134,37 @@ public abstract class LogicList extends Logic {
      */
     @Override
     protected void fixAlertLayout() {
-        headerSpan = appContext.getBean(AHeaderSpanList.class, this.getSpanList());
+        this.fixSpanList();
+        if (spanHeaderList != null && spanHeaderList.size() > 0) {
+            headerSpan = appContext.getBean(AHeaderSpanList.class, super.spanHeaderList);
+        }
+
         super.fixAlertLayout();
     }
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     *
-     * @return una lista di elementi html di tipo 'span'
      */
-    protected List<Span> getSpanList() {
-        return null;
+    protected void fixSpanList() {
+    }
+
+    protected void addSpanBlu(final String message) {
+        if (spanHeaderList != null) {
+            spanHeaderList.add(html.getSpanBlu(message));
+        }
+    }
+
+    protected void addSpanVerde(final String message) {
+        if (spanHeaderList != null) {
+            spanHeaderList.add(html.getSpanVerde(message));
+        }
+    }
+
+    protected void addSpanRosso(final String message) {
+        if (spanHeaderList != null && usaSpanHeaderRossi) {
+            spanHeaderList.add(html.getSpanRosso(message));
+        }
     }
 
     /**
@@ -575,7 +596,7 @@ public abstract class LogicList extends Logic {
     protected AFiltro fixFiltroCombo(final String fieldName, final Object fieldValue) {
         AFiltro filtro = null;
 
-        if (text.isValid(fieldName)) {
+        if (text.isValid(fieldName) && fieldValue != null) {
             filtro = AFiltro.ugualeObj(fieldName, fieldValue);
         }
 

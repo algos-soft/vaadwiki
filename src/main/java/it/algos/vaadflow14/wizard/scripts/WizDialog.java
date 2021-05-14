@@ -277,13 +277,18 @@ public abstract class WizDialog extends Dialog {
         boolean status = true;
 
         status = status && this.regolaAEWizCost();
+        AEWizCost.print(AEWizValue.inserito);
+        AEWizCost.print(AEWizValue.derivato);
+
         //        status = status && this.regolaAEDir();
         status = status && this.regolaAECheck();
         status = status && this.regolaAEPackage();
         status = status && this.regolaAEToken();
         AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.nameTargetProjectUpper.get());
 
-        wizService.printInfoStart();
+//        AEWizCost.print(AEWizValue.inserito);
+//        AEWizCost.print(AEWizValue.derivato);
+//        wizService.printInfoStart();
         return status;
     }
 
@@ -399,6 +404,7 @@ public abstract class WizDialog extends Dialog {
 
     /**
      * Chiamato alla dismissione del dialogo <br>
+     * Recupera i valori inseriti dall'utente <br>
      * Regola i valori regolabili della Enumeration AEWizCost <br>
      * Verranno usati da: <br>
      * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
@@ -410,7 +416,7 @@ public abstract class WizDialog extends Dialog {
      *
      * @return false se manca uno dei due parametri obbligatori
      */
-    protected boolean fixValoriDerivati(final String pathProject, final String nameTargetProjectUpper, final String packageName) {
+    protected boolean fixValoriInseriti(final String pathProject, final String nameTargetProjectUpper, final String packageName) {
 
         if (text.isEmpty(pathProject) || text.isEmpty(nameTargetProjectUpper)) {
             return false;
@@ -434,7 +440,7 @@ public abstract class WizDialog extends Dialog {
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
 
-        wizService.printProgetto();
+//        wizService.printProgetto();
         return true;
     }
 

@@ -46,7 +46,7 @@ import java.util.*;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Continente", keyPropertyName = "nome", usaCompany = false, usaCreazione = false, usaModifica = false)
 @AIView(menuName = "Continente", menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
-@AIList(fields = "ordine,nome,abitato", usaRowIndex = false, usaReset = true)
+@AIList(fields = "ordine,nome,abitato", usaRowIndex = false, usaResetMenu = true)
 @AIForm(fields = "ordine,nome,stati,abitato", usaSpostamentoTraSchede = true)
 public class Continente extends AEntity {
 

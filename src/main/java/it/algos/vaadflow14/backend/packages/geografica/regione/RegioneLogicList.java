@@ -82,26 +82,19 @@ public class RegioneLogicList extends LogicList {
     }
 
 
+
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     *
-     * @return una lista di elementi html di tipo 'span'
      */
     @Override
-    protected List<Span> getSpanList() {
-        List<Span> lista = new ArrayList<>();
-
-        lista.add(html.getSpanBlu("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2"));
-//        lista.add(html.getSpanBlu("Recuperati dalla pagina wiki: " + wikiPageTitle));//@todo Funzionalità ancora da implementare
-        lista.add(html.getSpanBlu("Codice ISO, sigla abituale e 'status' normativo"));
-        lista.add(html.getSpanBlu("Ordinamento alfabetico: prima Italia poi altri stati europei"));
-        if (AEPreferenza.usaDebug.is()) {
-            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed i comboBox 'Stato' e 'Status'"));
-        }
-
-        return lista;
+    protected void fixSpanList() {
+        addSpanBlu("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2");
+        addSpanBlu("Codice ISO, sigla abituale e 'status' normativo");
+        addSpanBlu("Ordinamento alfabetico: prima Italia poi altri stati europei");
+        addSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed i comboBox 'Stato' e 'Status'");
     }
+
 
     /**
      * Costruisce una mappa di ComboBox di selezione e filtro <br>

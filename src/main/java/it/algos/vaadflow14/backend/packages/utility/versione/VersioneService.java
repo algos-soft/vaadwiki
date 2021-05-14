@@ -154,7 +154,7 @@ public class VersioneService extends AService {
             return result;
         }
 
-        numRec = creaIfNotExist("Setup", LocalDate.now(), "Installazione iniziale di " + FlowVar.projectName) != null ? numRec + 1 : numRec;
+        numRec = creaIfNotExist("Setup", LocalDate.now(), "Installazione iniziale di " + FlowVar.projectNameUpper) != null ? numRec + 1 : numRec;
 
         return super.fixPostReset(AETypeReset.hardCoded, numRec);
     }

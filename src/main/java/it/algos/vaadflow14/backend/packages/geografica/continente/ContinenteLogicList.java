@@ -64,19 +64,16 @@ public class ContinenteLogicList extends LogicList {
 
         super.usaBottonePaginaWiki = true;
         super.wikiPageTitle = "Continente";
-//        super.formClazz = ContinenteForm.class;//@todo Funzionalità ancora da implementare
     }
 
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     *
-     * @return una lista di elementi html di tipo 'span'
      */
     @Override
-    protected List<Span> getSpanList() {
-        return Collections.singletonList(html.getSpanVerde("Ripartizione dei 249 stati censiti"));
+    protected void fixSpanList() {
+        addSpanBlu("Ripartizione dei 249 stati censiti.");
     }
 
 

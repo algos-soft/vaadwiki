@@ -47,7 +47,7 @@ public class WizDialogFeedbackWizard extends WizDialog {
 
         if (!AEFlag.isBaseFlow.is()) {
             pathWizard = file.findPathBreve(AEWizCost.pathVaadFlow14Wizard.get(), "algos");
-            pathProject = file.findPathBreve(AEWizCost.nameProjectCurrentUpper.get(), "algos");
+            pathProject = file.findPathBreve(AEWizCost.nameCurrentProjectUpper.get(), "algos");
             pathModuloBase = file.findPathBreve(AEWizCost.pathVaadFlow14Root.get(), "operativi");
             topLayout.add(text.getLabelGreenBold(String.format("Ricopia la directory %s di %s su %s", pathWizard, pathProject, pathModuloBase)));
 
@@ -93,13 +93,13 @@ public class WizDialogFeedbackWizard extends WizDialog {
         String pathProject = VUOTA;
 
         //--inserisce il path completo del progetto in esecuzione
-        pathProject = AEWizCost.pathCurrent.get();
+        pathProject = AEWizCost.pathCurrentProjectRoot.get();
         AEWizCost.pathTargetProjectRoot.setValue(pathProject);
 
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
 
-        AEWizCost.print("Test uscita feedback");
+//        AEWizCost.print("Test uscita feedback");
         return true;
     }
 

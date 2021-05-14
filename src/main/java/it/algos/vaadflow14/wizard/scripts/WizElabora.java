@@ -274,7 +274,7 @@ public abstract class WizElabora implements WizRecipient {
         String newText = VUOTA;
         String nomeFileTextSorgente = "Boot";
         String tagOld = "import it.algos.vaadflow14.backend.application.FlowVar;";
-        String project = AEWizCost.nameProjectCurrentLower.get();
+        String project = AEWizCost.nameCurrentProjectUpper.get();
         String pack = AEWizCost.nameTargetPackagePunto.get();
         String clazz = AEWizCost.nameTargetFileUpper.get();
         String packageName = AEWizCost.nameTargetFileUpper.get();
@@ -316,7 +316,7 @@ public abstract class WizElabora implements WizRecipient {
         boolean status = true;
         int numFiles = 0;
         String message = VUOTA;
-        AEWizCost.print("Levare");
+//        AEWizCost.print("Levare");
         String nameTargetProjectUpper = AEWizCost.nameTargetProjectUpper.get();
         String nameTargetProjectModulo = AEWizCost.nameTargetProjectModulo.get();
         String suffix;

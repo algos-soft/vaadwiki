@@ -94,26 +94,29 @@ public class WizService {
      * Chiamato da Wizard.initView() <br>
      */
     public void fixAEWizCost() {
-        //--directory di lavoro
-        String pathCurrent = System.getProperty("user.dir") + SLASH;
-        AEWizCost.pathCurrent.setValue(pathCurrent);
+        //--regola tutti i valori automatici
+        AEWizCost.fixValoriDerivati();
 
-        //--programmatore (magari serve)
-        String user = pathCurrent.substring(1);
-        user = text.levaTestoPrimaDi(user, SLASH);
-        user = user.substring(0, user.indexOf(SLASH));
-        AEWizCost.nameUser.setValue(user);
+//        //--directory di lavoro
+//        String pathCurrent = System.getProperty("user.dir") + SLASH;
+//        AEWizCost.pathCurrentProject.setValue(pathCurrent);
+//
+//        //--programmatore (magari serve)
+//        String user = pathCurrent.substring(1);
+//        user = text.levaTestoPrimaDi(user, SLASH);
+//        user = user.substring(0, user.indexOf(SLASH));
+//        AEWizCost.nameUser.setValue(user);
 
-        //--progetto in esecuzione
-        String projectCurrent = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
-        projectCurrent = text.primaMaiuscola(projectCurrent);
-        AEWizCost.nameProjectCurrentUpper.setValue(projectCurrent);
+//        //--progetto in esecuzione
+//        String projectCurrent = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
+//        projectCurrent = text.primaMaiuscola(projectCurrent);
+//        AEWizCost.nameCurrentProjectUpper.setValue(projectCurrent);
 
         //--differenziazione tra progetto base (vaadflow14) e progetti derivati
-        AEFlag.isBaseFlow.set(projectCurrent.toLowerCase().equals(AEWizCost.nameVaadFlow14.get().toLowerCase()));
+        AEFlag.isBaseFlow.set(AEWizCost.nameCurrentProjectUpper.equals(AEWizCost.nameVaadFlow14.get()));
 
-        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
-        AEWizCost.fixValoriDerivati();
+//        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
+//        AEWizCost.fixValoriDerivati();
     }
 
     /**
@@ -187,7 +190,7 @@ public class WizService {
         String message = VUOTA;
         File srcDir = new File(srcPath);
         File destDir = new File(destPath);
-        String dirPath = text.isValid(directory) ? directory : AEWizCost.nameProjectCurrentUpper.get().toLowerCase();
+        String dirPath = text.isValid(directory) ? directory : AEWizCost.nameCurrentProjectUpper.get().toLowerCase();
         String pathBreve = file.findPathBreveDa(destPath, dirPath);
         String type = text.setTonde(copyWiz.name());
 
@@ -354,7 +357,7 @@ public class WizService {
         AIResult resultCheck = AResult.errato();
         String message = VUOTA;
         boolean esisteFileDest = false;
-        String dirPath = text.isValid(firstDir) ? firstDir : AEWizCost.nameProjectCurrentUpper.get().toLowerCase();
+        String dirPath = text.isValid(firstDir) ? firstDir : AEWizCost.nameCurrentProjectUpper.get().toLowerCase();
         String pathBreve = file.findPathBreveDa(pathFileToBeWritten, dirPath);
 
         esisteFileDest = file.isEsisteFile(pathFileToBeWritten);
@@ -816,7 +819,7 @@ public class WizService {
         AEToken.codeRinvio.setValue(fixCodeRinvio());
         AEToken.newEntityKeyUnica.setValue(fixNewEntityUnica());
         AEToken.toString.setValue(fixString());
-        printProgetto();
+//        printProgetto();
 
         System.out.println(VUOTA);
         System.out.println(AEToken.packageNamePunti.getTokenTag() + SEP + AEToken.packageNamePunti.getValue());
@@ -1294,71 +1297,53 @@ public class WizService {
     //        return listaWizCost;
     //    }
 
-    public List<AEWizCost> printProgetto() {
-        List<AEWizCost> listaWiz = null;
-        List<AEWizValue> listaType = new ArrayList<>();
-        listaType.add(AEWizValue.inserito);
-        listaType.add(AEWizValue.derivato);
+//    public List<AEWizCost> printProgetto() {
+//        List<AEWizCost> listaWiz = null;
+//        List<AEWizValue> listaType = new ArrayList<>();
+//        listaType.add(AEWizValue.inserito);
+//        listaType.add(AEWizValue.derivato);
+//
+//        listaWiz = getAllTypeWiz(listaType);
+//        printInfoBase(listaWiz, "Valori correnti per un nuovo progetto");
+//
+//        return listaWiz;
+//    }
 
-        listaWiz = getAllTypeWiz(listaType);
-        printInfoBase(listaWiz, "Valori correnti per un nuovo progetto");
+//    public void printInfoBase(List<AEWizCost> listaWiz, String titolo) {
+//        System.out.println(VUOTA);
+//        System.out.println("********************");
+//        System.out.println(titolo + " (" + listaWiz.size() + ")");
+//        System.out.println("********************");
+//        for (AEWizCost aeWizCost : listaWiz) {
+//            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.getDescrizione() + "\" " + FlowCost.UGUALE_SPAZIATO + aeWizCost.get());
+//            System.out.println(VUOTA);
+//        }
+//        System.out.println(VUOTA);
+//    }
 
-        return listaWiz;
-
-        //        if (array.isEmpty(vuoteProgetto)) {
-        //            printInfoBase(vuoteProgetto, "Costanti del progetto a cui manca ancora un valore indispensabile");
-        //        }
-        //        else {
-        //            printInfoBase(getHannoValoreValido(), "Costanti del progetto con i valori utilizzabili");
-        //        }
-    }
-
-    //--metodo statico invocato da Wizard.initView()
-    public void printInfoBase(List<AEWizCost> lista, String titolo) {
-        System.out.println(VUOTA);
-        System.out.println("********************");
-        System.out.println(titolo + " (" + lista.size() + ")");
-        System.out.println("********************");
-        for (AEWizCost aeWizCost : lista) {
-            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.getDescrizione() + "\" " + FlowCost.UGUALE_SPAZIATO + aeWizCost.get());
-            //            System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.getCopyWiz().name());
-            System.out.println(VUOTA);
-        }
-        System.out.println(VUOTA);
-    }
-
-    //--metodo statico invocato da Wizard.initView()
+    /**
+     * Stampa di controllo dei valori 'fissi' <br>
+     */
     public void printInfoStart() {
-        printInfoBase(getNecessitanoInserimentoValore(), "Tutte le costanti a cui bisogna inserire il valore in runtime.");
-        printInfoBase(getInseritoValore(), "Costanti a cui è già stato inserito un valore in runtime.");
-        printInfoBase(getVuote(), "Costanti a cui manca ancora l'inserimento del valore.");
-        printInfoBase(getHannoValoreVuoto(), "Costanti a cui manca ancora un valore o inserito o calcolato");
-        printInfoBase(getHannoValoreValido(), "Costanti con un valore valido o inserito o calcolato");
-
-        //        printInfoBase(getDirectory(), "Directory di percorso. Valori statici ed immutabili");
-        //        printInfoBase(getSistema(), "Variabili di sistema. Dipende dal programma in uso");
-        //        printInfoBase(getNomeFile(), "Nome e file di percorso. Dipende dal progetto selezionato");
-        //        printInfoBase(getPath(), "Path di percorso. Dipende dal progetto selezionato");
-        //        printInfoBase(getPackages(), "Variabili del package. Dipende dal package selezionato");
-        //
-        //        System.out.println(FlowCost.VUOTA);
-        //        System.out.println("********************");
-        //        System.out.println("Costanti statiche indipendenti dal progetto che sta girando");
-        //        System.out.println("********************");
-        //        for (AEWizCost aeWizCost : AEWizCost.values()) {
-        //            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.descrizione + "\" " + FlowCost.UGUALE + aeWizCost.value);
-        //            if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
-        //                System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.copyWiz.name());
-        //            }
-        //            System.out.println(FlowCost.VUOTA);
-        //        }
-        //        System.out.println(FlowCost.VUOTA);
+        AEWizCost.print(AEWizValue.costante);
+        AEWizCost.print(AEWizValue.calcolato);
     }
 
+//    public List<AEWizCost> getWizCostByValue(AEWizValue wizValue) {
+//        List<AEWizCost> listaWiz = new ArrayList<>();
+//
+//        for (AEWizCost wizCost : AEWizCost.values()) {
+//            if (wizCost.getWizValue() == wizValue) {
+//                listaWiz.add(wizCost);
+//            }
+//        }
+//
+//        return listaWiz;
+//    }
 
     //--metodo statico invocato da Wizard.initView()
     public void printInfoPackage() {
-        //        printInfoBase(getPackages(), "Variabili del package. Dipende dal package selezionato");
+        //                printInfoBase(getPackages(), "Variabili del package. Dipende dal package selezionato");
     }
 
     //--metodo statico

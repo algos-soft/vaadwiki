@@ -679,21 +679,22 @@ public class AMongoService<capture> extends AAbstractService {
             for (AFiltro filtro : mappaFiltri.values()) {
                 criteriaFiltro = filtro.getCriteria();
 
-                if (criteriaQuery == null) {
-                    criteriaQuery = criteriaFiltro;
-                }
-                else {
-                    //--For multiple criteria on the same field, uses a “comma” to combine them.
-                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
-                        criteriaQuery.andOperator(criteriaFiltro);
-                    }
-                    else {
-                        criteriaQuery.andOperator(criteriaFiltro);
-                    }
-                }
+//                if (criteriaQuery == null) {
+//                    criteriaQuery = criteriaFiltro;
+//                }
+//                else {
+//                    //--For multiple criteria on the same field, uses a “comma” to combine them.
+//                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
+//                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
+//                    }
+//                    else {
+//                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
+//                    }
+//                }
+                query.addCriteria(filtro.getCriteria());
             }
-            query.addCriteria(criteriaQuery);
         }
+
         if (sortSpring != null) {
             query.with(sortSpring);
         }

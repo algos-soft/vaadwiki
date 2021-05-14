@@ -33,14 +33,14 @@ public class FlowVar {
     /**
      * Controlla se l' applicazione gira in 'debug mode' oppure no <br>
      * Di default (per sicurezza) uguale a true <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static boolean usaDebug;
 
     /**
      * Controlla se l' applicazione è multi-company oppure no <br>
      * Di default (per sicurezza) uguale a true <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      * Se usaCompany=true anche usaSecurity deve essere true <br>
      */
     public static boolean usaCompany;
@@ -51,26 +51,41 @@ public class FlowVar {
      * Se si usa il login, occorre la classe SecurityConfiguration <br>
      * Se non si usa il login, occorre disabilitare l'Annotation @EnableWebSecurity di SecurityConfiguration <br>
      * Di default (per sicurezza) uguale a true <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      * Se usaCompany=true anche usaSecurity deve essere true <br>
      * Può essere true anche se usaCompany=false <br>
      */
     public static boolean usaSecurity;
 
 
+    /**
+     * Nome identificativo minuscolo dell' applicazione nella directory dei projects Idea <br>
+     * Usato come base per costruire i path delle varie directory <br>
+     * Spesso coincide (non obbligatoriamente) con projectNameModulo <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
+     */
+    public static String projectNameDirectoryIdea;
 
     /**
-     * Nome identificativo dell' applicazione <br>
+     * Nome identificativo minuscolo del modulo dell' applicazione <br>
+     * Usato come parte del path delle varie directory <br>
+     * Spesso coincide (non obbligatoriamente) con projectNameIdea <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
+     */
+    public static String projectNameModulo;
+
+    /**
+     * Nome identificativo maiuscolo dell' applicazione <br>
      * Usato (eventualmente) nella barra di menu in testa pagina <br>
      * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
-    public static String projectName;
+    public static String projectNameUpper;
 
 
     /**
      * Descrizione completa dell' applicazione <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static String projectDescrizione;
 
@@ -78,7 +93,7 @@ public class FlowVar {
     /**
      * Versione dell' applicazione <br>
      * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static double projectVersion;
 
@@ -86,7 +101,7 @@ public class FlowVar {
     /**
      * Data della versione dell' applicazione <br>
      * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static LocalDate versionDate;
 
@@ -94,7 +109,7 @@ public class FlowVar {
     /**
      * Eventuali informazioni aggiuntive da utilizzare nelle informazioni <br>
      * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static String projectNote;
 
@@ -102,20 +117,15 @@ public class FlowVar {
     /**
      * Flag per usare le icone VaadinIcon <br>
      * In alternativa usa le icone 'lumo' <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static boolean usaVaadinIcon;
-
-    //    /**
-    //     * Eventuali titolo della pagina <br>
-    //     */
-    //    public static String layoutTitle;
 
 
     /**
      * Classe da usare per lo startup del programma <br>
      * Di default FlowData oppure possibile sottoclasse del progetto <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static Class dataClazz;
 
@@ -143,20 +153,19 @@ public class FlowVar {
     //     */
     //    public static Class companyServiceClazz = CompanyService.class;
 
-
-//    /**
-//     * Nome da usare per recuperare la lista delle Company (o sottoclassi) <br>
-//     * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>
-//     * Eventuale casting a carico del chiamante <br>
-//     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
-//     */
-//    public static String companyClazzName;
+    //    /**
+    //     * Nome da usare per recuperare la lista delle Company (o sottoclassi) <br>
+    //     * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>
+    //     * Eventuale casting a carico del chiamante <br>
+    //     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+    //     */
+    //    public static String companyClazzName;
 
     /**
      * Classe da usare per le Company (o sottoclassi) <br>
      * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>
      * Eventuale casting a carico del chiamante <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static Class companyClazz;
 
@@ -164,7 +173,7 @@ public class FlowVar {
     /**
      * Path per recuperare dalle risorse un' immagine da inserire nella barra di menu di MainLayout. <br>
      * Ogni applicazione può modificarla <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static String pathLogo;
 
@@ -180,14 +189,14 @@ public class FlowVar {
     /**
      * Lista delle enum di preferenze specifiche. <br>
      * Quelle generali dell'applicazione sono in AEPreferenza.values() <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static List<AIPreferenza> preferenzeSpecificheList;
 
     /**
      * Lista delle enum di bottoni specifici. <br>
      * Quelli generali dell'applicazione sono in AEButton.values() <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static List<AIButton> bottoniSpecificiList;
 
@@ -195,7 +204,7 @@ public class FlowVar {
      * Mostra i 2 (incrementabili) packages di admin (preferenza, versione) <br>
      * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
      * Di default (per sicurezza) uguale a false <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static boolean usaAdminPackages;
 
@@ -203,7 +212,7 @@ public class FlowVar {
      * Mostra i 3 (incrementabili) packages di gestione (address, via, persona) <br>
      * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
      * Di default (per sicurezza) uguale a false <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static boolean usaGestionePackages;
 
@@ -211,7 +220,7 @@ public class FlowVar {
      * Mostra i 4 (fissi) packages geografici (stato, regione, provincia, comune) <br>
      * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
      * Di default (per sicurezza) uguale a false <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static boolean usaGeografiaPackages;
 
@@ -219,7 +228,7 @@ public class FlowVar {
      * Mostra i 4 (fissi) packages cronologici (secolo, anno, mese, giorno) <br>
      * Anche se non visibili nel menu, sono sempre disponibili col nome della @Route <br>
      * Di default (per sicurezza) uguale a false <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static boolean usaCronoPackages;
 

@@ -61,26 +61,21 @@ public class MeseLogicList extends LogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-
-        //                super.usaBottoneExport = true;//@todo Funzionalità ancora da implementare
     }
 
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     *
-     * @return una lista di elementi html di tipo 'span'
      */
     @Override
-    protected List<Span> getSpanList() {
-        List<Span> lista = new ArrayList<>();
+    protected void fixSpanList() {
+        String message;
 
-        lista.add(getSpan("Mesi dell' anno, coi relativi giorni. Tiene conto degli anni bisestili per il mese di febbraio."));
-        lista.add(getSpan("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi."));
-        lista.add(getSpanDebug("Bottoni 'DeleteAll', 'Reset' e 'New' solo in alcune applicazioni. Deve essere regolato in backend.boot.xxxBoot.fixVariabili()"));
-
-        return lista;
+        addSpanBlu("Mesi dell' anno, coi relativi giorni. Tiene conto degli anni bisestili per il mese di febbraio.");
+        addSpanBlu("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.");
+        message= String.format("Bottoni %s e %s solo in alcune applicazioni. Deve essere regolato in backend.boot.xxxBoot.fixVariabili().",html.bold("DeleteAll"),html.bold("Reset"));
+        addSpanRosso(message);
     }
 
 

@@ -44,7 +44,7 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Giorno", keyPropertyName = "giorno", usaCompany = false, usaCreazione = false, usaModifica = false, usaResetIniziale = true)
-@AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
+@AIView(menuIcon = VaadinIcon.CALENDAR, searchProperty = "giorno", sortProperty = "ordine")
 @AIList(fields = "ordine,giorno", usaRowIndex = false)
 @AIForm(fields = "ordine,giorno,mese", usaSpostamentoTraSchede = false)
 public class Giorno extends AEntity {
@@ -80,7 +80,7 @@ public class Giorno extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Mese.class)
+    @AIField(type = AETypeField.combo, comboClazz = Mese.class, usaComboBoxGrid = true)
     @AIColumn(widthEM = 8)
     public Mese mese;
 

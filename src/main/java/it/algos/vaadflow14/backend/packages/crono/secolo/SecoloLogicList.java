@@ -68,20 +68,12 @@ public class SecoloLogicList extends LogicList {
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     *
-     * @return una lista di elementi html di tipo 'span'
      */
     @Override
-    protected List<Span> getSpanList() {
-        List<Span> lista = new ArrayList<>();
-
-        lista.add(html.getSpanBlu("Secoli ante e post Cristo. Venti secoli AnteCristo e ventun secoli DopoCristo."));
-        lista.add(html.getSpanBlu("Sono indicati gli anni iniziali e finali di ogni secolo. L' anno 0 NON esiste nei calendari."));
-        if (AEPreferenza.usaDebug.is()) {
-            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta'"));
-        }
-
-        return lista;
+    protected void fixSpanList() {
+        addSpanBlu("Secoli ante e post Cristo. Venti secoli AnteCristo e ventun secoli DopoCristo");
+        addSpanBlu("Sono indicati gli anni iniziali e finali di ogni secolo. L' anno 0 NON esiste nei calendari.");
+        addSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed i comboBox 'Stato' e 'Status'");
     }
 
 

@@ -30,6 +30,8 @@ import java.util.*;
  * User: gac
  * Date: mar, 28-apr-2020
  * Time: 21:18
+ * <p>
+ * Classe astratta per i test <br>
  */
 @AIScript(sovraScrivibile = false)
 public abstract class ATest {
@@ -126,6 +128,9 @@ public abstract class ATest {
 
     @InjectMocks
     protected AWikiApiService wikiApi;
+
+    @InjectMocks
+    protected AGeograficService geografic;
 
     @InjectMocks
     protected AFileService file;
@@ -252,6 +257,8 @@ public abstract class ATest {
 
     protected Integer[] ottenutoInteroMatrice;
 
+    protected Map<String, Object> mappa;
+
     protected Map<String, String> mappaSorgente;
 
     protected Map<String, String> mappaPrevista;
@@ -278,7 +285,6 @@ public abstract class ATest {
 
     protected AEntity entityBean;
 
-
     protected Query query;
 
     protected BasicDBObject objectQuery;
@@ -302,6 +308,12 @@ public abstract class ATest {
     protected byte[] bytes;
 
     protected Class clazz;
+
+    protected long inizio;
+
+    protected int cicli;
+
+    protected int caratteriVisibili;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -342,6 +354,9 @@ public abstract class ATest {
 
         MockitoAnnotations.initMocks(wikiApi);
         Assertions.assertNotNull(wikiApi);
+
+        MockitoAnnotations.initMocks(geografic);
+        Assertions.assertNotNull(geografic);
 
         MockitoAnnotations.initMocks(file);
         Assertions.assertNotNull(file);
@@ -402,6 +417,9 @@ public abstract class ATest {
      * Qui passa ad ogni test delle sottoclassi <br>
      */
     protected void setUp() {
+        inizio = System.currentTimeMillis();
+        cicli = 1;
+        caratteriVisibili = 80;
         previstoBooleano = false;
         ottenutoBooleano = false;
         sorgente = VUOTA;
@@ -426,6 +444,7 @@ public abstract class ATest {
         filtro = null;
         listaFiltri = new ArrayList<>();
         mappaFiltri = new HashMap<>();
+        mappa = new HashMap<>();
         listaBean = null;
         listaStr = null;
         listaFields = null;

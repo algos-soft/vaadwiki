@@ -58,7 +58,7 @@ public class WizDialogUpdateProject extends WizDialog {
             topLayout = fixSezione("Aggiornamento di un progetto", "green");
         }
         else {
-            topLayout = fixSezione(String.format("Aggiornamento di %s", AEWizCost.nameProjectCurrentUpper.get()), "green");
+            topLayout = fixSezione(String.format("Aggiornamento di %s", AEWizCost.nameCurrentProjectUpper.get()), "green");
         }
         this.add(topLayout);
 
@@ -217,7 +217,7 @@ public class WizDialogUpdateProject extends WizDialog {
         //--se siamo in un progetto specifico, recupera il path da quello corrente
         else {
             //--recupera il path completo del progetto in esecuzione
-            pathProject = AEWizCost.pathCurrent.get();
+            pathProject = AEWizCost.pathCurrentProjectRoot.get();
 
             //--recupera la directory del progetto in esecuzione
             directoryAndProjectModuloLower = file.estraeClasseFinale(pathProject);
@@ -244,7 +244,7 @@ public class WizDialogUpdateProject extends WizDialog {
         }
 
         //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
-        return super.fixValoriDerivati(pathProject, projectNameUpper, VUOTA);
+        return super.fixValoriInseriti(pathProject, projectNameUpper, VUOTA);
     }
 
 

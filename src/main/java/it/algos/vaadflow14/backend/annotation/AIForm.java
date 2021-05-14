@@ -14,12 +14,21 @@ import java.lang.annotation.*;
  * Date: lun, 27-apr-2020
  * Time: 14:55
  * <p>
- * Annotation per le Entity Class <br>
- * Lista dei fields automatici nel dialogo del Form <br>
+ * Annotation Algos per le Entity Class <br>
+ * <p>
+ * Regola:
+ * fields()="all fields" -> List of visible fields on Form
+ * widthID()=16 -> The width of the ID field
+ * operationForm()=AEOperation.edit -> Tipologia di operazioni ammesse sul Form
+ * usaSpostamentoTraSchede()=false -> Flag per l'utilizzo delle frecce di spostamento tra scheda precedente e successiva
+ * <p>
+ * Standard:
+ * AIList(fields = "code,descrizione", usaSpostamentoTraSchede = true)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE) //--Class, interface (including annotation type), or enum declaration
-public @interface AIForm  {
+@Target(ElementType.TYPE)
+//--Class, interface (including annotation type), or enum declaration
+public @interface AIForm {
 
 
     /**
@@ -44,7 +53,7 @@ public @interface AIForm  {
 
 
     /**
-     * (Optional) tipologia di operazioni ammesse sul Form da aprire
+     * (Optional) tipologia di operazioni ammesse sul Form
      * Di default AEOperation.edit
      *
      * @return the status
@@ -53,7 +62,7 @@ public @interface AIForm  {
 
 
     /**
-     * (Optional) utilizzo delle frecce per spostarsi tra schede precedenti e successive
+     * (Optional) Flag per l'utilizzo delle frecce di spostamento tra scheda precedente e successiva
      * Di default false
      *
      * @return the status

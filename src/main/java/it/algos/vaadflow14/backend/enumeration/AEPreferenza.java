@@ -38,6 +38,7 @@ public enum AEPreferenza implements AIPreferenza {
     numeroBottoni(BUTTONS_NUMBER, "Numero di bottoni nella prima riga sopra la Grid", AETypePref.integer, 4, false, false, false),
     usaLogVisibile(PREF_USA_LOG_VIDEO, "Visualizza il log nella finestra", AETypePref.bool, true, false),
     usaButtonOnlyIcon(PREF_USA_BUTTON_ONLY_ICON, "Usa solo l'icona del bottone e non il testo", AETypePref.bool, true, false),
+    usaSpanHeaderRossi(PREF_USA_SPAN_HEADER_ROSSI, "Usa gli avvisi in rosso nell'header della lista", AETypePref.bool, false, false),
     durataAvviso(PREF_DURATA_AVVISO_VIDEO, "Durata in millisecondi dell'avviso a video", AETypePref.integer, 2000, false, false, false),
     usaMenuReset(PREF_USA_MENU_RESET, "Usa i bottoni deleteAll e reset nelle xxxLogicList (se previsto dal package)", AETypePref.bool, true, false, true, false, VUOTA),
     usaMenuAdmin(PREF_USA_MENU_ADMIN, "Usa i menu del gruppo admin", AETypePref.bool, false, false, true, false, "Mostra i 2 (incrementabili) packages di admin (preferenza, versione). Anche se non visibili nel menu, sono sempre disponibili col nome della @Route."),

@@ -29,7 +29,7 @@ import javax.validation.constraints.*;
  * Annotated with Spring: @SpringComponent (vaadin), @QueryEntity (querydsl), @Document (mongodb), @TypeAlias (data) <br>
  * Annotated with @SpringComponent, @QueryEntity, @Document, @TypeAlias <br>
  * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
- * Annotated with Algos: @AIScript per controllare la ri-creazione di questo file dal Wizard <br>
+ * Annotated with Algos: @AIScript per controllare il typo di file e la ri-creazione con Wizard <br>
  * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
  * Annotated with Algos: @AIView per info su menu, icon, route, search e sort <br>
  * Annotated with Algos: @AIList per info sulla Grid e sulle colonne <br>

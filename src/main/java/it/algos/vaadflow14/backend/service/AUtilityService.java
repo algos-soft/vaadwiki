@@ -217,9 +217,11 @@ public class AUtilityService extends AAbstractService {
     public ComboBox creaComboBox(final Class<? extends AEntity> entityClazz, final String fieldName, DataProvider dataProvider, final int width, final Object initialValue) {
         ComboBox combo = null;
         Field reflectionJavaField = null;
-        Class comboEnumClazz = null;
+        Class comboClazz = null;
+        Class enumClazz = null;
         String widthEM = width > 0 ? width + TAG_EM : VUOTA;
         Sort sortSpring;
+        List items;
 
         reflectionJavaField = reflection.getField(entityClazz, fieldName);
         AETypeField type = annotation.getColumnType(reflectionJavaField);
@@ -228,13 +230,6 @@ public class AUtilityService extends AAbstractService {
             return null;
         }
 
-        if (type == AETypeField.combo) {
-            comboEnumClazz = annotation.getComboClass(reflectionJavaField);
-            sortSpring = annotation.getSortSpring(comboEnumClazz);
-        }
-        if (type == AETypeField.enumeration) {
-            comboEnumClazz = annotation.getEnumClass(reflectionJavaField);
-        }
         combo = new ComboBox();
         combo.setWidth(widthEM);
         combo.setPreventInvalidInput(true);
@@ -243,9 +238,21 @@ public class AUtilityService extends AAbstractService {
         combo.setClearButtonVisible(true);
         combo.setRequired(false);
 
-        dataProvider = dataProvider != null ? dataProvider : provider.creaDataProvider(comboEnumClazz);
-        if (dataProvider != null) {
-            combo.setDataProvider(dataProvider);
+        if (type == AETypeField.combo) {
+            comboClazz = annotation.getComboClass(reflectionJavaField);
+            //            sortSpring = annotation.getSortSpring(comboClazz);
+            dataProvider = dataProvider != null ? dataProvider : provider.creaDataProvider(comboClazz);
+            if (dataProvider != null) {
+                combo.setDataProvider(dataProvider);
+            }
+        }
+
+        if (type == AETypeField.enumeration) {
+            enumClazz = annotation.getEnumClass(reflectionJavaField);
+            items =field.getEnumerationItems(reflectionJavaField);
+            if (items != null) {
+                combo.setItems(items);
+            }
         }
 
         if (initialValue != null) {

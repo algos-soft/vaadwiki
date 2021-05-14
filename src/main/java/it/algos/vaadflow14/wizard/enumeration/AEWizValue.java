@@ -9,7 +9,7 @@ package it.algos.vaadflow14.wizard.enumeration;
  */
 public enum AEWizValue {
 
-    costante("Costanti", false, false, "AEWizValue.costante - Costanti con valore statico fisso e non modificabile."),
+    costante("Costanti", false, false, "AEWizValue.costante - Costanti con valore statico fisso e non modificabile. Possono (devono) cambiare su un altro computer."),
     calcolato("Calcolati", false, false, "AEWizValue.calcolato - Valori in base al programma in uso. Regolati automaticamente alla partenza di Wizard (prima dei dialoghi) e poi statici."),
     inserito("Inseriti", true, true, "AEWizValue.inserito - Valori in base al project o al package selezionato. Inseriti dall'utente (con un combobox). Regolati all'uscita del dialogo."),
     derivato("Derivati", false, true, "AEWizValue.derivato - Valori in base al project o al package selezionato. Derivati automaticamente da un precedente valore inserito dall'utente."),

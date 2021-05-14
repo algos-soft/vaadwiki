@@ -69,7 +69,7 @@ public class Preferenza extends AEntity {
      * tipo di dato memorizzato (obbligatorio)
      */
     @NotNull
-    @AIField(type = AETypeField.enumeration, enumClazz = AETypePref.class, required = true, focus = true, widthEM = 12)
+    @AIField(type = AETypeField.enumeration, enumClazz = AETypePref.class, usaComboBoxGrid = true, required = true, focus = true, widthEM = 12)
     @AIColumn(widthEM = 6, sortable = true)
     public AETypePref type;
 

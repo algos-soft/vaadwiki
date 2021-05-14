@@ -233,7 +233,7 @@ public class WizDialogNewProject extends WizDialog {
         }
 
         //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
-        return super.fixValoriDerivati(pathProject, projectNameUpper, VUOTA);
+        return super.fixValoriInseriti(pathProject, projectNameUpper, VUOTA);
     }
 
     /**

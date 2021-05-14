@@ -54,14 +54,14 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
 
         //--recupera il path completo del progetto in esecuzione
         //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
-        pathProject = AEWizCost.pathCurrent.get();
+        pathProject = AEWizCost.pathCurrentProjectRoot.get();
 
         //--recupera il nome (maiuscolo) del progetto in esecuzione
         //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
-        projectNameUpper = AEWizCost.nameProjectCurrentUpper.get();
+        projectNameUpper = AEWizCost.nameCurrentProjectUpper.get();
 
         //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
-         super.fixValoriDerivati(pathProject, projectNameUpper, VUOTA);
+         super.fixValoriInseriti(pathProject, projectNameUpper, VUOTA);
     }
 
     /**
@@ -307,7 +307,7 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
 
         //--recupera il path completo del progetto in esecuzione
         //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
-        pathProject = AEWizCost.pathCurrent.get();
+        pathProject = AEWizCost.pathCurrentProjectRoot.get();
 
         //-recupera il nome (maiuscolo) del progetto in esecuzione, usando il valore del file xxxApplication
         //--estraendo la parte del nome precedente il tag 'Application'
@@ -319,7 +319,7 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
         }
 
         //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
-        return super.fixValoriDerivati(pathProject, projectNameUpper, packageName);
+        return super.fixValoriInseriti(pathProject, projectNameUpper, packageName);
     }
 
     /**

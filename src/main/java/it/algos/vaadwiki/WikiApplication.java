@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import it.algos.vaadflow14.backend.annotation.AIScript;
+import org.vaadin.artur.helpers.*;
 
 /**
  * Project vaadwiki
@@ -52,7 +53,7 @@ public class WikiApplication extends SpringBootServletInitializer {
      * @param args eventuali parametri in ingresso
      */
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(WikiApplication.class, args);
+        LaunchUtil.launchBrowserInDevelopmentMode(SpringApplication.run(WikiApplication.class, args));
     }// end of SpringBoot constructor
 
 

@@ -70,7 +70,7 @@ public class ALayoutService extends AAbstractService {
         //        final Image image = new Image(resolvedImage, "");
         //        image.setHeight("24px");
         //        image.setWidth("24px");
-        String check = FlowVar.projectName;
+        String check = FlowVar.projectNameUpper;
         final Label title = new Label(check);
         //        top.add(image, title);//@todo Funzionalità ancora da implementare
         top.add(title);

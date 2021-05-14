@@ -33,7 +33,7 @@ public class GenereServiceTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    GenereService service;
+    it.algos.vaadwiki.backend.packages.genere.GenereService service;
 
 
     /**

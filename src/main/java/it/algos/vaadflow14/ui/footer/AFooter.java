@@ -131,7 +131,7 @@ public class AFooter extends VerticalLayout {
         //            }// end of if/else cycle
         //        }// end of if/else cycle
 
-        message = DEVELOPER_COMPANY + SEP + projectName;
+        message = DEVELOPER_COMPANY + SEP + projectNameUpper;
         message += SPAZIO;
         message += FlowVar.projectVersion;
         message += " del ";

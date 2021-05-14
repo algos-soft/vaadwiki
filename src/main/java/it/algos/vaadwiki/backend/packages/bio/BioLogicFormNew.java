@@ -196,7 +196,7 @@ public class BioLogicFormNew extends WikiLogicForm {
 
         String wikiTitle = getWikiTitle();
         if (text.isValid(getWikiTitle())) {
-            textTmpl = bio.leggeTmpl(wikiTitle);
+            textTmpl = wikiBot.leggeTmpl(wikiTitle);
             if (text.isValid(textTmpl)) {
                 fieldTmpBioServer.setValue(textTmpl);
             }

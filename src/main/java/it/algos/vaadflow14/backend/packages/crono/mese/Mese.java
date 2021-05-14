@@ -46,7 +46,7 @@ import javax.validation.constraints.*;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Mese", keyPropertyName = "mese", usaCompany = false, usaCreazione = true, usaModifica = true, usaDelete = true, usaResetIniziale = true)
 @AIView(menuName = "Mese", menuIcon = VaadinIcon.CALENDAR, searchProperty = "mese", sortProperty = "ordine")
-@AIList(fields = "ordine,mese,giorni,giorniBisestile,sigla", usaRowIndex = false, usaReset = true)
+@AIList(fields = "ordine,mese,giorni,giorniBisestile,sigla", usaRowIndex = false, usaResetMenu = true)
 @AIForm(fields = "mese,giorni,giorniBisestile,sigla", usaSpostamentoTraSchede = true)
 public class Mese extends AEntity {
 

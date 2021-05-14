@@ -27,8 +27,6 @@ public abstract class FlowCost {
 
     public static final int MAX = 2147483647;
 
-    public static Date DATA_NULLA = new Date(70, 0, 1);
-
     public static final String NAME_VAADFLOW = "vaadflow14";
 
     public static final String PATH_RISORSE = "src/main/resources/META-INF/resources/";
@@ -42,6 +40,8 @@ public abstract class FlowCost {
     public static final String TAG_FLOW_DATA = "flowdata";
 
     public static final String VUOTA = "";
+
+    public static final String ERRORE = "Errore";
 
     public static final String SPAZIO = " ";
 
@@ -136,7 +136,6 @@ public abstract class FlowCost {
     public final static String FIELD_NAME_DESCRIZIONE = "descrizione";
 
     public final static String FIELD_NAME_COMPANY = "company";
-
 
     /**
      * The constant ROUTE_NAME.
@@ -244,7 +243,6 @@ public abstract class FlowCost {
     public static final String VERO = "true";
 
     public static final String FALSO = "false";
-
 
     /**
      * tag per la singola parentesi tonda di apertura
@@ -365,7 +363,6 @@ public abstract class FlowCost {
 
     public static final List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
 
-
     //--Costanti usate per identificare alcune company
     public static final String COMPANY_ALGOS = "algos";
 
@@ -390,6 +387,8 @@ public abstract class FlowCost {
     public static final String PREF_USA_LOG_VIDEO = "usaLogVideo";
 
     public static final String PREF_USA_BUTTON_ONLY_ICON = "usaButtonOnlyIcon";
+
+    public static final String PREF_USA_SPAN_HEADER_ROSSI = "usaSpanHeaderRossi";
 
     public static final String PREF_DURATA_AVVISO_VIDEO = "durataAvvisoVideo";
 
@@ -418,6 +417,8 @@ public abstract class FlowCost {
     public static final double ICON_WIDTH = 3.0;
 
     public static final int COMBO_WIDTH = 10;
+
+    public static Date DATA_NULLA = new Date(70, 0, 1);
 
 
 }

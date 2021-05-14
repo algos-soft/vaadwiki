@@ -58,7 +58,7 @@ public class WizElaboraUpdateProject extends WizElabora {
                     case fileSovrascriveSempreAncheSeEsiste:
                     case fileSoloSeNonEsiste:
                     case fileCheckFlagSeEsiste:
-                        wizService.copyFile(copyWiz, srcPath + value, destPath + value, AEWizCost.nameProjectCurrentUpper.get().toLowerCase());
+                        wizService.copyFile(copyWiz, srcPath + value, destPath + value, AEWizCost.nameCurrentProjectUpper.get().toLowerCase());
                         break;
                     case sourceSovrascriveSempreAncheSeEsiste:
                     case sourceSoloSeNonEsiste:

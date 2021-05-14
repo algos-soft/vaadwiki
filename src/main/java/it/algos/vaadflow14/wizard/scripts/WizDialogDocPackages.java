@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.*;
-import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -38,7 +37,7 @@ public class WizDialogDocPackages extends WizDialog {
 
         //--recupera il path completo del progetto in esecuzione
         //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
-        pathProject = AEWizCost.pathCurrent.get();
+        pathProject = AEWizCost.pathCurrentProjectRoot.get();
 
         //-recupera il nome (maiuscolo) del progetto in esecuzione, usando il valore del file xxxApplication
         //--estraendo la parte del nome precedente il tag 'Application'
@@ -46,7 +45,7 @@ public class WizDialogDocPackages extends WizDialog {
         projectNameUpper = wizService.estraeProjectFromApplication();
 
         //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
-        super.fixValoriDerivati(pathProject, projectNameUpper, VUOTA);
+        super.fixValoriInseriti(pathProject, projectNameUpper, VUOTA);
     }
 
 
@@ -124,7 +123,7 @@ public class WizDialogDocPackages extends WizDialog {
         }
         else {
             //--recupera il path completo del progetto in esecuzione
-            pathProject = AEWizCost.pathCurrent.get();
+            pathProject = AEWizCost.pathCurrentProjectRoot.get();
         }
 
         if (text.isEmpty(pathProject)) {

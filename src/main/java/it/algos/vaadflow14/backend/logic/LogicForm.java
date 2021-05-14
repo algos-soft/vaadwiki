@@ -353,7 +353,7 @@ public abstract class LogicForm extends Logic {
             case conferma:
             case registra:
                 if (saveDaForm()) {
-                    this.back();
+                    this.backToList();
                 }
                 break;
             case prima:

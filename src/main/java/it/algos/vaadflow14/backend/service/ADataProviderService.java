@@ -102,8 +102,9 @@ public class ADataProviderService extends AAbstractService {
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                countCallback -> mongo.count(entityClazz, mappaFiltri)
-        );
+                countCallback -> mongo.fetch(entityClazz, mappaFiltri).size());
+//                countCallback -> mongo.count(entityClazz, mappaFiltri));
+
 
         return dataProvider;
     }

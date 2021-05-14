@@ -70,24 +70,24 @@ public class PrenomeLogicList extends WikiLogicList {
     }
 
 
-    /**
-     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto <br>
-     *
-     * @return una liste di 'span'
-     */
-    @Override
-    protected List<Span> getSpanList() {
-        List<Span> lista = new ArrayList<>();
-
-        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadPrenome));
-        lista.add(html.getSpanBlu("Progetto:Antroponimi/Nomi doppi."));
-        lista.add(html.getSpanVerde("Sono elencati i " + html.bold("nomi doppi") + " (ad esempio 'Maria Teresa'), per i quali il BioBot deve fare una lista di biografati una volta superate le " + html.bold("50") + " biografie."));
-        lista.add(html.getSpanVerde("Si veda anche la [[Categoria:Prenomi composti]]."));
-        lista.add(html.getSpanRosso("La lista " + html.bold("nome") + " prevede " + html.bold("solo") + " nomi singoli a cui vengono aggiunti questi " + html.bold("nomi doppi") + " accettabili."));
-        lista.add(html.getSpanRosso("Quando si crea la lista " + html.bold("nome") + ", i nomi doppi vengono scaricati ed aggiunti alla lista stessa."));
-        return lista;
-    }
+//    /**
+//     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+//     * DEVE essere sovrascritto <br>
+//     *
+//     * @return una liste di 'span'
+//     */
+//    @Override
+//    protected List<Span> getSpanList() {
+//        List<Span> lista = new ArrayList<>();
+//
+//        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadPrenome));
+//        lista.add(html.getSpanBlu("Progetto:Antroponimi/Nomi doppi."));
+//        lista.add(html.getSpanVerde("Sono elencati i " + html.bold("nomi doppi") + " (ad esempio 'Maria Teresa'), per i quali il BioBot deve fare una lista di biografati una volta superate le " + html.bold("50") + " biografie."));
+//        lista.add(html.getSpanVerde("Si veda anche la [[Categoria:Prenomi composti]]."));
+//        lista.add(html.getSpanRosso("La lista " + html.bold("nome") + " prevede " + html.bold("solo") + " nomi singoli a cui vengono aggiunti questi " + html.bold("nomi doppi") + " accettabili."));
+//        lista.add(html.getSpanRosso("Quando si crea la lista " + html.bold("nome") + ", i nomi doppi vengono scaricati ed aggiunti alla lista stessa."));
+//        return lista;
+//    }
 
 
 }// end of Route class

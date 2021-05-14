@@ -67,7 +67,8 @@ public class PreferenzaLogicList extends LogicList {
         //        this.searchProperty = annotation.getSearchPropertyName(entityClazz);//@todo Funzionalità ancora da implementare
         //        this.usaBottoneDelete = false;//@todo Funzionalità ancora da implementare
         this.usaBottoneResetList = true;
-        this.usaBottoneNew = true;
+        this.usaBottoneSearch = true;
+        this.usaBottoneNew = false;
         this.usaBottoneExport = false;
         this.usaBottonePaginaWiki = false;
         //        this.wikiPageTitle = VUOTA;//@todo Funzionalità ancora da implementare
@@ -78,31 +79,27 @@ public class PreferenzaLogicList extends LogicList {
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     *
-     * @return una lista di elementi html di tipo 'span'
      */
     @Override
-    protected List<Span> getSpanList() {
-        List<Span> lista = new ArrayList<>();
-
-        lista.add(html.getSpanVerde("PreferenzaLogicList è @Scope " + html.bold("prototype") + " mentre PreferenzaService è " + html.bold("singleton")));
-        lista.add(html.getSpanVerde("PreferenzaLogicList è usato come normale classe del package di preferenze e viene ricreato per ogni Grid e Form"));
-        lista.add(html.getSpanVerde("PreferenzaService è usato per 'leggere' le preferenze da qualsiasi 'service' singleton"));
-        lista.add(html.getSpanVerde("Alcune preferenze sono Enumeration e possono essere lette direttamente: AEPreferenza.usaDebug.is()"));
-        lista.add(html.getSpanVerde("Altre preferenze sono inserite dall'utente e possono essere lette dal singleton APreferenzaService: pref.isBool(\"usaDebug\")"));
-        lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed il comboBox 'Type'"));
-
-        return lista;
+    protected void fixSpanList() {
+        addSpanBlu("PreferenzaLogicList è @Scope " + html.bold("prototype") + " mentre PreferenzaService è " + html.bold("singleton"));
+        addSpanBlu("PreferenzaLogicList è usato come normale classe del package di preferenze e viene ricreato per ogni Grid e Form");
+        addSpanBlu("PreferenzaService è usato per 'leggere' le preferenze da qualsiasi 'service' singleton");
+        addSpanBlu("Alcune preferenze sono Enumeration e possono essere lette direttamente: AEPreferenza.usaDebug.is()");
+        addSpanBlu("Altre preferenze sono inserite dall'utente e possono essere lette dal singleton APreferenzaService: pref.isBool(\"usaDebug\")");
+        addSpanRosso("Bottoni 'DeleteAll' e 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed il comboBox 'Type'");
     }
 
-    /**
-     * Costruisce una mappa di ComboBox di selezione e filtro <br>
-     * DEVE essere sovrascritto nella sottoclasse <br>
-     */
-//        @Override
-    protected void fixMappaComboBox() {
-        //        super.creaComboBox("type");
-    }
+
+//    /**
+//     * Regola una mappa di ComboBox (solo per la List e facoltativi) da usare nel wrapper getWrapButtonsTop() <br>
+//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     */
+//    @Override
+//    protected void fixMappaComboBox() {
+//        super.fixComboBox("type");
+//    }
+
 
     /**
      * Costruisce un wrapper di dati <br>

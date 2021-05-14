@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.backend.packages.geografica.stato;
 
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -65,9 +64,9 @@ public class StatoLogicList extends LogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm =   AEOperation.showOnly;
+        super.operationForm = AEOperation.showOnly;
         super.usaBottonePaginaWiki = true;
-//        super.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
+        //        super.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
         super.wikiPageTitle = "ISO_3166-1";
     }
 
@@ -75,22 +74,14 @@ public class StatoLogicList extends LogicList {
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     *
-     * @return una lista di elementi html di tipo 'span'
      */
     @Override
-    protected List<Span> getSpanList() {
-        List<Span> lista = new ArrayList<>();
-
-        lista.add(html.getSpanBlu("Stati del mondo. Codifica secondo ISO 3166-1"));
-//        lista.add(html.getSpanBlu("Recuperati dalla pagina wiki: " + wikiPageTitle));//@todo Funzionalità ancora da implementare
-        lista.add(html.getSpanBlu("Codici: numerico, alfa-due, alfa-tre e ISO locale"));
-        lista.add(html.getSpanBlu("Ordinamento alfabetico: prima Italia, UE e poi gli altri"));
-        if (AEPreferenza.usaDebug.is()) {
-            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField"));
-        }
-
-        return lista;
+    protected void fixSpanList() {
+        addSpanBlu("Stati del mondo. Codifica secondo ISO 3166-1");
+        //        addSpanBlu("Recuperati dalla pagina wiki: " + wikiPageTitle));//@todo Funzionalità ancora da implementare
+        addSpanBlu("Codici: numerico, alfa-due, alfa-tre e ISO locale");
+        addSpanBlu("Ordinamento alfabetico: prima Italia, UE e poi gli altri");
+        addSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField");
     }
 
 

@@ -3,7 +3,6 @@ package it.algos.unit;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadwiki.backend.service.*;
-import it.algos.vaadwiki.wiki.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
@@ -12,26 +11,25 @@ import org.mockito.*;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: sab, 08-mag-2021
- * Time: 11:06
+ * Date: lun, 10-mag-2021
+ * Time: 14:07
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("testAllValido")
-@DisplayName("Test sul service base ABioService")
+@Tag("WikiBotServiceTest")
+@DisplayName("Test di unit")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class BioServiceTest extends ATest {
+public class WikiBotServiceTest extends ATest {
 
-    public static final String PAGINA_PIOZZANO = "Piozzano";
 
     /**
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    ABioService service;
+    AWikiBotService service;
 
 
     /**
@@ -62,39 +60,27 @@ public class BioServiceTest extends ATest {
         super.setUp();
     }
 
-//    @Test
-//    @Order(1)
-//    @DisplayName("1 - leggeTmpl")
-//    void leggeTmpl() {
-//
-//        sorgente = "Guido Rossi";
-//        ottenuto = service.leggeTmpl(sorgente);
-//        assertTrue(text.isValid(ottenuto));
-//        assertTrue(ottenuto.startsWith(previsto));
-//        System.out.println(VUOTA);
-//        System.out.println(VUOTA);
-//        System.out.println("1 - Legge un template bio");
-//        System.out.println(VUOTA);
-//        System.out.println(ottenuto);
-//    }
-//
-//    @Test
-//    @Order(2)
-//    @DisplayName("2 - leggePagina")
-//    void leggePagina() {
-//        Pagina pagina = null;
-//        sorgente = PAGINA_PIOZZANO;
-//        sorgente2 = "xyz";
-//
-//        pagina = service.leggePagina(VUOTA);
-//        assertNull(pagina);
-//
-//        pagina = service.leggePagina(sorgente2);
-//        assertNull(pagina);
-//
-//        pagina = service.leggePagina(sorgente);
-//        assertNotNull(pagina);
-//    }
+    @Test
+    @Order(1)
+    @DisplayName("1 - legge (come user) un template")
+    public void leggeTmpl() {
+        sorgente = "Guido Rossi";
+        previsto = "{{Bio";
+
+        ottenuto = service.leggeTmpl(sorgente);
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+
+        System.out.println("2 - Legge il testo wiki della pagina wiki.");
+        System.out.println("2 - Usa le API base SENZA loggarsi.");
+        System.out.println("2 - Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println("2 - Sorgente restituito in formato visibile/leggibile");
+        System.out.println(String.format("2 - Tempo impiegato per leggere %d pagine: %s", cicli, date.deltaTextEsatto(inizio)));
+
+        System.out.println("1 - Legge un template bio");
+        System.out.println(VUOTA);
+        System.out.println(ottenuto);
+    }
 
 
     /**

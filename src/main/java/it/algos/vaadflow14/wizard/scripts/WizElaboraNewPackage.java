@@ -61,7 +61,7 @@ public class WizElaboraNewPackage extends WizElabora {
 
         if (file.isNotEsisteDirectory(AEWizCost.pathTargetPackageSlash.get())) {
             if (file.creaDirectory(AEWizCost.pathTargetPackageSlash.get())) {
-                message = String.format("Creata in %s la directory ../packages/%s per un nuovo package che non esisteva.", AEWizCost.nameProjectCurrentUpper.get(), AEWizCost.nameTargetPackage.get());
+                message = String.format("Creata in %s la directory ../packages/%s per un nuovo package che non esisteva.", AEWizCost.nameCurrentProjectUpper.get(), AEWizCost.nameTargetPackage.get());
                 logger.log(AETypeLog.wizard, message);
             }
         }
