@@ -220,7 +220,6 @@ public class Wizard extends VerticalLayout {
         layout.setSpacing(false);
         H3 paragrafo = new H3(WizCost.TITOLO_NUOVO_PROGETTO);
         paragrafo.getElement().getStyle().set("color", "blue");
-        this.add(paragrafo);
 
         layout.add(new Label("Crea un nuovo project IntelliJIdea, nella directory 'IdeaProjects'"));
         layout.add(new Label("Seleziona un progetto vuoto tra quelli esistenti. Regola alcuni flags iniziali"));
@@ -231,6 +230,7 @@ public class Wizard extends VerticalLayout {
         dialogNewProject = appContext.getBean(WizDialogNewProject.class);
         bottone.addClickListener(event -> dialogNewProject.open(this::elaboraNewProject));
 
+        this.add(paragrafo);
         layout.add(bottone);
         this.add(layout);
     }
@@ -244,37 +244,30 @@ public class Wizard extends VerticalLayout {
 
     public void paragrafoUpdateProject() {
         VerticalLayout layout = new VerticalLayout();
+        HorizontalLayout bottoni = new HorizontalLayout();
         layout.setMargin(false);
         layout.setPadding(false);
         layout.setSpacing(false);
-        H3 paragrafo = new H3();
-        String titolo;
-        String titoloIni;
+        H3 paragrafo;
+        Label label;
 
         if (AEFlag.isBaseFlow.is()) {
-            titolo = WizCost.TITOLO_MODIFICA_PROGETTO;
+            paragrafo = new H3(WizCost.TITOLO_MODIFICA_PROGETTO);
+            label = new Label("Seleziona un progetto dalla enumeration AEProgetto. Regola alcuni flags per le modifiche");
         }
         else {
-            titolo = WizCost.TITOLO_MODIFICA_QUESTO_PROGETTO + " (" + AEWizCost.nameCurrentProjectUpper.get() + ")";
+            paragrafo = new H3(String.format("Modifica del modulo %s del progetto %s", AEWizCost.nameVaadFlow14Lower.get(), AEWizCost.nameCurrentProjectUpper.get()));
+            label = new Label("Update del modulo base di questo progetto. Regola alcuni flags per le modifiche");
         }
-
-        paragrafo.setText(titolo);
         paragrafo.getElement().getStyle().set("color", "blue");
-        this.add(paragrafo);
 
-        if (AEFlag.isBaseFlow.is()) {
-            titoloIni = "Seleziona un progetto dalla enumeration AEProgetto.";
-        }
-        else {
-            titoloIni = "Update del modulo vaadflow14 di questo progetto.";
-        }
-        layout.add(new Label(titoloIni + " Regola alcuni flags per le modifiche"));
-
-        Button bottone = new Button("Update project");
+        Button bottone = new Button(String.format("Update modulo %s", AEWizCost.nameVaadFlow14Lower.get()));
         bottone.getElement().setAttribute("theme", "primary");
         bottone.addClickListener(event -> dialogUpdateProject.open(this::elaboraUpdateProject));
+        bottoni.add(bottone);
 
-        layout.add(bottone);
+        this.add(paragrafo);
+        layout.add(label, bottoni);
         this.add(layout);
     }
 
@@ -288,29 +281,25 @@ public class Wizard extends VerticalLayout {
         layout.setMargin(false);
         layout.setPadding(false);
         layout.setSpacing(false);
-        H3 paragrafo = new H3();
-        String titolo;
-        String titoloIni;
-
-        titolo = WizCost.TITOLO_MODIFICA_MODULO;
-
-        paragrafo.setText(titolo);
-        paragrafo.getElement().getStyle().set("color", "blue");
-        this.add(paragrafo);
+        H3 paragrafo;
+        Label label;
 
         if (AEFlag.isBaseFlow.is()) {
-            titoloIni = "Seleziona un modulo dalla enumeration AEProgetto.";
+            paragrafo = new H3(WizCost.TITOLO_MODIFICA_MODULO);
+            label = new Label("Seleziona un modulo dalla enumeration AEProgetto. Regola alcuni flags per le modifiche");
         }
         else {
-            titoloIni = "Update del modulo di questo progetto.";
+            paragrafo = new H3(String.format("Modifica del modulo %s del progetto %s", AEWizCost.nameCurrentProjectModulo.get(), AEWizCost.nameCurrentProjectUpper.get()));
+            label = new Label("Update del modulo corrente di questo progetto. Regola alcuni flags per le modifiche");
         }
-        layout.add(new Label(titoloIni + " Regola alcuni flags per le modifiche"));
+        paragrafo.getElement().getStyle().set("color", "blue");
 
-        Button bottone = new Button("Update modulo");
+        Button bottone = new Button(String.format("Update modulo %s", AEWizCost.nameCurrentProjectModulo.get()));
         bottone.getElement().setAttribute("theme", "primary");
         bottone.addClickListener(event -> dialogUpdateModulo.open(this::elaboraUpdateModulo));
 
-        layout.add(bottone);
+        this.add(paragrafo);
+        layout.add(label, bottone);
         this.add(layout);
     }
 
@@ -325,31 +314,38 @@ public class Wizard extends VerticalLayout {
         layout.setMargin(false);
         layout.setPadding(false);
         layout.setSpacing(false);
-        H3 paragrafo = new H3(WizCost.TITOLO_NEW_PACKAGE);
-        paragrafo.getElement().getStyle().set("color", "blue");
-        this.add(paragrafo);
-
-        layout.add(new Label("Creazione di un nuovo package. Regola alcuni flags di possibili opzioni"));
+        H3 paragrafo;
+        Label label;
 
         if (AEFlag.isBaseFlow.is()) {
-            Button  bottone = new Button("New package " + AEWizCost.nameVaadFlow14Lower.get());
+            paragrafo = new H3(WizCost.TITOLO_NEW_PACKAGE);
+        }
+        else {
+            paragrafo = new H3(String.format("Nuovo package per il modulo %s", AEWizCost.nameCurrentProjectModulo.get()));
+        }
+        paragrafo.getElement().getStyle().set("color", "blue");
+        label = new Label("Creazione di un nuovo package. Regola alcuni flags di possibili opzioni");
+
+        if (AEFlag.isBaseFlow.is()) {
+            Button bottone = new Button(String.format("New package %s", AEWizCost.nameVaadFlow14Lower.get()));
             bottone.getElement().setAttribute("theme", "primary");
             bottone.addClickListener(event -> dialogNewPackage.open(this::elaboraNewPackage));
 
-            Button  bottone2 = new Button("New package " + AEWizCost.nameCurrentProjectModulo.get());
+            Button bottone2 = new Button(String.format("New package %s", AEWizCost.nameCurrentProjectModulo.get()));
             bottone2.getElement().setAttribute("theme", "primary");
             bottone2.addClickListener(event -> dialogNewPackage.open(this::elaboraNewPackage));
 
-            layout.add(new HorizontalLayout(bottone,bottone2));
+            layout.add(label, new HorizontalLayout(bottone, bottone2));
         }
         else {
-            Button  bottone = new Button("New package");
+            Button bottone = new Button(String.format("New package %s", AEWizCost.nameCurrentProjectModulo.get()));
             bottone.getElement().setAttribute("theme", "primary");
             bottone.addClickListener(event -> dialogNewPackage.open(this::elaboraNewPackage));
 
-            layout.add(bottone);
+            layout.add(label, bottone);
         }
 
+        this.add(paragrafo);
         this.add(layout);
     }
 
@@ -365,33 +361,40 @@ public class Wizard extends VerticalLayout {
         layout.setMargin(false);
         layout.setPadding(false);
         layout.setSpacing(false);
-        H3 paragrafo = new H3(WizCost.TITOLO_UPDATE_PACKAGE);
-        paragrafo.getElement().getStyle().set("color", "blue");
-
-        this.add(paragrafo);
-
-        layout.add(new Label("Update di un package esistente"));
-        layout.add(new Label("Seleziona il package dalla lista di quelli esistenti. Regola alcuni flags di possibili opzioni"));
+        H3 paragrafo;
+        Label label;
+        Label label2;
 
         if (AEFlag.isBaseFlow.is()) {
-            Button  bottone = new Button("Update package " + AEWizCost.nameVaadFlow14Lower.get());
+            paragrafo = new H3(WizCost.TITOLO_UPDATE_PACKAGE);
+        }
+        else {
+            paragrafo = new H3(String.format("Modifica package del modulo %s", AEWizCost.nameCurrentProjectModulo.get()));
+        }
+        paragrafo.getElement().getStyle().set("color", "blue");
+        label = new Label("Update di un package esistente");
+        label2 = new Label("Seleziona il package dalla lista di quelli esistenti. Regola alcuni flags di possibili opzioni");
+
+        if (AEFlag.isBaseFlow.is()) {
+            Button bottone = new Button("Update package " + AEWizCost.nameVaadFlow14Lower.get());
             bottone.getElement().setAttribute("theme", "primary");
             bottone.addClickListener(event -> dialogNewPackage.open(this::elaboraUpdatePackage));
 
-            Button  bottone2 = new Button("Update package " + AEWizCost.nameCurrentProjectModulo.get());
+            Button bottone2 = new Button("Update package " + AEWizCost.nameCurrentProjectModulo.get());
             bottone2.getElement().setAttribute("theme", "primary");
             bottone2.addClickListener(event -> dialogNewPackage.open(this::elaboraUpdatePackage));
 
-            layout.add(new HorizontalLayout(bottone,bottone2));
+            layout.add(label, label2, new HorizontalLayout(bottone, bottone2));
         }
         else {
-            Button bottone = new Button("Update package");
+            Button bottone = new Button(String.format("Update package %s", AEWizCost.nameCurrentProjectModulo.get()));
             bottone.getElement().setAttribute("theme", "primary");
             bottone.addClickListener(event -> dialogUpdatePackage.open(this::elaboraUpdatePackage));
 
-            layout.add(bottone);
+            layout.add(label, label2, bottone);
         }
 
+        this.add(paragrafo);
         this.add(layout);
     }
 
@@ -405,32 +408,41 @@ public class Wizard extends VerticalLayout {
         layout.setMargin(false);
         layout.setPadding(false);
         layout.setSpacing(false);
-        H3 paragrafo = new H3(WizCost.TITOLO_DOC_PACKAGES);
-        paragrafo.getElement().getStyle().set("color", "blue");
-
-        this.add(paragrafo);
-
-        layout.add(new Label("Documentazione delle classi standard dei package esistenti"));
-        layout.add(new Label("Seleziona quali classi standard modificare. Si applica a tutti i packages"));
+//        H3 paragrafo = new H3(WizCost.TITOLO_DOC_PACKAGES);
+        H3 paragrafo;
+        Label label;
+        Label label2;
 
         if (AEFlag.isBaseFlow.is()) {
-            Button  bottone = new Button("Doc packages " + AEWizCost.nameVaadFlow14Lower.get());
+            paragrafo = new H3(WizCost.TITOLO_DOC_PACKAGES);
+        }
+        else {
+            paragrafo = new H3(String.format("Documentazione del modulo %s", AEWizCost.nameCurrentProjectModulo.get()));
+        }
+        paragrafo.getElement().getStyle().set("color", "blue");
+        label = new Label("Documentazione delle classi standard dei packages esistenti nel modulo");
+        label2 = new Label("Seleziona quali classi standard modificare. Si applica a tutti i packages.");
+
+        if (AEFlag.isBaseFlow.is()) {
+            Button bottone = new Button("Doc packages " + AEWizCost.nameVaadFlow14Lower.get());
             bottone.getElement().setAttribute("theme", "primary");
             bottone.addClickListener(event -> dialogNewPackage.open(this::elaboraDocPackages));
 
-            Button  bottone2 = new Button("Doc packages " + AEWizCost.nameCurrentProjectModulo.get());
+            Button bottone2 = new Button("Doc packages " + AEWizCost.nameCurrentProjectModulo.get());
             bottone2.getElement().setAttribute("theme", "primary");
             bottone2.addClickListener(event -> dialogNewPackage.open(this::elaboraDocPackages));
 
-            layout.add(new HorizontalLayout(bottone,bottone2));
+            layout.add(label, label2, new HorizontalLayout(bottone, bottone2));
         }
         else {
-            Button bottone = new Button("Doc packages");
+            Button bottone = new Button(String.format("Doc package %s", AEWizCost.nameCurrentProjectModulo.get()));
             bottone.getElement().setAttribute("theme", "primary");
             bottone.addClickListener(event -> dialogDocPackages.open(this::elaboraDocPackages));
 
-            layout.add(bottone);
+            layout.add(label, label2, bottone);
         }
+
+        this.add(paragrafo);
         this.add(layout);
     }
 
@@ -450,9 +462,9 @@ public class Wizard extends VerticalLayout {
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
 
-        layout.add(new Label("Ricopia su vaadflow14 la directory wizard di questo progetto"));
+        layout.add(new Label("Ricopia su Vaadflow14 la directory wizard di questo progetto"));
 
-        Button bottone = new Button("Send back");
+        Button bottone = new Button(String.format("Send back to %s", AEWizCost.nameVaadFlow14Upper.get()));
         bottone.getElement().setAttribute("theme", "primary");
         bottone.addClickListener(event -> dialogFeedbackWizard.open(this::elaboraFeedbackWizard));
 
