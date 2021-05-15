@@ -96,7 +96,8 @@ public class WizService {
     public void fixAEWizCost() {
         //--regola tutti i valori automatici
         AEWizCost.fixValoriDerivati();
-
+        printInfoStart();
+        printInfoCheck();
         //        //--directory di lavoro
         //        String pathCurrent = System.getProperty("user.dir") + SLASH;
         //        AEWizCost.pathCurrentProject.setValue(pathCurrent);
@@ -113,7 +114,7 @@ public class WizService {
         //        AEWizCost.nameCurrentProjectUpper.setValue(projectCurrent);
 
         //--differenziazione tra progetto base (vaadflow14) e progetti derivati
-        AEFlag.isBaseFlow.set(AEWizCost.nameCurrentProjectUpper.equals(AEWizCost.nameVaadFlow14.get()));
+        AEFlag.isBaseFlow.set(AEWizCost.nameCurrentProjectDirectoryIdea.get().equals(AEWizCost.nameVaadFlow14Lower.get()));
 
         //        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         //        AEWizCost.fixValoriDerivati();
@@ -327,7 +328,7 @@ public class WizService {
             fileName += FlowCost.TXT_SUFFIX;
         }
 
-        pathSource = file.findPathBreve(AEWizCost.pathVaadFlow14WizSources.get() + fileName, AEWizCost.nameVaadFlow14.get().toLowerCase());
+        pathSource = file.findPathBreve(AEWizCost.pathVaadFlow14WizSources.get() + fileName, AEWizCost.nameVaadFlow14Upper.get().toLowerCase());
         if (!file.isEsisteFile(AEWizCost.pathVaadFlow14WizSources.get(), fileName)) {
             message = String.format("Non sono riuscito a trovare il file sorgente %s %s", pathSource, type);
             logger.log(AETypeLog.wizard, message);

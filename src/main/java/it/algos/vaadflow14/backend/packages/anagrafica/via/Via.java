@@ -26,10 +26,6 @@ import javax.validation.constraints.*;
  * Unica classe obbligatoria per un package. Le altre servono solo per personalizzare. <br>
  * <p>
  * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
- * Annotated with Algos: @AIScript per controllare il typo di file e la ri-creazione con Wizard <br>
- * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
- * Annotated with Algos: @AIView per info su menu, icon, route, search e sort <br>
- * Annotated with Algos: @AIList per info sulle colonne della Grid <br>
  * Annotated with Algos: @AIForm per info sulle properties del Form <br>
  */
 @SpringComponent

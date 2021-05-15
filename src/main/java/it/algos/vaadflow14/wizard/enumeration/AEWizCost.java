@@ -66,13 +66,19 @@ public enum AEWizCost {
      * Nome del progetto base vaadflow14. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameVaadFlow14(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.nome, "Nome del progetto base vaadflow14", "Vaadflow14"),
+    nameVaadFlow14Upper(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.nome, "Nome del progetto base vaadflow14", "Vaadflow14"),
+
+    /**
+     * Nome del progetto base vaadflow14. <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    nameVaadFlow14Lower(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.nome, "Nome del progetto base vaadflow14", "vaadflow14"),
 
     /**
      * Cartella del progetto base vaadflow14. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirVaadFlow14(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Cartella del progetto base vaadflow14", nameVaadFlow14.value.toLowerCase() + SLASH),
+    dirVaadFlow14(AEWizValue.costante, AEWizUso.nullo, AEWizCopy.dir, "Cartella del progetto base vaadflow14", nameVaadFlow14Upper.value.toLowerCase() + SLASH),
 
     /**
      * Percorso del progetto base vaadflow14. Nei Documents di Gac <br>
@@ -102,13 +108,13 @@ public enum AEWizCost {
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootConfig(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root CONFIG di risorse on-line esterne al JAR (da %s)", nameVaadFlow14.value), "config/", AECopyWiz.dirAddingOnly, "", ""),
+    dirRootConfig(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root CONFIG di risorse on-line esterne al JAR (da %s)", nameVaadFlow14Upper.value), "config/", AECopyWiz.dirAddingOnly, "", ""),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootDoc(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root DOC di documentazione (da %s)", nameVaadFlow14.value), "doc/", AECopyWiz.dirAddingOnly),
+    dirRootDoc(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root DOC di documentazione (da %s)", nameVaadFlow14Upper.value), "doc/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di root. <br>
@@ -117,25 +123,25 @@ public enum AEWizCost {
      * contiene styles/ (sempre)
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootFrontend(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root FRONTEND per il Client (da %s)", nameVaadFlow14.value), "frontend/", AECopyWiz.dirAddingOnly),
+    dirRootFrontend(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root FRONTEND per il Client (da %s)", nameVaadFlow14Upper.value), "frontend/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootLinks(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root LINKS a siti web utili (da %s)", nameVaadFlow14.value), "links/", AECopyWiz.dirAddingOnly),
+    dirRootLinks(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root LINKS a siti web utili (da %s)", nameVaadFlow14Upper.value), "links/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootSnippets(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root SNIPPETS di codice suggerito (da %s)", nameVaadFlow14.value), "snippets/", AECopyWiz.dirAddingOnly),
+    dirRootSnippets(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root SNIPPETS di codice suggerito (da %s)", nameVaadFlow14Upper.value), "snippets/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di modulo. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirModuloVaadFlow14(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory modulo BASE %s (da %s, Wizard compreso)", nameVaadFlow14.value, nameVaadFlow14.value), dirModulo.value + dirVaadFlow14.value, AECopyWiz.dirDeletingAll, VUOTA, VUOTA),
+    dirModuloVaadFlow14(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory modulo BASE %s (da %s, Wizard compreso)", nameVaadFlow14Upper.value, nameVaadFlow14Upper.value), dirModulo.value + dirVaadFlow14.value, AECopyWiz.dirDeletingAll, VUOTA, VUOTA),
 
     /**
      * Percorso del modulo base vaadflow14. Nei Documents di Gac <br>
@@ -255,7 +261,7 @@ public enum AEWizCost {
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirMetaInf(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory META-INF (da %s)", nameVaadFlow14.value), dirResources.value + "META-INF", AECopyWiz.dirAddingOnly, "", "resources"),
+    dirMetaInf(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory META-INF (da %s)", nameVaadFlow14Upper.value), dirResources.value + "META-INF", AECopyWiz.dirAddingOnly, "", "resources"),
 
     /**
      * File. <br>
@@ -291,7 +297,7 @@ public enum AEWizCost {
      * File a livello di root. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    fileRootTEST(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.file, String.format("File root/test ATEST (da %s)", nameVaadFlow14.value), "src/test/java/it/algos/test/ATest.java", AECopyWiz.fileCheckFlagSeEsiste),
+    fileRootTEST(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.file, String.format("File root/test ATEST (da %s)", nameVaadFlow14Upper.value), "src/test/java/it/algos/test/ATest.java", AECopyWiz.fileCheckFlagSeEsiste),
 
     //==========================================================================
     // Valori calcolati automaticamente dal programma alla partenza del Wizard.
@@ -376,11 +382,11 @@ public enum AEWizCost {
             if (pathCurrentProjectRoot.valida) {
                 valueSystem = file.estraeDirectoryFinaleSenzaSlash(pathCurrentProjectRoot.get()).toLowerCase();
                 if (text.isValid(this.value)) {
-                    if (!valueSystem.equals(this.value)) {
-                        message = String.format("FlowVar.projectNameModulo=%s mentre il programma gira in %s", this.value, valueSystem);
-                        logger.log(AETypeLog.wizard, message);
-                        this.value = ERRORE;
-                    }
+//                    if (!valueSystem.equals(this.value)) {
+//                        message = String.format("FlowVar.projectNameModulo=%s mentre il programma gira in %s", this.value, valueSystem);
+//                        logger.log(AETypeLog.wizard, message);
+//                        this.value = ERRORE;
+//                    }
                 }
                 else {
                     message = String.format("Il programma gira in %s ma manca il valore di FlowVar.projectNameModulo come controllo", valueSystem);

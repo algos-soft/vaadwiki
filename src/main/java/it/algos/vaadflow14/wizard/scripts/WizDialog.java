@@ -159,6 +159,7 @@ public abstract class WizDialog extends Dialog {
         super.open();
     }// end of method
 
+
     protected void regolazioniIniziali() {
         //--pulisce le costanti dei packages
         AEPackage.reset();

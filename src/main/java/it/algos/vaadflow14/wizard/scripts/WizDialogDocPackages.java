@@ -18,17 +18,15 @@ import java.util.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WizDialogDocPackages extends WizDialog {
+public class WizDialogDocPackages extends WizDialogPackage {
 
     /**
      * Apertura del dialogo <br>
      */
     public void open(WizRecipient wizRecipient) {
-        super.wizRecipient = wizRecipient;
         AEFlag.isDocPackages.set(true);
 
-        this.regolazioniIniziali();
-        super.inizia();
+        super.open(wizRecipient);
     }
 
 

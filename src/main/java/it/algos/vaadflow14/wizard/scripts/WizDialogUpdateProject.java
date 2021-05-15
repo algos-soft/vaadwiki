@@ -146,17 +146,16 @@ public class WizDialogUpdateProject extends WizDialog {
         mappaWizBox.get(AEWizCost.dirModuloVaadFlow14.name()).getBox().setValue(true);
     }
 
-
-//    protected void sincroAll() {
-//        Checkbox checkAll = mappaWizBox.get(AECheck.all.name()).getBox();
-//        boolean accesi = checkAll.getValue();
-//
-//        for (String key : mappaWizBox.keySet()) {
-//            if (!key.equals(AECheck.all.name())) {
-//                mappaWizBox.get(key).setValue(accesi);
-//            }
-//        }
-//    }
+    //    protected void sincroAll() {
+    //        Checkbox checkAll = mappaWizBox.get(AECheck.all.name()).getBox();
+    //        boolean accesi = checkAll.getValue();
+    //
+    //        for (String key : mappaWizBox.keySet()) {
+    //            if (!key.equals(AECheck.all.name())) {
+    //                mappaWizBox.get(key).setValue(accesi);
+    //            }
+    //        }
+    //    }
 
     protected void creaBottoni() {
         super.creaBottoni();
@@ -213,27 +212,31 @@ public class WizDialogUpdateProject extends WizDialog {
             //--recupera il nome del progetto selezionato dall'elemento della enumeration AEProgetto
             //--perché potrebbe essere diverso (Es. vaadwiki -> Wiki)
             projectNameUpper = progettoTarget.getProjectNameUpper();
+
+            AEWizCost.pathTargetProjectRoot.setValue(pathProject);
+            AEWizCost.nameTargetProjectModulo.setValue(text.primaMinuscola(projectNameUpper));
+            AEWizCost.nameTargetProjectUpper.setValue(projectNameUpper);
         }
         //--se siamo in un progetto specifico, recupera il path da quello corrente
         else {
-            //--recupera il path completo del progetto in esecuzione
-            pathProject = AEWizCost.pathCurrentProjectRoot.get();
-
-            //--recupera la directory del progetto in esecuzione
-            directoryAndProjectModuloLower = file.estraeClasseFinale(pathProject);
-
-            //--recupera un progetto della enumeration AEProgetto
-            //--tramite il valore di directoryAndProjectModuloLower
-            progettoTarget = AEProgetto.getProgettoByDirectory(directoryAndProjectModuloLower);
-            if (progettoTarget != null) {
-                projectNameUpper = progettoTarget.getProjectNameUpper();
-            }
-
-            //--se non ha trovato un progetto (possibile), usa il valore del file xxxApplication
-            //--estraendo la parte del nome precedente il tag 'Application'
-            if (text.isEmpty(projectNameUpper)) {
-                projectNameUpper = wizService.estraeProjectFromApplication();
-            }
+            //            //--recupera il path completo del progetto in esecuzione
+            //            pathProject = AEWizCost.pathCurrentProjectRoot.get();
+            //
+            //            //--recupera la directory del progetto in esecuzione
+            //            directoryAndProjectModuloLower = file.estraeClasseFinale(pathProject);
+            //
+            //            //--recupera un progetto della enumeration AEProgetto
+            //            //--tramite il valore di directoryAndProjectModuloLower
+            //            progettoTarget = AEProgetto.getProgettoByDirectory(directoryAndProjectModuloLower);
+            //            if (progettoTarget != null) {
+            //                projectNameUpper = progettoTarget.getProjectNameUpper();
+            //            }
+            //
+            //            //--se non ha trovato un progetto (possibile), usa il valore del file xxxApplication
+            //            //--estraendo la parte del nome precedente il tag 'Application'
+            //            if (text.isEmpty(projectNameUpper)) {
+            //                projectNameUpper = wizService.estraeProjectFromApplication();
+            //            }
         }
 
         //--recupera i flag selezionati a video
@@ -243,8 +246,10 @@ public class WizDialogUpdateProject extends WizDialog {
             }
         }
 
-        //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
-        return super.fixValoriInseriti(pathProject, projectNameUpper, VUOTA);
+        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
+        AEWizCost.fixValoriDerivati();
+
+        return true;
     }
 
 
