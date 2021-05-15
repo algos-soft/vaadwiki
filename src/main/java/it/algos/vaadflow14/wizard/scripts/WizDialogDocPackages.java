@@ -20,15 +20,22 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WizDialogDocPackages extends WizDialogPackage {
 
+
     /**
      * Apertura del dialogo <br>
      */
     public void open(WizRecipient wizRecipient) {
-        AEFlag.isDocPackages.set(true);
-
-        super.open(wizRecipient);
+        this.open(wizRecipient,VUOTA);
     }
 
+    /**
+     * Apertura del dialogo <br>
+     */
+    public void open(WizRecipient wizRecipient, String nomeModulo) {
+        AEFlag.isDocPackages.set(true);
+
+        super.open(wizRecipient,nomeModulo);
+    }
 
 
     /**

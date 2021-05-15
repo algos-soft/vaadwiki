@@ -35,10 +35,17 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
      * Apertura del dialogo <br>
      */
     public void open(WizRecipient wizRecipient) {
+        this.open(wizRecipient,VUOTA);
+    }
+
+    /**
+     * Apertura del dialogo <br>
+     */
+    public void open(WizRecipient wizRecipient, String nomeModulo) {
         AEFlag.isNewPackage.set(false);
         AEFlag.isUpdatePackage.set(true);
 
-        super.open(wizRecipient);
+        super.open(wizRecipient,nomeModulo);
     }
 
 
@@ -48,7 +55,14 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
      */
     @Override
     protected void creaTopLayout() {
-        topLayout = fixSezione("Modifica di un package", "green");
+        String message;
+        if (AEFlag.isBaseFlow.is()) {
+            message = String.format("Modifica di un package del modulo %s", AEWizCost.nameTargetProjectModulo.get());
+        }
+        else {
+            message = "Modifica di un package";
+        }
+        topLayout = fixSezione(message, "green");
         this.add(topLayout);
 
         topLayout.add(text.getLabelGreenBold("Update di un package esistente in questo progetto"));
@@ -67,7 +81,7 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
 
         List<String> packages = wizService.getPackages();
         Collections.sort(packages);
-        String label = "Packages esistenti nella directory di questo progetto";
+        String label = "Packages esistenti nella directory di questo modulo";
 
         if (array.isAllValid(packages)) {
 
@@ -279,25 +293,29 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
      */
     @Override
     protected boolean regolaAEWizCost() {
-        String pathProject = VUOTA;
-        String projectNameUpper = VUOTA;
         String packageName = VUOTA;
 
-        //--recupera il path completo del progetto in esecuzione
-        //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
-        pathProject = AEWizCost.pathCurrentProjectRoot.get();
-
-        //-recupera il nome (maiuscolo) del progetto in esecuzione, usando il valore del file xxxApplication
-        //--estraendo la parte del nome precedente il tag 'Application'
-        //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
-        projectNameUpper = wizService.estraeProjectFromApplication();
+        //-recupera il progetto target
+        AEWizCost.pathTargetProjectRoot.setValue(AEWizCost.pathCurrentProjectRoot.get());
+        AEWizCost.nameTargetProjectUpper.setValue(AEWizCost.nameCurrentProjectUpper.get());
+        if (AEFlag.isBaseFlow.is()) {
+            AEWizCost.nameTargetProjectModulo.setValue(nomeModulo);
+        }
+        else {
+            AEWizCost.nameTargetProjectModulo.setValue(AEWizCost.nameCurrentProjectModulo.get());
+        }
 
         if (fieldComboPackages != null && text.isValid(fieldComboPackages.getValue())) {
             packageName = fieldComboPackages.getValue();
         }
+        if (text.isValid(packageName)) {
+            AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(packageName));
+        }
 
-        //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
-        return super.fixValoriInseriti(pathProject, projectNameUpper, packageName);
+        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
+        AEWizCost.fixValoriDerivati();
+
+        return true;
     }
 
     /**

@@ -1,11 +1,9 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -25,10 +23,17 @@ public class WizDialogNewPackage extends WizDialogPackage {
      * Apertura del dialogo <br>
      */
     public void open(WizRecipient wizRecipient) {
+        this.open(wizRecipient,VUOTA);
+    }
+
+    /**
+     * Apertura del dialogo <br>
+     */
+    public void open(WizRecipient wizRecipient, String nomeModulo) {
         AEFlag.isNewPackage.set(true);
         AEFlag.isUpdatePackage.set(false);
 
-        super.open(wizRecipient);
+        super.open(wizRecipient,nomeModulo);
     }
 
 
@@ -38,7 +43,14 @@ public class WizDialogNewPackage extends WizDialogPackage {
      */
     @Override
     protected void creaTopLayout() {
-        topLayout = fixSezione(TITOLO_NEW_PACKAGE, "green");
+        String message;
+        if (AEFlag.isBaseFlow.is()) {
+            message = String.format("Nuovo package per il modulo %s", AEWizCost.nameTargetProjectModulo.get());
+        }
+        else {
+            message = "Nuovo package";
+        }
+        topLayout = fixSezione(message, "green");
         this.add(topLayout);
 
         topLayout.add(text.getLabelGreenBold("Creazione di un nuovo package funzionante"));
@@ -124,26 +136,16 @@ public class WizDialogNewPackage extends WizDialogPackage {
      */
     @Override
     protected boolean regolaAEWizCost() {
-        //        String pathProject = VUOTA;
-        //        String projectNameUpper = VUOTA;
         String packageName = VUOTA;
-        //
-        //        //--recupera il path completo del progetto in esecuzione
-        //        //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
-        //        pathProject = AEWizCost.pathCurrentProjectRoot.get();
-        //
-        //        //-recupera il nome (maiuscolo) del progetto in esecuzione, usando il valore del file xxxApplication
-        //        //--estraendo la parte del nome precedente il tag 'Application'
-        //        //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
-        //        projectNameUpper = wizService.estraeProjectFromApplication();
 
         //-recupera il progetto target
+        AEWizCost.pathTargetProjectRoot.setValue(AEWizCost.pathCurrentProjectRoot.get());
+        AEWizCost.nameTargetProjectUpper.setValue(AEWizCost.nameCurrentProjectUpper.get());
         if (AEFlag.isBaseFlow.is()) {
+            AEWizCost.nameTargetProjectModulo.setValue(nomeModulo);
         }
         else {
-            AEWizCost.pathTargetProjectRoot.setValue(AEWizCost.pathCurrentProjectRoot.get());
             AEWizCost.nameTargetProjectModulo.setValue(AEWizCost.nameCurrentProjectModulo.get());
-            AEWizCost.nameTargetProjectUpper.setValue(AEWizCost.nameCurrentProjectUpper.get());
         }
 
         //--inserisce il nome (obbligatorio) del package da creare/modificare
@@ -156,9 +158,6 @@ public class WizDialogNewPackage extends WizDialogPackage {
 
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
-
-        //        //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
-        //        return super.fixValoriInseriti(pathProject, projectNameUpper, packageName);
 
         return true;
     }

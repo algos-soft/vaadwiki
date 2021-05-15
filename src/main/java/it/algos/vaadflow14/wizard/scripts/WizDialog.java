@@ -130,6 +130,7 @@ public abstract class WizDialog extends Dialog {
 
     protected ComboBox<String> fieldComboPackages;
 
+    protected String nomeModulo;
 
     /**
      * Regolazioni grafiche
@@ -164,13 +165,14 @@ public abstract class WizDialog extends Dialog {
         //--pulisce le costanti dei packages
         AEPackage.reset();
 
-        //--recupera il progetto target
+        //-recupera il progetto target
+        AEWizCost.pathTargetProjectRoot.setValue(AEWizCost.pathCurrentProjectRoot.get());
+        AEWizCost.nameTargetProjectUpper.setValue(AEWizCost.nameCurrentProjectUpper.get());
         if (AEFlag.isBaseFlow.is()) {
+            AEWizCost.nameTargetProjectModulo.setValue(nomeModulo);
         }
         else {
-            AEWizCost.pathTargetProjectRoot.setValue(AEWizCost.pathCurrentProjectRoot.get());
             AEWizCost.nameTargetProjectModulo.setValue(AEWizCost.nameCurrentProjectModulo.get());
-            AEWizCost.nameTargetProjectUpper.setValue(AEWizCost.nameCurrentProjectUpper.get());
         }
 
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali

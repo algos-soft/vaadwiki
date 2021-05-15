@@ -62,6 +62,8 @@ public enum AEPackage {
 
     private String fieldName;
 
+    private String fieldNameIniziale;
+
     //    /**
     //     * Costruttore parziale <br>
     //     */
@@ -93,7 +95,7 @@ public enum AEPackage {
     /**
      * Costruttore completo <br>
      */
-    AEPackage(String descrizione, boolean isAccesoInizialmente, boolean isFile, boolean isProperty, boolean isFieldAssociato, String sourcesName, String suffix, String field, String fieldName) {
+    AEPackage(String descrizione, boolean isAccesoInizialmente, boolean isFile, boolean isProperty, boolean isFieldAssociato, String sourcesName, String suffix, String field, String fieldNameIniziale) {
         this.descrizione = descrizione;
         this.isAccesoInizialmente = isAccesoInizialmente;
         this.isAcceso = isAccesoInizialmente;
@@ -103,13 +105,14 @@ public enum AEPackage {
         this.sourcesName = sourcesName;
         this.suffix = suffix;
         this.field = field;
-        this.fieldName = fieldName;
+        this.fieldNameIniziale = fieldNameIniziale;
+        this.fieldName = fieldNameIniziale;
     }
 
     public static void reset() {
         for (AEPackage pack : AEPackage.values()) {
             pack.isAcceso = pack.isAccesoInizialmente;
-            pack.fieldName = VUOTA;
+            pack.fieldName = pack.fieldNameIniziale;
         }
     }
 
