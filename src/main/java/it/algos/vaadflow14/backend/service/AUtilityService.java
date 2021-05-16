@@ -155,10 +155,11 @@ public class AUtilityService extends AAbstractService {
      * Qui effettuo la conversione
      *
      * @param sortVaadinList sort di Vaadin
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
      *
      * @return sortSpring di springframework
      */
-    public Sort sortVaadinToSpring(final List<QuerySortOrder> sortVaadinList) {
+    public Sort sortVaadinToSpring(final List<QuerySortOrder> sortVaadinList,final Class<? extends AEntity> entityClazz) {
         Sort sortSpring = null;
         Sort.Direction directionSpring = null;
         String fieldName = VUOTA;
@@ -176,7 +177,15 @@ public class AUtilityService extends AAbstractService {
             }
         }
 
-        return sortSpring != null ? sortSpring : Sort.by(Sort.DEFAULT_DIRECTION, FIELD_ID);
+        if (sortSpring == null) {
+            sortSpring = annotation.getSortSpring(entityClazz);
+        }
+
+        if (sortSpring == null) {
+            sortSpring = Sort.by(Sort.DEFAULT_DIRECTION, FIELD_ID);
+        }
+
+        return sortSpring;
     }
 
     /**
@@ -249,7 +258,7 @@ public class AUtilityService extends AAbstractService {
 
         if (type == AETypeField.enumeration) {
             enumClazz = annotation.getEnumClass(reflectionJavaField);
-            items =field.getEnumerationItems(reflectionJavaField);
+            items = field.getEnumerationItems(reflectionJavaField);
             if (items != null) {
                 combo.setItems(items);
             }

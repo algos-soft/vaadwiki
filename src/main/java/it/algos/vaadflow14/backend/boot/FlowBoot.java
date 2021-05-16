@@ -386,6 +386,10 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     protected void fixMenuRoutes() {
 
+        if (AEPreferenza.usaSpanHeaderRossi.is()) {
+            FlowVar.menuRouteList.add(Preferenza.class);
+        }
+
         if (FlowVar.usaCompany) {
             FlowVar.menuRouteList.add(Utente.class);
             FlowVar.menuRouteList.add(Company.class);
@@ -407,6 +411,7 @@ public abstract class FlowBoot implements ServletContextListener {
             FlowVar.menuRouteList.add(Regione.class);
             FlowVar.menuRouteList.add(Provincia.class);
         }
+
         if (AEPreferenza.usaMenuCrono.is()) {
             FlowVar.menuRouteList.add(Secolo.class);
             FlowVar.menuRouteList.add(Anno.class);

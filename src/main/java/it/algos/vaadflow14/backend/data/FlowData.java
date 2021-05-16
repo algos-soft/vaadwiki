@@ -155,8 +155,8 @@ public class FlowData implements AIData {
             return;
         }
 
-        if (!annotation.usaResetIniziale(entityClazz)) {
-            message = String.format("Nel package %s la entityClazz %s non prevede il reset iniziale dei dati", packageName, entityClazz.getSimpleName());
+        if (!annotation.usaBoot(entityClazz)) {
+            message = String.format("Nel package %s la entityClazz %s non prevede la creazione iniziale dei dati", packageName, entityClazz.getSimpleName());
             logger.log(AETypeLog.checkData, message);
             return;
         }

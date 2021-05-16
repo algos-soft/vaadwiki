@@ -651,7 +651,7 @@ public class AMongoService<capture> extends AAbstractService {
      * @return lista di entityBeans
      */
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sortVaadinList, int offset, int limit) {
-        return fetch(entityClazz, mappaFiltri, utility.sortVaadinToSpring(sortVaadinList), offset, limit);
+        return fetch(entityClazz, mappaFiltri, utility.sortVaadinToSpring(sortVaadinList, entityClazz), offset, limit);
     }
 
     /**
@@ -662,7 +662,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
      * @param mappaFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
-     * @param sortSpring        eventuali condizioni di ordinamento. Se nullo, cerca quello base della AEntity.
+     * @param sortSpring  eventuali condizioni di ordinamento. Se nullo, cerca quello base della AEntity.
      * @param offset      eventuale da cui iniziare. Se zero inizia dal primo bean.
      * @param limit       numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
      *
@@ -679,18 +679,18 @@ public class AMongoService<capture> extends AAbstractService {
             for (AFiltro filtro : mappaFiltri.values()) {
                 criteriaFiltro = filtro.getCriteria();
 
-//                if (criteriaQuery == null) {
-//                    criteriaQuery = criteriaFiltro;
-//                }
-//                else {
-//                    //--For multiple criteria on the same field, uses a “comma” to combine them.
-//                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
-//                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
-//                    }
-//                    else {
-//                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
-//                    }
-//                }
+                //                if (criteriaQuery == null) {
+                //                    criteriaQuery = criteriaFiltro;
+                //                }
+                //                else {
+                //                    //--For multiple criteria on the same field, uses a “comma” to combine them.
+                //                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
+                //                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
+                //                    }
+                //                    else {
+                //                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
+                //                    }
+                //                }
                 query.addCriteria(filtro.getCriteria());
             }
         }

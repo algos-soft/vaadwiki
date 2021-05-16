@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.ui.view.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.*;
@@ -433,6 +434,46 @@ public class AAnnotationService extends AAbstractService {
     }
 
     //==========================================================================
+    // @AIScript
+    //==========================================================================
+
+    /**
+     * Flag se il file può essere sovrascritto dal Doc Wizard. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean isSovrascrivibile(final Class<? extends AEntity> entityClazz) {
+        AIScript annotation = this.getAIScript(entityClazz);
+        return annotation != null && annotation.sovraScrivibile();
+    }
+
+    /**
+     * Tipologia dei file Algos sia generici che del package. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public AETypeFile getTypeFile(final Class<? extends AEntity> entityClazz) {
+        AIScript annotation = this.getAIScript(entityClazz);
+        return annotation != null ? annotation.type() : AETypeFile.nessuno;
+    }
+
+    /**
+     * The type of doc upgrade from wizard. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public AEWizDoc getDocFile(final Class<? extends AEntity> entityClazz) {
+        AIScript annotation = this.getAIScript(entityClazz);
+        return annotation != null ? annotation.doc() : AEWizDoc.revisione;
+    }
+
+    //==========================================================================
     // @AIEntity
     //==========================================================================
 
@@ -505,9 +546,9 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return the status
      */
-    public boolean usaResetIniziale(final Class<? extends AEntity> entityClazz) {
+    public boolean usaBoot(final Class<? extends AEntity> entityClazz) {
         AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.usaResetIniziale() : false;
+        return annotation != null ? annotation.usaBoot() : false;
     }
 
     /**
@@ -639,21 +680,22 @@ public class AAnnotationService extends AAbstractService {
     // @AIView
     //==========================================================================
 
-    /**
-     * Restituisce il nome della property per navigare verso la View <br>
-     * 1) Controlla che il parametro in ingresso non sia nullo <br>
-     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
-     * 3) Controlla che esista l'annotation specifica <br>
-     * 4) Cerca la property 'routeFormName' nell'Annotation @AIView della classe AViewList <br>
-     *
-     * @param viewClazz the class of type AView
-     *
-     * @return the name of the property
-     */
-    public String getFormRouteName(final Class<? extends AView> viewClazz) {
-        AIView annotation = this.getAIViewView(viewClazz);
-        return annotation != null ? annotation.routeFormName() : VUOTA;
-    }
+    //    /**
+    //     * Restituisce il nome della property per navigare verso la View <br>
+    //     * 1) Controlla che il parametro in ingresso non sia nullo <br>
+    //     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
+    //     * 3) Controlla che esista l'annotation specifica <br>
+    //     * 4) Cerca la property 'routeFormName' nell'Annotation @AIView della classe AViewList <br>
+    //     *
+    //     * @param viewClazz the class of type AView
+    //     *
+    //     * @return the name of the property
+    //     */
+    //    @Deprecated
+    //    public String getFormRouteName(final Class<? extends AView> viewClazz) {
+    //        AIView annotation = this.getAIViewView(viewClazz);
+    //        return annotation != null ? annotation.routeFormName() : VUOTA;
+    //    }
 
 
     /**

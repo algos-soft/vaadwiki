@@ -12,14 +12,30 @@ import java.lang.annotation.*;
  * Date: lun, 27-apr-2020
  * Time: 14:55
  * <p>
- * Annotation per le Entity Class <br>
+ * Annotation Algos per le Entity Class <br>
+ * Controlla le property ed il comportamento della List e della Grid. <br>
+ * <p>
+ * Regola:
+ * recordName()=VUOTA -> (Optional) Nome visibile della singola scheda. Se manca usa il nome della collezione.
+ * keyPropertyName()=VUOTA -> (Mandatory) Field property unica nella collezione.
+ * usaBoot()=false -> (Optional) Creazione automatica dei dati alla partenza se la collezione è vuota
+ * usaCreazione()=true -> (Optional) Possibilità di creazione di una nuova entity
+ * usaModifica()=true -> (Optional) Possibilità di modifica di una entity esistente
+ * usaDelete()=true -> (Optional) Possibilità di cancellazione di una entity
+ * usaCompany()=false -> (Optional) Utilizza il field della superclasse
+ * usaNote()=false -> (Optional) Utilizza il field della superclasse
+ * usaTimeStamp()=false -> (Optional) Utilizza timestamps per memorizzare date di creazione e di modifica della entity
+ * <p>
+ * Standard:
+ * AIEntity(recordName = "Xxx", keyPropertyName = "code", usaBoot = true, usaCreazione = true, usaModifica = true, usaDelete = true)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE) //--Class, interface (including annotation type), or enum declaration
+@Target(ElementType.TYPE)
+//--Class, interface (including annotation type), or enum declaration
 public @interface AIEntity {
 
     /**
-     * (Optional) Label del record
+     * (Optional) Nome visibile della singola scheda.
      * Usato nel dialog come Edit...recordName oppure Modifica...recordName
      * Di default usa il 'name' della collection mongoDB @Document
      *
@@ -28,7 +44,7 @@ public @interface AIEntity {
     String recordName() default VUOTA;
 
     /**
-     * (Optional) key property unica
+     * (Mandatory) key property unica
      * Di default usa la property 'id' della collection mongoDB
      *
      * @return the string
@@ -36,24 +52,15 @@ public @interface AIEntity {
     String keyPropertyName() default VUOTA;
 
     /**
-     * (Optional) il campo della superclasse
+     * (Optional) Creazione automatica dei dati alla partenza se collezione vuota
      * Di default false
      *
      * @return the status
      */
-    boolean usaCompany() default false;
+    boolean usaBoot() default false;
 
     /**
-     * (Optional) il campo della superclasse
-     * Di default false
-     *
-     * @return the status
-     */
-    boolean usaNote() default false;
-
-
-    /**
-     * (Optional) possibilità di creazione di una nuova entity
+     * (Optional) Possibilità di creazione di una nuova entity
      * Di default true
      *
      * @return the status
@@ -61,7 +68,7 @@ public @interface AIEntity {
     boolean usaCreazione() default true;
 
     /**
-     * (Optional) possibilità di modifica di una entity
+     * (Optional) Possibilità di modifica di una entity esistente
      * Di default true
      *
      * @return the status
@@ -69,15 +76,7 @@ public @interface AIEntity {
     boolean usaModifica() default true;
 
     /**
-     * (Optional) uso di timestamps per memorizzare date di creazione e di modifica della entity
-     * Di default false
-     *
-     * @return the status
-     */
-    boolean usaTimeStamp() default false;
-
-    /**
-     * (Optional) possibilità di cancellare una entity
+     * (Optional) Possibilità di cancellazione di una entity
      * Di default true
      *
      * @return the status
@@ -85,12 +84,27 @@ public @interface AIEntity {
     boolean usaDelete() default true;
 
     /**
-     * (Optional) possibilità di resettare i data alla partenza
+     * (Optional) Utilizza il field della superclasse
      * Di default false
      *
      * @return the status
      */
-    boolean usaResetIniziale() default false;
+    boolean usaCompany() default false;
 
+    /**
+     * (Optional) Utilizza il field della superclasse
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaNote() default false;
+
+    /**
+     * (Optional) Utilizza timestamps per memorizzare date di creazione e di modifica della entity
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaTimeStamp() default false;
 
 }

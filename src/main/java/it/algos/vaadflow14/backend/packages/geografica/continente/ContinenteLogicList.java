@@ -74,6 +74,7 @@ public class ContinenteLogicList extends LogicList {
     @Override
     protected void fixSpanList() {
         addSpanBlu("Ripartizione dei 249 stati censiti.");
+        addSpanRosso("Creazione automatica all'avvio se la collezione è vuota.");
     }
 
 

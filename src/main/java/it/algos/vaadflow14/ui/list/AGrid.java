@@ -196,24 +196,24 @@ public class AGrid {
     protected void addColumnsGrid() {
         Grid.Column<AEntity> colonna = null;
         String indexWidth = VUOTA;
+        boolean esisteColonnaOrdine = reflection.isEsiste(entityClazz, FIELD_ORDINE);
 
         //--se usa la numerazione automatica, questa occupa la prima colonna
-        if (annotation.usaRowIndex(entityClazz)) {
+        //--la numerazione automatica, anche se erroneamente prevista nella @AIList della AEntity, non viene attivata se esiste già la colonna numerica 'ordine'
+        if (annotation.usaRowIndex(entityClazz) && !esisteColonnaOrdine) {
             indexWidth = getWidth();
             grid.addColumn(item -> VUOTA).setKey(FIELD_INDEX).setHeader("#").setWidth(indexWidth).setFlexGrow(0);
         }
 
         //--se esiste la colonna 'ordine', la posiziono prima di un eventuale colonna col bottone 'edit'
         //--ed elimino la property dalla lista gridPropertyNamesList
-        if (true) {
-            if (reflection.isEsiste(entityClazz, FIELD_ORDINE)) {
-                if (gridPropertyNamesList.contains(FIELD_ORDINE)) {
-                    colonna = columnService.add(grid, entityClazz, FIELD_ORDINE);
-                    if (colonna != null) {
-                        columnsMap.put(FIELD_ORDINE, colonna);
-                    }
-                    gridPropertyNamesList.remove(FIELD_ORDINE);
+        if (esisteColonnaOrdine) {
+            if (gridPropertyNamesList.contains(FIELD_ORDINE)) {
+                colonna = columnService.add(grid, entityClazz, FIELD_ORDINE);
+                if (colonna != null) {
+                    columnsMap.put(FIELD_ORDINE, colonna);
                 }
+                gridPropertyNamesList.remove(FIELD_ORDINE);
             }
         }
 
@@ -304,7 +304,7 @@ public class AGrid {
         return buttonEdit;
     }
 
-@Deprecated
+    @Deprecated
     public void setItems(Collection items) {
 
         //        grid.deselectAll();
@@ -325,7 +325,7 @@ public class AGrid {
     public void setAllListener(AILogic entityLogic) {
         this.entityLogic = entityLogic;
 
-        if (annotation.usaRowIndex(entityClazz)) {
+        if (annotation.usaRowIndex(entityClazz) && !reflection.isEsiste(entityClazz, FIELD_ORDINE)) {
             grid.addAttachListener(event -> {
                 grid.getColumnByKey(FIELD_INDEX).getElement().executeJs("this.renderer = function(root, column, rowData) {root.textContent = rowData.index + 1}");
             });

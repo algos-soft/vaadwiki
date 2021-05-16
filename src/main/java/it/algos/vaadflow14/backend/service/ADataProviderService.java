@@ -51,6 +51,9 @@ public class ADataProviderService extends AAbstractService {
 
                 // First callback fetches items based on a query
                 fetchCallback -> {
+                    // Esistono DUE tipi di Sort: quello di Spring e quello di Vaadin
+                    Sort sortSpring = null;
+
                     // The index of the first item to load
                     int offset = fetchCallback.getOffset();
 
@@ -59,9 +62,14 @@ public class ADataProviderService extends AAbstractService {
 
                     // Ordine delle colonne
                     // Vaadin mi manda sempre UNA sola colonna. Perché?
-                    List<QuerySortOrder> sorts = fetchCallback.getSortOrders();
+                    List<QuerySortOrder> sortVaadinList = fetchCallback.getSortOrders();
 
-                    return mongo.fetch(entityClazz, (Map<String, AFiltro>) null, sorts, offset, limit).stream();
+                    // Alla partenza (se l'ordinamento manca) usa l'ordine base della AEntity
+                    // le volte successive usa l'ordine selezionato da un header della Grid
+                    // Converto il tipo di sort
+                    sortSpring = utility.sortVaadinToSpring(sortVaadinList, entityClazz);
+
+                    return mongo.fetch(entityClazz, (Map<String, AFiltro>) null, sortSpring, offset, limit).stream();
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
@@ -78,6 +86,9 @@ public class ADataProviderService extends AAbstractService {
 
                 // First callback fetches items based on a query
                 fetchCallback -> {
+                    // Esistono DUE tipi di Sort: quello di Spring e quello di Vaadin
+                    Sort sortSpring = null;
+
                     // The index of the first item to load
                     int offset = fetchCallback.getOffset();
 
@@ -90,21 +101,17 @@ public class ADataProviderService extends AAbstractService {
 
                     // Alla partenza (se l'ordinamento manca) usa l'ordine base della AEntity
                     // le volte successive usa l'ordine selezionato da un header della Grid
-                    if (sortVaadinList != null && sortVaadinList.size() == 0) {
-//                        sortVaadinList = annotation.getSortVaadinList(entityClazz);
-                        Sort sortSpring = annotation.getSortSpring(entityClazz);
-//                        Sort sortSpring2=utility.sortVaadinToSpring(sortVaadinList);
-                        int a=87;
-                    }
+                    // Converto il tipo di sort
+                    sortSpring = utility.sortVaadinToSpring(sortVaadinList, entityClazz);
 
-                    return mongo.fetch(entityClazz, mappaFiltri, sortVaadinList, offset, limit).stream();
+                    return mongo.fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                countCallback -> mongo.fetch(entityClazz, mappaFiltri).size());
-//                countCallback -> mongo.count(entityClazz, mappaFiltri));
-
+                countCallback -> mongo.fetch(entityClazz, mappaFiltri).size()
+        );
+        //                countCallback -> mongo.count(entityClazz, mappaFiltri));
 
         return dataProvider;
     }

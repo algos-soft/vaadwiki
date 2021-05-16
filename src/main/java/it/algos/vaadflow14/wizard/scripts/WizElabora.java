@@ -308,10 +308,8 @@ public abstract class WizElabora implements WizRecipient {
 
     /**
      * Modifica della documentazione dei files di un package <br>
-     *
-     * @param inizioFile per la modifica dell'header
      */
-    protected void fixDocPackage(boolean inizioFile) {
+    protected void fixDocPackage() {
         AIResult risultato = AResult.errato();
         boolean status = true;
         int numFiles = 0;
@@ -330,7 +328,7 @@ public abstract class WizElabora implements WizRecipient {
                     suffix = pack.getSuffix();
                     fileName = text.primaMaiuscola(packageName) ;
                     wizService.regolaAEToken(nameTargetProjectUpper, nameTargetProjectModulo, packageName, fileName);
-                    risultato = elaboraDoc(packageName, pack, inizioFile);
+                    risultato = elaboraDoc(packageName, pack);
                     if (risultato.isValido()) {
                         message = risultato.getValidationMessage();
                         numFiles++;
@@ -356,10 +354,8 @@ public abstract class WizElabora implements WizRecipient {
      * fileName è la parte terminale di packageName dopo lo slash <br>
      * upperName è la parte terminale di packageName dopo lo slash con la prima maiuscola <br>
      * pathFileToBeWritten è il path completo con upperName, il suffisso del package ed il suffisso java <br>
-     *
-     * @param inizioFile per la modifica dell'header
      */
-    protected AIResult elaboraDoc(String packageName, AEPackage pack, boolean inizioFile) {
+    protected AIResult elaboraDoc(String packageName, AEPackage pack) {
         AIResult risultato = AResult.errato();
         String fileName;
         String upperName;
@@ -380,7 +376,7 @@ public abstract class WizElabora implements WizRecipient {
 
         if (file.isEsisteFile(pathFileDaModificare)) {
             //            wizService.regolaAEToken(AEWizCost.nameProjectCurrentUpper.get(), packageName,fileName);//@todo PROVVISORIO
-            risultato = wizService.fixDocFile(packageName, nameSource, suffisso, pathFileDaModificare, inizioFile);
+            risultato = wizService.fixDocFile(packageName, nameSource, suffisso, pathFileDaModificare);
         }
         else {
             message = String.format("Nel package %s manca il file %s", packageName, text.isValid(pack.getSuffix()) ? upperName + pack.getSuffix() : "Entity");

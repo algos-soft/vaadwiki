@@ -11,6 +11,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.service.*;
@@ -360,6 +361,7 @@ public abstract class LogicProperty extends VerticalLayout {
      * La lista si costruisce in regolazioniIniziali() della LogicList <br>
      */
     protected List<Span> spanHeaderList;
+
 
     protected void fixProperty() {
         if (routeParameter == null && annotation.getRouteName(this.getClass()).equals(ROUTE_NAME_GENERIC_VIEW)) {

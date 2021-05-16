@@ -341,4 +341,23 @@ public class AClassService extends AAbstractService {
         return routeName;
     }
 
+    /**
+     *
+     */
+    public Class getClazzFromName(String canonicalName) {
+        Class clazz = null;
+
+        if (canonicalName.endsWith(JAVA_SUFFIX)) {
+            canonicalName = text.levaCoda(canonicalName, JAVA_SUFFIX);
+        }
+
+        try {
+            clazz = Class.forName(canonicalName);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getClazzFromName");
+        }
+
+        return clazz;
+    }
+
 }

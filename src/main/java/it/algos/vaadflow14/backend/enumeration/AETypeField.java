@@ -10,7 +10,7 @@ public enum AETypeField {
     textArea(8, 18),
     integer(5, 8),
     lungo(5, 8),
-    booleano(4, 4),
+    booleano(5, 4),
     localDateTime(9, 0),
     localDate(8, 0),
     localTime(6, 0),

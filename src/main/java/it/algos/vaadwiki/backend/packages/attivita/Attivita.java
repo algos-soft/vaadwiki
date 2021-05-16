@@ -21,8 +21,8 @@ import static java.awt.image.ImageObserver.WIDTH;
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: mer, 14-apr-2021 <br>
- * Fix time: 17:58 <br>
+ * Fix first: mer, 14-apr-2021 alle 17:58 <br>
+ * Fix last: mer, 14-apr-2021 alle 17:58 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
@@ -51,7 +51,7 @@ import static java.awt.image.ImageObserver.WIDTH;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Attivita", keyPropertyName = "singolare", usaCreazione = false, usaModifica = false, usaCompany = false)
 @AIView(menuName = "Attivita", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
-@AIList(fields = "singolare,plurale,aggiunta", usaRowIndex = true)
+@AIList(fields = "singolare,plurale,aggiunta", usaRowIndex = true)//
 @AIForm(fields = "singolare,plurale,aggiunta", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
 public class Attivita extends AEntity {
 

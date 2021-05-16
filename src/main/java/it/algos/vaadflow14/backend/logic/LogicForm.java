@@ -347,8 +347,9 @@ public abstract class LogicForm extends Logic {
                 this.openConfirmExitForm(entityBean);
                 break;
             case delete:
-                this.deleteForm();
-                this.back();
+                if (deleteForm()) {
+                    this.backToList();
+                }
                 break;
             case conferma:
             case registra:

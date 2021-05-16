@@ -22,7 +22,7 @@ public class WizElaboraDocPackages extends WizElabora {
      */
     @Override
     public void esegue() {
-        super.fixDocPackage(false);
+        super.fixDocPackage();
     }
 
 }

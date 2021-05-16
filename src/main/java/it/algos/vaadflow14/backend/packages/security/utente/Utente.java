@@ -27,14 +27,17 @@ import java.util.*;
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * Le properties sono PUBLIC per poter usare la Reflection <br>
- * Unica classe obbligatoria per un package. Le altre servono solo per personalizzare. <br>
+ * Unica classe obbligatoria per un package. <br>
+ * Le altre servono solo se si vuole qualcosa in più dello standard minimo. <br>
  * <p>
+ * Annotated with Spring: @SpringComponent (vaadin), @QueryEntity (querydsl), @Document (mongodb), @TypeAlias (data) <br>
+ * Annotated with @SpringComponent, @QueryEntity, @Document, @TypeAlias <br>
  * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
- * Annotated with Algos: @AIScript per controllare la ri-creazione di questo file dal Wizard <br>
+ * Annotated with Algos: @AIScript per controllare il typo di file e la ri-creazione con Wizard <br>
  * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
  * Annotated with Algos: @AIView per info su menu, icon, route, search e sort <br>
- * Annotated with Algos: @AIList per info sulle colonne della Grid <br>
- * Annotated with Algos: @AIForm per info sulle properties del Form <br>
+ * Annotated with Algos: @AIList per info sulla Grid e sulle colonne <br>
+ * Annotated with Algos: @AIForm per info sul Form e sulle properties <br>
  */
 @SpringComponent
 @QueryEntity

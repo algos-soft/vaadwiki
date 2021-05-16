@@ -10,6 +10,7 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import it.algos.vaadwiki.backend.packages.prova.*;
 import org.apache.commons.io.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -72,6 +73,22 @@ public class WizService {
      */
     @Autowired
     public AFileService file;
+
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con @Autowired <br>
+     * Disponibile al termine del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AAnnotationService annotation;
+
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con @Autowired <br>
+     * Disponibile al termine del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AClassService classService;
 
 
     /**
@@ -170,13 +187,13 @@ public class WizService {
         AEPackage.print(message);
     }
 
-//    /**
-//     * Visualizzazione finale di controllo <br>
-//     */
-//    public void printInfoCompleto(String message) {
-//        printInfo(message);
-//        AEToken.printInfo(message);
-//    }
+    //    /**
+    //     * Visualizzazione finale di controllo <br>
+    //     */
+    //    public void printInfoCompleto(String message) {
+    //        printInfo(message);
+    //        AEToken.printInfo(message);
+    //    }
 
     /**
      * Copia una cartella da VaadFlow al progetto <br>
@@ -424,19 +441,31 @@ public class WizService {
      * @param nameSourceText       nome del file di testo presente nella directory wizard.sources di VaadFlow14
      * @param suffisso             del file da modificare
      * @param pathFileDaModificare nome completo del file da modificare
-     * @param inizioFile           per la modifica dell'header
      */
-    public AIResult fixDocFile(String packageName, String nameSourceText, String suffisso, String pathFileDaModificare, boolean inizioFile) {
+    public AIResult fixDocFile(String packageName, String nameSourceText, String suffisso, String pathFileDaModificare) {
         AIResult risultato = AResult.errato();
         String message = VUOTA;
-        String tagIni = inizioFile ? "package" : "* <p>";
-        String tagEnd = "@AIScript(";
+        AEWizDoc wizDoc = null;
+        String tagIni = VUOTA;
+        String tagEnd = VUOTA;
         String oldHeader;
         String newHeader;
         String realText = file.leggeFile(pathFileDaModificare);
         String sourceText = leggeFile(nameSourceText);
         String path = file.findPathBreve(pathFileDaModificare, FlowCost.DIR_PACKAGES);
         String fileName = file.estraeClasseFinaleSenzaJava(pathFileDaModificare);
+        Class clazz = classService.getClazzFromName(pathFileDaModificare);
+
+        clazz = Prova.class;
+
+        if (clazz != null) {
+            wizDoc = annotation.getDocFile(clazz);
+        }
+
+        if (wizDoc != null) {
+            tagIni = wizDoc.getIniTag();
+            tagEnd = wizDoc.getEndTag();
+        }
 
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "fixDocFile");
@@ -830,13 +859,13 @@ public class WizService {
         AEToken.newEntityKeyUnica.setValue(fixNewEntityUnica());
         AEToken.toString.setValue(fixString());
 
-//        System.out.println(VUOTA);
-//        System.out.println(AEToken.packageNamePunti.getTokenTag() + SEP + AEToken.packageNamePunti.getValue());
-//        System.out.println(AEToken.packageNameSlash.getTokenTag() + SEP + AEToken.packageNameSlash.getValue());
-//        System.out.println(AEToken.packageNameLower.getTokenTag() + SEP + AEToken.packageNameLower.getValue());
-//        System.out.println(AEToken.packageNameUpper.getTokenTag() + SEP + AEToken.packageNameUpper.getValue());
-//        System.out.println(AEToken.entityLower.getTokenTag() + SEP + AEToken.entityLower.getValue());
-//        System.out.println(AEToken.entityUpper.getTokenTag() + SEP + AEToken.entityUpper.getValue());
+        //        System.out.println(VUOTA);
+        //        System.out.println(AEToken.packageNamePunti.getTokenTag() + SEP + AEToken.packageNamePunti.getValue());
+        //        System.out.println(AEToken.packageNameSlash.getTokenTag() + SEP + AEToken.packageNameSlash.getValue());
+        //        System.out.println(AEToken.packageNameLower.getTokenTag() + SEP + AEToken.packageNameLower.getValue());
+        //        System.out.println(AEToken.packageNameUpper.getTokenTag() + SEP + AEToken.packageNameUpper.getValue());
+        //        System.out.println(AEToken.entityLower.getTokenTag() + SEP + AEToken.entityLower.getValue());
+        //        System.out.println(AEToken.entityUpper.getTokenTag() + SEP + AEToken.entityUpper.getValue());
 
         return status;
     }

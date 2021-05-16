@@ -32,7 +32,7 @@ public class StatoLogicForm extends LogicForm {
      * Costruttore senza parametri <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      */
-    public StatoLogicForm(@Qualifier("StatoService") AIService entityService) {
+    public StatoLogicForm(@Qualifier("statoService") AIService entityService) {
         super.entityClazz = Stato.class;
         super.entityService = entityService;
     }// end of Vaadin/@Route constructor
