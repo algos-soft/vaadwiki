@@ -1,9 +1,11 @@
 package it.algos.vaadflow14.backend.service;
 
+import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -342,10 +344,20 @@ public class AClassService extends AAbstractService {
     }
 
     /**
+     * Recupera la clazz dal nome canonico <br>
+     * Il canonicalName inizia da ...it/algos/... <br>
+     * Il canonicalName termina SENZA JAVA_SUFFIX <br>
      *
+     * @param canonicalName della classe relativo al path parziale di esecuzione
+     *
+     * @return classe individuata
      */
     public Class getClazzFromName(String canonicalName) {
         Class clazz = null;
+
+        if (text.isEmpty(canonicalName)) {
+            return clazz;
+        }
 
         if (canonicalName.endsWith(JAVA_SUFFIX)) {
             canonicalName = text.levaCoda(canonicalName, JAVA_SUFFIX);
@@ -358,6 +370,41 @@ public class AClassService extends AAbstractService {
         }
 
         return clazz;
+    }
+
+    /**
+     * Recupera il canonicalName dal path completo <br>
+     * Il path completo inizia da /Users/gac/Documents/... <br>
+     *
+     * @param pathCompleto della classe
+     *
+     * @return canonicalName
+     */
+    public String getNameFromPath(String pathCompleto) {
+        String canonicalName = VUOTA;
+        String tagDirectory = "it/algos";
+
+        canonicalName = fileService.findPathCanonical(pathCompleto, tagDirectory);
+        if (canonicalName.endsWith(JAVA_SUFFIX)) {
+            canonicalName = text.levaCoda(canonicalName, JAVA_SUFFIX);
+        }
+
+        canonicalName = canonicalName.replaceAll(FlowCost.SLASH, FlowCost.PUNTO);
+        return canonicalName;
+    }
+
+    /**
+     * Recupera la clazz dal path completo <br>
+     * Il path completo inizia da /Users/gac/Documents/... <br>
+     *
+     * @param pathCompleto della classe
+     *
+     * @return classe individuata
+     */
+    public Class getClazzFromPath(final String pathCompleto) {
+        String canonicalName = getNameFromPath(pathCompleto);
+        canonicalName = canonicalName.replaceAll(FlowCost.SLASH, FlowCost.PUNTO);
+        return getClazzFromName(canonicalName);
     }
 
 }

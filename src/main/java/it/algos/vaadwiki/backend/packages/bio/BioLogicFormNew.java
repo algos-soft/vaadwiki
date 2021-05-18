@@ -6,13 +6,16 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.tabs.*;
 import com.vaadin.flow.data.value.*;
 import com.vaadin.flow.router.*;
+import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.interfaces.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import org.springframework.beans.factory.annotation.*;
 
@@ -22,11 +25,12 @@ import java.util.*;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: gio, 06-mag-2021
- * Time: 16:29
+ * First time: gio, 06-mag-2021
+ * Last doc revision: mar, 18-mag-2021 alle 18:37 <br>
  * <p>
  */
 @Route(value = "bioFormNew", layout = MainLayout.class)
+@AIScript(sovraScrivibile = false, type = AETypeFile.form, doc = AEWizDoc.revisione)
 public class BioLogicFormNew extends WikiLogicForm {
 
 

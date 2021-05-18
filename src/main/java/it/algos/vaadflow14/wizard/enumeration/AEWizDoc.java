@@ -10,7 +10,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  * Time: 15:34
  */
 public enum AEWizDoc {
-    nullo(false, "Non modifica il file.", VUOTA),
+    nessuno(false, "Non modifica il file.", VUOTA),
     inizio(true, "Modifica l'header partendo dall'inizio del file e fino al tag " + TAG_END_DOC, TAG_INIZIO_DOC),
     revisione(true, "Modifica l'header partendo dalla data di revisione (compresa) e fino al tag " + TAG_END_DOC, TAG_INIZIO_REVISION),
     ;
@@ -19,24 +19,25 @@ public enum AEWizDoc {
 
     private String descrizione;
 
-    private String iniTag;
+    private String tagIni;
 
-    private String endTag;
+    private String tagEnd;
 
     /**
      * Costruttore <br>
      */
-    AEWizDoc(boolean esegue, String descrizione, String iniTag) {
-        this(esegue, descrizione, iniTag, TAG_END_DOC);
+    AEWizDoc(final boolean esegue, final String descrizione, final String tagIni) {
+        this(esegue, descrizione, tagIni, TAG_END_DOC);
     }
 
     /**
      * Costruttore <br>
      */
-    AEWizDoc(boolean esegue, String descrizione, String iniTag, String endTag) {
+    AEWizDoc(final boolean esegue, final String descrizione, final String tagIni, final String tagEnd) {
         this.esegue = esegue;
         this.descrizione = descrizione;
-        this.iniTag = iniTag;
+        this.tagIni = tagIni;
+        this.tagEnd = tagEnd;
     }
 
     public boolean isEsegue() {
@@ -47,11 +48,11 @@ public enum AEWizDoc {
         return descrizione;
     }
 
-    public String getIniTag() {
-        return iniTag;
+    public String getTagIni() {
+        return tagIni;
     }
 
-    public String getEndTag() {
-        return endTag;
+    public String getTagEnd() {
+        return tagEnd;
     }
 }

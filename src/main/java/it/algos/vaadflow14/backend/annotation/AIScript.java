@@ -18,12 +18,12 @@ import java.lang.annotation.*;
  * Regola:
  * sovraScrivibile()=false -> (Optional) Se il file può essere sovrascritto dal Doc Wizard
  * type()=AETypeFile.nessuno -> (Mandatory) Tipologia dei file Algos sia generici che del package
- * doc()=AEWizDoc.revisione -> (Mandatory) The type of doc upgrade from wizard
+ * doc()=AEWizDoc.nessuno -> (Mandatory) The type of doc upgrade from wizard
  * <p>
  * Standard:
  * AIScript(sovraScrivibile = false, type = AETypeFile.nessuno, doc = AEWizDoc.revisione)
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 //--Class, interface (including annotation type), or enum declaration
 public @interface AIScript {
@@ -52,6 +52,6 @@ public @interface AIScript {
      *
      * @return the Algos file type
      */
-    AEWizDoc doc() default AEWizDoc.revisione;
+    AEWizDoc doc() default AEWizDoc.nessuno;
 
 }

@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.*;
@@ -18,8 +19,8 @@ import javax.validation.constraints.*;
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: dom, 18-apr-2021 <br>
- * Fix time: 8:44 <br>
+ * First time: dom, 18-apr-2021 <br>
+ * Last doc revision: mar, 18-mag-2021 alle 19:18 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
@@ -45,7 +46,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @Builder(builderMethodName = "builderBio")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.revisione)
 @AIEntity(recordName = "Bio", keyPropertyName = "wikiTitle", usaCompany = false)
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "wikiTitle")
 @AIList(fields = "pageId,wikiTitle,nome,cognome", usaRowIndex = true)

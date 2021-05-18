@@ -12,8 +12,8 @@ import java.time.*;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: ven, 16-apr-2021
- * Time: 16:51
+ * First time: ven, 16-apr-2021
+ * Last doc revision: mar, 18-mag-2021 alle 18:37 <br>
  * <p>
  * Classe di libreria; NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
  * Estende la classe astratta AAbstractService che mantiene i riferimenti agli altri services <br>

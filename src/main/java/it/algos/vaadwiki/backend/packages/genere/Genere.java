@@ -1,24 +1,30 @@
 package it.algos.vaadwiki.backend.packages.genere;
 
-import com.querydsl.core.annotations.*;
-import com.vaadin.flow.component.icon.*;
-import com.vaadin.flow.spring.annotation.*;
+import com.querydsl.core.annotations.QueryEntity;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.*;
-import org.springframework.data.mongodb.core.index.*;
-import org.springframework.data.mongodb.core.mapping.*;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static java.awt.image.ImageObserver.WIDTH;
 
 /**
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: mer, 14-apr-2021 <br>
- * Fix time: 9:14 <br>
+ * First time: mer, 14-apr-2021 <br>
+ * Last doc revision: mar, 18-mag-2021 alle 19:18 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
@@ -44,7 +50,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @Builder(builderMethodName = "builderGenere")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.revisione)
 @AIEntity(recordName = "Genere", keyPropertyName = "singolare", usaCreazione = false, usaModifica = false, usaCompany = false)
 @AIView(menuName = "Genere", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
 @AIList(fields = "singolare,pluraleMaschile,pluraleFemminile", usaRowIndex = true)

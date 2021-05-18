@@ -1,12 +1,19 @@
 package it.algos.vaadwiki.backend.packages.professione;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
+import it.algos.vaadflow14.backend.logic.AService;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
+import it.algos.vaadflow14.backend.wrapper.AResult;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
-import org.springframework.beans.factory.annotation.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 import java.util.*;
 
@@ -14,8 +21,8 @@ import java.util.*;
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: gio, 15-apr-2021 <br>
- * Fix time: 6:53 <br>
+ * First time: gio, 15-apr-2021 <br>
+ * Last doc revision: mar, 18-mag-2021 alle 19:18 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe EntityService <br>
@@ -31,7 +38,7 @@ import java.util.*;
 @Service
 @Qualifier("professioneService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.revisione)
 public class ProfessioneService extends WikiService {
 
 

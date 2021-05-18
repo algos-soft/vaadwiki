@@ -6,6 +6,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -21,8 +22,8 @@ import static java.awt.image.ImageObserver.WIDTH;
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: mer, 14-apr-2021 <br>
- * Fix time: 18:44 <br>
+ * First time: mer, 14-apr-2021 <br>
+ * Last doc revision: mar, 18-mag-2021 alle 19:18 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
@@ -48,7 +49,7 @@ import static java.awt.image.ImageObserver.WIDTH;
 @AllArgsConstructor
 @Builder(builderMethodName = "builderNazionalita")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.revisione)
 @AIEntity(recordName = "Nazionalita", keyPropertyName = "singolare", usaCreazione = false, usaModifica = false, usaCompany = false)
 @AIView(menuName = "Nazionalita", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
 @AIList(fields = "singolare,plurale", usaRowIndex = true)

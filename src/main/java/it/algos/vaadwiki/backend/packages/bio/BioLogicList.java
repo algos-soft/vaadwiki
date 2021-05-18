@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -16,8 +17,8 @@ import java.util.*;
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: lun, 26-apr-2021 <br>
- * Fix time: 13:45 <br>
+ * First time: lun, 26-apr-2021 <br>
+ * Last doc revision: mar, 18-mag-2021 alle 19:18 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe GenericLogicList con @Route <br>
@@ -30,7 +31,7 @@ import java.util.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Route(value = "bio", layout = MainLayout.class)
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = false, type = AETypeFile.list, doc = AEWizDoc.revisione)
 public class BioLogicList extends LogicList {
 
     /**

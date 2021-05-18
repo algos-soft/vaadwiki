@@ -49,6 +49,8 @@ public abstract class FlowCost {
 
     public static final String VIRGOLA = ",";
 
+    public static final String A_CAPO_HTML = "<br>";
+
     public static final String VIRGOLA_SPAZIO = VIRGOLA + SPAZIO;
 
     public static final String VIRGOLA_CAPO = VIRGOLA + A_CAPO;
@@ -123,9 +125,11 @@ public abstract class FlowCost {
 
     public static final String TAG_INIZIO_DOC = "package";
 
+    public static final String TAG_FIRST_TIME = "* First time";
+
     public static final String TAG_INIZIO_REVISION = "* Last doc revision";
 
-    public static final String TAG_END_DOC = "* @AIScript(";
+    public static final String TAG_END_DOC = "@AIScript(";
 
     //--praticamente una data 'nulla'
     public static final LocalDateTime ROOT_DATA_TIME = LocalDateTime.of(2000, 1, 1, 0, 0);

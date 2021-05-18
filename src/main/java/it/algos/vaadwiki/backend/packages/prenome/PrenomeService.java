@@ -2,6 +2,8 @@ package it.algos.vaadwiki.backend.packages.prenome;
 
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -13,8 +15,8 @@ import org.springframework.stereotype.Service;
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: dom, 18-apr-2021 <br>
- * Fix time: 7:42 <br>
+ * First time: dom, 18-apr-2021 <br>
+ * Last doc revision: mar, 18-mag-2021 alle 19:18 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe EntityService <br>
@@ -30,7 +32,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Qualifier("prenomeService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.revisione)
 public class PrenomeService extends WikiService {
 
 

@@ -4,11 +4,13 @@ import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.interfaces.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import org.springframework.beans.factory.annotation.*;
 
@@ -18,8 +20,8 @@ import java.util.*;
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: lun, 26-apr-2021 <br>
- * Fix time: 13:45 <br>
+ * First time: lun, 26-apr-2021 <br>
+ * Last doc revision: mar, 18-mag-2021 alle 19:18 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe GenericLogicForm con @Route <br>
@@ -33,7 +35,7 @@ import java.util.*;
  */
 
 @Route(value = "bioForm", layout = MainLayout.class)
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = false, type = AETypeFile.form, doc = AEWizDoc.revisione)
 public class BioLogicForm extends WikiLogicForm {
 
 

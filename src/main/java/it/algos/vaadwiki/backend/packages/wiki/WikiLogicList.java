@@ -17,8 +17,8 @@ import java.util.*;
  * Project wikibio
  * Created by Algos
  * User: gac
- * Date: mar, 30-mar-2021
- * Time: 13:34
+ * First time: mar, 30-mar-2021
+ * Last doc revision: mar, 18-mag-2021 alle 18:37 <br>
  */
 public abstract class WikiLogicList extends LogicList {
 

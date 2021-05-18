@@ -10,7 +10,6 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
-import it.algos.vaadwiki.backend.packages.prova.*;
 import org.apache.commons.io.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -444,27 +443,38 @@ public class WizService {
      */
     public AIResult fixDocFile(String packageName, String nameSourceText, String suffisso, String pathFileDaModificare) {
         AIResult risultato = AResult.errato();
-        String message = VUOTA;
+        String message;
         AEWizDoc wizDoc = null;
-        String tagIni = VUOTA;
-        String tagEnd = VUOTA;
+        String tagIni;
+        String tagEnd;
         String oldHeader;
-        String newHeader;
+        String newHeader = VUOTA;
         String realText = file.leggeFile(pathFileDaModificare);
         String sourceText = leggeFile(nameSourceText);
         String path = file.findPathBreve(pathFileDaModificare, FlowCost.DIR_PACKAGES);
         String fileName = file.estraeClasseFinaleSenzaJava(pathFileDaModificare);
-        Class clazz = classService.getClazzFromName(pathFileDaModificare);
-
-        clazz = Prova.class;
+        Class clazz = classService.getClazzFromPath(pathFileDaModificare);
+        boolean preservaOldDate = false;
 
         if (clazz != null) {
             wizDoc = annotation.getDocFile(clazz);
         }
 
-        if (wizDoc != null) {
-            tagIni = wizDoc.getIniTag();
-            tagEnd = wizDoc.getEndTag();
+        if (wizDoc == null) {
+            message = String.format("Nel package %s manca il tag doc = AEWizDoc nello @AIScript del file %s e preferisco non modificare la documentazione", packageName, path);
+            logger.log(AETypeLog.wizardDoc, message);
+            return risultato;
+        }
+
+        if (wizDoc.isEsegue()) {
+            tagIni = wizDoc.getTagIni();
+            tagEnd = wizDoc.getTagEnd();
+            preservaOldDate = wizDoc == AEWizDoc.inizio;
+        }
+        else {
+            message = String.format("Nel package %s c'è AEWizDoc=nessuno nello @AIScript del file %s e non modifico la documentazione", packageName, path);
+            logger.log(AETypeLog.wizardDoc, message);
+            return risultato;
         }
 
         if (text.isEmpty(sourceText)) {
@@ -490,7 +500,12 @@ public class WizService {
                 return risultato;
             }
             oldHeader = realText.substring(realText.indexOf(tagIni), realText.indexOf(tagEnd));
-            newHeader = sourceText.substring(sourceText.indexOf(tagIni), sourceText.indexOf(tagEnd));
+            if (sourceText.contains(tagIni) && sourceText.contains(tagEnd)) {
+                if (sourceText.indexOf(tagIni) < sourceText.indexOf(tagEnd)) {
+                    newHeader = sourceText.substring(sourceText.indexOf(tagIni), sourceText.indexOf(tagEnd));
+                }
+            }
+
             if (text.isValid(oldHeader) && text.isValid(newHeader)) {
                 if (newHeader.trim().equals(oldHeader.trim())) {
                     message = String.format("Nel package %s non è stato modificato il file %s", packageName, fileName);
@@ -498,6 +513,7 @@ public class WizService {
                     risultato = AResult.errato(message);
                 }
                 else {
+                    newHeader = preservaOldDate ? fixOldDate(oldHeader, newHeader) : newHeader;
                     realText = text.sostituisce(realText, oldHeader, newHeader);
                     risultato = file.scriveFile(pathFileDaModificare, realText, true, FlowCost.DIR_PACKAGES);
                     if (risultato.isValido()) {
@@ -512,11 +528,52 @@ public class WizService {
             }
         }
         else {
-            message = String.format("Nel package %s manca il tag @AIScript nel file %s che non è stato modificato", packageName, path);
-            logger.log(AETypeLog.wizardDoc, message);
+            if (!realText.contains(tagIni)) {
+                message = String.format("Nel package %s manca il tag %s nel file %s che non è stato modificato", packageName, tagIni, path);
+                logger.log(AETypeLog.wizardDoc, message);
+            }
+            if (!realText.contains(tagEnd)) {
+                message = String.format("Nel package %s manca il tag %s nel file %s che non è stato modificato", packageName, tagEnd, path);
+                logger.log(AETypeLog.wizardDoc, message);
+            }
+
+            //            message = String.format("Nel package %s manca il tag @AIScript nel file %s che non è stato modificato", packageName, path);
+            //            logger.log(AETypeLog.wizardDoc, message);
         }
 
         return risultato;
+    }
+
+    /**
+     * Preserva la vecchia data di creazione del file <br>
+     */
+    public String fixOldDate(final String oldHeader, final String newHeader) {
+        String newHeaderModificato = newHeader;
+        String tagIni = TAG_FIRST_TIME;
+        String tagEnd = "*";
+        String vecchiaData = VUOTA;
+        int posIniOld = 0;
+        int posEndOld = 0;
+        int posIniNew = 0;
+        int posEndnew = 0;
+        String nuovaData = VUOTA;
+
+        if (oldHeader.contains(tagIni) && newHeader.contains(TAG_FIRST_TIME)) {
+            posIniOld = oldHeader.indexOf(tagIni);
+            posEndOld = oldHeader.indexOf(tagEnd, posIniOld + tagIni.length());
+            vecchiaData = oldHeader.substring(posIniOld, posEndOld).trim();
+            if (!vecchiaData.endsWith("<br>")) {
+                vecchiaData += SPAZIO + "<br>" + A_CAPO + SPAZIO;
+            }
+            vecchiaData += A_CAPO + SPAZIO;
+
+            posIniNew = newHeader.indexOf(TAG_FIRST_TIME);
+            posEndnew = newHeader.indexOf(tagEnd, posIniNew + TAG_FIRST_TIME.length());
+            nuovaData = newHeader.substring(posIniNew, posEndnew);
+            newHeaderModificato = text.sostituisce(newHeader, nuovaData, vecchiaData);
+        }
+
+        return newHeaderModificato + A_CAPO;
     }
 
     public String leggeFile(String nomeFileTextSorgente) {
@@ -538,7 +595,7 @@ public class WizService {
      *
      * @return testo elaborato
      */
-    protected String elaboraFileCreatoDaSource(String testoGrezzoDaElaborare) {
+    public String elaboraFileCreatoDaSource(String testoGrezzoDaElaborare) {
         String testoFinaleElaborato = testoGrezzoDaElaborare;
 
         for (AEToken token : AEToken.values()) {

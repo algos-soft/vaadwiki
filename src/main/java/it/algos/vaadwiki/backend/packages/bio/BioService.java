@@ -2,11 +2,11 @@ package it.algos.vaadwiki.backend.packages.bio;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.wrapper.AResult;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.*;
@@ -17,8 +17,8 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Project: vaadwiki <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: lun, 26-apr-2021 <br>
- * Fix time: 13:45 <br>
+ * First time: lun, 26-apr-2021 <br>
+ * Last doc revision: mar, 18-mag-2021 alle 19:18 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe EntityService <br>
@@ -34,7 +34,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @Service
 @Qualifier("bioService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.revisione)
 public class BioService extends AService {
 
 

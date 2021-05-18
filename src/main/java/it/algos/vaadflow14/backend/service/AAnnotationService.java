@@ -470,7 +470,7 @@ public class AAnnotationService extends AAbstractService {
      */
     public AEWizDoc getDocFile(final Class<? extends AEntity> entityClazz) {
         AIScript annotation = this.getAIScript(entityClazz);
-        return annotation != null ? annotation.doc() : AEWizDoc.revisione;
+        return annotation != null ? annotation.doc() : AEWizDoc.nessuno;
     }
 
     //==========================================================================
