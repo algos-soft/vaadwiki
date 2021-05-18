@@ -18,7 +18,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Created by Algos <br>
  * User: gac <br>
  * First time: lun, 26-apr-2021 <br>
- * Last doc revision: mar, 18-mag-2021 alle 19:18 <br>
+ * Last doc revision: mar, 18-mag-2021 alle 19:35 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe EntityService <br>
@@ -31,9 +31,13 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Annotated with @Scope (obbligatorio con SCOPE_SINGLETON) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Spring
 @Service
+//Spring
 @Qualifier("bioService")
+//Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+//Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.revisione)
 public class BioService extends AService {
 

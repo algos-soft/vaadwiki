@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.*;
  * Created by Algos <br>
  * User: gac <br>
  * First time: lun, 26-apr-2021 <br>
- * Last doc revision: mar, 18-mag-2021 alle 19:18 <br>
+ * Last doc revision: mar, 18-mag-2021 alle 19:35 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe GenericLogicList con @Route <br>
@@ -31,7 +31,9 @@ import org.springframework.beans.factory.annotation.*;
  * Annotated with @Route (obbligatorio) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Vaadin flow
 @Route(value = "nazionalita", layout = MainLayout.class)
+//Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.list, doc = AEWizDoc.revisione)
 public class NazionalitaLogicList extends WikiLogicList {
 
