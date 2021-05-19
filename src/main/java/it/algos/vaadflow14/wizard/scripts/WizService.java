@@ -443,11 +443,14 @@ public class WizService {
         String tagFalseOld = tagFalse + par;
         String tagNew = ", doc = AEWizDoc.inizioRevisione" + par;
 
-        if (newText.contains(TAG_FIRST_TIME_OLD)) {
-            newText = text.sostituisce(newText, TAG_FIRST_TIME_OLD, TAG_FIRST_TIME);
+        if (newText.contains(TAG_FIRST_DATE_OLD)) {
+            newText = text.sostituisce(newText, TAG_FIRST_DATE_OLD, TAG_FIRST_DATE_NEW);
         }
-        if (newText.contains(TAG_INIZIO_REVISION_OLD)) {
-            newText = text.sostituisce(newText, TAG_INIZIO_REVISION_OLD, TAG_INIZIO_REVISION);
+        if (newText.contains(TAG_TIME_OLD)) {
+            newText = text.sostituisce(newText, TAG_TIME_OLD, TAG_REVISION_NEW);
+        }
+        if (newText.contains(TAG_TIME_OLD_2)) {
+            newText = text.sostituisce(newText, TAG_TIME_OLD_2, TAG_REVISION_NEW);
         }
 
         if (newText.contains(tagTrueOld)) {
@@ -587,7 +590,7 @@ public class WizService {
      */
     public String fixOldDate(String oldHeader, final String newHeader) {
         String newHeaderModificato = newHeader;
-        String tagIni = TAG_FIRST_TIME;
+        String tagIni = TAG_FIRST_DATE_NEW;
         String tagEnd = "*";
         String vecchiaData = VUOTA;
         int posIniOld = 0;
@@ -596,7 +599,7 @@ public class WizService {
         int posEndnew = 0;
         String nuovaData = VUOTA;
 
-        if (oldHeader.contains(tagIni) && newHeader.contains(TAG_FIRST_TIME)) {
+        if (oldHeader.contains(tagIni) && newHeader.contains(TAG_FIRST_DATE_NEW)) {
             posIniOld = oldHeader.indexOf(tagIni);
             posEndOld = oldHeader.indexOf(tagEnd, posIniOld + tagIni.length());
             vecchiaData = oldHeader.substring(posIniOld, posEndOld).trim();
@@ -605,8 +608,8 @@ public class WizService {
             }
             vecchiaData += A_CAPO + SPAZIO;
 
-            posIniNew = newHeader.indexOf(TAG_FIRST_TIME);
-            posEndnew = newHeader.indexOf(tagEnd, posIniNew + TAG_FIRST_TIME.length());
+            posIniNew = newHeader.indexOf(TAG_FIRST_DATE_NEW);
+            posEndnew = newHeader.indexOf(tagEnd, posIniNew + TAG_FIRST_DATE_NEW.length());
             nuovaData = newHeader.substring(posIniNew, posEndnew);
             newHeaderModificato = text.sostituisce(newHeader, nuovaData, vecchiaData);
         }
