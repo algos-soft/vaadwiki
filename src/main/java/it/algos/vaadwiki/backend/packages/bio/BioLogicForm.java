@@ -37,7 +37,7 @@ import java.util.*;
 //Vaadin flow
 @Route(value = "bioForm", layout = MainLayout.class)
 //Algos
-@AIScript(sovraScrivibile = false, type = AETypeFile.form, doc = AEWizDoc.revisione)
+@AIScript(sovraScrivibile = false, type = AETypeFile.form, doc = AEWizDoc.inizioRevisione)
 public class BioLogicForm extends WikiLogicForm {
 
 

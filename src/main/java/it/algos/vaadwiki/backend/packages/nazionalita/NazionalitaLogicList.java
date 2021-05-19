@@ -1,15 +1,12 @@
 package it.algos.vaadwiki.backend.packages.nazionalita;
 
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
-import java.util.*;
 
 import it.algos.vaadflow14.wizard.enumeration.*;
-import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import static it.algos.vaadwiki.backend.packages.wiki.WikiService.*;
 import org.springframework.beans.factory.annotation.*;
@@ -34,7 +31,7 @@ import org.springframework.beans.factory.annotation.*;
 //Vaadin flow
 @Route(value = "nazionalita", layout = MainLayout.class)
 //Algos
-@AIScript(sovraScrivibile = false, type = AETypeFile.list, doc = AEWizDoc.revisione)
+@AIScript(sovraScrivibile = false, type = AETypeFile.list, doc = AEWizDoc.inizioRevisione)
 public class NazionalitaLogicList extends WikiLogicList {
 
 

@@ -30,7 +30,7 @@ import java.util.*;
  * <p>
  */
 @Route(value = "bioFormNew", layout = MainLayout.class)
-@AIScript(sovraScrivibile = false, type = AETypeFile.form, doc = AEWizDoc.revisione)
+@AIScript(sovraScrivibile = false, type = AETypeFile.form, doc = AEWizDoc.inizioRevisione)
 public class BioLogicFormNew extends WikiLogicForm {
 
 

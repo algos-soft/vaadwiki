@@ -36,7 +36,7 @@ import org.springframework.stereotype.Service;
 //Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //Algos
-@AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.revisione)
+@AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.inizioRevisione)
 public class PrenomeService extends WikiService {
 
 

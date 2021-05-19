@@ -1,6 +1,5 @@
 package it.algos.vaadwiki.backend.packages.bio;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.AService;
@@ -38,7 +37,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 //Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //Algos
-@AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.revisione)
+@AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.inizioRevisione)
 public class BioService extends AService {
 
 

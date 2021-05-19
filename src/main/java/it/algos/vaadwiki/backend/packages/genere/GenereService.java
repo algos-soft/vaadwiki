@@ -39,7 +39,7 @@ import java.util.*;
 //Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //Algos
-@AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.revisione)
+@AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.inizioRevisione)
 public class GenereService extends WikiService {
 
 

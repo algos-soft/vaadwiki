@@ -314,7 +314,7 @@ public abstract class WizElabora implements WizRecipient {
         boolean status = true;
         int numFiles = 0;
         String message = VUOTA;
-//        AEWizCost.print("Levare");
+        //        AEWizCost.print("Levare");
         String nameTargetProjectUpper = AEWizCost.nameTargetProjectUpper.get();
         String nameTargetProjectModulo = AEWizCost.nameTargetProjectModulo.get();
         String suffix;
@@ -326,7 +326,7 @@ public abstract class WizElabora implements WizRecipient {
             for (AEPackage pack : AEPackage.getFiles()) {
                 if (pack.is()) {
                     suffix = pack.getSuffix();
-                    fileName = text.primaMaiuscola(packageName) ;
+                    fileName = text.primaMaiuscola(packageName);
                     wizService.regolaAEToken(nameTargetProjectUpper, nameTargetProjectModulo, packageName, fileName);
                     risultato = elaboraDoc(packageName, pack);
                     if (risultato.isValido()) {
@@ -376,6 +376,7 @@ public abstract class WizElabora implements WizRecipient {
 
         if (file.isEsisteFile(pathFileDaModificare)) {
             //            wizService.regolaAEToken(AEWizCost.nameProjectCurrentUpper.get(), packageName,fileName);//@todo PROVVISORIO
+            wizService.fixDocFileOld(packageName, suffisso, pathFileDaModificare);
             risultato = wizService.fixDocFile(packageName, nameSource, suffisso, pathFileDaModificare);
         }
         else {

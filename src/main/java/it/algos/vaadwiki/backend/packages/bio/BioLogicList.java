@@ -1,7 +1,6 @@
 package it.algos.vaadwiki.backend.packages.bio;
 
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
@@ -10,8 +9,6 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
-
-import java.util.*;
 
 /**
  * Project: vaadwiki <br>
@@ -33,7 +30,7 @@ import java.util.*;
 //Vaadin flow
 @Route(value = "bio", layout = MainLayout.class)
 //Algos
-@AIScript(sovraScrivibile = false, type = AETypeFile.list, doc = AEWizDoc.revisione)
+@AIScript(sovraScrivibile = false, type = AETypeFile.list, doc = AEWizDoc.inizioRevisione)
 public class BioLogicList extends LogicList {
 
     /**

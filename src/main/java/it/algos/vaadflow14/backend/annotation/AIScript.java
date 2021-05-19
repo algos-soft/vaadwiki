@@ -48,10 +48,10 @@ public @interface AIScript {
 
     /**
      * (Mandatory) The type of doc upgrade from wizard.
-     * Defaults to AETypeFile.nessuno.
+     * Defaults to AETypeFile.inizioRevisione.
      *
      * @return the Algos file type
      */
-    AEWizDoc doc() default AEWizDoc.nessuno;
+    AEWizDoc doc() default AEWizDoc.inizioRevisione;
 
 }

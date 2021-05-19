@@ -10,9 +10,9 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  * Time: 15:34
  */
 public enum AEWizDoc {
-    nessuno(false, "Non modifica il file.", VUOTA),
-    inizio(true, "Modifica l'header partendo dall'inizio del file e fino al tag " + TAG_END_DOC, TAG_INIZIO_DOC),
-    revisione(true, "Modifica l'header partendo dalla data di revisione (compresa) e fino al tag " + TAG_END_DOC, TAG_INIZIO_REVISION),
+    nonModificabile(false, "Non modifica il file.", VUOTA),
+    inizioFile(true, "Modifica l'header partendo dall'inizio del file e fino al tag " + TAG_END_DOC, TAG_INIZIO_DOC),
+    inizioRevisione(true, "Modifica l'header partendo dalla data di revisione (compresa) e fino al tag " + TAG_END_DOC, TAG_INIZIO_REVISION),
     ;
 
     private boolean esegue;

@@ -1,10 +1,6 @@
 package it.algos.vaadwiki.backend.packages.professione;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
@@ -13,7 +9,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 import java.util.*;
 
@@ -42,7 +37,7 @@ import java.util.*;
 //Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //Algos
-@AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.revisione)
+@AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.inizioRevisione)
 public class ProfessioneService extends WikiService {
 
 

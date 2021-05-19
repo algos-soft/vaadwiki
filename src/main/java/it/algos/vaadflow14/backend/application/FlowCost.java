@@ -125,7 +125,11 @@ public abstract class FlowCost {
 
     public static final String TAG_INIZIO_DOC = "package";
 
+    public static final String TAG_FIRST_TIME_OLD = "* Date";
+
     public static final String TAG_FIRST_TIME = "* First time";
+
+    public static final String TAG_INIZIO_REVISION_OLD = "* Time";
 
     public static final String TAG_INIZIO_REVISION = "* Last doc revision";
 

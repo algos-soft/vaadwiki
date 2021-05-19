@@ -20,7 +20,7 @@ import javax.validation.constraints.*;
  * Created by Algos <br>
  * User: gac <br>
  * First time: dom, 18-apr-2021 <br>
- * Last doc revision: mar, 18-mag-2021 alle 19:35 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 9:52 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
@@ -50,7 +50,7 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderBio")
 @EqualsAndHashCode(callSuper = false)
 //Algos
-@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.revisione)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Bio", keyPropertyName = "wikiTitle", usaCompany = false)
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "wikiTitle")
 @AIList(fields = "pageId,wikiTitle,nome,cognome", usaRowIndex = true)
