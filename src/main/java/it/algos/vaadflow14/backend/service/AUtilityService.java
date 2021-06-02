@@ -155,11 +155,11 @@ public class AUtilityService extends AAbstractService {
      * Qui effettuo la conversione
      *
      * @param sortVaadinList sort di Vaadin
-     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param entityClazz    corrispondente ad una collection sul database mongoDB. Obbligatoria.
      *
      * @return sortSpring di springframework
      */
-    public Sort sortVaadinToSpring(final List<QuerySortOrder> sortVaadinList,final Class<? extends AEntity> entityClazz) {
+    public Sort sortVaadinToSpring(final List<QuerySortOrder> sortVaadinList, final Class<? extends AEntity> entityClazz) {
         Sort sortSpring = null;
         Sort.Direction directionSpring = null;
         String fieldName = VUOTA;
@@ -223,17 +223,23 @@ public class AUtilityService extends AAbstractService {
      * @param width        larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
      * @param initialValue eventuale valore iniziale di selezione
      */
-    public ComboBox creaComboBox(final Class<? extends AEntity> entityClazz, final String fieldName, DataProvider dataProvider, final int width, final Object initialValue) {
+    public ComboBox creaComboBox(final Class<? extends AEntity> entityClazz, final String fieldName, DataProvider dataProvider, final int width, Object initialValue) {
         ComboBox combo = null;
         Field reflectionJavaField = null;
         Class comboClazz = null;
         Class enumClazz = null;
-        String widthEM = width > 0 ? width + TAG_EM : VUOTA;
+        AETypeField type;
+        String widthEM;
+        //        String widthEM = width > 0 ? width + TAG_EM : COMBO_WIDTH + TAG_EM;
         Sort sortSpring;
         List items;
+        AIService serviceClazz;
+        String textInitialValue;
 
         reflectionJavaField = reflection.getField(entityClazz, fieldName);
-        AETypeField type = annotation.getColumnType(reflectionJavaField);
+        type = annotation.getColumnType(reflectionJavaField);
+        widthEM = width > 0 ? width + TAG_EM : annotation.getComboBoxGridWidth(reflectionJavaField);
+        textInitialValue = annotation.getComboInitialValue(reflectionJavaField);
 
         if (type != AETypeField.combo && type != AETypeField.enumeration) {
             return null;
@@ -264,11 +270,33 @@ public class AUtilityService extends AAbstractService {
             }
         }
 
+        if (initialValue == null && comboClazz != null) {
+            serviceClazz = classService.getServiceFromEntityClazz(comboClazz);
+            initialValue = serviceClazz.findByKey(textInitialValue);
+        }
+
         if (initialValue != null) {
             combo.setValue(initialValue);
         }
 
         return combo;
+    }
+
+    /**
+     * Controlla i flag della entityClazz per vedere se usare la colonna reset <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return sortVaadin di Vaadin
+     */
+    public boolean usaReset(final Class<? extends AEntity> entityClazz) {
+        boolean usaReset = false;
+
+        if (annotation.usaReset(entityClazz) && annotation.usaNew(entityClazz) && reflection.isEsiste(entityClazz, FIELD_NAME_RESET)) {
+            usaReset = true;
+        }
+
+        return usaReset;
     }
 
 }

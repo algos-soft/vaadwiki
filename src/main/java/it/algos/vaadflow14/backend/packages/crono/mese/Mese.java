@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.hibernate.validator.constraints.*;
 import org.springframework.data.annotation.*;
@@ -19,17 +20,15 @@ import javax.validation.constraints.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: gio, 30-lug-2020
- * Time: 08:27
+ * First time: gio, 30-lug-2020
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
- * Le properties sono PUBLIC per poter usare la Reflection <br>
+ * Le properties sono PUBLIC per poter usare la Reflection ed i Test <br>
  * Unica classe obbligatoria per un package. <br>
  * Le altre servono solo se si vuole qualcosa in più dello standard minimo. <br>
  * <p>
- * Annotated with Spring: @SpringComponent (vaadin), @QueryEntity (querydsl), @Document (mongodb), @TypeAlias (data) <br>
- * Annotated with @SpringComponent, @QueryEntity, @Document, @TypeAlias <br>
  * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
  * Annotated with Algos: @AIScript per controllare il typo di file e la ri-creazione con Wizard <br>
  * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
@@ -37,19 +36,25 @@ import javax.validation.constraints.*;
  * Annotated with Algos: @AIList per info sulla Grid e sulle colonne <br>
  * Annotated with Algos: @AIForm per info sul Form e sulle properties <br>
  */
+//Vaadin spring
 @SpringComponent
+//querydsl
 @QueryEntity
+//Spring mongodb
 @Document(collection = "mese")
+//Spring data
 @TypeAlias("mese")
+//Lombok
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderMese")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Mese", keyPropertyName = "mese", usaCompany = false, usaCreazione = true, usaModifica = true, usaDelete = true, usaBoot = true)
+//Algos
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
+@AIEntity(recordName = "Mese", keyPropertyName = "mese", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Mese", menuIcon = VaadinIcon.CALENDAR, searchProperty = "mese", sortProperty = "ordine")
-@AIList(fields = "ordine,mese,giorni,giorniBisestile,sigla", usaRowIndex = false, usaResetMenu = true)
+@AIList(fields = "ordine,mese,giorni,giorniBisestile,sigla", usaRowIndex = false)
 @AIForm(fields = "mese,giorni,giorniBisestile,sigla", usaSpostamentoTraSchede = true)
 public class Mese extends AEntity {
 

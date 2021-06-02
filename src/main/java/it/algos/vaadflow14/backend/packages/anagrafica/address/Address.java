@@ -8,6 +8,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.*;
@@ -18,17 +19,15 @@ import javax.validation.constraints.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: ven, 11-set-2020
- * Time: 20:21
+ * First time: ven, 11-set-2020
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
- * Le properties sono PUBLIC per poter usare la Reflection <br>
+ * Le properties sono PUBLIC per poter usare la Reflection ed i Test <br>
  * Unica classe obbligatoria per un package. <br>
  * Le altre servono solo se si vuole qualcosa in più dello standard minimo. <br>
  * <p>
- * Annotated with Spring: @SpringComponent (vaadin), @QueryEntity (querydsl), @Document (mongodb), @TypeAlias (data) <br>
- * Annotated with @SpringComponent, @QueryEntity, @Document, @TypeAlias <br>
  * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
  * Annotated with Algos: @AIScript per controllare il typo di file e la ri-creazione con Wizard <br>
  * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
@@ -36,16 +35,22 @@ import javax.validation.constraints.*;
  * Annotated with Algos: @AIList per info sulla Grid e sulle colonne <br>
  * Annotated with Algos: @AIForm per info sul Form e sulle properties <br>
  */
+//Vaadin spring
 @SpringComponent
+//querydsl
 @QueryEntity
+//Spring mongodb
 @Document(collection = "address")
+//Spring data
 @TypeAlias("address")
+//Lombok
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderAddress")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Address")
 @AIView(menuIcon = VaadinIcon.COG)
 @AIList(fields = "via,indirizzo,civico,localita,cap")

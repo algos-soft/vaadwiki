@@ -52,10 +52,10 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Attivita", keyPropertyName = "singolare", usaCreazione = false, usaModifica = false, usaCompany = false)
+@AIEntity(recordName = "Attivita", keyPropertyName = "singolare", usaBoot = true)
 @AIView(menuName = "Attivita", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
-@AIList(fields = "singolare,plurale,aggiunta", usaRowIndex = true)//
-@AIForm(fields = "singolare,plurale,aggiunta", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
+@AIList(fields = "singolare,plurale,aggiunta", usaRowIndex = true)
+@AIForm(fields = "singolare,plurale,aggiunta", usaSpostamentoTraSchede = true)
 public class Attivita extends AEntity {
 
 
@@ -93,7 +93,7 @@ public class Attivita extends AEntity {
      /**
      * flag aggiunta (facoltativo, di default false) <br>
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "aggiunta")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "aggiunta",usaCheckBox3Vie = true)
     @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "Add")
     public boolean aggiunta;
 

@@ -11,6 +11,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -23,23 +24,28 @@ import java.util.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: ven, 25-dic-2020
- * Time: 18:40
+ * First time: ven, 25-dic-2020
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe EntityService <br>
+ * Se manca, usa la classe EntityService <br>
  * Layer di collegamento tra il 'backend' e mongoDB <br>
  * Mantiene lo 'stato' della classe AEntity ma non mantiene lo stato di un'istanza entityBean <br>
  * L' istanza (SINGLETON) viene creata alla partenza del programma <br>
  * <p>
  * Annotated with @Service (obbligatorio) <br>
+ * Annotated with @Qualifier (obbligatorio) per iniettare questo singleton nel costruttore di xxxLogicList <br>
  * Annotated with @Scope (obbligatorio con SCOPE_SINGLETON) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Spring
 @Service
-@Qualifier("statoService")
+//Spring
+@Qualifier("geografica/statoService")
+//Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class StatoService extends AService {
 
 
@@ -54,7 +60,7 @@ public class StatoService extends AService {
      * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
-    ContinenteService continenteService;
+    private ContinenteService continenteService;
 
 
     /**
@@ -72,7 +78,7 @@ public class StatoService extends AService {
 
 
     /**
-     * Crea e registra una entity solo se non esisteva <br>
+     * Crea e registra una entityBean col flag reset=true <br>
      *
      * @param ordine   di presentazione nel popup/combobox (obbligatorio, unico)
      * @param stato    (obbligatorio, unico)
@@ -83,11 +89,32 @@ public class StatoService extends AService {
      * @param locale   (obbligatorio, unico)
      * @param bandiera (facoltativa)
      *
-     * @return la nuova entity appena creata e salvata
+     * @return true se la entity è stata creata e salvata
      */
-    public Stato creaIfNotExist(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) {
-        return (Stato) checkAndSave(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera, continente));
+    private boolean creaReset(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) {
+        Stato entity = newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera, continente);
+        entity.reset = true;
+
+        return save(entity) != null;
     }
+
+    //    /**
+    //     * Crea e registra una entity solo se non esisteva <br>
+    //     *
+    //     * @param ordine   di presentazione nel popup/combobox (obbligatorio, unico)
+    //     * @param stato    (obbligatorio, unico)
+    //     * @param ue       appartenenza all' unione europea (obbligatorio)
+    //     * @param numerico di riferimento (obbligatorio)
+    //     * @param alfatre  (obbligatorio, unico)
+    //     * @param alfadue  (obbligatorio, unico)
+    //     * @param locale   (obbligatorio, unico)
+    //     * @param bandiera (facoltativa)
+    //     *
+    //     * @return la nuova entity appena creata e salvata
+    //     */
+    //    public Stato creaIfNotExist(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) {
+    //        return (Stato) checkAndSave(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera, continente));
+    //    }
 
 
     /**
@@ -177,14 +204,10 @@ public class StatoService extends AService {
         return (Stato) super.findByKey(keyValue);
     }
 
+
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
+     * Invocato dal bottone Reset di alcune liste <br>
      * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
@@ -195,9 +218,9 @@ public class StatoService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-//    @Override
-    public AIResult resetEmptyOnly2() {//@todo rimettere
-        AIResult result = super.resetEmptyOnly();
+    @Override
+    public AIResult reset() {
+        AIResult result = super.reset();
         int numRec = 0;
         AIResult resultCollectionPropedeutica;
         Stato stato;
@@ -253,37 +276,30 @@ public class StatoService extends AService {
                 }
                 continente = continente != null ? continente : continenteDefault;
 
-                stato = creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente);
-
-                if (stato != null) {
+                if (creaReset(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente)) {
                     numRec++;
                 }
-
             }
         }
 
-        return super.fixPostReset(AETypeReset.wikipedia, numRec);
+        return AResult.valido(AETypeReset.wikipedia.get(), numRec);
     }
 
 
     private AIResult checkContinente() {
+        String packageName = Stato.class.getSimpleName().toLowerCase();
         String collection = "continente";
 
-        if (continenteService == null) {
-            continenteService = appContext.getBean(ContinenteService.class);
-        }
-
         if (mongo.isValid(collection)) {
-            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
+            return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
             if (continenteService == null) {
                 return AResult.errato("Manca la classe ContinenteService");
             }
             else {
-                return continenteService.resetEmptyOnly();
+                return continenteService.reset();
             }
-
         }
     }
 
@@ -317,7 +333,7 @@ public class StatoService extends AService {
     public ComboBox creaComboStati() {
         ComboBox<Stato> combo = new ComboBox();
         String tag = TRE_PUNTI;
-        String widthEM = "12em";
+        String widthEM = "14em";
         Sort sort = Sort.by("ordine");
         List items;
 

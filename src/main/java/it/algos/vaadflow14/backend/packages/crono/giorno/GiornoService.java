@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -18,23 +19,28 @@ import java.util.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: ven, 25-dic-2020
- * Time: 16:55
+ * First time: ven, 25-dic-2020
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe EntityService <br>
+ * Se manca, usa la classe EntityService <br>
  * Layer di collegamento tra il 'backend' e mongoDB <br>
  * Mantiene lo 'stato' della classe AEntity ma non mantiene lo stato di un'istanza entityBean <br>
  * L' istanza (SINGLETON) viene creata alla partenza del programma <br>
  * <p>
  * Annotated with @Service (obbligatorio) <br>
+ * Annotated with @Qualifier (obbligatorio) per iniettare questo singleton nel costruttore di xxxLogicList <br>
  * Annotated with @Scope (obbligatorio con SCOPE_SINGLETON) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Spring
 @Service
-@Qualifier("giornoService")
+//Spring
+@Qualifier("crono/giornoService")
+//Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class GiornoService extends AService {
 
 
@@ -49,7 +55,7 @@ public class GiornoService extends AService {
      * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
-    MeseService meseService;
+    private MeseService meseService;
 
     /**
      * Costruttore @Autowired. <br>
@@ -66,16 +72,19 @@ public class GiornoService extends AService {
 
 
     /**
-     * Crea e registra una entity solo se non esisteva <br>
+     * Crea e registra una entityBean col flag reset=true <br>
      *
      * @param giorno (obbligatorio, unico)
      * @param ordine (obbligatorio, unico)
      * @param mese   di riferimento (obbligatorio)
      *
-     * @return la nuova entity appena creata e salvata
+     * @return true se la entity è stata creata e salvata
      */
-    public Giorno creaIfNotExist(final int ordine, final String giorno, final Mese mese) {
-        return (Giorno) checkAndSave(newEntity(ordine, giorno, mese));
+    private boolean creaReset(final int ordine, final String giorno, final Mese mese) {
+        Giorno entity = newEntity(ordine, giorno, mese);
+        entity.reset = true;
+
+        return save(entity) != null;
     }
 
 
@@ -114,44 +123,27 @@ public class GiornoService extends AService {
     }
 
 
+    private AIResult checkMese() {
+        String packageName = Giorno.class.getSimpleName().toLowerCase();
+        String collection = "mese";
 
-    /**
-     * Retrieves an entity by its id.
-     *
-     * @param keyID must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Giorno findById(final String keyID) {
-        return (Giorno) super.findById(keyID);
+        if (mongo.isValid(collection)) {
+            return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
+        }
+        else {
+            if (meseService == null) {
+                return AResult.errato("Manca la classe MeseService");
+            }
+            else {
+                return meseService.reset();
+            }
+        }
     }
 
-
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param keyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Giorno findByKey(final String keyValue) {
-        return (Giorno) super.findByKey(keyValue);
-    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
+     * Invocato dal bottone Reset di alcune liste <br>
      * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
@@ -163,15 +155,15 @@ public class GiornoService extends AService {
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+    public AIResult reset() {
+        AIResult result = super.reset();
+        int numRec = 0;
         AIResult resultCollectionPropedeutica;
         int ordine;
         String titolo;
         String titoloMese;
         List<HashMap> lista;
         Mese mese;
-        int numRec = 0;
 
         if (result.isErrato()) {
             return result;
@@ -193,31 +185,10 @@ public class GiornoService extends AService {
             mese = (Mese) mongo.findById(Mese.class, titoloMese);
             ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
 
-            numRec = creaIfNotExist(ordine, titolo, mese) != null ? numRec + 1 : numRec;
+            numRec = creaReset(ordine, titolo, mese)  ? numRec + 1 : numRec;
         }
 
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+        return AResult.valido(AETypeReset.hardCoded.get(), numRec);
     }
 
-
-    private AIResult checkMese() {
-        String collection = "mese";
-
-        if (meseService == null) {
-            meseService = appContext.getBean(MeseService.class);
-        }
-
-        if (mongo.isValid(collection)) {
-            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
-        }
-        else {
-            if (meseService == null) {
-                return AResult.errato("Manca la classe MeseService");
-            }
-            else {
-                return meseService.resetEmptyOnly();
-            }
-        }
-    }
-
-}
+}// end of Singleton class}

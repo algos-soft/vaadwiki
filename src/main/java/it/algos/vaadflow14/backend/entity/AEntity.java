@@ -1,14 +1,12 @@
 package it.algos.vaadflow14.backend.entity;
 
-import it.algos.vaadflow14.backend.annotation.AIColumn;
-import it.algos.vaadflow14.backend.annotation.AIField;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import lombok.Getter;
-import lombok.Setter;
-import org.bson.Document;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import lombok.*;
+import org.springframework.data.mongodb.core.index.*;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.io.*;
+import java.time.*;
 
 /**
  * Project vaadflow15
@@ -80,6 +78,19 @@ public abstract class AEntity implements Serializable {
     @AIField(caption = "Key", required = true)
     @AIColumn(header = "Key", widthEM = 12)
     public String id;
+
+
+    /**
+     * flag per le collezioni che usano 'reset' e 'leggono' i dati
+     * true se la entities viene costruita dal programma (all'avvio o dal bottone reset)
+     * false se viene inserita direttamente dall'utente
+     * di default reset=false
+     */
+    @Indexed()
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox)
+    @AIColumn(typeBool = AETypeBoolCol.checkBox, header = "R.", widthEM = 5)
+    public boolean reset;
+
 
     /**
      * Eventuali note (facoltativo) <br>

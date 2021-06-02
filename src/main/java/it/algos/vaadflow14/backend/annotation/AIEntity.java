@@ -18,16 +18,15 @@ import java.lang.annotation.*;
  * Regola:
  * recordName()=VUOTA -> (Optional) Nome visibile della singola scheda. Se manca usa il nome della collezione.
  * keyPropertyName()=VUOTA -> (Mandatory) Field property unica nella collezione.
+ * usaReset()=false -> (Optional) Flag per la creazione automatica della lista
  * usaBoot()=false -> (Optional) Creazione automatica dei dati alla partenza se la collezione è vuota
- * usaCreazione()=true -> (Optional) Possibilità di creazione di una nuova entity
- * usaModifica()=true -> (Optional) Possibilità di modifica di una entity esistente
- * usaDelete()=true -> (Optional) Possibilità di cancellazione di una entity
+ * usaNew()=true -> (Optional) Possibilità di creazione di una nuova entity
  * usaCompany()=false -> (Optional) Utilizza il field della superclasse
  * usaNote()=false -> (Optional) Utilizza il field della superclasse
  * usaTimeStamp()=false -> (Optional) Utilizza timestamps per memorizzare date di creazione e di modifica della entity
  * <p>
  * Standard:
- * AIEntity(recordName = "Xxx", keyPropertyName = "code", usaBoot = true, usaCreazione = true, usaModifica = true, usaDelete = true)
+ * AIEntity(recordName = "Xxx", keyPropertyName = "code", usaReset = true, usaBoot = true, usaNew = true)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -43,21 +42,34 @@ public @interface AIEntity {
      */
     String recordName() default VUOTA;
 
+
     /**
      * (Mandatory) key property unica
      * Di default usa la property 'id' della collection mongoDB
      *
      * @return the string
      */
-    String keyPropertyName() default VUOTA;
+    String keyPropertyName() default FIELD_ID;
+
+
+    /**
+     * (Optional) Flag per la creazione automatica della lista
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaReset() default false;
+
 
     /**
      * (Optional) Creazione automatica dei dati alla partenza se collezione vuota
+     * ha senso solo se usaReset=true
      * Di default false
      *
      * @return the status
      */
     boolean usaBoot() default false;
+
 
     /**
      * (Optional) Possibilità di creazione di una nuova entity
@@ -65,23 +77,8 @@ public @interface AIEntity {
      *
      * @return the status
      */
-    boolean usaCreazione() default true;
+    boolean usaNew() default true;
 
-    /**
-     * (Optional) Possibilità di modifica di una entity esistente
-     * Di default true
-     *
-     * @return the status
-     */
-    boolean usaModifica() default true;
-
-    /**
-     * (Optional) Possibilità di cancellazione di una entity
-     * Di default true
-     *
-     * @return the status
-     */
-    boolean usaDelete() default true;
 
     /**
      * (Optional) Utilizza il field della superclasse

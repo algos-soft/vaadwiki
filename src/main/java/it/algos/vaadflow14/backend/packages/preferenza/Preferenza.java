@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.*;
@@ -17,17 +18,15 @@ import javax.validation.constraints.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: mar, 25-ago-2020
- * Time: 11:23
+ * First time: mar, 25-ago-2020
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
- * Le properties sono PUBLIC per poter usare la Reflection <br>
+ * Le properties sono PUBLIC per poter usare la Reflection ed i Test <br>
  * Unica classe obbligatoria per un package. <br>
  * Le altre servono solo se si vuole qualcosa in più dello standard minimo. <br>
  * <p>
- * Annotated with Spring: @SpringComponent (vaadin), @QueryEntity (querydsl), @Document (mongodb), @TypeAlias (data) <br>
- * Annotated with @SpringComponent, @QueryEntity, @Document, @TypeAlias <br>
  * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
  * Annotated with Algos: @AIScript per controllare il typo di file e la ri-creazione con Wizard <br>
  * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
@@ -35,16 +34,22 @@ import javax.validation.constraints.*;
  * Annotated with Algos: @AIList per info sulla Grid e sulle colonne <br>
  * Annotated with Algos: @AIForm per info sul Form e sulle properties <br>
  */
+//Vaadin spring
 @SpringComponent
+//querydsl
 @QueryEntity
+//Spring mongodb
 @Document(collection = "preferenza")
+//Spring data
 @TypeAlias("preferenza")
+//Lombok
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderPreferenza")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaCompany = true, usaNote = true)
 @AIView(menuName = "Preferenza", menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
 @AIList(fields = "code,type,value,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione", usaRowIndex = true)
@@ -72,7 +77,7 @@ public class Preferenza extends AEntity {
      * tipo di dato memorizzato (obbligatorio)
      */
     @NotNull
-    @AIField(type = AETypeField.enumeration, enumClazz = AETypePref.class, usaComboBoxGrid = true, required = true, focus = true, widthEM = 12)
+    @AIField(type = AETypeField.enumeration, enumClazz = AETypePref.class, usaComboBox = true, required = true, focus = true, widthEM = 12)
     @AIColumn(widthEM = 6, sortable = true)
     public AETypePref type;
 

@@ -152,8 +152,8 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         //--Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
         this.fixAlertLayout();
 
-        //--Regola una mappa di ComboBox (solo per la List e facoltativi) da affiancare ai bottoni di comando della view al Top <br>
-        this.fixMappaComboBox();
+//        //--Regola una mappa di ComboBox (solo per la List e facoltativi) da affiancare ai bottoni di comando della view al Top <br>
+//        this.fixMappaComboBox();
 
         //--Costruisce un layout (obbligatorio per la List) per i bottoni di comando della view al Top <br>
         //--Eventualmente i bottoni potrebbero andare su due righe <br>
@@ -223,6 +223,8 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
     public boolean performAction(AIAction iAzione, String searchFieldValue) {
         return false;
     }
+
+
 
     /**
      * Esegue l'azione del bottone. Azione che necessita di un field e di un valore. <br>

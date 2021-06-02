@@ -135,8 +135,11 @@ public abstract class FlowCost {
 
     public static final String TAG_REVISION_NEW = "* Last doc revision:";
 
-
     public static final String TAG_END_DOC = "@AIScript(";
+
+    public static final String TAG_METHOD_RESET = "reset";
+
+    public static final String TAG_METHOD_BOOT_RESET = "bootReset";
 
     //--praticamente una data 'nulla'
     public static final LocalDateTime ROOT_DATA_TIME = LocalDateTime.of(2000, 1, 1, 0, 0);
@@ -151,6 +154,8 @@ public abstract class FlowCost {
     public final static String FIELD_NAME_CODE = "code";
 
     public final static String FIELD_NAME_DESCRIZIONE = "descrizione";
+
+    public final static String FIELD_NAME_RESET = "reset";
 
     public final static String FIELD_NAME_COMPANY = "company";
 

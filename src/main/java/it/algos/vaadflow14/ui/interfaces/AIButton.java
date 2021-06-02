@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.interfaces;
 
 import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.icon.*;
 
 /**
@@ -42,6 +43,8 @@ public interface AIButton {
     public boolean isIconaAfterText();
 
     public boolean isIconaOnly();
+
+    public Button get();
 
 }// end of interface
 

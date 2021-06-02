@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.*;
@@ -19,17 +20,15 @@ import javax.validation.constraints.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: mar, 15-set-2020
- * Time: 11:29
+ * First time: mar, 15-set-2020
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
- * Le properties sono PUBLIC per poter usare la Reflection <br>
+ * Le properties sono PUBLIC per poter usare la Reflection ed i Test <br>
  * Unica classe obbligatoria per un package. <br>
  * Le altre servono solo se si vuole qualcosa in più dello standard minimo. <br>
  * <p>
- * Annotated with Spring: @SpringComponent (vaadin), @QueryEntity (querydsl), @Document (mongodb), @TypeAlias (data) <br>
- * Annotated with @SpringComponent, @QueryEntity, @Document, @TypeAlias <br>
  * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
  * Annotated with Algos: @AIScript per controllare il typo di file e la ri-creazione con Wizard <br>
  * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
@@ -37,20 +36,26 @@ import javax.validation.constraints.*;
  * Annotated with Algos: @AIList per info sulla Grid e sulle colonne <br>
  * Annotated with Algos: @AIForm per info sul Form e sulle properties <br>
  */
+//Vaadin spring
 @SpringComponent
+//querydsl
 @QueryEntity
+//Spring mongodb
 @Document(collection = "provincia")
+//Spring data
 @TypeAlias("provincia")
+//Lombok
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderProvincia")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaCompany = false, usaCreazione = false, usaModifica = false)
+//Algos
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
+@AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Provincia", menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
-@AIList(fields = "ordine,nome,sigla,regione,iso,status", usaRowIndex = false)
-@AIForm(fields = "ordine,nome,sigla,regione,iso,status", usaSpostamentoTraSchede = false)
+@AIList(fields = "nome,sigla,regione,iso,status", usaRowIndex = true)
+@AIForm(fields = "nome,sigla,iso,status", usaSpostamentoTraSchede = true)
 public class Provincia extends AEntity {
 
     /**
@@ -58,14 +63,6 @@ public class Provincia extends AEntity {
      */
     private final static long serialVersionUID = 1L;
 
-
-    /**
-     * ordinamento (obbligatorio, unico) <br>
-     */
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#", widthEM = 3)
-    public int ordine;
 
     /**
      * nome (obbligatorio, unico) <br>
@@ -94,7 +91,7 @@ public class Provincia extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Regione.class, logicClazz = RegioneService.class, usaComboMethod = true, methodName = "creaComboRegioniItaliane")
+    @AIField(type = AETypeField.combo, comboClazz = Regione.class, logicClazz = RegioneService.class, usaComboBox = true, widthEM = 14, usaComboMethod = true, methodName = "creaComboRegioniItaliane")
     @AIColumn(widthEM = 11)
     public Regione regione;
 
@@ -123,7 +120,7 @@ public class Provincia extends AEntity {
      * statuto normativo (obbligatorio) <br>
      */
     @NotNull()
-    @AIField(type = AETypeField.enumeration, enumClazz = AETypeProvincia.class, widthEM = 16)
+    @AIField(type = AETypeField.enumeration, enumClazz = AETypeProvincia.class, usaComboBox = true, widthEM = 17)
     @AIColumn(widthEM = 15)
     public AETypeProvincia status;
 

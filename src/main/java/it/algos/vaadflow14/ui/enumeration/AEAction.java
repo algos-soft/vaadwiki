@@ -10,6 +10,6 @@ import it.algos.vaadflow14.ui.interfaces.*;
  * Time: 07:31
  */
 public enum AEAction implements AIAction {
-    nulla, deleteAll, resetList, nuovo, searchField, searchDialog, valueChanged, export, download, upload, showWiki, edit, show, editNoDelete, click, doubleClick,
+    nulla, deleteAll, resetList, nuovo, searchField, searchDialog, valueChanged, check,checkNull, checkFalse, checkTrue, export, download, upload, showWiki, edit, show, editNoDelete, click, doubleClick,
     resetForm, delete, back, annulla, conferma, registra, prima, dopo,
 }

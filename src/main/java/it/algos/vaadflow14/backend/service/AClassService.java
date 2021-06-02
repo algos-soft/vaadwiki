@@ -389,7 +389,6 @@ public class AClassService extends AAbstractService {
             canonicalName = text.levaCoda(canonicalName, JAVA_SUFFIX);
         }
 
-        canonicalName = canonicalName.replaceAll(FlowCost.SLASH, FlowCost.PUNTO);
         return canonicalName;
     }
 

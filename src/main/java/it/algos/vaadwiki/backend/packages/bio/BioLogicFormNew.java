@@ -161,7 +161,7 @@ public class BioLogicFormNew extends WikiLogicForm {
      * Sincronizza lo stato del bottone download col contenuto del field wikiTitle <br>
      */
     private void sincroDownload(final String value) {
-        Button bottoneDownload = topLayout.getMappaBottoni().get(AEButton.download);
+        Button bottoneDownload = null;//@todo sti cazzi;
         if (bottoneDownload != null) {
             bottoneDownload.setEnabled(text.isValid(value) && value.length() > 2);
         }

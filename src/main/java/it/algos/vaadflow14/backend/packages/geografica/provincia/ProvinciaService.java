@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -19,23 +20,28 @@ import java.util.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: ven, 25-dic-2020
- * Time: 20:29
+ * First time: ven, 25-dic-2020
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe EntityService <br>
+ * Se manca, usa la classe EntityService <br>
  * Layer di collegamento tra il 'backend' e mongoDB <br>
  * Mantiene lo 'stato' della classe AEntity ma non mantiene lo stato di un'istanza entityBean <br>
  * L' istanza (SINGLETON) viene creata alla partenza del programma <br>
  * <p>
  * Annotated with @Service (obbligatorio) <br>
+ * Annotated with @Qualifier (obbligatorio) per iniettare questo singleton nel costruttore di xxxLogicList <br>
  * Annotated with @Scope (obbligatorio con SCOPE_SINGLETON) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Spring
 @Service
-@Qualifier("provinciaService")
+//Spring
+@Qualifier("geografica/provinciaService")
+//Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class ProvinciaService extends AService {
 
 
@@ -66,12 +72,9 @@ public class ProvinciaService extends AService {
     }
 
 
-
-
     /**
-     * Crea e registra una entity solo se non esisteva <br>
+     * Crea e registra una entityBean col flag reset=true <br>
      *
-     * @param ordine  (obbligatorio, unico)
      * @param nome    (obbligatorio, unico)
      * @param sigla   (consuetudinaria, obbligatoria)
      * @param regione (obbligatorio)
@@ -79,11 +82,15 @@ public class ProvinciaService extends AService {
      * @param iso     di riferimento (obbligatorio, unico)
      * @param status  (obbligatorio)
      *
-     * @return la nuova entity appena creata e salvata
+     * @return true se la entity è stata creata e salvata
      */
-    public Provincia creaIfNotExist(final int ordine, final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) {
-        return (Provincia) checkAndSave(newEntity(ordine, nome, sigla, regione, stato, iso, status));
+    private boolean creaReset(final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) {
+        Provincia entity = newEntity(nome, sigla, regione, stato, iso, status);
+        entity.reset = true;
+
+        return save(entity) != null;
     }
+
 
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
@@ -95,7 +102,7 @@ public class ProvinciaService extends AService {
      */
     @Override
     public Provincia newEntity() {
-        return newEntity(0, VUOTA, VUOTA, (Regione) null, (Stato) null, VUOTA, (AETypeProvincia) null);
+        return newEntity(VUOTA, VUOTA, (Regione) null, (Stato) null, VUOTA, (AETypeProvincia) null);
     }
 
 
@@ -104,7 +111,6 @@ public class ProvinciaService extends AService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param ordine  (obbligatorio, unico)
      * @param nome    (obbligatorio, unico)
      * @param sigla   (consuetudinaria, obbligatoria)
      * @param regione (obbligatorio)
@@ -114,9 +120,8 @@ public class ProvinciaService extends AService {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Provincia newEntity(final int ordine, final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) {
+    public Provincia newEntity(final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) {
         Provincia newEntityBean = Provincia.builderProvincia()
-                .ordine(ordine > 0 ? ordine : getNewOrdine())
                 .nome(text.isValid(nome) ? nome : null)
                 .sigla(text.isValid(sigla) ? sigla : null)
                 .regione(regione)
@@ -158,14 +163,71 @@ public class ProvinciaService extends AService {
         return (Provincia) super.findByKey(keyValue);
     }
 
+
+    private AIResult checkRegione() {
+        String packageName = Provincia.class.getSimpleName().toLowerCase();
+        String collection = "regione";
+
+        if (mongo.isValid(collection)) {
+            return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
+        }
+        else {
+            if (regioneService == null) {
+                return AResult.errato("Manca la classe RegioneService");
+            }
+            else {
+                return regioneService.reset();
+            }
+        }
+    }
+
+
+    private AIResult creaProvinceItaliane() {
+        AIResult result = AResult.errato();
+        List<WrapQuattro> listaWrap;
+        Provincia provincia;
+        String nome;
+        String sigla;
+        String regioneTxt;
+        Regione regione;
+        Stato stato = AEStato.italia.getStato();
+        String iso;
+        AETypeProvincia status = null;
+
+        listaWrap = geografic.getProvince();
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapQuattro wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                sigla = wrap.getPrima();
+                iso = sigla;
+                regioneTxt = wrap.getTerza().toLowerCase();
+                regione = regioneService.findById(regioneTxt);
+                status = AETypeProvincia.findByIso(Integer.parseInt(regione.sigla));
+                status = wrap.isValido() ? AETypeProvincia.metropolitana : status;
+
+                if (text.isValid(nome) && stato != null && regione != null && text.isValid(iso) && text.isValid(sigla)) {
+                    if (creaReset(nome, sigla, regione, stato, iso, status)) {
+                    }
+                    else {
+                        logger.log(String.format("Provincia non registrata. Nome:%s, Sigla:%s, Regione:%s", nome, sigla, regioneTxt));
+                    }
+                }
+                else {
+                    logger.log(String.format("Mancano dati essenziali. Nome:%s, Sigla:%s, Regione:%s", nome, sigla, regioneTxt));
+                }
+            }
+            result = AResult.valido("Province italiane: ");
+        }
+        else {
+            result = AResult.errato("Non sono riuscito a trovare la table nella pagina di wikipedia 'Province d'Italia'");
+        }
+
+        return result;
+    }
+
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
+     * Invocato dal bottone Reset di alcune liste <br>
      * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
@@ -176,16 +238,15 @@ public class ProvinciaService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-//    @Override
-    public AIResult resetEmptyOnly2() {//@todo rimettere
-        AIResult result = super.resetEmptyOnly();
+    @Override
+    public AIResult reset() {
+        AIResult result = super.reset();
         int numRec = 0;
         AIResult resultCollectionPropedeutica;
 
         if (result.isErrato()) {
             return result;
         }
-
         resultCollectionPropedeutica = checkRegione();
         if (resultCollectionPropedeutica.isValido()) {
             logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
@@ -194,71 +255,8 @@ public class ProvinciaService extends AService {
             return resultCollectionPropedeutica;
         }
 
-        return creaProvinceItaliane();
+        result = creaProvinceItaliane();
+        return AResult.valido(AETypeReset.wikipedia.get(), numRec);
     }
 
-
-    private AIResult checkRegione() {
-        String collection = "regione";
-
-        if (regioneService == null) {
-            regioneService = appContext.getBean(RegioneService.class);
-        }
-
-        if (mongo.isValid(collection)) {
-            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
-        }
-        else {
-            if (regioneService == null) {
-                return AResult.errato("Manca la classe RegioneService");
-            }
-            else {
-                return regioneService.resetEmptyOnly();
-            }
-        }
-    }
-
-
-    private AIResult creaProvinceItaliane() {
-        AIResult result = AResult.errato();
-        List<WrapTreStringhe> listaWrap;
-        Provincia provincia;
-        int ordine = 0;
-        String nome;
-        String sigla;
-        String regioneTxt;
-        Regione regione;
-        Stato stato = AEStato.italia.getStato();
-        String iso;
-        AETypeProvincia status = AETypeProvincia.provincia;
-
-        listaWrap = geografic.getProvince();
-        if (listaWrap != null && listaWrap.size() > 0) {
-            for (WrapTreStringhe wrap : listaWrap) {
-                nome = wrap.getSeconda();
-                sigla = wrap.getPrima();
-                iso = sigla;
-                regioneTxt = wrap.getTerza().toLowerCase();
-                regione = regioneService.findById(regioneTxt);
-
-                if (text.isValid(nome) && stato != null && text.isValid(iso) && text.isValid(sigla)) {
-                    provincia = creaIfNotExist(ordine, nome, sigla, regione, stato, iso, status);
-                    if (provincia != null) {
-                        ordine++;
-                    }
-                }
-                else {
-                    logger.warn("Mancano dati essenziali", this.getClass(), "creaProvinceItaliane");
-                }
-            }
-            result = AResult.valido("Province italiane: ", ordine);
-        }
-        else {
-            result = AResult.errato("Non sono riuscito a trovare la table nella pagina di wikipedia 'Province d'Italia'");
-        }
-
-        return result;
-    }
-
-
-}
+}// end of Singleton class

@@ -428,8 +428,7 @@ public class AMongoService<capture> extends AAbstractService {
      * @return entity
      */
     @Deprecated
-    public List<AEntity> findAll(Class<? extends
-            AEntity> entityClazz, List<AFiltro> listaFiltri, Sort sortPrevalente) {
+    public List<AEntity> findAll(Class<? extends AEntity> entityClazz, List<AFiltro> listaFiltri, Sort sortPrevalente) {
         Query query = new Query();
         CriteriaDefinition criteria;
         Sort sort;
@@ -1329,9 +1328,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return the founded entity
      */
-    private List<AEntity> findLista(Class<? extends
-            AEntity> entityClazz, String propertyName, Serializable
-                                            propertyValue, Sort sort) {
+    private List<AEntity> findLista(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue, Sort sort) {
         List<AEntity> lista = null;
         Query query = new Query();
         query.addCriteria(Criteria.where(propertyName).is(propertyValue));
@@ -1485,8 +1482,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return true se la entity esisteva ed è stata cancellata
      */
-    public boolean delete(Class<? extends AEntity> entityClazz, Query
-            query) {
+    public boolean delete(Class<? extends AEntity> entityClazz, Query query) {
         boolean status = false;
         DeleteResult result = null;
 
@@ -1534,8 +1530,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return lista
      */
-    public DeleteResult delete(List<? extends
-            AEntity> listaEntities, Class<? extends AEntity> clazz) {
+    public DeleteResult delete(List<? extends AEntity> listaEntities, Class<? extends AEntity> clazz) {
         ArrayList<String> listaId = new ArrayList<String>();
 
         for (AEntity entity : listaEntities) {

@@ -36,7 +36,7 @@ public class AGridField<T> extends AField<Object> {
     public AColumnService column;
 
 
-    private Grid innerField;
+    public Grid innerField;
 
     private List<String> listaProperties;
 

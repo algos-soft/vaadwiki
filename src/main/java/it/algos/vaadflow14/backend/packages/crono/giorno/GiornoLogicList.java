@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
 /**
@@ -12,11 +13,11 @@ import org.springframework.beans.factory.annotation.*;
  * Created by Algos <br>
  * User: gac <br>
  * Fix date: ven, 12-mar-2021 <br>
- * Fix time: 7:31 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe GenericLogicList con @Route <br>
- * Gestione della 'business logic' e della 'grafica' di @Route <br>
+ * Se manca, usa la classe GenericLogicList con @Route <br>
+ * Gestione della 'view' di @Route e della 'business logic' <br>
  * Mantiene lo 'stato' <br>
  * L' istanza (PROTOTYPE) viene creata ad ogni chiamata del browser <br>
  * Eventuali parametri (opzionali) devono essere passati nell'URL <br>
@@ -24,8 +25,10 @@ import org.springframework.beans.factory.annotation.*;
  * Annotated with @Route (obbligatorio) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Vaadin flow
 @Route(value = "giorno", layout = MainLayout.class)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class GiornoLogicList extends LogicList {
 
 
@@ -72,13 +75,13 @@ public class GiornoLogicList extends LogicList {
         addSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta' e comboBox selezione 'Mese'");
     }
 
-    /**
-     * Regola una mappa di ComboBox (solo per la List e facoltativi) da usare nel wrapper getWrapButtonsTop() <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixMappaComboBox() {
-        this.fixComboBox("mese");
-    }
+//    /**
+//     * Regola una mappa di ComboBox (solo per la List e facoltativi) da usare nel wrapper getWrapButtonsTop() <br>
+//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     */
+//    @Override
+//    protected void fixMappaComboBox() {
+//        this.fixComboBox("mese");
+//    }
 
 }// end of Route class

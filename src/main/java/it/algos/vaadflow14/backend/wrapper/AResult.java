@@ -1,6 +1,6 @@
 package it.algos.vaadflow14.backend.wrapper;
 
-import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -18,14 +18,14 @@ public class AResult implements AIResult {
 
     private boolean valido;
 
-    private String errorMessage = FlowCost.VUOTA;
+    private String errorMessage = VUOTA;
 
-    private String validationMessage = FlowCost.VUOTA;
+    private String validationMessage = VUOTA;
 
     private int valore = 0;
 
     private AResult() {
-        this(true, FlowCost.VUOTA);
+        this(true, VUOTA);
     }
 
     private AResult(boolean valido, String message) {
@@ -57,6 +57,10 @@ public class AResult implements AIResult {
 
     public static AResult errato() {
         return new AResult(false, "Non effettuato");
+    }
+
+    public static AResult errato(int valore) {
+        return new AResult(false, VUOTA, valore);
     }
 
     public static AResult errato(String errorMessage) {

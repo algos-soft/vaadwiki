@@ -157,12 +157,13 @@ public interface AIService {
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * Invocato in fase di 'startup' <br>
      * <p>
      * 1) deve esistere lo specifico metodo sovrascritto <br>
      * 2) deve essere valida la entityClazz <br>
      * 3) deve esistere la collezione su mongoDB <br>
-     * 4) la collezione non deve essere vuota <br>
+     * 4) la collezione viene svuotata <br>
+     * 5) vengono mantenuti eventuali records inseriti manualmente <br>
      * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
@@ -173,11 +174,26 @@ public interface AIService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    AIResult resetEmptyOnly();
+    AIResult bootReset();
 
     /**
-     * The Entity Class  (obbligatoria sempre e final)
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato dal bottone Reset di alcune liste <br>
+     * <p>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
+    AIResult reset() ;
+
+        /**
+         * The Entity Class  (obbligatoria sempre e final)
+         */
     Class<? extends AEntity> getEntityClazz();
 
 

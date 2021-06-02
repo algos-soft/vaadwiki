@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
+import ch.carnet.kasparscherrer.*;
+import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.textfield.*;
@@ -67,11 +69,18 @@ public abstract class LogicList extends Logic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+        boolean isResetMethod = false;
 
-        super.operationForm = annotation.getOperation(entityClazz);
-        super.usaBottoneDeleteAll = AEPreferenza.usaMenuReset.is() && annotation.usaDeleteMenu(entityClazz);
-        super.usaBottoneResetList = AEPreferenza.usaMenuReset.is() && annotation.usaResetMenu(entityClazz);
-        super.usaBottoneNew = AEPreferenza.usaMenuReset.is() && annotation.usaCreazione(entityClazz);
+        try {
+            isResetMethod = entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null;
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+        }
+
+        super.usaBottoneDeleteAll = annotation.usaNew(entityClazz);
+        super.usaBottoneResetList = annotation.usaReset(entityClazz) && isResetMethod;
+        super.usaBottoneNew = annotation.usaNew(entityClazz);
+        super.usaBottoneSearch = annotation.usaSearchField(entityClazz);
 
         this.fixOperationForm();
     }
@@ -87,8 +96,11 @@ public abstract class LogicList extends Logic {
         //--costruisce una lista (vuota) di Span per l'header della lista
         super.spanHeaderList = new ArrayList<>();
 
-        //--costruisce una mappa (vuota) di ComboBox per il topLayout
-        super.mappaComboBox = new HashMap<>();
+        //        //--costruisce una mappa (vuota) di ComboBox per il topLayout
+        //        super.mappaComboBox = new HashMap<>();
+
+        //--costruisce una lista (vuota) di Component per i comandi sopra la lista
+        super.mappaComponentiTop = new LinkedHashMap<>();
 
         //--costruisce una mappa (vuota) di filtri per la Grid
         super.mappaFiltri = new HashMap<>();
@@ -135,6 +147,37 @@ public abstract class LogicList extends Logic {
     @Override
     protected void fixAlertLayout() {
         this.fixSpanList();
+
+        String preferenza = html.bold("Preferenza");
+        String delete = html.bold("Delete");
+        String tutte = html.bold("tutte");
+        String entity = entityClazz.getSimpleName();
+        String service = entityService.getClass().getSimpleName();
+        String collezione = html.bold(annotation.getCollectionName(entityClazz));
+        String reset = html.bold("Reset");
+        String nuovo = html.bold("New");
+        String usaReset = html.bold("usaReset");
+        String usaBoot = html.bold("usaBoot");
+        String usaNew = html.bold("usaNew");
+        String solo = html.bold("solo");
+        String resetTrue = html.bold("reset=true");
+        String search = html.bold("SearchField");
+        String property = html.bold("searchProperty");
+        String and = html.bold("e");
+        String non = html.bold("non");
+        String propReset = html.bold("reset");
+
+        addSpanRosso(String.format("La visualizzazione di questi avvisi rossi si regola in %s:usaSpanHeaderRossi", preferenza));
+        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true", delete, entity, usaNew));
+        addSpanRosso(String.format("Bottone %s agisce su %s le entities della collezione %s", delete, tutte, collezione));
+        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true e in %s.reset()!=null", reset, entity, usaReset, service));
+        addSpanRosso(String.format("Bottone %s agisce %s sulle entities della collezione %s che hanno la property %s", reset, solo, collezione, resetTrue));
+        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true", nuovo, entity, usaNew));
+        addSpanRosso(String.format("%s presente se in %s->@AIView esiste il valore della property %s", search, entity, property));
+        addSpanRosso(String.format("Se in %s->@AIEntity %s=true %s anche %s=true, la collezione viene resettata all'avvio del programma.", entity, usaReset, and, usaBoot));
+        addSpanRosso(String.format("Se in %s->@AIEntity %s=true e %s=false, %s compare la property %s", entity, usaReset, usaNew, non, propReset));
+        addSpanRosso(String.format("Se in %s->@AIEntity %s=true e %s=true, compare la property %s uguale a true per le schede create con reset", entity, usaReset, usaNew, propReset));
+
         if (spanHeaderList != null && spanHeaderList.size() > 0) {
             headerSpan = appContext.getBean(AHeaderSpanList.class, super.spanHeaderList);
         }
@@ -148,6 +191,7 @@ public abstract class LogicList extends Logic {
      */
     protected void fixSpanList() {
     }
+
 
     protected void addSpanBlu(final String message) {
         if (spanHeaderList != null) {
@@ -167,38 +211,27 @@ public abstract class LogicList extends Logic {
         }
     }
 
-    /**
-     * Regola una mappa di ComboBox (solo per la List e facoltativi) da usare nel wrapper getWrapButtonsTop() <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void fixMappaComboBox() {
-        for (String fieldName : annotation.getGridColumns(entityClazz)) {
-            if (annotation.usaComboBoxGrid(entityClazz, fieldName)) {
-                this.fixComboBox(fieldName);
-            }
-        }
-    }
 
     /**
      * Costruisce una lista di bottoni (enumeration) al Top della view <br>
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
      * Costruisce i bottoni come dai flag regolati di default o nella sottoclasse <br>
      * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected List<AIButton> getListaAEBottoniTop() {
-        List<AIButton> listaBottoni = super.getListaAEBottoniTop();
+    protected void creaAEBottoniTop() {
         String message = VUOTA;
 
         if (usaBottoneDeleteAll) {
-            listaBottoni.add(AEButton.deleteAll);
+            mappaComponentiTop.put(AEButton.deleteAll.testo, AEButton.deleteAll);
         }
 
         if (usaBottoneResetList && entityService != null) {
             //--se manca il metodo specifico il bottone non potrebbe funzionare
             try {
-                if (entityService.getClass().getDeclaredMethod("resetEmptyOnly") != null) {
-                    listaBottoni.add(AEButton.resetList);
+                if (entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null) {
+                    mappaComponentiTop.put(AEButton.resetList.testo, AEButton.resetList);
                 }
             } catch (Exception unErrore) {
                 message = String.format("Non sono riuscito a controllare se esiste il metodo resetEmptyOnly() nella classe %s", entityService.getClass().getSimpleName());
@@ -206,38 +239,76 @@ public abstract class LogicList extends Logic {
             }
         }
 
-        //        if (methodExists) {
-        //            result = entityService.resetEmptyOnly();
-        //            logger.log(AETypeLog.checkData, result.getMessage());
-        //        }
-        //        else {
-        //            if (!nameService.equals(TAG_GENERIC_SERVICE)) {
-        //                message = String.format("Nel package %s la classe %s non ha il metodo resetEmptyOnly() ", packageName, entityServicePrevista);
-        //                logger.log(AETypeLog.checkData, message);
-        //            }
-        //        }
-
         if (usaBottoneNew) {
-            listaBottoni.add(AEButton.nuovo);
-        }
-        if (usaBottoneSearch) {
-            listaBottoni.add(AEButton.searchDialog);
-        }
-        if (usaBottoneExport) {
-            listaBottoni.add(AEButton.export);
+            mappaComponentiTop.put(AEButton.nuovo.testo, AEButton.nuovo);
         }
         if (usaBottonePaginaWiki) {
-            listaBottoni.add(AEButton.wiki);
+            mappaComponentiTop.put(AEButton.wiki.testo, AEButton.wiki);
         }
         if (usaBottoneDownload) {
-            listaBottoni.add(AEButton.download);
+            mappaComponentiTop.put(AEButton.download.testo, AEButton.download);
         }
         if (usaBottoneUpload) {
-            listaBottoni.add(AEButton.upload);
+            mappaComponentiTop.put(AEButton.upload.testo, AEButton.upload);
+        }
+        if (usaBottoneSearch) {
+            mappaComponentiTop.put(AEButton.searchDialog.testo, AEButton.searchDialog);
+        }
+        if (usaBottoneExport) {
+            mappaComponentiTop.put(AEButton.export.testo, AEButton.export);
+        }
+    }
+
+    /**
+     * Costruisce una mappa di componenti di comando/selezione/filtro al Top della view <br>
+     * <p>
+     * I componenti possono essere (nell'ordine):
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
+     * SearchField per il filtro testuale di ricerca <br>
+     * ComboBox di filtro <br>
+     * CheckBox di filtro <br>
+     * IndeterminateCheckbox di filtro <br>
+     * Bottoni specifici non standard <br>
+     * <p>
+     * Costruisce i bottoni standard come dai flag regolati di default o nella sottoclasse <br>
+     * Costruisce il searchField previsto in AEntity->@AIView(searchProperty) <br>
+     * Costruisce i comboBox previsti nella AEntity->@AIField(usaComboBox = true) <br>
+     * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
+     * Costruisce gli indeterminateCheckbox previsti nella AEntity->@AIField(usaCheckBox3Vie = true) <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni, comboBox e checkBox <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void creaComandiTop() {
+        super.creaComandiTop();
+        ComboBox combo;
+        Checkbox check;
+        IndeterminateCheckbox check3Vie;
+
+        for (String fieldName : annotation.getGridColumns(entityClazz)) {
+
+            if (annotation.usaComboBox(entityClazz, fieldName)) {
+                combo = this.getComboBox(fieldName);
+                mappaComponentiTop.put(fieldName, combo);
+            }
+
+            if (annotation.usaCheckBox(entityClazz, fieldName)) {
+                check = new Checkbox(text.primaMaiuscola(fieldName));
+                mappaComponentiTop.put(fieldName, check);
+            }
+
+            if (annotation.usaCheckBox3Vie(entityClazz, fieldName)) {
+                check3Vie = new IndeterminateCheckbox(text.primaMaiuscola(fieldName));
+                mappaComponentiTop.put(fieldName, check3Vie);
+            }
         }
 
-        return listaBottoni;
+        if (utility.usaReset(entityClazz)) {
+            check3Vie = new IndeterminateCheckbox(text.primaMaiuscola(FIELD_NAME_RESET));
+            mappaComponentiTop.put(FIELD_NAME_RESET, check3Vie);
+        }
     }
+
 
     /**
      * Crea un ComboBox e lo aggiunge alla mappa <br>
@@ -246,8 +317,8 @@ public abstract class LogicList extends Logic {
      *
      * @param fieldName (obbligatorio) della property da utilizzare per il ComboBox
      */
-    protected ComboBox fixComboBox(final String fieldName) {
-        return fixComboBox(fieldName, (DataProvider) null, COMBO_WIDTH, null);
+    protected ComboBox getComboBox(final String fieldName) {
+        return getComboBox(fieldName, (DataProvider) null, 0, null);
     }
 
 
@@ -259,8 +330,8 @@ public abstract class LogicList extends Logic {
      * @param fieldName    (obbligatorio) della property da utilizzare per il ComboBox
      * @param dataProvider fornitore degli items. Se manca lo costruisce con la collezione completa
      */
-    protected ComboBox fixComboBox(final String fieldName, final DataProvider dataProvider) {
-        return fixComboBox(fieldName, dataProvider, COMBO_WIDTH, null);
+    protected ComboBox getComboBox(final String fieldName, final DataProvider dataProvider) {
+        return getComboBox(fieldName, dataProvider, 0, null);
     }
 
 
@@ -272,8 +343,8 @@ public abstract class LogicList extends Logic {
      * @param fieldName (obbligatorio) della property da utilizzare per il ComboBox
      * @param width     larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
      */
-    protected ComboBox fixComboBox(final String fieldName, final int width) {
-        return fixComboBox(fieldName, (DataProvider) null, width, null);
+    protected ComboBox getComboBox(final String fieldName, final int width) {
+        return getComboBox(fieldName, (DataProvider) null, width, null);
     }
 
 
@@ -285,8 +356,8 @@ public abstract class LogicList extends Logic {
      * @param fieldName    (obbligatorio) della property da utilizzare per il ComboBox
      * @param initialValue eventuale valore iniziale di selezione
      */
-    protected ComboBox fixComboBox(final String fieldName, final Object initialValue) {
-        return fixComboBox(fieldName, (DataProvider) null, COMBO_WIDTH, initialValue);
+    protected ComboBox getComboBox(final String fieldName, final Object initialValue) {
+        return getComboBox(fieldName, (DataProvider) null, 0, initialValue);
     }
 
     /**
@@ -299,14 +370,8 @@ public abstract class LogicList extends Logic {
      * @param width        larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
      * @param initialValue eventuale valore iniziale di selezione
      */
-    protected ComboBox fixComboBox(final String fieldName, final DataProvider dataProvider, final int width, final Object initialValue) {
-        ComboBox combo = utility.creaComboBox(entityClazz, fieldName, dataProvider, width, initialValue);
-
-        if (mappaComboBox != null && combo != null) {
-            mappaComboBox.put(fieldName, combo);
-        }
-
-        return combo;
+    protected ComboBox getComboBox(final String fieldName, final DataProvider dataProvider, final int width, final Object initialValue) {
+        return utility.creaComboBox(entityClazz, fieldName, dataProvider, width, initialValue);
     }
 
     /**
@@ -371,7 +436,13 @@ public abstract class LogicList extends Logic {
      */
     @Override
     public List<String> getGridColumns() {
-        return annotation.getGridColumns(entityClazz);
+        List<String> lista = annotation.getGridColumns(entityClazz);
+
+        if (utility.usaReset(entityClazz)) {
+            lista.add(FIELD_NAME_RESET);
+        }
+
+        return lista;
     }
 
 
@@ -529,6 +600,11 @@ public abstract class LogicList extends Logic {
                 this.grid.getGrid().getDataProvider().refreshAll();
                 grid.fixGridHeader();
                 break;
+            case check:
+                this.fixFiltroCheck(fieldName, fieldValue);
+                this.grid.getGrid().getDataProvider().refreshAll();
+                grid.fixGridHeader();
+                break;
             default:
                 status = false;
                 break;
@@ -610,6 +686,41 @@ public abstract class LogicList extends Logic {
         return filtro;
     }
 
+    /**
+     * Costruisce il filtro di un Checkbox. <br>
+     * Recupera il field su cui selezionare il valore <br>
+     * Filtro booleano a 3 stati <br>
+     *
+     * @param fieldName  nome del field
+     * @param fieldValue valore corrente del field
+     */
+    protected AFiltro fixFiltroCheck(final String fieldName, final Object fieldValue) {
+        AFiltro filtro = null;
+
+        if (text.isValid(fieldName)) {
+            if (fieldValue == null) {
+                filtro = null;
+            }
+            else {
+                if ((boolean) fieldValue) {
+                    filtro = AFiltro.vero(fieldName);
+                }
+                else {
+                    filtro = AFiltro.falso(fieldName);
+                }
+            }
+        }
+
+        if (mappaFiltri != null) {
+            mappaFiltri.remove(fieldName);
+            if (filtro != null) {
+                mappaFiltri.put(fieldName, filtro);
+            }
+        }
+
+        return filtro;
+    }
+
     protected void executeRoute() {
         executeRoute(VUOTA, VUOTA, VUOTA);
     }
@@ -673,7 +784,7 @@ public abstract class LogicList extends Logic {
      */
     protected final void openConfirmReset() {
         MessageDialog messageDialog;
-        String message = "Vuoi veramente ripristinare i valori originali predeterminati di questa collezione? L' operazione cancellerà tutti i valori successivamente aggiunti o modificati.";
+        String message = "Vuoi veramente ripristinare i valori originali predeterminati di questa collezione? L' operazione cancellerà tutti i valori originali. Eventuali valori inseriti manualmente NON vengono cancellati/modificati";
         VaadinIcon icon = VaadinIcon.WARNING;
 
         if (mongo.isEmpty(entityClazz)) {
@@ -694,9 +805,18 @@ public abstract class LogicList extends Logic {
      * Rinfresca la griglia <br>
      */
     public void clickReset() {
-        if (resetDeletingAll()) {
+        String collection = annotation.getCollectionName(entityClazz);
+        String message;
+        int numRec;
+        String type;
+
+        AIResult result = entityService.reset();
+        if (result.isValido()) {
+            numRec = result.getValore();
+            type = result.getMessage();
+            message = String.format("Nella collezione %s sono stati re-inseriti %d elementi %s", collection, numRec, type);
+            logger.log(AETypeLog.reset, message);
             this.refreshGrid();
-            //            this.reloadList();
         }
     }
 
@@ -714,9 +834,9 @@ public abstract class LogicList extends Logic {
      * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
      */
     private boolean resetDeletingAll() {
-        AIResult result;
+        AIResult result = null;
         entityService.delete();
-        result = entityService.resetEmptyOnly();
+        //        result = entityService.resetEmptyOnly();
 
         logger.log(AETypeLog.reset, result.getMessage());
         return result.isValido();

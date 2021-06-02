@@ -1,8 +1,10 @@
 package it.algos.vaadwiki.ui.enumeration;
 
 import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.icon.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.backend.annotation.*;
@@ -171,6 +173,11 @@ public enum AEWikiButton implements AIButton {
     @Override
     public boolean isIconaOnly() {
         return iconaOnly;
+    }
+
+    @Override
+    public Button get() {
+        return FactoryButton.get(this);
     }
 
 }

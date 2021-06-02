@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.bson.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -20,23 +21,28 @@ import java.util.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: ven, 25-dic-2020
- * Time: 06:54
+ * First time: ven, 25-dic-2020
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe EntityService <br>
+ * Se manca, usa la classe EntityService <br>
  * Layer di collegamento tra il 'backend' e mongoDB <br>
  * Mantiene lo 'stato' della classe AEntity ma non mantiene lo stato di un'istanza entityBean <br>
  * L' istanza (SINGLETON) viene creata alla partenza del programma <br>
  * <p>
  * Annotated with @Service (obbligatorio) <br>
+ * Annotated with @Qualifier (obbligatorio) per iniettare questo singleton nel costruttore di xxxLogicList <br>
  * Annotated with @Scope (obbligatorio con SCOPE_SINGLETON) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Spring
 @Service
-@Qualifier("annoService")
+//Spring
+@Qualifier("crono/annoService")
+//Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class AnnoService extends AService {
 
     /**
@@ -58,7 +64,8 @@ public class AnnoService extends AService {
      * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
-    SecoloService secoloService;
+    private SecoloService secoloService;
+
 
     /**
      * Costruttore @Autowired. <br>
@@ -75,17 +82,20 @@ public class AnnoService extends AService {
 
 
     /**
-     * Crea e registra una entity solo se non esisteva <br>
+     * Crea e registra una entityBean col flag reset=true <br>
      *
      * @param ordine    (obbligatorio, unico)
-     * @param anno      (obbligatorio, unico)
+     * @param anno   (obbligatorio, unico)
      * @param bisestile (obbligatorio)
      * @param secolo    di riferimento (obbligatorio)
      *
-     * @return la nuova entityBean appena creata e salvata
+     * @return true se la entity è stata creata e salvata
      */
-    public Anno creaIfNotExist(final int ordine,final String anno,final boolean bisestile,final Secolo secolo) {
-        return (Anno) checkAndSave(newEntity(ordine, anno, bisestile, secolo));
+    private boolean creaReset(final int ordine, final String anno, final boolean bisestile, final Secolo secolo) {
+        Anno entity = newEntity(ordine, anno, bisestile, secolo);
+        entity.reset = true;
+
+        return save(entity) != null;
     }
 
 
@@ -116,7 +126,7 @@ public class AnnoService extends AService {
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Anno newEntity(final int ordine,final String anno,final boolean bisestile,final Secolo secolo) {
+    public Anno newEntity(final int ordine, final String anno, final boolean bisestile, final Secolo secolo) {
         Anno newEntityBean = Anno.builderAnno()
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
                 .anno(text.isValid(anno) ? anno : null)
@@ -176,14 +186,27 @@ public class AnnoService extends AService {
     }
 
 
+    private AIResult checkSecolo() {
+        String packageName = Anno.class.getSimpleName().toLowerCase();
+        String collection = "secolo";
+
+        if (mongo.isValid(collection)) {
+            return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
+        }
+        else {
+            if (secoloService == null) {
+                return AResult.errato("Manca la classe SecoloService");
+            }
+            else {
+                return secoloService.reset();
+            }
+        }
+    }
+
+
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
+     * Invocato dal bottone Reset di alcune liste <br>
      * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
@@ -195,8 +218,8 @@ public class AnnoService extends AService {
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+    public AIResult reset() {
+        AIResult result = super.reset();
         int numRec = 0;
         AIResult resultCollectionPropedeutica;
         int ordine;
@@ -229,7 +252,7 @@ public class AnnoService extends AService {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                if (creaIfNotExist(ordine, nome, bisestile, secolo) != null) {
+                if (creaReset(ordine, nome, bisestile, secolo)) {
                     numRec++;
                 }
             }
@@ -246,34 +269,13 @@ public class AnnoService extends AService {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                if (creaIfNotExist(ordine, nome, bisestile, secolo) != null) {
+                if (creaReset(ordine, nome, bisestile, secolo)) {
                     numRec++;
                 }
             }
         }
 
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+        return AResult.valido(AETypeReset.hardCoded.get(), numRec);
     }
 
-
-    private AIResult checkSecolo() {
-        String collection = "secolo";
-
-        if (secoloService == null) {
-            secoloService = appContext.getBean(SecoloService.class);
-        }
-
-        if (mongo.isValid(collection)) {
-            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
-        }
-        else {
-            if (secoloService == null) {
-                return AResult.errato("Manca la classe SecoloLogic");
-            }
-            else {
-                return secoloService.resetEmptyOnly();
-            }
-        }
-    }
-
-}
+}// end of Singleton class

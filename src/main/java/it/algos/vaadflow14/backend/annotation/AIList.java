@@ -60,13 +60,6 @@ public @interface AIList {
      */
     boolean usaDeleteMenu() default false;
 
-    /**
-     * (Optional) Flag per la creazione automatica della lista dal bottone del menu
-     * Di default false
-     *
-     * @return the status
-     */
-    boolean usaResetMenu() default false;
 
     /**
      * (Optional) Singolo span di alert sopra la lista

@@ -377,12 +377,13 @@ public abstract class AService extends AAbstractService implements AIService {
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * Invocato in fase di 'startup' <br>
      * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
+     * 1) deve esistere lo specifico metodo sovrascritto <br>
+     * 2) deve essere valida la entityClazz <br>
+     * 3) deve esistere la collezione su mongoDB <br>
+     * 4) la collezione (dei soli dati reset) viene ricreata solo è vuota <br>
+     * 5) vengono mantenuti eventuali records inseriti manualmente <br>
      * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
@@ -393,28 +394,40 @@ public abstract class AService extends AAbstractService implements AIService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    public AIResult resetEmptyOnly() {
+    @Override
+    public AIResult bootReset() {
+        AIResult result = null;
         String collectionName;
+        Query query = new Query();
+        int numRec = 0;
 
         if (entityClazz == null) {
-            return AResult.errato("Manca la entityClazz nella businessService specifica");
+            result = AResult.errato("Manca la entityClazz nella businessService specifica");
+            return result;
         }
 
         collectionName = annotation.getCollectionName(entityClazz);
         if (mongo.isExists(collectionName)) {
-            if (mongo.isValid(entityClazz)) {
-                return AResult.errato("La collezione " + collectionName + " esiste già e non c'è bisogno di crearla");
+            //--cancella le entities preesistenti
+            //--solo quelle create da reset
+            query.addCriteria(Criteria.where(FIELD_NAME_RESET).is(true));
+            numRec = mongo.count(entityClazz, query);
+            if (numRec == 0) {
+                result = reset();
             }
             else {
-                return AResult.valido();
+                result = AResult.errato( numRec);
             }
         }
         else {
-            return AResult.errato("La collezione " + collectionName + " non esiste");
+            result = AResult.errato("La collezione " + collectionName + " non esiste");
         }
+
+        return result;
     }
 
-    public AIResult fixPostReset(final AETypeReset type, final int numRec) {
+    @Deprecated
+    public AIResult fixPostResetOnly(final AETypeReset type, final int numRec) {
         String collectionName;
         String message;
 
@@ -433,6 +446,34 @@ public abstract class AService extends AAbstractService implements AIService {
         }
     }
 
+    /**
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato dal bottone Reset di alcune liste <br>
+     * <p>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return wrapper col risultato ed eventuale messaggio di errore
+     */
+    @Override
+    public AIResult reset() {
+        Query query = new Query();
+
+        if (entityClazz == null) {
+            return AResult.errato("Manca la entityClazz nella businessService specifica");
+        }
+
+        //--cancella le entities preesistenti
+        //--solo quelle create da reset
+        query.addCriteria(Criteria.where(FIELD_NAME_RESET).is(true));
+        mongo.delete(entityClazz, query);
+
+        return AResult.valido();
+    }
 
     /**
      * Ordine di presentazione (facoltativo) <br>
@@ -446,7 +487,6 @@ public abstract class AService extends AAbstractService implements AIService {
     public int getNewOrdine() {
         return mongo.getNewOrder(entityClazz, FIELD_ORDINE);
     }
-
 
     /**
      * The Entity Class  (obbligatoria sempre e final)

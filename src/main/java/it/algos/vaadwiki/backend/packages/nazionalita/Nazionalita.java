@@ -52,7 +52,7 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Nazionalita", keyPropertyName = "singolare", usaCreazione = false, usaModifica = false, usaCompany = false)
+@AIEntity(recordName = "Nazionalita", keyPropertyName = "singolare", usaCompany = false)
 @AIView(menuName = "Nazionalita", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
 @AIList(fields = "singolare,plurale", usaRowIndex = true)
 @AIForm(fields = "singolare,plurale", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)

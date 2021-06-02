@@ -5,6 +5,8 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -14,23 +16,28 @@ import org.springframework.stereotype.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: lun, 21-dic-2020
- * Time: 20:37
+ * First time: lun, 21-dic-2020
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe EntityService <br>
+ * Se manca, usa la classe EntityService <br>
  * Layer di collegamento tra il 'backend' e mongoDB <br>
  * Mantiene lo 'stato' della classe AEntity ma non mantiene lo stato di un'istanza entityBean <br>
  * L' istanza (SINGLETON) viene creata alla partenza del programma <br>
  * <p>
  * Annotated with @Service (obbligatorio) <br>
+ * Annotated with @Qualifier (obbligatorio) per iniettare questo singleton nel costruttore di xxxLogicList <br>
  * Annotated with @Scope (obbligatorio con SCOPE_SINGLETON) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Spring
 @Service
-@Qualifier("continenteService")
+//Spring
+@Qualifier("geografica/continenteService")
+//Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class ContinenteService extends AService {
 
 
@@ -48,28 +55,18 @@ public class ContinenteService extends AService {
         super(Continente.class);
     }
 
-
     /**
-     * Crea e registra una entity solo se non esisteva <br>
+     * Crea e registra una entityBean col flag reset=true <br>
      *
-     * @param aeContinente enumeration per la creazione-reset di tutte le entities
+     * @param aeContinente: enumeration per la creazione-reset di tutte le entities
      *
-     * @return la nuova entity appena creata e salvata
+     * @return true se la entity è stata creata e salvata
      */
-    public Continente creaIfNotExist(final AEContinente aeContinente) {
-        return creaIfNotExist(aeContinente.getOrd(), aeContinente.getNome(), aeContinente.isAbitato());
-    }
+    private boolean creaReset(final AEContinente aeContinente) {
+        Continente entity = newEntity(aeContinente.getNome(), aeContinente.isAbitato());
+        entity.reset = true;
 
-
-    /**
-     * Crea e registra una entity solo se non esisteva <br>
-     *
-     * @param nome obbligatorio
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    public Continente creaIfNotExist(final int ordine, final String nome, final boolean abitato) {
-        return (Continente) checkAndSave(newEntity(ordine, nome, abitato));
+        return save(entity) != null;
     }
 
 
@@ -82,7 +79,7 @@ public class ContinenteService extends AService {
      */
     @Override
     public Continente newEntity() {
-        return newEntity(0, VUOTA, true);
+        return newEntity(VUOTA, true);
     }
 
 
@@ -90,12 +87,13 @@ public class ContinenteService extends AService {
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
+     * L'ordine di presentazione (obbligatorio, unico) viene calcolato in automatico
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Continente newEntity(final int ordine, final String nome, final boolean abitato) {
+    public Continente newEntity(final String nome, final boolean abitato) {
         Continente newEntityBean = Continente.builderContinente()
-                .ordine(ordine > 0 ? ordine : getNewOrdine())
+                .ordine(this.getNewOrdine())
                 .nome(text.isValid(nome) ? nome : null)
                 .abitato(abitato)
                 .build();
@@ -136,12 +134,7 @@ public class ContinenteService extends AService {
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
+     * Invocato dal bottone Reset di alcune liste <br>
      * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
@@ -153,8 +146,8 @@ public class ContinenteService extends AService {
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+    public AIResult reset() {
+        AIResult result = super.reset();
         int numRec = 0;
 
         if (result.isErrato()) {
@@ -162,10 +155,10 @@ public class ContinenteService extends AService {
         }
 
         for (AEContinente aeContinente : AEContinente.values()) {
-            numRec = creaIfNotExist(aeContinente) != null ? numRec + 1 : numRec;
+            numRec = creaReset(aeContinente) ? numRec + 1 : numRec;
         }
 
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+        return AResult.valido(AETypeReset.hardCoded.get(), numRec);
     }
 
-}
+}// end of Singleton class

@@ -254,7 +254,26 @@ public @interface AIField {
      *
      * @return the boolean
      */
-    boolean usaComboBoxGrid() default false;
+    boolean usaComboBox() default false;
+
+
+    /**
+     * (Optional) Usa un checkBox come filtro nel header della Grid.
+     * Meaning sense only for AETypeField.booleano and typeBool.
+     * Defaults to false.
+     *
+     * @return the boolean
+     */
+    boolean usaCheckBox() default false;
+
+    /**
+     * (Optional) Usa un checkBox a 3 vie come filtro nel header della Grid.
+     * Meaning sense only for AETypeField.booleano and typeBool.
+     * Defaults to false.
+     *
+     * @return the boolean
+     */
+    boolean usaCheckBox3Vie() default false;
 
     /**
      * (Optional) placeholder for empty field
@@ -294,8 +313,16 @@ public @interface AIField {
      * The type of the data type
      * Defaults to standard type.
      *
-     * @return the strings
+     * @return the type
      */
     AETypeData getTypeData() default AETypeData.standard;
+
+    /**
+     * Valore iniziale (text) di un combo
+     * Defaults to VUOTA.
+     *
+     * @return the strings
+     */
+    String comboInitialValue() default VUOTA;
 
 }

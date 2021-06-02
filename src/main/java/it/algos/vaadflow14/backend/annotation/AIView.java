@@ -22,11 +22,9 @@ import java.lang.annotation.Target;
  * Regola:
  * menuName()=False -> (Mandatory) Label del menu
  * menuIcon()=VaadinIcon.ASTERISK -> (Optional) Icona visibile nel menu
- * vaadFlow()=false -> (Optional) Appartenenza al progetto Base VaadFlow14
  * searchProperty()=VUOTA -> (Mandatory) Property per la ricerca tramite il searchField
- * sortProperty()=VUOTA -> (Mandatory) Property per l'ordinamento
- * sortDirection()="ASC" -> (Optional) Direzione per l'ordinamento
- * startListEmpty()=false -> (Optional) Mostra la lista vuota all'apertura.
+ * sortProperty()=VUOTA -> (Mandatory) Property per l'ordinamento della lista
+ * sortDirection()="ASC" -> (Optional) Direzione per l'ordinamento della lista
  * <p>
  * Standard:
  * AIView(menuName = "Xxx", menuIcon = VaadinIcon.ASTERISK, searchProperty = "code", sortProperty = "code")
@@ -47,6 +45,7 @@ public @interface AIView {
      */
     String menuName() default VUOTA;
 
+
     /**
      * (Optional) Icona visibile nel menu
      * Di default un asterisco
@@ -55,12 +54,6 @@ public @interface AIView {
      */
     VaadinIcon menuIcon() default VaadinIcon.ASTERISK;
 
-    /**
-     * (Optional) Appartenenza al progetto Base VaadFlow14
-     *
-     * @return the boolean
-     */
-    boolean vaadFlow() default false;
 
     /**
      * (Mandatory) Property per la ricerca tramite il searchField
@@ -69,12 +62,14 @@ public @interface AIView {
      */
     String searchProperty() default VUOTA;
 
+
     /**
-     * (Mandatory) Property per l'ordinamento
+     * (Mandatory) Property per l'ordinamento della lista
      *
      * @return the string
      */
     String sortProperty() default VUOTA;
+
 
     /**
      * (Optional) Direzione per l'ordinamento
@@ -82,15 +77,5 @@ public @interface AIView {
      * @return the string
      */
     String sortDirection() default SORT_SPRING_ASC;
-
-    /**
-     * (Optional) Mostra la lista vuota all'apertura. Da usare SOLO se ci sono filtri di selezione.
-     * Altrimenti non si vedrà mai niente
-     *
-     * @return the boolean
-     */
-    boolean startListEmpty() default false;
-
-
 
 }

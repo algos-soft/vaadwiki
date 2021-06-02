@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.ui.button;
 
 import com.vaadin.flow.component.button.*;
-import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -21,8 +20,8 @@ import java.util.*;
  * User: gac
  * Date: mer, 20-mag-2020
  * Time: 20:42
- * Superclasse astratta per la gestione delle barre di bottoni (sopra e sotto) <br>
- * Contenuto variabile in base ad una lista di bottoni inviata nel costruttore dalla Logic <br>
+ * Superclasse astratta per la gestione delle barre di comandi (sopra e sotto) <br>
+ * Contenuto variabile in base ad una mappa di componenti inviata nel costruttore dalla Logic <br>
  * <p>
  * Se il costruttore arriva SENZA parametri, mostra solo quanto previsto nelle preferenze <br>
  */
@@ -52,14 +51,13 @@ public abstract class AButtonLayout extends VerticalLayout {
     @Autowired
     protected ALogService logger;
 
-
-    /**
-     * Flag di preferenza per selezionare la ricerca testuale:
-     * 1) nessuna
-     * 2) campo editText di selezione per una property specificata in searchProperty
-     * 3) dialogo di selezione
-     */
-    protected AESearch searchType;
+    //    /**
+    //     * Flag di preferenza per selezionare la ricerca testuale:
+    //     * 1) nessuna
+    //     * 2) campo editText di selezione per una property specificata in searchProperty
+    //     * 3) dialogo di selezione
+    //     */
+    //    protected AESearch searchType;
 
     /**
      * Flag di preferenza per specificare la property della entity su cui effettuare la ricerca <br>
@@ -78,38 +76,17 @@ public abstract class AButtonLayout extends VerticalLayout {
      */
     protected Button buttonClearFilter;
 
-    //    /**
-    //     * Riferimento iniettato per la gestione degli eventi/azioni <br>
-    //     */
-    //    protected AILogicOld service;
-    //
-    //
-    //    /**
-    //     * Property per la lista di bottoni iniziali (facoltativa, può anche essere costruita utilizzando listaAEBottoniIniziali)
-    //     */
-    //    protected List<AEButton> iniziali;
-    //
-    //    /**
-    //     * Property per la lista di bottoni centrali (facoltativa, può anche essere costruita utilizzando listaAEBottoniCentrali)
-    //     */
-    //    protected List<AEButton> centrali;
-    //
-    //    /**
-    //     * Property per la lista di bottoni finali (facoltativa, può anche essere costruita utilizzando listaAEBottoniFinali)
-    //     */
-    //    protected List<AEButton> finali;
-
 
     /**
      * Property per la lista di bottoni finali (facoltativa)
      */
     protected List<Button> specifici;
 
-    /**
-     * Mappa dei bottoni standard (obbligatoria) <br>
-     * La chiave è l'enumeration del bottone che contiene riferimenti per gli eventi <br>
-     */
-    protected Map<AIButton, Button> mappaBottoni;
+    //    /**
+    //     * Mappa dei bottoni standard (obbligatoria) <br>
+    //     * La chiave è l'enumeration del bottone che contiene riferimenti per gli eventi <br>
+    //     */
+    //    protected Map<AIButton, Button> mappaBottoni;
 
     /**
      * Property per selezionare i bottoni standard in base al tipo di Form (usata solo in ABottomLayout)
@@ -122,36 +99,41 @@ public abstract class AButtonLayout extends VerticalLayout {
      */
     protected AILogic entityLogic;
 
-    /**
-     * B - (semi-obbligatorio) una serie di bottoni standard, sotto forma di List<AEButton>
-     */
-    protected List<AIButton> listaAEBottoni;
+    //    /**
+    //     * B - (semi-obbligatorio) una serie di bottoni standard, sotto forma di List<AEButton>
+    //     */
+    //    protected List<AIButton> listaAEBottoni;
+    //
+    //    /**
+    //     * C - (facoltativo) wrapper di dati per il dialogo/campo di ricerca
+    //     */
+    //    protected WrapSearch wrapSearch;
+    //
+    //    /**
+    //     * D - (facoltativo) una mappa di combobox di selezione e filtro, LinkedHashMap<String, ComboBox>
+    //     * La chiave generalmente è il nome della property della entity con cui costruire il comboBox <br>
+    //     */
+    //    protected Map<String, ComboBox> mappaComboBox;
+    //
+    //    /**
+    //     * E - (facoltativo) una mappa di checkbox di selezione e filtro, Map<String, Checkbox>
+    //     */
+    //    protected Map<String, Checkbox> mappaCheckBox;
 
     /**
-     * C - (facoltativo) wrapper di dati per il dialogo/campo di ricerca
-     */
-    protected WrapSearch wrapSearch;
-
-    /**
-     * D - (facoltativo) una mappa di combobox di selezione e filtro, LinkedHashMap<String, ComboBox>
-     * La chiave generalmente è il nome della property della entity con cui costruire il comboBox <br>
-     */
-    protected Map<String, ComboBox> mappaComboBox;
-
-    /**
-     * E - (facoltativo) una serie di bottoni non-standard, sotto forma di List<Button>
+     * F - (facoltativo) una serie di bottoni non-standard, sotto forma di List<Button>
      */
     protected List<Button> listaBottoniSpecifici;
 
     /**
-     * Property per il numero di bottoni nella prima riga sopra la Grid (facoltativa)
+     * Wrap di informazioni usato da ALogic per la creazione di ATopLayout e ABottomLayout <br>
+     * La ALogic mantiene lo stato ed elabora informazioni che verranno usate da ATopLayout e ABottomLayout <br>
      */
-    protected int maxNumeroBottoniPrimaRiga;
+    protected WrapComponenti wrapper;
 
-    protected WrapButtons wrapper;
 
     /**
-     * Layout grafico per la prima fila di bottoni sopra la Grid
+     * Layout grafico per la prima fila di bottoni sopra la Grid o il Form
      */
     protected HorizontalLayout primaRiga;
 
@@ -161,37 +143,39 @@ public abstract class AButtonLayout extends VerticalLayout {
     protected HorizontalLayout secondaRiga;
 
     /**
-     * Layout grafico per l'unica fila (opzionale) di bottoni sotto la Grid
+     * Layout grafico per l'unica fila (opzionale) di bottoni sotto la Grid o il Form
      */
     protected HorizontalLayout rigaUnica;
 
-    //    /**
-    //     * Costruttore base senza parametri <br>
-    //     * Non utilizzato. Serve per automatismi di SpringBoot <br>
-    //     */
-    //    public AButtonLayout() {
-    //    }
+    /**
+     * Mappa in entrata di componenti di selezione e filtro <br>
+     */
+    protected Map<String, Object> mappaComponenti;
+
+    /**
+     * Mappa corrente di componenti di selezione e filtro <br>
+     * Serve per recuperare un componente e regolarlo durante la vita della List o Form <br>
+     */
+    protected Map<String, Object> mappaCorrente;
+
+    /**
+     * Costruttore base senza parametri <br>
+     * Non utilizzato. Serve per automatismi di SpringBoot <br>
+     */
+    public AButtonLayout() {
+    }
 
 
     /**
      * Costruttore base con parametro wrapper di passaggio dati <br>
-     * La classe viene costruita con appContext.getBean(xxxLayout.class, wrapButtons) in LogicList <br>
+     * La classe viene costruita con appContext.getBean(ATopLayout.class, wrapper) in LogicList <br>
      *
      * @param wrapper di informazioni tra 'logic' e 'view'
      */
-    public AButtonLayout(WrapButtons wrapper) {
+    public AButtonLayout(WrapComponenti wrapper) {
         this.wrapper = wrapper;
         this.entityLogic = wrapper != null ? wrapper.getEntityLogic() : null;
-        this.listaAEBottoni = wrapper != null ? wrapper.getListaABottoni() : null;
-        this.wrapSearch = wrapper != null ? wrapper.getWrapSearch() : null;
-        this.mappaComboBox = wrapper != null ? wrapper.getMappaComboBox() : null;
-        this.listaBottoniSpecifici = wrapper != null ? wrapper.getListaBottoniSpecifici() : null;
-        this.maxNumeroBottoniPrimaRiga = wrapper != null ? wrapper.getMaxNumeroBottoniPrimaRiga() : 0;
-
-        //        this.searchType = wrapper != null ? wrapper.getWrapSearch().getSearchType() : null;
-        //        this.searchProperty = wrapper != null ? wrapper.getWrapSearch().getSearchProperty() : null;
-        this.mappaComboBox = wrapper != null ? wrapper.getMappaComboBox() : null;
-        //        this.operationForm = wrapButtons.getOperationForm();
+        this.mappaComponenti = wrapper != null ? wrapper.getMappaComponenti() : null;
     }
 
 
@@ -206,31 +190,42 @@ public abstract class AButtonLayout extends VerticalLayout {
      */
     @PostConstruct
     protected void postConstruct() {
+        this.fixPreferenze();
         this.checkParametri();
         this.initView();
+        this.creaAll();
         this.creaAllBottoni();
         this.addAllToView();
     }
 
+
+    /**
+     * Preferenze usate da questa 'view' <br>
+     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        mappaCorrente = new HashMap<>();
+    }
 
     protected void checkParametri() {
         String message;
 
         if (AEPreferenza.usaDebug.is()) {
             if (wrapper == null) {
-                logger.warn("Creazione di un xxxLayout senza WrapButtons", this.getClass(), "checkParametri");
+                logger.warn("Creazione di un xxxLayout senza WrapTop", this.getClass(), "checkParametri");
                 return;
             }
 
             if (entityLogic == null) {
-                logger.error("Manca la entityLogic nel WrapButtons", this.getClass(), "checkParametri");
+                logger.error("Manca la entityLogic nel WrapTop", this.getClass(), "checkParametri");
                 return;
             }
 
-            if (listaAEBottoni == null) {
-                message = String.format("Non ci sono bottoni nella view (List) chiamata da %s", entityLogic.getClass().getSimpleName());
-                logger.info(message, this.getClass(), "checkParametri");
-            }
+            //            if (listaAEBottoni == null) {
+            //                message = String.format("Non ci sono bottoni nella view (List) chiamata da %s", entityLogic.getClass().getSimpleName());
+            //                logger.info(message, this.getClass(), "checkParametri");
+            //            }
         }
     }
 
@@ -240,10 +235,12 @@ public abstract class AButtonLayout extends VerticalLayout {
      * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
     protected void initView() {
-        mappaBottoni = new HashMap<AIButton, Button>();
         this.setMargin(false);
         this.setSpacing(false);
         this.setPadding(false);
+    }
+
+    protected void creaAll() {
     }
 
     protected void creaAllBottoni() {
@@ -252,10 +249,10 @@ public abstract class AButtonLayout extends VerticalLayout {
     protected void addAllToView() {
     }
 
+    @Deprecated
     protected Button getButton(final AIButton aeButton) {
         Button button = FactoryButton.get(aeButton);
         button.addClickListener(event -> performAction(aeButton.getAction()));
-        mappaBottoni.put(aeButton, button);
 
         return button;
     }
@@ -269,13 +266,6 @@ public abstract class AButtonLayout extends VerticalLayout {
      * @param entityLogic a cui rinviare l'evento/azione da eseguire
      */
     public void setAllListener(AILogic entityLogic) {
-        //        this.entityLogic = entityLogic;
-        //
-        //        if (array.isAllValid(mappaBottoni)) {
-        //            for (Map.Entry<AEButton, Button> mappaEntry : mappaBottoni.entrySet()) {
-        //                mappaEntry.getValue().addClickListener(event -> performAction(mappaEntry.getKey().action));
-        //            }
-        //        }
     }
 
 
@@ -315,8 +305,8 @@ public abstract class AButtonLayout extends VerticalLayout {
      * @param entityBean selezionata (solo per Form)
      */
     public void performAction(AIAction azione, AEntity entityBean) {
-        //        entityLogic.performAction(azione, entityBean);@//@todo PROVVISORIO
     }
+
 
     /**
      * Esegue l'azione del bottone. Azione che necessita di un field e di un valore. <br>
@@ -332,9 +322,6 @@ public abstract class AButtonLayout extends VerticalLayout {
         entityLogic.performAction(iAzione, fieldName, fieldValue);
     }
 
-    public Map<AIButton, Button> getMappaBottoni() {
-        return mappaBottoni;
-    }
 
     public TextField getSearchField() {
         return searchField;
@@ -348,13 +335,21 @@ public abstract class AButtonLayout extends VerticalLayout {
      * @return bottone richiesto
      */
     public Button getBottone(String key) {
+        Object obj;
         Button button = null;
 
-        if (array.isAllValid(mappaBottoni) && mappaBottoni.get(key) != null) {
-            return mappaBottoni.get(key);
+        if (array.isAllValid(mappaCorrente) && mappaCorrente.get(key) != null) {
+            obj = mappaCorrente.get(key);
+            if (obj != null && obj instanceof Button) {
+                button = (Button) obj;
+            }
         }
 
         return button;
+    }
+
+    public Map<String, Object> getMappaCorrente() {
+        return mappaCorrente;
     }
 
 }

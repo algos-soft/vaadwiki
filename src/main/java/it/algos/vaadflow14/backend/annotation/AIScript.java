@@ -16,12 +16,12 @@ import java.lang.annotation.*;
  * Controlla il flusso degli scripts di modifica del framework. <br>
  * <p>
  * Regola:
- * sovraScrivibile()=false -> (Optional) Se il file può essere sovrascritto dal Doc Wizard
- * type()=AETypeFile.nessuno -> (Mandatory) Tipologia dei file Algos sia generici che del package
- * doc()=AEWizDoc.nessuno -> (Mandatory) The type of doc upgrade from wizard
+ * sovraScrivibile()=false ->        (Mandatory) Se il contenuto del file può essere sovrascritto da Wizard
+ * doc()=AEWizDoc.inizioRevisione -> (Mandatory) The type of documentation only upgrade from wizard
+ * type()=AETypeFile.nessuno ->      (Optional) Tipologia dei file Algos sia generici che del package
  * <p>
  * Standard:
- * AIScript(sovraScrivibile = false, type = AETypeFile.nessuno, doc = AEWizDoc.revisione)
+ * AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -30,7 +30,7 @@ public @interface AIScript {
 
 
     /**
-     * (Optional) Status of this file for Wizard re-working.
+     * (Mandatory) Status of this file for Wizard re-working.
      * Se il file può essere sovrascritto dal Doc Wizard
      * Defaults to false.
      *
@@ -38,13 +38,6 @@ public @interface AIScript {
      */
     boolean sovraScrivibile() default false;
 
-    /**
-     * (Mandatory) The type of the Algos file.
-     * Defaults to AETypeFile.nessuno.
-     *
-     * @return the Algos file type
-     */
-    AETypeFile type() default AETypeFile.nessuno;
 
     /**
      * (Mandatory) The type of doc upgrade from wizard.
@@ -53,5 +46,14 @@ public @interface AIScript {
      * @return the Algos file type
      */
     AEWizDoc doc() default AEWizDoc.inizioRevisione;
+
+
+    /**
+     * (Optional) The type of the Algos file.
+     * Defaults to AETypeFile.nessuno.
+     *
+     * @return the Algos file type
+     */
+    AETypeFile type() default AETypeFile.nessuno;
 
 }

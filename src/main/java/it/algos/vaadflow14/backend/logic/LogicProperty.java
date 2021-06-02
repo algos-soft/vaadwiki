@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.*;
@@ -11,7 +12,6 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.button.*;
-import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.service.*;
@@ -343,12 +343,12 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected AEOperation operationForm = AEOperation.listNoForm;
 
-    /**
-     * ComboBox usati in topLayout <br>
-     * La mappa si costruisce in regolazioniIniziali() della LogicList <br>
-     * I ComboBox vengono aggiunti in fixComboBox() della LogicList <br>
-     */
-    protected Map<String, ComboBox> mappaComboBox;
+    //    /**
+    //     * ComboBox usati in topLayout <br>
+    //     * La mappa si costruisce in regolazioniIniziali() della LogicList <br>
+    //     * I ComboBox vengono aggiunti in fixComboBox() della LogicList <br>
+    //     */
+    //    protected Map<String, ComboBox> mappaComboBox;
 
     /**
      * Filtri collegati a dataProvider <br>
@@ -361,6 +361,17 @@ public abstract class LogicProperty extends VerticalLayout {
      * La lista si costruisce in regolazioniIniziali() della LogicList <br>
      */
     protected List<Span> spanHeaderList;
+
+
+    /**
+     * Mappa di componenti di selezione e filtro <br>
+     */
+    protected Map<String, Object> mappaComponentiTop;
+
+    /**
+     * Mappa di componenti di selezione e filtro <br>
+     */
+    protected Map<String, Object> mappaComponentiBottom;
 
 
     protected void fixProperty() {
@@ -500,47 +511,110 @@ public abstract class LogicProperty extends VerticalLayout {
     }
 
     /**
-     * Costruisce un layout per i bottoni di comando al Top della view <br>
-     * Chiamato da Logic.initView() <br>
-     * Aggiunge tutti i listeners ai bottoni <br>
+     * Costruisce un layout per i componenti al Top della view <br>
+     * I componenti possono essere (nell'ordine):
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
+     * SearchField per il filtro testuale di ricerca <br>
+     * ComboBox di filtro <br>
+     * CheckBox di filtro <br>
+     * Bottoni specifici non standard <br>
+     * <p>
+     * Metodo chiamato da Logic.initView() <br>
+     * Costruisce tutti i componenti in metodi che possono essere sovrascritti <br>
+     * Raggruppa tutti i componenti in un wrapper <br>
+     * Costruisce un istanza della classe dedicata e la aggiunge al placeholder <br>
+     * Costruisce un istanza (grafica) della classe dedicata <br>
+     * Inserisce la istanza in topPlaceHolder della view <br>
+     * Aggiunge tutti i listeners dei bottoni, searchFiled, comboBox, checkBox <br>
      * Obbligatorio per la List, facoltativo per il Form <br>
      * Nella List i bottoni possono andare su due righe <br>
      * Nel Form i bottoni vanno su una sola riga <br>
-     * Inserisce l' istanza (grafica) in topPlaceHolder della view <br>
      * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      */
     protected void fixTopLayout() {
-        topLayout = appContext.getBean(ATopLayout.class, this.getWrapButtonsTop());
-        if (topPlaceHolder != null && topLayout != null) {
+        WrapComponenti wrapper;
+
+        this.creaAEBottoniTop();
+        this.creaComandiTop();
+        wrapper = new WrapComponenti((AILogic) this, mappaComponentiTop, maxNumeroBottoniPrimaRiga);
+
+        topLayout = appContext.getBean(ATopLayout.class, wrapper);
+        if (topPlaceHolder != null) {
             topPlaceHolder.add(topLayout);
         }
     }
 
     /**
-     * Regola una mappa di ComboBox (solo per la List e facoltativi) da usare nel wrapper getWrapButtonsTop() <br>
+     * Costruisce una lista di bottoni (enumeration) al Top della view <br>
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
+     * Costruisce i bottoni come dai flag regolati di default o nella sottoclasse <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected void fixMappaComboBox() {
+    protected void creaAEBottoniTop() {
+    }
+
+    /**
+     * Costruisce una mappa di componenti di comando/selezione/filtro al Top della view <br>
+     * <p>
+     * I componenti possono essere (nell'ordine):
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
+     * SearchField per il filtro testuale di ricerca <br>
+     * ComboBox di filtro <br>
+     * CheckBox di filtro <br>
+     * Bottoni specifici non standard <br>
+     * <p>
+     * Costruisce i bottoni standard come dai flag regolati di default o nella sottoclasse <br>
+     * Costruisce il searchField previsto in AEntity->@AIView(searchProperty) <br>
+     * Costruisce i comboBox previsti nella AEntity->@AIField(usaComboBox = true) <br>
+     * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
+     * Costruisce gli indeterminateCheckbox previsti nella AEntity->@AIField(usaCheckBox3Vie = true) <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni, comboBox e checkBox <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void creaComandiTop() {
+    }
+
+
+    /**
+     * Costruisce un wrap di informazioni per la ricerca in ViewList <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected WrapSearch getWrapSearch() {
+        return new WrapSearch();
+    }
+
+    /**
+     * Costruisce una mappa di ComboBox da usare nel wrapper WrapTop <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Deprecated
+    protected Map<String, ComboBox> getMappaComboBox() {
+        return new HashMap<>();
+    }
+
+    /**
+     * Costruisce una mappa di Checkbox da usare nel wrapper WrapTop <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected Map<String, Checkbox> getMappaCheckBox() {
+        return new HashMap<>();
     }
 
 
     /**
      * Costruisce un wrapper (obbligatorio) di dati per i bottoni di comando al Top della view <br>
      * I dati sono gestiti da questa 'logic' <br>
-     * I dati vengono passati alla View che li usa <br>
+     * I dati vengono passati al componente specializzato che li usa <br>
      * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      *
      * @return wrapper di dati per la view
      */
+    @Deprecated
     protected WrapButtons getWrapButtonsTop() {
         List<AIButton> listaAEBottoni = this.getListaAEBottoniTop();
-        //        WrapSearch wrapSearch = this.getWrapSearch();
-        //                LinkedHashMap<String, ComboBox> mappaComboBox = this.mappaComboBox;
-        //        List<Button> listaBottoniSpecifici = this.getListaBottoniSpecifici();
-        //        AEOperation operationForm = null;
-        //    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final LinkedHashMap<String, ComboBox> mappaComboBox, final List<Button> listaBottoniSpecifici, final int maxNumeroBottoniPrimaRiga) {
 
-        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, (WrapSearch) null, mappaComboBox, (List<Button>) null, maxNumeroBottoniPrimaRiga);
+        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, (WrapSearch) null, null, null, (List<Button>) null, maxNumeroBottoniPrimaRiga);
     }
 
     /**
@@ -549,6 +623,7 @@ public abstract class LogicProperty extends VerticalLayout {
      * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
+    @Deprecated
     protected List<AIButton> getListaAEBottoniTop() {
         return new ArrayList<>();
     }
@@ -581,7 +656,12 @@ public abstract class LogicProperty extends VerticalLayout {
      * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      */
     protected void fixBottomLayout() {
-        bottomLayout = appContext.getBean(ABottomLayout.class, this.getWrapButtonsBottom());
+        WrapComponenti wrapper;
+        this.creaAEBottoniBottom();
+
+        wrapper = new WrapComponenti((AILogic) this, mappaComponentiBottom);
+
+        bottomLayout = appContext.getBean(ABottomLayout.class, wrapper);
         if (bottomPlaceHolder != null && bottomLayout != null) {
             bottomPlaceHolder.add(bottomLayout);
         }
@@ -589,28 +669,12 @@ public abstract class LogicProperty extends VerticalLayout {
 
 
     /**
-     * Costruisce un wrapper (obbligatorio) di dati per i bottoni di comando al Bottom della view <br>
-     * I dati sono gestiti da questa 'logic' <br>
-     * I dati vengono passati alla View che li usa <br>
-     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
-     *
-     * @return wrapper di dati per la view
-     */
-    protected WrapButtons getWrapButtonsBottom() {
-        List<AIButton> listaAEBottoni = this.getListaAEBottoniBottom();
-
-        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null);
-    }
-
-
-    /**
      * Costruisce una lista di bottoni (enumeration) al Bottom della view <br>
-     * Costruisce i bottoni come previsto dal flag operationForm <br>
-     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
+     * Costruisce i bottoni come dai flag regolati di default o nella sottoclasse <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected List<AIButton> getListaAEBottoniBottom() {
-        return new ArrayList<>();
+    protected void creaAEBottoniBottom() {
     }
 
 

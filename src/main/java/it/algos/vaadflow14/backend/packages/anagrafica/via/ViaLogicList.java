@@ -1,25 +1,24 @@
 package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
-
-import java.util.*;
 
 /**
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: dom, 07-mar-2021
- * Time: 21:57
+ * First time: dom, 07-mar-2021
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe GenericLogicList con @Route <br>
- * Gestione della 'business logic' e della 'grafica' di @Route <br>
+ * Se manca, usa la classe GenericLogicList con @Route <br>
+ * Gestione della 'view' di @Route e della 'business logic' <br>
  * Mantiene lo 'stato' <br>
  * L' istanza (PROTOTYPE) viene creata ad ogni chiamata del browser <br>
  * Eventuali parametri (opzionali) devono essere passati nell'URL <br>
@@ -27,8 +26,10 @@ import java.util.*;
  * Annotated with @Route (obbligatorio) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Vaadin flow
 @Route(value = "via", layout = MainLayout.class)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione, type = AETypeFile.list)
 public class ViaLogicList extends LogicList {
 
 
@@ -61,8 +62,10 @@ public class ViaLogicList extends LogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-        super.usaBottoneSearch = true;
+
+        super.maxNumeroBottoniPrimaRiga = 3;
     }
+
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
@@ -72,7 +75,9 @@ public class ViaLogicList extends LogicList {
     protected void fixSpanList() {
         addSpanBlu("Codifica delle più comuni tipologie di indirizzi.");
         addSpanBlu("Presentate nelle anagrafiche in un popup di selezione.");
-        addSpanBlu("L'ordinamento del popup è quello numerico riportato qui e non quello alfabetico.");
+        addSpanVerde("L'ordinamento del popup è quello numerico riportato qui e non quello alfabetico.");
+        addSpanVerde("Viene pre-caricato un pacchetto di valori standard che sono sempre resettabili");
+        addSpanVerde("Possono essere aggiunti altri valori");
     }
 
 

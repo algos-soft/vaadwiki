@@ -5,12 +5,10 @@ import com.vaadin.flow.data.provider.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.ui.view.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
-import lombok.*;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -82,7 +80,7 @@ public class AAnnotationService extends AAbstractService {
     private static final long serialVersionUID = 1L;
 
     //==========================================================================
-    // Annotations
+    // Interfaces
     //==========================================================================
 
     /**
@@ -100,25 +98,14 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
-     * Get the annotation Builder (Lombok). <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return the specific Annotation
-     */
-    public Builder getBuilder(final Class<? extends AEntity> entityClazz) {
-        return (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) ? entityClazz.getAnnotation(Builder.class) : null;
-    }
-
-    /**
      * Get the annotation Qualifier. <br>
      *
-     * @param viewClazz the class of type AView
+     * @param genericClazz of all types
      *
      * @return the specific Annotation
      */
-    public Qualifier getQualifier(final Class<? extends AView> viewClazz) {
-        return (viewClazz != null && AView.class.isAssignableFrom(viewClazz)) ? viewClazz.getAnnotation(Qualifier.class) : null;
+    public Qualifier getQualifier(final Class<?> genericClazz) {
+        return genericClazz != null ? genericClazz.getAnnotation(Qualifier.class) : null;
     }
 
 
@@ -206,7 +193,7 @@ public class AAnnotationService extends AAbstractService {
     }
 
     //==========================================================================
-    // Annotations Algos
+    // Interfaces Algos
     //==========================================================================
 
     /**
@@ -216,9 +203,10 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return the specific annotation
      */
-    public AIScript getAIScript(final Class<? extends AEntity> genericClazz) {
+    public AIScript getAIScript(final Class<?> genericClazz) {
         return genericClazz != null ? genericClazz.getAnnotation(AIScript.class) : null;
     }
+
 
     /**
      * Get the annotation Algos AIEntity. <br>
@@ -280,6 +268,7 @@ public class AAnnotationService extends AAbstractService {
     public AIView getAIViewView(final Class<? extends AView> viewClazz) {
         return (viewClazz != null && AView.class.isAssignableFrom(viewClazz)) ? viewClazz.getAnnotation(AIView.class) : null;
     }
+
 
     /**
      * Get the annotation Algos AIList. <br>
@@ -440,14 +429,28 @@ public class AAnnotationService extends AAbstractService {
     /**
      * Flag se il file può essere sovrascritto dal Doc Wizard. <br>
      *
+     * @param genericClazz of all types
+     *
+     * @return the status
+     */
+    public boolean isSovrascrivibile(final Class<?> genericClazz) {
+        AIScript annotation = this.getAIScript(genericClazz);
+        return annotation != null && annotation.sovraScrivibile();
+    }
+
+
+    /**
+     * The type of doc upgrade from wizard. <br>
+     *
      * @param entityClazz the class of type AEntity
      *
      * @return the status
      */
-    public boolean isSovrascrivibile(final Class<? extends AEntity> entityClazz) {
+    public AEWizDoc getDocFile(final Class<?> entityClazz) {
         AIScript annotation = this.getAIScript(entityClazz);
-        return annotation != null && annotation.sovraScrivibile();
+        return annotation != null ? annotation.doc() : AEWizDoc.inizioRevisione;
     }
+
 
     /**
      * Tipologia dei file Algos sia generici che del package. <br>
@@ -459,18 +462,6 @@ public class AAnnotationService extends AAbstractService {
     public AETypeFile getTypeFile(final Class<? extends AEntity> entityClazz) {
         AIScript annotation = this.getAIScript(entityClazz);
         return annotation != null ? annotation.type() : AETypeFile.nessuno;
-    }
-
-    /**
-     * The type of doc upgrade from wizard. <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return the status
-     */
-    public AEWizDoc getDocFile(final Class<? extends AEntity> entityClazz) {
-        AIScript annotation = this.getAIScript(entityClazz);
-        return annotation != null ? annotation.doc() : AEWizDoc.nonModificabile;
     }
 
     //==========================================================================
@@ -510,46 +501,6 @@ public class AAnnotationService extends AAbstractService {
         return isEntityClass(clazz);
     }
 
-    /**
-     * Restituisce il nome della property chiave <br>
-     * 1) Controlla che il parametro in ingresso non sia nullo <br>
-     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
-     * 3) Controlla che esista l'annotation specifica <br>
-     * 4) Cerca in @AIEntity della classe AEntity la property 'keyPropertyName'
-     * 5) Se non la trova, usa '_id' <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return the menu icon
-     */
-    public String getKeyPropertyName(final Class<? extends AEntity> entityClazz) {
-        AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.keyPropertyName() : VUOTA;
-    }
-
-    /**
-     * Flag per usare il field della superclasse AEntity. <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return the status
-     */
-    public boolean usaCompany(final Class<? extends AEntity> entityClazz) {
-        AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.usaCompany() : FlowVar.usaCompany;
-    }
-
-    /**
-     * Flag per la ri-creazione automatica della lista alla partenza. <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return the status
-     */
-    public boolean usaBoot(final Class<? extends AEntity> entityClazz) {
-        AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.usaBoot() : false;
-    }
 
     /**
      * Restituisce il nome del record (da usare nel Dialog)
@@ -581,6 +532,125 @@ public class AAnnotationService extends AAbstractService {
         return recordName;
     }
 
+
+    /**
+     * Restituisce il nome della property chiave <br>
+     * 1) Controlla che il parametro in ingresso non sia nullo <br>
+     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
+     * 3) Controlla che esista l'annotation specifica <br>
+     * 4) Cerca in @AIEntity della classe AEntity la property 'keyPropertyName'
+     * 5) Se non la trova, usa '_id' <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the key property name
+     */
+    public String getKeyPropertyName(final Class<? extends AEntity> entityClazz) {
+        String keyName = VUOTA;
+        AIEntity annotation = null;
+
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIEntity(entityClazz);
+        }
+
+        if (annotation != null) {
+            keyName = annotation.keyPropertyName();
+        }
+
+        return keyName;
+    }
+
+    /**
+     * Flag per usare il reset della collection. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaReset(final Class<? extends AEntity> entityClazz) {
+        boolean usaReset = false;
+        AIEntity annotation = null;
+
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIEntity(entityClazz);
+        }
+
+        if (annotation != null) {
+            usaReset = annotation.usaReset();
+        }
+
+        return usaReset;
+    }
+
+
+    /**
+     * Flag per la ri-creazione automatica della lista alla partenza. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaBoot(final Class<? extends AEntity> entityClazz) {
+        boolean usaBoot = false;
+        AIEntity annotation = null;
+
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIEntity(entityClazz);
+        }
+
+        if (annotation != null) {
+            usaBoot = annotation.usaBoot();
+        }
+
+        return usaBoot;
+    }
+
+
+    /**
+     * Flag per la creazione di nuove entities. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaNew(final Class<? extends AEntity> entityClazz) {
+        boolean usaNew = false;
+        AIEntity annotation = null;
+
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIEntity(entityClazz);
+        }
+
+        if (annotation != null) {
+            usaNew = annotation.usaNew();
+        }
+
+        return usaNew;
+    }
+
+    /**
+     * Flag per usare il field della superclasse AEntity. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaCompany(final Class<? extends AEntity> entityClazz) {
+        boolean usaCompany = false;
+        AIEntity annotation = null;
+
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIEntity(entityClazz);
+        }
+
+        if (annotation != null) {
+            usaCompany = annotation.usaCompany();
+        }
+
+        return usaCompany;
+    }
+
+
     /**
      * Flag per usare il field della superclasse AEntity. <br>
      *
@@ -589,34 +659,20 @@ public class AAnnotationService extends AAbstractService {
      * @return the status
      */
     public boolean usaNote(final Class<? extends AEntity> entityClazz) {
-        AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.usaNote() : false;
+        boolean usaNote = false;
+        AIEntity annotation = null;
+
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIEntity(entityClazz);
+        }
+
+        if (annotation != null) {
+            usaNote = annotation.usaNote();
+        }
+
+        return usaNote;
     }
 
-
-    /**
-     * Flag per la creazione di una nuova entity. <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return the status
-     */
-    public boolean usaCreazione(final Class<? extends AEntity> entityClazz) {
-        AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.usaCreazione() : false;
-    }
-
-    /**
-     * Flag per la modifica di una entity. <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return the status
-     */
-    public boolean usaModifica(final Class<? extends AEntity> entityClazz) {
-        AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.usaModifica() : false;
-    }
 
     /**
      * Flag per l'utilizzo dei timestamps. <br>
@@ -626,26 +682,23 @@ public class AAnnotationService extends AAbstractService {
      * @return the status
      */
     public boolean usaTimeStamp(final Class<? extends AEntity> entityClazz) {
-        AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.usaTimeStamp() : false;
-    }
+        boolean usaTimeStamp = false;
+        AIEntity annotation = null;
 
-    /**
-     * Flag per la cancellazione di una entity. <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return the status
-     */
-    public boolean usaDelete(final Class<? extends AEntity> entityClazz) {
-        AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.usaDelete() : false;
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIEntity(entityClazz);
+        }
+
+        if (annotation != null) {
+            usaTimeStamp = annotation.usaTimeStamp();
+        }
+
+        return usaTimeStamp;
     }
 
     //==========================================================================
     // @Miscellanea
     //==========================================================================
-
 
     /**
      * Get the name of the qualifier.
@@ -680,33 +733,14 @@ public class AAnnotationService extends AAbstractService {
     // @AIView
     //==========================================================================
 
-    //    /**
-    //     * Restituisce il nome della property per navigare verso la View <br>
-    //     * 1) Controlla che il parametro in ingresso non sia nullo <br>
-    //     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
-    //     * 3) Controlla che esista l'annotation specifica <br>
-    //     * 4) Cerca la property 'routeFormName' nell'Annotation @AIView della classe AViewList <br>
-    //     *
-    //     * @param viewClazz the class of type AView
-    //     *
-    //     * @return the name of the property
-    //     */
-    //    @Deprecated
-    //    public String getFormRouteName(final Class<? extends AView> viewClazz) {
-    //        AIView annotation = this.getAIViewView(viewClazz);
-    //        return annotation != null ? annotation.routeFormName() : VUOTA;
-    //    }
-
-
     /**
      * Restituisce il nome del menu. <br>
      * 1) Controlla che il parametro in ingresso non sia nullo <br>
      * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
      * 3) Controlla che esista l' annotation specifica <br>
      * 4) Cerca la property 'menuName' nell' Annotation @AIView della classe AViewList <br>
-     * 5) Se non la trova, cerca nella classe la property statica MENU_NAME <br>
-     * 6) Se non la trova, di default usa la property 'value' di @Route <br>
-     * 7) Se non la trova, di default usa nome della classe <br>
+     * 5) Se non la trova, di default usa la property 'value' di @Route <br>
+     * 6) Se non la trova, di default usa nome della classe <br>
      *
      * @param entityViewClazz the class of type AEntity or AView
      *
@@ -721,11 +755,6 @@ public class AAnnotationService extends AAbstractService {
         // Cerca in @AIView della classe la property 'menuName'
         if (annotationView != null) {
             menuName = annotationView.menuName();
-        }
-
-        // Se non la trova, cerca nella classe la property statica MENU_NAME
-        if (text.isEmpty(menuName)) {
-            //            menuName = reflection.getMenuName(entityViewClazz);  //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
         }
 
         // Se non la trova, di default usa la property 'value' di @Route
@@ -783,50 +812,110 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
-     * Flag per indicare un menu del progetto base VaadFlow15 <br>
-     * 1) Controlla che il parametro in ingresso non sia nullo <br>
-     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
-     * 3) Controlla che esista l'annotation specifica <br>
-     *
-     * @param entityViewClazz the class of type AEntity or AView
-     *
-     * @return true se appartiene al progetto base VaadinFlow15
-     */
-    public boolean isMenuProgettoBase(final Class<?> entityViewClazz) {
-        AIView annotation = this.getAIView(entityViewClazz);
-        return annotation != null && annotation.vaadFlow();
-    }
-
-
-    /**
      * Restituisce il nome della property per le ricerche con searchField <br>
      * 1) Controlla che il parametro in ingresso non sia nullo <br>
      * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
      * 3) Controlla che esista l'annotation specifica <br>
+     * 4) Se non la trova, di default cerca la property 'code' <br>
      *
-     * @param entityViewClazz the class of type AEntity or AView
+     * @param entityClazz the class of type AEntity
      *
      * @return the name of the property
      */
-    public String getSearchPropertyName(final Class<?> entityViewClazz) {
-        AIView annotation = this.getAIView(entityViewClazz);
-        return annotation != null ? annotation.searchProperty() : VUOTA;
+    public String getSearchPropertyName(Class<? extends AEntity> entityClazz) {
+        String searchProperty = VUOTA;
+        AIView annotation = null;
+
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIView(entityClazz);
+        }
+        else {
+            return VUOTA;
+        }
+
+        if (annotation != null) {
+            searchProperty = annotation.searchProperty();
+        }
+
+        //--la property 'code' DEVE essere pubblica
+        if (text.isEmpty(searchProperty)) {
+            searchProperty = FIELD_CODE;
+        }
+
+        //--la property DEVE esistere
+        if (!reflection.isEsiste(entityClazz, searchProperty)) {
+            searchProperty = VUOTA;
+        }
+
+        return searchProperty;
+    }
+
+    /**
+     * Flag per l'utilizzo delle ricerche con searchField. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaSearchField(final Class<? extends AEntity> entityClazz) {
+        boolean usaSearchField = false;
+        AIView annotation = null;
+
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIView(entityClazz);
+        }
+        else {
+            return false;
+        }
+
+        if (annotation != null) {
+            usaSearchField = text.isValid(getSearchPropertyName(entityClazz));
+        }
+
+        return usaSearchField;
     }
 
 
     /**
-     * Flag per mostrare una Grid vuota all'apertura. Da usare SOLO se ci sono filtri di selezione. <br>
-     * 1) Controlla che il parametro in ingresso non sia nullo <br>
-     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
-     * 3) Controlla che esista l'annotation specifica <br>
+     * Get the sort for the Grid Columns.
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return sort
+     */
+    public String getSortProperty(final Class<?> entityClazz) {
+        String sortPropertyTxt = VUOTA;
+        AIView annotation = this.getAIView(entityClazz);
+
+        if (annotation != null) {
+            sortPropertyTxt = annotation.sortProperty();
+        }
+
+        return sortPropertyTxt;
+    }
+
+
+    /**
+     * Get the sort direction for the Grid Columns.
      *
      * @param entityViewClazz the class of type AEntity or AView
      *
-     * @return true per mostrare ka lista vuota all'apertura della Grid
+     * @return sortSpring
      */
-    public boolean isStartListEmpty(final Class<?> entityViewClazz) {
+    public Sort.Direction getSortDirectionSpring(final Class<?> entityViewClazz) {
+        Sort.Direction sortDirection = Sort.Direction.ASC;
         AIView annotation = this.getAIView(entityViewClazz);
-        return annotation != null && annotation.startListEmpty();
+        String sortDirectionTxt = VUOTA;
+
+        if (annotation != null) {
+            sortDirectionTxt = annotation.sortDirection();
+        }
+
+        if (text.isValid(sortDirectionTxt) && (sortDirectionTxt.equals("DESC") || sortDirectionTxt.equals("desc"))) {
+            sortDirection = Sort.Direction.DESC;
+        }
+
+        return sortDirection;
     }
 
 
@@ -839,20 +928,16 @@ public class AAnnotationService extends AAbstractService {
      */
     public Sort getSortSpring(final Class<?> entityViewClazz) {
         Sort sortSpring = null;
-        String sortDirectionTxt = VUOTA;
-        Sort.Direction sortDirection = Sort.Direction.ASC;
         String sortPropertyTxt = VUOTA;
+        Sort.Direction sortDirection = Sort.Direction.ASC;
         AIView annotation = this.getAIView(entityViewClazz);
 
         if (annotation != null) {
-            sortPropertyTxt = annotation.sortProperty();
-            sortDirectionTxt = annotation.sortDirection();
-            if (text.isValid(sortDirectionTxt) && (sortDirectionTxt.equals("DESC") || sortDirectionTxt.equals("desc"))) {
-                sortDirection = Sort.Direction.DESC;
-            }
+            sortPropertyTxt = getSortProperty(entityViewClazz);
+            sortDirection = getSortDirectionSpring(entityViewClazz);
         }
 
-        if (text.isValid(sortPropertyTxt)) {
+        if (text.isValid(sortPropertyTxt) && sortDirection != null) {
             sortSpring = Sort.by(sortDirection, sortPropertyTxt);
         }
 
@@ -889,24 +974,6 @@ public class AAnnotationService extends AAbstractService {
         }
 
         return sortVaadinList;
-    }
-
-    /**
-     * Get the sort for the Grid Columns.
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return sort
-     */
-    public String getSortProperty(final Class<?> entityClazz) {
-        String sortPropertyTxt = VUOTA;
-        AIView annotation = this.getAIView(entityClazz);
-
-        if (annotation != null) {
-            sortPropertyTxt = annotation.sortProperty();
-        }
-
-        return sortPropertyTxt;
     }
 
     //==========================================================================
@@ -1007,17 +1074,17 @@ public class AAnnotationService extends AAbstractService {
         return annotation != null ? annotation.usaDeleteMenu() : false;
     }
 
-    /**
-     * Flag per la creazione automatica della lista dal bottone del menu. <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return the status
-     */
-    public boolean usaResetMenu(final Class<? extends AEntity> entityClazz) {
-        AIList annotation = this.getAIList(entityClazz);
-        return annotation != null ? annotation.usaResetMenu() : false;
-    }
+    //    /**
+    //     * Flag per la creazione automatica della lista dal bottone del menu. <br>
+    //     *
+    //     * @param entityClazz the class of type AEntity
+    //     *
+    //     * @return the status
+    //     */
+    //    public boolean usaResetMenu(final Class<? extends AEntity> entityClazz) {
+    //        AIList annotation = this.getAIList(entityClazz);
+    //        return annotation != null ? annotation.usaResetMenu() : false;
+    //    }
 
 
     /**
@@ -1443,33 +1510,88 @@ public class AAnnotationService extends AAbstractService {
 
     /**
      * Get the status of specific method for comboBox in Grid.
+     * Meaning sense only for AETypeField.combo.
      *
      * @param entityClazz the class of type AEntity
      * @param fieldName   the property name
      *
      * @return status of field
      */
-    public boolean usaComboBoxGrid(Class<? extends AEntity> entityClazz, String fieldName) {
-        return usaComboBoxGrid(reflection.getField(entityClazz, fieldName));
+    public boolean usaComboBox(Class<? extends AEntity> entityClazz, String fieldName) {
+        return usaComboBox(reflection.getField(entityClazz, fieldName));
     }
 
 
     /**
      * Get the status of specific method for comboBox in Grid.
+     * Meaning sense only for AETypeField.combo.
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
      * @return status of field
      */
-    public boolean usaComboBoxGrid(final Field reflectionJavaField) {
-        boolean usaComboMethod = false;
+    public boolean usaComboBox(final Field reflectionJavaField) {
+        boolean usaComboBoxGrid = false;
         AIField annotation = this.getAIField(reflectionJavaField);
+        AETypeField type = this.getFormType(reflectionJavaField);
 
-        if (annotation != null) {
-            usaComboMethod = annotation.usaComboBoxGrid();
+        if (annotation != null && (type == AETypeField.combo||type == AETypeField.enumeration)) {
+            usaComboBoxGrid = annotation.usaComboBox();
         }
 
-        return usaComboMethod;
+        return usaComboBoxGrid;
+    }
+
+    /**
+     * Get the width of the combo in Grid.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the width of the field
+     */
+    public String getComboBoxGridWidth(final Field reflectionJavaField) {
+        String widthTxt;
+        double widthDouble = 0;
+        AIField annotation = null;
+        AETypeField type = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIField(reflectionJavaField);
+        if (annotation != null) {
+            widthDouble = annotation.widthEM();
+        }
+
+        widthDouble = widthDouble > 0 ? widthDouble : COMBO_WIDTH;
+        widthTxt = widthDouble + TAG_EM;
+
+        return widthTxt;
+    }
+
+    /**
+     * Get the initial value of the combo in Grid.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the value of the field
+     */
+    public String getComboInitialValue(final Field reflectionJavaField) {
+        String value = VUOTA;
+        AIField annotation = null;
+        AETypeField type = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIField(reflectionJavaField);
+        if (annotation != null) {
+            value = annotation.comboInitialValue();
+        }
+
+        return value;
     }
 
     /**
@@ -1489,6 +1611,76 @@ public class AAnnotationService extends AAbstractService {
 
         return methodName;
     }
+
+
+    /**
+     * Get the status of specific method for checkBox in Grid.
+     * Meaning sense only for AETypeField.booleano.
+     *
+     * @param entityClazz the class of type AEntity
+     * @param fieldName   the property name
+     *
+     * @return status of field
+     */
+    public boolean usaCheckBox(Class<? extends AEntity> entityClazz, String fieldName) {
+        return usaCheckBox(reflection.getField(entityClazz, fieldName));
+    }
+
+
+    /**
+     * Get the status of specific method for checkBox in Grid.
+     * Meaning sense only for AETypeField.booleano.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return status of field
+     */
+    public boolean usaCheckBox(final Field reflectionJavaField) {
+        boolean usaCheckBox = false;
+        AIField annotation = this.getAIField(reflectionJavaField);
+        AETypeField type = this.getFormType(reflectionJavaField);
+
+        if (annotation != null && type == AETypeField.booleano) {
+            usaCheckBox = annotation.usaCheckBox();
+        }
+
+        return usaCheckBox;
+    }
+
+    /**
+     * Get the status of specific method for checkBox in Grid.
+     * Meaning sense only for AETypeField.booleano.
+     *
+     * @param entityClazz the class of type AEntity
+     * @param fieldName   the property name
+     *
+     * @return status of field
+     */
+    public boolean usaCheckBox3Vie(Class<? extends AEntity> entityClazz, String fieldName) {
+        return usaCheckBox3Vie(reflection.getField(entityClazz, fieldName));
+    }
+
+
+    /**
+     * Get the status of specific method for checkBox in Grid.
+     * Meaning sense only for AETypeField.booleano.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return status of field
+     */
+    public boolean usaCheckBox3Vie(final Field reflectionJavaField) {
+        boolean usaCheckBox3Vie = false;
+        AIField annotation = this.getAIField(reflectionJavaField);
+        AETypeField type = this.getFormType(reflectionJavaField);
+
+        if (annotation != null && type == AETypeField.booleano) {
+            usaCheckBox3Vie = annotation.usaCheckBox3Vie();
+        }
+
+        return usaCheckBox3Vie;
+    }
+
 
     /**
      * Get the placeholder from @AIField

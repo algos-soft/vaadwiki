@@ -6,6 +6,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -15,23 +16,28 @@ import org.springframework.stereotype.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: lun, 21-dic-2020
- * Time: 17:48
+ * First time: lun, 21-dic-2020
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe EntityService <br>
+ * Se manca, usa la classe EntityService <br>
  * Layer di collegamento tra il 'backend' e mongoDB <br>
  * Mantiene lo 'stato' della classe AEntity ma non mantiene lo stato di un'istanza entityBean <br>
  * L' istanza (SINGLETON) viene creata alla partenza del programma <br>
  * <p>
  * Annotated with @Service (obbligatorio) <br>
+ * Annotated with @Qualifier (obbligatorio) per iniettare questo singleton nel costruttore di xxxLogicList <br>
  * Annotated with @Scope (obbligatorio con SCOPE_SINGLETON) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Spring
 @Service
+//Spring
 @Qualifier("companyService")
+//Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class CompanyService extends AService {
 
 
@@ -170,9 +176,10 @@ public class CompanyService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    @Override
+    //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+        AIResult result=null;
+        //        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 
         if (result.isErrato()) {
@@ -183,7 +190,7 @@ public class CompanyService extends AService {
         numRec = creaIfNotExist("Demo", "Company demo", "345 994487", "demo@algos.it") != null ? numRec + 1 : numRec;
         numRec = creaIfNotExist("Test", "Company di test", "", "presidentePonteTaro@crocerossa.it") != null ? numRec + 1 : numRec;
 
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+        return super.fixPostResetOnly(AETypeReset.hardCoded, numRec);
     }
 
     /**

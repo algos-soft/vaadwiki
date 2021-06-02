@@ -2,12 +2,14 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.form.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -23,6 +25,8 @@ import java.time.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class PreferenzaForm extends AForm {
 
     /**

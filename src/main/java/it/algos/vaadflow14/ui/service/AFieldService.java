@@ -401,17 +401,17 @@ public class AFieldService extends AAbstractService {
         ComboBox<T> combo = new ComboBox();
         boolean usaComboMethod;
         Class<AEntity> comboClazz;
-        Class<ALogicOld> logicClazz;
+        Class<AService> logicClazz;
         String methodName;
         Method metodo;
-        ALogicOld logicInstance;
+        AService logicInstance;
         List items = null;
 
         usaComboMethod = annotation.usaComboMethod(reflectionJavaField);
         comboClazz = annotation.getComboClass(reflectionJavaField);
         if (usaComboMethod) {
             logicClazz = annotation.getLogicClass(reflectionJavaField);
-            logicInstance = (ALogicOld) StaticContextAccessor.getBean(logicClazz);
+            logicInstance = (AService) StaticContextAccessor.getBean(logicClazz);
             methodName = annotation.getMethodName(reflectionJavaField);
             try {
                 metodo = logicClazz.getDeclaredMethod(methodName);

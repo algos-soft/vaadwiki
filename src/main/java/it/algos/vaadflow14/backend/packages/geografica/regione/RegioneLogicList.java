@@ -1,6 +1,6 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -17,11 +18,11 @@ import java.util.*;
  * Created by Algos <br>
  * User: gac <br>
  * Fix date: ven, 12-mar-2021 <br>
- * Fix time: 7:36 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe GenericLogicList con @Route <br>
- * Gestione della 'business logic' e della 'grafica' di @Route <br>
+ * Se manca, usa la classe GenericLogicList con @Route <br>
+ * Gestione della 'view' di @Route e della 'business logic' <br>
  * Mantiene lo 'stato' <br>
  * L' istanza (PROTOTYPE) viene creata ad ogni chiamata del browser <br>
  * Eventuali parametri (opzionali) devono essere passati nell'URL <br>
@@ -29,10 +30,17 @@ import java.util.*;
  * Annotated with @Route (obbligatorio) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Vaadin flow
 @Route(value = "regione", layout = MainLayout.class)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class RegioneLogicList extends LogicList {
 
+
+    /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -41,11 +49,6 @@ public class RegioneLogicList extends LogicList {
      */
     @Autowired
     public StatoService statoService;
-
-    /**
-     * versione della classe per la serializzazione
-     */
-    private final static long serialVersionUID = 1L;
 
 
     /**
@@ -72,15 +75,11 @@ public class RegioneLogicList extends LogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm = AEPreferenza.usaDebug.is() ? AEOperation.edit : AEOperation.showOnly;
-        super.usaBottoneDeleteAll = AEPreferenza.usaDebug.is();
-        super.usaBottoneResetList = AEPreferenza.usaDebug.is();
-        super.usaBottoneNew = AEPreferenza.usaDebug.is();
         super.usaBottonePaginaWiki = true;
-//        super.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
-//        super.wikiPageTitle = "ISO_3166-2";//@todo Funzionalità ancora da implementare
+        super.usaBottoneSearch = true;
+        super.wikiPageTitle = "ISO_3166-2";
+        this.maxNumeroBottoniPrimaRiga = 3;
     }
-
 
 
     /**
@@ -92,25 +91,30 @@ public class RegioneLogicList extends LogicList {
         addSpanBlu("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2");
         addSpanBlu("Codice ISO, sigla abituale e 'status' normativo");
         addSpanBlu("Ordinamento alfabetico: prima Italia poi altri stati europei");
-        addSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed i comboBox 'Stato' e 'Status'");
     }
 
 
     /**
-     * Costruisce una mappa di ComboBox di selezione e filtro <br>
-     * DEVE essere sovrascritto nella sottoclasse <br>
+     * Costruisce una mappa di ComboBox da usare nel wrapper WrapTop <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-//    @Override
-    protected void fixMappaComboBox() {
+    protected Map<String, ComboBox> getMappaComboBox() {
+        Map<String, ComboBox> mappa = super.getMappaComboBox();
+        ComboBox combo;
 
-//        if (AEPreferenza.usaBandiereStati.is()) {
-//            mappaComboBox.put("stato", statoService.creaComboStati());//@todo con bandierine
-//        }
-//        else {
-//            super.creaComboBox("stato", AEStato.italia.getStato());//@todo senza bandierine
-//        }
-//
-//        super.creaComboBox("status", 14);
+        if (AEPreferenza.usaBandiereStati.is()) {
+            combo = getComboBox("stato", statoService.creaComboStati());
+            mappa.put("stato", combo);
+        }
+        else {
+            combo = getComboBox("stato", AEStato.italia.getStato());
+            mappa.put("stato", combo);
+        }
+
+        combo = getComboBox("status");
+        mappa.put("status", combo);
+
+        return mappa;
     }
 
 }// end of Route class

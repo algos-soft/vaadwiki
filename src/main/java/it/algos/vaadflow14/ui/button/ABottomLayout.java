@@ -2,7 +2,7 @@ package it.algos.vaadflow14.ui.button;
 
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.spring.annotation.*;
-import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.wrapper.*;
 import org.springframework.beans.factory.config.*;
@@ -28,15 +28,25 @@ public class ABottomLayout extends AButtonLayout {
 
 
     /**
-     * Costruttore base con parametro wrapper di passaggio dati <br>
-     * La classe viene costruita con appContext.getBean(xxxLayout.class, wrapButtons) in AEntityService <br>
+     * Costruttore <br>
+     * La classe viene costruita con appContext.getBean(ABottomLayout.class, wrapper) in ALogic <br>
      *
-     * @param wrapButtons wrap di informazioni
+     * @param wrapper di informazioni tra 'logic' e 'view'
      */
-    public ABottomLayout(WrapButtons wrapButtons) {
-        super(wrapButtons);
+    public ABottomLayout(final WrapComponenti wrapper) {
+        super(wrapper);
     }
 
+
+    /**
+     * Preferenze usate da questa 'view' <br>
+     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+    }
 
     /**
      * Qui va tutta la logica iniziale della view <br>
@@ -45,29 +55,33 @@ public class ABottomLayout extends AButtonLayout {
     @Override
     protected void initView() {
         super.initView();
+
         super.rigaUnica = new AHorizontalLayout();
+        rigaUnica.setAlignItems(Alignment.CENTER);
     }
 
 
     @Override
-    protected void creaAllBottoni() {
-        if (listaAEBottoni != null && listaAEBottoni.size() > 0) {
-            for (AIButton bottone : listaAEBottoni) {
-                this.addBottoneEnum(bottone);
-            }
-        }
+    protected void creaAll() {
+        Button button;
 
-        if (listaBottoniSpecifici != null && listaBottoniSpecifici.size() > 0) {
-            for (Button bottone : listaBottoniSpecifici) {
-                rigaUnica.add(bottone);
+        if (mappaComponenti != null && mappaComponenti.size() > 0) {
+            for (String key : mappaComponenti.keySet()) {
+                Object obj = mappaComponenti.get(key);
+
+                if (obj instanceof AIButton) {
+                    button = ((AIButton) obj).get();
+                    button.addClickListener(event -> performAction(((AIButton) obj).getAction()));
+                    rigaUnica.add(button);
+                    mappaCorrente.put(key, button);
+                }
             }
         }
     }
 
-
+    @Deprecated
     protected void addBottoneEnum(AIButton aeButton) {
-        Button button = getButton(aeButton);
-        rigaUnica.add(button);
+        rigaUnica.add(aeButton.get());
     }
 
 

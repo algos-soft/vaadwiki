@@ -54,6 +54,7 @@ public class AFiltro implements Serializable {
         return filtro;
     }
 
+
     public static AFiltro contains(String fieldName, String value) {
         AFiltro filtro = new AFiltro();
 
@@ -64,9 +65,11 @@ public class AFiltro implements Serializable {
         return filtro;
     }
 
+
     public static AFiltro ugualeStr(String fieldName, String value) {
         return new AFiltro(AETypeBson.uguale.getCriteria(fieldName, value));
     }
+
 
     public static AFiltro ugualeObj(String fieldName, Object value) {
         AFiltro filtro = new AFiltro();
@@ -76,6 +79,27 @@ public class AFiltro implements Serializable {
 
         return filtro;
     }
+
+
+    public static AFiltro vero(String fieldName) {
+        return booleano(fieldName,true);
+    }
+
+
+    public static AFiltro falso(String fieldName) {
+        return booleano(fieldName,false);
+    }
+
+
+    public static AFiltro booleano(String fieldName, boolean value) {
+        AFiltro filtro = new AFiltro();
+
+        Criteria criteria = Criteria.where(fieldName).is(value);
+        filtro.criteria = criteria;
+
+        return filtro;
+    }
+
 
     public Criteria getCriteria() {
         return criteria;

@@ -5,23 +5,28 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Project: vaadflow14 <br>
  * Created by Algos <br>
  * User: gac <br>
  * Fix date: ven, 12-mar-2021 <br>
- * Fix time: 7:36 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe GenericLogicList con @Route <br>
- * Gestione della 'business logic' e della 'grafica' di @Route <br>
+ * Se manca, usa la classe GenericLogicList con @Route <br>
+ * Gestione della 'view' di @Route e della 'business logic' <br>
  * Mantiene lo 'stato' <br>
  * L' istanza (PROTOTYPE) viene creata ad ogni chiamata del browser <br>
  * Eventuali parametri (opzionali) devono essere passati nell'URL <br>
@@ -29,8 +34,10 @@ import java.util.*;
  * Annotated with @Route (obbligatorio) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Vaadin flow
 @Route(value = "stato", layout = MainLayout.class)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class StatoLogicList extends LogicList {
 
 
@@ -39,6 +46,13 @@ public class StatoLogicList extends LogicList {
      */
     private final static long serialVersionUID = 1L;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ContinenteService continenteService;
 
     /**
      * Costruttore con parametro <br>
@@ -64,10 +78,11 @@ public class StatoLogicList extends LogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm = AEOperation.showOnly;
+        //        super.operationForm = AEOperation.showOnly;
         super.usaBottonePaginaWiki = true;
-        //        super.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
+        super.usaBottoneSearch = true;
         super.wikiPageTitle = "ISO_3166-1";
+        this.maxNumeroBottoniPrimaRiga = 3;
     }
 
 
@@ -81,9 +96,23 @@ public class StatoLogicList extends LogicList {
         //        addSpanBlu("Recuperati dalla pagina wiki: " + wikiPageTitle));//@todo Funzionalità ancora da implementare
         addSpanBlu("Codici: numerico, alfa-due, alfa-tre e ISO locale");
         addSpanBlu("Ordinamento alfabetico: prima Italia, UE e poi gli altri");
-        addSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField");
     }
 
+//    protected void fixTopLayout() {
+//        topLayout = appContext.getBean(ATopLayout.class, this.getWrapButtonsTop());
+//        if (topPlaceHolder != null && topLayout != null) {
+//            topPlaceHolder.add(topLayout);
+//        }
+//    }
+
+    /**
+     * Costruisce una mappa di ComboBox di selezione e filtro <br>
+     * DEVE essere sovrascritto nella sottoclasse <br>
+     */
+//    @Override
+//    protected void fixMappaComboBox2() {
+//        super.fixComboBox("continente", continenteService.findByKey("Europa"));
+//    }
 
     /**
      * Costruisce una lista ordinata di nomi delle properties del Form. <br>

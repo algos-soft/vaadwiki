@@ -1,30 +1,25 @@
 package it.algos.vaadflow14.ui.topbar;
 
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.contextmenu.SubMenu;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.server.VaadinSession;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.login.ALogin;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.service.AVaadinService;
-import it.algos.vaadflow14.ui.service.ALayoutService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.contextmenu.*;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.component.menubar.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.server.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.login.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
+
+import javax.annotation.*;
 
 /**
  * Componente per la barra superiore della finestra <br>
@@ -45,9 +40,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class
-TopbarComponent extends HorizontalLayout {
-
+public class TopbarComponent extends HorizontalLayout {
 
     //    private Image image;
 
@@ -153,7 +146,8 @@ TopbarComponent extends HorizontalLayout {
         elasticSpacer.getStyle().set("flex-grow", "1");
         if (menuUser != null) {
             this.add(logo, divTitolo, elasticSpacer, menuUser);
-        } else {
+        }
+        else {
             this.add(logo, divTitolo);
         }
 
@@ -201,7 +195,8 @@ TopbarComponent extends HorizontalLayout {
                 primaRiga = new Label(company.getCode());
                 secondaRiga = new Label(company.getDescrizione());
             }
-        } else {
+        }
+        else {
         }
         div.getElement().setAttribute("style", "display:flex; flex-direction:column; min-width:2em");
 
@@ -222,16 +217,17 @@ TopbarComponent extends HorizontalLayout {
      * Logo del tipo di browser collegato (facoltativo) <br>
      */
     private Button fixDevice() {
-        Button button= new Button();
+        Button button = new Button();
         VaadinSession vaadSession = VaadinSession.getCurrent();
-        if (vaadSession!=null) {
+        if (vaadSession != null) {
             button.setText("Mobile");
-        } else {
+        }
+        else {
             button.setText("Desktop");
         }
 
-//        FontAwesome.Brands.Icon image = null;
-//        image=FontAwesome.Brands.FIREFOX.create();
+        //        FontAwesome.Brands.Icon image = null;
+        //        image=FontAwesome.Brands.FIREFOX.create();
         return button;
     }
 
@@ -255,10 +251,12 @@ TopbarComponent extends HorizontalLayout {
                 if (itemUser != null) {
                     if (login.isDeveloper()) {
                         itemUser.getElement().getStyle().set("color", "red");
-                    } else {
+                    }
+                    else {
                         if (login.isAdmin()) {
                             itemUser.getElement().getStyle().set("color", "blue");
-                        } else {
+                        }
+                        else {
                             itemUser.getElement().getStyle().set("color", "green");
                         }
                     }

@@ -14,27 +14,29 @@ import java.util.*;
  */
 public enum AETypeProvincia {
 
-    provincia("Provincia", VUOTA),
-    autonoma("Provincia autonoma", "TAA"),
-    metropolitana("Città metropolitana", VUOTA),
-    friuli("Associazione di comuni", "FVG"),
-    consorzio("Libero consorzio comunale", "SIC"),
-    regione("Regione autonoma", "VAO"),
+    provincia("Provincia", VUOTA, 0),
+    autonoma("Provincia autonoma", "TAA", 32),
+    metropolitana("Città metropolitana", VUOTA, 0),
+    friuli("Associazione di comuni", "FVG", 36),
+    consorzio("Libero consorzio comunale", "SIC", 82),
+    regione("Regione autonoma", "VAO", 23),
     ;
 
     private String tag;
 
     private String siglaRegione;
 
+    private int isoRegione;
 
     /**
      * Costruttore completo con parametri.
      *
      * @param tag della provincia
      */
-    AETypeProvincia(String tag, String siglaRegione) {
+    AETypeProvincia(String tag, String siglaRegione, int isoRegione) {
         this.tag = tag;
         this.siglaRegione = siglaRegione;
+        this.isoRegione = isoRegione;
     }
 
 
@@ -62,6 +64,18 @@ public enum AETypeProvincia {
 
         for (AETypeProvincia eaType : AETypeProvincia.values()) {
             if (eaType.getSiglaRegione().equals(siglaRegione)) {
+                type = eaType;
+            }
+        }
+
+        return type;
+    }
+
+    public static AETypeProvincia findByIso(int isoRegione) {
+        AETypeProvincia type = AETypeProvincia.provincia;
+
+        for (AETypeProvincia eaType : AETypeProvincia.values()) {
+            if (eaType.getIsoRegione() == isoRegione) {
                 type = eaType;
             }
         }
@@ -119,6 +133,9 @@ public enum AETypeProvincia {
         return siglaRegione;
     }
 
+    public int getIsoRegione() {
+        return isoRegione;
+    }
 
     /**
      * Returns the name of this enum constant, as contained in the

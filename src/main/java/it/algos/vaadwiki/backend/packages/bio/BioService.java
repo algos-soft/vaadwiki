@@ -164,9 +164,8 @@ public class BioService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+        AIResult result = super.reset();
         int numRec = 0;
 
         if (result.isErrato()) {
