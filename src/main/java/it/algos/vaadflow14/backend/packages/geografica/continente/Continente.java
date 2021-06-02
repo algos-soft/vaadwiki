@@ -52,11 +52,11 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Continente", keyPropertyName = "nome", usaReset = true, usaBoot = true, usaNew = false)
+@AIEntity(recordName = "Continente", keyPropertyName = "nome", usaBoot = true, usaNew = false)
 @AIView(menuName = "Continente", menuIcon = VaadinIcon.GLOBE, sortProperty = "ordine")
 @AIList(fields = "ordine,nome,abitato")
 @AIForm(fields = "ordine,nome,stati,abitato", usaSpostamentoTraSchede = true)
-public class Continente extends AEntity {
+public class Continente extends AREntity {
 
     /**
      * versione della classe per la serializzazione

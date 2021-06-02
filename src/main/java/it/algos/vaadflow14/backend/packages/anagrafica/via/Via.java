@@ -50,11 +50,11 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Via", keyPropertyName = "nome", usaReset = true, usaBoot = true, usaNew = true)
+@AIEntity(recordName = "Via", keyPropertyName = "nome", usaBoot = true, usaNew = true)
 @AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine")
 @AIList(fields = "ordine,nome", usaRowIndex = true)
 @AIForm(fields = "ordine,nome", usaSpostamentoTraSchede = true)
-public class Via extends AEntity {
+public class Via extends AREntity {
 
     /**
      * versione della classe per la serializzazione

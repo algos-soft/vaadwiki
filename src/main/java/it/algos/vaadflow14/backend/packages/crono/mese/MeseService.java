@@ -63,10 +63,7 @@ public class MeseService extends AService {
      * @return true se la entity è stata creata e salvata
      */
     private boolean creaReset(final AEMese aeMese) {
-        Mese entity = newEntity(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
-        entity.reset = true;
-
-        return save(entity) != null;
+        return super.creaReset(newEntity(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla()));
     }
 
 

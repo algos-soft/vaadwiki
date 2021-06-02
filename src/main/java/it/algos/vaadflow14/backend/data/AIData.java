@@ -9,6 +9,6 @@ package it.algos.vaadflow14.backend.data;
  */
 public interface AIData {
 
-    void fixData();
+    void resetData();
 
 }

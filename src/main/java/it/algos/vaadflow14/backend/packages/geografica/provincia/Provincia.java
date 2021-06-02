@@ -52,11 +52,11 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaReset = true, usaBoot = true, usaNew = false)
+@AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaBoot = true, usaNew = false)
 @AIView(menuName = "Provincia", menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
 @AIList(fields = "nome,sigla,regione,iso,status", usaRowIndex = true)
 @AIForm(fields = "nome,sigla,iso,status", usaSpostamentoTraSchede = true)
-public class Provincia extends AEntity {
+public class Provincia extends AREntity {
 
     /**
      * versione della classe per la serializzazione

@@ -53,17 +53,8 @@ public @interface AIEntity {
 
 
     /**
-     * (Optional) Flag per la creazione automatica della lista
-     * Di default false
-     *
-     * @return the status
-     */
-    boolean usaReset() default false;
-
-
-    /**
      * (Optional) Creazione automatica dei dati alla partenza se collezione vuota
-     * ha senso solo se usaReset=true
+     * Ha senso solo se esiste il metodo xxxService.reset()
      * Di default false
      *
      * @return the status

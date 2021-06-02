@@ -240,7 +240,7 @@ public class UtenteService extends AService {
         numRec = creaIfNotExist(companyService.getTest(), "antonia-pellegrini", "pellegrini123", AERole.user) != null ? numRec + 1 : numRec;
         numRec = creaIfNotExist(null, "paolo cremona", "cremona123", AERole.guest) != null ? numRec + 1 : numRec;
 
-        return super.fixPostResetOnly(AETypeReset.hardCoded, numRec);
+        return result;
     }
 
 }

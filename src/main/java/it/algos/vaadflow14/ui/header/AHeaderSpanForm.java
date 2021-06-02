@@ -6,6 +6,8 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
+import java.util.*;
+
 /**
  * Project vaadflow14
  * Created by Algos
@@ -20,25 +22,41 @@ public class AHeaderSpanForm extends AHeaderSpan {
 
     /**
      * Costruttore base con parametro <br>
-     * Non usa @Autowired perché l' istanza viene creata con appContext.getBean(AHeaderSpanForm.class, message) <br>
+     * Non usa @Autowired perché l' istanza viene creata con appContext.getBean(AHeaderSpanForm.class, spanList) <br>
      */
-    public AHeaderSpanForm(final String message) {
-        super();
-        super.message = message;
+    public AHeaderSpanForm(final List<Span> listaSpan) {
+        super(listaSpan);
     }
+
 
     @Override
     protected void initView() {
         Span span;
 
-        if (text.isValid(message)) {
-            span = new Span(message);
-            span.setText(message);
+        if (listaSpan != null && listaSpan.size() > 0) {
+            span = listaSpan.get(0);
             span.getElement().getStyle().set(AETypeColor.verde.getTag(), AETypeColor.verde.get());
             span.getElement().getStyle().set(AETypeWeight.bold.getTag(), AETypeWeight.bold.get());
             span.getElement().getStyle().set(AETypeSize.smaller.getTag(), AETypeSize.smaller.get());
             this.add(span);
+
+            for (int k = 1; k < listaSpan.size() ; k++) {
+                this.add(listaSpan.get(k));
+            }
         }
     }
+
+//    protected void initViewOld() {
+//        Span span;
+//
+//        if (text.isValid(message)) {
+//            span = new Span(message);
+//            span.setText(message);
+//            span.getElement().getStyle().set(AETypeColor.verde.getTag(), AETypeColor.verde.get());
+//            span.getElement().getStyle().set(AETypeWeight.bold.getTag(), AETypeWeight.bold.get());
+//            span.getElement().getStyle().set(AETypeSize.smaller.getTag(), AETypeSize.smaller.get());
+//            this.add(span);
+//        }
+//    }
 
 }

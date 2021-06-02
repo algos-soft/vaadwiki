@@ -362,6 +362,11 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected List<Span> spanHeaderList;
 
+    /**
+     * Lista (eventuale) di 'span' da mostrare come header della view <br>
+     * La lista si costruisce in regolazioniIniziali() della LogicForm <br>
+     */
+    protected List<Span> spanHeaderForm;
 
     /**
      * Mappa di componenti di selezione e filtro <br>

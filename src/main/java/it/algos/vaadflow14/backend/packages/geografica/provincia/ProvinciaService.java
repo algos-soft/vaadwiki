@@ -85,10 +85,7 @@ public class ProvinciaService extends AService {
      * @return true se la entity è stata creata e salvata
      */
     private boolean creaReset(final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) {
-        Provincia entity = newEntity(nome, sigla, regione, stato, iso, status);
-        entity.reset = true;
-
-        return save(entity) != null;
+        return super.creaReset(newEntity(nome, sigla, regione, stato, iso, status));
     }
 
 

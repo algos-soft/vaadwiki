@@ -64,10 +64,7 @@ public class ViaService extends AService {
      * @return true se la entity è stata creata e salvata
      */
     private boolean creaReset(final AEVia aeVia) {
-        Via entity = newEntity(aeVia.toString());
-        entity.reset = true;
-
-        return save(entity) != null;
+        return super.creaReset(newEntity(aeVia.toString()));
     }
 
 

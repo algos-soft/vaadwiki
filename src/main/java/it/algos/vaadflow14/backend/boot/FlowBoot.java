@@ -367,7 +367,7 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     protected void fixData() {
         if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(FlowData.class)) {
-            dataInstance.fixData();
+            dataInstance.resetData();
         }
     }
 

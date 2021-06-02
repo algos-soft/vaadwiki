@@ -166,7 +166,7 @@ public class AddressService extends AService {
         message = String.format("Nel package %s la classe %s non ha ancora sviluppato il metodo resetEmptyOnly() ", "Address", "AddressService");
 //        return AResult.errato(message);
 
-        return super.fixPostResetOnly(AETypeReset.hardCoded, numRec);
+        return result;
     }
 
 }

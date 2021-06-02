@@ -92,10 +92,7 @@ public class AnnoService extends AService {
      * @return true se la entity è stata creata e salvata
      */
     private boolean creaReset(final int ordine, final String anno, final boolean bisestile, final Secolo secolo) {
-        Anno entity = newEntity(ordine, anno, bisestile, secolo);
-        entity.reset = true;
-
-        return save(entity) != null;
+        return super.creaReset(newEntity(ordine, anno, bisestile, secolo));
     }
 
 

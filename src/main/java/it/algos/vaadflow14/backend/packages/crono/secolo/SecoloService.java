@@ -64,10 +64,7 @@ public class SecoloService extends AService {
      * @return true se la entity è stata creata e salvata
      */
     private boolean creaReset(final AESecolo aeSecolo) {
-        Secolo entity = newEntity(aeSecolo.getNome(), aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine());
-        entity.reset = true;
-
-        return save(entity) != null;
+        return super.creaReset(newEntity(aeSecolo.getNome(), aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine()));
     }
 
 

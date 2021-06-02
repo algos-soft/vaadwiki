@@ -29,20 +29,24 @@ public abstract class AHeaderSpan extends VerticalLayout implements AIHeader {
     /**
      * Property specifica regolata nella sottoclasse <br>
      */
-    protected List<Span> spanList;
+    protected List<Span> listaSpan;
 
     /**
      * Property specifica regolata nella sottoclasse <br>
      */
     protected String message;
 
+    public AHeaderSpan() {
+    }
+
     /**
      * Costruttore base senza parametro <br>
      */
-    public AHeaderSpan() {
+    public AHeaderSpan(List<Span> listaSpan) {
         this.setMargin(false);
         this.setSpacing(false);
         this.setPadding(false);
+        this.listaSpan = listaSpan;
     }
 
     /**

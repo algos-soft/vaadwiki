@@ -53,11 +53,11 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaReset = true, usaBoot = true, usaNew = false)
+@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaBoot = true, usaNew = false)
 @AIView(menuName = "Stato", menuIcon = VaadinIcon.GLOBE, searchProperty = "stato", sortProperty = "ordine")
 @AIList(fields = "ordine,bandiera,stato,ue,continente,numerico,alfadue,alfatre,locale", usaDeleteMenu = true, usaRowIndex = false)
 @AIForm(fields = "ordine,stato,bandiera,regioni,ue,continente,numerico,alfadue,alfatre,locale", usaSpostamentoTraSchede = true)
-public class Stato extends AEntity {
+public class Stato extends AREntity {
 
     /**
      * versione della classe per la serializzazione

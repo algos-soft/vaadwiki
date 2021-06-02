@@ -387,6 +387,42 @@ public class AMongoService<capture> extends AAbstractService {
     }
 
     /**
+     * Controlla che NON ci siano entities con la property rest=true. <br>
+     * Controlla che esista la collezione <br>
+     * Controlla che esista la property 'reset' <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     *
+     * @return true se non ci sono properties con reset=true
+     */
+    public boolean isResetVuoto(Class<? extends AEntity> entityClazz) {
+        return countReset(entityClazz) == 0;
+    }
+
+
+    /**
+     * Conta tutte le entities con la property rest=true. <br>
+     * Controlla che esista la collezione <br>
+     * Controlla che esista la property 'reset' <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     *
+     * @return true se non ci sono properties con reset=true
+     */
+    public int countReset(Class<? extends AEntity> entityClazz) {
+        int numRec = 0;
+        String collectionName = annotation.getCollectionName(entityClazz);
+        Query query = new Query();
+
+        if (text.isValid(collectionName) && isExists(collectionName)) {
+            query.addCriteria(Criteria.where(FIELD_NAME_RESET).is(true));
+            numRec = mongo.count(entityClazz, query);
+        }
+
+        return numRec;
+    }
+
+    /**
      * Cerca tutte le entities di una collection ordinate. <br>
      * Gli ordinamenti dei vari filtri vengono concatenati nell'ordine di costruzione <br>
      *

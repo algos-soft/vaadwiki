@@ -348,8 +348,4 @@ public abstract class AButtonLayout extends VerticalLayout {
         return button;
     }
 
-    public Map<String, Object> getMappaCorrente() {
-        return mappaCorrente;
-    }
-
 }

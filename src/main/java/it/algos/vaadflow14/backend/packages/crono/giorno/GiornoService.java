@@ -81,10 +81,7 @@ public class GiornoService extends AService {
      * @return true se la entity è stata creata e salvata
      */
     private boolean creaReset(final int ordine, final String giorno, final Mese mese) {
-        Giorno entity = newEntity(ordine, giorno, mese);
-        entity.reset = true;
-
-        return save(entity) != null;
+        return super.creaReset(newEntity(ordine, giorno, mese));
     }
 
 

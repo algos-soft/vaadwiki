@@ -5,7 +5,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -404,6 +403,82 @@ public class AClassService extends AAbstractService {
         String canonicalName = getNameFromPath(pathCompleto);
         canonicalName = canonicalName.replaceAll(FlowCost.SLASH, FlowCost.PUNTO);
         return getClazzFromName(canonicalName);
+    }
+
+
+    /**
+     * Check if the class is an entityBean class.
+     * 1) Controlla che il parametro in ingresso non sia vuoto <br>
+     *
+     * @param canonicalName of the class to be checked if is of type AEntity
+     *
+     * @return true if the class is of type AEntity
+     */
+    public boolean isEntity(final String canonicalName) {
+        Class clazz = null;
+
+        try {
+            clazz = Class.forName(canonicalName);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "isEntityClass");
+        }
+
+        if (clazz != null) {
+            return isEntity(clazz);
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    /**
+     * Controlla se la classe è una AEntity. <br>
+     *
+     * @param genericClazz to be checked if is of type AEntity
+     *
+     * @return the status
+     */
+    public boolean isEntity(final Class genericClazz) {
+        return genericClazz != null && AEntity.class.isAssignableFrom(genericClazz);
+    }
+
+
+    /**
+     * Check if the class is an entityBean class.
+     * 1) Controlla che il parametro in ingresso non sia vuoto <br>
+     *
+     * @param canonicalName of the class to be checked if is of type AREntity
+     *
+     * @return true if the class is of type AREntity
+     */
+    public boolean isResetEntity(final String canonicalName) {
+        Class clazz = null;
+
+        try {
+            clazz = Class.forName(canonicalName);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "isEntityClass");
+        }
+
+        if (clazz != null) {
+            return isResetEntity(clazz);
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    /**
+     * Controlla se la classe è una AREntity. <br>
+     *
+     * @param genericClazz to be checked if is of type AREntity
+     *
+     * @return the status
+     */
+    public boolean isResetEntity(final Class genericClazz) {
+        return genericClazz != null && AREntity.class.isAssignableFrom(genericClazz);
     }
 
 }

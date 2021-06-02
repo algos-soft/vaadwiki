@@ -63,10 +63,7 @@ public class ContinenteService extends AService {
      * @return true se la entity è stata creata e salvata
      */
     private boolean creaReset(final AEContinente aeContinente) {
-        Continente entity = newEntity(aeContinente.getNome(), aeContinente.isAbitato());
-        entity.reset = true;
-
-        return save(entity) != null;
+        return super.creaReset(newEntity(aeContinente.getNome(), aeContinente.isAbitato()));
     }
 
 

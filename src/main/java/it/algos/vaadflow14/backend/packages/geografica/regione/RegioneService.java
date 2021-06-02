@@ -94,10 +94,7 @@ public class RegioneService extends AService {
      * @return true se la entity è stata creata e salvata
      */
     private boolean creaReset(final String divisione, final Stato stato, final String iso, final String sigla, final AEStatus status) {
-        Regione entity = newEntity(divisione, stato, iso, sigla, status);
-        entity.reset = true;
-
-        return save(entity) != null;
+        return super.creaReset(newEntity(divisione, stato, iso, sigla, status));
     }
 
 

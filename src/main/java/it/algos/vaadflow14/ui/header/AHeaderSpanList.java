@@ -23,16 +23,15 @@ public class AHeaderSpanList extends AHeaderSpan {
      * Costruttore base con parametro <br>
      * Non usa @Autowired perché l' istanza viene creata con appContext.getBean(AHeaderSpanList.class, spanList) <br>
      */
-    public AHeaderSpanList(List<Span> spanList) {
-        super();
-        super.spanList = spanList;
+    public AHeaderSpanList(List<Span> listaSpan) {
+        super(listaSpan);
     }
 
 
     @Override
     protected void initView() {
-        if (spanList != null && spanList.size() > 0) {
-            for (Span span : spanList) {
+        if (listaSpan != null && listaSpan.size() > 0) {
+            for (Span span : listaSpan) {
                 this.add(span);
             }
         }

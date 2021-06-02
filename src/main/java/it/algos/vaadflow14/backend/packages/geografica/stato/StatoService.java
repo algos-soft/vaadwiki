@@ -92,29 +92,8 @@ public class StatoService extends AService {
      * @return true se la entity è stata creata e salvata
      */
     private boolean creaReset(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) {
-        Stato entity = newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera, continente);
-        entity.reset = true;
-
-        return save(entity) != null;
+        return super.creaReset(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera, continente));
     }
-
-    //    /**
-    //     * Crea e registra una entity solo se non esisteva <br>
-    //     *
-    //     * @param ordine   di presentazione nel popup/combobox (obbligatorio, unico)
-    //     * @param stato    (obbligatorio, unico)
-    //     * @param ue       appartenenza all' unione europea (obbligatorio)
-    //     * @param numerico di riferimento (obbligatorio)
-    //     * @param alfatre  (obbligatorio, unico)
-    //     * @param alfadue  (obbligatorio, unico)
-    //     * @param locale   (obbligatorio, unico)
-    //     * @param bandiera (facoltativa)
-    //     *
-    //     * @return la nuova entity appena creata e salvata
-    //     */
-    //    public Stato creaIfNotExist(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) {
-    //        return (Stato) checkAndSave(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera, continente));
-    //    }
 
 
     /**

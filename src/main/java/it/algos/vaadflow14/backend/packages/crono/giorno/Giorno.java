@@ -51,11 +51,11 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Giorno", keyPropertyName = "giorno", usaReset = true, usaBoot = true, usaNew = false)
+@AIEntity(recordName = "Giorno", keyPropertyName = "giorno", usaBoot = true, usaNew = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, searchProperty = "giorno", sortProperty = "ordine")
 @AIList(fields = "ordine,giorno", usaRowIndex = false)
 @AIForm(fields = "ordine,giorno,mese", usaSpostamentoTraSchede = false)
-public class Giorno extends AEntity {
+public class Giorno extends AREntity {
 
     /**
      * versione della classe per la serializzazione
