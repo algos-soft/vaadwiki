@@ -209,13 +209,17 @@ public abstract class LogicForm extends Logic {
         String preferenza = html.bold("Preferenza");
         addSpanRosso(String.format("La visualizzazione di questi avvisi rossi si regola in %s:usaSpanHeaderRossi", preferenza));
         addSpanRosso(String.format("Bottone %s sempre presente per tornare alla lista", back));
-        addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", delete, entity, usaNew));
-        addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", save, entity, usaNew));
-        addSpanRosso(String.format("Bottone %s presente se %s extends %s ed esiste %s.%s", save, entity, aREntity, service, methodReset));
+        if (annotation.usaNew(entityClazz)) {
+            addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", delete, entity, usaNew));
+            addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", save, entity, usaNew));
+        }
+        if (annotation.usaReset(entityClazz)) {
+            addSpanRosso(String.format("Bottone %s presente se %s extends %s ed esiste %s.%s", save, entity, aREntity, service, methodReset));
+        }
         addSpanRosso(String.format("Frecce %s e %s presenti se %s->@AIEntity(%s=true)", prima, dopo, entity, frecce));
 
         if (spanHeaderForm != null && spanHeaderForm.size() > 0) {
-            headerSpan = appContext.getBean(AHeaderSpanForm.class, super.spanHeaderForm);
+            headerSpan = appContext.getBean(AHeaderAlertForm.class, super.spanHeaderForm);
         }
 
         super.fixAlertLayout();

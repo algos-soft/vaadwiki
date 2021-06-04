@@ -2,11 +2,13 @@ package it.algos.vaadwiki.backend.packages.nazionalita;
 
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import static it.algos.vaadwiki.backend.packages.wiki.WikiService.*;
 import org.springframework.beans.factory.annotation.*;
@@ -65,36 +67,35 @@ public class NazionalitaLogicList extends WikiLogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneSearch = true;
-        super.usaBottoneUpload = true;
-        super.usaBottoneStatistiche = true;
         super.wikiModuloTitle = PATH_MODULO_NAZIONALITA;
         super.wikiStatisticheTitle = PATH_STATISTICHE_NAZIONALITA;
     }
 
+    /**
+     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixAlertList() {
+        String parametri = html.bold("Nazionalità/Cittadinanza/NazionalitàNaturalizzato");
+        String plurale = html.bold("plurale maschile");
+        String alfabetico = html.bold("alfabetico");
+        String uno = html.bold("Forma1");
+        String due = html.bold("Forma2");
 
-//    /**
-//     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-//     * DEVE essere sovrascritto <br>
-//     *
-//     * @return una liste di 'span'
-//     */
-//    @Override
-//    protected List<Span> getSpanList() {
-//        List<Span> lista = new ArrayList<>();
-//
-//        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadNazionalita));
-//        lista.add(html.getSpanBlu("Modulo:Bio/Plurale nazionalità."));
-//        lista.add(html.getSpanVerde("Contiene la tabella di conversione delle nazionalità passate via parametri " + html.bold("Nazionalità/Cittadinanza/NazionalitàNaturalizzato")));
-//        lista.add(html.getSpanVerde(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
-//        lista.add(html.getSpanVerde("All'interno della tabella le nazionalità sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse"));
-//        lista.add(html.getSpanVerde("Le nazionalità sono elencate all'interno del modulo con la seguente sintassi:"));
-//        lista.add(html.getSpanVerde("[\"nazionalitaForma1\"] = \"nazionalità al plurale\","));
-//        lista.add(html.getSpanVerde("[\"nazionalitaForma2\"] = \"nazionalità al plurale\","));
-//        lista.add(html.getSpanRosso("Progetto:Biografie/Nazionalità."));
-//
-//        return lista;
-//    }
+        super.fixInfoDownload(AEWikiPreferenza.lastDownloadNazionalita);
+        addSpanBlu(html.bold("Modulo:Bio/Plurale nazionalità."));
+        addSpanBlu(html.bold("Progetto:Biografie/Nazionalità."));
+        addSpanVerde(String.format("Contiene la tabella di conversione delle nazionalità passate via parametri %s", parametri));
+        addSpanVerde(String.format(" da singolare maschile e femminile (usati nell'incipit) al %s, per categorizzare la pagina",plurale));
+        addSpanVerde(String.format("All'interno della tabella le nazionalità sono in ordine %s al fine di rendere più agevole la manutenzione delle stesse", alfabetico));
+        addSpanVerde(String.format("Le nazionalità sono elencate nel modulo con la sintassi: [\"nazionalita%s\"]=\"nazionalità al plurale\", [\"nazionalita%s\"]=\"nazionalità al plurale\",", uno, due));
+    }
 
+
+    @Override
+    protected void wikiPage(AEntity entityBean) {
+        wikiApi.openWikiPage("Progetto:Biografie/Nazionalità/" + text.primaMaiuscola(((Nazionalita)entityBean).plurale));
+    }
 
 }// end of Route class

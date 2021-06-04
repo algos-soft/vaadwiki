@@ -52,7 +52,7 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Prenome", keyPropertyName = "code", usaCompany = false)
+@AIEntity(recordName = "Nome doppio", keyPropertyName = "code", usaNew = false)
 @AIView(menuName = "Prenome", menuIcon = VaadinIcon.ASTERISK, searchProperty = "code", sortProperty = "code")
 @AIList(fields = "code", usaRowIndex = true)
 @AIForm(fields = "code", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)

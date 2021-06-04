@@ -1,7 +1,9 @@
 package it.algos.vaadwiki.backend.packages.nazionalita;
 
 import it.algos.vaadflow14.backend.annotation.AIScript;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
 
+import java.time.*;
 import java.util.*;
 
 /**
@@ -52,6 +55,7 @@ public class NazionalitaService extends WikiService {
      */
     public NazionalitaService() {
         super(Nazionalita.class);
+        super.prefDownload = AEWikiPreferenza.lastDownloadNazionalita;
     }
 
     /**
@@ -139,6 +143,7 @@ public class NazionalitaService extends WikiService {
      */
     public boolean downloadModulo(String wikiTitle) {
         boolean status = false;
+        String message;
         Map<String, String> mappa = wikiApi.leggeMappaModulo(wikiTitle);
 
         if (mappa != null && mappa.size() > 0) {
@@ -150,6 +155,8 @@ public class NazionalitaService extends WikiService {
         }
 
         super.fixDataDownload();
+        message = "Ultimo download nazionalità:" + SPAZIO + date.getDataOrarioCompleta(LocalDateTime.now());
+        logger.log(AETypeLog.download, message);
         return status;
     }
 

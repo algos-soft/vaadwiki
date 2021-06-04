@@ -1,20 +1,18 @@
 package it.algos.vaadwiki.backend.packages.attivita;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.component.icon.VaadinIcon;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * Project: vaadwiki <br>
@@ -73,28 +71,28 @@ public class Attivita extends AEntity {
     /**
      * singolare di riferimento (obbligatorio, unico) <br>
      */
-     @NotBlank(message = "Il singolare è obbligatorio")
-     @Indexed(unique = false, direction = IndexDirection.DESCENDING)
-     @Size(min = 2, max = 50)
-     @AIField(type = AETypeField.text, firstCapital = true, focus = true, caption = "singolare", widthEM = WIDTHEM)
-     @AIColumn(header = "singolare", widthEM = WIDTHEM)
-     public String singolare;
+    @NotBlank(message = "Il singolare è obbligatorio")
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
+    @Size(min = 2, max = 50)
+    @AIField(type = AETypeField.text, firstCapital = true, focus = true, caption = "singolare", widthEM = WIDTHEM)
+    @AIColumn(header = "singolare", widthEM = WIDTHEM)
+    public String singolare;
 
 
-     /**
+    /**
      * plurale (facoltativo, non unico) <br>
      */
-     @Indexed(unique = false, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 2, max = 50)
     @AIField(type = AETypeField.text, firstCapital = true, caption = "plurale", widthEM = WIDTHEM)
-     @AIColumn(header = "plurale", widthEM = WIDTHEM)
+    @AIColumn(header = "plurale", widthEM = WIDTHEM)
     public String plurale;
 
-     /**
+    /**
      * flag aggiunta (facoltativo, di default false) <br>
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "aggiunta",usaCheckBox3Vie = true)
-    @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "Add")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "aggiunta", usaCheckBox3Vie = true)
+    @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "Add", widthEM = 5)
     public boolean aggiunta;
 
 

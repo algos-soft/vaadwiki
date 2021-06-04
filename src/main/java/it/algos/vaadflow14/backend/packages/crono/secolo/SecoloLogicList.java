@@ -73,7 +73,7 @@ public class SecoloLogicList extends LogicList {
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected void fixSpanList() {
+    protected void fixAlertList() {
         addSpanBlu("Secoli ante e post Cristo. Venti secoli AnteCristo e ventun secoli DopoCristo");
         addSpanBlu("Sono indicati gli anni iniziali e finali di ogni secolo. L' anno 0 NON esiste nei calendari.");
         addSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed i comboBox 'Stato' e 'Status'");

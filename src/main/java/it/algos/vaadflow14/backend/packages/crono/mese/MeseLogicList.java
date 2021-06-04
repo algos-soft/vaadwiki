@@ -72,7 +72,7 @@ public class MeseLogicList extends LogicList {
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected void fixSpanList() {
+    protected void fixAlertList() {
         String message;
 
         addSpanBlu("Mesi dell' anno, coi relativi giorni. Tiene conto degli anni bisestili per il mese di febbraio.");

@@ -104,7 +104,7 @@ public class WikiBoot extends FlowBoot {
      */
     protected void fixData() {
         if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(WikiData.class)) {
-            dataInstance.fixData();
+            dataInstance.resetData();
         }
     }
 

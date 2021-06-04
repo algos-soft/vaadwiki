@@ -1,6 +1,10 @@
 package it.algos.vaadwiki.backend.packages.wiki;
 
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.grid.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.data.renderer.*;
+import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.logic.*;
@@ -78,6 +82,16 @@ public abstract class WikiLogicList extends LogicList {
      */
     protected boolean usaBottoneStatisticheDue;
 
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneUploadAll;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneUploadStatistiche;
+
 
     /**
      * Flag di preferenza per specificare il titolo del modulo wiki da mostrare in lettura <br>
@@ -120,16 +134,55 @@ public abstract class WikiLogicList extends LogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneNew = false;
-        super.usaBottoneSearch = true;
         super.usaBottonePaginaWiki = false;
         super.usaBottoneDownload = true;
-        super.usaBottoneUpload = true;
+        super.usaBottoneUpload = false;
         this.usaBottoneModulo = true;
         this.usaBottoneStatistiche = true;
+        this.usaBottoneUploadAll = true;
+        this.usaBottoneUploadStatistiche = true;
+        super.maxNumeroBottoniPrimaRiga = 4;
+    }
 
-        this.maxNumeroBottoniPrimaRiga = 6;
+    /**
+     * Costruisce una lista di bottoni (enumeration) al Top della view <br>
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
+     * Costruisce i bottoni come dai flag regolati di default o nella sottoclasse <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void creaAEBottoniTop() {
+        super.creaAEBottoniTop();
+
+        if (usaBottoneUpdate) {
+            putMappa(AEWikiButton.update);
+        }
+        if (usaBottoneModulo) {
+            putMappa(AEWikiButton.modulo);
+        }
+        if (usaBottoneElabora) {
+            putMappa(AEWikiButton.elabora);
+        }
+        if (usaBottoneCheck) {
+            putMappa(AEWikiButton.check);
+        }
+        if (usaBottoneTest) {
+            putMappa(AEWikiButton.test);
+        }
+        if (usaBottoneStatistiche) {
+            putMappa(AEWikiButton.statistiche);
+        }
+        if (usaBottoneStatisticheDue) {
+            putMappa(AEWikiButton.statisticheDue);
+        }
+        if (usaBottoneUploadAll) {
+            putMappa(AEWikiButton.uploadAll);
+        }
+        if (usaBottoneUploadStatistiche) {
+            putMappa(AEWikiButton.uploadStatistiche);
+        }
+
     }
 
     /**
@@ -165,6 +218,70 @@ public abstract class WikiLogicList extends LogicList {
         }
 
         return listaBottoni;
+    }
+
+    /**
+     * Regolazioni finali della Grid <br>
+     * <p>
+     * Eventuali colonna 'ad-hoc' <br>
+     * Eventuali 'listener' specifici <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixGrid() {
+        Grid realGrid;
+        ComponentRenderer renderer;
+        Grid.Column colonna;
+        String lar = "5em";
+
+        if (bodyPlaceHolder != null && grid != null) {
+            realGrid = grid.getGrid();
+
+            renderer = new ComponentRenderer<>(this::createWikiButton);
+            colonna = realGrid.addColumn(renderer);
+            colonna.setHeader("Wiki");
+            colonna.setWidth(lar);
+            colonna.setFlexGrow(0);
+
+            renderer = new ComponentRenderer<>(this::createTestButton);
+            colonna = realGrid.addColumn(renderer);
+            colonna.setHeader("Test");
+            colonna.setWidth(lar);
+            colonna.setFlexGrow(0);
+
+            renderer = new ComponentRenderer<>(this::createUploadButton);
+            colonna = realGrid.addColumn(renderer);
+            colonna.setHeader("Upload");
+            colonna.setWidth(lar);
+            colonna.setFlexGrow(0);
+        }
+    }
+
+    protected Button createWikiButton(AEntity entityBean) {
+        Button wikiButton = new Button(new Icon(VaadinIcon.LIST));
+        wikiButton.getElement().setAttribute("theme", "secondary");
+        wikiButton.addClickListener(e -> wikiPage(entityBean));
+
+        return wikiButton;
+    }
+
+    protected Button createTestButton(AEntity entityBean) {
+        Button viewButton = new Button(new Icon(VaadinIcon.SERVER));
+        viewButton.getElement().setAttribute("theme", "secondary");
+        //        viewButton.addClickListener(e -> testAttivita(entityBean));
+
+        return viewButton;
+    }
+
+    protected Button createUploadButton(AEntity entityBean) {
+        Button uploadButton = new Button(new Icon(VaadinIcon.UPLOAD));
+        uploadButton.getElement().setAttribute("theme", "error");
+        //        uploadButton.addClickListener(e -> uploadService.uploadAttivita(entityBean));
+
+        return uploadButton;
+    }
+
+
+    protected void wikiPage(AEntity entityBean) {
     }
 
     /**
@@ -231,7 +348,7 @@ public abstract class WikiLogicList extends LogicList {
      *
      * @return un 'span' di colore rosso
      */
-    protected Span fixInfoDownload(AEWikiPreferenza aePreferenza) {
+    protected void fixInfoDownload(AEWikiPreferenza aePreferenza) {
         String message;
         LocalDateTime last = aePreferenza.getDate();
 
@@ -241,8 +358,16 @@ public abstract class WikiLogicList extends LogicList {
         else {
             message = "Ultimo download:" + SPAZIO + date.getDataOrarioCompleta(last);
         }
-
-        return html.getSpanBlu(message);
+        addSpanRossoFix(message);
     }
+
+    protected void addWikiLink(String wikiTitle) {
+        this.addWikiLink(wikiTitle, wikiTitle);
+    }
+
+    protected void addWikiLink(String wikiTitle, String viewTitle) {
+        super.addLink(FlowCost.PATH_WIKI + wikiTitle, html.bold(viewTitle));
+    }
+
 
 }

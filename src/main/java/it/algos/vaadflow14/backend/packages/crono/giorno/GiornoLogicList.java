@@ -70,7 +70,7 @@ public class GiornoLogicList extends LogicList {
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected void fixSpanList() {
+    protected void fixAlertList() {
         addSpanBlu("Giorni dell' anno. 366 giorni per tenere conto dei 29 giorni di febbraio negli anni bisestili");
         addSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta' e comboBox selezione 'Mese'");
     }

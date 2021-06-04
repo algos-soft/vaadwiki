@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.wiki;
 
+import com.vaadin.flow.component.*;
+import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -1153,6 +1155,11 @@ public class AWikiApiService extends AAbstractService {
 
     public String estraeGraffa(String testoCompleto) {
         return text.setNoDoppieGraffe(estraeGraffaCon(testoCompleto));
+    }
+
+    public void openWikiPage(String wikiTitle) {
+        String link = "\"" + FlowCost.PATH_WIKI + wikiTitle + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }
 
 }

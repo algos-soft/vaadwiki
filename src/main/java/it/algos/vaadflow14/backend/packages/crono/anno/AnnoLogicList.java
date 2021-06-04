@@ -80,7 +80,7 @@ public class AnnoLogicList extends LogicList {
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected void fixSpanList() {
+    protected void fixAlertList() {
         addSpanBlu("Pacchetto convenzionale di 3030 anni. 1000 anni ANTE Cristo e 2030 anni DOPO Cristo");
         addSpanBlu("Sono indicati gli anni bisestili secondo il calendario Giuliano (fino al 1582) e Gregoriano poi");
         addSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta' e comboBox selezione 'Secolo'");

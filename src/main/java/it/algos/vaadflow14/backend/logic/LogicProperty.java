@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.logic;
 
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
@@ -16,6 +17,7 @@ import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.ui.wrapper.*;
+import it.algos.vaadflow14.wiki.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
 
@@ -151,6 +153,14 @@ public abstract class LogicProperty extends VerticalLayout {
     protected ADataProviderService dataService;
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected AWikiApiService wikiApi;
+
+    /**
      * PlaceHolder iniziale per avvisi sopra la Grid (o Form) <br><br>
      * Label o altro per informazioni specifiche; di norma per il developer <br>
      * Contenuto facoltativo, assente di default <br>
@@ -160,7 +170,7 @@ public abstract class LogicProperty extends VerticalLayout {
     /**
      * Avvisi SOPRA la Grid (o Form) <br>
      */
-    protected AHeaderSpan headerSpan;
+    protected AHeaderAlert headerSpan;
 
     /**
      * PlaceHolder per bottoni di comando SOPRA la Grid (o Form) <br>
@@ -357,10 +367,10 @@ public abstract class LogicProperty extends VerticalLayout {
     protected Map<String, AFiltro> mappaFiltri;
 
     /**
-     * Lista (eventuale) di 'span' da mostrare come header della view <br>
+     * Lista (eventuale) di 'component' da mostrare come header della view <br>
      * La lista si costruisce in regolazioniIniziali() della LogicList <br>
      */
-    protected List<Span> spanHeaderList;
+    protected List<Component> alertList;
 
     /**
      * Lista (eventuale) di 'span' da mostrare come header della view <br>
@@ -650,6 +660,16 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     public List<String> getFormPropertyNamesList() {
         return null;
+    }
+
+    /**
+     * Regolazioni finali della Grid <br>
+     * <p>
+     * Eventuali colonna 'ad-hoc' <br>
+     * Eventuali 'listener' specifici <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixGrid() {
     }
 
     /**

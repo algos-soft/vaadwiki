@@ -91,15 +91,5 @@ public class CompanyLogicList extends LogicList {
 
 
 
-    /**
-     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixSpanList() {
-        addSpanRosso("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'");
-        addSpanRosso("Di norma utilizzato solo in applicazioni con usaCompany=true");
-    }
-
 
 }// end of Route class

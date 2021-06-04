@@ -91,7 +91,7 @@ public class StatoLogicList extends LogicList {
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected void fixSpanList() {
+    protected void fixAlertList() {
         addSpanBlu("Stati del mondo. Codifica secondo ISO 3166-1");
         //        addSpanBlu("Recuperati dalla pagina wiki: " + wikiPageTitle));//@todo Funzionalità ancora da implementare
         addSpanBlu("Codici: numerico, alfa-due, alfa-tre e ISO locale");

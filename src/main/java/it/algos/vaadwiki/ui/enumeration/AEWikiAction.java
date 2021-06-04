@@ -10,5 +10,5 @@ import it.algos.vaadflow14.ui.interfaces.*;
  * Time: 08:32
  */
 public enum AEWikiAction implements AIAction {
-    update, modulo, elabora, check, test, statistiche, statisticheDue
+    update, modulo, elabora, check, test, statistiche, statisticheDue, uploadAll, uploadStatistiche
 }

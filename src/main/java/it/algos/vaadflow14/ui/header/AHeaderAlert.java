@@ -16,7 +16,7 @@ import java.util.*;
  * Date: dom, 04-apr-2021
  * Time: 15:31
  */
-public abstract class AHeaderSpan extends VerticalLayout implements AIHeader {
+public abstract class AHeaderAlert extends VerticalLayout implements AIHeader {
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -29,24 +29,24 @@ public abstract class AHeaderSpan extends VerticalLayout implements AIHeader {
     /**
      * Property specifica regolata nella sottoclasse <br>
      */
-    protected List<Span> listaSpan;
+    protected List<Component> listaAlert;
 
     /**
      * Property specifica regolata nella sottoclasse <br>
      */
     protected String message;
 
-    public AHeaderSpan() {
+    public AHeaderAlert() {
     }
 
     /**
      * Costruttore base senza parametro <br>
      */
-    public AHeaderSpan(List<Span> listaSpan) {
+    public AHeaderAlert(List<Component> listaAlert) {
         this.setMargin(false);
         this.setSpacing(false);
         this.setPadding(false);
-        this.listaSpan = listaSpan;
+        this.listaAlert = listaAlert;
     }
 
     /**

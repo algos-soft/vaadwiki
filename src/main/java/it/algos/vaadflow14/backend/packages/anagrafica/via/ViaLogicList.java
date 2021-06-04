@@ -72,7 +72,7 @@ public class ViaLogicList extends LogicList {
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected void fixSpanList() {
+    protected void fixAlertList() {
         addSpanBlu("Codifica delle più comuni tipologie di indirizzi.");
         addSpanBlu("Presentate nelle anagrafiche in un popup di selezione.");
         addSpanVerde("L'ordinamento del popup è quello numerico riportato qui e non quello alfabetico.");

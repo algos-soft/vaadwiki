@@ -1,11 +1,14 @@
 package it.algos.vaadwiki.backend.packages.prenome;
 
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import static it.algos.vaadwiki.backend.packages.wiki.WikiService.*;
 import org.springframework.beans.factory.annotation.*;
@@ -65,29 +68,50 @@ public class PrenomeLogicList extends WikiLogicList {
         super.fixPreferenze();
 
         super.usaBottoneUpload = false;
-        this.usaBottoneStatistiche = false;
+        super.usaBottoneStatistiche = false;
+        super.usaBottoneUploadAll = false;
+        super.usaBottoneUploadStatistiche = false;
         super.wikiModuloTitle = PATH_MODULO_PRENOME;
     }
 
+    /**
+     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixAlertList() {
+        String doppi = html.bold("nomi doppi");
+        String biografie = html.bold("50");
+        String nome = html.bold("nome");
+        String solo = html.bold("solo");
+        String lista = html.bold("persone per nome");
+        String modulo = "Progetto:Antroponimi/Nomi doppi";
+        String categoria = "Categoria:Prenomi composti";
 
-//    /**
-//     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-//     * DEVE essere sovrascritto <br>
-//     *
-//     * @return una liste di 'span'
-//     */
-//    @Override
-//    protected List<Span> getSpanList() {
-//        List<Span> lista = new ArrayList<>();
-//
-//        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadPrenome));
-//        lista.add(html.getSpanBlu("Progetto:Antroponimi/Nomi doppi."));
-//        lista.add(html.getSpanVerde("Sono elencati i " + html.bold("nomi doppi") + " (ad esempio 'Maria Teresa'), per i quali il BioBot deve fare una lista di biografati una volta superate le " + html.bold("50") + " biografie."));
-//        lista.add(html.getSpanVerde("Si veda anche la [[Categoria:Prenomi composti]]."));
-//        lista.add(html.getSpanRosso("La lista " + html.bold("nome") + " prevede " + html.bold("solo") + " nomi singoli a cui vengono aggiunti questi " + html.bold("nomi doppi") + " accettabili."));
-//        lista.add(html.getSpanRosso("Quando si crea la lista " + html.bold("nome") + ", i nomi doppi vengono scaricati ed aggiunti alla lista stessa."));
-//        return lista;
-//    }
+        super.fixInfoDownload(AEWikiPreferenza.lastDownloadPrenome);
+        addWikiLink("Progetto:Antroponimi/Nomi_doppi");
+        addSpanVerde(String.format("Sono elencati i %s + (ad esempio 'Maria Teresa')", doppi, biografie));
+        addSpanVerde(String.format("BioBot crea una lista di %s quando le biografie superano %s (tra nomi e nomi doppi)", lista, biografie));
+
+        Span vedi = html.getSpanVerde("Vedi anche ");
+        Span verde = html.getSpanVerde(categoria, AETypeWeight.bold);
+        if (alertList != null) {
+            alertList.add(new Anchor(FlowCost.PATH_WIKI + categoria, vedi, verde));
+        }
+
+        addSpanRosso(String.format("La lista %s prevede %s nomi singoli a cui vengono aggiunti questi %s accettabili", nome, solo, doppi));
+        addSpanRosso(String.format("Quando si crea la lista  %s, i nomi doppi vengono scaricati ed aggiunti alla lista stessa", nome));
+    }
+
+    /**
+     * Regolazioni finali della Grid <br>
+     * <p>
+     * Eventuali colonna 'ad-hoc' <br>
+     * Eventuali 'listener' specifici <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixGrid() {
+    }
 
 
 }// end of Route class

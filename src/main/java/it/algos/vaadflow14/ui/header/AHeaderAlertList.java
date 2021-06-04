@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.ui.header;
 
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -16,23 +17,23 @@ import java.util.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AHeaderSpanList extends AHeaderSpan {
+public class AHeaderAlertList extends AHeaderAlert {
 
 
     /**
      * Costruttore base con parametro <br>
      * Non usa @Autowired perché l' istanza viene creata con appContext.getBean(AHeaderSpanList.class, spanList) <br>
      */
-    public AHeaderSpanList(List<Span> listaSpan) {
-        super(listaSpan);
+    public AHeaderAlertList(List<Component> listaAlert) {
+        super(listaAlert);
     }
 
 
     @Override
     protected void initView() {
-        if (listaSpan != null && listaSpan.size() > 0) {
-            for (Span span : listaSpan) {
-                this.add(span);
+        if (listaAlert != null && listaAlert.size() > 0) {
+            for (Component comp : listaAlert) {
+                this.add(comp);
             }
         }
     }

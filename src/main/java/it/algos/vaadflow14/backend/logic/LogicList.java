@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.logic;
 import ch.carnet.kasparscherrer.*;
 import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.data.provider.*;
@@ -94,7 +95,7 @@ public abstract class LogicList extends Logic {
         super.regolazioniIniziali();
 
         //--costruisce una lista (vuota) di Span per l'header della lista
-        super.spanHeaderList = new ArrayList<>();
+        super.alertList = new ArrayList<>();
 
         //        //--costruisce una mappa (vuota) di ComboBox per il topLayout
         //        super.mappaComboBox = new HashMap<>();
@@ -145,7 +146,7 @@ public abstract class LogicList extends Logic {
      */
     @Override
     protected void fixAlertLayout() {
-        this.fixSpanList();
+        this.fixAlertList();
 
         String preferenza = html.bold("Preferenza");
         String delete = html.bold("Delete");
@@ -167,24 +168,27 @@ public abstract class LogicList extends Logic {
         String non = html.bold("non");
         String propReset = html.bold("reset");
         String methodReset = html.bold("reset()");
+        String xxx = html.bold("xxx");
 
         addSpanRosso(String.format("La visualizzazione di questi avvisi rossi si regola in %s:usaSpanHeaderRossi", preferenza));
         addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", delete, entity, usaNew));
-        addSpanRosso(String.format("Bottone %s agisce su %s le entities della collezione %s", delete, tutte, collezione));
-        addSpanRosso(String.format("Bottone %s presente se %s extends %s ed esiste %s.%s", reset, entity, aREntity, service, methodReset));
-        addSpanRosso(String.format("Bottone %s agisce %s sulle entities della collezione %s che hanno la property %s", reset, solo, collezione, resetTrue));
         addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", nuovo, entity, usaNew));
-        addSpanRosso(String.format("%s presente se in %s->@AIView esiste il valore della property %s", search, entity, property));
-        addSpanRosso(String.format("La collezione %s viene ricreata (mantenendo le entities che hanno %s) ad ogni avvio del programma se:", collezione, resetFalse));
-        addSpanRosso(String.format("- %s estende %s,", entity, aREntity));
-        addSpanRosso(String.format("- %s->@AIEntity %s=true,", entity, usaBoot));
-        addSpanRosso(String.format("- esiste %s.%s,", service, methodReset));
-        addSpanRosso(String.format("- la collezione %s contiene nessuna entity che abbia la property %s ", non, resetTrue));
-        addSpanRosso(String.format("Se %s extends %s e %s->@AIEntity(%s=false), %s compare la property %s", entity, aREntity, entity, usaNew, non, propReset));
-        addSpanRosso(String.format("Se %s extends %s e %s->@AIEntity(%s=true), compare la property %s uguale a true per le schede create con reset", entity, aREntity, entity, usaNew, propReset));
+        addSpanRosso(String.format("%s presente se  %s->@AIView(%s=%s)", search, entity, property,xxx));
+        if (annotation.usaReset(entityClazz)) {
+            addSpanRosso(String.format("Bottone %s presente se %s extends %s ed esiste %s.%s", reset, entity, aREntity, service, methodReset));
+            addSpanRosso(String.format("Bottone %s agisce %s sulle entities della collezione %s che hanno la property %s", reset, solo, collezione, resetTrue));
+            addSpanRosso(String.format("Bottone %s agisce su %s le entities della collezione %s", delete, tutte, collezione));
+            addSpanRosso(String.format("La collezione %s viene ricreata (mantenendo le entities che hanno %s) ad ogni avvio del programma se:", collezione, resetFalse));
+            addSpanRosso(String.format("- %s estende %s,", entity, aREntity));
+            addSpanRosso(String.format("- %s->@AIEntity %s=true,", entity, usaBoot));
+            addSpanRosso(String.format("- esiste %s.%s,", service, methodReset));
+            addSpanRosso(String.format("- la collezione %s contiene nessuna entity che abbia la property %s ", non, resetTrue));
+            addSpanRosso(String.format("Se %s extends %s e %s->@AIEntity(%s=false), %s compare la property %s", entity, aREntity, entity, usaNew, non, propReset));
+            addSpanRosso(String.format("Se %s extends %s e %s->@AIEntity(%s=true), compare la property %s uguale a true per le schede create con reset", entity, aREntity, entity, usaNew, propReset));
+        }
 
-        if (spanHeaderList != null && spanHeaderList.size() > 0) {
-            headerSpan = appContext.getBean(AHeaderSpanList.class, super.spanHeaderList);
+        if (alertList != null && alertList.size() > 0) {
+            headerSpan = appContext.getBean(AHeaderAlertList.class, super.alertList);
         }
 
         super.fixAlertLayout();
@@ -194,25 +198,31 @@ public abstract class LogicList extends Logic {
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
-    protected void fixSpanList() {
+    protected void fixAlertList() {
     }
 
 
     protected void addSpanBlu(final String message) {
-        if (spanHeaderList != null) {
-            spanHeaderList.add(html.getSpanBlu(message));
+        if (alertList != null) {
+            alertList.add(html.getSpanBlu(message));
         }
     }
 
     protected void addSpanVerde(final String message) {
-        if (spanHeaderList != null) {
-            spanHeaderList.add(html.getSpanVerde(message));
+        if (alertList != null) {
+            alertList.add(html.getSpanVerde(message));
+        }
+    }
+
+    protected void addSpanRossoFix(final String message) {
+        if (alertList != null) {
+            alertList.add(html.getSpanRosso(message));
         }
     }
 
     protected void addSpanRosso(final String message) {
-        if (spanHeaderList != null && usaSpanHeaderRossi) {
-            spanHeaderList.add(html.getSpanRosso(message));
+        if (alertList != null && usaSpanHeaderRossi) {
+            alertList.add(html.getSpanRosso(message));
         }
     }
 
@@ -226,17 +236,17 @@ public abstract class LogicList extends Logic {
      */
     @Override
     protected void creaAEBottoniTop() {
-        String message = VUOTA;
+        String message;
 
         if (usaBottoneDeleteAll) {
-            mappaComponentiTop.put(AEButton.deleteAll.testo, AEButton.deleteAll);
+            putMappa(AEButton.deleteAll);
         }
 
         if (usaBottoneResetList && entityService != null) {
             //--se manca il metodo specifico il bottone non potrebbe funzionare
             try {
                 if (entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null) {
-                    mappaComponentiTop.put(AEButton.resetList.testo, AEButton.resetList);
+                    putMappa(AEButton.resetList);
                 }
             } catch (Exception unErrore) {
                 message = String.format("Non sono riuscito a controllare se esiste il metodo resetEmptyOnly() nella classe %s", entityService.getClass().getSimpleName());
@@ -245,22 +255,22 @@ public abstract class LogicList extends Logic {
         }
 
         if (usaBottoneNew) {
-            mappaComponentiTop.put(AEButton.nuovo.testo, AEButton.nuovo);
+            putMappa(AEButton.nuovo);
         }
         if (usaBottonePaginaWiki) {
-            mappaComponentiTop.put(AEButton.wiki.testo, AEButton.wiki);
+            putMappa(AEButton.wiki);
         }
         if (usaBottoneDownload) {
-            mappaComponentiTop.put(AEButton.download.testo, AEButton.download);
+            putMappa(AEButton.download);
         }
         if (usaBottoneUpload) {
-            mappaComponentiTop.put(AEButton.upload.testo, AEButton.upload);
+            putMappa(AEButton.upload);
         }
         if (usaBottoneSearch) {
-            mappaComponentiTop.put(AEButton.searchDialog.testo, AEButton.searchDialog);
+            putMappa(AEButton.searchDialog);
         }
         if (usaBottoneExport) {
-            mappaComponentiTop.put(AEButton.export.testo, AEButton.export);
+            putMappa(AEButton.export);
         }
     }
 
@@ -312,6 +322,15 @@ public abstract class LogicList extends Logic {
             check3Vie = new IndeterminateCheckbox(text.primaMaiuscola(FIELD_NAME_RESET));
             mappaComponentiTop.put(FIELD_NAME_RESET, check3Vie);
         }
+    }
+
+    /**
+     * Aggiunge una enumeration alla mappa dei componenti <br>
+     *
+     * @param aiButton enumeration da aggiungere alla mappa componenti
+     */
+    protected void putMappa(final AIButton aiButton) {
+        mappaComponentiTop.put(aiButton.getTesto(), aiButton);
     }
 
 
@@ -865,5 +884,11 @@ public abstract class LogicList extends Logic {
         }
     }
 
+    protected void addLink(final String http, final String title) {
+        Span span = html.getSpanBlu(title, AETypeWeight.bold);
+        if (alertList!=null) {
+            alertList.add(new Anchor(http, span));
+        }
+    }
 
 }

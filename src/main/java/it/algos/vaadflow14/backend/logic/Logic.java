@@ -162,6 +162,9 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         //--Corpo principale della Grid/Form (obbligatorio) <br>
         this.fixBodyLayout();
 
+        //--Regolazioni finali Grid/Form (eventuale) <br>
+        this.fixGrid();
+
         //--Costruisce un layout (obbligatorio per il Form) per i bottoni di comando della view al Bottom <br>
         this.fixBottomLayout();
 

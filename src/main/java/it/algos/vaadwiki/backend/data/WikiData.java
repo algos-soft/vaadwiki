@@ -59,19 +59,20 @@ public class WikiData extends FlowData {
 
 
     /**
-     * Check iniziale di alcune collections <br>
-     * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
-     * Vengono create se mancano e se esiste un metodo resetEmptyOnly() nella classe xxxLogic specifica <br>
-     * Crea un elenco di entities/collections che implementano il metodo resetEmptyOnly() <br>
+     * Check iniziale. Ad ogni avvio del programma spazzola tutte le collections <br>
+     * Ognuna viene ricreata (mantenendo le entities che hanno reset=false) se:
+     * - xxx->@AIEntity usaBoot=true,
+     * - esiste xxxService.reset(),
+     * - la collezione non contiene nessuna entity che abbia la property reset=true
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      * L' ordine con cui vengono create le collections è significativo <br>
      *
      * @since java 8
      */
     @Override
-    public void fixData() {
-        super.fixData();
-        super.fixData("vaadwiki");
+    public void resetData() {
+        super.resetData();
+        super.resetData("vaadwiki");
     }
 
 }// end of data class

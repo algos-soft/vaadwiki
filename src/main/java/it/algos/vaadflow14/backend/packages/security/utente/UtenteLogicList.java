@@ -95,7 +95,7 @@ public class UtenteLogicList extends LogicList {
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected void fixSpanList() {
+    protected void fixAlertList() {
         addSpanRosso("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'");
         addSpanRosso("Di norma utilizzato solo in applicazioni con usaSecurity=true");
     }

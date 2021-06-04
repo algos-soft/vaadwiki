@@ -84,7 +84,7 @@ public class PreferenzaLogicList extends LogicList {
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected void fixSpanList() {
+    protected void fixAlertList() {
         addSpanBlu("PreferenzaLogicList è @Scope " + html.bold("prototype") + " mentre PreferenzaService è " + html.bold("singleton"));
         addSpanBlu("PreferenzaLogicList è usato come normale classe del package di preferenze e viene ricreato per ogni Grid e Form");
         addSpanBlu("PreferenzaService è usato per 'leggere' le preferenze da qualsiasi 'service' singleton");

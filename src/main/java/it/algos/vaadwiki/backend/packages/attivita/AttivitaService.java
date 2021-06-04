@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
+import java.time.*;
 import java.util.*;
 
 /**
@@ -168,6 +169,7 @@ public class AttivitaService extends WikiService {
      */
     public boolean downloadModulo(String wikiTitle) {
         boolean status = false;
+        String message;
         Map<String, String> mappa = wikiApi.leggeMappaModulo(wikiTitle);
 
         if (mappa != null && mappa.size() > 0) {
@@ -180,6 +182,9 @@ public class AttivitaService extends WikiService {
         status = aggiunge();
 
         super.fixDataDownload();
+        message = "Ultimo download attività:" + SPAZIO + date.getDataOrarioCompleta(LocalDateTime.now());
+        logger.log(AETypeLog.download, message);
+
         return status;
     }
 

@@ -87,7 +87,7 @@ public class RegioneLogicList extends LogicList {
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected void fixSpanList() {
+    protected void fixAlertList() {
         addSpanBlu("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2");
         addSpanBlu("Codice ISO, sigla abituale e 'status' normativo");
         addSpanBlu("Ordinamento alfabetico: prima Italia poi altri stati europei");

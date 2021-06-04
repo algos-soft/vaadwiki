@@ -25,12 +25,14 @@ import it.algos.vaadflow14.backend.annotation.*;
 public enum AEWikiButton implements AIButton {
 
     update("Update", VaadinIcon.LIST, "error", AEWikiAction.update, true, "Update di una pagina", "cross"),
-    modulo("Modulo", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.modulo, true, "Modulo di Wikipedia", "cross"),
+    modulo("Modulo", VaadinIcon.LIST, "secondary", AEWikiAction.modulo, true, "Modulo di Wikipedia", "cross"),
     elabora("Elabora", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.elabora, true, "Elabora un documento", "cross"),
     check("Check", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.elabora, true, "Controlla un documento", "cross"),
     test("Test", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.test, true, "Test di una funzionalità", "cross"),
     statistiche("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statistiche, true, "Elaborazione statistiche", "cross"),
     statisticheDue("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statisticheDue, true, "Elaborazione statistiche", "cross"),
+    uploadAll("Upload All", VaadinIcon.UPLOAD, "error", AEWikiAction.uploadAll, true, "Upload di tutte le pagine", "cross"),
+    uploadStatistiche("Upload Stat.", VaadinIcon.UPLOAD, "error", AEWikiAction.uploadStatistiche, true, "Upload della pagina delle statistiche", "cross"),
 
     ;
 
