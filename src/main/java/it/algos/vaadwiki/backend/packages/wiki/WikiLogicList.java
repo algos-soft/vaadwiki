@@ -110,6 +110,22 @@ public abstract class WikiLogicList extends LogicList {
      */
     protected String wikiStatisticheDueTitle;
 
+    protected String parametri;
+
+    protected String alfabetico;
+
+    protected String singolare;
+
+    protected String plurale;
+
+    protected String minuscolo;
+
+    protected String uno;
+
+    protected String due;
+
+    protected String anche;
+
     /**
      * Costruttore con parametri <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
@@ -141,7 +157,25 @@ public abstract class WikiLogicList extends LogicList {
         this.usaBottoneStatistiche = true;
         this.usaBottoneUploadAll = true;
         this.usaBottoneUploadStatistiche = true;
-        super.maxNumeroBottoniPrimaRiga = 4;
+        super.maxNumeroBottoniPrimaRiga = 3;
+    }
+
+    /**
+     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixAlertList() {
+        super.fixAlertList();
+
+        parametri = html.bold("Attività/Attività2/Attività3");
+        alfabetico = html.bold("alfabetico");
+        singolare = html.bold("singolare");
+        plurale = html.bold("plurale");
+        minuscolo = html.bold("minuscolo");
+        uno = html.bold("Forma1");
+        due = html.bold("Forma2");
+        anche = html.bold("anche");
     }
 
     /**

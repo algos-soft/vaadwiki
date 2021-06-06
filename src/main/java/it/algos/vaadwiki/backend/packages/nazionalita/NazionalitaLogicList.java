@@ -73,23 +73,21 @@ public class NazionalitaLogicList extends WikiLogicList {
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
     protected void fixAlertList() {
+        super.fixAlertList();
+
         String parametri = html.bold("Nazionalità/Cittadinanza/NazionalitàNaturalizzato");
-        String plurale = html.bold("plurale maschile");
-        String alfabetico = html.bold("alfabetico");
-        String uno = html.bold("Forma1");
-        String due = html.bold("Forma2");
 
         super.fixInfoDownload(AEWikiPreferenza.lastDownloadNazionalita);
-        addSpanBlu(html.bold("Modulo:Bio/Plurale nazionalità."));
-        addSpanBlu(html.bold("Progetto:Biografie/Nazionalità."));
+        addSpanBlu(html.bold(PATH_MODULO_NAZIONALITA));
+        addSpanBlu(html.bold(PATH_STATISTICHE_NAZIONALITA));
         addSpanVerde(String.format("Contiene la tabella di conversione delle nazionalità passate via parametri %s", parametri));
         addSpanVerde(String.format(" da singolare maschile e femminile (usati nell'incipit) al %s, per categorizzare la pagina",plurale));
-        addSpanVerde(String.format("All'interno della tabella le nazionalità sono in ordine %s al fine di rendere più agevole la manutenzione delle stesse", alfabetico));
         addSpanVerde(String.format("Le nazionalità sono elencate nel modulo con la sintassi: [\"nazionalita%s\"]=\"nazionalità al plurale\", [\"nazionalita%s\"]=\"nazionalità al plurale\",", uno, due));
+        addSpanRossoFix(String.format("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in %s", minuscolo));
     }
 
 

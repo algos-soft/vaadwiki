@@ -249,9 +249,9 @@ public class AGrid {
         String indexWidth = VUOTA;
         int dim1 = 100;
         int dim2 = 1000;
-        String tag1 = "2.5" + TAG_EM;
-        String tag2 = "3.5" + TAG_EM;
-        String tag3 = "4.5" + TAG_EM;
+        String tag1 = "3.0" + TAG_EM;
+        String tag2 = "4.0" + TAG_EM;
+        String tag3 = "5.0" + TAG_EM;
 
         int dim = mongo.count(entityClazz);
 

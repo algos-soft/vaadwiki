@@ -1,11 +1,17 @@
 package it.algos.vaadwiki.backend.packages.professione;
 
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.grid.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.data.renderer.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import static it.algos.vaadwiki.backend.packages.wiki.WikiService.*;
 import org.springframework.beans.factory.annotation.*;
@@ -66,34 +72,74 @@ public class ProfessioneLogicList extends WikiLogicList {
 
         super.usaBottoneUpload = false;
         super.usaBottoneStatistiche = false;
-        super.wikiModuloTitle =  PATH_MODULO_PROFESSIONE;
+        super.usaBottoneUploadAll = false;
+        super.usaBottoneUploadStatistiche = false;
+        super.wikiModuloTitle = PATH_MODULO_PROFESSIONE;
     }
 
+    /**
+     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixAlertList() {
+        super.fixAlertList();
+        String riferimento = html.bold("pagina di riferimento");
+        String maschili = html.bold("attività maschili");
+        String non = html.bold("non");
+        String ex = html.bold("ex-attività");
+        String attivita = html.bold("Attività");
+        String mantengono = html.bold("mantengono");
+        String pagina = html.bold("pagina");
+        String professione = html.bold("professione");
 
-//    /**
-//     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-//     * DEVE essere sovrascritto <br>
-//     *
-//     * @return una liste di 'span'
-//     */
-//    @Override
-//    protected List<Span> getSpanList() {
-//        List<Span> lista = new ArrayList<>();
-//
-//        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadProfessione));
-//        lista.add(html.getSpanBlu("Modulo:Bio/Link attività."));
-//        lista.add(html.getSpanVerde("Contiene la tabella di conversione delle attività passate via parametri " + html.bold("Attività/Attività2/Attività3")));
-//        lista.add(html.getSpanVerde(" dal nome dell'attività a quello della pagina corrispondente, per creare dei piped wikiLink."));
-//        lista.add(html.getSpanVerde("All'interno della tabella le attività sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse"));
-//        lista.add(html.getSpanVerde("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
-//        lista.add(html.getSpanVerde("[\"attivitaForma1\"] = \"pagina di riferimento\","));
-//        lista.add(html.getSpanVerde("[\"attivitaForma2\"] = \"pagina di riferimento\","));
-//        lista.add(html.getSpanRosso("Nella collezione locale mongoDB vengono aggiunte " + html.bold("anche") + " le voci delle " + html.bold("attività maschili") + " che corrispondono alla pagina (non presenti nel Modulo su Wiki)"));
-//        lista.add(html.getSpanRosso("Nella collezione locale mongoDB vengono aggiunte " + html.bold("anche") + " le voci delle " + html.bold("ex-attività") + " (non presenti nel Modulo su Wiki) recuperate dalla collezione locale 'Attività' su mongoDB\n"));
-//        lista.add(html.getSpanRosso("Le attività e le pagine mantengono il maiuscolo/minuscolo previsto nel modulo"));
-//
-//        return lista;
-//    }
+        super.fixInfoDownload(AEWikiPreferenza.lastDownloadProfessione);
+        addWikiLink(PATH_MODULO_PROFESSIONE);
+        addSpanVerde(String.format("Contiene la tabella di conversione delle attività passate via parametri %s", parametri));
+        addSpanVerde(String.format(" dal nome dell'attività a quello della %s corrispondente, per creare dei piped wikiLink", pagina));
+        addSpanVerde(String.format("Le attività sono elencate nel modulo con la sintassi: [\"attivita%s\"]=\"%s\", [\"attivita%s\"]=\"%s\",", uno, riferimento, due, riferimento));
+        addSpanRossoFix(String.format("In mongoDB.%s vengono aggiunte %s le voci delle %s che corrispondono alla pagina (%s presenti nel Modulo su Wiki)", professione, anche, maschili, non));
+        addSpanRossoFix(String.format("In mongoDB.%s vengono aggiunte %s le voci delle %s (%s presenti nel Modulo su Wiki) recuperate da mongoDB.%s", professione, anche, ex, non, attivita));
+        addSpanRossoFix(String.format("Le attività e le pagine %s il maiuscolo/minuscolo previsto nel modulo",mantengono));
+    }
+
+    /**
+     * Regolazioni finali della Grid <br>
+     * <p>
+     * Eventuali colonna 'ad-hoc' <br>
+     * Eventuali 'listener' specifici <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixGrid() {
+        Grid realGrid;
+        ComponentRenderer renderer;
+        Grid.Column colonna;
+        String lar = "5em";
+
+        if (bodyPlaceHolder != null && grid != null) {
+            realGrid = grid.getGrid();
+
+            renderer = new ComponentRenderer<>(this::createWikiButton);
+            colonna = realGrid.addColumn(renderer);
+            colonna.setHeader("Wiki");
+            colonna.setWidth(lar);
+            colonna.setFlexGrow(0);
+        }
+    }
+
+    protected Button createWikiButton(AEntity entityBean) {
+        Button wikiButton = new Button(new Icon(VaadinIcon.LIST));
+        wikiButton.getElement().setAttribute("theme", "secondary");
+        wikiButton.addClickListener(e -> wikiPage(entityBean));
+
+        return wikiButton;
+    }
+
+    @Override
+    protected void wikiPage(AEntity entityBean) {
+        wikiApi.openWikiPage(text.primaMaiuscola(((Professione) entityBean).pagina));
+    }
 
 
 }// end of Route class

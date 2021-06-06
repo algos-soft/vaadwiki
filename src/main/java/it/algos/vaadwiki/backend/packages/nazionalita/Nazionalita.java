@@ -1,20 +1,18 @@
 package it.algos.vaadwiki.backend.packages.nazionalita;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.component.icon.VaadinIcon;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * Project: vaadwiki <br>
@@ -52,7 +50,7 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Nazionalita", keyPropertyName = "singolare", usaCompany = false)
+@AIEntity(recordName = "Nazionalita", keyPropertyName = "singolare", usaBoot = true, usaNew = false)
 @AIView(menuName = "Nazionalita", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
 @AIList(fields = "singolare,plurale", usaRowIndex = true)
 @AIForm(fields = "singolare,plurale", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
@@ -89,8 +87,6 @@ public class Nazionalita extends AEntity {
     @AIField(type = AETypeField.text, firstCapital = true, caption = "plurale", widthEM = WIDTHEM)
     @AIColumn(header = "plurale", widthEM = WIDTHEM)
     public String plurale;
-
-     
 
 
     /**

@@ -32,9 +32,9 @@ public abstract class WikiService extends AService {
 
     public final static String PATH_PROGETTO = "Progetto:Biografie/";
 
-    public final static String PATH_MODULO_PLURALE = PATH_MODULO + "Plurale_";
+    public final static String PATH_MODULO_PLURALE = PATH_MODULO + "Plurale ";
 
-    public final static String PATH_MODULO_LINK = PATH_MODULO + "Link_";
+    public final static String PATH_MODULO_LINK = PATH_MODULO + "Link ";
 
     public final static String GENERE = "genere";
 

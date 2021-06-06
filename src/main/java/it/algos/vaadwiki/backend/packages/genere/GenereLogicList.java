@@ -1,11 +1,14 @@
 package it.algos.vaadwiki.backend.packages.genere;
 
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import static it.algos.vaadwiki.backend.packages.wiki.WikiService.*;
 import org.springframework.beans.factory.annotation.*;
@@ -66,32 +69,67 @@ public class GenereLogicList extends WikiLogicList {
 
         super.usaBottoneUpload = false;
         super.usaBottoneStatistiche = false;
-        super.wikiModuloTitle =  PATH_MODULO_GENERE;
+        super.usaBottoneUploadAll = false;
+        super.usaBottoneUploadStatistiche = false;
+        super.wikiModuloTitle = PATH_MODULO_GENERE;
     }
 
 
-//    /**
-//     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-//     * DEVE essere sovrascritto <br>
-//     *
-//     * @return una liste di 'span'
-//     */
-//    @Override
-//    protected List<Span> getSpanList() {
-//        List<Span> lista = new ArrayList<>();
-//
-//        lista.add(super.fixInfoDownload(AEWikiPreferenza.lastDownloadGenere));
-//        lista.add(html.getSpanBlu("Modulo:Bio/Plurale attività genere."));
-//        lista.add(html.getSpanVerde("Contiene la tabella di conversione delle attività passate via parametri <b>Attività/Attività2/Attività3</b>"));
-//        lista.add(html.getSpanVerde(" da singolare maschile e femminile (usati nell'incipit) al plurale maschile, per categorizzare la pagina"));
-//        lista.add(html.getSpanVerde("All'interno della tabella le attività sono in ordine alfabetico al fine di rendere più agevole la manutenzione delle stesse"));
-//        lista.add(html.getSpanVerde("Le attività sono elencate all'interno del modulo con la seguente sintassi:"));
-//        lista.add(html.getSpanVerde("[\"attività singolare maschile\"] = \"attività plurale maschile\","));
-//        lista.add(html.getSpanVerde("[\"attività singolare femminile\"] = \"attività plurale femminile\","));
-//        lista.add(html.getSpanRosso("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in maiuscolo"));
-//
-//        return lista;
-//    }
+    /**
+     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixAlertList() {
+        super.fixAlertList();
 
+        String maschile = html.bold("maschile");
+        String femminile = html.bold("femminile");
+        String nazionalitaTxt = "nazionalità, ";
+        String nomeTxt = "nome, e ";
+        String cognomeTxt = "cognome ";
+        String listaNazionalita = "Categoria:Bio nazionalità";
+        String listaNomi = "Progetto:Antroponimi/Liste nomi";
+        String listaCognomi = "Progetto:Antroponimi/Liste cognomi";
+        String progettoTxt = "progetto:Antroponimi";
+
+        super.fixInfoDownload(AEWikiPreferenza.lastDownloadGenere);
+        addWikiLink(PATH_MODULO_GENERE);
+        addSpanVerde(String.format("Contiene la tabella di conversione delle attività passate via parametri %s", parametri));
+        addSpanVerde(String.format(" da %s %s e %s (usati nell'incipit) al %s %s e %s, per le intestazioni dei paragrafi", singolare, maschile, femminile, plurale, maschile, femminile));
+        //        addSpanVerde(String.format("nelle liste di nazionalità, nomi e cognomi previste nel Progetto:Antroponimi"));
+
+        Span liste = html.getSpanVerde("nelle liste di ");
+        Span nazionalità = html.getSpanVerde(nazionalitaTxt, AETypeWeight.bold);
+        Span nomi = html.getSpanVerde(nomeTxt, AETypeWeight.bold);
+        Span cognomi = html.getSpanVerde(cognomeTxt, AETypeWeight.bold);
+        Span previste = html.getSpanVerde("previste nel ");
+        Span progetto = html.getSpanVerde(progettoTxt, AETypeWeight.bold);
+        Anchor anchorNaz = new Anchor(FlowCost.PATH_WIKI + listaNazionalita, nazionalità);
+        Anchor anchorNomi = new Anchor(FlowCost.PATH_WIKI + listaNomi, nomi);
+        Anchor anchorCog = new Anchor(FlowCost.PATH_WIKI + listaCognomi, cognomi);
+        Anchor anchorAntr = new Anchor(FlowCost.PATH_WIKI + progettoTxt, progetto);
+        Span riga = new Span(liste, anchorNaz, anchorNomi, anchorCog, previste, anchorAntr);
+        if (alertList != null) {
+            alertList.add(riga);
+        }
+
+        addSpanVerde(String.format("Le attività sono elencate nel modulo con la sintassi: [\"attivita %s %s\"]=\"attività %s %s\"", singolare, maschile, plurale, maschile));
+        addSpanVerde(String.format("Le attività sono elencate nel modulo con la sintassi: [\"attivita %s %s\"]=\"attività %s %s\"", singolare, femminile, plurale, femminile));
+
+        addSpanRossoFix(String.format("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in %s", minuscolo));
+    }
+
+
+    /**
+     * Regolazioni finali della Grid <br>
+     * <p>
+     * Eventuali colonna 'ad-hoc' <br>
+     * Eventuali 'listener' specifici <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixGrid() {
+    }
 
 }// end of Route class

@@ -75,7 +75,6 @@ public abstract class LogicList extends Logic {
         try {
             isResetMethod = entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null;
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
         }
 
         super.usaBottoneDeleteAll = annotation.usaNew(entityClazz);
@@ -196,7 +195,7 @@ public abstract class LogicList extends Logic {
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixAlertList() {
     }

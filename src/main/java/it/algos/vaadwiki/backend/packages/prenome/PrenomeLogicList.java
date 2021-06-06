@@ -76,20 +76,21 @@ public class PrenomeLogicList extends WikiLogicList {
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
     protected void fixAlertList() {
+        super.fixAlertList();
+
         String doppi = html.bold("nomi doppi");
         String biografie = html.bold("50");
         String nome = html.bold("nome");
         String solo = html.bold("solo");
         String lista = html.bold("persone per nome");
-        String modulo = "Progetto:Antroponimi/Nomi doppi";
         String categoria = "Categoria:Prenomi composti";
 
         super.fixInfoDownload(AEWikiPreferenza.lastDownloadPrenome);
-        addWikiLink("Progetto:Antroponimi/Nomi_doppi");
+        addWikiLink(PATH_MODULO_PRENOME);
         addSpanVerde(String.format("Sono elencati i %s + (ad esempio 'Maria Teresa')", doppi, biografie));
         addSpanVerde(String.format("BioBot crea una lista di %s quando le biografie superano %s (tra nomi e nomi doppi)", lista, biografie));
 
@@ -99,8 +100,8 @@ public class PrenomeLogicList extends WikiLogicList {
             alertList.add(new Anchor(FlowCost.PATH_WIKI + categoria, vedi, verde));
         }
 
-        addSpanRosso(String.format("La lista %s prevede %s nomi singoli a cui vengono aggiunti questi %s accettabili", nome, solo, doppi));
-        addSpanRosso(String.format("Quando si crea la lista  %s, i nomi doppi vengono scaricati ed aggiunti alla lista stessa", nome));
+        addSpanRossoFix(String.format("La lista %s prevede %s nomi singoli a cui vengono aggiunti questi %s accettabili", nome, solo, doppi));
+        addSpanRossoFix(String.format("Quando si crea la lista  %s, i nomi doppi vengono scaricati ed aggiunti alla lista stessa", nome));
     }
 
     /**
@@ -110,6 +111,7 @@ public class PrenomeLogicList extends WikiLogicList {
      * Eventuali 'listener' specifici <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
+    @Override
     protected void fixGrid() {
     }
 

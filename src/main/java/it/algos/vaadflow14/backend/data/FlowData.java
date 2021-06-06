@@ -10,8 +10,8 @@ import it.algos.vaadflow14.backend.wrapper.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.mongodb.core.query.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.*;
 
@@ -52,6 +52,22 @@ public class FlowData implements AIData {
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AMongoService mongo;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AArrayService array;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
@@ -86,14 +102,6 @@ public class FlowData implements AIData {
     protected AAnnotationService annotation;
 
     /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public AMongoService mongo;
-
-    /**
      * Controlla che la classe sia una Entity <br>
      */
     protected Predicate<String> checkEntity = canonicalName -> classService.isEntity(canonicalName);
@@ -110,6 +118,34 @@ public class FlowData implements AIData {
      */
     protected Predicate<Object> checkUsaBoot = clazzName -> annotation.usaBoot(clazzName.toString());
 
+    /**
+     * Controlla che il service abbia il metodo reset() oppure download() <br>
+     */
+    protected Predicate<Method> esisteMetodo = clazzName -> clazzName.getName().contains("reset") || clazzName.getName().contains("download");
+
+    /**
+     * Controlla che il service abbia il metodo reset() oppure download() <br>
+     * nella sottoclasse specifica xxxService <br>
+     * Altrimenti i dati non possono essere ri-creati <br>
+     */
+    protected Predicate<Object> esisteMetodoService = clazzName -> {
+        final Method[] methods;
+        final AIService entityService = classService.getServiceFromEntityName(clazzName.toString());
+
+        try {
+            methods = entityService.getClass().getDeclaredMethods();
+        } catch (Exception unErrore) {
+            return false;
+        }
+
+        if (Arrays.stream(methods).filter(esisteMetodo).count() == 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    };
+
 
     /**
      * Controllo la singola collezione <br>
@@ -121,7 +157,7 @@ public class FlowData implements AIData {
      * Invoco il metodo API resetEmptyOnly() della interfaccia AIService <br>
      */
     protected Consumer<Object> bootReset = canonicalEntity -> {
-        final AIResult result;
+        AIResult result = null;
         final String canonicalEntityName = (String) canonicalEntity;
         final String canonicaName = canonicalEntityName.endsWith(SUFFIX_ENTITY) ? text.levaCoda(canonicalEntityName, SUFFIX_ENTITY) : canonicalEntityName;
         final String classeFinale = file.estraeClasseFinale(canonicaName);
@@ -133,8 +169,7 @@ public class FlowData implements AIData {
         Class entityClazz = null;
         int numRec;
         String type;
-//        String collectionName;
-//        Query query = new Query();
+        String metodo = VUOTA;
 
         try {
             entityClazz = Class.forName(canonicalEntityName);
@@ -154,32 +189,53 @@ public class FlowData implements AIData {
             logger.log(AETypeLog.checkData, message);
             return;
         }
-
-         //--Controlla che esista il metodo reset() nella sottoclasse specifica xxxService <br>
-         //--Altrimenti i dati non possono essere ri-creati <br>
-        try {
-            if (entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) == null) {
-                return;
+        if (annotation.usaReset(entityClazz)) {
+            metodo = "reset";
+            if (mongo.isResetVuoto(entityClazz)) {
+                try {
+                    entityService.getClass().getDeclaredMethod("reset");
+                    result = entityService.reset();
+                } catch (Exception unErrore) {
+                    try {
+                        entityService.getClass().getDeclaredMethod("download");
+                        result = entityService.download() ? AResult.valido() : AResult.errato();
+                    } catch (Exception unErrore2) {
+                        return;
+                    }
+                }
             }
-        } catch (Exception unErrore) {
-        }
-
-        if (mongo.isResetVuoto(entityClazz)) {
-            result = entityService.reset();
+            else {
+                result = AResult.errato(mongo.countReset(entityClazz));
+            }
         }
         else {
-            result = AResult.errato( mongo.countReset(entityClazz));
+            metodo = "download";
+            if (mongo.isEmpty(entityClazz)) {
+                try {
+                    entityService.getClass().getDeclaredMethod("reset");
+                    result = entityService.reset();
+                } catch (Exception unErrore) {
+                    try {
+                        entityService.getClass().getDeclaredMethod("download");
+                        result = entityService.download() ? AResult.valido() : AResult.errato();
+                    } catch (Exception unErrore2) {
+                        return;
+                    }
+                }
+            }
+            else {
+                result = AResult.errato(mongo.count(entityClazz));
+            }
         }
-
 
         if (result != null) {
             numRec = result.getValore();
             type = result.getValidationMessage();
             if (result.isValido()) {
-                message = String.format("Nel package %s sono stati inseriti %d elementi %s col metodo %s.reset() ", packageName, numRec, type, nameService);
+                message = String.format("Nel package %s sono stati inseriti %d elementi %s col metodo %s.%s() ", packageName, numRec, type, nameService, metodo);
             }
             else {
-                message = String.format("Nel package %s esistevano %d elementi creati col metodo %s.reset() ", packageName, numRec, nameService);
+                message = String.format("Nel package %s esistevano %d elementi creati col metodo %s.%s() ", packageName, numRec, nameService, metodo);
             }
             logger.log(AETypeLog.checkData, message);
         }
@@ -234,8 +290,8 @@ public class FlowData implements AIData {
     protected void resetData(final String moduleName) {
         List<String> allModulePackagesClasses;
         List<Object> allEntityClasses;
-        List<Object> allResetEntityClasses;
-        List<Object> allResetUsaBootEntityClasses;
+        List<Object> allUsaBootEntityClasses;
+        List<Object> allEntityClassesRicreabiliResetDownload;
         String message;
         Object[] matrice = null;
 
@@ -246,22 +302,42 @@ public class FlowData implements AIData {
         //--seleziona le classes che estendono AEntity
         logger.log(AETypeLog.checkData, VUOTA);
         allEntityClasses = Arrays.asList(allModulePackagesClasses.stream().filter(checkEntity).sorted().toArray());
-        message = String.format("In %s sono stati trovati %d packages con classi di tipo AEntity", moduleName, allEntityClasses.size() + 1);
+        if (array.isAllValid(allEntityClasses)) {
+            message = String.format("In %s sono stati trovati %d packages con classi di tipo AEntity", moduleName, allEntityClasses.size());
+        }
+        else {
+            message = String.format("In %s non è stato trovato nessun package con classi di tipo AEntity", moduleName);
+        }
         logger.log(AETypeLog.checkData, message);
 
-        //--seleziona le Entity classes che estendono AREntity
-        allResetEntityClasses = Arrays.asList(allEntityClasses.stream().filter(checkResetEntity).sorted().toArray());
-        message = String.format("In %s sono stati trovati %d packages con classi di tipo AREntity da controllare", moduleName, allResetEntityClasses.size() + 1);
+        //        //--seleziona le Entity classes che estendono AREntity
+        //        allResetEntityClasses = Arrays.asList(allEntityClasses.stream().filter(checkResetEntity).sorted().toArray());
+        //        message = String.format("In %s sono stati trovati %d packages con classi di tipo AREntity da controllare", moduleName, allResetEntityClasses.size() + 1);
+        //        logger.log(AETypeLog.checkData, message);
+
+        //--seleziona le Entity classes che hanno @AIEntity usaBoot=true
+        allUsaBootEntityClasses = Arrays.asList(allEntityClasses.stream().filter(checkUsaBoot).sorted().toArray());
+        if (array.isAllValid(allUsaBootEntityClasses)) {
+            message = String.format("In %s sono stati trovati %d packages con classi di tipo AEntity che hanno usaBoot=true", moduleName, allUsaBootEntityClasses.size());
+        }
+        else {
+            message = String.format("In %s non è stato trovato nessun package con classi di tipo AEntity che hanno usaBoot=true", moduleName);
+        }
         logger.log(AETypeLog.checkData, message);
 
-        //--seleziona le REntity classes che hanno @AIEntity usaBoot=true
-        allResetUsaBootEntityClasses = Arrays.asList(allResetEntityClasses.stream().filter(checkUsaBoot).sorted().toArray());
-        message = String.format("In %s sono stati trovati %d packages con classi di tipo AREntity che hanno usaBoot=true", moduleName, allResetUsaBootEntityClasses.size() + 1);
+        //--seleziona le xxxService classes che hanno il metodo reset() oppure download()
+        allEntityClassesRicreabiliResetDownload = Arrays.asList(allUsaBootEntityClasses.stream().filter(esisteMetodoService).sorted().toArray());
+        if (array.isAllValid(allEntityClassesRicreabiliResetDownload)) {
+            message = String.format("In %s sono stati trovati %d packages con classi di tipo xxxService che hanno reset() oppure download()", moduleName, allEntityClassesRicreabiliResetDownload.size());
+        }
+        else {
+            message = String.format("In %s non è stato trovato nessun package con classi di tipo xxxService che hanno reset() oppure download()", moduleName);
+        }
         logger.log(AETypeLog.checkData, message);
 
-        //--elabora le entity classes che estendono AREntity
+        //--elabora le entity classes che hanno il metodo reset() oppure download() e quindi sono ricreabili
         //--eseguendo xxxService.bootReset (forEach=elaborazione)
-        allResetUsaBootEntityClasses.stream().forEach(bootReset);
+        allEntityClassesRicreabiliResetDownload.stream().forEach(bootReset);
         message = String.format("Controllati i dati iniziali di %s", moduleName);
         logger.log(AETypeLog.checkData, message);
     }
