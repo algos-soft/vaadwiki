@@ -106,8 +106,8 @@ public class AColumnService extends AAbstractService {
                         return new Label(testo);
                     }));//end of lambda expressions and anonymous inner class
                     break;
-                case integer:
                 case lungo:
+                case integer:
                     colonna = grid.addColumn(fieldName);
                     sortable = true;
                     break;

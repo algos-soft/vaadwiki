@@ -201,12 +201,12 @@ public class BioLogicForm extends WikiLogicForm {
      * Scarica una singola biografia <br>
      */
     private void downloadBio() {
-        String allText;
+        String tmpl;
 
         String valueWikiTitle = getWikiTitle();
-        if (text.isValid(getWikiTitle())) {
-            allText = wikiApi.legge(valueWikiTitle);
-            System.out.println(allText);
+        if (text.isValid(valueWikiTitle)) {
+            tmpl = wikiBot.leggeTmpl(valueWikiTitle);
+            System.out.println(tmpl);
         }
     }
 

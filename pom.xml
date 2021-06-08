@@ -30,7 +30,7 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <!-- Va tenuta aggiornata la versione di VAADIN -->
-        <vaadin.version>14.6.1</vaadin.version>
+        <vaadin.version>14.6.2</vaadin.version>
     </properties>
 
 
