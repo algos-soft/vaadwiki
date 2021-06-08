@@ -54,7 +54,7 @@ import javax.validation.constraints.*;
 @AIEntity(recordName = "Bio", keyPropertyName = "wikiTitle", usaCompany = false)
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "wikiTitle")
 @AIList(fields = "pageId,wikiTitle,nome,cognome", usaRowIndex = true)
-@AIForm(fields = "pageId,wikiTitle,tmpBioServer,nome,cognome", operationForm = AEOperation.edit, usaSpostamentoTraSchede = true)
+@AIForm(fields = "pageId,wikiTitle,tmpBioServer,nome,cognome", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 
 

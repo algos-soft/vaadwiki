@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.crono.anno;
 import com.google.gson.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
@@ -274,5 +275,6 @@ public class AnnoService extends AService {
 
         return AResult.valido(AETypeReset.hardCoded.get(), numRec);
     }
+
 
 }// end of Singleton class

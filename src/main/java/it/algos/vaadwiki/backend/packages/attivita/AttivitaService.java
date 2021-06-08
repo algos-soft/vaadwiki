@@ -12,7 +12,6 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
-import java.time.*;
 import java.util.*;
 
 /**
@@ -91,8 +90,13 @@ public class AttivitaService extends WikiService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public Attivita creaAggiunta(final String singolare, final String plurale) {
-        return (Attivita) mongo.insert(newEntity(singolare, plurale, true));
+    public Attivita creaAggiuntaIfNotExist(final String singolare, final String plurale) {
+        if (mongo.isExist(entityClazz, text.levaSpazi(singolare))) {
+            return null;
+        }
+        else {
+            return (Attivita) mongo.insert(newEntity(singolare, plurale, true));
+        }
     }
 
     /**
@@ -182,9 +186,6 @@ public class AttivitaService extends WikiService {
         status = aggiunge();
 
         super.fixDataDownload();
-        message = "Ultimo download attività:" + SPAZIO + date.getDataOrarioCompleta(LocalDateTime.now());
-        logger.log(AETypeLog.download, message);
-
         return status;
     }
 
@@ -218,7 +219,7 @@ public class AttivitaService extends WikiService {
                 }
 
                 if (entity != null) {
-                    creaAggiunta(genereSingolare, entity.plurale);
+                    creaAggiuntaIfNotExist(genereSingolare, entity.plurale);
                 }
             }
         }

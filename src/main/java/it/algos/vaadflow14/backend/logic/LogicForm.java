@@ -112,7 +112,7 @@ public abstract class LogicForm extends Logic {
         super.usaBottoneResetForm = false;
         super.usaBottoneBack = true;
         super.usaBottoneAnnulla = false;
-        super.usaBottoneCancella = usaNew;
+        super.usaBottoneCancella = usaNew && operationForm != AEOperation.addNew;
         super.usaBottoneConferma = false;
         super.usaBottoneRegistra = usaNew || annotation.usaReset(entityClazz) && isResetMethod;
 
@@ -196,6 +196,7 @@ public abstract class LogicForm extends Logic {
         String aREntity = html.bold("AREntity");
         String service = entityService.getClass().getSimpleName();
         String methodReset = html.bold("reset()");
+        String edit = html.bold("edit");
 
         if (entityBean != null) {
             addSpanVerde(String.format("%s %s %s.%s", TAG_SCHEDA, SEP, entityClazz.getSimpleName(), entityBean.toString()));
@@ -204,13 +205,13 @@ public abstract class LogicForm extends Logic {
             addSpanVerde(String.format("%s %s %s", TAG_SCHEDA, SEP, entityClazz.getSimpleName()));
         }
 
-        this.fixSpanForm();
+        this.fixAlertForm();
 
         String preferenza = html.bold("Preferenza");
         addSpanRosso(String.format("La visualizzazione di questi avvisi rossi si regola in %s:usaSpanHeaderRossi", preferenza));
         addSpanRosso(String.format("Bottone %s sempre presente per tornare alla lista", back));
         if (annotation.usaNew(entityClazz)) {
-            addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", delete, entity, usaNew));
+            addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true) e AEOperation=%s", delete, entity, usaNew, edit));
             addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", save, entity, usaNew));
         }
         if (annotation.usaReset(entityClazz)) {
@@ -227,9 +228,9 @@ public abstract class LogicForm extends Logic {
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected void fixSpanForm() {
+    protected void fixAlertForm() {
     }
 
     protected void addSpanBlu(final String message) {
@@ -250,16 +251,32 @@ public abstract class LogicForm extends Logic {
         }
     }
 
-
     /**
      * Costruisce una lista di bottoni (enumeration) al Top della view <br>
-     * Costruisce i bottoni come dai Flag regolati di default o nella sottoclasse <br>
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
+     * Costruisce i bottoni come dai flag regolati di default o nella sottoclasse <br>
      * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected List<AIButton> getListaAEBottoniTop() {
-        return new ArrayList<>();
+    protected void creaAEBottoniTop() {
+        super.creaAEBottoniTop();
+
+        if (usaBottoneResetForm) {
+            putMappa(AEButton.resetForm);
+        }
+        if (usaBottoneExport) {
+            putMappa(AEButton.export);
+        }
+        if (usaBottonePaginaWiki) {
+            putMappa(AEButton.wiki);
+        }
+        if (usaBottoneDownload) {
+            putMappa(AEButton.download);
+        }
+        if (usaBottoneUpload) {
+            putMappa(AEButton.upload);
+        }
     }
 
     /**
@@ -330,11 +347,6 @@ public abstract class LogicForm extends Logic {
      */
     @Override
     protected void creaAEBottoniBottom() {
-        String message = VUOTA;
-
-        if (usaBottoneResetForm) {
-            mappaComponentiBottom.put(AEButton.resetForm.testo, AEButton.resetForm);
-        }
         if (usaBottoneBack) {
             mappaComponentiBottom.put(AEButton.back.testo, AEButton.back);
         }
@@ -394,7 +406,8 @@ public abstract class LogicForm extends Logic {
 
         switch (azione) {
             case resetForm:
-                //                this.reloadForm(entityBean);
+                entityService.resetForm(entityBean);
+                executeRoute(entityBean.id);
                 break;
             case export:
                 //                export();

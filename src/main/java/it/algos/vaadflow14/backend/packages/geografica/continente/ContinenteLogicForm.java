@@ -1,22 +1,14 @@
 package it.algos.vaadflow14.backend.packages.geografica.continente;
 
 import com.vaadin.flow.router.*;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.enumeration.AEContinente;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
-import it.algos.vaadflow14.ui.fields.AField;
-import it.algos.vaadflow14.ui.fields.AGridField;
-import it.algos.vaadflow14.ui.form.AForm;
-import it.algos.vaadflow14.ui.form.WrapForm;
+import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-
-import java.util.List;
 
 /**
  * Project vaadflow14
@@ -47,13 +39,13 @@ public class ContinenteLogicForm extends LogicForm {
         super.entityService = entityService;
     }// end of Vaadin/@Route constructor
 
+
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    @Override
-    protected void fixSpanForm() {
-        super.fixSpanForm();
+    protected void fixAlertForm() {
+        super.fixAlertForm();
 
         addSpanBlu("Nella sub-lista tutti gli stati di questo continente");
     }

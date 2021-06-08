@@ -138,7 +138,6 @@ public class PrenomeService extends WikiService {
      */
     public boolean downloadModulo(String wikiTitle) {
         boolean status = false;
-        String message;
         String tag = A_CAPO + "\\*";
         String[] righe = null;
         String nome;
@@ -167,8 +166,6 @@ public class PrenomeService extends WikiService {
         }
 
         super.fixDataDownload();
-        message = "Ultimo download nomi doppi:" + SPAZIO + date.getDataOrarioCompleta(LocalDateTime.now());
-        logger.log(AETypeLog.download, message);
         return status;
     }
 

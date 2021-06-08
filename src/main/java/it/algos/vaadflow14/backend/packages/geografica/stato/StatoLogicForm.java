@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.backend.packages.geografica.stato;
 
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.grid.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
@@ -9,8 +8,6 @@ import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
-import it.algos.vaadflow14.ui.fields.*;
-import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
@@ -65,22 +62,10 @@ public class StatoLogicForm extends LogicForm {
         super.fixPreferenze();
 
         super.wikiPageTitle = ((Stato) entityBean).stato;
+        super.usaBottoneResetForm = true;
+        super.usaBottonePaginaWiki = true;
     }
 
-
-    /**
-     * Costruisce una lista di bottoni (enumeration) <br>
-     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<AIButton> getListaAEBottoniTop() {
-        List<AIButton> listaBottoni = new ArrayList<>();
-
-        listaBottoni.add(AEButton.download);
-        listaBottoni.add(AEButton.wiki);
-
-        return listaBottoni;
-    }
 
     /**
      * Esegue un azione di download, specifica del programma/package in corso <br>

@@ -441,6 +441,8 @@ public abstract class LogicProperty extends VerticalLayout {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void regolazioniIniziali() {
+        //--costruisce una lista (vuota) di Component per i comandi sopra la lista
+        this.mappaComponentiTop = new LinkedHashMap<>();
     }
 
     /**
@@ -569,6 +571,7 @@ public abstract class LogicProperty extends VerticalLayout {
     protected void creaAEBottoniTop() {
     }
 
+
     /**
      * Costruisce una mappa di componenti di comando/selezione/filtro al Top della view <br>
      * <p>
@@ -590,6 +593,14 @@ public abstract class LogicProperty extends VerticalLayout {
     protected void creaComandiTop() {
     }
 
+    /**
+     * Aggiunge una enumeration alla mappa dei componenti <br>
+     *
+     * @param aiButton enumeration da aggiungere alla mappa componenti
+     */
+    protected void putMappa(final AIButton aiButton) {
+        mappaComponentiTop.put(aiButton.getTesto(), aiButton);
+    }
 
     /**
      * Costruisce un wrap di informazioni per la ricerca in ViewList <br>

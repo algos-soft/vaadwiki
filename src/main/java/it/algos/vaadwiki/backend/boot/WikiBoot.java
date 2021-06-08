@@ -126,12 +126,12 @@ public class WikiBoot extends FlowBoot {
     @Override
     protected void fixMenuRoutes() {
         super.fixMenuRoutes();
-		FlowVar.menuRouteList.add(Bio.class);
 		FlowVar.menuRouteList.add(Prenome.class);
         FlowVar.menuRouteList.add(Genere.class);
+        FlowVar.menuRouteList.add(Professione.class);
         FlowVar.menuRouteList.add(Attivita.class);
         FlowVar.menuRouteList.add(Nazionalita.class);
-        FlowVar.menuRouteList.add(Professione.class);
+        FlowVar.menuRouteList.add(Bio.class);
     }
 
     /**

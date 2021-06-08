@@ -786,8 +786,7 @@ public class AMongoService<capture> extends AAbstractService {
      * @return lista di entityBeans
      */
     @Deprecated
-    public List<AEntity> findSet(Class<? extends AEntity> entityClazz,
-                                 int offset, int limit, BasicDBObject query, BasicDBObject sort) {
+    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject query, BasicDBObject sort) {
         List<AEntity> items = null;
         Gson gSon = new Gson();
         String jsonString;
@@ -1026,6 +1025,18 @@ public class AMongoService<capture> extends AAbstractService {
      */
     public AEntity crea(final Class entityClazz, final String valueID) {
         return agSonService.crea(entityClazz, valueID);
+    }
+
+    /**
+     * Controlla l'esistenza di singola entity di una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return if the entity exist
+     */
+    public boolean isExist(Class<? extends AEntity> entityClazz, String keyId) {
+        return findById(entityClazz, keyId) != null;
     }
 
     /**

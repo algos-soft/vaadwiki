@@ -6,10 +6,12 @@ import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.data.renderer.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
@@ -62,6 +64,13 @@ public class StatoService extends AService {
      */
     private ContinenteService continenteService;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
+     * al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    private RegioneService regioneService;
+
 
     /**
      * Costruttore @Autowired. <br>
@@ -71,9 +80,10 @@ public class StatoService extends AService {
      * Se ci sono DUE costruttori, di cui uno senza parametri, inietta quello senza parametri <br>
      * Regola la entityClazz (final) associata a questo service <br>
      */
-    public StatoService(final ContinenteService continenteService) {
+    public StatoService(final ContinenteService continenteService, final RegioneService regioneService) {
         super(Stato.class);
         this.continenteService = continenteService;
+        this.regioneService = regioneService;
     }
 
 
@@ -351,6 +361,26 @@ public class StatoService extends AService {
             return wrapper;
         }));
         return combo;
+    }
+
+    /**
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato dal bottone Reset di alcuni form <br>
+     * <p>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, SENZA invocare prima il metodo della superclasse <br>
+     *
+     * @param entityBean di cui ricreare le condizioni
+     *
+     * @return wrapper col risultato ed eventuale messaggio di errore
+     */
+    @Override
+    public AIResult resetForm(AEntity entityBean) {
+        return regioneService.creaRegioniDiUnoStato((Stato) entityBean);
     }
 
 }

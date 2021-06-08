@@ -169,11 +169,30 @@ public interface AIService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    AIResult reset() ;
+    AIResult reset();
 
-        /**
-         * The Entity Class  (obbligatoria sempre e final)
-         */
+
+    /**
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato dal bottone Reset di alcuni form <br>
+     * <p>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, SENZA invocare prima il metodo della superclasse <br>
+     *
+     * @param entityBean di cui ricreare le condizioni
+     *
+     * @return wrapper col risultato ed eventuale messaggio di errore
+     */
+    AIResult resetForm(final AEntity entityBean);
+
+
+    /**
+     * The Entity Class  (obbligatoria sempre e final)
+     */
     Class<? extends AEntity> getEntityClazz();
 
 

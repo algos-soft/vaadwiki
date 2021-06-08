@@ -355,6 +355,7 @@ public abstract class AService extends AAbstractService implements AIService {
      * ....... true se la collection è stata cancellata (tutta o filtrata)
      */
     @Override
+    @Deprecated
     public boolean delete() {
         if (FlowVar.usaCompany) {
             return false;
@@ -372,15 +373,9 @@ public abstract class AService extends AAbstractService implements AIService {
      */
     @Override
     public boolean deleteAll() {
-        String message;
-        String collectionName;
 
         if (mongo.isExists(annotation.getCollectionName(entityClazz))) {
             mongo.mongoOp.remove(new Query(), entityClazz);
-
-            collectionName = annotation.getCollectionName(entityClazz);
-            message = "La collezione " + collectionName + " è stata interamente cancellata";
-            logger.log(AETypeLog.deleteAll, message);
             return true;
         }
         else {
@@ -388,27 +383,25 @@ public abstract class AService extends AAbstractService implements AIService {
         }
     }
 
-
-
-//    @Deprecated
-//    public AIResult fixPostResetOnly(final AETypeReset type, final int numRec) {
-//        String collectionName;
-//        String message;
-//
-//        if (entityClazz == null) {
-//            return AResult.errato("Manca la entityClazz nella businessService specifica");
-//        }
-//
-//        collectionName = annotation.getCollectionName(entityClazz);
-//        if (mongo.isValid(entityClazz)) {
-//            message = String.format("La collezione %s era vuota e sono stati inseriti %d elementi %s", collectionName, numRec, type.get());
-//            return AResult.valido(message);
-//        }
-//        else {
-//            message = String.format("Non è stato possibile creare la collezione %s", collectionName);
-//            return AResult.errato(message);
-//        }
-//    }
+    //    @Deprecated
+    //    public AIResult fixPostResetOnly(final AETypeReset type, final int numRec) {
+    //        String collectionName;
+    //        String message;
+    //
+    //        if (entityClazz == null) {
+    //            return AResult.errato("Manca la entityClazz nella businessService specifica");
+    //        }
+    //
+    //        collectionName = annotation.getCollectionName(entityClazz);
+    //        if (mongo.isValid(entityClazz)) {
+    //            message = String.format("La collezione %s era vuota e sono stati inseriti %d elementi %s", collectionName, numRec, type.get());
+    //            return AResult.valido(message);
+    //        }
+    //        else {
+    //            message = String.format("Non è stato possibile creare la collezione %s", collectionName);
+    //            return AResult.errato(message);
+    //        }
+    //    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -437,6 +430,28 @@ public abstract class AService extends AAbstractService implements AIService {
         mongo.delete(entityClazz, query);
 
         return AResult.valido();
+    }
+
+    /**
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato dal bottone Reset di alcuni form <br>
+     * <p>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, SENZA invocare prima il metodo della superclasse <br>
+     *
+     * @param entityBean di cui ricreare le condizioni
+     *
+     * @return wrapper col risultato ed eventuale messaggio di errore
+     */
+    @Override
+    public AIResult resetForm(AEntity entityBean) {
+        String message = String.format("Manca il metodo resetForm nella classe specifica %s", this.getClass().getSimpleName());
+        logger.log(AETypeLog.reset, message);
+        return AResult.errato(message);
     }
 
     /**

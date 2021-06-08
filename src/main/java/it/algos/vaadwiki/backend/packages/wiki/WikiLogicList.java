@@ -333,29 +333,28 @@ public abstract class WikiLogicList extends LogicList {
         boolean status = super.performAction(iAzione);
         AEWikiAction azione = iAzione instanceof AEWikiAction ? (AEWikiAction) iAzione : null;
 
+        if (status) {
+            return true;
+        }
+
         if (azione == null) {
             return false;
         }
 
-        if (status) {
-            return true;
-        }
-        else {
-            status = true;
-            switch (azione) {
-                case modulo:
-                    openWikiPage(wikiModuloTitle);
-                    break;
-                case statistiche:
-                    openWikiPage(wikiStatisticheTitle);
-                    break;
-                case statisticheDue:
-                    openWikiPage(wikiStatisticheDueTitle);
-                    break;
-                default:
-                    status = false;
-                    break;
-            }
+        status = true;
+        switch (azione) {
+            case modulo:
+                openWikiPage(wikiModuloTitle);
+                break;
+            case statistiche:
+                openWikiPage(wikiStatisticheTitle);
+                break;
+            case statisticheDue:
+                openWikiPage(wikiStatisticheDueTitle);
+                break;
+            default:
+                status = false;
+                break;
         }
 
         return status;

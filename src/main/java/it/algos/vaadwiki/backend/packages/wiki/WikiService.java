@@ -80,9 +80,12 @@ public abstract class WikiService extends AService {
 
 
     protected void fixDataDownload() {
+        String message;
 
         if (prefDownload != null) {
             prefDownload.setValue(LocalDateTime.now());
+            message = prefDownload.getDescrizione() + DUE_PUNTI_SPAZIO + date.getDataOrarioCompleta(LocalDateTime.now());
+            logger.log(AETypeLog.download, message);
         }
 
     }

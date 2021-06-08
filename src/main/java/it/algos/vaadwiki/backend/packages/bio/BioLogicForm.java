@@ -1,6 +1,9 @@
 package it.algos.vaadwiki.backend.packages.bio;
 
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.tabs.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -9,6 +12,7 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.fields.*;
+import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
@@ -40,6 +44,7 @@ import java.util.*;
 @AIScript(sovraScrivibile = false, type = AETypeFile.form, doc = AEWizDoc.inizioRevisione)
 public class BioLogicForm extends WikiLogicForm {
 
+    protected AForm secondForm;
 
     /**
      * Costruttore con parametro <br>
@@ -70,8 +75,27 @@ public class BioLogicForm extends WikiLogicForm {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
+        super.usaBottoneDownload = true;
     }
 
+    /**
+     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixAlertForm() {
+        super.fixAlertForm();
+        String download = "download";
+        String down = html.bold(text.primaMaiuscola(download));
+        String esatto = html.bold("esatto");
+        String massiccia = html.bold("massiccia");
+        String singola = html.bold("singola");
+
+        addSpanBlu(String.format("%s di una singola scheda indicando l'%s wikiTitle", down, esatto));
+        addSpanVerde(String.format("Normalmente il %s avviene in automatico in maniera %s", download, massiccia));
+        addSpanVerde(String.format("Qui si può cercare la %s voce eventualmente sfuggita al ciclo di %s", singola, download));
+    }
 
     /**
      * Costruisce una lista di bottoni (enumeration) al Top della view <br>
@@ -81,6 +105,45 @@ public class BioLogicForm extends WikiLogicForm {
      */
     protected List<AIButton> getListaAEBottoniTop() {
         return Collections.singletonList(AEButton.download);
+    }
+
+
+    /**
+     * Costruisce il corpo principale (obbligatorio) della Grid <br>
+     */
+    @Override
+    protected void fixBodyLayout() {
+        WrapForm wrapSimple = new WrapForm(entityBean, operationForm, Arrays.asList("wikiTitle", "nome", "cognome", "tmpBioServer"));
+        currentForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSimple);
+
+        WrapForm wrapSecond = new WrapForm(entityBean, operationForm, Collections.singletonList("tmpBioServer"));
+        secondForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSecond);
+
+        Tab tab1 = new Tab("Simple");
+        Div page1 = new Div();
+        page1.add(currentForm);
+        page1.setVisible(false);
+
+        Tab tab2 = new Tab("Page");
+        Div page2 = new Div();
+        page2.add(secondForm);
+        page2.setVisible(false);
+
+        Map<Tab, Component> tabsToPages = new HashMap<>();
+        tabsToPages.put(tab1, page1);
+        tabsToPages.put(tab2, page2);
+        Tabs tabs = new Tabs(tab1, tab2);
+        tabs.setFlexGrowForEnclosedTabs(1);
+        Div pages = new Div(page1, page2);
+
+        tabs.addSelectedChangeListener(event -> {
+            tabsToPages.values().forEach(page -> page.setVisible(false));
+            Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
+            selectedPage.setVisible(true);
+        });
+
+        bodyPlaceHolder.add(tabs, pages);
+        page1.setVisible(true);
     }
 
     /**
@@ -142,8 +205,8 @@ public class BioLogicForm extends WikiLogicForm {
 
         String valueWikiTitle = getWikiTitle();
         if (text.isValid(getWikiTitle())) {
-//            allText = wikiBot.legge(valueWikiTitle);
-//            System.out.println(allText);
+            allText = wikiApi.legge(valueWikiTitle);
+            System.out.println(allText);
         }
     }
 

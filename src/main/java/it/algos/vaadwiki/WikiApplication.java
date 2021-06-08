@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import it.algos.vaadflow14.backend.annotation.AIScript;
+import org.springframework.scheduling.annotation.*;
 import org.vaadin.artur.helpers.*;
 
 /**
@@ -42,6 +43,7 @@ import org.vaadin.artur.helpers.*;
  * Se l'applicazione NON usa la security, aggiungere exclude = {SecurityAutoConfiguration.class} a @SpringBootApplication <br>
  */
 @SpringBootApplication(scanBasePackages = {"it.algos"}, exclude = {SecurityAutoConfiguration.class})
+@EnableScheduling
 @EnableVaadin({"it.algos"})
 @EntityScan({"it.algos"})
 @AIScript(sovraScrivibile = false)

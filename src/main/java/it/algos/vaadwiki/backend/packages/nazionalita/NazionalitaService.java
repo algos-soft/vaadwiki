@@ -155,8 +155,6 @@ public class NazionalitaService extends WikiService {
         }
 
         super.fixDataDownload();
-        message = "Ultimo download nazionalità:" + SPAZIO + date.getDataOrarioCompleta(LocalDateTime.now());
-        logger.log(AETypeLog.download, message);
         return status;
     }
 
