@@ -46,6 +46,8 @@ public class BioLogicForm extends WikiLogicForm {
 
     protected AForm secondForm;
 
+    private BioService bioService;
+
     /**
      * Costruttore con parametro <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
@@ -58,6 +60,7 @@ public class BioLogicForm extends WikiLogicForm {
      */
     public BioLogicForm(@Autowired @Qualifier("bioService") final AIService bioService) {
         super(bioService, Bio.class);
+        this.bioService = (BioService) bioService;
     }// end of Vaadin/@Route constructor
 
 
@@ -113,10 +116,10 @@ public class BioLogicForm extends WikiLogicForm {
      */
     @Override
     protected void fixBodyLayout() {
-        WrapForm wrapSimple = new WrapForm(entityBean, operationForm, Arrays.asList("wikiTitle", "nome", "cognome", "tmpBioServer"));
+        WrapForm wrapSimple = new WrapForm(entityBean, operationForm, Arrays.asList("wikiTitle", "nome", "cognome", "tmplBioServer"));
         currentForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSimple);
 
-        WrapForm wrapSecond = new WrapForm(entityBean, operationForm, Collections.singletonList("tmpBioServer"));
+        WrapForm wrapSecond = new WrapForm(entityBean, operationForm, Collections.singletonList("tmplBioServer"));
         secondForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSecond);
 
         Tab tab1 = new Tab("Simple");
@@ -201,12 +204,22 @@ public class BioLogicForm extends WikiLogicForm {
      * Scarica una singola biografia <br>
      */
     private void downloadBio() {
-        String tmpl;
+        Bio bio;
+        long pageId = 67;
+        String wikiTitle = "pippoz";
+        String nome = "mario";
+        String cognome = "Rossi";
+        String tmplBioServer;
 
         String valueWikiTitle = getWikiTitle();
         if (text.isValid(valueWikiTitle)) {
-            tmpl = wikiBot.leggeTmpl(valueWikiTitle);
-            System.out.println(tmpl);
+            tmplBioServer = wikiBot.leggeTmpl(valueWikiTitle);
+            System.out.println(tmplBioServer);
+            if (text.isValid(tmplBioServer)) {
+                entityBean =  bioService.newEntity(pageId, wikiTitle, nome, cognome, tmplBioServer);
+                currentForm.getBinder().setBean(entityBean);
+//                bioService.save(bio);
+            }
         }
     }
 

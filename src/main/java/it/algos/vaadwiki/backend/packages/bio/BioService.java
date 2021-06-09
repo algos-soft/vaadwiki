@@ -1,16 +1,16 @@
 package it.algos.vaadwiki.backend.packages.bio;
 
-import it.algos.vaadflow14.backend.annotation.AIScript;
+import it.algos.vaadflow14.backend.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.wrapper.AResult;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.Service;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
 
 /**
  * Project: vaadwiki <br>
@@ -55,21 +55,21 @@ public class BioService extends AService {
         super(Bio.class);
     }
 
-    /**
-     * Crea e registra una entityBean solo se non esisteva <br>
-     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
-     * solo col valore di un parametro da usare anche come keyID <br>
-     * Controlla che non esista già una entityBean con lo stesso keyID <br>
-     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
-     *
-     * @param keyPropertyValue obbligatorio
-     *
-     * @return la nuova entityBean appena creata e salvata
-     */
-    @Override
-    public Bio creaIfNotExist(final String keyPropertyValue) {
-        return (Bio) checkAndSave(newEntity(keyPropertyValue));
-    }
+//    /**
+//     * Crea e registra una entityBean solo se non esisteva <br>
+//     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
+//     * solo col valore di un parametro da usare anche come keyID <br>
+//     * Controlla che non esista già una entityBean con lo stesso keyID <br>
+//     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
+//     *
+//     * @param keyPropertyValue obbligatorio
+//     *
+//     * @return la nuova entityBean appena creata e salvata
+//     */
+//    @Override
+//    public Bio creaIfNotExist(final String keyPropertyValue) {
+//        return (Bio) checkAndSave(newEntity(keyPropertyValue));
+//    }
 
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
@@ -81,36 +81,42 @@ public class BioService extends AService {
      */
     @Override
     public Bio newEntity() {
-        return newEntity(VUOTA, VUOTA);
+        return newEntity(0, VUOTA, VUOTA, VUOTA, VUOTA);
     }
+
+    //    /**
+    //     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
+    //     * Usa il @Builder di Lombok <br>
+    //     * Eventuali regolazioni iniziali delle property <br>
+    //     *
+    //     * @param wikiTitle di riferimento (obbligatorio, unico)
+    //     *
+    //     * @return la nuova entityBean appena creata (non salvata)
+    //     */
+    //    private Bio newEntity(final String wikiTitle) {
+    //        return newEntity(wikiTitle, VUOTA);
+    //    }
 
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param wikiTitle di riferimento (obbligatorio, unico)
+     * @param pageId       di riferimento (obbligatorio, unico)
+     * @param wikiTitle    di riferimento (obbligatorio, unico)
+     * @param nome         (facoltativo, non unico)
+     * @param cognome      (facoltativo, non unico)
+     * @param tmplBioServer (facoltativo, unico)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    private Bio newEntity(final String wikiTitle) {
-        return newEntity(wikiTitle, VUOTA);
-    }
-
-    /**
-     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @param wikiTitle di riferimento (obbligatorio, unico)
-	 * @param nome (facoltativo, non unico)
-     *
-     * @return la nuova entityBean appena creata (non salvata)
-     */
-    public Bio newEntity(final String wikiTitle, final String nome) {
+    public Bio newEntity(final long pageId, final String wikiTitle, final String nome, final String cognome, final String tmplBioServer) {
         Bio newEntityBean = Bio.builderBio()
+                .pageId(pageId)
                 .wikiTitle(text.isValid(wikiTitle) ? wikiTitle : null)
-				.nome(text.isValid(nome) ? nome : null)
+                .nome(text.isValid(nome) ? nome : null)
+                .cognome(text.isValid(cognome) ? cognome : null)
+                .tmplBioServer(text.isValid(tmplBioServer) ? tmplBioServer : null)
                 .build();
 
         return (Bio) fixKey(newEntityBean);
@@ -174,7 +180,7 @@ public class BioService extends AService {
 
         //--da sostituire
         String message;
-        message = String.format("Nel package %s la classe %s non ha ancora sviluppato il metodo resetEmptyOnly() ", "bio", "BioService");
+        message = String.format("Nel package %s la classe %s non ha ancora sviluppato il metodo reset() ", "bio", "BioService");
         return AResult.errato(message);
 
         // return super.fixPostReset(AETypeReset.enumeration, numRec);

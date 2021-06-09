@@ -36,4 +36,20 @@ public abstract class WikiCost {
 
     public static final LocalDateTime DATA_TIME = LocalDateTime.of(2021, 4, 15, 12, 30);
 
+    public static final String KEY_MAP_GRAFFE_ESISTONO = "keyMapGraffeEsistono";
+
+    public static final String KEY_MAP_GRAFFE_TYPE = "keyMapGraffeType";
+
+    public static final String KEY_MAP_GRAFFE_NUMERO = "keyMapGraffeNumero";
+
+    public static final String KEY_MAP_GRAFFE_VALORE_CONTENUTO = "keyMapGraffeValoreContenuto";
+
+    public static final String KEY_MAP_GRAFFE_TESTO_PRECEDENTE = "keyMapGraffeTestoPrecedente";
+
+    public static final String KEY_MAP_GRAFFE_NOME_PARAMETRO = "keyMapGraffeNomeParametro";
+
+    public static final String KEY_MAP_GRAFFE_VALORE_PARAMETRO = "keyMapGraffeValoreParametro";
+
+    public static final String KEY_MAP_GRAFFE_LISTA_WRAPPER = "keyMapGraffeListaWrapper";
+
 }// end of static class

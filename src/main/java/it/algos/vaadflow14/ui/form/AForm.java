@@ -649,4 +649,8 @@ public abstract class AForm extends VerticalLayout {
         return fieldsMap != null ? fieldsMap.get(name) : null;
     }
 
+    public Binder getBinder() {
+        return binder;
+    }
+
 }

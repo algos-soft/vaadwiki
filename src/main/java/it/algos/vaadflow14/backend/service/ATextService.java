@@ -1223,5 +1223,69 @@ public class ATextService extends AAbstractService {
         return testoOut.trim();
     }
 
+    /**
+     * Numero di occorrenze di un tag in un testo. <br>
+     * Il tag non viene trimmato ed è sensibile agli spazi prima e dopo <br>
+     * NON si usano le regex <br>
+     *
+     * @param testoDaSpazzolare di riferimento
+     * @param tag               da cercare
+     *
+     * @return numero di occorrenze - zero se non ce ne sono
+     */
+    public int getNumTag(String testoDaSpazzolare, String tag) {
+        int numTag = 0;
+        int pos;
+
+        //--controllo di congruità
+        if (text.isValid(testoDaSpazzolare) && text.isValid(tag)) {
+            if (testoDaSpazzolare.contains(tag)) {
+                pos = testoDaSpazzolare.indexOf(tag);
+                while (pos != -1) {
+                    pos = testoDaSpazzolare.indexOf(tag, pos + tag.length());
+                    numTag++;
+                }
+            }
+        }
+
+        return numTag;
+    }
+
+
+    /**
+     * Controlla che le occorrenze dei due tag si pareggino all'interno del testo.
+     *
+     * @param testo  di riferimento
+     * @param tagIni di apertura
+     * @param tagEnd di chiusura
+     *
+     * @return vero se il numero di tagIni è uguale al numero di tagEnd
+     */
+    public  boolean isPariTag(String testo, String tagIni, String tagEnd) {
+        boolean pari = false;
+        int numIni;
+        int numEnd;
+
+        if (!testo.equals(VUOTA) && !tagIni.equals(VUOTA) && !tagEnd.equals(VUOTA)) {
+            numIni = getNumTag(testo, tagIni);
+            numEnd = getNumTag(testo, tagEnd);
+            pari = (numIni == numEnd);
+        }
+
+        return pari;
+    }
+
+
+    /**
+     * Controlla se nel testo ci sono occorrenze pari delle graffe.
+     * Le graffe devono anche essere nel giusto ordine
+     *
+     * @param testo in ingresso
+     *
+     * @return vero se le occorrenze di apertura e chiusura sono uguali
+     */
+    public  boolean isPariGraffe(String testo) {
+        return isPariTag(testo, DOPPIE_GRAFFE_INI, DOPPIE_GRAFFE_END);
+    }
 
 }
