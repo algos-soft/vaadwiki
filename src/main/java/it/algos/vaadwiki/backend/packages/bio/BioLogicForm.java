@@ -16,6 +16,7 @@ import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
+import it.algos.vaadwiki.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -48,6 +49,8 @@ public class BioLogicForm extends WikiLogicForm {
 
     private BioService bioService;
 
+    private BioUtility bioUtility;
+
     /**
      * Costruttore con parametro <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
@@ -58,9 +61,10 @@ public class BioLogicForm extends WikiLogicForm {
      *
      * @param bioService (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicForm
      */
-    public BioLogicForm(@Autowired @Qualifier("bioService") final AIService bioService) {
+    public BioLogicForm(@Autowired @Qualifier("bioService") final AIService bioService, final BioUtility bioUtility) {
         super(bioService, Bio.class);
         this.bioService = (BioService) bioService;
+        this.bioUtility = bioUtility;
     }// end of Vaadin/@Route constructor
 
 
@@ -116,7 +120,7 @@ public class BioLogicForm extends WikiLogicForm {
      */
     @Override
     protected void fixBodyLayout() {
-        WrapForm wrapSimple = new WrapForm(entityBean, operationForm, Arrays.asList("wikiTitle", "nome", "cognome", "tmplBioServer"));
+        WrapForm wrapSimple = new WrapForm(entityBean, operationForm, Arrays.asList("pageId", "wikiTitle", "nome", "cognome", "tmplBioServer"));
         currentForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSimple);
 
         WrapForm wrapSecond = new WrapForm(entityBean, operationForm, Collections.singletonList("tmplBioServer"));
@@ -204,22 +208,37 @@ public class BioLogicForm extends WikiLogicForm {
      * Scarica una singola biografia <br>
      */
     private void downloadBio() {
-        Bio bio;
-        long pageId = 67;
-        String wikiTitle = "pippoz";
-        String nome = "mario";
-        String cognome = "Rossi";
-        String tmplBioServer;
+        long pageId ;
+        String wikiTitle ;
+        String nome = VUOTA;
+        String cognome = VUOTA;
+        String contenutoPagina ;
+        String tmplBioServer ;
+        Map mappa;
 
-        String valueWikiTitle = getWikiTitle();
-        if (text.isValid(valueWikiTitle)) {
-            tmplBioServer = wikiBot.leggeTmpl(valueWikiTitle);
-            System.out.println(tmplBioServer);
+        wikiTitle = getWikiTitle();
+        if (text.isValid(wikiTitle)) {
+
+            mappa = wikiApi.getMappaParse(wikiTitle);
+            contenutoPagina = (String) mappa.get(KEY_MAPPA_TEXT);
+            tmplBioServer = wikiBot.estraeTmpl(contenutoPagina);
+
             if (text.isValid(tmplBioServer)) {
-                entityBean =  bioService.newEntity(pageId, wikiTitle, nome, cognome, tmplBioServer);
+                pageId = (Long) mappa.get(KEY_MAPPA_PAGEID);
+                mappa = bioUtility.estraeMappa(tmplBioServer);
+                nome = (String) mappa.get("Nome");
+                cognome = (String) mappa.get("Cognome");
+                printMappa(mappa);
+                entityBean = bioService.newEntity(pageId, wikiTitle, nome, cognome, tmplBioServer);
                 currentForm.getBinder().setBean(entityBean);
-//                bioService.save(bio);
+                //                bioService.save(bio);
             }
+        }
+    }
+
+    private void printMappa(Map mappa) {
+        for (Object key : mappa.keySet()) {
+            System.out.println(key + SEP + mappa.get(key));
         }
     }
 

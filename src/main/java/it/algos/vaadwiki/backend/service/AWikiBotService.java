@@ -37,6 +37,24 @@ public class AWikiBotService extends AAbstractService {
      * Recupera il tag finale di chiusura con o senza ritorno a capo precedente
      * Controlla che non esistano doppie graffe dispari all'interno del template
      *
+     * @param testoCompletoPagina in ingresso
+     *
+     * @return template completo di doppie graffe iniziali e finali
+     */
+    public String estraeTmpl(final String testoCompletoPagina) {
+        return wikiApi.estraeTmpl(testoCompletoPagina, "Bio");
+    }
+
+    /**
+     * Legge il testo del template Bio da una voce <br>
+     * Esamina solo il PRIMO template BIO che trova <br>
+     * Gli estremi sono COMPRESI <br>
+     * <p>
+     * Recupera il tag iniziale con o senza ''Template''
+     * Recupera il tag iniziale con o senza primo carattere maiuscolo
+     * Recupera il tag finale di chiusura con o senza ritorno a capo precedente
+     * Controlla che non esistano doppie graffe dispari all'interno del template
+     *
      * @param wikiTitle della pagina wiki
      *
      * @return template completo di doppie graffe iniziali e finali
@@ -44,7 +62,6 @@ public class AWikiBotService extends AAbstractService {
     public String leggeTmpl(final String wikiTitle) {
         return wikiApi.leggeTmpl(wikiTitle, "Bio");
     }
-
 
     /**
      * Legge una singola pagina da wiki <br>

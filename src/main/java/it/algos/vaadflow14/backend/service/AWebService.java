@@ -42,6 +42,7 @@ public class AWebService extends AAbstractService {
         URLConnection urlConn = null;
 
         if (domain != null && domain.length() > 0) {
+            domain = domain.replaceAll(SPAZIO, UNDERSCORE);
             urlConn = new URL(domain).openConnection();
             urlConn.setDoOutput(true);
             urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");

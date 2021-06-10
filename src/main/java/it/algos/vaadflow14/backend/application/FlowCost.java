@@ -140,6 +140,7 @@ public abstract class FlowCost {
     public static final String TAG_METHOD_RESET = "reset";
 
     public static final String TAG_METHOD_BOOT_RESET = "bootReset";
+
     public static final String TAG_SCHEDA = "SCHEDA";
 
     //--praticamente una data 'nulla'
@@ -206,6 +207,14 @@ public abstract class FlowCost {
     public static final String KEY_SESSION_LOGIN = "SESSION_LOGIN";
 
     public static final String KEY_SESSION_MOBILE = "sessionMobile";
+
+    public static final String KEY_MAPPA_PARSE = "parse";
+
+    public static final String KEY_MAPPA_PAGEID = "pageid";
+
+    public static final String KEY_MAPPA_TITLE = "title";
+
+    public static final String KEY_MAPPA_TEXT = "wikitext";
 
     /**
      * The constant PROPERTY_SERIAL.

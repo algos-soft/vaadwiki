@@ -125,6 +125,9 @@ public class AFieldService extends AAbstractService {
                 case integer:
                     field = appContext.getBean(AIntegerField.class);
                     break;
+                case lungo:
+                    field = appContext.getBean(ALongField.class);
+                    break;
                 case booleano:
                     typeBool = annotation.getTypeBoolField(reflectionJavaField);
                     if (typeBool == AETypeBoolField.checkBox) {
@@ -325,6 +328,8 @@ public class AFieldService extends AAbstractService {
                     if (uniqueValidator != null) {
                         builder.withValidator(uniqueValidator);
                     }
+                    break;
+                case lungo:
                     break;
                 case booleano:
                     break;

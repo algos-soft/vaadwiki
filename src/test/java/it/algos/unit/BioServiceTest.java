@@ -1,10 +1,7 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadwiki.backend.service.*;
-import it.algos.vaadwiki.wiki.*;
-import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 
@@ -31,7 +28,7 @@ public class BioServiceTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    ABioService service;
+    BioUtility service;
 
 
     /**

@@ -1,21 +1,10 @@
 package it.algos.vaadwiki.backend.packages.wiki;
 
-import com.vaadin.flow.component.button.*;
-import com.vaadin.flow.router.*;
-import it.algos.vaadflow14.backend.annotation.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.enumeration.*;
-import it.algos.vaadflow14.ui.fields.*;
-import it.algos.vaadflow14.ui.interfaces.*;
-import it.algos.vaadflow14.wiki.*;
-import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
-
-import java.util.*;
 
 /**
  * Project: vaadwiki <br>
@@ -50,7 +39,7 @@ public abstract class WikiLogicForm extends LogicForm {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ABioService bio;
+    public BioUtility bio;
 
     /**
      * Costruttore con parametri <br>

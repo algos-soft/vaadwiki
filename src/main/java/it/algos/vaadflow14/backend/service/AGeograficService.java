@@ -421,7 +421,7 @@ public class AGeograficService extends AAbstractService {
             sigla = "0" + sigla;
         }
 
-        testoGrezzo = wikiApi.legge(tag + wikiTitle);
+        testoGrezzo = wikiApi.leggeQuery(tag + wikiTitle);
 
         if (text.isValid(testoGrezzo)) {
             if (testoGrezzo.startsWith(DOPPIE_GRAFFE_INI)) {
