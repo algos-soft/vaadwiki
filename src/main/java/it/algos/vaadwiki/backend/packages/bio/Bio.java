@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.*;
 import org.springframework.data.mongodb.core.mapping.*;
 
@@ -54,7 +55,7 @@ import javax.validation.constraints.*;
 @AIEntity(recordName = "Bio", keyPropertyName = "wikiTitle", usaCompany = false)
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "wikiTitle")
 @AIList(fields = "pageId,wikiTitle,nome,cognome", usaRowIndex = true)
-@AIForm(fields = "pageId,wikiTitle,tmplBioServer,nome,cognome", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
+@AIForm(fields = "pageId,wikiTitle,nome,cognome,tmplBioServer", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 
 
@@ -66,14 +67,18 @@ public class Bio extends AEntity {
     /**
      * larghezza delle colonne
      */
-    private static final transient int WIDTHEM = 20;
+    private static final transient int WIDTHEM_ID = 7;
+
+    private static final transient int WIDTHEM_TITLE = 20;
+
+    private static final transient int WIDTHEM = 12;
 
     /**
      * pageId (obbligatorio, unico) <br>
      */
     @Indexed(unique = false, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.lungo, caption = "pageId", typeNum = AETypeNum.positiviOnly, widthEM = WIDTHEM)
-    @AIColumn(header = "#", widthEM = WIDTHEM)
+    @AIField(type = AETypeField.lungo, caption = "pageId", typeNum = AETypeNum.positiviOnly, widthEM = WIDTHEM_ID )
+    @AIColumn(header = "#", widthEM = WIDTHEM_ID )
     public long pageId;
 
 
@@ -83,8 +88,8 @@ public class Bio extends AEntity {
     @NotBlank(message = "Il wikiTitle è obbligatorio")
     @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 2, max = 50)
-    @AIField(type = AETypeField.text, required = true, focus = true, widthEM = WIDTHEM)
-    @AIColumn(widthEM = WIDTHEM)
+    @AIField(type = AETypeField.text, required = true, focus = true, widthEM = WIDTHEM_TITLE)
+    @AIColumn(widthEM = WIDTHEM_TITLE)
     public String wikiTitle;
 
 
@@ -102,9 +107,14 @@ public class Bio extends AEntity {
     public String cognome;
 
     @Lob
-    @Field("tmp")
+    @Field("tmpl")
     @AIField(type = AETypeField.textArea, required = true, help = "Template effettivamente presente sul server.", widthEM = 48)
     public String tmplBioServer;
+
+    @Transient()
+    @Lob
+    @AIField(type = AETypeField.textArea, required = true, help = "Template semplificato.", widthEM = 48)
+    public String tmplBioGac;
 
     /**
      * @return a string representation of the object.

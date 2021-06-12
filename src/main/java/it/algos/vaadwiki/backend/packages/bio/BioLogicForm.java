@@ -17,6 +17,7 @@ import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadwiki.backend.service.*;
+import it.algos.vaadwiki.wiki.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -120,10 +121,10 @@ public class BioLogicForm extends WikiLogicForm {
      */
     @Override
     protected void fixBodyLayout() {
-        WrapForm wrapSimple = new WrapForm(entityBean, operationForm, Arrays.asList("pageId", "wikiTitle", "nome", "cognome", "tmplBioServer"));
+        WrapForm wrapSimple = new WrapForm(entityBean, operationForm, Arrays.asList("pageId", "wikiTitle", "tmplBioServer", "nome", "cognome"));
         currentForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSimple);
 
-        WrapForm wrapSecond = new WrapForm(entityBean, operationForm, Collections.singletonList("tmplBioServer"));
+        WrapForm wrapSecond = new WrapForm(entityBean, operationForm, Collections.singletonList("tmplBioGac"));
         secondForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSecond);
 
         Tab tab1 = new Tab("Simple");
@@ -208,31 +209,14 @@ public class BioLogicForm extends WikiLogicForm {
      * Scarica una singola biografia <br>
      */
     private void downloadBio() {
-        long pageId ;
-        String wikiTitle ;
-        String nome = VUOTA;
-        String cognome = VUOTA;
-        String contenutoPagina ;
-        String tmplBioServer ;
-        Map mappa;
+        String wikiTitle;
+        BioWrap wrap;
 
         wikiTitle = getWikiTitle();
         if (text.isValid(wikiTitle)) {
-
-            mappa = wikiApi.getMappaParse(wikiTitle);
-            contenutoPagina = (String) mappa.get(KEY_MAPPA_TEXT);
-            tmplBioServer = wikiBot.estraeTmpl(contenutoPagina);
-
-            if (text.isValid(tmplBioServer)) {
-                pageId = (Long) mappa.get(KEY_MAPPA_PAGEID);
-                mappa = bioUtility.estraeMappa(tmplBioServer);
-                nome = (String) mappa.get("Nome");
-                cognome = (String) mappa.get("Cognome");
-                printMappa(mappa);
-                entityBean = bioService.newEntity(pageId, wikiTitle, nome, cognome, tmplBioServer);
-                currentForm.getBinder().setBean(entityBean);
-                //                bioService.save(bio);
-            }
+            wrap = wikiBot.getBioWrap(wikiTitle);
+            entityBean = bioService.newEntity(wrap);
+            currentForm.getBinder().setBean(entityBean);
         }
     }
 

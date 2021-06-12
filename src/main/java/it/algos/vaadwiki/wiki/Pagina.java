@@ -1,9 +1,5 @@
 package it.algos.vaadwiki.wiki;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-
 /**
  * Project vaadwiki
  * Created by Algos
@@ -12,20 +8,31 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
  * Time: 10:50
  */
 public class Pagina {
+
     /** nomi interni dei campi (ordine non garantito) */
     //--parametri wiki
     private int pageid;
+
     private String title;
+
     private int ns;
 
     private String contentmodel;
+
     private String contentformat;
+
     private String edittoken;
+
     private int lastrevid;
+
     private int length;
+
     private String pagelanguage;
+
     private String starttimestamp;
+
     private String touched;    //ultima visita effettuata da chicchessia sul server wiki - attualmente (27-10-13) non utilizzato
+
     private String testo; //contenuto completo della pagina
 
     public Pagina(int pageid, String title, int ns, String contentmodel, String contentformat, String edittoken, int lastrevid, int length, String pagelanguage, String starttimestamp, String touched, String testo) {

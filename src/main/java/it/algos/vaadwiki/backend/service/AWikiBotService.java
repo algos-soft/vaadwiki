@@ -6,6 +6,8 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
+import java.util.*;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -75,6 +77,24 @@ public class AWikiBotService extends AAbstractService {
         Pagina pagina = null;
 
         return pagina;
+    }
+
+    /**
+     * Costruisce un wrapper di dati essenziali per una Biografia <br>
+     *
+     * @param wikiTitle della pagina wiki
+     *
+     * @return pagina wiki
+     */
+    public BioWrap getBioWrap(final String wikiTitle) {
+        BioWrap wrap = null;
+        Map mappa = wikiApi.getMappaParse(wikiTitle);
+
+        if (array.isAllValid(mappa)) {
+            wrap = appContext.getBean(BioWrap.class, mappa);
+        }
+
+        return wrap;
     }
 
 
