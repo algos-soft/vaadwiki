@@ -144,6 +144,7 @@ public class WizDialogUpdateProject extends WizDialog {
         }
         super.addCheckBoxMap();
         mappaWizBox.get(AEWizCost.dirModuloVaadFlow14.name()).getBox().setValue(true);
+        mappaWizBox.get(AEWizCost.fileRootTEST.name()).getBox().setValue(true);
     }
 
     //    protected void sincroAll() {

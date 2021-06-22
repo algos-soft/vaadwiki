@@ -8,13 +8,15 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.*;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.*;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.time.*;
+import java.util.*;
 
 /**
  * Project: vaadwiki <br>
@@ -52,10 +54,10 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Bio", keyPropertyName = "wikiTitle", usaCompany = false)
+@AIEntity(recordName = "Bio", keyPropertyName = "wikiTitle")
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "wikiTitle")
 @AIList(fields = "pageId,wikiTitle,nome,cognome", usaRowIndex = true)
-@AIForm(fields = "pageId,wikiTitle,nome,cognome,tmplBioServer", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
+@AIForm(fields = "pageId,wikiTitle,tmplBioServer", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 
 
@@ -76,9 +78,9 @@ public class Bio extends AEntity {
     /**
      * pageId (obbligatorio, unico) <br>
      */
-    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.lungo, caption = "pageId", typeNum = AETypeNum.positiviOnly, widthEM = WIDTHEM_ID )
-    @AIColumn(header = "#", widthEM = WIDTHEM_ID )
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.lungo, required = true, caption = "pageId", typeNum = AETypeNum.positiviOnly, widthEM = WIDTHEM_ID)
+    @AIColumn(header = "#", widthEM = WIDTHEM_ID)
     public long pageId;
 
 
@@ -86,11 +88,36 @@ public class Bio extends AEntity {
      * wikiTitle di riferimento (obbligatorio, unico) <br>
      */
     @NotBlank(message = "Il wikiTitle è obbligatorio")
-    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 2, max = 50)
     @AIField(type = AETypeField.text, required = true, focus = true, widthEM = WIDTHEM_TITLE)
     @AIColumn(widthEM = WIDTHEM_TITLE)
     public String wikiTitle;
+
+
+    @Lob
+    @Field("tmpls")
+    @AIField(type = AETypeField.textArea, required = true, help = "Template effettivamente presente sul server.", widthEM = 48)
+    public String tmplBioServer;
+
+
+    //--ultima modifica sul server wiki
+    //--uso il formato Timestamp, per confrontarla col campo timestamp
+    //--molto meglio che siano esattamente dello stesso tipo
+    @Field("mod")
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.localDateTime, required = false, help = "ultima modifica della voce effettuata sul server wiki")
+    public LocalDateTime lastModifica;
+
+
+    //--ultima lettura/aggiornamento della voce, effettuata dal programma VaadBio
+    //--uso il formato Timestamp, per confrontarla col campo timestamp
+    //--molto meglio che siano esattamente dello stesso tipo
+    @Field("let")
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.localDateTime, required = false, help = "ultima lettura/aggiornamento della voce effettuata dal programma VaadBio")
+    public LocalDateTime lastLettura;
+
 
 
     @Indexed(unique = false, direction = IndexDirection.DESCENDING)
@@ -106,15 +133,6 @@ public class Bio extends AEntity {
     @AIColumn(widthEM = WIDTHEM)
     public String cognome;
 
-    @Lob
-    @Field("tmpl")
-    @AIField(type = AETypeField.textArea, required = true, help = "Template effettivamente presente sul server.", widthEM = 48)
-    public String tmplBioServer;
-
-    @Transient()
-    @Lob
-    @AIField(type = AETypeField.textArea, required = true, help = "Template semplificato.", widthEM = 48)
-    public String tmplBioGac;
 
     /**
      * @return a string representation of the object.

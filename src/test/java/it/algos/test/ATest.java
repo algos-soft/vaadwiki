@@ -5,9 +5,11 @@ import com.vaadin.flow.data.provider.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -79,13 +81,23 @@ public abstract class ATest {
 
     protected final static String NAME_ANNO = "anno";
 
+    protected static final int WIDTH = 160;
+
+    protected static final int WIDTH_WRAP = 40;
+
     protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
 
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
 
+    protected static Class<? extends AEntity> MESE_ENTITY_CLASS = Mese.class;
+
     protected static Class<? extends AEntity> COMPANY_ENTITY_CLASS = Company.class;
 
     protected static Class ANNO_LOGIC_LIST = AnnoLogicList.class;
+
+    protected static Class VIA_LIST_CLASS = ViaLogicList.class;
+
+    protected static Class VIA_SERVICE_CLASS = ViaService.class;
 
     protected static Field FIELD_ORDINE;
 
@@ -315,6 +327,11 @@ public abstract class ATest {
 
     protected int caratteriVisibili;
 
+    protected AIResult previstoRisultato;
+
+    protected AIResult ottenutoRisultato;
+
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      */
@@ -453,8 +470,13 @@ public abstract class ATest {
         FIELD_NOME = reflection.getField(VIA_ENTITY_CLASS, NAME_NOME);
         entityBean = null;
         clazz = null;
+        previstoRisultato = null;
+        ottenutoRisultato = null;
     }
 
+    protected String getTime() {
+        return date.deltaTextEsatto(inizio);
+    }
 
     protected void printVuota(List<String> lista) {
         System.out.println(VUOTA);
@@ -494,6 +516,21 @@ public abstract class ATest {
                     printVuota(lista);
                 }
             }
+        }
+    }
+
+    protected void printWrap(WrapPage wrap) {
+        System.out.println(VUOTA);
+        System.out.println(String.format("La query è: %s", wrap.getDomain()));
+        System.out.println(String.format("Il title è: %s", wrap.getTitle()));
+        System.out.println(String.format("La pageid è: %s", wrap.getPageid()));
+        System.out.println(String.format("Il time è: %s", wrap.getTime()));
+        System.out.println(wrap.isTemplate() ? "Usa solo il template come testo" : "Usa tutta la pagina come testo");
+        if (wrap.isTemplate()) {
+            System.out.println(String.format("Il template è: %s", wrap.getTmpl().substring(0, Math.min(wrap.getTmpl().length(), WIDTH_WRAP))));
+        }
+        else {
+            System.out.println(String.format("Il testo è: %s", wrap.getText().substring(0, Math.min(wrap.getText().length(), WIDTH_WRAP))));
         }
     }
 

@@ -16,21 +16,25 @@ public interface AIResult {
 
     boolean isErrato();
 
+    String getText();
+
+    void setText(final String text);
+
     String getMessage();
 
-    AIResult setMessage(String message);
+    AIResult setMessage(final String message);
 
     String getErrorMessage();
 
-    AIResult setErrorMessage(String message);
+    AIResult setErrorMessage(final String message);
 
     String getValidationMessage();
 
-    AIResult setValidationMessage(String message);
+    AIResult setValidationMessage(final String message);
 
     int getValore();
 
-    void print(ALogService logger, AETypeLog typeLog);
+    void print(final  ALogService logger, final AETypeLog typeLog);
 
 }// end of interface
 

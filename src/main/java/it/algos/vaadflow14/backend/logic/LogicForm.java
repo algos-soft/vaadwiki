@@ -481,7 +481,7 @@ public abstract class LogicForm extends Logic {
             if (mongo.isValid(entityClazz)) {
                 messageDialog = new MessageDialog().setTitle("Ritorno alla lista").setMessage(message);
                 messageDialog.addButton().text("Rimani").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
-                messageDialog.addButtonToLeft().text("Back").icon(iconBack).error().onClick(e -> back()).closeOnClick();
+                messageDialog.addButtonToLeft().text("Back").icon(iconBack).error().onClick(e -> backToList()).closeOnClick();
                 messageDialog.open();
             }
         }

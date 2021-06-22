@@ -96,6 +96,7 @@ public class AFieldService extends AAbstractService {
         //        boolean usaComboMethod = false;
         String width = VUOTA;
         String height = VUOTA;
+        boolean autofocus = false;
 
         if (reflectionJavaField == null) {
             return null;
@@ -103,6 +104,7 @@ public class AFieldService extends AAbstractService {
 
         fieldKey = reflectionJavaField.getName();
         width = annotation.getFormWith(reflectionJavaField);
+        autofocus = annotation.isFocus(reflectionJavaField);
         type = annotation.getFormType(reflectionJavaField);
         if (type != null) {
             switch (type) {
@@ -181,6 +183,9 @@ public class AFieldService extends AAbstractService {
                 case gridShowOnly:
                     field = creaGridField(entityBean, reflectionJavaField);
                     break;
+                case mappa:
+                    field = appContext.getBean(AMappaField.class);
+                    break;
                 default:
                     logger.warn("Switch - caso non definito per type=" + type, this.getClass(), "creaOnly");
                     break;
@@ -202,6 +207,9 @@ public class AFieldService extends AAbstractService {
             }
             field.setFieldKey(fieldKey);
             field.setWidth(width);
+            if (autofocus) {
+                field.setAutofocus();
+            }
         }
 
         return field;
@@ -364,6 +372,8 @@ public class AFieldService extends AAbstractService {
                 case image:
                     break;
                 case gridShowOnly:
+                    break;
+                case mappa:
                     break;
                 default:
                     logger.warn("Switch - caso non definito per il field \"" + reflectionJavaField.getName() + "\" del tipo " + fieldType, this.getClass(), "addToBinder");

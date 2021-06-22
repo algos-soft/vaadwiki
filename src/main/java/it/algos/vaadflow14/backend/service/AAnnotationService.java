@@ -1846,7 +1846,7 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return status of field
      */
-    public boolean focus(Field reflectionJavaField) {
+    public boolean isFocus(Field reflectionJavaField) {
         boolean status = false;
         AIField annotation = null;
 

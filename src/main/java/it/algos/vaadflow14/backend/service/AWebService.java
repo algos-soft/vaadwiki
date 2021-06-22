@@ -1,6 +1,8 @@
 package it.algos.vaadflow14.backend.service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -23,17 +25,20 @@ public class AWebService extends AAbstractService {
     /**
      * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
      */
-    public final static String TAG_WIKI = "https://it.wikipedia.org/wiki/";
+    public static final String TAG_WIKI = "https://it.wikipedia.org/wiki/";
 
-    private final static String TAG_INIZIALE = "https://";
+    public static final String UNKNOWN_HOST = "java.net.UnknownHostException: htp";
 
     //--codifica dei caratteri
-    public static String INPUT = "UTF8";
+    public static final String INPUT = "UTF8";
 
-    public static String TAG_TABLE_INIZIALE = "<table class=\"wikitable sortable\">";
+    public static final String TAG_TABLE_INIZIALE = "<table class=\"wikitable sortable\">";
 
-    public static String TAG_TABLE_BODY = "<tbody><tr>";
+    public static final String TAG_TABLE_BODY = "<tbody><tr>";
 
+    private static final String TAG_INIZIALE = "http://";
+
+    private static final String TAG_INIZIALE_SECURE = "https://";
 
     /**
      * Crea la connessione di tipo GET
@@ -83,9 +88,8 @@ public class AWebService extends AAbstractService {
         return risposta;
     }
 
-
     /**
-     * Request di tipo GET <br>
+     * Request di tipo GET. Legge la pagina intera. <br>
      * Accetta SOLO un urlDomain (indirizzo) completo <br>
      * Può essere un urlDomain generico di un sito web e restituisce il testo in formato html <br>
      * Può essere un urlDomain di una pagina wiki in lettura normale (senza API) e restituisce il testo in formato html <br>
@@ -93,22 +97,91 @@ public class AWebService extends AAbstractService {
      *
      * @param urlDomain completo
      *
-     * @return codiceSorgente grezzo in formato html oppure BSON
+     * @return risultato col testo grezzo in formato html oppure BSON
      */
-    public String leggeWeb(String urlDomain) {
+    public String leggeWebTxt(final String urlDomain) {
+        return legge(urlDomain).getText();
+    }
+
+    /**
+     * Request di tipo GET. Legge la pagina intera. <br>
+     * Accetta SOLO un urlDomain (indirizzo) completo <br>
+     * Può essere un urlDomain generico di un sito web e restituisce il testo in formato html <br>
+     * Può essere un urlDomain di una pagina wiki in lettura normale (senza API) e restituisce il testo in formato html <br>
+     * Può essere un urlDomain che usa le API di Mediawiki e restituisce il testo in formato BSON <br>
+     *
+     * @param urlDomain completo
+     *
+     * @return risultato col testo grezzo in formato html oppure BSON
+     */
+    public AIResult legge(final String urlDomain) {
+        AIResult result;
         String codiceSorgente = VUOTA;
         URLConnection urlConn;
         String tag = TAG_INIZIALE;
+        String tag2 = TAG_INIZIALE_SECURE;
 
         try {
-            String indirizzoWebCompleto = urlDomain.startsWith(tag) ? urlDomain : tag + urlDomain;
-            urlConn = getURLConnection(indirizzoWebCompleto);
+            String webUrl = urlDomain.startsWith(tag) || urlDomain.startsWith(tag2) ? urlDomain : tag2 + urlDomain;
+            urlConn = getURLConnection(webUrl);
             codiceSorgente = getUrlRequest(urlConn);
+            result = AResult.contenuto(codiceSorgente, urlDomain);
         } catch (Exception unErrore) {
-            logger.error(unErrore.toString());
+            result = AResult.errato(unErrore.toString());
         }
 
-        return codiceSorgente;
+        return result;
+    }
+
+    /**
+     * Request di tipo GET. Legge il body della pagina. <br>
+     * Accetta SOLO un urlDomain (indirizzo) completo <br>
+     * Può essere un urlDomain generico di un sito web e restituisce il testo in formato html <br>
+     * Può essere un urlDomain di una pagina wiki in lettura normale (senza API) e restituisce il testo in formato html <br>
+     * Può essere un urlDomain che usa le API di Mediawiki e restituisce il testo in formato BSON <br>
+     *
+     * @param urlDomain completo
+     *
+     * @return risultato col body in formato html oppure BSON
+     */
+    public String leggeBodyWebTxt(final String urlDomain) {
+        return leggeBodyWeb(urlDomain).getText();
+    }
+
+    /**
+     * Request di tipo GET. Legge il body della pagina. <br>
+     * Accetta SOLO un urlDomain (indirizzo) completo <br>
+     * Può essere un urlDomain generico di un sito web e restituisce il testo in formato html <br>
+     * Può essere un urlDomain di una pagina wiki in lettura normale (senza API) e restituisce il testo in formato html <br>
+     * Può essere un urlDomain che usa le API di Mediawiki e restituisce il testo in formato BSON <br>
+     *
+     * @param urlDomain completo
+     *
+     * @return risultato col body in formato html oppure BSON
+     */
+    public AIResult leggeBodyWeb(final String urlDomain) {
+        AIResult result = legge(urlDomain);
+        String bodyText;
+
+        if (result.isValido() && text.isValid(result.getText())) {
+            bodyText = text.estrae(result.getText(), "<body>", "</body>");
+            result.setText(bodyText);
+        }
+
+        return result;
+    }
+    /**
+     * Request di tipo GET <br>
+     * Sorgente completo di una pagina wiki <br>
+     * Non usa le API di Mediawiki <br>
+     * Elabora il wikiTitle per eliminare gli spazi vuoti <br>
+     *
+     * @param wikiTitleGrezzo da controllare per riempire gli spazi vuoti
+     *
+     * @return testo sorgente completo della pagina web in formato html
+     */
+    public String leggeWikiTxt(String wikiTitleGrezzo) {
+        return leggeWiki(wikiTitleGrezzo).getText();
     }
 
 
@@ -122,9 +195,16 @@ public class AWebService extends AAbstractService {
      *
      * @return testo sorgente completo della pagina web in formato html
      */
-    public String leggeSorgenteWiki(String wikiTitleGrezzo) {
+    public AIResult leggeWiki(final String wikiTitleGrezzo) {
+        AIResult result;
         String wikiTitleElaborato = wikiTitleGrezzo.replaceAll(SPAZIO, UNDERSCORE);
-        return leggeWeb(TAG_WIKI + wikiTitleElaborato);
+        result = legge(TAG_WIKI + wikiTitleElaborato);
+
+        if (result.isValido()) {
+            result.setMessage(wikiTitleGrezzo);
+        }
+
+        return result;
     }
 
 
@@ -202,7 +282,7 @@ public class AWebService extends AAbstractService {
      */
     public String leggeTableWiki(String indirizzoWikiGrezzo, String[] titoliTable) {
         String testoTable = VUOTA;
-        String sorgentePagina = leggeSorgenteWiki(indirizzoWikiGrezzo);
+        String sorgentePagina = leggeWikiTxt(indirizzoWikiGrezzo);
 
         if (text.isValid(sorgentePagina)) {
             testoTable = estraeTableWiki(sorgentePagina, titoliTable);

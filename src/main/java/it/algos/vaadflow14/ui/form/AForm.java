@@ -653,4 +653,8 @@ public abstract class AForm extends VerticalLayout {
         return binder;
     }
 
+    public FormLayout getTopLayout() {
+        return topLayout;
+    }
+
 }

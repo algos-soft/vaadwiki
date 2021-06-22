@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
 import java.util.*;
+import java.util.regex.*;
 
 
 /**
@@ -646,11 +647,11 @@ public class ATextService extends AAbstractService {
     public String setTonde(String stringaIn) {
         String stringaOut = stringaIn;
 
-        if (!stringaOut.startsWith(TONDA_INI)) {
-            stringaOut = TONDA_INI + stringaOut;
+        if (!stringaOut.startsWith(PARENTESI_TONDA_INI)) {
+            stringaOut = PARENTESI_TONDA_INI + stringaOut;
         }
-        if (!stringaOut.endsWith(TONDA_END)) {
-            stringaOut = stringaOut + TONDA_END;
+        if (!stringaOut.endsWith(PARENTESI_TONDA_END)) {
+            stringaOut = stringaOut + PARENTESI_TONDA_END;
         }
 
         return stringaOut.trim();
@@ -1261,7 +1262,7 @@ public class ATextService extends AAbstractService {
      *
      * @return vero se il numero di tagIni è uguale al numero di tagEnd
      */
-    public  boolean isPariTag(String testo, String tagIni, String tagEnd) {
+    public boolean isPariTag(String testo, String tagIni, String tagEnd) {
         boolean pari = false;
         int numIni;
         int numEnd;
@@ -1284,8 +1285,299 @@ public class ATextService extends AAbstractService {
      *
      * @return vero se le occorrenze di apertura e chiusura sono uguali
      */
-    public  boolean isPariGraffe(String testo) {
+    public boolean isPariGraffe(String testo) {
         return isPariTag(testo, DOPPIE_GRAFFE_INI, DOPPIE_GRAFFE_END);
+    }
+
+
+    /**
+     * Restituisce la posizione di un tag in un testo
+     * Riceve una lista di tag da provare
+     * Restituisce la prima posizione tra tutti i tag trovati
+     *
+     * @param testo in ingresso
+     * @param lista di stringhe, oppure singola stringa
+     *
+     * @return posizione della prima stringa trovata
+     * -1 se non ne ha trovato nessuna
+     * -1 se il primo parametro è nullo o vuoto
+     * -1 se il secondo parametro è nullo
+     * -1 se il secondo parametro non è ne una lista di stringhe, ne una stringa
+     */
+    public int getPos(String testo, ArrayList<String> lista) {
+        int pos = testo.length();
+        int posTmp;
+        ArrayList<Integer> posizioni = new ArrayList<Integer>();
+
+        if (!testo.equals("") && lista != null) {
+
+            for (String stringa : lista) {
+                posTmp = testo.indexOf(stringa);
+                if (posTmp != -1) {
+                    posizioni.add(posTmp);
+                }
+            }
+
+            if (posizioni.size() > 0) {
+                for (Integer num : posizioni) {
+                    pos = Math.min(pos, num);
+                }
+            }
+            else {
+                pos = 0;
+            }
+        }
+
+        return pos;
+    }
+
+
+    /**
+     * Controlla se esiste un tag in un testo <br>
+     * Rimanda al metodo base con i tag iniziali e finali di default <br>
+     *
+     * @param testo in ingresso
+     * @param tag   di riferimento per la ricerca
+     *
+     * @return true se esiste
+     */
+    public boolean isTag(String testo, String tag) {
+        return isTag(testo, REGEX_PIPE, tag, UGUALE_SEMPLICE);
+    }
+
+
+    /**
+     * Controlla se esiste un gruppo di tag in un testo <br>
+     * Il gruppo è costituito dal primo tag, seguito da n spazi, poi il secondo tag seguito da n spazi, poi il terzo tag <br>
+     *
+     * @param testo      to be scanned to find the pattern
+     * @param primoTag   di riferimento (di solito PIPE))
+     * @param secondoTag significativo (parametro)
+     * @param terzoTag   di riferimento (di solito UGUALE))
+     *
+     * @return true se esiste
+     */
+    public boolean isTag(String testo, String primoTag, String secondoTag, String terzoTag) {
+        return getPosFirstTag(testo, primoTag, secondoTag, terzoTag) != 0;
+    }
+
+
+    /**
+     * Restituisce la posizione di un tag in un testo <br>
+     * Rimanda al metodo base con i tag iniziali e finali di default <br>
+     *
+     * @param testo in ingresso
+     * @param tag   di riferimento per la ricerca
+     *
+     * @return posizione del tag nel testo - 0 se non esiste
+     */
+    public int getPosFirstTag(String testo, String tag) {
+        return getPosFirstTag(testo, REGEX_PIPE, tag, UGUALE_SEMPLICE);
+    }
+
+
+    /**
+     * Restituisce la posizione del primo tag di un gruppo di tag in un testo <br>
+     * Il gruppo è costituito dal primo tag, seguito da n spazi, poi il secondo tag seguito da n spazi, poi il terzo tag <br>
+     *
+     * @param line       in ingresso
+     * @param primoTag   di riferimento (di solito PIPE))
+     * @param secondoTag significativo (parametro)
+     * @param terzoTag   di riferimento (di solito UGUALE))
+     *
+     * @return posizione del PRIMO tag nel testo - 0 se non esiste
+     */
+    public int getPosFirstTag(String line, String primoTag, String secondoTag, String terzoTag) {
+        int pos = 0;
+        String regexSpazioVariabile = "\\s*"; // zero o più occorrenze
+        String firstChar = secondoTag.substring(0, 1);
+        String rimanentiChars = secondoTag.substring(1);
+        String firstInsensitiveChar = "[" + firstChar.toUpperCase() + firstChar.toLowerCase() + "]";
+        String regex = primoTag + regexSpazioVariabile + firstInsensitiveChar + rimanentiChars + regexSpazioVariabile + terzoTag;
+
+        // Create a Pattern object
+        Pattern pattern = Pattern.compile(regex);
+
+        // Now create matcher object.
+        Matcher matcher = pattern.matcher(line);
+
+        if (matcher.find()) {
+            pos = matcher.start();
+        }
+
+        return pos;
+    }
+
+    /**
+     * Elimina la parte di stringa successiva al tag, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata   stringa in ingresso
+     * @param tagFinale dopo il quale eliminare
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopo(String entrata, String tagFinale) {
+        String uscita = entrata;
+        int pos;
+
+        if (uscita != null && tagFinale != null) {
+            uscita = entrata.trim();
+            if (uscita.contains(tagFinale)) {
+                pos = uscita.indexOf(tagFinale);
+                uscita = uscita.substring(0, pos);
+                uscita = uscita.trim();
+            }
+        }
+
+        return uscita;
+    }
+
+
+    /**
+     * Elimina la parte di stringa successiva al tag <ref>, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoRef(String entrata) {
+        return levaDopo(entrata, REF);
+    }
+
+
+    /**
+     * Elimina la parte di stringa successiva al tag <!--, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoNote(String entrata) {
+        return levaDopo(entrata, NOTE);
+    }
+
+
+    /**
+     * Elimina la parte di stringa successiva al tag <!--, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoUguale(String entrata) {
+        return levaDopo(entrata, UGUALE_SEMPLICE);
+    }
+
+
+    /**
+     * Elimina la parte di stringa successiva al tag <!--, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoEccetera(String entrata) {
+        return levaDopo(entrata, ECC);
+    }
+
+
+    /**
+     * Elimina la parte di stringa successiva al tag {{, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoGraffe(String entrata) {
+        return levaDopo(entrata, DOPPIE_GRAFFE_INI);
+    }
+
+
+    /**
+     * Elimina la parte di stringa successiva al tag -virgola-, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoVirgola(String entrata) {
+        return levaDopo(entrata, VIRGOLA);
+    }
+
+
+    /**
+     * Elimina la parte di stringa successiva al tag -aperta parentesi-, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoParentesi(String entrata) {
+        return levaDopo(entrata, PARENTESI_TONDA_END);
+    }
+
+
+    /**
+     * Elimina la parte di stringa successiva al tag -punto interrogativo-, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoInterrogativo(String entrata) {
+        return levaDopo(entrata, PUNTO_INTERROGATIVO);
+    }
+
+
+    /**
+     * Elimina la parte di stringa successiva al tag -circa-, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoCirca(String entrata) {
+        return levaDopo(entrata, CIRCA);
     }
 
 }

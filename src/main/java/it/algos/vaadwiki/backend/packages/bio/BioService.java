@@ -6,12 +6,16 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.wiki.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
+
+import java.time.*;
 
 /**
  * Project: vaadwiki <br>
@@ -47,6 +51,13 @@ public class BioService extends AService {
      */
     private final static long serialVersionUID = 1L;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AWikiBotService wikiBot;
 
     /**
      * Costruttore senza parametri <br>
@@ -82,7 +93,20 @@ public class BioService extends AService {
      */
     @Override
     public Bio newEntity() {
-        return newEntity(0, VUOTA, VUOTA, VUOTA, VUOTA, VUOTA);
+        return newEntity(0, VUOTA, VUOTA, null);
+    }
+
+    /**
+     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
+     * Usa il @Builder di Lombok <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     *
+     * @param wrap per i dati base essenziali di una biografia
+     *
+     * @return la nuova entityBean appena creata (non salvata)
+     */
+    public Bio newEntity(final WrapPage wrap) {
+        return newEntity(wrap.getPageid(), wrap.getTitle(), wrap.getTmpl(), wrap.getTime());
     }
 
     /**
@@ -95,7 +119,7 @@ public class BioService extends AService {
      * @return la nuova entityBean appena creata (non salvata)
      */
     public Bio newEntity(final BioWrap wrap) {
-        return newEntity(wrap.getPageid(), wrap.getTitle(), wrap.getNome(), wrap.getCognome(), wrap.getTmplBioServer(), wrap.getTmplBioGac());
+        return newEntity(wrap.getPageid(), wrap.getTitle(),  wrap.getTmplBioServer(),null);
     }
 
     /**
@@ -105,20 +129,18 @@ public class BioService extends AService {
      *
      * @param pageId        di riferimento (obbligatorio, unico)
      * @param wikiTitle     di riferimento (obbligatorio, unico)
-     * @param nome          (facoltativo, non unico)
-     * @param cognome       (facoltativo, non unico)
-     * @param tmplBioServer (facoltativo, unico)
+     * @param tmplBioServer (obbligatorio, unico)
+     * @param lastModifica  sul server wiki (obbligatorio)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Bio newEntity(final long pageId, final String wikiTitle, final String nome, final String cognome, final String tmplBioServer, final String tmplBioGac) {
+    public Bio newEntity(final long pageId, final String wikiTitle, final String tmplBioServer, final LocalDateTime lastModifica) {
         Bio newEntityBean = Bio.builderBio()
                 .pageId(pageId)
                 .wikiTitle(text.isValid(wikiTitle) ? wikiTitle : null)
-                .nome(text.isValid(nome) ? nome : null)
-                .cognome(text.isValid(cognome) ? cognome : null)
                 .tmplBioServer(text.isValid(tmplBioServer) ? tmplBioServer : null)
-                .tmplBioGac(text.isValid(tmplBioGac) ? tmplBioServer : text.isValid(tmplBioServer) ? tmplBioServer : null)
+                .lastModifica(lastModifica != null ? lastModifica : LocalDateTime.now())
+                .lastLettura(LocalDateTime.now())
                 .build();
 
         return (Bio) fixKey(newEntityBean);
@@ -135,7 +157,9 @@ public class BioService extends AService {
      */
     @Override
     public Bio findById(final String keyID) {
-        return (Bio) super.findById(keyID);
+        Bio bio = (Bio) super.findById(keyID);
+        fixTransienti(bio);
+        return bio;
     }
 
 
@@ -153,6 +177,14 @@ public class BioService extends AService {
         return (Bio) super.findByKey(keyValue);
     }
 
+    public void fixTransienti(Bio bio) {
+        //        bio.tmplBioClient = bio.tmplBioServer + "Pippoz";
+        //
+        //        Map mappa = wikiBot.getMappaDownload(bio.tmplBioServer);
+        //        bio.mappaDownload = mappa;
+        //        bio.mappaTroncata = mappa;
+        //        bio.mappaElaborata = mappa;
+    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>

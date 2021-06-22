@@ -2,6 +2,7 @@ package it.algos.vaadwiki.backend.packages.bio;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.formlayout.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.tabs.*;
 import com.vaadin.flow.router.*;
@@ -12,7 +13,6 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.fields.*;
-import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
@@ -45,8 +45,6 @@ import java.util.*;
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.form, doc = AEWizDoc.inizioRevisione)
 public class BioLogicForm extends WikiLogicForm {
-
-    protected AForm secondForm;
 
     private BioService bioService;
 
@@ -121,31 +119,38 @@ public class BioLogicForm extends WikiLogicForm {
      */
     @Override
     protected void fixBodyLayout() {
-        WrapForm wrapSimple = new WrapForm(entityBean, operationForm, Arrays.asList("pageId", "wikiTitle", "tmplBioServer", "nome", "cognome"));
-        currentForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSimple);
+        super.fixBodyLayout();
 
-        WrapForm wrapSecond = new WrapForm(entityBean, operationForm, Collections.singletonList("tmplBioGac"));
-        secondForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSecond);
+        String minWidthForm = "40em";
 
-        Tab tab1 = new Tab("Simple");
+        FormLayout layoutTmpl = new FormLayout();
+        layoutTmpl.setResponsiveSteps(new FormLayout.ResponsiveStep(minWidthForm, 1));
+
+        Tab tab1 = new Tab("src");
         Div page1 = new Div();
         page1.add(currentForm);
-        page1.setVisible(false);
+        page1.setVisible(true);
 
-        Tab tab2 = new Tab("Page");
+        Tab tab2 = new Tab("maps");
         Div page2 = new Div();
-        page2.add(secondForm);
+        page2.add(appContext.getBean(BioFormMaps.class, entityBean));
         page2.setVisible(false);
+
+        Tab tab3 = new Tab("tmpl");
+        Div page3 = new Div();
+        page3.add(appContext.getBean(BioFormTmpl.class, entityBean));
+        page3.setVisible(false);
 
         Map<Tab, Component> tabsToPages = new HashMap<>();
         tabsToPages.put(tab1, page1);
         tabsToPages.put(tab2, page2);
-        Tabs tabs = new Tabs(tab1, tab2);
+        tabsToPages.put(tab3, page3);
+        Tabs tabs = new Tabs(tab1, tab2, tab3);
         tabs.setFlexGrowForEnclosedTabs(1);
-        Div pages = new Div(page1, page2);
+        Div pages = new Div(page1, page2, page3);
 
         tabs.addSelectedChangeListener(event -> {
-            tabsToPages.values().forEach(page -> page.setVisible(false));
+            tabsToPages.values().forEach(pagina -> pagina.setVisible(false));
             Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
             selectedPage.setVisible(true);
         });
@@ -153,6 +158,7 @@ public class BioLogicForm extends WikiLogicForm {
         bodyPlaceHolder.add(tabs, pages);
         page1.setVisible(true);
     }
+
 
     /**
      * Regolazioni finali di alcuni oggetti <br>
@@ -210,15 +216,17 @@ public class BioLogicForm extends WikiLogicForm {
      */
     private void downloadBio() {
         String wikiTitle;
-        BioWrap wrap;
+        BioWrap wrap=null;
 
         wikiTitle = getWikiTitle();
         if (text.isValid(wikiTitle)) {
-            wrap = wikiBot.getBioWrap(wikiTitle);
+//            wrap = wikiBot.getBioWrap(wikiTitle);
             entityBean = bioService.newEntity(wrap);
             currentForm.getBinder().setBean(entityBean);
         }
     }
+
+
 
     private void printMappa(Map mappa) {
         for (Object key : mappa.keySet()) {

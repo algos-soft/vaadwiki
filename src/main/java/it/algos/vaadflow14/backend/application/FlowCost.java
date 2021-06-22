@@ -24,6 +24,7 @@ import java.util.*;
  * Prefisso SHOW per abilitare la presentazione dei moduli nel menu <br>
  */
 public abstract class FlowCost {
+    public static final String ENCODE = "UTF-8";
 
     public static final int MAX = 2147483647;
 
@@ -59,6 +60,12 @@ public abstract class FlowCost {
 
     public static final String REF = "<ref>";
 
+    public static final String ECC = "ecc.";
+
+    public static final String NOTE = "<!--";
+
+    public static final String CIRCA = "circa";
+
     public static final String DOPPIO_SPAZIO = SPAZIO + SPAZIO;
 
     public static final String TRATTINO = "-";
@@ -68,6 +75,8 @@ public abstract class FlowCost {
     public static final String SLASH = "/";
 
     public static final String PIPE = "|";
+
+    public static final String REGEX_PIPE = "\\|";
 
     public static final String ESCLAMATIVO = "!";
 
@@ -84,6 +93,8 @@ public abstract class FlowCost {
     public static final String PUNTO = ".";
 
     public static final String PUNTO_VIRGOLA = ";";
+
+    public static final String PUNTO_INTERROGATIVO = "?";
 
     public static final String DUE_PUNTI = ":";
 
@@ -216,6 +227,10 @@ public abstract class FlowCost {
 
     public static final String KEY_MAPPA_TEXT = "wikitext";
 
+    public static final String KEY_MAPPA_DOMAIN = "domain";
+
+    public static final String KEY_MAPPA_LAST_MODIFICA = "lastModifica";
+
     /**
      * The constant PROPERTY_SERIAL.
      */
@@ -264,6 +279,24 @@ public abstract class FlowCost {
 
     public static final String KEY_BUTTON_DELETE = "delete";
 
+    public static final String KEY_JSON_QUERY = "query";
+
+    public static final String KEY_JSON_PAGES = "pages";
+
+    public static final String KEY_JSON_PAGE_ID = "pageid";
+
+    public static final String KEY_JSON_TITLE = "title";
+
+    public static final String KEY_JSON_REVISIONS = "revisions";
+
+    public static final String KEY_JSON_TIMESTAMP = "timestamp";
+
+    public static final String KEY_JSON_SLOTS = "slots";
+
+    public static final String KEY_JSON_MAIN = "main";
+
+    public static final String KEY_JSON_CONTENT = "content";
+
     public static final String QUADRA_INI = "[";
 
     public static final String DOPPIE_QUADRE_INI = QUADRA_INI + QUADRA_INI;
@@ -279,12 +312,12 @@ public abstract class FlowCost {
     /**
      * tag per la singola parentesi tonda di apertura
      */
-    public static final String TONDA_INI = "(";
+    public static final String PARENTESI_TONDA_INI = "(";
 
     /**
      * tag per la singola parentesi tonda di chiusura
      */
-    public static final String TONDA_END = ")";
+    public static final String PARENTESI_TONDA_END = ")";
 
     /**
      * tag per la singola graffa di apertura

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.*;
+import java.time.*;
 import java.util.*;
 
 /**
@@ -49,6 +50,7 @@ public class BioWrap {
     @Autowired
     public BioUtility bioUtility;
 
+
     private long pageid;
 
     private String title;
@@ -59,7 +61,7 @@ public class BioWrap {
     //--template Bio
     private String tmplBioServer;
 
-    private String tmplBioGac;
+    private LocalDateTime lastModifica;
 
     private Map<String, Object> mappaApi;
 
@@ -87,16 +89,17 @@ public class BioWrap {
             this.pageid = (Long) mappaApi.get(FlowCost.KEY_MAPPA_PAGEID);
             this.title = (String) mappaApi.get(FlowCost.KEY_MAPPA_TITLE);
             this.testo = (String) mappaApi.get(FlowCost.KEY_MAPPA_TEXT);
+            this.lastModifica = (LocalDateTime) mappaApi.get(KEY_MAPPA_LAST_MODIFICA);
         }
 
         if (wikiBot != null && text.isValid(testo)) {
             this.tmplBioServer = wikiBot.estraeTmpl(this.testo);
         }
 
-        if (bioUtility != null && text.isValid(tmplBioServer)) {
-            mappaBio = bioUtility.estraeMappa(tmplBioServer);
-            this.tmplBioGac = this.tmplBioServer+"pippoz";
-        }
+//        if (bioUtility != null && text.isValid(tmplBioServer)) {
+//            mappaBio = bioUtility.estraeMappa(tmplBioServer);
+//            this.tmplBioClient = this.tmplBioServer + "pippoz";
+//        }
     }
 
     public long getPageid() {
@@ -113,10 +116,6 @@ public class BioWrap {
 
     public String getTmplBioServer() {
         return tmplBioServer;
-    }
-
-    public String getTmplBioGac() {
-        return tmplBioGac;
     }
 
     public String getNome() {

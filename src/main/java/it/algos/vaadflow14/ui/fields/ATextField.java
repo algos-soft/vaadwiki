@@ -81,6 +81,10 @@ public class ATextField extends AField<String>  {
         textField.setWidth(width);
     }
 
+    @Override
+    public void setAutofocus() {
+        textField.setAutofocus(true);
+    }
 
     @Override
     public void setErrorMessage(String errorMessage) {

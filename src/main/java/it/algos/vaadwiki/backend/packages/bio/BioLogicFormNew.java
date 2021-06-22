@@ -82,7 +82,7 @@ public class BioLogicFormNew extends WikiLogicForm {
      */
     @Override
     protected void fixBodyLayout() {
-        WrapForm wrapSimple = new WrapForm(entityBean, operationForm,Arrays.asList("wikiTitle", "tmpBioServer"));
+        WrapForm wrapSimple = new WrapForm(entityBean, operationForm, Arrays.asList("wikiTitle", "tmpBioServer"));
         currentForm = appContext.getBean(AGenericForm.class, entityService, this, wrapSimple);
 
         WrapForm wrapSecond = new WrapForm(entityBean, operationForm, Collections.singletonList("tmpBioServer"));
@@ -127,7 +127,7 @@ public class BioLogicFormNew extends WikiLogicForm {
      *
      * @return lista di nomi di properties
      */
-//    @Override
+    //    @Override
     public List<String> getFormPropertyNamesList2() {
         List<String> fieldsNameList = new ArrayList<>();
 
@@ -195,12 +195,12 @@ public class BioLogicFormNew extends WikiLogicForm {
      * Scarica una singola biografia <br>
      */
     private void downloadBio() {
-        String textTmpl;
+        String textTmpl = VUOTA;
         AField fieldTmpBioServer = currentForm.getField("tmpBioServer");
 
         String wikiTitle = getWikiTitle();
         if (text.isValid(getWikiTitle())) {
-            textTmpl = wikiBot.leggeTmpl(wikiTitle);
+            //            textTmpl = wikiBot.leggeTmpl(wikiTitle);
             if (text.isValid(textTmpl)) {
                 fieldTmpBioServer.setValue(textTmpl);
             }
