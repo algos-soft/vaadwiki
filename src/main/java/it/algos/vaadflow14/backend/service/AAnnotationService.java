@@ -2491,6 +2491,28 @@ public class AAnnotationService extends AAbstractService {
 
         return status;
     }
+    /**
+     * Get the status required of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the flag
+     */
+    public boolean isEnabled(Field reflectionJavaField) {
+        boolean status = true;
+        AIField annotationAIField = null;
+
+        if (reflectionJavaField == null) {
+            return false;
+        }
+
+        annotationAIField = this.getAIField(reflectionJavaField);
+        if (annotationAIField != null) {
+            status = annotationAIField.enabled();
+        }
+
+        return status;
+    }
 
     //    /**
     //     * Get the status required of the property.

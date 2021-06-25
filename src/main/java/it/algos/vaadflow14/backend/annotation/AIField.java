@@ -315,7 +315,7 @@ public @interface AIField {
      *
      * @return the type
      */
-    AETypeData getTypeData() default AETypeData.standard;
+    AETypeData typeData() default AETypeData.standard;
 
     /**
      * Valore iniziale (text) di un combo
@@ -324,5 +324,13 @@ public @interface AIField {
      * @return the strings
      */
     String comboInitialValue() default VUOTA;
+
+    /**
+     * (Optional) Flag per la modificabilità del field
+     * Defaults to true.
+     *
+     * @return the boolean
+     */
+    boolean enabled() default true;
 
 }

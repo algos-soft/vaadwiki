@@ -8,7 +8,6 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.*;
 import org.springframework.data.mongodb.core.mapping.*;
@@ -16,7 +15,6 @@ import org.springframework.data.mongodb.core.mapping.*;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.*;
-import java.util.*;
 
 /**
  * Project: vaadwiki <br>
@@ -56,8 +54,8 @@ import java.util.*;
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Bio", keyPropertyName = "wikiTitle")
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "wikiTitle")
-@AIList(fields = "pageId,wikiTitle,nome,cognome", usaRowIndex = true)
-@AIForm(fields = "pageId,wikiTitle,tmplBioServer", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
+@AIList(fields = "pageId,wikiTitle,lastModifica,lastLettura", usaRowIndex = true)
+@AIForm(fields = "pageId,wikiTitle,lastModifica,tmplBioServer", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 
 
@@ -79,7 +77,7 @@ public class Bio extends AEntity {
      * pageId (obbligatorio, unico) <br>
      */
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.lungo, required = true, caption = "pageId", typeNum = AETypeNum.positiviOnly, widthEM = WIDTHEM_ID)
+    @AIField(type = AETypeField.lungo, required = true, caption = "PageId interno della pagina wiki", typeNum = AETypeNum.positiviOnly, widthEM = WIDTHEM_ID, enabled = false)
     @AIColumn(header = "#", widthEM = WIDTHEM_ID)
     public long pageId;
 
@@ -90,14 +88,14 @@ public class Bio extends AEntity {
     @NotBlank(message = "Il wikiTitle è obbligatorio")
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 2, max = 50)
-    @AIField(type = AETypeField.text, required = true, focus = true, widthEM = WIDTHEM_TITLE)
+    @AIField(type = AETypeField.text, required = true, focus = true, caption = "Titolo esatto della pagina wiki", widthEM = WIDTHEM_TITLE, enabled = false)
     @AIColumn(widthEM = WIDTHEM_TITLE)
     public String wikiTitle;
 
 
     @Lob
     @Field("tmpls")
-    @AIField(type = AETypeField.textArea, required = true, help = "Template effettivamente presente sul server.", widthEM = 48)
+    @AIField(type = AETypeField.textArea, required = true, caption = "Template presente sul server", widthEM = 48, enabled = false)
     public String tmplBioServer;
 
 
@@ -106,7 +104,7 @@ public class Bio extends AEntity {
     //--molto meglio che siano esattamente dello stesso tipo
     @Field("mod")
     @Indexed(direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.localDateTime, required = false, help = "ultima modifica della voce effettuata sul server wiki")
+    @AIField(type = AETypeField.localDateTime, caption = "Ultima modifica effettuata (non dal Bot) sul server", enabled = false)
     public LocalDateTime lastModifica;
 
 
@@ -115,9 +113,8 @@ public class Bio extends AEntity {
     //--molto meglio che siano esattamente dello stesso tipo
     @Field("let")
     @Indexed(direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.localDateTime, required = false, help = "ultima lettura/aggiornamento della voce effettuata dal programma VaadBio")
+    @AIField(type = AETypeField.localDateTime, help = "ultima lettura/aggiornamento della voce effettuata dal programma VaadBio", enabled = false)
     public LocalDateTime lastLettura;
-
 
 
     @Indexed(unique = false, direction = IndexDirection.DESCENDING)

@@ -43,8 +43,8 @@ public enum AEPreferenza implements AIPreferenza {
     usaMenuReset(PREF_USA_MENU_RESET, "Usa i bottoni deleteAll e reset nelle xxxLogicList (se previsto dal package)", AETypePref.bool, true, false, true, false, VUOTA),
     usaMenuAdmin(PREF_USA_MENU_ADMIN, "Usa i menu del gruppo admin", AETypePref.bool, false, false, true, false, "Mostra i 2 (incrementabili) packages di admin (preferenza, versione). Anche se non visibili nel menu, sono sempre disponibili col nome della @Route."),
     usaMenuGestione(PREF_USA_MENU_GESTIONE, "Usa i menu del gruppo gestione", AETypePref.bool, false, false, true, false, "Mostra i 3 (incrementabili) packages di gestione (address, via, persona). Anche se non visibili nel menu, sono sempre disponibili col nome della @Route."),
-    usaMenuGeo(PREF_USA_MENU_GEO, "Usa i menu del gruppo geografia", AETypePref.bool, true, false, true, false, "Mostra i 4 (fissi) packages geografici (stato, regione, provincia, comune). Anche se non visibili nel menu, sono sempre disponibili col nome della @Route."),
-    usaMenuCrono(PREF_USA_MENU_CRONO, "Usa i menu del gruppo crono", AETypePref.bool, true, false, true, false, "Mostra i 4 (fissi) packages cronologici (secolo, anno, mese, giorno). Anche se non visibili nel menu, sono sempre disponibili col nome della @Route."),
+    usaMenuGeo(PREF_USA_MENU_GEO, "Usa i menu del gruppo geografia", AETypePref.bool, false, false, true, false, "Mostra i 4 (fissi) packages geografici (stato, regione, provincia, comune). Anche se non visibili nel menu, sono sempre disponibili col nome della @Route."),
+    usaMenuCrono(PREF_USA_MENU_CRONO, "Usa i menu del gruppo crono", AETypePref.bool, false, false, true, false, "Mostra i 4 (fissi) packages cronologici (secolo, anno, mese, giorno). Anche se non visibili nel menu, sono sempre disponibili col nome della @Route."),
     ;
 
 

@@ -14,10 +14,10 @@ import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.interfaces.*;
+import it.algos.vaadflow14.wiki.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadwiki.backend.service.*;
-import it.algos.vaadwiki.wiki.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -83,6 +83,8 @@ public class BioLogicForm extends WikiLogicForm {
         super.fixPreferenze();
 
         super.usaBottoneDownload = true;
+        super.usaBottonePaginaWiki = true;
+        super.wikiPageTitle = ((Bio) entityBean).wikiTitle;
     }
 
     /**
@@ -216,16 +218,15 @@ public class BioLogicForm extends WikiLogicForm {
      */
     private void downloadBio() {
         String wikiTitle;
-        BioWrap wrap=null;
+        WrapPage wrap = null;
 
         wikiTitle = getWikiTitle();
         if (text.isValid(wikiTitle)) {
-//            wrap = wikiBot.getBioWrap(wikiTitle);
+            wrap = wikiBot.leggePage(wikiTitle);
             entityBean = bioService.newEntity(wrap);
             currentForm.getBinder().setBean(entityBean);
         }
     }
-
 
 
     private void printMappa(Map mappa) {

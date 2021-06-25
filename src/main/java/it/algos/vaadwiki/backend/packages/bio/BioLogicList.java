@@ -38,7 +38,6 @@ public class BioLogicList extends LogicList {
      */
     private final static long serialVersionUID = 1L;
 
-//    private static String ROUTE_NAME_NEW_FORM = "bioFormNew";
 
 
     /**
@@ -67,26 +66,5 @@ public class BioLogicList extends LogicList {
     }
 
 
-//    /**
-//     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-//     * DEVE essere sovrascritto <br>
-//     *
-//     * @return una liste di 'span'
-//     */
-//    @Override
-//    protected List<Span> getSpanList() {
-//        return Collections.singletonList(html.getSpanVerde("Test"));
-//    }
-
-//    /**
-//     * Costruisce una nuova @route in modalità new <br>
-//     * Seleziona (eventualmente) il Form da usare <br>
-//     * Può essere sovrascritto, senza invocare il metodo della superclasse <br>
-//     */
-//    @Override
-//    protected void newForm() {
-//        final QueryParameters query = route.getQueryForm(entityClazz, AEOperation.addNew, null);
-//        UI.getCurrent().navigate(ROUTE_NAME_NEW_FORM, query);
-//    }
 
 }// end of Route class

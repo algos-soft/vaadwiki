@@ -92,6 +92,7 @@ public class AFieldService extends AAbstractService {
         List items;
         List<String> enumItems;
         boolean isRequired = false;
+        boolean isEnabled = false;
         boolean isAllowCustomValue = false;
         //        boolean usaComboMethod = false;
         String width = VUOTA;
@@ -104,7 +105,8 @@ public class AFieldService extends AAbstractService {
 
         fieldKey = reflectionJavaField.getName();
         width = annotation.getFormWith(reflectionJavaField);
-        autofocus = annotation.isFocus(reflectionJavaField);
+        autofocus = operationForm == AEOperation.addNew && annotation.isFocus(reflectionJavaField);
+        isEnabled = annotation.isEnabled(reflectionJavaField);
         type = annotation.getFormType(reflectionJavaField);
         if (type != null) {
             switch (type) {
@@ -210,6 +212,7 @@ public class AFieldService extends AAbstractService {
             if (autofocus) {
                 field.setAutofocus();
             }
+            field.setEnabled(isEnabled);
         }
 
         return field;

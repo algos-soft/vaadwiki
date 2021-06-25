@@ -268,14 +268,14 @@ public abstract class LogicForm extends Logic {
         if (usaBottoneExport) {
             putMappa(AEButton.export);
         }
-        if (usaBottonePaginaWiki) {
-            putMappa(AEButton.wiki);
-        }
         if (usaBottoneDownload) {
             putMappa(AEButton.download);
         }
         if (usaBottoneUpload) {
             putMappa(AEButton.upload);
+        }
+        if (usaBottonePaginaWiki) {
+            putMappa(AEButton.wiki);
         }
     }
 
