@@ -1,0 +1,11 @@
+For those that are not familiar with lambda expressions, consider the following snippet of code
+
+for(String i : listOfStrings) {
+  System.out.println(i);
+}
+
+With lambda expressions and the corresponding impact they have had on Java libraries and traditional iterative operations, you can condense the above snippet to:
+
+listOfStrings.forEach(i -> System.out.println(i));
+
+At first, this feels like an insignificant win and, in truth, it is. There is nothing more pretentious than a programmer touting how the turned three lines of code into one. The real power behind lambda expressions comes with an explanation of functional interfaces, another feature introduced in Java 8. A functional interface is just like a regular interface, except you define the body of the function specified in said interface anonymously, using lambda expressions

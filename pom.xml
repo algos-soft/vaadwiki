@@ -30,7 +30,7 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <!-- Va tenuta aggiornata la versione di VAADIN -->
-        <vaadin.version>14.6.3</vaadin.version>
+        <vaadin.version>14.6.4</vaadin.version>
     </properties>
 
 
@@ -146,11 +146,18 @@
             <artifactId>tooltip</artifactId>
             <version>1.2.2</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.vaadin.artur/a-vaadin-helper -->
         <dependency>
             <groupId>org.vaadin.artur</groupId>
             <artifactId>a-vaadin-helper</artifactId>
             <version>1.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vaadin.componentfactory</groupId>
+            <artifactId>enhanced-dialog</artifactId>
+            <version>1.0.4</version>
         </dependency>
         <!-- Vaadin -->
 

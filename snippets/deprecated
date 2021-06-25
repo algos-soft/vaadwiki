@@ -1,0 +1,22 @@
+Java 9 adds some optional attributes to the @Deprecated annotation: since and forRemoval.
+
+The since attribute requires a string that lets us define in which version the element was deprecated. The default value is an empty string.
+
+And forRemoval is a boolean that allows us to specify if the element will be removed in the next release. Its default value is false:
+
+	public class Worker {
+	    /**
+	     * Calculate period between versions
+	     * @deprecated
+	     * This method is no longer acceptable to compute time between versions.
+	     * <p> Use {@link Utils#calculatePeriod(Machine)} instead.
+	     *
+	     * @param machine instance
+	     * @return computed time
+	     */
+	    @Deprecated(since = "4.5", forRemoval = true)
+	    public int calculate(Machine machine) {
+	        return machine.exportVersions().size() * 10;
+	    }
+	}
+

@@ -1,0 +1,8 @@
+
+padding is the space between the content and the border, whereas margin is the space outside the border.
+
+The margin clears an area around an element (outside the border),
+but the padding clears an area around the content (inside the border) of an element.
+it means that your element does not know about its outside margins,
+so if you are developing dynamic web controls,
+I recommend that to use padding vs margin if you can

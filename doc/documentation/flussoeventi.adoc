@@ -1,0 +1,18 @@
+:doctype: book
+:toc: left
+:toclevels: 4
+
+
+= Flusso degli eventi
+
+== Prima del browser
+
+=== 1 Main
+- The main method makes it possible to run the application as a plain Java application which starts embedded web server via Spring Boot.
+- Punto di ingresso nella classe xxxApplication che estende **SpringBootServletInitializer**
+
+=== 2 OnApplicationEvent
+- Nella classe **FlowBoot** o una sua sottoclasse
+- invocato dall' annotation **@EventListener**
+
+== Dopo il browser

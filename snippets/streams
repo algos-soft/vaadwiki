@@ -1,0 +1,15 @@
+Streams are Collections that have been modified for functional use. Consider the List collection, typically a LinkedList or an ArrayList data structure. These data structures were designed for traditional CRUD operations in a very object-oriented way. But what happens when you need to iterate over all of elements in a list that meet a criteria, perform some chain of operations against those elements, and forward those elements on to a new list object? You could spend a lot of time working on a "helper object" that is designed specifically to modify all of your list objects in your application to accomplish this, or you could use stream operations. Streams have been integrated into many of the native Java data structures (just like many lambda functions) allowing them to be easily pulled from pre-Java 8 code. Consider the following example pulled from this excellent resource on the Streams API
+
+List<String> myList = Arrays.asList("a1", "a2", "b1", "c2", "c1");
+Stream<String> myStream = myList.stream();
+
+myStream
+    .filter(s -> s.startsWith("c"))
+    .map(String::toUpperCase)
+    .sorted()
+    .forEach(System.out::println);
+
+// C1
+// C2
+
+We create a List object and from that List we create a Stream. The filter method takes a lambda that pulls all elements out of the stream which start with a "c". The map method passes the method reference for the toUpposerCase method, which is part of the String object, and applies it to each element in the Stream at this time (which is just c2 and c1). The sorted method sorts the elements in the stream in alpha-numeric order (resulting in C1 and C2). Finally the forEach method takes another method references which returns the type void and applies it to the remaining members of the stream, thus printing the strings "C1" and "C2". Streams are another departure from traditional Java, much like lambda expressions. They are very functional tools that cannot be re-used after a terminating operation has been called on it (i.e. any method which returns void, in the above case the forEach method). However, they are invaluable tools for parsing large data sets. Whole classes designed to process large data structures can be reduced to a few lines of code using streams.

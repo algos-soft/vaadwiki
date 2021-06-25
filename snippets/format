@@ -1,0 +1,1 @@
+                message = String.format("La preferenza: %s è del tipo sbagliato", keyCode);

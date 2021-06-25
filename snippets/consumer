@@ -1,0 +1,13 @@
+//    /**
+//     * Azione implementata nel metodo della classe specifica <br>
+//     *
+//     * @since java 8
+//     */
+//    public Consumer<AIData> fixData = AIData::fixData;
+//
+//    /**
+//     * Azione implementata nel metodo della classe specifica <br>
+//     *
+//     * @since java 8
+//     */
+//    public Consumer<AIData> fixPreferenze = AIData::fixPreferenze;

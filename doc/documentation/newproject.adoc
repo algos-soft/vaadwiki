@@ -1,0 +1,82 @@
+:doctype: book
+:toc: left
+:toclevels: 4
+
+
+= Nuovo progetto
+- IDEA, creazione di un nuovo progetto di base con VaadinFlow e SpringBoot
+Usa Vaadin 14.3.1 (e successivi) e IntelliJ Idea 2020.1.4 (e successivi)
+
+=== Struttura base
+
+1. File -> New -> Project...
+
+2. Selezionare **Maven** a sinistra (la seconda opzione del secondo gruppo)
+
+3. Controllare che Project SDK sia selezionato. Se manca, crearlo -> **New**
+
+4. Non selezionare 'Create from archetype'.
+ - Confermare -> _Next_
+
+6. Controllare **Name** del progetto (minuscolo) e **Location** d'installazione.
+
+5. Aprire **Artifact Coordinates** e regolare:
+- GroupId: it.algos
+- ArtifactId: nomeNuovoProgetto
+- Version: 1.0-SNAPSHOT
+- Confermare -> **Finish**
+
+=== Git
+==== Ignore
+- Controllare che esista il file (nascosto) **.gitignore**
+- Se manca recuperarlo
+
+==== Esclusioni
+===== Generali
+- target
+- build/
+- target/
+- out/
+- log/
+
+===== Mac
+- *.DS_Store
+
+===== IntelliJ IDEA
+- .idea
+- *.iws
+- *.iml
+- *.ipr
+
+===== Pnpm
+- bower_components
+- node
+- node_modules/
+- package.json
+- package-lock.json
+- webpack.config.js
+- **/webpack.generated.js
+- pnpm-lock.yaml
+- pnpmfile.js
+
+==== Rimozione Remotes
+- Aprire VCS -> Git -> Remotes... e cancellare eventuali preesistenti riferimenti ad altri progetti
+- Un nuovo progetto **NON** dovrebbe avere la partizione VCS -> Git -> Remotes...
+
+=== GitHub
+- Aprire VCS -> Import into Version Control -> Share Project on GitHub...
+- Confermare -> **Share**
+
+=== POM
+==== Vaadin
+- Replace artifactId with vaadin-core to use only free components
+- Aggiungere <exclusions>:  Webjars are only needed when running in Vaadin 13 compatibility mode
+
+==== Dependency
+- Spring MongoDB
+- Lombok
+
+=== Install
+- On terminal run: **npm install**
+- Aggiungere (obbligatorio) resources -> application.properties
+- Aggiungere (facoltativo) resources -> banner.txt

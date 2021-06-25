@@ -1,0 +1,1 @@
+Type annotations are annotations that are specified at the field level. Type annotations are very popular in the Hibernate and JPA libraries, where you can define database relationships between two records on a foreign key.

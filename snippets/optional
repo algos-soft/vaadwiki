@@ -1,0 +1,4 @@
+Optional objects can be assigned null values without throwing NullPointerExceptions. These objects do much in the way of cleaning boiler plate code. Instead of checking if an object is equal to null, you can use an Optional type which contain constructs like Optional.empty or Optional.isPresent to replace your constant null checking.
+
+        Optional<AIData> opt = Optional.ofNullable((AIData) appContext.getBean(FlowVar.dataClazz));
+        opt.ifPresentOrElse(fixPreferenze, mancaDataClazz);

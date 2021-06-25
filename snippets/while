@@ -1,0 +1,12 @@
+            //--controlla anche la prima volta
+            //--se non ci sono le condizioni NON esegue MAI
+            while (stringaOut.startsWith(QUADRA_INI)) {
+                stringaOut = stringaOut.substring(1);
+            }
+
+
+            //--prima esegue una volta, poi controlla le volte successive
+            //--se non ci sono le condizioni esegue COMUNQUE almeno una volta
+            do {
+                stringaOut = stringaOut.substring(1);
+            } while(stringaOut.startsWith(QUADRA_INI));

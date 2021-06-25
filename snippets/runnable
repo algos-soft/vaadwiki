@@ -1,0 +1,6 @@
+//    /**
+//     * Messaggio di errore <br>
+//     *
+//     * @since java 8
+//     */
+//    public Runnable mancaDataClazz = () -> System.out.println("Non ho trovato la classe xxxData");
