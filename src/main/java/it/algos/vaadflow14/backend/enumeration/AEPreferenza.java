@@ -30,6 +30,8 @@ public enum AEPreferenza implements AIPreferenza {
     usaFormFieldMaiuscola(PREF_USA_FORM_MAIUSCOLA, "Prima lettera maiuscola nella label di un field", AETypePref.bool, true, true),
     usaSearchCaseSensitive(PREF_USA_SEARCH_SENSITIVE, "Search delle query sensibile alle maiuscole", AETypePref.bool, false, true),
     //    iconaDetail("iconaDetail", "VaadinIcon per aprire il Form", AETypePref.icona, "TRUCK"),
+
+    usaButtonShortcut(PREF_USA_BUTTON_SHORTCUT, "Shortcut dei bottoni. Disabilitabile in caso di problemi col browser", AETypePref.bool, true, true),
     iconaEdit(PREF_ICONA_EDIT, "Icona per il dettaglio della scheda", AETypePref.enumeration, AETypeIconaEdit.edit, true),
     mailTo(PREF_EMAIL, "Indirizzo email", AETypePref.email, "gac@algos.it", true, "Email di default a cui spedire i log di posta"),
     maxRigheGrid(PREF_MAX_RIGHE_GRID, "Righe massime della griglia semplice", AETypePref.integer, 20, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),

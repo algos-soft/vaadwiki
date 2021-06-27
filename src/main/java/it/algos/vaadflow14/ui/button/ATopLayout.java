@@ -121,6 +121,10 @@ public class ATopLayout extends AButtonLayout {
                     }
                 }
 
+                if (obj instanceof Button) {
+                    this.addComp(key, (Component)obj);
+                }
+
                 if (obj instanceof ComboBox) {
                     combo = ((ComboBox) obj);
                     this.addComp(key, combo);

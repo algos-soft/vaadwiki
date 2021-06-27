@@ -152,8 +152,8 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         //--Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
         this.fixAlertLayout();
 
-//        //--Regola una mappa di ComboBox (solo per la List e facoltativi) da affiancare ai bottoni di comando della view al Top <br>
-//        this.fixMappaComboBox();
+        //        //--Regola una mappa di ComboBox (solo per la List e facoltativi) da affiancare ai bottoni di comando della view al Top <br>
+        //        this.fixMappaComboBox();
 
         //--Costruisce un layout (obbligatorio per la List) per i bottoni di comando della view al Top <br>
         //--Eventualmente i bottoni potrebbero andare su due righe <br>
@@ -226,7 +226,6 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
     public boolean performAction(AIAction iAzione, String searchFieldValue) {
         return false;
     }
-
 
 
     /**
@@ -306,10 +305,16 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
     /**
      * Apre una pagina di wikipedia. <br>
      */
-    protected final void openWikiPage(String wikiTitle) {
-        String link = "\"" + PATH_WIKI + wikiTitle + "\"";
-        if (text.isValid(wikiTitle)) {
-            UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    protected void openWikiPage(final String wikiTitle) {
+        this.openWeb(PATH_WIKI + wikiTitle);
+    }
+
+    /**
+     * Apre una pagina generica sul web. <br>
+     */
+    protected void openWeb(final String urlWeb) {
+        if (text.isValid(urlWeb)) {
+            UI.getCurrent().getPage().executeJavaScript("window.open(" + "\"" + urlWeb + "\"" + ");");
         }
         else {
             logger.info("Manca il valore di wikiPageTitle", this.getClass(), "openWikiPage");

@@ -178,6 +178,11 @@ public enum AEWikiButton implements AIButton {
     }
 
     @Override
+    public Button get(String text) {
+        return FactoryButton.get(this,text);
+    }
+
+    @Override
     public Button get() {
         return FactoryButton.get(this);
     }

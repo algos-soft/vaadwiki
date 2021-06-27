@@ -97,10 +97,10 @@ public enum AETypeData {
     dataCompletaShort("data completa short", "EEE, d-MMM-yyy", "dom, 5-ott-2014", 14),
 
     /**
-     * Pattern: d-M-yy 'alle' H:mm <br>
+     * Pattern: d-MMM-yy 'alle' H:mm <br>
      * Esempio: 5-ott-14 alle 13:45 <br>
      */
-    breveOrario("data e orario brevi", "d-M-yy 'alle' H:mm", "5-ott-14 alle 13:45", 20, false),
+    breveOrario("data e orario brevi", "d-MMM-yy 'alle' H:mm", "5-ott-14 alle 13:45", 20, false),
 
     /**
      * Pattern: EEEE, d-MMMM-yyy 'alle' H:mm <br>
@@ -109,10 +109,10 @@ public enum AETypeData {
     completaOrario("data e orario completi", "EEEE, d-MMMM-yyy 'alle' H:mm", "domenica, 5-ottobre-2014 alle 13:45", 20, false),
 
     /**
-     * Pattern: d-M-yy H:mm <br>
-     * Esempio: 18-4-17 13:45 <br>
+     * Pattern: d-MMM-yy H:mm <br>
+     * Esempio: 18-nov-17 13:45 <br>
      */
-    normaleOrario("data e orario", "d-M-yy H:mm", "18-4-17 13:45", 9, false),
+    normaleOrario("data e orario", "d-MMM-yy H:mm", "18-nov-17 13:45", 10, false),
 
 
     /**

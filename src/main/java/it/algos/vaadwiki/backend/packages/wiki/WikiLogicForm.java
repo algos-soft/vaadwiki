@@ -3,7 +3,10 @@ package it.algos.vaadwiki.backend.packages.wiki;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.interfaces.*;
+import it.algos.vaadflow14.wiki.*;
 import it.algos.vaadwiki.backend.service.*;
+import it.algos.vaadwiki.ui.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
 /**
@@ -66,6 +69,55 @@ public abstract class WikiLogicForm extends LogicForm {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+    }
+
+    /**
+     * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     * Interfaccia utilizzata come parametro per poter sovrascrivere il metodo <br>
+     * Nella classe base eseguirà un casting a AEAction <br>
+     * Nella (eventuale) sottoclasse specifica del progetto eseguirà un casting a AExxxAction <br>
+     *
+     * @param iAzione interfaccia dell'azione selezionata da eseguire
+     *
+     * @return false se il parametro non è una enumeration valida o manca lo switch
+     */
+    @Override
+    public boolean performAction(AIAction iAzione) {
+        boolean status = super.performAction(iAzione);
+        AEWikiAction azione = iAzione instanceof AEWikiAction ? (AEWikiAction) iAzione : null;
+
+        if (status) {
+            return true;
+        }
+
+        if (azione == null) {
+            return false;
+        }
+
+        status = true;
+        switch (azione) {
+            case wikiPaginaView:
+                openWikiPage(AWikiApiService.API_VIEW);
+                break;
+            case wikiPaginaEdit:
+                openWikiPage(AWikiApiService.API_EDIT);
+                break;
+            case wikiPaginaHistory:
+                openWikiPage(AWikiApiService.API_HISTORY);
+                break;
+            default:
+                status = false;
+                break;
+        }
+
+        return status;
+    }
+
+    /**
+     * Apre una pagina di wikipedia. <br>
+     */
+    protected void openWikiPage(String path) {
+        super.openWeb(path + wikiPageTitle);
     }
 
 }

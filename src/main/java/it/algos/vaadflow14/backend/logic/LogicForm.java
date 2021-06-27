@@ -402,7 +402,11 @@ public abstract class LogicForm extends Logic {
     @Override
     public boolean performAction(AIAction iAzione) {
         boolean status = true;
-        AEAction azione = (AEAction) iAzione;
+        AEAction azione = iAzione instanceof AEAction ? (AEAction) iAzione : null;
+
+        if (azione == null) {
+            return false;
+        }
 
         switch (azione) {
             case resetForm:

@@ -126,4 +126,8 @@ public class BioWrap {
         return mappaBio != null ? mappaBio.get("Cognome") : VUOTA;
     }
 
+    public LocalDateTime getLastModifica() {
+        return lastModifica;
+    }
+
 }

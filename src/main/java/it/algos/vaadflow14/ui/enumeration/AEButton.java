@@ -187,6 +187,12 @@ public enum AEButton implements AIButton {
         return iconaOnly;
     }
 
+
+    @Override
+    public Button get(final String text) {
+        return FactoryButton.get(this, text);
+    }
+
     @Override
     public Button get() {
         return FactoryButton.get(this);

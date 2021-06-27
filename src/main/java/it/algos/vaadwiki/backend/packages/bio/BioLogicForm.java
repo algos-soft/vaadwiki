@@ -13,11 +13,11 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.fields.*;
-import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.wiki.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadwiki.backend.service.*;
+import it.algos.vaadwiki.ui.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -83,7 +83,7 @@ public class BioLogicForm extends WikiLogicForm {
         super.fixPreferenze();
 
         super.usaBottoneDownload = true;
-        super.usaBottonePaginaWiki = true;
+        //        super.usaBottonePaginaWiki = true;
         super.wikiPageTitle = ((Bio) entityBean).wikiTitle;
     }
 
@@ -107,12 +107,31 @@ public class BioLogicForm extends WikiLogicForm {
 
     /**
      * Costruisce una lista di bottoni (enumeration) al Top della view <br>
-     * Costruisce i bottoni come dai Flag regolati di default o nella sottoclasse <br>
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
+     * Costruisce i bottoni come dai flag regolati di default o nella sottoclasse <br>
      * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected List<AIButton> getListaAEBottoniTop() {
-        return Collections.singletonList(AEButton.download);
+    @Override
+    protected void creaAEBottoniTop() {
+        super.creaAEBottoniTop();
+
+        Button button;
+
+        button = AEButton.wiki.get("View");
+        button.addClickListener(event -> performAction(AEWikiAction.wikiPaginaView));
+        putMappa(button);
+
+        button = AEButton.wiki.get("Edit");
+        button.addClickListener(event -> performAction(AEWikiAction.wikiPaginaEdit));
+        putMappa(button);
+
+        button = AEButton.wiki.get("Crono");
+        button.addClickListener(event -> performAction(AEWikiAction.wikiPaginaHistory));
+        putMappa(button);
+
+        //        putMappa(((Button) AEButton.wiki.get("Edit").addClickListener(event -> performAction(AEWikiAction.wikiPaginaEdit))));
+        //        putMappa((Button) AEButton.wiki.get("Crono").addClickListener(event -> performAction(AEWikiAction.wikiPaginaCrono)));
     }
 
 
@@ -223,8 +242,20 @@ public class BioLogicForm extends WikiLogicForm {
         wikiTitle = getWikiTitle();
         if (text.isValid(wikiTitle)) {
             wrap = wikiBot.leggePage(wikiTitle);
-            entityBean = bioService.newEntity(wrap);
-            currentForm.getBinder().setBean(entityBean);
+
+            if (wrap != null && wrap.isValida()) {
+                entityBean = bioService.newEntity(wrap);
+                currentForm.getBinder().setBean(entityBean);
+                logger.info(AETypeLog.download, String.format("Download della pagina %s", wikiTitle));
+            }
+            else {
+                if (wrap != null) {
+                    logger.warn(AETypeLog.download, "Qualcosa non ha funzionato");
+                }
+                else {
+                    logger.warn(AETypeLog.download, String.format("Su wiki non esiste la pagina %s", wikiTitle));
+                }
+            }
         }
     }
 

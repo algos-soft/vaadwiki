@@ -26,13 +26,33 @@ public abstract class FactoryButton {
      *
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
-    public static Button get(AIButton aeButton) {
+    public static Button get(final AIButton aeButton) {
+        return get(aeButton, VUOTA);
+    }
+
+    /**
+     * Costruzione standard del bottone <br>
+     * Di default usa le vaadinIcon <br>
+     *
+     * @param aeButton enumeration con i parametri standard del bottone richiesto
+     * @param text     del bottone sostituivo di quello standard
+     *
+     * @return nuovo bottone costruito coi parametri standard previsti e CON listener
+     */
+    public static Button get(final AIButton aeButton, final String text) {
+        Button button;
+
         if (FlowVar.usaVaadinIcon) {
-            return getVaadin(aeButton);
+            button = getVaadin(aeButton);
         }
         else {
-            return getLumo(aeButton);
+            button = getLumo(aeButton);
         }
+        if (text != null && text.length() > 0) {
+            button.setText(text);
+        }
+
+        return button;
     }
 
 

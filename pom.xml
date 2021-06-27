@@ -154,6 +154,7 @@
             <version>1.6.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.vaadin.componentfactory/enhanced-dialog -->
         <dependency>
             <groupId>com.vaadin.componentfactory</groupId>
             <artifactId>enhanced-dialog</artifactId>

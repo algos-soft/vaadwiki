@@ -603,6 +603,15 @@ public abstract class LogicProperty extends VerticalLayout {
     }
 
     /**
+     * Aggiunge una enumeration alla mappa dei componenti <br>
+     *
+     * @param button da aggiungere alla mappa componenti
+     */
+    protected void putMappa(final Button button) {
+        mappaComponentiTop.put(button.getText(), button);
+    }
+
+    /**
      * Costruisce un wrap di informazioni per la ricerca in ViewList <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */

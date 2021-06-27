@@ -28,6 +28,8 @@ public class WrapPage {
 
     private String tmpl;
 
+    private boolean valida;
+
 
     public WrapPage(final String domain, final long pageid, final String title, final String text, final String stringTimestamp) {
         this(domain, pageid, title, text, stringTimestamp, false);
@@ -41,6 +43,14 @@ public class WrapPage {
         this.tmpl = template ? text : VUOTA;
         this.time = LocalDateTime.parse(stringTimestamp, DateTimeFormatter.ISO_DATE_TIME);
         this.template = template;
+        this.valida = true;
+    }
+
+    public WrapPage(final String domain, final String title, final boolean valida) {
+        this.domain = domain;
+        this.pageid = pageid;
+        this.title = title;
+        this.valida = valida;
     }
 
     public String getDomain() {
@@ -69,6 +79,10 @@ public class WrapPage {
 
     public String getTmpl() {
         return tmpl;
+    }
+
+    public boolean isValida() {
+        return valida;
     }
 
 }

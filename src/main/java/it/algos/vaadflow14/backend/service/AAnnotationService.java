@@ -501,31 +501,30 @@ public class AAnnotationService extends AAbstractService {
         return isEntityClass(clazz);
     }
 
-
-//    /**
-//     * Check if the class is an entityBean class.
-//     * 1) Controlla che il parametro in ingresso non sia vuoto <br>
-//     *
-//     * @param canonicalName of the class to be checked if is of type AREntity
-//     *
-//     * @return true if the class is of type AREntity
-//     */
-//    public boolean isResetEntityClass(final String canonicalName) {
-//        Class clazz = null;
-//
-//        try {
-//            clazz = Class.forName(canonicalName);
-//        } catch (Exception unErrore) {
-//            logger.error(unErrore, this.getClass(), "isResetEntityClass");
-//        }
-//
-//        if (isEntityClass(canonicalName)) {
-//            return usaReset(clazz);
-//        }
-//        else {
-//            return false;
-//        }
-//    }
+    //    /**
+    //     * Check if the class is an entityBean class.
+    //     * 1) Controlla che il parametro in ingresso non sia vuoto <br>
+    //     *
+    //     * @param canonicalName of the class to be checked if is of type AREntity
+    //     *
+    //     * @return true if the class is of type AREntity
+    //     */
+    //    public boolean isResetEntityClass(final String canonicalName) {
+    //        Class clazz = null;
+    //
+    //        try {
+    //            clazz = Class.forName(canonicalName);
+    //        } catch (Exception unErrore) {
+    //            logger.error(unErrore, this.getClass(), "isResetEntityClass");
+    //        }
+    //
+    //        if (isEntityClass(canonicalName)) {
+    //            return usaReset(clazz);
+    //        }
+    //        else {
+    //            return false;
+    //        }
+    //    }
 
 
     /**
@@ -643,7 +642,6 @@ public class AAnnotationService extends AAbstractService {
             return false;
         }
     }
-
 
 
     /**
@@ -2099,19 +2097,35 @@ public class AAnnotationService extends AAbstractService {
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      */
     public AETypeData getTypeDataCol(final Field reflectionJavaField) {
-        AETypeData type = AETypeData.standard;
+        AETypeData typeData = null;
+        AETypeField typeField = getFormType(reflectionJavaField);
         AIColumn annotation = null;
 
         if (reflectionJavaField == null) {
             return null;
         }
 
-        annotation = this.getAIColumn(reflectionJavaField);
-        if (annotation != null) {
-            type = annotation.typeData();
+        switch (typeField) {
+            case localDate:
+                typeData = AETypeData.dateNormal;
+                break;
+            case localTime:
+                typeData = AETypeData.orario;
+                break;
+            case localDateTime:
+                typeData = AETypeData.normaleOrario;
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "getTypeDataCol");
+                break;
         }
 
-        return type;
+        annotation = this.getAIColumn(reflectionJavaField);
+        if (annotation != null) {
+            typeData = annotation.typeData();
+        }
+
+        return typeData;
     }
 
     //==========================================================================
@@ -2491,6 +2505,7 @@ public class AAnnotationService extends AAbstractService {
 
         return status;
     }
+
     /**
      * Get the status required of the property.
      *

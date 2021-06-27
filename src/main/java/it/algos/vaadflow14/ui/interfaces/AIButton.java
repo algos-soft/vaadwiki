@@ -44,6 +44,8 @@ public interface AIButton {
 
     public boolean isIconaOnly();
 
+    public Button get(final String text);
+
     public Button get();
 
 }// end of interface

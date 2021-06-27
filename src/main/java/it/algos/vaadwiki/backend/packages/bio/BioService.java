@@ -119,7 +119,7 @@ public class BioService extends AService {
      * @return la nuova entityBean appena creata (non salvata)
      */
     public Bio newEntity(final BioWrap wrap) {
-        return newEntity(wrap.getPageid(), wrap.getTitle(),  wrap.getTmplBioServer(),null);
+        return newEntity(wrap.getPageid(), wrap.getTitle(),  wrap.getTmplBioServer(),wrap.getLastModifica());
     }
 
     /**

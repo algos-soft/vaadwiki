@@ -69,6 +69,12 @@ public class AWikiApiService extends AAbstractService {
 
     public static final String WIKI_QUERY_PAGEIDS = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&rvslots=main&prop=revisions&rvprop=content|ids|timestamp&pageids=";
 
+    public static final String API_VIEW = "https://it.wikipedia.org/wiki/";
+
+    public static final String API_EDIT = "https://it.wikipedia.org/w/index.php?action=edit&section=0&title=";
+
+    public static final String API_HISTORY = "https://it.wikipedia.org/w/index.php?action=history&title=";
+
     /**
      * Converte il valore stringa nel tipo previsto dal parametro PagePar
      *
@@ -833,8 +839,13 @@ public class AWikiApiService extends AAbstractService {
         String stringTimestamp;
         String content;
 
-        pageid = (long) jsonPage.get(KEY_JSON_PAGE_ID);
         title = (String) jsonPage.get(KEY_JSON_TITLE);
+
+        if (jsonPage.get(KEY_JSON_MISSING) != null && (boolean) jsonPage.get(KEY_JSON_MISSING)) {
+            return new WrapPage(webUrl, title, false);
+        }
+
+        pageid = (long) jsonPage.get(KEY_JSON_PAGE_ID);
         JSONArray jsonRevisions = (JSONArray) jsonPage.get(KEY_JSON_REVISIONS);
         JSONObject jsonRevZero = (JSONObject) jsonRevisions.get(0);
         stringTimestamp = (String) jsonRevZero.get(KEY_JSON_TIMESTAMP);

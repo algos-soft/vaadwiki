@@ -53,7 +53,7 @@ import java.time.*;
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Bio", keyPropertyName = "wikiTitle")
-@AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "wikiTitle")
+@AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "lastModifica")
 @AIList(fields = "pageId,wikiTitle,lastModifica,lastLettura", usaRowIndex = true)
 @AIForm(fields = "pageId,wikiTitle,lastModifica,tmplBioServer", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
@@ -105,6 +105,7 @@ public class Bio extends AEntity {
     @Field("mod")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.localDateTime, caption = "Ultima modifica effettuata (non dal Bot) sul server", enabled = false)
+    @AIColumn(typeData = AETypeData.normaleOrario)
     public LocalDateTime lastModifica;
 
 

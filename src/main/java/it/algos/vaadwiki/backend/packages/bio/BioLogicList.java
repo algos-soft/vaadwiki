@@ -1,6 +1,6 @@
 package it.algos.vaadwiki.backend.packages.bio;
 
-import com.vaadin.flow.component.*;
+import com.vaadin.componentfactory.*;
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.dialog.*;
 import com.vaadin.flow.component.html.*;
@@ -105,25 +105,25 @@ public class BioLogicList extends LogicList {
     }
 
     protected void getInput() {
-        //        EnhancedDialog dialog = new EnhancedDialog();
-        //        dialog.setHeader("Example Header");
-        //        dialog.setContent(new Span("Content"));
-        //        dialog.setFooter(new Button("Close", evt -> dialog.close()));
-        //        dialog.open();
+        //        EnhancedDialog dialog2 = new EnhancedDialog();
+        //        dialog2.setHeader("Example Header");
+        //        dialog2.setContent(new Span("Content"));
+        //        dialog2.setFooter(new Button("Close", evt -> dialog2.close()));
+        //        dialog2.open();
 
-        VerticalLayout layout = new VerticalLayout();
-        Dialog dialog = new Dialog();
-        TextField field = new TextField("Titolo della pagina sul server wiki");
-        field.setWidth("14em");
-        field.addValueChangeListener(event -> newFormEsegue(field.getValue()));
-        layout.add(field);
-        field.setAutofocus(true);
+                VerticalLayout layout = new VerticalLayout();
+                Dialog dialog = new Dialog();
+                TextField field = new TextField("Titolo della pagina sul server wiki");
+                field.setWidth("16em");
+                field.addValueChangeListener(event -> newFormEsegue(field.getValue()));
+                layout.add(field);
+                field.setAutofocus(true);
 
-        dialog.setWidth("400px");
-        dialog.setHeight("200px");
-        layout.add(new Button("Download", evt -> dialog.close()));
-        dialog.add(layout);
-        dialog.open();
+                dialog.setWidth("400px");
+                dialog.setHeight("200px");
+                layout.add(new Button("Download", evt -> dialog.close()));
+                dialog.add(layout);
+                dialog.open();
     }
 
     protected void newFormEsegue(String wikiTitle) {

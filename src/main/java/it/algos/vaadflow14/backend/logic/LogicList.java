@@ -14,6 +14,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.ui.dialog.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
@@ -169,7 +170,7 @@ public abstract class LogicList extends Logic {
         addSpanRosso(String.format("La visualizzazione di questi avvisi rossi si regola in %s:usaSpanHeaderRossi", preferenza));
         addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", delete, entity, usaNew));
         addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", nuovo, entity, usaNew));
-        addSpanRosso(String.format("%s presente se  %s->@AIView(%s=%s)", search, entity, property,xxx));
+        addSpanRosso(String.format("%s presente se  %s->@AIView(%s=%s)", search, entity, property, xxx));
         if (annotation.usaReset(entityClazz)) {
             addSpanRosso(String.format("Bottone %s presente se %s extends %s ed esiste %s.%s", reset, entity, aREntity, service, methodReset));
             addSpanRosso(String.format("Bottone %s agisce %s sulle entities della collezione %s che hanno la property %s", reset, solo, collezione, resetTrue));
@@ -320,14 +321,14 @@ public abstract class LogicList extends Logic {
         }
     }
 
-//    /**
-//     * Aggiunge una enumeration alla mappa dei componenti <br>
-//     *
-//     * @param aiButton enumeration da aggiungere alla mappa componenti
-//     */
-//    protected void putMappa(final AIButton aiButton) {
-//        mappaComponentiTop.put(aiButton.getTesto(), aiButton);
-//    }
+    //    /**
+    //     * Aggiunge una enumeration alla mappa dei componenti <br>
+    //     *
+    //     * @param aiButton enumeration da aggiungere alla mappa componenti
+    //     */
+    //    protected void putMappa(final AIButton aiButton) {
+    //        mappaComponentiTop.put(aiButton.getTesto(), aiButton);
+    //    }
 
 
     /**
@@ -490,7 +491,7 @@ public abstract class LogicList extends Logic {
                 this.openConfirmDeleteAll();
                 break;
             case resetList:
-                this.openConfirmReset();
+                this.openReset();
                 break;
             case nuovo:
                 this.newForm();
@@ -807,21 +808,24 @@ public abstract class LogicList extends Logic {
      * The dialog will display the given title and message(s), then call <br>
      * Può essere sovrascritto dalla classe specifica se servono avvisi diversi <br>
      */
-    protected final void openConfirmReset() {
-        MessageDialog messageDialog;
-        String message = "Vuoi veramente ripristinare i valori originali predeterminati di questa collezione? L' operazione cancellerà tutti i valori originali. Eventuali valori inseriti manualmente NON vengono cancellati/modificati";
-        VaadinIcon icon = VaadinIcon.WARNING;
+    protected final void openReset() {
+        appContext.getBean(AResetDialog.class).open(this::clickReset);
 
-        if (mongo.isEmpty(entityClazz)) {
-            clickReset();
-        }
-        else {
-            messageDialog = new MessageDialog().setTitle("Reset").setMessage(message);
-            messageDialog.addButton().text("Continua").icon(icon).error().onClick(e -> clickReset()).closeOnClick();
-            messageDialog.addButtonToLeft().text("Annulla").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
-            messageDialog.open();
-        }
+                MessageDialog messageDialog;
+        //        String message = "Vuoi veramente ripristinare i valori originali predeterminati di questa collezione? L' operazione cancellerà tutti i valori originali. Eventuali valori inseriti manualmente NON vengono cancellati/modificati";
+        //        VaadinIcon icon = VaadinIcon.WARNING;
+        //
+        //        if (mongo.isEmpty(entityClazz)) {
+        //            clickReset();
+        //        }
+        //        else {
+        //            messageDialog = new MessageDialog().setTitle("Reset").setMessage(message);
+        //            messageDialog.addButton().text("Continua").icon(icon).error().onClick(e -> clickReset()).closeOnClick();
+        //            messageDialog.addButtonToLeft().text("Annulla").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
+        //            messageDialog.open();
+        //        }
     }
+
 
 
     /**
@@ -888,7 +892,7 @@ public abstract class LogicList extends Logic {
 
     protected void addLink(final String http, final String title) {
         Span span = html.getSpanBlu(title, AETypeWeight.bold);
-        if (alertList!=null) {
+        if (alertList != null) {
             alertList.add(new Anchor(http, span));
         }
     }
