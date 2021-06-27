@@ -253,7 +253,7 @@ public class BioLogicForm extends WikiLogicForm {
                     logger.warn(AETypeLog.download, "Qualcosa non ha funzionato");
                 }
                 else {
-                    logger.warn(AETypeLog.download, String.format("Su wiki non esiste la pagina %s", wikiTitle));
+                    logger.info(AETypeLog.download, String.format("Su wiki non esiste la pagina %s", wikiTitle));
                 }
             }
         }

@@ -1,9 +1,7 @@
 package it.algos.vaadwiki.backend.packages.bio;
 
-import com.vaadin.componentfactory.*;
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.dialog.*;
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.router.*;
@@ -111,19 +109,19 @@ public class BioLogicList extends LogicList {
         //        dialog2.setFooter(new Button("Close", evt -> dialog2.close()));
         //        dialog2.open();
 
-                VerticalLayout layout = new VerticalLayout();
-                Dialog dialog = new Dialog();
-                TextField field = new TextField("Titolo della pagina sul server wiki");
-                field.setWidth("16em");
-                field.addValueChangeListener(event -> newFormEsegue(field.getValue()));
-                layout.add(field);
-                field.setAutofocus(true);
+        VerticalLayout layout = new VerticalLayout();
+        Dialog dialog = new Dialog();
+        TextField field = new TextField("Titolo della pagina sul server wiki");
+        field.setWidth("16em");
+        field.addValueChangeListener(event -> newFormEsegue(field.getValue()));
+        layout.add(field);
+        field.setAutofocus(true);
 
-                dialog.setWidth("400px");
-                dialog.setHeight("200px");
-                layout.add(new Button("Download", evt -> dialog.close()));
-                dialog.add(layout);
-                dialog.open();
+        dialog.setWidth("400px");
+        dialog.setHeight("200px");
+        layout.add(new Button("Download", evt -> dialog.close()));
+        dialog.add(layout);
+        dialog.open();
     }
 
     protected void newFormEsegue(String wikiTitle) {
@@ -143,8 +141,21 @@ public class BioLogicList extends LogicList {
 
         if (text.isValid(wikiTitle)) {
             wrap = wikiBot.leggePage(wikiTitle);
+        }
+
+        if (wrap != null && wrap.isValida()) {
+            entityBean = bioService.newEntity(wrap);
             bio = bioService.newEntity(wrap);
             bioService.save(bio);
+            logger.info(AETypeLog.download, String.format("Download della pagina %s", wikiTitle));
+        }
+        else {
+            if (wrap == null) {
+                logger.warn(AETypeLog.download, "Qualcosa non ha funzionato");
+            }
+            else {
+                logger.info(AETypeLog.download, String.format("Su wiki non esiste la pagina %s", wrap.getTitle()));
+            }
         }
 
         return bio;
