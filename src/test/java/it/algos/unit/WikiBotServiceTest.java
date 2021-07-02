@@ -32,7 +32,11 @@ public class WikiBotServiceTest extends ATest {
 
     private static final String CAT_1435 = "Nati nel 1435";
 
+    private static final String CAT_1591 = "Nati nel 1591";
+
     private static final String CAT_1935 = "Nati nel 1935";
+
+    private static final String CAT_1713 = "Nati nel 1713";
 
     private static final String CAT_ROMANI = "Personaggi della storia romana";
 
@@ -186,12 +190,9 @@ public class WikiBotServiceTest extends ATest {
             System.out.println(wrap.getLastModifica());
         }
 
-        sorgente = CAT_1935;
-        previstoIntero = 50;
-        sorgente2 = wikiApi.getPageidsCat(sorgente);
-        assertTrue(text.isValid(sorgente2));
-
-        wrapLista = service.fixPages(sorgente2);
+        sorgente = CAT_1435;
+        previstoIntero = 33;
+        wrapLista = service.getMiniWrap(sorgente);
         assertNotNull(wrapLista);
         assertEquals(previstoIntero, wrapLista.size());
 
@@ -200,6 +201,41 @@ public class WikiBotServiceTest extends ATest {
         System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
         System.out.println(String.format("Tempo impiegato per leggere la categoria '%s' e controllare il 'timestamp' di %d pagine: %s", sorgente, previstoIntero, getTime()));
 
+
+        sorgente = CAT_1591;
+        previstoIntero = 67;
+        wrapLista = service.getMiniWrap(sorgente);
+        assertNotNull(wrapLista);
+        assertEquals(previstoIntero, wrapLista.size());
+
+        System.out.println(VUOTA);
+        System.out.println(String.format("Le pagine wiki sono: %s", wrapLista.size()));
+        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
+        System.out.println(String.format("Tempo impiegato per leggere la categoria '%s' e controllare il 'timestamp' di %d pagine: %s", sorgente, previstoIntero, getTime()));
+
+
+        sorgente = CAT_1713;
+        previstoIntero = 104;
+        wrapLista = service.getMiniWrap(sorgente);
+        assertNotNull(wrapLista);
+        assertEquals(previstoIntero, wrapLista.size());
+
+        System.out.println(VUOTA);
+        System.out.println(String.format("Le pagine wiki sono: %s", wrapLista.size()));
+        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
+        System.out.println(String.format("Tempo impiegato per leggere la categoria '%s' e controllare il 'timestamp' di %d pagine: %s", sorgente, previstoIntero, getTime()));
+
+
+        sorgente = CAT_1935;
+        previstoIntero = 1987;
+        wrapLista = service.getMiniWrap(sorgente);
+        assertNotNull(wrapLista);
+        assertEquals(previstoIntero, wrapLista.size());
+
+        System.out.println(VUOTA);
+        System.out.println(String.format("Le pagine wiki sono: %s", wrapLista.size()));
+        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
+        System.out.println(String.format("Tempo impiegato per leggere la categoria '%s' e controllare il 'timestamp' di %d pagine: %s", sorgente, previstoIntero, getTime()));
     }
 
     /**

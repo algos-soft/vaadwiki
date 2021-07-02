@@ -88,6 +88,37 @@ public class AWikiBotService extends AAbstractService {
      * Usa una API con action=query SENZA bisogno di loggarsi <br>
      * Recupera dalla urlRequest  pageid e timestamp <br>
      *
+     * @param categoryTitle da recuperare
+     *
+     * @return lista di MiniWrap con 'pageid' e 'lastModifica'
+     */
+    public List<MiniWrap> getMiniWrap(final String categoryTitle) {
+        List<MiniWrap> wraps = new ArrayList<>();
+        List<Long> listaPageids = wikiApi.getLongCat(categoryTitle);
+        int limit = LIMIT_USER;
+        int dimLista = listaPageids.size();
+        int cicli = (dimLista / limit) + 1;
+        String strisciaIds = VUOTA;
+        int ini = 0;
+        int end = 0;
+
+        for (int k = 0; k < cicli; k++) {
+            ini = k * limit;
+            end = ((k + 1) * limit);
+            end = Math.min(end, dimLista);
+            strisciaIds = array.toStringaPipe(listaPageids.subList(ini, end));
+            wraps.addAll(fixPages(strisciaIds));
+        }
+
+        return wraps;
+    }
+
+    /**
+     * Recupera (come user) 'lastModifica' di una serie di pageid <br>
+     * Usa una API con action=query SENZA bisogno di loggarsi <br>
+     * Recupera dalla urlRequest  pageid e timestamp <br>
+     * Non devono arrivare più di 50 pageid <br>
+     *
      * @param pageIds stringa dei pageIds delle pagine wiki da controllare
      *
      * @return lista di MiniWrap con 'pageid' e 'lastModifica'
@@ -99,6 +130,10 @@ public class AWikiBotService extends AAbstractService {
         String rispostaAPI;
 
         if (text.isEmpty(pageIds)) {
+            return null;
+        }
+
+        if (pageIds.split(PIPE_REGEX).length > LIMIT_USER) {
             return null;
         }
 

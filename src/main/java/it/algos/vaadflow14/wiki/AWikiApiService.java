@@ -49,9 +49,9 @@ public class AWikiApiService extends AAbstractService {
 
     public static final String PAGINA_ISO_1_NUMERICO = "ISO 3166-1 numerico";
 
-    public static final String LIMIT_USER = "50";
+    public static final int LIMIT_USER = 50;
 
-    public static final String LIMIT_BOT = "500";
+    public static final int LIMIT_BOT = 500;
 
     public static final String PAGES = "pages";
 
