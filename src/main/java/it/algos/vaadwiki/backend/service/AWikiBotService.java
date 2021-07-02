@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.backend.service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wiki.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
@@ -93,17 +94,43 @@ public class AWikiBotService extends AAbstractService {
      */
     public List<MiniWrap> fixPages(final String pageIds) {
         List<MiniWrap> wraps = null;
-        String webUrl = WIKI_QUERY_TIMESTAMP + pageIds;
-        String rispostaAPI = web.legge(webUrl).getText();
+        String webUrl;
+        AIResult result;
+        String rispostaAPI;
+
+        if (text.isEmpty(pageIds)) {
+            return null;
+        }
+
+        webUrl = WIKI_QUERY_TIMESTAMP + pageIds;
+        result = web.legge(webUrl);
+        rispostaAPI = result.getText();
 
         JSONArray jsonPages = wikiApi.getArrayPagine(rispostaAPI);
         if (jsonPages != null) {
             wraps = new ArrayList<>();
             for (Object obj : jsonPages) {
-                wraps.add(wikiApi.creaPage( (JSONObject) obj));
+                wraps.add(creaPage((JSONObject) obj));
             }
         }
         return wraps;
+    }
+
+
+    public MiniWrap creaPage(final JSONObject jsonPage) {
+        long pageid;
+        String stringTimestamp;
+
+        if (jsonPage.get(KEY_JSON_MISSING) != null && (boolean) jsonPage.get(KEY_JSON_MISSING)) {
+            return null;
+        }
+
+        pageid = (long) jsonPage.get(KEY_JSON_PAGE_ID);
+        JSONArray jsonRevisions = (JSONArray) jsonPage.get(KEY_JSON_REVISIONS);
+        JSONObject jsonRevZero = (JSONObject) jsonRevisions.get(0);
+        stringTimestamp = (String) jsonRevZero.get(KEY_JSON_TIMESTAMP);
+
+        return new MiniWrap(pageid, stringTimestamp);
     }
 
     /**
