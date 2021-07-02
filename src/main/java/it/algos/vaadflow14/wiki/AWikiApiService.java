@@ -206,6 +206,27 @@ public class AWikiApiService extends AAbstractService {
         return web.legge(WIKI_QUERY_TITLES + wikiTitle);
     }
 
+
+    /**
+     * Legge una lista di pageid di una categoria wiki <br>
+     * Se non si mette 'cmlimit' restituisce 10 pagine <br>
+     * Valore massimo di 'cmlimit' (come user) 500 pagine <br>
+     * Il valore massimo (come user) di 'cmlimit' è 20 <br>
+     * La query restituisce SOLO pageid <br>
+     *
+     * @param categoryTitle da recuperare
+     *
+     * @return lista di pageid
+     */
+    public String getPageidsCat(final String categoryTitle) {
+        String striscia = VUOTA;
+        List<Long> lista = getLongCat(categoryTitle);
+
+        striscia = array.toStringaPipe(lista);
+
+        return striscia;
+    }
+
     /**
      * Legge una lista di pageid di una categoria wiki <br>
      * Se non si mette 'cmlimit' restituisce 10 pagine <br>
@@ -408,6 +429,7 @@ public class AWikiApiService extends AAbstractService {
 
         return lista;
     }
+
     /**
      * Recupera un lista di 'title'' dal testo JSON di risposta ad una query <br>
      *

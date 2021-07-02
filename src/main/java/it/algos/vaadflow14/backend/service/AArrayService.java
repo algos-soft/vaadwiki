@@ -1,19 +1,15 @@
 package it.algos.vaadflow14.backend.service;
 
-import com.vaadin.flow.component.grid.Grid;
-import it.algos.vaadflow14.backend.functional.APredicate;
-import org.jsoup.internal.StringUtil;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.vaadin.flow.component.grid.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.functional.*;
+import org.jsoup.internal.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
+
+import java.util.*;
+import java.util.stream.*;
 
 /**
  * Project vaadflow <br>
@@ -314,7 +310,20 @@ public class AArrayService extends AAbstractService {
      * @since Java 9
      */
     private String toStringaBase(final List array, final String sep) {
-        return isAllValid(array) ? String.join(sep, array) : null;
+        StringBuffer buffer = new StringBuffer();
+
+        if (array != null) {
+            array.forEach(obj -> {
+                {
+                    buffer.append(sep);
+                    buffer.append(obj);
+                }
+            });
+            buffer.delete(0,sep.length());
+        }
+
+        return buffer.toString();
+        //        return isAllValid(array) ? String.join(sep, array) : null;
     }
 
 
@@ -371,7 +380,7 @@ public class AArrayService extends AAbstractService {
      */
     @Deprecated
     public Grid.Column[] getColumnArray(Grid grid) {
-        int k=0;
+        int k = 0;
         List<Grid.Column> lista = grid.getColumns();
         Grid.Column[] matrice = new Grid.Column[lista.size()];
 

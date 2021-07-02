@@ -251,6 +251,12 @@ public abstract class ATest {
 
     protected List<String> ottenutoArray;
 
+    protected List<Long> sorgenteArrayLong;
+
+    protected List<Long> previstoArrayLong;
+
+    protected List<Long> ottenutoArrayLong;
+
     protected List<Integer> previstoInteroArray;
 
     protected List<Integer> ottenutoInteroArray;
@@ -427,6 +433,12 @@ public abstract class ATest {
         preferenzaService.mongo = mongo;
         utilityService.text = text;
         html.text = text;
+        sorgenteArray = null;
+        previstoArray = null;
+        ottenutoArray = null;
+        sorgenteArrayLong = null;
+        previstoArrayLong = null;
+        ottenutoArrayLong = null;
     }
 
 
@@ -526,16 +538,17 @@ public abstract class ATest {
         System.out.println(String.format("La query è: %s", wrap.getDomain()));
         System.out.println(String.format("Il title è: %s", wrap.getTitle()));
         if (wrap.isValida()) {
-//            message = wrap.getType() == AETypePage.testoConTmpl ? "Usa solo il template come testo" : message;
-//            message = wrap.getType() == AETypePage.testoSenzaTmpl ? "Usa tutta la pagina come testo" : message;
+            System.out.println("Il wrap è valido");
+            message = wrap.getType() == AETypePage.testoConTmpl ? "Usa solo il template come testo" : message;
+            message = wrap.getType() == AETypePage.testoSenzaTmpl ? "Usa tutta la pagina come testo" : message;
             System.out.println(String.format("La pageid è: %s", wrap.getPageid()));
             System.out.println(String.format("Il timestamp è: %s", wrap.getTime()));
-//            System.out.println(message);
+            System.out.println(message);
             if (wrap.getType() == AETypePage.testoConTmpl) {
-                System.out.println(String.format("Il wrap contiene il template che è: %s", wrap.getTmpl().substring(0, Math.min(wrap.getTmpl().length(), WIDTH_WRAP))));
+                System.out.println(String.format("Il template è: %s", wrap.getTmpl().substring(0, Math.min(wrap.getTmpl().length(), WIDTH_WRAP))));
             }
             if (wrap.getType() == AETypePage.testoSenzaTmpl) {
-                System.out.println(String.format("Il wrap contiene il testo che è: %s", wrap.getText().substring(0, Math.min(wrap.getText().length(), WIDTH_WRAP))));
+                System.out.println(String.format("Il testo è: %s", wrap.getText().substring(0, Math.min(wrap.getText().length(), WIDTH_WRAP))));
             }
         }
         else {
