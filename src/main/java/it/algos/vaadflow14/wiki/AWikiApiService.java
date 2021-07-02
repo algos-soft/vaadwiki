@@ -6,6 +6,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadwiki.wiki.*;
 import org.json.simple.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -94,6 +95,8 @@ public class AWikiApiService extends AAbstractService {
     public static final String WIKI_QUERY_TITLES = WIKI + "&rvslots=main&prop=revisions&rvprop=content|ids|timestamp&titles=";
 
     public static final String WIKI_QUERY_PAGEIDS = WIKI + "&rvslots=main&prop=revisions&rvprop=content|ids|timestamp&pageids=";
+
+    public static final String WIKI_QUERY_TIMESTAMP = WIKI + "&prop=revisions&rvprop=ids|timestamp&pageids=";
 
     public static final String WIKI_QUERY_CATEGORY = WIKI + "&list=categorymembers&cmlimit=" + LIMIT + "&cmtitle=Categoria:";
 
@@ -1204,6 +1207,24 @@ public class AWikiApiService extends AAbstractService {
             return new WrapPage(webUrl, pageid, title, content, stringTimestamp, AETypePage.testoSenzaTmpl);
         }
     }
+
+
+    public MiniWrap creaPage( final JSONObject jsonPage) {
+        long pageid;
+        String stringTimestamp;
+
+        if (jsonPage.get(KEY_JSON_MISSING) != null && (boolean) jsonPage.get(KEY_JSON_MISSING)) {
+            return null;
+        }
+
+        pageid = (long) jsonPage.get(KEY_JSON_PAGE_ID);
+        JSONArray jsonRevisions = (JSONArray) jsonPage.get(KEY_JSON_REVISIONS);
+        JSONObject jsonRevZero = (JSONObject) jsonRevisions.get(0);
+        stringTimestamp = (String) jsonRevZero.get(KEY_JSON_TIMESTAMP);
+
+        return new MiniWrap(pageid,stringTimestamp);
+    }
+
 
     /**
      * Recupera un array di pages dal testo JSON di risposta ad una query <br>

@@ -3,7 +3,10 @@ package it.algos.vaadwiki.backend.service;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wiki.*;
+import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
+import it.algos.vaadwiki.wiki.*;
+import org.json.simple.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -71,12 +74,36 @@ public class AWikiBotService extends AAbstractService {
      * Recupera dalla urlRequest title, pageid, timestamp e wikitext <br>
      * Estrae il wikitext in linguaggio wiki visibile <br>
      *
-     * @param pageIds della pagina wiki
+     * @param pageIds stringa dei pageIds delle pagine wiki da leggere
      *
      * @return wrapper con testo completo (visibile) della pagina wiki
      */
     public List<WrapPage> leggePages(String pageIds) {
         return wikiApi.leggePages(pageIds, TAG_BIO);
+    }
+
+    /**
+     * Recupera (come user) 'lastModifica' di una serie di pageid <br>
+     * Usa una API con action=query SENZA bisogno di loggarsi <br>
+     * Recupera dalla urlRequest  pageid e timestamp <br>
+     *
+     * @param pageIds stringa dei pageIds delle pagine wiki da controllare
+     *
+     * @return lista di MiniWrap con 'pageid' e 'lastModifica'
+     */
+    public List<MiniWrap> fixPages(final String pageIds) {
+        List<MiniWrap> wraps = null;
+        String webUrl = WIKI_QUERY_TIMESTAMP + pageIds;
+        String rispostaAPI = web.legge(webUrl).getText();
+
+        JSONArray jsonPages = wikiApi.getArrayPagine(rispostaAPI);
+        if (jsonPages != null) {
+            wraps = new ArrayList<>();
+            for (Object obj : jsonPages) {
+                wraps.add(wikiApi.creaPage( (JSONObject) obj));
+            }
+        }
+        return wraps;
     }
 
     /**

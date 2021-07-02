@@ -4,6 +4,7 @@ import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.wiki.*;
 import it.algos.vaadwiki.backend.service.*;
+import it.algos.vaadwiki.wiki.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
@@ -49,6 +50,7 @@ public class WikiBotServiceTest extends ATest {
         Assertions.assertNotNull(service);
         service.text = text;
         service.array = array;
+        service.web = web;
         service.wikiApi = wikiApi;
     }
 
@@ -111,6 +113,33 @@ public class WikiBotServiceTest extends ATest {
         System.out.println("Pagine recuperate:");
         for (WrapPage wrap : wrapLista) {
             this.printWrap(wrap);
+        }
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - Recupera (come user) 'lastModifica' di una serie di pageid")
+    public void leggePages22() {
+        sorgente = "8956310|132555|134246|133958|8978579";
+        List<MiniWrap> wrapLista;
+        previstoIntero = 5;
+
+        wrapLista = service.fixPages(sorgente);
+        assertNotNull(wrapLista);
+        assertEquals(previstoIntero, wrapLista.size());
+
+        System.out.println("3 - Recupera (come user) 'lastModifica' di una serie di pageid");
+        System.out.println("Recupera dalla urlRequest  pageid e timestamp");
+        System.out.println(String.format("Le pagine wiki sono: %s", sorgente));
+        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
+        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", previstoIntero, getTime()));
+
+        System.out.println(VUOTA);
+        System.out.println("Pagine recuperate:");
+        for (MiniWrap wrap : wrapLista) {
+            System.out.print(wrap.getPageid());
+            System.out.print(SEP);
+            System.out.println(wrap.getLastModifica());
         }
     }
 
