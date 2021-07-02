@@ -297,7 +297,7 @@ public enum AEWizCost {
      * File a livello di root. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    fileRootTEST(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.file, String.format("File root/test ATEST (da %s)", nameVaadFlow14Upper.value), "src/test/java/it/algos/test/ATest.java", AECopyWiz.fileCheckFlagSeEsiste),
+    fileRootTEST(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.file, String.format("File root/test ATEST (da %s)", nameVaadFlow14Upper.value), "src/test/java/it/algos/test/ATest.java", AECopyWiz.fileSovrascriveSempreAncheSeEsiste),
 
     //==========================================================================
     // Valori calcolati automaticamente dal programma alla partenza del Wizard.

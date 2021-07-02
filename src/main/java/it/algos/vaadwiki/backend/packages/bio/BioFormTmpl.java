@@ -68,25 +68,25 @@ public class BioFormTmpl extends AVerticalLayout {
 
         AField<String> field = appContext.getBean(ATextAreaField.class);
         field.setLabel("Tmpl server (non modificabile)");
-        field.setValue(bioBean.tmplBioServer);
+        field.setValue(bioBean.tmplBio);
         field.setWidth(minWidthForm);
         primaRiga.add(field);
 
         AField<String> field2 = appContext.getBean(ATextAreaField.class);
         field2.setLabel("Tmpl troncato (non modificabile)");
-        field2.setValue(bioBean.tmplBioServer);
+        field2.setValue(bioBean.tmplBio);
         field2.setWidth(minWidthForm);
         primaRiga.add(field2);
 
         AField<String> field3 = appContext.getBean(ATextAreaField.class);
         field3.setLabel("Tmpl elaborato (non modificabile)");
-        field3.setValue(bioBean.tmplBioServer);
+        field3.setValue(bioBean.tmplBio);
         field3.setWidth(minWidthForm);
         secondaRiga.add(field3);
 
         AField<String> field4 = appContext.getBean(ATextAreaField.class);
         field4.setLabel("Tmpl link (non modificabile)");
-        field4.setValue(bioBean.tmplBioServer);
+        field4.setValue(bioBean.tmplBio);
         field4.setWidth(minWidthForm);
         secondaRiga.add(field4);
 

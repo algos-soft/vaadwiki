@@ -199,7 +199,7 @@ public abstract class LogicForm extends Logic {
         String edit = html.bold("edit");
 
         if (entityBean != null) {
-            addSpanVerde(String.format("%s %s %s.%s", TAG_SCHEDA, SEP, entityClazz.getSimpleName(), entityBean.toString()));
+            addSpanVerde(String.format("%s %s %s%s%s", TAG_SCHEDA, SEP, entityClazz.getSimpleName(), DUE_PUNTI, entityBean.toString()));
         }
         else {
             addSpanVerde(String.format("%s %s %s", TAG_SCHEDA, SEP, entityClazz.getSimpleName()));

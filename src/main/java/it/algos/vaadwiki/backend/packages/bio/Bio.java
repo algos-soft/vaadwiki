@@ -55,7 +55,7 @@ import java.time.*;
 @AIEntity(recordName = "Bio", keyPropertyName = "wikiTitle")
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "lastModifica")
 @AIList(fields = "pageId,wikiTitle,lastModifica,lastLettura", usaRowIndex = true)
-@AIForm(fields = "pageId,wikiTitle,lastModifica,tmplBioServer", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
+@AIForm(fields = "pageId,wikiTitle,lastModifica,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 
 
@@ -94,15 +94,13 @@ public class Bio extends AEntity {
 
 
     @Lob
-    @Field("tmpls")
     @AIField(type = AETypeField.textArea, required = true, caption = "Template presente sul server", widthEM = 48, enabled = false)
-    public String tmplBioServer;
+    public String tmplBio;
 
 
     //--ultima modifica sul server wiki
     //--uso il formato Timestamp, per confrontarla col campo timestamp
     //--molto meglio che siano esattamente dello stesso tipo
-    @Field("mod")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.localDateTime, caption = "Ultima modifica effettuata (non dal Bot) sul server", enabled = false)
     @AIColumn(typeData = AETypeData.normaleOrario)
@@ -112,7 +110,6 @@ public class Bio extends AEntity {
     //--ultima lettura/aggiornamento della voce, effettuata dal programma VaadBio
     //--uso il formato Timestamp, per confrontarla col campo timestamp
     //--molto meglio che siano esattamente dello stesso tipo
-    @Field("let")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.localDateTime, help = "ultima lettura/aggiornamento della voce effettuata dal programma VaadBio", enabled = false)
     public LocalDateTime lastLettura;

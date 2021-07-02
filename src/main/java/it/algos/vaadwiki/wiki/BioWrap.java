@@ -59,7 +59,7 @@ public class BioWrap {
     private String testo;
 
     //--template Bio
-    private String tmplBioServer;
+    private String tmplBio;
 
     private LocalDateTime lastModifica;
 
@@ -93,7 +93,7 @@ public class BioWrap {
         }
 
         if (wikiBot != null && text.isValid(testo)) {
-            this.tmplBioServer = wikiBot.estraeTmpl(this.testo);
+            this.tmplBio = wikiBot.estraeTmpl(this.testo);
         }
 
 //        if (bioUtility != null && text.isValid(tmplBioServer)) {
@@ -114,8 +114,8 @@ public class BioWrap {
         return testo;
     }
 
-    public String getTmplBioServer() {
-        return tmplBioServer;
+    public String getTmplBio() {
+        return tmplBio;
     }
 
     public String getNome() {

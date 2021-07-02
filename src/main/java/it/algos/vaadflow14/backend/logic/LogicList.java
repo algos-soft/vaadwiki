@@ -772,7 +772,7 @@ public abstract class LogicList extends Logic {
      * The dialog will display the given title and message(s), then call <br>
      * Può essere sovrascritto dalla classe specifica se servono avvisi diversi <br>
      */
-    protected final void openConfirmDeleteAll() {
+    protected void openConfirmDeleteAll() {
         MessageDialog messageDialog;
         String message = "Vuoi veramente cancellare tutto? L' operazione non è reversibile.";
         VaadinIcon icon = VaadinIcon.WARNING;

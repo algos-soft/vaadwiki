@@ -11,10 +11,12 @@ import java.time.format.*;
  * User: gac
  * Date: dom, 20-giu-2021
  * Time: 07:19
+ * <p>
+ * Semplice wrapper per i dati essenziali di una pagina recuperata da MediaWiki <br>
  */
 public class WrapPage {
 
-    boolean template;
+    private AETypePage type;
 
     private long pageid;
 
@@ -31,27 +33,22 @@ public class WrapPage {
     private boolean valida;
 
 
-    public WrapPage(final String domain, final long pageid, final String title, final String text, final String stringTimestamp) {
-        this(domain, pageid, title, text, stringTimestamp, false);
+    public WrapPage(final String domain, final String title, final AETypePage type) {
+        this(domain, 0, title, VUOTA, VUOTA, type);
     }
 
-    public WrapPage(final String domain, final long pageid, final String title, final String text, final String stringTimestamp, final boolean template) {
+
+    public WrapPage(final String domain, final long pageid, final String title, final String text, final String stringTimestamp, final AETypePage type) {
         this.domain = domain;
         this.pageid = pageid;
         this.title = title;
-        this.text = template ? VUOTA : text;
-        this.tmpl = template ? text : VUOTA;
-        this.time = LocalDateTime.parse(stringTimestamp, DateTimeFormatter.ISO_DATE_TIME);
-        this.template = template;
-        this.valida = true;
+        this.text = type == AETypePage.testoSenzaTmpl ? text : VUOTA;
+        this.tmpl = type == AETypePage.testoConTmpl ? text : VUOTA;
+        this.time = (stringTimestamp != null && stringTimestamp.length() > 0) ? LocalDateTime.parse(stringTimestamp, DateTimeFormatter.ISO_DATE_TIME) : null;
+        this.type = type;
+        this.valida = type == AETypePage.testoSenzaTmpl || type == AETypePage.testoConTmpl;
     }
 
-    public WrapPage(final String domain, final String title, final boolean valida) {
-        this.domain = domain;
-        this.pageid = pageid;
-        this.title = title;
-        this.valida = valida;
-    }
 
     public String getDomain() {
         return domain;
@@ -73,8 +70,8 @@ public class WrapPage {
         return time;
     }
 
-    public boolean isTemplate() {
-        return template;
+    public AETypePage getType() {
+        return type;
     }
 
     public String getTmpl() {

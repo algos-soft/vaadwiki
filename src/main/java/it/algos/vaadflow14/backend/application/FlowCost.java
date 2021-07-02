@@ -274,11 +274,11 @@ public abstract class FlowCost {
 
     public static final String KEY_BUTTON_ANNULLA = "annulla";
 
-    public static final String KEY_BUTTON_CONFERMA = "conferma";
+    public static final String KEY_BUTTON_CONFERMA = "Conferma";
 
     public static final String KEY_BUTTON_REGISTRA = "save";
 
-    public static final String KEY_BUTTON_DELETE = "delete";
+    public static final String KEY_BUTTON_DELETE = "Delete";
 
     public static final String KEY_JSON_QUERY = "query";
 

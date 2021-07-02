@@ -521,17 +521,37 @@ public abstract class ATest {
 
     protected void printWrap(WrapPage wrap) {
         System.out.println(VUOTA);
+        String message = VUOTA;
+
         System.out.println(String.format("La query è: %s", wrap.getDomain()));
         System.out.println(String.format("Il title è: %s", wrap.getTitle()));
-        System.out.println(String.format("La pageid è: %s", wrap.getPageid()));
-        System.out.println(String.format("Il time è: %s", wrap.getTime()));
-        System.out.println(wrap.isTemplate() ? "Usa solo il template come testo" : "Usa tutta la pagina come testo");
-        if (wrap.isTemplate()) {
-            System.out.println(String.format("Il template è: %s", wrap.getTmpl().substring(0, Math.min(wrap.getTmpl().length(), WIDTH_WRAP))));
+        if (wrap.isValida()) {
+//            message = wrap.getType() == AETypePage.testoConTmpl ? "Usa solo il template come testo" : message;
+//            message = wrap.getType() == AETypePage.testoSenzaTmpl ? "Usa tutta la pagina come testo" : message;
+            System.out.println(String.format("La pageid è: %s", wrap.getPageid()));
+            System.out.println(String.format("Il timestamp è: %s", wrap.getTime()));
+//            System.out.println(message);
+            if (wrap.getType() == AETypePage.testoConTmpl) {
+                System.out.println(String.format("Il wrap contiene il template che è: %s", wrap.getTmpl().substring(0, Math.min(wrap.getTmpl().length(), WIDTH_WRAP))));
+            }
+            if (wrap.getType() == AETypePage.testoSenzaTmpl) {
+                System.out.println(String.format("Il wrap contiene il testo che è: %s", wrap.getText().substring(0, Math.min(wrap.getText().length(), WIDTH_WRAP))));
+            }
         }
         else {
-            System.out.println(String.format("Il testo è: %s", wrap.getText().substring(0, Math.min(wrap.getText().length(), WIDTH_WRAP))));
+            System.out.println("Il wrap non è valido");
+            if (wrap.getType() == AETypePage.nonEsiste) {
+                System.out.println("La pagina non esiste");
+            }
+            if (wrap.getType() == AETypePage.disambigua) {
+                System.out.println("La pagina è una disambigua");
+            }
+            if (wrap.getType() == AETypePage.redirect) {
+                System.out.println("La pagina è un redirect");
+            }
         }
+
+
     }
 
 }// end of class

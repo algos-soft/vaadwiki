@@ -119,7 +119,7 @@ public class BioService extends AService {
      * @return la nuova entityBean appena creata (non salvata)
      */
     public Bio newEntity(final BioWrap wrap) {
-        return newEntity(wrap.getPageid(), wrap.getTitle(),  wrap.getTmplBioServer(),wrap.getLastModifica());
+        return newEntity(wrap.getPageid(), wrap.getTitle(),  wrap.getTmplBio(),wrap.getLastModifica());
     }
 
     /**
@@ -129,16 +129,16 @@ public class BioService extends AService {
      *
      * @param pageId        di riferimento (obbligatorio, unico)
      * @param wikiTitle     di riferimento (obbligatorio, unico)
-     * @param tmplBioServer (obbligatorio, unico)
+     * @param tmplBio (obbligatorio, unico)
      * @param lastModifica  sul server wiki (obbligatorio)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Bio newEntity(final long pageId, final String wikiTitle, final String tmplBioServer, final LocalDateTime lastModifica) {
+    public Bio newEntity(final long pageId, final String wikiTitle, final String tmplBio, final LocalDateTime lastModifica) {
         Bio newEntityBean = Bio.builderBio()
                 .pageId(pageId)
                 .wikiTitle(text.isValid(wikiTitle) ? wikiTitle : null)
-                .tmplBioServer(text.isValid(tmplBioServer) ? tmplBioServer : null)
+                .tmplBio(text.isValid(tmplBio) ? tmplBio : null)
                 .lastModifica(lastModifica != null ? lastModifica : LocalDateTime.now())
                 .lastLettura(LocalDateTime.now())
                 .build();

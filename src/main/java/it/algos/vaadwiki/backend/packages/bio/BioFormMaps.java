@@ -63,7 +63,7 @@ public class BioFormMaps extends FormLayout {
      */
     @PostConstruct
     protected void postConstruct() {
-        Map<String, String> mappa = wikiBot.getMappaDownload(bioBean.tmplBioServer);
+        Map<String, String> mappa = wikiBot.getMappaDownload(bioBean.tmplBio);
         AField<Map<String, String>> field = appContext.getBean(AMappaField.class);
         field.setValue(mappa);
         this.add(field);

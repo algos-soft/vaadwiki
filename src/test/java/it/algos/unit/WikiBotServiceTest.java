@@ -72,13 +72,13 @@ public class WikiBotServiceTest extends ATest {
         WrapPage wrap;
 
         wrap = service.leggePage(sorgente);
-        assertTrue(wrap.isTemplate());
+        assertEquals(AETypePage.testoConTmpl, wrap.getType());
         assertTrue(wrap.getTmpl().startsWith(previsto));
 
         System.out.println("1 - Legge il template Bio della pagina.");
         System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
         System.out.println("Legge (come user) una SINGOLA pagina dal server wiki");
-        System.out.println("La pagina viene richiesta dal PAGEID");
+        System.out.println("La pagina viene richiesta dal TITLE");
         System.out.println("Usa le API base di VaadFlow14 SENZA loggarsi.");
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
         System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");

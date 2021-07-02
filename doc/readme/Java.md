@@ -36,7 +36,7 @@ But with higher-order functions, we can perform the following operations:
      BiConsumer(T,U): Takes two parameters type (T,U), produces nothing (void).
      BiFunction(T,U,R): Takes two parameters type (T,U), produces one result (R).
      UnaryOperator(T): Takes one parameter type (T), produces one result (T).
-     BiaryOperator(T): Takes two parameters of type (T), produces one result (T).
+     BinaryOperator(T): Takes two parameters of type (T), produces one result (T).
 ####Function
 Function is a functional interface; it takes an argument (object of type T) and returns an object (object of type R). The argument and output can be a different type.
     
