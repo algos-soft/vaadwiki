@@ -190,6 +190,48 @@ public class ALogService extends AAbstractService {
         modifica(entityBean, mongo.find(entityBean));
     }
 
+    /**
+     * Logger specifico <br>
+     * Creazione o modifica di una entity esistente <br>
+     *
+     * @param entityBean    nuova o modificata
+     * @param operation     del dialogo (new o modifica)
+     * @param entityBeanOld prima della modifica
+     */
+    public void newEdit(final AEntity entityBean, final AEOperation operation, final AEntity entityBeanOld) {
+        if (entityBean != null && operation != null) {
+            switch (operation) {
+                case addNew:
+                    nuovo(entityBean);
+                    break;
+                case newEdit:
+                    if (entityBeanOld != null) {
+                        modifica(entityBean, entityBeanOld);
+                    }
+                    else {
+                        nuovo(entityBean);
+                    }
+                    break;
+                case newEditNoLog:
+                    break;
+                case edit:
+                case editProfile:
+                case editNoDelete:
+                case editDaLink:
+                    if (entityBeanOld != null) {
+                        modifica(entityBean, entityBeanOld);
+                    }
+                    else {
+                        logger.warn("Manca entityBeanOld", this.getClass(), "newEdit");
+                    }
+                    break;
+                default:
+                    logger.warn("Switch - caso non definito", this.getClass(), "newEdit");
+                    break;
+            }
+        }
+    }
+
 
     /**
      * Logger specifico <br>
@@ -407,6 +449,21 @@ public class ALogService extends AAbstractService {
      */
     public void info(Exception unErrore, Class clazz, String methodName) {
         info(unErrore.toString(), clazz, methodName);
+    }
+
+
+    public void error(AILogType type, Exception unErrore) {
+        error(type, unErrore.getMessage());
+    }
+
+    public void error(AILogType type, String message) {
+        String typeTxt;
+
+        typeTxt = type != null ? type.getTag() : AETypeLog.system.getTag();
+        typeTxt = text.fixSizeQuadre(typeTxt, 10);
+
+        message = typeTxt + DOPPIO_SPAZIO + message;
+        adminLogger.error(message.trim());
     }
 
     /**

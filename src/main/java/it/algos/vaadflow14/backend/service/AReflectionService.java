@@ -1,17 +1,15 @@
 package it.algos.vaadflow14.backend.service;
 
-import com.vaadin.flow.component.icon.VaadinIcon;
-import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.icon.*;
+import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.*;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * Project springvaadin
@@ -346,11 +344,14 @@ public class AReflectionService extends AAbstractService {
      * @return the string value
      */
     public String getPropertyValueStr(final AEntity entityBean, final String publicFieldName) {
-        String value = VUOTA;
+        String value;
         Object objValue = getPropertyValue(entityBean, publicFieldName);
 
         if (objValue instanceof String) {
             value = (String) objValue;
+        }
+        else {
+            value = objValue.toString();
         }
 
         return value;
@@ -366,7 +367,7 @@ public class AReflectionService extends AAbstractService {
      */
     public boolean isEsiste(Class<? extends AEntity> entityClazz, final String publicFieldName) {
         try {
-            return entityClazz.getField(publicFieldName)!=null;
+            return entityClazz.getField(publicFieldName) != null;
         } catch (Exception unErrore) {
         }
         return false;
@@ -393,7 +394,6 @@ public class AReflectionService extends AAbstractService {
     //        return mappa;
     //    }// end of method
 
-
     //    /**
     //     * Valore della property di una classe
     //     *
@@ -416,7 +416,6 @@ public class AReflectionService extends AAbstractService {
     //
     //        return status;
     //    }// end of method
-
 
     //    /**
     //     * Fields dichiarati nella View
@@ -443,7 +442,6 @@ public class AReflectionService extends AAbstractService {
     //
     //        return listaFields;
     //    }// end of method
-
 
     //    /**
     //     * Fields dichiarati nella Entity
@@ -478,7 +476,6 @@ public class AReflectionService extends AAbstractService {
     //        return listaFields;
     //    }// end of method
 
-
     //    /**
     //     * Nomi dei fields dichiarati nella Entity
     //     * Comprende la entity e tutte le superclassi (fino a ACEntity e AEntity)
@@ -511,7 +508,6 @@ public class AReflectionService extends AAbstractService {
     //
     //        return listaNomi;
     //    }// end of method
-
 
     //    /**
     //     * Fields dichiarati nella Entity, da usare come columns della Grid (List)
@@ -582,7 +578,6 @@ public class AReflectionService extends AAbstractService {
     //
     //        return fieldsList;
     //    }// end of method
-
 
     //    /**
     //     * Fields dichiarati nella Entity, da usare come campi del Form
@@ -674,7 +669,6 @@ public class AReflectionService extends AAbstractService {
     //
     //        return fieldsList;
     //    }// end of method
-
 
     //    /**
     //     * Flag.

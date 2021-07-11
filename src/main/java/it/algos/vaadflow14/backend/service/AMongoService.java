@@ -1419,8 +1419,19 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return true if exist
      */
-    public boolean isEsiste(Class<? extends AEntity> entityClazz, String
-            keyId) {
+    public boolean isEsiste(Class<? extends AEntity> entityClazz, long keyId) {
+        return findById(entityClazz, Long.toString(keyId)) != null;
+    }
+
+    /**
+     * Check the existence of a single entity. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return true if exist
+     */
+    public boolean isEsiste(Class<? extends AEntity> entityClazz, String keyId) {
         return findById(entityClazz, keyId) != null;
     }
 
@@ -1432,8 +1443,19 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return true if exist
      */
-    public boolean isNotEsiste(Class<? extends
-            AEntity> entityClazz, String keyId) {
+    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, String keyId) {
+        return !isEsiste(entityClazz, keyId);
+    }
+
+    /**
+     * Check the existence of a single entity. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return true if exist
+     */
+    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, long keyId) {
         return !isEsiste(entityClazz, keyId);
     }
 

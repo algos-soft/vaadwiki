@@ -76,6 +76,25 @@ public abstract class AService extends AAbstractService implements AIService {
         this.keyPropertyName = annotation.getKeyPropertyName(entityClazz);
     }
 
+    /**
+     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
+     *
+     * @return la nuova entityBean appena creata (non salvata)
+     */
+    public AEntity newEntity() {
+        AEntity newEntityBean = null;
+
+        try {
+            newEntityBean = entityClazz.getDeclaredConstructor().newInstance();
+        } catch (Exception unErrore) {
+            logger.warn(unErrore.toString(), this.getClass(), "newEntity");
+        }
+
+        return newEntityBean;
+    }
+
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
@@ -90,6 +109,19 @@ public abstract class AService extends AAbstractService implements AIService {
      */
     public AEntity creaIfNotExist(final String keyPropertyValue) {
         return null;
+    }
+
+    /**
+     * Crea e registra una entityBean col flag reset=true <br>
+     * Esegue SOLO se la entity è sottoclasse di AREntity <br>
+     *
+     * @param newEntity appena creata, da regolare e da salvare
+     *
+     * @return true se la entity è stata creata e salvata
+     */
+    protected boolean creaReset(final AREntity newEntity) {
+        newEntity.reset = true;
+        return save(newEntity, AEOperation.addNew) != null;
     }
 
     /**
@@ -127,18 +159,6 @@ public abstract class AService extends AAbstractService implements AIService {
     }
 
     /**
-     * Crea e registra sempre una entityBean <br>
-     *
-     * @param entityBean da registrare (nuova o esistente)
-     *
-     * @return la entityBean appena salvata, null se non salvata
-     */
-    @Override
-    public AEntity save(AEntity entityBean) {
-        return mongo.save(entityBean);
-    }
-
-    /**
      * Check the existence of a single entity. <br>
      *
      * @param keyId chiave identificativa
@@ -150,56 +170,60 @@ public abstract class AService extends AAbstractService implements AIService {
     }
 
     /**
-     * Crea e registra una entityBean col flag reset=true <br>
-     * Esegue SOLO se la entity è sottoclasse di AREntity <br>
+     * Crea e registra una entityBean <br>
+     * A livello UI i fields sono già stati verificati <br>
+     * Prevede un punto di controllo PRIMA della registrazione,
+     * per eventuale congruità dei parametri o per valori particolari in base alla BusinessLogic <br>
+     * Esegue la registrazione sul database mongoDB con un controllo finale di congruità <br>
+     * Prevede un punto di controllo DOPO la registrazione,
+     * per eventuali side effects su altre collections collegate o dipendenti <br>
      *
-     * @param newEntity appena creata, da regolare e da salvare
+     * @param entityBeanDaRegistrare (nuova o esistente)
+     * @param operation              del dialogo (new o modifica)
      *
-     * @return true se la entity è stata creata e salvata
+     * @return la entityBean appena registrata, null se non registrata
      */
-    protected boolean creaReset(final AREntity newEntity) {
-        newEntity.reset = true;
-        return save(newEntity) != null;
+    @Override
+    public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) {
+        AEntity entityBean;
+        AEntity entityBeanOld = mongo.find(entityBeanDaRegistrare);
+
+        //--eventuali operazioni eseguite PRIMA di registrare (new o modifica)
+        entityBean = this.beforeSave(entityBeanDaRegistrare, operation);
+
+        //--esegue la registrazione sul database mongoDB
+        //--con un controllo finale di congruità
+        //--e gestione dell'eventuale errore
+        entityBean = entityBean != null ? mongo.save(entityBean) : null;
+
+        //--operazioni eseguite DOPO la registrazione (new o modifica)
+        entityBean = entityBean != null ? this.afterSave(entityBean, operation) : null;
+
+        //--messaggio di log differenziato tra new e modifica
+        logger.newEdit(entityBean, operation, entityBeanOld);
+
+        return entityBean;
     }
 
-    /**
-     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     * Senza properties per compatibilità con la superclasse <br>
-     *
-     * @return la nuova entityBean appena creata (non salvata)
-     */
-    public AEntity newEntity() {
-        AEntity newEntityBean = null;
-
-        try {
-            newEntityBean = entityClazz.getDeclaredConstructor().newInstance();
-        } catch (Exception unErrore) {
-            logger.warn(unErrore.toString(), this.getClass(), "newEntity");
-        }
-
-        return newEntityBean;
-    }
-
 
     /**
-     * Operazioni eseguite PRIMA di save o di insert <br>
+     * Operazioni eseguite PRIMA di registrare (new o modifica) <br>
      * Regolazioni automatiche di property <br>
      * Controllo della validità delle properties obbligatorie <br>
      * Controllo per la presenza della company se FlowVar.usaCompany=true <br>
      * Controlla se la entity registra le date di creazione e modifica <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @param entityBean da regolare prima del save
-     * @param operation  del dialogo (NEW, Edit)
+     * @param entityBeanDaRegistrare (nuova o esistente)
+     * @param operation              del dialogo (new o modifica)
      *
      * @return the modified entity
      */
-    public AEntity beforeSave(final AEntity entityBean, final AEOperation operation) {
+    public AEntity beforeSave(final AEntity entityBeanDaRegistrare, final AEOperation operation) {
         AEntity entityBeanWithID;
         Company company;
 
-        entityBeanWithID = fixKey(entityBean);
+        entityBeanWithID = fixKey(entityBeanDaRegistrare);
 
         if (FlowVar.usaCompany && entityBeanWithID instanceof ACEntity) {
             company = ((ACEntity) entityBeanWithID).company;
@@ -224,6 +248,21 @@ public abstract class AService extends AAbstractService implements AIService {
         }
 
         return entityBeanWithID;
+    }
+
+
+    /**
+     * Operazioni eseguite DOPO la registrazione (new o modifica) <br>
+     * Regolazioni di altre collections collegate <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param entityBeanDaRegistrare (nuova o esistente)
+     * @param operation              del dialogo (NEW, Edit)
+     *
+     * @return the modified entity
+     */
+    public AEntity afterSave(final AEntity entityBeanDaRegistrare, final AEOperation operation) {
+        return entityBeanDaRegistrare;
     }
 
     /**

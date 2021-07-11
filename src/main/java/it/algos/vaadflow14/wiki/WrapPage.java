@@ -46,7 +46,7 @@ public class WrapPage {
         this.tmpl = type == AETypePage.testoConTmpl ? text : VUOTA;
         this.time = (stringTimestamp != null && stringTimestamp.length() > 0) ? LocalDateTime.parse(stringTimestamp, DateTimeFormatter.ISO_DATE_TIME) : null;
         this.type = type;
-        this.valida = type == AETypePage.testoSenzaTmpl || type == AETypePage.testoConTmpl;
+        this.valida = (type == AETypePage.testoSenzaTmpl || type == AETypePage.testoConTmpl);
     }
 
 

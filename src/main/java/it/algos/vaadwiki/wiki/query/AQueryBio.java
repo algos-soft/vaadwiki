@@ -45,7 +45,7 @@ public class AQueryBio extends AQueryVoce {
         String contenutoVoce = super.urlRequest(titoloWiki);
 
         if (text.isValid(contenutoVoce)) {
-//            templateBio = LibWiki.estraeTmplBioCompresi(contenutoVoce); //@@todo SVILUPPI - trasformare la Libreria in istanza
+//            templateBio =
         }
 
         return templateBio;

@@ -3,6 +3,7 @@ package it.algos.vaadflow14.ui.form;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.customfield.*;
 import com.vaadin.flow.component.formlayout.*;
+import com.vaadin.flow.component.notification.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.data.binder.*;
 import com.vaadin.flow.shared.*;
@@ -10,6 +11,7 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.service.*;
@@ -19,6 +21,7 @@ import org.springframework.context.*;
 import javax.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * Project vaadflow15
@@ -576,36 +579,28 @@ public abstract class AForm extends VerticalLayout {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void writeFieldsExtra() {
-        AIField field = null;
-
-        if (usaFieldNote) {
-            if (fieldsMap != null) {
-                //                field = fieldsMap.get(FlowCost.FIELD_NOTE);
-                //                if (field != null) {
-                //                    //                    entityBean.note = (String) field.getBinder().getValue();
-                //                }
-            }
-        }
     }
 
 
     /**
-     * Get the current valid entity.
-     * Use the returned instance for further operations
+     * Get the current valid entity <br>
+     * Use the returned instance for further operations <br>
      *
      * @return the checked entity
      */
     public AEntity getValidBean() {
         writeFieldsExtra();
 
-        //--Associa i valori del binder a entityBean. Dalla UI alla business logic
-        //        return binder.writeBeanIfValid(entityBean) ? entityBean : null;
         try {
-            boolean status = binder.isValid();
-            if (binder.writeBeanIfValid((AEntity) entityBean)) {
+            //--associa i fields del binder alla entityBean. Dalla UI alla business logic
+            if (binder.writeBeanIfValid( entityBean)) {
                 return entityBean;
             }
             else {
+                BinderValidationStatus<AEntity> status = binder.validate();
+                Notification.show(status.getValidationErrors().stream()
+                        .map(ValidationResult::getErrorMessage)
+                        .collect(Collectors.joining("; ")), 3000, Notification.Position.BOTTOM_START);
                 return null;
             }
         } catch (Exception unErrore) {

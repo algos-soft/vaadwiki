@@ -1,11 +1,13 @@
 package it.algos.vaadwiki.backend.service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wiki.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
+import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.wiki.*;
 import org.json.simple.*;
 import org.springframework.beans.factory.annotation.*;
@@ -13,7 +15,10 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
+import java.time.*;
 import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
 
 /**
  * Project vaadwiki
@@ -38,6 +43,8 @@ public class AWikiBotService extends AAbstractService {
 
     public static final String TAG_BIO = "Bio";
 
+    private static final LocalDateTime MONGO_TIME_ORIGIN = LocalDateTime.of(2000, 1, 1, 0, 0);
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -54,6 +61,28 @@ public class AWikiBotService extends AAbstractService {
      */
     @Autowired
     public BioUtility utility;
+
+    /**
+     * Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb <br>
+     */
+    protected Predicate<MiniWrap> checkNuovi = wrap -> mongo.isNotEsiste(Bio.class, wrap.getPageid());
+
+    /**
+     * Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb <br>
+     */
+    protected Predicate<MiniWrap> checkEsistenti = wrap -> mongo.isEsiste(Bio.class, wrap.getPageid());
+
+    /**
+     * Vengono usati quelli che hanno miniWrap.lastModifica maggiore di bio.lastModifica <br>
+     */
+    protected Predicate<MiniWrap> checkModificati = wrap -> {
+        LocalDateTime wrapTime = wrap.getLastModifica();
+        String key = wrap.getPageid() + VUOTA;
+        Bio bio = (Bio) mongo.findById(Bio.class, key);
+        LocalDateTime mongoTime = bio != null ? bio.getLastMongo() : MONGO_TIME_ORIGIN;
+
+        return wrapTime.isAfter(mongoTime);
+    };
 
     /**
      * Legge (come user) una pagina dal server wiki <br>
@@ -75,12 +104,37 @@ public class AWikiBotService extends AAbstractService {
      * Recupera dalla urlRequest title, pageid, timestamp e wikitext <br>
      * Estrae il wikitext in linguaggio wiki visibile <br>
      *
+     * @param listaPageIdsDaLeggere sul server
+     *
+     * @return lista di wrapper con testo completo (visibile) della pagina wiki
+     */
+    public List<WrapPage> leggePages(List<Long> listaPageIdsDaLeggere) {
+        return leggePages(array.toStringaPipe(listaPageIdsDaLeggere));
+    }
+
+    /**
+     * Legge (come user) una serie pagina dal server wiki <br>
+     * Usa una API con action=query SENZA bisogno di loggarsi <br>
+     * Recupera dalla urlRequest title, pageid, timestamp e wikitext <br>
+     * Estrae il wikitext in linguaggio wiki visibile <br>
+     *
      * @param pageIds stringa dei pageIds delle pagine wiki da leggere
      *
-     * @return wrapper con testo completo (visibile) della pagina wiki
+     * @return lista di wrapper con testo completo (visibile) della pagina wiki
      */
     public List<WrapPage> leggePages(String pageIds) {
-        return wikiApi.leggePages(pageIds, TAG_BIO);
+        long inizio = System.currentTimeMillis();
+
+        List<WrapPage> listaWrapPage = wikiApi.leggePages(pageIds, TAG_BIO);
+        if (listaWrapPage != null) {
+            if (listaWrapPage.size() > 0) {
+                logger.info(AETypeLog.bio, String.format("Recupera una lista di %d wrapPage valide (con tmplBio) in %s", listaWrapPage.size(), date.deltaTextEsatto(inizio)));
+            }
+            else {
+                logger.info(AETypeLog.bio, "Non ci sono wrapPages valide (con tmplBio) da leggere");
+            }
+        }
+        return listaWrapPage;
     }
 
     /**
@@ -93,8 +147,22 @@ public class AWikiBotService extends AAbstractService {
      * @return lista di MiniWrap con 'pageid' e 'lastModifica'
      */
     public List<MiniWrap> getMiniWrap(final String categoryTitle) {
-        List<MiniWrap> wraps = new ArrayList<>();
         List<Long> listaPageids = wikiApi.getLongCat(categoryTitle);
+        return getMiniWrap(listaPageids);
+    }
+
+    /**
+     * Recupera (come user) 'lastModifica' di una serie di pageid <br>
+     * Usa una API con action=query SENZA bisogno di loggarsi <br>
+     * Recupera dalla urlRequest  pageid e timestamp <br>
+     *
+     * @param categoryTitle da recuperare
+     *
+     * @return lista di MiniWrap con 'pageid' e 'lastModifica'
+     */
+    public List<MiniWrap> getMiniWrap(final List<Long> listaPageids) {
+        List<MiniWrap> wraps = new ArrayList<>();
+        long inizio = System.currentTimeMillis();
         int limit = LIMIT_USER;
         int dimLista = listaPageids.size();
         int cicli = (dimLista / limit) + 1;
@@ -109,6 +177,8 @@ public class AWikiBotService extends AAbstractService {
             strisciaIds = array.toStringaPipe(listaPageids.subList(ini, end));
             wraps.addAll(fixPages(strisciaIds));
         }
+
+        logger.info(AETypeLog.bio, String.format("Recuperata una lista di %s miniWrap con pageId e lastModifica in %s", wraps.size(), date.deltaTextEsatto(inizio)));
 
         return wraps;
     }
@@ -151,7 +221,6 @@ public class AWikiBotService extends AAbstractService {
         return wraps;
     }
 
-
     public MiniWrap creaPage(final JSONObject jsonPage) {
         long pageid;
         String stringTimestamp;
@@ -166,6 +235,55 @@ public class AWikiBotService extends AAbstractService {
         stringTimestamp = (String) jsonRevZero.get(KEY_JSON_TIMESTAMP);
 
         return new MiniWrap(pageid, stringTimestamp);
+    }
+
+    /**
+     * Elabora la lista di MiniWrap e costruisce una lista di pageIds da leggere <br>
+     * Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb <br>
+     * Vengono usati quelli che hanno miniWrap.lastModifica maggiore di bio.lastModifica <br>
+     *
+     * @param listaMiniWrap da elaborare
+     *
+     * @return lista di pageId da leggere dal server
+     */
+    public List<Long> elaboraMiniWrap(final List<MiniWrap> listaMiniWrap) {
+        List<Long> listaPageIdsDaLeggere = new ArrayList<>();
+        List<MiniWrap> listaMiniWrapTotali = new ArrayList<>();
+        long inizio = System.currentTimeMillis();
+        int nuove;
+        int modificate;
+        int totali;
+        String message = VUOTA;
+
+        //--Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb
+        List<MiniWrap> listaMiniWrapNuovi = listaMiniWrap
+                .stream()
+                .filter(checkNuovi)
+                .sorted()
+                .collect(Collectors.toList());
+        nuove = listaMiniWrapNuovi.size();
+        listaMiniWrapTotali.addAll(listaMiniWrapNuovi);
+
+        //--Vengono usati quelli che hanno miniWrap.lastModifica maggiore di bio.lastModifica
+        List<MiniWrap> listaMiniWrapModificati = listaMiniWrap
+                .stream()
+                .filter(checkEsistenti)
+                .filter(checkModificati)
+                .sorted()
+                .collect(Collectors.toList());
+        modificate = listaMiniWrapModificati.size();
+        listaMiniWrapTotali.addAll(listaMiniWrapModificati);
+        totali = nuove + modificate;
+
+        for (MiniWrap wrap : listaMiniWrapTotali) {
+            listaPageIdsDaLeggere.add(wrap.getPageid());
+        }
+
+        message = String.format("Elaborata una lista di miniWrap da leggere: %d nuove e %d modificate (%d totali) in %s", nuove, modificate, totali, date.deltaTextEsatto(inizio));
+
+        logger.info(AETypeLog.bio, message);
+
+        return listaPageIdsDaLeggere;
     }
 
     /**

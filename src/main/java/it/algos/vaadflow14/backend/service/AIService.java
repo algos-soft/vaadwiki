@@ -43,13 +43,20 @@ public interface AIService {
 
 
     /**
-     * Crea e registra sempre una entityBean <br>
+     * Crea e registra una entityBean <br>
+     * A livello UI i fields sono già stati verificati <br>
+     * Prevede un punto di controllo PRIMA della registrazione,
+     * per eventuale congruità dei parametri o per valori particolari in base alla BusinessLogic <br>
+     * Esegue la registrazione sul database mongoDB con un controllo finale di congruità <br>
+     * Prevede un punto di controllo DOPO la registrazione,
+     * per eventuali side effects su altre collections collegate o dipendenti <br>
      *
-     * @param entityBean da registrare (nuova o esistente)
+     * @param entityBeanDaRegistrare (nuova o esistente)
+     * @param operation  del dialogo (NEW, Edit)
      *
-     * @return la entityBean appena salvata, null se non salvata
+     * @return la entityBean appena registrata, null se non registrata
      */
-    AEntity save(final AEntity entityBean);
+    AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation);
 
 
     /**

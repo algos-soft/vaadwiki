@@ -228,36 +228,10 @@ public class BioLogicForm extends WikiLogicForm {
      * @return true se l'azione è stata eseguita
      */
     public boolean download() {
-        downloadBio();
+        ((BioService) entityService).downloadBio(getWikiTitle());
         return true;
     }
 
-    /**
-     * Scarica una singola biografia <br>
-     */
-    private void downloadBio() {
-        String wikiTitle;
-        WrapPage wrap = null;
-
-        wikiTitle = getWikiTitle();
-        if (text.isValid(wikiTitle)) {
-            wrap = wikiBot.leggePage(wikiTitle);
-
-            if (wrap != null && wrap.isValida()) {
-                entityBean = bioService.newEntity(wrap);
-                currentForm.getBinder().setBean(entityBean);
-                logger.info(AETypeLog.download, String.format("Download della pagina %s", wikiTitle));
-            }
-            else {
-                if (wrap != null) {
-                    logger.warn(AETypeLog.download, "Qualcosa non ha funzionato");
-                }
-                else {
-                    logger.info(AETypeLog.download, String.format("Su wiki non esiste la pagina %s", wikiTitle));
-                }
-            }
-        }
-    }
 
 
     private void printMappa(Map mappa) {

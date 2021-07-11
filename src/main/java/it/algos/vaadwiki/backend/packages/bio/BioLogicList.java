@@ -10,7 +10,6 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
-import it.algos.vaadflow14.wiki.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
@@ -83,6 +82,8 @@ public class BioLogicList extends LogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
+        super.usaBottoneDownload = true;
     }
 
     /**
@@ -124,41 +125,29 @@ public class BioLogicList extends LogicList {
         dialog.open();
     }
 
+
+    /**
+     * Esegue un azione di download, specifica del programma/package in corso <br>
+     * Deve essere sovrascritto <br>
+     *
+     * @return true se l'azione è stata eseguita
+     */
+    @Override
+    public boolean download() {
+        ((BioService) entityService).ciclo();
+        super.reload();
+
+        return true;
+    }
+
+
     protected void newFormEsegue(String wikiTitle) {
-        Bio bio = downloadBio(wikiTitle);
+        Bio bio = ((BioService) entityService).downloadBio(wikiTitle);
 
         if (bio != null) {
             this.executeRoute(bio);
         }
     }
 
-    /**
-     * Scarica una singola biografia <br>
-     */
-    private Bio downloadBio(String wikiTitle) {
-        WrapPage wrap = null;
-        Bio bio = null;
-
-        if (text.isValid(wikiTitle)) {
-            wrap = wikiBot.leggePage(wikiTitle);
-        }
-
-        if (wrap != null && wrap.isValida()) {
-            entityBean = bioService.newEntity(wrap);
-            bio = bioService.newEntity(wrap);
-            bioService.save(bio);
-            logger.info(AETypeLog.download, String.format("Download della pagina %s", wikiTitle));
-        }
-        else {
-            if (wrap == null) {
-                logger.warn(AETypeLog.download, "Qualcosa non ha funzionato");
-            }
-            else {
-                logger.info(AETypeLog.download, String.format("Su wiki non esiste la pagina %s", wrap.getTitle()));
-            }
-        }
-
-        return bio;
-    }
 
 }// end of Route class

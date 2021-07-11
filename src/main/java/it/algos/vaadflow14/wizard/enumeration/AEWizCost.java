@@ -294,10 +294,16 @@ public enum AEWizCost {
     sourceRootREAD(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.source, String.format("File root README con note di testo (da %s)", dirSources.value), "README.txt", AECopyWiz.sourceCheckFlagSeEsiste),
 
     /**
-     * File a livello di root. <br>
+     * File di test. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    fileRootTEST(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.file, String.format("File root/test ATEST (da %s)", nameVaadFlow14Upper.value), "src/test/java/it/algos/test/ATest.java", AECopyWiz.fileSovrascriveSempreAncheSeEsiste),
+    fileRootTEST(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.file, String.format("File root/test/ATEST (da %s)", nameVaadFlow14Upper.value), "src/test/java/it/algos/test/ATest.java", AECopyWiz.fileSovrascriveSempreAncheSeEsiste),
+
+    /**
+     * Cartella. <br>
+     * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
+     */
+    dirTestUnit(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root/test/UNIT (da %s)", nameVaadFlow14Upper.value),   "src/test/java/it/algos/unit", AECopyWiz.dirAddingOnly, VUOTA, "test"),
 
     //==========================================================================
     // Valori calcolati automaticamente dal programma alla partenza del Wizard.

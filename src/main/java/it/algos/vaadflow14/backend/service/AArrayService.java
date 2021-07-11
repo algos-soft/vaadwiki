@@ -323,6 +323,7 @@ public class AArrayService extends AAbstractService {
         }
 
         return buffer.toString();
+        //        return isAllValid(array) ? String.join(sep, array) : null;
     }
 
 

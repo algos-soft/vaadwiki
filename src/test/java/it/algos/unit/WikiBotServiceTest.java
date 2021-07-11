@@ -3,6 +3,7 @@ package it.algos.unit;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.wiki.*;
+import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
 import static org.junit.Assert.*;
@@ -28,23 +29,28 @@ import java.util.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WikiBotServiceTest extends ATest {
 
-    private static final String CAT_INESISTENTE = "Nati nel 3435";
+    public static final String CAT_INESISTENTE = "Nati nel 3435";
 
-    private static final String CAT_1435 = "Nati nel 1435";
+    public static final String CAT_1167 = "Nati nel 1167";
 
-    private static final String CAT_1591 = "Nati nel 1591";
+    public static final String CAT_1435 = "Nati nel 1435";
 
-    private static final String CAT_1935 = "Nati nel 1935";
+    public static final String CAT_1591 = "Nati nel 1591";
 
-    private static final String CAT_1713 = "Nati nel 1713";
+    public static final String CAT_1935 = "Nati nel 1935";
 
-    private static final String CAT_ROMANI = "Personaggi della storia romana";
+    public static final String CAT_1713 = "Nati nel 1713";
+
+    public static final String CAT_ROMANI = "Personaggi della storia romana";
 
     /**
      * Classe principale di riferimento <br>
      */
     @InjectMocks
     AWikiBotService service;
+
+    @InjectMocks
+    BioService bioService;
 
 
     /**
@@ -62,6 +68,9 @@ public class WikiBotServiceTest extends ATest {
         service.text = text;
         service.array = array;
         service.web = web;
+        service.logger = logger;
+        service.date = date;
+        service.mongo = mongo;
         service.wikiApi = wikiApi;
         wikiApi.array = array;
     }
@@ -77,7 +86,7 @@ public class WikiBotServiceTest extends ATest {
         super.setUp();
     }
 
-    @Test
+    //    @Test
     @Order(1)
     @DisplayName("1 - legge (come user) un template")
     public void leggePage() {
@@ -101,7 +110,7 @@ public class WikiBotServiceTest extends ATest {
         super.printWrap(wrap);
     }
 
-    @Test
+    //    @Test
     @Order(2)
     @DisplayName("2 - legge una serie di wrapper di dati con una API action=query di Mediawiki")
     public void leggePages() {
@@ -127,7 +136,7 @@ public class WikiBotServiceTest extends ATest {
         }
     }
 
-    @Test
+    //    @Test
     @Order(3)
     @DisplayName("3 - Recupera (come user) 'lastModifica' di una serie di pageid")
     public void fixPages() {
@@ -161,7 +170,7 @@ public class WikiBotServiceTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(4)
     @DisplayName("4 - Recupera (come user) 'lastModifica' di una categoria")
     public void fixPages2() {
@@ -201,7 +210,6 @@ public class WikiBotServiceTest extends ATest {
         System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
         System.out.println(String.format("Tempo impiegato per leggere la categoria '%s' e controllare il 'timestamp' di %d pagine: %s", sorgente, previstoIntero, getTime()));
 
-
         sorgente = CAT_1591;
         previstoIntero = 67;
         wrapLista = service.getMiniWrap(sorgente);
@@ -212,7 +220,6 @@ public class WikiBotServiceTest extends ATest {
         System.out.println(String.format("Le pagine wiki sono: %s", wrapLista.size()));
         System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
         System.out.println(String.format("Tempo impiegato per leggere la categoria '%s' e controllare il 'timestamp' di %d pagine: %s", sorgente, previstoIntero, getTime()));
-
 
         sorgente = CAT_1713;
         previstoIntero = 104;
@@ -225,7 +232,6 @@ public class WikiBotServiceTest extends ATest {
         System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
         System.out.println(String.format("Tempo impiegato per leggere la categoria '%s' e controllare il 'timestamp' di %d pagine: %s", sorgente, previstoIntero, getTime()));
 
-
         sorgente = CAT_1935;
         previstoIntero = 1987;
         wrapLista = service.getMiniWrap(sorgente);
@@ -236,6 +242,136 @@ public class WikiBotServiceTest extends ATest {
         System.out.println(String.format("Le pagine wiki sono: %s", wrapLista.size()));
         System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
         System.out.println(String.format("Tempo impiegato per leggere la categoria '%s' e controllare il 'timestamp' di %d pagine: %s", sorgente, previstoIntero, getTime()));
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("5 - ciclo di download")
+    public void leggePage2() {
+        WrapPage wrap = null;
+        int cont = 0;
+        List<String> lista = wikiApi.getTitleCat(CAT_1167);
+        assertNotNull(lista);
+
+        System.out.println(String.format("Trovate %s pagine", lista.size()));
+        for (String wikiTitle : lista) {
+            wrap = service.leggePage(wikiTitle);
+            cont++;
+            if (wrap.isValida()) {
+                System.out.println(String.format("%s%s%s è ok", cont, SEP, wrap.getTitle()));
+            }
+            else {
+                System.out.println(String.format("%s%sAlla pagina '%s' manca il tmpl Bio", cont, SEP, wrap.getTitle()));
+            }
+        }
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("6 - ciclo di download")
+    public void leggePage3() {
+        List<WrapCat> listaWrapDiControlloDelPageid = null;
+        List<Long> listaPageIdsCategoria = null;
+        List<MiniWrap> listaMiniWrap = null;
+        List<WrapPage> listaWrapPage = null;
+        List<Long> listaPageIdsDaLeggere = null;
+        String stringPageIds = VUOTA;
+
+        //--solo per controllo del titolo nel test. Normalmente non serve
+        listaWrapDiControlloDelPageid = wikiApi.getWrapCat(CAT_1167);
+        assertNotNull(listaWrapDiControlloDelPageid);
+        System.out.println(String.format("Lista di %d WrapCat con i pageIds per controllo", listaWrapDiControlloDelPageid.size()));
+        System.out.println("Solo per controllo del titolo nel test. Normalmente non serve");
+        System.out.println(VUOTA);
+        printWrap(listaWrapDiControlloDelPageid);
+
+        //--A - Parte dalla lista di tutti i (long)pageIds della categoria
+        //--nel caso reale sono circa mezzo milione
+        listaPageIdsCategoria = wikiApi.getLongCat(CAT_1167);
+        assertNotNull(listaPageIdsCategoria);
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
+        System.out.println("A - Parte dalla lista di tutti i (long) pageIds della categoria");
+        System.out.println("Nel caso reale sono circa mezzo milione");
+        System.out.println(String.format("Lista di %d pageIds (tutte quelle della categoria)", listaPageIdsCategoria.size()));
+        printLong(listaPageIdsCategoria);
+
+        //--B - Usa tutta la lista di pageIds e si recupera una lista (stessa lunghezza) di miniWrap
+        listaMiniWrap = service.getMiniWrap(listaPageIdsCategoria);
+        assertNotNull(listaMiniWrap);
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
+        System.out.println("B - Usa tutta la lista di pageIds e recupera una lista (stessa lunghezza) di miniWrap");
+        System.out.println(String.format("Lista di %d miniWrap corrispondente alla list di %d long (l'ordine potrebbe essere diverso)", listaMiniWrap.size(), listaPageIdsCategoria.size()));
+        printMiniWrap(listaMiniWrap);
+
+        //--C - Elabora la lista di miniWrap e costruisce una lista di pageIds da leggere
+        //--Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb
+        //--Vengono usati quelli che hanno miniWrap.lastModifica maggiore di bio.lastModifica
+        //--questi controlli vengono saltati in questa testUnit
+        //--dalla lista risultante di MiniWrap, si costruisce una lista di pageIds da leggere
+        //--si costruisce una lista di WrapPage valide
+        listaPageIdsDaLeggere= service.elaboraMiniWrap(listaMiniWrap);
+        listaWrapPage = service.leggePages(listaPageIdsDaLeggere);
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
+        System.out.println("C - Elabora la lista di miniWrap e costruisce una lista di pageIds da leggere");
+        System.out.println("Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb");
+        System.out.println("Vengono usati quelli che hanno miniWrap.lastModifica maggiore di bio.lastModifica");
+        System.out.println("questi controlli vengono saltati in questa testUnit");
+        System.out.println("dalla elaborazione della lista di miniWrap, risulta una lista di pageIds da leggere");
+        System.out.println(String.format("Lista originaria di %d miniWrap", listaMiniWrap.size()));
+        System.out.println(String.format("Lista elaborata di %d pageIds", listaPageIdsDaLeggere.size()));
+        System.out.println(String.format("Lista scaricata di %d wrapPage valide (con tmplBio)", listaWrapPage.size()));
+        printWrapPage(listaWrapPage);
+    }
+
+
+    private void printWrap(List<WrapCat> wrapLista) {
+        int pos = 0;
+        for (WrapCat wrap : wrapLista) {
+            pos++;
+            System.out.print(pos);
+            System.out.print(") ");
+            System.out.print(wrap.getPageid());
+            System.out.print(SEP);
+            System.out.println(wrap.getTitle());
+        }
+    }
+
+    private void printLong(List<Long> listaPageIds) {
+        int pos = 0;
+        for (long lungo : listaPageIds) {
+            pos++;
+            System.out.print(pos);
+            System.out.print(") ");
+            System.out.println(lungo);
+        }
+    }
+
+
+    private void printMiniWrap(List<MiniWrap> listaMiniWrap) {
+        int pos = 0;
+        for (MiniWrap wrap : listaMiniWrap) {
+            pos++;
+            System.out.print(pos);
+            System.out.print(") ");
+            System.out.print(wrap.getPageid());
+            System.out.print(SEP);
+            System.out.println(date.get(wrap.getLastModifica()));
+        }
+    }
+
+    private void printWrapPage(List<WrapPage> listaWrapPage) {
+        int pos = 0;
+        for (WrapPage wrap : listaWrapPage) {
+            pos++;
+            System.out.print(pos);
+            System.out.print(") ");
+            System.out.print(wrap.getPageid());
+            System.out.print(SEP);
+            System.out.println(wrap.getTitle());
+        }
     }
 
     /**

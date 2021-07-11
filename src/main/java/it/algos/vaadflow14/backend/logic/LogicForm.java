@@ -435,9 +435,10 @@ public abstract class LogicForm extends Logic {
                 break;
             case conferma:
             case registra:
-                if (saveDaForm()) {
-                    this.backToList();
-                }
+                this.saveClicked();
+                //                if (saveClicked()) {
+                //                    this.backToList();
+                //                }
                 break;
             case prima:
                 executeRoute(entityBeanPrevID);
@@ -538,18 +539,35 @@ public abstract class LogicForm extends Logic {
 
     /**
      * Save proveniente da un click sul bottone 'registra' del Form. <br>
-     * La entityBean viene recuperare dal form <br>
+     * Inizio delle operazioni di registrazione
      *
-     * @return true se la entity è stata registrata o definitivamente scartata; esce dal dialogo
-     * .       false se manca qualche field e la situazione è recuperabile; resta nel dialogo
+     * @return true se la entity è stata registrata o definitivamente scartata; esce dalla view
+     * .       false se manca qualche field e la situazione è recuperabile; resta nella view
      */
-    public boolean saveDaForm() {
-        AEntity entityBean = null;
-        if (currentForm != null) {
-            entityBean = currentForm.getValidBean();
-        }
+    public void saveClicked() {
+        //--passa al metodo del currentForm
+        //--associa i fields del binder alla entityBean. Dalla UI alla business logic
+        //--restituisce una entityBean solo se è valida, altrimenti null
+        entityBean = currentForm != null ? currentForm.getValidBean() : null;
 
-        return entityBean != null ? save(entityBean) : false;
+        if (entityBean != null) {
+            //--regola in scrittura eventuali fields della UI NON associati al binder <br>
+            writeSpecificFields();
+
+            //--passa al service per la registrazione della entityBean
+            entityService.save(entityBean,operationForm);
+
+            //--chiude questa view e torna a LogicList tramite @Route
+            this.backToList();
+        }
+    }
+
+    /**
+     * Regola in scrittura eventuali valori NON associati al binder <br>
+     * Dalla  UI al DB <br>
+     * Deve essere sovrascritto <br>
+     */
+    protected void writeSpecificFields() {
     }
 
     /**
@@ -557,8 +575,8 @@ public abstract class LogicForm extends Logic {
      * Use the returned instance for further operations as the save operation
      * might have changed the entity instance completely.
      *
-     * @return true se la entity è stata registrata o definitivamente scartata; esce dal dialogo
-     * .       false se manca qualche field e la situazione è recuperabile; resta nel dialogo
+     * @return true se la entity è stata registrata o definitivamente scartata; esce dalla view
+     * .       false se manca qualche field e la situazione è recuperabile; resta nella view
      */
     public boolean save(final AEntity entityToSave) {
         boolean status = false;

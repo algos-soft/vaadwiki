@@ -1,35 +1,33 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import it.algos.vaadwiki.backend.service.*;
-import static org.junit.Assert.*;
+import it.algos.vaadflow14.backend.service.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 
 /**
- * Project vaadwiki
+ * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: sab, 08-mag-2021
- * Time: 11:06
+ * Date: ven, 30-apr-2021
+ * Time: 07:51
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("testAllValido")
-@DisplayName("Test sul service base ABioService")
+@Tag("MongoServiceTest")
+@DisplayName("Test di unit")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class BioServiceTest extends ATest {
+public class MongoServiceTest extends ATest {
 
-    public static final String PAGINA_PIOZZANO = "Piozzano";
 
     /**
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    BioUtility service;
+    AMongoService service;
 
 
     /**
@@ -43,10 +41,9 @@ public class BioServiceTest extends ATest {
 
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
-        assertNotNull(service);
+        Assertions.assertNotNull(service);
         service.text = text;
         service.array = array;
-        service.wikiApi = wikiApi;
     }
 
 
@@ -60,39 +57,11 @@ public class BioServiceTest extends ATest {
         super.setUp();
     }
 
-//    @Test
-//    @Order(1)
-//    @DisplayName("1 - leggeTmpl")
-//    void leggeTmpl() {
-//
-//        sorgente = "Guido Rossi";
-//        ottenuto = service.leggeTmpl(sorgente);
-//        assertTrue(text.isValid(ottenuto));
-//        assertTrue(ottenuto.startsWith(previsto));
-//        System.out.println(VUOTA);
-//        System.out.println(VUOTA);
-//        System.out.println("1 - Legge un template bio");
-//        System.out.println(VUOTA);
-//        System.out.println(ottenuto);
-//    }
-//
-//    @Test
-//    @Order(2)
-//    @DisplayName("2 - leggePagina")
-//    void leggePagina() {
-//        Pagina pagina = null;
-//        sorgente = PAGINA_PIOZZANO;
-//        sorgente2 = "xyz";
-//
-//        pagina = service.leggePagina(VUOTA);
-//        assertNull(pagina);
-//
-//        pagina = service.leggePagina(sorgente2);
-//        assertNull(pagina);
-//
-//        pagina = service.leggePagina(sorgente);
-//        assertNotNull(pagina);
-//    }
+    @Test
+    @Order(1)
+    @DisplayName("fetch")
+    void fetch() {
+    }
 
 
     /**

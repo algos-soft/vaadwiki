@@ -52,10 +52,10 @@ import java.time.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Bio", keyPropertyName = "wikiTitle")
-@AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "lastModifica")
-@AIList(fields = "pageId,wikiTitle,lastModifica,lastLettura", usaRowIndex = true)
-@AIForm(fields = "pageId,wikiTitle,lastModifica,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
+@AIEntity(recordName = "Bio", keyPropertyName = "pageId")
+@AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "lastMongo")
+@AIList(fields = "pageId,wikiTitle,valido,lastServer,lastMongo", usaRowIndex = true)
+@AIForm(fields = "pageId,wikiTitle,valido,lastServer,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 
 
@@ -104,7 +104,7 @@ public class Bio extends AEntity {
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.localDateTime, caption = "Ultima modifica effettuata (non dal Bot) sul server", enabled = false)
     @AIColumn(typeData = AETypeData.normaleOrario)
-    public LocalDateTime lastModifica;
+    public LocalDateTime lastServer;
 
 
     //--ultima lettura/aggiornamento della voce, effettuata dal programma VaadBio
@@ -112,7 +112,16 @@ public class Bio extends AEntity {
     //--molto meglio che siano esattamente dello stesso tipo
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.localDateTime, help = "ultima lettura/aggiornamento della voce effettuata dal programma VaadBio", enabled = false)
-    public LocalDateTime lastLettura;
+    public LocalDateTime lastMongo;
+
+
+    /**
+     * flag valido (facoltativo, di default false) <br>
+     * valido se lastLettura >= lastModifica
+     */
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "valido")
+    @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "OK", widthEM = 5)
+    public boolean valido;
 
 
     @Indexed(unique = false, direction = IndexDirection.DESCENDING)

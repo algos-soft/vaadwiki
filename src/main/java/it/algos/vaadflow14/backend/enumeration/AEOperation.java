@@ -13,6 +13,8 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  */
 public enum AEOperation {
     listNoForm(VUOTA, VUOTA, false, false, false),
+    newEdit(VUOTA, VUOTA, true, true, false),
+    newEditNoLog(VUOTA, VUOTA, true, true, false),
     addNew("New", "add", true, false, false),
     edit("Edit", "edit", true, true, true),
     editProfile("Edit", "edit", true, false, false),

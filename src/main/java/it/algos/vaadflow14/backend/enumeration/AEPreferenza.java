@@ -204,7 +204,7 @@ public enum AEPreferenza implements AIPreferenza {
     public void setValue(Object value) {
         Preferenza pref = preferenzaService.findByKey(this.keyCode);
         pref.setValue(pref.type.objectToBytes(value));
-        preferenzaService.save(pref);
+        preferenzaService.save(pref,AEOperation.newEdit);
     }
 
     public String getStr() {

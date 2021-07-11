@@ -15,6 +15,7 @@ public enum AETypeLog implements AILogType {
 
     system("system"),
     setup("setup"),
+    login("login"),
     startup("startup"),
     checkMenu("checkMenu"),
     checkData("checkData"),
@@ -39,6 +40,7 @@ public enum AETypeLog implements AILogType {
     reset("reset"),
     utente("utente"),
     password("password"),
+    bio("cicloBio"),
     ;
 
     private String tag;
