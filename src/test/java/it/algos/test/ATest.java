@@ -14,6 +14,7 @@ import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wiki.*;
+import it.algos.vaadwiki.wiki.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.slf4j.*;

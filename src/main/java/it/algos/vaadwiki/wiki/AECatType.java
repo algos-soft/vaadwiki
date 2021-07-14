@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.wiki;
+package it.algos.vaadwiki.wiki;
 
 /**
  * Project vaadflow14

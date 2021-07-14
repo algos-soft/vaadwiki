@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.wiki;
+package it.algos.vaadwiki.wiki;
 
 import com.vaadin.flow.spring.annotation.*;
 import org.springframework.beans.factory.config.*;

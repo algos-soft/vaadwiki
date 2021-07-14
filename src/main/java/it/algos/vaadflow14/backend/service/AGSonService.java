@@ -50,7 +50,7 @@ public class AGSonService extends AAbstractService {
 
     private MongoClient mongoClient = null;
 
-    private MongoDatabase database = null;
+    public MongoDatabase database = null;
 
     private MongoCollection<Document> collection;
 

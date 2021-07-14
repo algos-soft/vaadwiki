@@ -1,6 +1,7 @@
-package it.algos.vaadflow14.wiki;
+package it.algos.vaadwiki.wiki;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.wiki.*;
 
 import java.time.*;
 import java.time.format.*;

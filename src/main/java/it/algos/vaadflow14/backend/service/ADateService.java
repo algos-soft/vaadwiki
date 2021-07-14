@@ -634,7 +634,7 @@ public class ADateService extends AAbstractService {
      * @return la data sotto forma di stringa
      */
     public String getOrario(LocalTime localTime) {
-        return localTime.format(DateTimeFormatter.ofPattern(AETypeData.orario.getPattern(), LOCALE));
+        return localTime != null ? localTime.format(DateTimeFormatter.ofPattern(AETypeData.orario.getPattern(), LOCALE)) : VUOTA;
     }
 
 
