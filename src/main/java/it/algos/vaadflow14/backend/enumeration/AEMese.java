@@ -1,6 +1,6 @@
 package it.algos.vaadflow14.backend.enumeration;
 
-import it.algos.vaadflow14.backend.service.ATextService;
+import it.algos.vaadflow14.backend.service.TextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +45,7 @@ public enum AEMese {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ATextService text;
+    public TextService text;
 
 
     String nome;
@@ -313,7 +313,7 @@ public enum AEMese {
     }
 
 
-    public void setText(ATextService text) {
+    public void setText(TextService text) {
         this.text = text;
     }
 
@@ -322,7 +322,7 @@ public enum AEMese {
     public static class MeseServiceInjector {
 
         @Autowired
-        private ATextService text;
+        private TextService text;
 
 
         @PostConstruct

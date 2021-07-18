@@ -35,7 +35,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AReflectionService extends AAbstractService {
+public class ReflectionService extends AbstractService {
 
 
     /**

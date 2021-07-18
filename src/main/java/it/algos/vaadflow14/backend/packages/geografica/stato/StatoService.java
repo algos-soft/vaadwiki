@@ -212,7 +212,6 @@ public class StatoService extends AService {
         AIResult result = super.reset();
         int numRec = 0;
         AIResult resultCollectionPropedeutica;
-        Stato stato;
         String nome;
         int pos = AEStatoEuropeo.values().length;
         int posEuropeo;
@@ -220,7 +219,7 @@ public class StatoService extends AService {
         boolean ue;
         String bandieraTxt = VUOTA;
         Map<String, Continente> mappa;
-        Continente continente = null;
+        Continente continente ;
         Continente continenteDefault = continenteService.findById(AEContinente.antartide.getNome());
         String alfaTre = VUOTA;
 

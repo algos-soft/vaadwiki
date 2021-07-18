@@ -24,7 +24,7 @@ import java.util.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Test di utility varie")
+@DisplayName("UtilityService - Utility varie.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UtilityServiceTest extends ATest {
 
@@ -33,8 +33,7 @@ public class UtilityServiceTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AUtilityService service;
-
+    UtilityService service;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -50,6 +49,7 @@ public class UtilityServiceTest extends ATest {
         Assertions.assertNotNull(service);
         service.text = text;
         service.array = array;
+        service.annotation = annotation;
     }
 
 

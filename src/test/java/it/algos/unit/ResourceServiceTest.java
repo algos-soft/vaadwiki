@@ -2,7 +2,7 @@ package it.algos.unit;
 
 import com.vaadin.flow.server.StreamResource;
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.service.AResourceService;
+import it.algos.vaadflow14.backend.service.ResourceService;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
@@ -25,17 +25,17 @@ import static org.junit.Assert.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("ResourceServiceTest")
-@DisplayName("Test di unit")
+@Tag("testAllValido")
+@DisplayName("ResourceService - Risorse esterne.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AResourceServiceTest extends ATest {
+public class ResourceServiceTest extends ATest {
 
 
     /**
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AResourceService service;
+    ResourceService service;
 
     private Map<String, List<String>> mappa;
 

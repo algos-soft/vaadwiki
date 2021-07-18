@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.ui.dialog;
 
 import com.vaadin.flow.component.button.*;
-import com.vaadin.flow.component.confirmdialog.*;
 import com.vaadin.flow.component.dialog.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
@@ -83,7 +82,7 @@ public class ADialog extends Dialog {
      * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    public ATextService text;
+    public TextService text;
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
@@ -130,7 +129,7 @@ public class ADialog extends Dialog {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AAnnotationService annotation;
+    public AnnotationService annotation;
 
     //    /**
     //     * Flag di preferenza per il testo del bottone Confirm. Normalmente 'Conferma'.

@@ -57,7 +57,7 @@ public class AGrid {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AReflectionService reflection;
+    public ReflectionService reflection;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -65,7 +65,7 @@ public class AGrid {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AHtmlService html;
+    public HtmlService html;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -73,7 +73,7 @@ public class AGrid {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ATextService text;
+    public TextService text;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -89,7 +89,7 @@ public class AGrid {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    protected AArrayService array;
+    protected ArrayService array;
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
@@ -97,7 +97,7 @@ public class AGrid {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    protected AAnnotationService annotation;
+    protected AnnotationService annotation;
 
     /**
      * Filtri per dataProvider <br>
@@ -117,7 +117,7 @@ public class AGrid {
     private DataProvider dataProvider;
 
     @Autowired
-    private ADataProviderService dataProviderService;
+    private DataProviderService dataProviderService;
 
     private Grid grid;
 

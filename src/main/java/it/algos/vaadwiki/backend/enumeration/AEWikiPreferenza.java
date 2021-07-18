@@ -70,10 +70,10 @@ public enum AEWikiPreferenza implements AIPreferenza {
     private ALogService logger;
 
     //--Link injettato da un metodo static
-    private ADateService date;
+    private DateService date;
 
     //--Link injettato da un metodo static
-    private AEnumerationService enumService;
+    private EnumerationService enumService;
 
 
     AEWikiPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany) {
@@ -106,11 +106,11 @@ public enum AEWikiPreferenza implements AIPreferenza {
         this.logger = logger;
     }
 
-    public void setDate(ADateService date) {
+    public void setDate(DateService date) {
         this.date = date;
     }
 
-    public void setEnumService(AEnumerationService enumService) {
+    public void setEnumService(EnumerationService enumService) {
         this.enumService = enumService;
     }
 
@@ -296,10 +296,10 @@ public enum AEWikiPreferenza implements AIPreferenza {
         private ALogService logger;
 
         @Autowired
-        private AEnumerationService enumService;
+        private EnumerationService enumService;
 
         @Autowired
-        private ADateService date;
+        private DateService date;
 
         @PostConstruct
         public void postConstruct() {

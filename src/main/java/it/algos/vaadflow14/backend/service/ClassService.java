@@ -20,7 +20,7 @@ import org.springframework.stereotype.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AClassService extends AAbstractService {
+public class ClassService extends AbstractService {
 
 
     /**
@@ -64,33 +64,6 @@ public class AClassService extends AAbstractService {
     }
 
 
-    /**
-     * Istanza della sottoclasse xxxLogic associata al nome delle Entity inviata  <br>
-     *
-     * @param entityClazzCanonicalName the canonical name of entity class
-     *
-     * @return istanza di xxxLogic associata alla Entity
-     */
-    public AILogicOld getLogicFromEntityName(String entityClazzCanonicalName) {
-        AILogicOld entityLogic = null;
-        String logicClazzCanonicalName;
-        AEntity entityBean;
-
-        if (text.isValid(entityClazzCanonicalName)) {
-            logicClazzCanonicalName = entityClazzCanonicalName + SUFFIX_LOGIC_LIST;
-            try {
-                entityLogic = (AILogicOld) appContext.getBean(Class.forName(logicClazzCanonicalName));
-            } catch (Exception unErrore) {
-                try {
-                    entityBean = (AEntity) appContext.getBean(Class.forName(entityClazzCanonicalName));
-                    entityLogic = appContext.getBean(EntityLogicOld.class, entityBean.getClass());
-                } catch (Exception unErrore2) {
-                    logger.error(unErrore2.getMessage(), this.getClass(), "getLogicFromEntityName");
-                }
-            }
-        }
-        return entityLogic;
-    }
 
     /**
      * Controlla che esiste una classe xxxLogicList associata alla Entity inviata  <br>
@@ -267,7 +240,7 @@ public class AClassService extends AAbstractService {
                     entityLogic = (AILogic) appContext.getBean(Class.forName(canonicalName), entityService);
                 } catch (Exception unErrore2) {
                     try {
-                        entityLogic = (AILogic) appContext.getBean(EntityLogicOld.class, entityClazz, operationForm);
+                        entityLogic = (AILogic) appContext.getBean(LogicList.class, entityClazz, operationForm);
                     } catch (Exception unErrore3) {
                         logger.error("Non sono riuscito a creare la entityLogic", this.getClass(), "getLogicFromEntity");
                     }

@@ -32,7 +32,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AUtilityService extends AAbstractService {
+public class UtilityService extends AbstractService {
 
 
     /**

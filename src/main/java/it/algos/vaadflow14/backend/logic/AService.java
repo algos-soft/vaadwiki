@@ -30,7 +30,7 @@ import java.util.*;
  * Se la sottoclasse xxxService non esiste (non è indispensabile), usa la classe
  * generica EntityService; i metodi esistono ma occorre un cast in uscita <br>
  */
-public abstract class AService extends AAbstractService implements AIService {
+public abstract class AService extends AbstractService implements AIService {
 
     /**
      * The Entity Class  (obbligatoria sempre e final)

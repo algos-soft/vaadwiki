@@ -47,7 +47,7 @@ import java.time.format.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class ALogService extends AAbstractService {
+public class ALogService extends AbstractService {
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -55,7 +55,7 @@ public class ALogService extends AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ABeanService beanService;
+    public BeanService beanService;
 
     /**
      * Riferimento al logger usato <br>

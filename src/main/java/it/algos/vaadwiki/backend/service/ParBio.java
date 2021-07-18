@@ -421,7 +421,7 @@ public enum ParBio {
     public AWikiBotService wikiBot;
 
     // @Autowired nella classe statica interna  @Component ParInjector
-    protected ATextService text;
+    protected TextService text;
 
     private String tag = "";
 
@@ -918,7 +918,7 @@ public enum ParBio {
         this.wikiBot = wikiBot;
     }
 
-    public void setText(ATextService text) {
+    public void setText(TextService text) {
         this.text = text;
     }
 
@@ -926,7 +926,7 @@ public enum ParBio {
     public static class ParInjector {
 
         @Autowired
-        private ATextService text;
+        private TextService text;
 
         @Autowired
         private AWikiBotService wikiBot;

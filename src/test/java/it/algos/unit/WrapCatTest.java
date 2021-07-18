@@ -348,7 +348,7 @@ public class WrapCatTest extends ATest {
         }
     }
 
-    private void printWrap(List<WrapDueStringhe> listaWrap) {
+    protected void printWrap(List<WrapDueStringhe> listaWrap) {
         System.out.println("********");
         if (array.isAllValid(listaWrap)) {
             for (WrapDueStringhe wrap : listaWrap) {

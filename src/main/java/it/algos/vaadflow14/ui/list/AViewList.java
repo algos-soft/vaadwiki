@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.*;
 public class AViewList extends AView {
 
     @Autowired
-    private ADataProviderService dataService;
+    private DataProviderService dataService;
 
     /**
      * Costruttore @Autowired <br>

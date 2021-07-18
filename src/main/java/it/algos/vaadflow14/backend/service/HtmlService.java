@@ -28,7 +28,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AHtmlService extends AAbstractService {
+public class HtmlService extends AbstractService {
 
 
     /**

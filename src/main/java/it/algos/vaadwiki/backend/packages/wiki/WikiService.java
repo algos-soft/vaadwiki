@@ -5,6 +5,8 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadwiki.backend.enumeration.*;
+import it.algos.vaadwiki.backend.service.*;
+import org.springframework.beans.factory.annotation.*;
 
 import java.time.*;
 
@@ -61,6 +63,14 @@ public abstract class WikiService extends AService {
     public final static String PATH_MODULO_PRENOME = "Progetto:Antroponimi/Nomi doppi";
 
     protected AEWikiPreferenza prefDownload;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AWikiBotService wikiBot;
 
     /**
      * Costruttore senza parametri <br>

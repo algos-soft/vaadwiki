@@ -2,17 +2,10 @@ package it.algos.vaadflow14.ui.service;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
-import it.algos.vaadflow14.backend.service.AAbstractService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
+import it.algos.vaadflow14.backend.service.AbstractService;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * Project vaadflow
@@ -29,7 +22,7 @@ import java.util.*;
  */
 @Service
 @VaadinSessionScope()
-public class AMenuService extends AAbstractService {
+public class AMenuService extends AbstractService {
 
 
 //    /**

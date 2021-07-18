@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.ui.header;
 
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
@@ -24,7 +23,7 @@ public abstract class AHeaderAlert extends VerticalLayout implements AIHeader {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    protected ATextService text;
+    protected TextService text;
 
     /**
      * Property specifica regolata nella sottoclasse <br>

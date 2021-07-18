@@ -4,7 +4,7 @@ import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import static it.algos.vaadflow14.backend.service.AFileService.*;
+import static it.algos.vaadflow14.backend.service.FileService.*;
 import org.apache.tomcat.util.http.fileupload.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,12 +19,16 @@ import java.util.*;
  * User: gac
  * Date: dom, 28-giu-2020
  * Time: 15:11
+ * Unit test di una classe di servizio <br>
+ * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
+ * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
+ * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("AFileServiceTest")
-@DisplayName("Unit test per la gestione dei files")
+@Tag("testAllValido")
+@DisplayName("FileService - Gestione dei files.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AFileServiceTest extends ATest {
+public class FileServiceTest extends ATest {
 
     static boolean FLAG_CREAZIONE_INIZIALE = true;
 

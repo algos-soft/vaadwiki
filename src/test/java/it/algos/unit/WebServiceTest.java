@@ -2,12 +2,14 @@ package it.algos.unit;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static it.algos.vaadflow14.backend.service.AWebService.*;
+import it.algos.vaadflow14.backend.service.*;
+import static it.algos.vaadflow14.backend.service.WebService.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.*;
+import org.mockito.*;
 
 import java.util.*;
 
@@ -17,12 +19,16 @@ import java.util.*;
  * User: gac
  * Date: gio, 07-mag-2020
  * Time: 07:56
+ * Unit test di una classe di servizio <br>
+ * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
+ * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
+ * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("testAllValido")
-@DisplayName("Test di controllo per i collegamenti base del web.")
+@Tag("WebService")
+@DisplayName("WebService - Collegamenti base del web.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AWebServiceTest extends ATest {
+public class WebServiceTest extends ATest {
 
     public static final String URL_ERRATO = "htp://www.altos.it/hellogac.html";
 
@@ -32,6 +38,11 @@ public class AWebServiceTest extends ATest {
 
     private static String PAGINA = "ISO 3166-2:IT";
 
+    /**
+     * Classe principale di riferimento <br>
+     */
+    @InjectMocks
+    protected WebService service;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -52,6 +63,11 @@ public class AWebServiceTest extends ATest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
+
+        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(service);
+        Assertions.assertNotNull(service);
+        service.text = text;
     }
 
 
@@ -61,7 +77,7 @@ public class AWebServiceTest extends ATest {
     public void leggeErrato() {
         sorgente = URL_ERRATO;
 
-        ottenutoRisultato = web.legge(sorgente);
+        ottenutoRisultato = service.legge(sorgente);
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isErrato());
         assertTrue(ottenutoRisultato.getErrorMessage().equals(UNKNOWN_HOST));
@@ -70,7 +86,7 @@ public class AWebServiceTest extends ATest {
         System.out.println("Genera un messaggio di errore:");
         System.out.println(ottenutoRisultato.getErrorMessage());
 
-        ottenuto = web.leggeWebTxt(sorgente);
+        ottenuto = service.leggeWebTxt(sorgente);
         assertNotNull(ottenuto);
         assertFalse(text.isValid(ottenuto));
     }
@@ -82,10 +98,10 @@ public class AWebServiceTest extends ATest {
         sorgente = URL_WEB_GAC;
         previsto = "<!DOCTYPE html><html><body><h1>Telefoni</h1><p style=\"font-family:verdana;font-size:60px\">Gac: 338 9235040</p>";
 
-        ottenutoRisultato = web.legge(sorgente);
+        ottenutoRisultato = service.legge(sorgente);
         assertTrue(ottenutoRisultato.isValido());
 
-        ottenuto = web.leggeWebTxt(sorgente);
+        ottenuto = service.leggeWebTxt(sorgente);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.equals(ottenutoRisultato.getText()));
@@ -109,10 +125,10 @@ public class AWebServiceTest extends ATest {
         previsto = "<h1>Telefoni</h1><p style=\"font-family:verdana;font-size:60px\">Gac: 338 9235040</p>";
         previsto2 = "<p style=\"font-family:verdana;font-size:60px\">2NT-3F: No</p>";
 
-        ottenutoRisultato = web.leggeBodyWeb(sorgente);
+        ottenutoRisultato = service.leggeBodyWeb(sorgente);
         assertTrue(ottenutoRisultato.isValido());
 
-        ottenuto = web.leggeBodyWebTxt(sorgente);
+        ottenuto = service.leggeBodyWebTxt(sorgente);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.equals(ottenutoRisultato.getText()));
@@ -135,10 +151,10 @@ public class AWebServiceTest extends ATest {
     public void legge() {
         sorgente = URL_WIKI_GENERICO;
 
-        ottenutoRisultato = web.legge(sorgente);
+        ottenutoRisultato = service.legge(sorgente);
         assertTrue(ottenutoRisultato.isValido());
 
-        ottenuto = web.leggeWebTxt(sorgente);
+        ottenuto = service.leggeWebTxt(sorgente);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.equals(ottenutoRisultato.getText()));
@@ -160,10 +176,10 @@ public class AWebServiceTest extends ATest {
     public void leggeWiki() {
         sorgente = PAGINA;
 
-        ottenutoRisultato = web.leggeWiki(sorgente);
+        ottenutoRisultato = service.leggeWiki(sorgente);
         assertTrue(ottenutoRisultato.isValido());
 
-        ottenuto = web.leggeWikiTxt(sorgente);
+        ottenuto = service.leggeWikiTxt(sorgente);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.equals(ottenutoRisultato.getText()));
@@ -178,13 +194,14 @@ public class AWebServiceTest extends ATest {
         System.out.println(ottenuto.substring(0, WIDTH));
     }
 
+
     @Test
     @Order(6)
     @DisplayName("6 - Legge una pagina wiki (inesistente)")
     public void leggeWikiMancante() {
         sorgente = "Pagina inesistente";
 
-        ottenutoRisultato = web.leggeWiki(sorgente);
+        ottenutoRisultato = service.leggeWiki(sorgente);
         assertTrue(ottenutoRisultato.isErrato());
 
         System.out.println(String.format("6 - Cerca di leggere la pagina wiki: %s in formato html", ottenutoRisultato.getMessage()));
@@ -192,7 +209,7 @@ public class AWebServiceTest extends ATest {
         System.out.println("Genera un messaggio di errore:");
         System.out.println(ottenutoRisultato.getErrorMessage());
 
-        ottenuto = web.leggeWikiTxt(sorgente);
+        ottenuto = service.leggeWikiTxt(sorgente);
         assertNotNull(ottenuto);
         assertFalse(text.isValid(ottenuto));
     }
@@ -206,7 +223,7 @@ public class AWebServiceTest extends ATest {
         System.out.println("7 - Costruisce una stringa di testo coi titoli della Table per individuarla nel sorgente della pagina");
 
         previsto = VUOTA;
-        ottenuto = web.costruisceTagTitoliTable(null);
+        ottenuto = service.costruisceTagTitoliTable(null);
         assertNotNull(ottenuto);
         assertFalse(text.isValid(ottenuto));
 
@@ -217,7 +234,7 @@ public class AWebServiceTest extends ATest {
         previsto += "<th>";
         previsto += "Codice";
 
-        ottenuto = web.costruisceTagTitoliTable(titoli);
+        ottenuto = service.costruisceTagTitoliTable(titoli);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
         System.out.println(VUOTA);
@@ -234,7 +251,7 @@ public class AWebServiceTest extends ATest {
         previsto += "<th>";
         previsto += "Province";
 
-        ottenuto = web.costruisceTagTitoliTable(titoli);
+        ottenuto = service.costruisceTagTitoliTable(titoli);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
         System.out.println(VUOTA);
@@ -254,7 +271,7 @@ public class AWebServiceTest extends ATest {
         previsto += "<th>";
         previsto += "Nella regione";
 
-        ottenuto = web.costruisceTagTitoliTable(titoli);
+        ottenuto = service.costruisceTagTitoliTable(titoli);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
 
@@ -268,11 +285,11 @@ public class AWebServiceTest extends ATest {
     @Order(8)
     @DisplayName("8 - Estrae una tavola")
     public void estraeTableWiki() {
-        sorgente = web.leggeWikiTxt(PAGINA);
+        sorgente = service.leggeWikiTxt(PAGINA);
 
         String[] titoli = new String[]{"Codice", "Città metropolitane", "Nella regione"};
 
-        ottenuto = web.estraeTableWiki(sorgente, titoli);
+        ottenuto = service.estraeTableWiki(sorgente, titoli);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
 
@@ -292,10 +309,10 @@ public class AWebServiceTest extends ATest {
     @Order(9)
     @DisplayName("9 - Estrae un'altra tavola")
     public void estraeTableWiki2() {
-        sorgente = web.leggeWikiTxt(PAGINA);
+        sorgente = service.leggeWikiTxt(PAGINA);
         String[] titoli = new String[]{"Codice", "Regioni"};
 
-        ottenuto = web.estraeTableWiki(sorgente, titoli);
+        ottenuto = service.estraeTableWiki(sorgente, titoli);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
 
@@ -319,7 +336,7 @@ public class AWebServiceTest extends ATest {
         String[] titoli = new String[]{"Codice", "Regioni"};
         int previstoIntero = 20;
 
-        lista = web.getRigheTableWiki(PAGINA, titoli);
+        lista = service.getRigheTableWiki(PAGINA, titoli);
         assertNotNull(lista);
         assertEquals(previstoIntero, lista.size());
 
@@ -345,7 +362,7 @@ public class AWebServiceTest extends ATest {
         String[] titoli = new String[]{"Codice", "Regioni"};
         int previstoIntero = 20;
 
-        mappaTable = web.getMappaTableWiki(PAGINA, titoli);
+        mappaTable = service.getMappaTableWiki(PAGINA, titoli);
         assertNotNull(mappaTable);
         assertEquals(previstoIntero, mappaTable.size());
 
@@ -374,7 +391,7 @@ public class AWebServiceTest extends ATest {
         String[] titoli = new String[]{"Codice", "Regioni"};
         int previstoIntero = 20;
 
-        matriceTable = web.getMatriceTableWiki(PAGINA, titoli);
+        matriceTable = service.getMatriceTableWiki(PAGINA, titoli);
         assertNotNull(matriceTable);
         assertEquals(previstoIntero, matriceTable.size());
 
@@ -404,7 +421,7 @@ public class AWebServiceTest extends ATest {
 
         int previstoIntero = 136;
 
-        matriceTable = web.getMatriceTableWiki("Comuni del Molise", titoli);
+        matriceTable = service.getMatriceTableWiki("Comuni del Molise", titoli);
         assertNotNull(matriceTable);
         assertEquals(previstoIntero, matriceTable.size());
 

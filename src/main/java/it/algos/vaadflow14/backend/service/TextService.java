@@ -31,7 +31,7 @@ import java.util.regex.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class ATextService extends AAbstractService {
+public class TextService extends AbstractService {
 
 
     /**

@@ -29,7 +29,7 @@ import java.util.stream.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AArrayService extends AAbstractService {
+public class ArrayService extends AbstractService {
 
 
     /**

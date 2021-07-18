@@ -34,6 +34,8 @@ public interface AIResult {
 
     int getValore();
 
+    void setValore(int value);
+
     void print(final  ALogService logger, final AETypeLog typeLog);
 
 }// end of interface

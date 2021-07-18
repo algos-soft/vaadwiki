@@ -38,7 +38,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AColumnService extends AAbstractService {
+public class AColumnService extends AbstractService {
 
     /**
      * versione della classe per la serializzazione

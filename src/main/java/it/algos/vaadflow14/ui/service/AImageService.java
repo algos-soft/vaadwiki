@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.ui.service;
 
 import com.vaadin.flow.component.html.Image;
-import it.algos.vaadflow14.backend.service.AAbstractService;
+import it.algos.vaadflow14.backend.service.AbstractService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AImageService extends AAbstractService {
+public class AImageService extends AbstractService {
 
     /**
      * versione della classe per la serializzazione

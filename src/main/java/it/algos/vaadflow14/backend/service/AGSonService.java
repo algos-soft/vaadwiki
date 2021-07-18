@@ -41,7 +41,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AGSonService extends AAbstractService {
+public class AGSonService extends AbstractService {
 
     /**
      * versione della classe per la serializzazione

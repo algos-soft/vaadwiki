@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wiki.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
+import it.algos.vaadwiki.backend.service.*;
 import org.json.simple.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -123,7 +124,15 @@ public class AQueryLogin {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ATextService text;
+    public AWikiBotService wikiBot;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public TextService text;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -193,7 +202,6 @@ public class AQueryLogin {
      * La response viene elaborata per confermare il login andato a buon fine <br>
      */
     public String urlRequest() {
-
         //--La prima request è di tipo GET
         this.preliminaryRequestGet();
 
@@ -474,7 +482,7 @@ public class AQueryLogin {
                 lgusername = (String) jsonLogin.get(LOGIN_USER_NAME);
             }
         }
-        List<Long>  listaPageIdsCategoria = wikiApi.getLongCat("Nati nel 1167");
+//        List<Long>  listaPageIdsCategoria = wikiBot.getLongCat("Nati nel 1167");
 
         return VUOTA;
     }
@@ -492,6 +500,13 @@ public class AQueryLogin {
 
     public String getLgusername() {
         return lgusername;
+    }
+
+    public Map getCookies() {
+        return cookies;
+    }
+    public String getCookiesText() {
+        return creaCookieText(TAG_SESSION, cookies.get(TAG_SESSION));
     }
 
 }

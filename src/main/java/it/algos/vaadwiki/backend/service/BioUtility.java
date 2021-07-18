@@ -28,7 +28,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class BioUtility extends AAbstractService {
+public class BioUtility extends AbstractService {
 
 
     /**

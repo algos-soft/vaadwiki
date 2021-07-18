@@ -1,39 +1,37 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import static it.algos.unit.WikiApiServiceTest.*;
-import it.algos.vaadflow14.wiki.*;
-import static it.algos.vaadwiki.backend.service.AWikiBotService.*;
-import it.algos.vaadwiki.wiki.query.*;
-import static org.junit.Assert.*;
+import it.algos.vaadflow14.backend.wrapper.AResult;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 
-import java.util.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Project vaadwiki
+ * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: gio, 08-lug-2021
- * Time: 19:01
+ * Date: ven, 27-nov-2020
+ * Time: 15:02
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("QueryLoginTest")
+@Tag("WrapperTest")
 @DisplayName("Test di unit")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class QueryLoginTest extends ATest {
+public class WrapperTest extends ATest {
 
 
     /**
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AQueryLogin istanza;
+    AResult result;
 
 
     /**
@@ -46,11 +44,8 @@ public class QueryLoginTest extends ATest {
         super.setUpStartUp();
 
         MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(istanza);
-        Assertions.assertNotNull(istanza);
-        istanza.wikiApi = wikiApi;
-        istanza.text = text;
-        istanza.logger = logger;
+        MockitoAnnotations.initMocks(result);
+        Assertions.assertNotNull(result);
     }
 
 
@@ -66,23 +61,30 @@ public class QueryLoginTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("urlRequest")
-    void urlRequest() {
-        istanza.urlRequest();
-        ottenutoBooleano = istanza.isLoginValido();
-        assertTrue(ottenutoBooleano);
-        System.out.println(String.format("Collegamento: %s", ottenutoBooleano));
-        System.out.println(String.format("%s: %d", AWikiApiService.LOGIN_USER_ID, istanza.getLguserid()));
-        System.out.println(String.format("%s: %s", AWikiApiService.LOGIN_USER_NAME, istanza.getLgusername()));
+    @DisplayName("Result")
+    void getLabelHost() {
+        sorgente = "Messaggio di errore";
+        sorgente2 = "Avviso per specificare il tipo di risultato positivo";
+        sorgenteIntero = 87;
 
-        String url = WIKI_PARSE + PAGINA_TEST + WIKI_QUERY_BOT;
-        ottenutoRisultato = web.legge(url);
-        Map mappa = istanza.getCookies();
-        QueryBot query = appContext.getBean(QueryBot.class, mappa);
-        query.urlRequest();
-        boolean collegato = query.isBot();
-        int a = 87;
-
+//        result = AResult.valido();
+//        assertTrue(result.isValido());
+//        assertEquals(VUOTA, result.getErrorMessage());
+//
+//        result = AResult.errato(sorgente);
+//        assertFalse(result.isValido());
+//        assertEquals(sorgente, result.getErrorMessage());
+//
+//        result = AResult.valido(sorgente2);
+//        assertTrue(result.isValido());
+//        assertEquals(VUOTA, result.getErrorMessage());
+//        assertEquals(sorgente2, result.getValidationMessage());
+//
+//        result = AResult.valido(sorgente2,sorgenteIntero);
+//        assertTrue(result.isValido());
+//        assertEquals(VUOTA, result.getErrorMessage());
+//        assertEquals(sorgente2, result.getValidationMessage());
+//        assertEquals(sorgenteIntero, result.getValore());
     }
 
 

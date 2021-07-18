@@ -2,7 +2,7 @@ package it.algos.unit;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.wiki.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
@@ -40,6 +40,7 @@ public class WikiBotServiceTest extends ATest {
     public static final String CAT_1935 = "Nati nel 1935";
 
     public static final String CAT_1713 = "Nati nel 1713";
+    public static final String CAT_2020 = "Morti nel 2020";
 
     public static final String CAT_ROMANI = "Personaggi della storia romana";
 
@@ -86,6 +87,198 @@ public class WikiBotServiceTest extends ATest {
         super.setUp();
     }
 
+    @Test
+    @Order(1)
+    @DisplayName("1 - Informazioni della categoria")
+    public void getInfoCategoria() {
+        System.out.println("1 - Informazioni della categoria.");
+        System.out.println("Legge (come anonymous) le info della categoria");
+
+        sorgente = CAT_INESISTENTE;
+        previstoIntero = 0;
+        inizio = System.currentTimeMillis();
+        ottenutoRisultato = service.getInfoCategoria(sorgente);
+        assertFalse(ottenutoRisultato.isValido());
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella categoria '%s' non ci sono pagine", sorgente));
+
+        sorgente = CAT_1167;
+        previstoIntero = 6;
+        inizio = System.currentTimeMillis();
+        ottenutoRisultato = service.getInfoCategoria(sorgente);
+        assertTrue(ottenutoRisultato.isValido());
+        assertEquals(previstoIntero, ottenutoRisultato.getValore());
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoRisultato.getValore()));
+
+        sorgente = CAT_1435;
+        previstoIntero = 33;
+        inizio = System.currentTimeMillis();
+        ottenutoRisultato = service.getInfoCategoria(sorgente);
+        assertTrue(ottenutoRisultato.isValido());
+        assertEquals(previstoIntero, ottenutoRisultato.getValore());
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoRisultato.getValore()));
+
+        sorgente = CAT_1935;
+        previstoIntero = 1990;
+        inizio = System.currentTimeMillis();
+        ottenutoRisultato = service.getInfoCategoria(sorgente);
+        assertTrue(ottenutoRisultato.isValido());
+        assertEquals(previstoIntero, ottenutoRisultato.getValore());
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoRisultato.getValore()));
+
+        sorgente = CAT_ROMANI;
+        previstoIntero = 78;
+        inizio = System.currentTimeMillis();
+        ottenutoRisultato = service.getInfoCategoria(sorgente);
+        assertTrue(ottenutoRisultato.isValido());
+        assertEquals(previstoIntero, ottenutoRisultato.getValore());
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoRisultato.getValore()));
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - Numero di pagine della categoria")
+    public void getTotaleCategoria() {
+        System.out.println("1 - numero di pagine della categoria.");
+        System.out.println("Legge (come anonymous) il numero di pagina della categoria");
+
+        sorgente = CAT_INESISTENTE;
+        previstoIntero = 0;
+        inizio = System.currentTimeMillis();
+        ottenutoIntero = service.getTotaleCategoria(sorgente);
+        assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoIntero));
+
+        sorgente = CAT_1167;
+        previstoIntero = 6;
+        inizio = System.currentTimeMillis();
+        ottenutoIntero = service.getTotaleCategoria(sorgente);
+        assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoIntero));
+
+        sorgente = CAT_1435;
+        previstoIntero = 33;
+        inizio = System.currentTimeMillis();
+        ottenutoIntero = service.getTotaleCategoria(sorgente);
+        assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoIntero));
+
+        sorgente = CAT_1935;
+        previstoIntero = 1990;
+        inizio = System.currentTimeMillis();
+        ottenutoIntero = service.getTotaleCategoria(sorgente);
+        assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoIntero));
+
+        sorgente = CAT_ROMANI;
+        previstoIntero = 78;
+        inizio = System.currentTimeMillis();
+        ottenutoIntero = service.getTotaleCategoria(sorgente);
+        assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoIntero));
+    }
+
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - Legge una lista di pageid di una categoria wiki")
+    public void getLongCat() {
+        System.out.println("3 - Legge una lista di pageid di una categoria wiki");
+        AETypeUser userType = null;
+        sorgente = CAT_INESISTENTE;
+        previstoIntero = 0;
+        ottenutoArrayLong = service.getLongCat(sorgente);
+        assertNotNull(ottenutoArrayLong);
+        assertEquals(previstoIntero, ottenutoArrayLong.size());
+
+        //--senza specificare il type di user, in automatico mette anonymous
+        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+        sorgente = CAT_1167;
+        userType = null;
+        previstoIntero = 6;
+        ottenutoArrayLong = service.getLongCat(sorgente,userType);
+        assertNotNull(ottenutoArrayLong);
+        assertEquals(previstoIntero, ottenutoArrayLong.size());
+        System.out.println(VUOTA);
+        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+
+        //--type di user=anonymous
+        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+        sorgente = CAT_1167;
+        userType = AETypeUser.anonymous;
+        previstoIntero = 6;
+        ottenutoArrayLong = service.getLongCat(sorgente, userType);
+        assertNotNull(ottenutoArrayLong);
+        assertEquals(previstoIntero, ottenutoArrayLong.size());
+        System.out.println(VUOTA);
+        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+
+        //--type di user=user
+        //--non essendo collegato va in errore
+        sorgente = CAT_1167;
+        userType = AETypeUser.user;
+        previstoIntero = 0;
+        ottenutoArrayLong = service.getLongCat(sorgente, userType);
+        assertNotNull(ottenutoArrayLong);
+        assertEquals(previstoIntero, ottenutoArrayLong.size());
+        System.out.println(VUOTA);
+        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+
+        //--type di user=bot
+        //--non essendo collegato va in errore
+        sorgente = CAT_1167;
+        userType = AETypeUser.bot;
+        previstoIntero = 0;
+        ottenutoArrayLong = service.getLongCat(sorgente, userType);
+        assertNotNull(ottenutoArrayLong);
+        assertEquals(previstoIntero, ottenutoArrayLong.size());
+        System.out.println(VUOTA);
+        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+
+        //--senza specificare il type di user, in automatico mette anonymous
+        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+        sorgente = CAT_1713;
+        userType = AETypeUser.anonymous;
+        previstoIntero = 104;
+        ottenutoArrayLong = service.getLongCat(sorgente, userType);
+        assertNotNull(ottenutoArrayLong);
+        assertEquals(previstoIntero, ottenutoArrayLong.size());
+        System.out.println(VUOTA);
+        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+
+        //--senza specificare il type di user, in automatico mette anonymous
+        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+        sorgente = CAT_1935;
+        userType = AETypeUser.anonymous;
+        previstoIntero = 1990;
+        ottenutoArrayLong = service.getLongCat(sorgente, userType);
+        assertNotNull(ottenutoArrayLong);
+        assertEquals(previstoIntero, ottenutoArrayLong.size());
+        System.out.println(VUOTA);
+        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+
+        //--senza specificare il type di user, in automatico mette anonymous
+        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+        sorgente = CAT_2020;
+        userType = AETypeUser.anonymous;
+        previstoIntero = 2386;
+        ottenutoArrayLong = service.getLongCat(sorgente, userType);
+        assertNotNull(ottenutoArrayLong);
+        assertEquals(previstoIntero, ottenutoArrayLong.size());
+        System.out.println(VUOTA);
+        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+    }
+
     //    @Test
     @Order(1)
     @DisplayName("1 - legge (come user) un template")
@@ -107,7 +300,7 @@ public class WikiBotServiceTest extends ATest {
         System.out.println("Sorgente restituito in formato visibile/leggibile");
 
         System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
-        super.printWrap(wrap);
+        //        this.printWrapCat(wrap); @todo RIMETTERE
     }
 
     //    @Test
@@ -132,7 +325,7 @@ public class WikiBotServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println("Pagine recuperate:");
         for (WrapPage wrap : wrapLista) {
-            this.printWrap(wrap);
+            //            this.printWrap(wrap); @todo RIMETTERE
         }
     }
 
@@ -178,7 +371,7 @@ public class WikiBotServiceTest extends ATest {
 
         sorgente = CAT_1435;
         previstoIntero = 33;
-        sorgente2 = wikiApi.getPageidsCat(sorgente);
+        sorgente2 = service.getPageidsCat(sorgente);
         assertTrue(text.isValid(sorgente2));
 
         wrapLista = service.fixPages(sorgente2);
@@ -244,13 +437,13 @@ public class WikiBotServiceTest extends ATest {
         System.out.println(String.format("Tempo impiegato per leggere la categoria '%s' e controllare il 'timestamp' di %d pagine: %s", sorgente, previstoIntero, getTime()));
     }
 
-    @Test
+    //    @Test
     @Order(5)
     @DisplayName("5 - ciclo di download")
     public void leggePage2() {
         WrapPage wrap = null;
         int cont = 0;
-        List<String> lista = wikiApi.getTitleCat(CAT_1167);
+        List<String> lista = service.getTitleCat(CAT_1167);
         assertNotNull(lista);
 
         System.out.println(String.format("Trovate %s pagine", lista.size()));
@@ -266,7 +459,7 @@ public class WikiBotServiceTest extends ATest {
         }
     }
 
-    @Test
+    //    @Test
     @Order(6)
     @DisplayName("6 - ciclo di download")
     public void leggePage3() {
@@ -278,16 +471,16 @@ public class WikiBotServiceTest extends ATest {
         String stringPageIds = VUOTA;
 
         //--solo per controllo del titolo nel test. Normalmente non serve
-        listaWrapDiControlloDelPageid = wikiApi.getWrapCat(CAT_1167);
+        listaWrapDiControlloDelPageid = service.getWrapCat(CAT_1167);
         assertNotNull(listaWrapDiControlloDelPageid);
         System.out.println(String.format("Lista di %d WrapCat con i pageIds per controllo", listaWrapDiControlloDelPageid.size()));
         System.out.println("Solo per controllo del titolo nel test. Normalmente non serve");
         System.out.println(VUOTA);
-        printWrap(listaWrapDiControlloDelPageid);
+        printWrapCat(listaWrapDiControlloDelPageid);
 
         //--A - Parte dalla lista di tutti i (long)pageIds della categoria
         //--nel caso reale sono circa mezzo milione
-        listaPageIdsCategoria = wikiApi.getLongCat(CAT_1167);
+        listaPageIdsCategoria = service.getLongCat(CAT_1167);
         assertNotNull(listaPageIdsCategoria);
         System.out.println(VUOTA);
         System.out.println(VUOTA);
@@ -311,7 +504,7 @@ public class WikiBotServiceTest extends ATest {
         //--questi controlli vengono saltati in questa testUnit
         //--dalla lista risultante di MiniWrap, si costruisce una lista di pageIds da leggere
         //--si costruisce una lista di WrapPage valide
-        listaPageIdsDaLeggere= service.elaboraMiniWrap(listaMiniWrap);
+        listaPageIdsDaLeggere = service.elaboraMiniWrap(listaMiniWrap);
         listaWrapPage = service.leggePages(listaPageIdsDaLeggere);
         System.out.println(VUOTA);
         System.out.println(VUOTA);
@@ -327,7 +520,7 @@ public class WikiBotServiceTest extends ATest {
     }
 
 
-    private void printWrap(List<WrapCat> wrapLista) {
+    private void printWrapCat(List<WrapCat> wrapLista) {
         int pos = 0;
         for (WrapCat wrap : wrapLista) {
             pos++;

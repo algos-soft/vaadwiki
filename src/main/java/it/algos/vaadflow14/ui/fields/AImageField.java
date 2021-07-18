@@ -14,8 +14,8 @@ import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.service.AReflectionService;
-import it.algos.vaadflow14.backend.service.AResourceService;
+import it.algos.vaadflow14.backend.service.ReflectionService;
+import it.algos.vaadflow14.backend.service.ResourceService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class AImageField extends AField<String> {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AResourceService resourceService;
+    public ResourceService resourceService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -63,7 +63,7 @@ public class AImageField extends AField<String> {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AReflectionService reflection;
+    public ReflectionService reflection;
 
     private HorizontalLayout layout;
 

@@ -54,7 +54,7 @@ public abstract class WizDialog extends Dialog {
      */
     @Autowired
 
-    public ADateService date;
+    public DateService date;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -62,7 +62,7 @@ public abstract class WizDialog extends Dialog {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    protected ATextService text;
+    protected TextService text;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -70,7 +70,7 @@ public abstract class WizDialog extends Dialog {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    protected AArrayService array;
+    protected ArrayService array;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -78,7 +78,7 @@ public abstract class WizDialog extends Dialog {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    protected AFileService file;
+    protected FileService file;
 
     protected WizRecipient wizRecipient;
 

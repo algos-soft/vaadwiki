@@ -49,7 +49,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AMongoService<capture> extends AAbstractService {
+public class AMongoService<capture> extends AbstractService {
 
     public final static int STANDARD_MONGO_MAX_BYTES = 33554432;
 

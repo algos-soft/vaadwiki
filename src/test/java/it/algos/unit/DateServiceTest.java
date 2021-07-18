@@ -23,12 +23,16 @@ import static org.junit.jupiter.api.Assertions.*;
  * User: gac
  * Date: sab, 06-giu-2020
  * Time: 19:18
+ * Unit test di una classe di servizio <br>
+ * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
+ * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
+ * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("ADateServiceTest")
-@DisplayName("Unit test sulle date")
+@Tag("testAllValido")
+@DisplayName("DateService - Date e orario.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ADateServiceTest extends ATest {
+public class DateServiceTest extends ATest {
 
     public static final String SEP = "  ->  ";
 

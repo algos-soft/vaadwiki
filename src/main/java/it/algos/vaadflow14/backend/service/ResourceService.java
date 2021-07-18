@@ -29,7 +29,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AResourceService extends AAbstractService {
+public class ResourceService extends AbstractService {
 
 
     /**

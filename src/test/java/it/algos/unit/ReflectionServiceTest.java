@@ -28,10 +28,10 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("AReflectionServiceTest")
-@DisplayName("Unit test sulla riflessione")
+@Tag("testAllValido")
+@DisplayName("ReflectionService - Reflexion dei fields e delle classi.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AReflectionServiceTest extends ATest {
+public class ReflectionServiceTest extends ATest {
 
     protected static Class<? extends AEntity> UTENTE_CLASS = Utente.class;
 
@@ -47,7 +47,7 @@ public class AReflectionServiceTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AReflectionService service;
+    ReflectionService service;
 
     private List<Field> listaFields;
 
@@ -108,7 +108,7 @@ public class AReflectionServiceTest extends ATest {
         printField(MESE_CLASS, "getFields", listaFields);
         assertEquals(previstoIntero, listaFields.size());
 
-        previstoIntero = 4;
+        previstoIntero = 5;
         listaFields = service.getFields(SECOLO_CLASS);
         Assertions.assertNotNull(listaFields);
         printField(SECOLO_CLASS, "getFields", listaFields);
@@ -132,13 +132,13 @@ public class AReflectionServiceTest extends ATest {
         printField(COMPANY_CLASS, "getAllFields", listaFields);
         assertEquals(previstoIntero, listaFields.size());
 
-        previstoIntero = 6;
+        previstoIntero = 7;
         listaFields = service.getAllFields(MESE_CLASS);
         Assertions.assertNotNull(listaFields);
         printField(MESE_CLASS, "getAllFields", listaFields);
         assertEquals(previstoIntero, listaFields.size());
 
-        previstoIntero = 5;
+        previstoIntero = 7;
         listaFields = service.getAllFields(SECOLO_CLASS);
         Assertions.assertNotNull(listaFields);
         printField(SECOLO_CLASS, "getAllFields", listaFields);
@@ -168,7 +168,7 @@ public class AReflectionServiceTest extends ATest {
         printName(MESE_CLASS, "getFields", listaStr);
         assertEquals(previstoIntero, listaStr.size());
 
-        previstoIntero = 4;
+        previstoIntero = 5;
         listaStr = service.getFieldsName(SECOLO_CLASS);
         Assertions.assertNotNull(listaStr);
         printName(SECOLO_CLASS, "getFields", listaStr);
@@ -192,13 +192,13 @@ public class AReflectionServiceTest extends ATest {
         printName(COMPANY_CLASS, "getFields", listaStr);
         assertEquals(previstoIntero, listaStr.size());
 
-        previstoIntero = 6;
+        previstoIntero = 7;
         listaStr = service.getAllFieldsName(MESE_CLASS);
         Assertions.assertNotNull(listaStr);
         printName(MESE_CLASS, "getFields", listaStr);
         assertEquals(previstoIntero, listaStr.size());
 
-        previstoIntero = 5;
+        previstoIntero = 7;
         listaStr = service.getAllFieldsName(SECOLO_CLASS);
         Assertions.assertNotNull(listaStr);
         printName(SECOLO_CLASS, "getFields", listaStr);

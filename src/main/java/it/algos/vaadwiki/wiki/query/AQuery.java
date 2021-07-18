@@ -23,7 +23,7 @@ public abstract class AQuery {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ATextService text;
+    public TextService text;
 
     /**
      * Request principale <br>

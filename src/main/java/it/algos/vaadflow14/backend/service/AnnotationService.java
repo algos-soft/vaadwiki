@@ -43,7 +43,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AAnnotationService extends AAbstractService {
+public class AnnotationService extends AbstractService {
 
     //==========================================================================
     // Costanti

@@ -1,7 +1,7 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.service.AEnumerationService;
+import it.algos.vaadflow14.backend.service.EnumerationService;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
@@ -21,18 +21,22 @@ import static org.junit.Assert.assertTrue;
  * User: gac
  * Date: dom, 30-ago-2020
  * Time: 10:23
+ * Unit test di una classe di servizio <br>
+ * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
+ * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
+ * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("AEnumeration")
-@DisplayName("Test di unit")
+@Tag("testAllValido")
+@DisplayName("EnumerationService - Persistenza nel mongoDB delle enumeration")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AEnumerationServiceTest extends ATest {
+public class EnumerationServiceTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AEnumerationService service;
+    EnumerationService service;
 
     private String rawValues;
 

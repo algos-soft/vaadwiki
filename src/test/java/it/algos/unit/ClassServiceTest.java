@@ -19,8 +19,8 @@ import org.mockito.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("ClassServiceTest")
-@DisplayName("Test di unit")
+@Tag("testAllValido")
+@DisplayName("ClassService - Utility di Class e path.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClassServiceTest extends ATest {
 
@@ -29,7 +29,7 @@ public class ClassServiceTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AClassService service;
+    ClassService service;
 
 
     /**

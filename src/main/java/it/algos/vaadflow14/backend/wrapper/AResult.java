@@ -165,6 +165,11 @@ public class AResult implements AIResult {
     }
 
     @Override
+    public void setValore(int value) {
+        valore = value;
+    }
+
+    @Override
     public void print(final ALogService logger, final AETypeLog typeLog) {
         if (isValido()) {
             logger.log(typeLog, getValidationMessage());

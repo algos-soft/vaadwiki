@@ -11,7 +11,6 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.service.*;
@@ -53,7 +52,7 @@ public abstract class AForm extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AAnnotationService annotation;
+    public AnnotationService annotation;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -61,7 +60,7 @@ public abstract class AForm extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AReflectionService reflection;
+    public ReflectionService reflection;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -69,7 +68,7 @@ public abstract class AForm extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ATextService text;
+    public TextService text;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -85,7 +84,7 @@ public abstract class AForm extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AArrayService array;
+    public ArrayService array;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -102,7 +101,7 @@ public abstract class AForm extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AClassService classService;
+    public ClassService classService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -110,7 +109,7 @@ public abstract class AForm extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ABeanService beanService;
+    public BeanService beanService;
 
 
     @Autowired
@@ -215,7 +214,7 @@ public abstract class AForm extends VerticalLayout {
     private LinkedHashMap<String, List> enumMap;
 
     @Deprecated
-    public AForm(ALogicOld logic, WrapForm wrap) {
+    public AForm( WrapForm wrap) {
         System.err.println("È stato chiamato il costruttore AForm con parametri errati. Non può funzionare");
     }
 

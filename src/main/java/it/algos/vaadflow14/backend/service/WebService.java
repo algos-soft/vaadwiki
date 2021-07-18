@@ -20,7 +20,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AWebService extends AAbstractService {
+public class WebService extends AbstractService {
 
     /**
      * Tag aggiunto prima del titoloWiki (leggibile) della pagina per costruire il 'domain' completo
@@ -116,7 +116,7 @@ public class AWebService extends AAbstractService {
      */
     public AIResult legge(final String urlDomain) {
         AIResult result;
-        String codiceSorgente = VUOTA;
+        String codiceSorgente ;
         URLConnection urlConn;
         String tag = TAG_INIZIALE;
         String tag2 = TAG_INIZIALE_SECURE;

@@ -35,7 +35,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class ADateService extends AAbstractService {
+public class DateService extends AbstractService {
 
     public static final String INFERIORE_SECONDO = "meno di un secondo";
 

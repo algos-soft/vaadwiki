@@ -6,7 +6,7 @@ import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
-import it.algos.vaadflow14.backend.service.AEnumerationService;
+import it.algos.vaadflow14.backend.service.EnumerationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,7 +35,7 @@ public class APreferenzaField extends AField<byte[]> {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AEnumerationService enumerationService;
+    public EnumerationService enumerationService;
 
     private AField valueField;
 

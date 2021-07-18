@@ -1,6 +1,5 @@
 package it.algos.unit;
 
-import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.html.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -16,12 +15,16 @@ import java.util.*;
  * User: gac
  * Date: mar, 28-apr-2020
  * Time: 20:42
+ * Unit test di una classe di servizio <br>
+ * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
+ * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
+ * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("text")
-@DisplayName("Unit test per elaborazione stringhe")
+@Tag("testAllValido")
+@DisplayName("TextService - Elaborazione stringhe di testo.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class ATextServiceTest extends ATest {
+public class TextServiceTest extends ATest {
 
 
     /**

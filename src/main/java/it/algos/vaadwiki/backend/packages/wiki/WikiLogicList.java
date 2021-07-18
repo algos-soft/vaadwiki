@@ -33,7 +33,7 @@ public abstract class WikiLogicList extends LogicList {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    protected AWebService web;
+    protected WebService web;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>

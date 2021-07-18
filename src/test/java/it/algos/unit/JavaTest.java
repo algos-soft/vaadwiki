@@ -24,10 +24,10 @@ import java.util.stream.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("JavaServiceTest")
-@DisplayName("Test di unit")
+@Tag("testAllValido")
+@DisplayName("Java - Nuove funzioni Java +8.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AJavaTest extends ATest {
+public class JavaTest extends ATest {
 
 
     private static void printNamesConsumer(String consumer) {
@@ -158,7 +158,7 @@ public class AJavaTest extends ATest {
     void consumer() {
         System.out.println("Java8 Consumer\n");
 
-        Consumer<String> consumer = AJavaTest::printNamesConsumer;
+        Consumer<String> consumer = JavaTest::printNamesConsumer;
         consumer.accept("C++");
         consumer.accept("Java");
         consumer.accept("Python");

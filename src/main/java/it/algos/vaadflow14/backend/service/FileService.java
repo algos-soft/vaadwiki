@@ -35,7 +35,7 @@ import java.util.stream.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AFileService extends AAbstractService {
+public class FileService extends AbstractService {
 
     public static final String PARAMETRO_NULLO = "Il parametro in ingresso è nullo";
 

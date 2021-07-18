@@ -38,7 +38,7 @@ public class WizService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ATextService text;
+    public TextService text;
 
 
     /**
@@ -47,7 +47,7 @@ public class WizService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AArrayService array;
+    public ArrayService array;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -63,7 +63,7 @@ public class WizService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ADateService date;
+    public DateService date;
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
@@ -71,7 +71,7 @@ public class WizService {
      * Disponibile al termine del costruttore di questa classe <br>
      */
     @Autowired
-    public AFileService file;
+    public FileService file;
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
@@ -79,7 +79,7 @@ public class WizService {
      * Disponibile al termine del costruttore di questa classe <br>
      */
     @Autowired
-    public AAnnotationService annotation;
+    public AnnotationService annotation;
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
@@ -87,7 +87,7 @@ public class WizService {
      * Disponibile al termine del costruttore di questa classe <br>
      */
     @Autowired
-    public AClassService classService;
+    public ClassService classService;
 
 
     /**

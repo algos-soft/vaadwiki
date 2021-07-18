@@ -50,7 +50,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AEnumerationService extends AAbstractService {
+public class EnumerationService extends AbstractService {
 
     /**
      * versione della classe per la serializzazione
@@ -63,7 +63,7 @@ public class AEnumerationService extends AAbstractService {
      * In alcune circostanze SpringBoot non riesce a costruire l'istanza <br>
      * Rimesso 'public' al posto del precedente 'private' <br>
      */
-    public AEnumerationService() {
+    public EnumerationService() {
     }// end of constructor
 
 
@@ -87,7 +87,7 @@ public class AEnumerationService extends AAbstractService {
             return VUOTA;
         }
 
-        valoreStringaMongoDB = array.toStringa(listaValoriPrevisti);
+        valoreStringaMongoDB = array.toStringaVirgola(listaValoriPrevisti);
         valoreStringaMongoDB += PUNTO_VIRGOLA;
         valoreStringaMongoDB += valoreInizialmenteSelezionato.trim();
 

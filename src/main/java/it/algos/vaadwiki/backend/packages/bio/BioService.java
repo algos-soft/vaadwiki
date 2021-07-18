@@ -6,11 +6,14 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.login.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wiki.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
+import it.algos.vaadwiki.wiki.query.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -235,13 +238,23 @@ public class BioService extends AService {
         List<WrapPage> listaWrapPage = null;
 
         //--Controlla quante pagine ci sono nella categoria
-        totale = wikiApi.getTotaleCategoria(category);
+        totale = wikiBot.getTotaleCategoria(category);
         logger.info(AETypeLog.bio, String.format("Nella categoria [%s] ci sono %d pagine", category, totale));
+
+        //@todo login provvisorio
+//        AQueryLogin loggin= appContext.getBean(AQueryLogin.class);
+//        loggin.urlRequest();
+//        loggin.getCookies();
+//        QueryBot query= appContext.getBean(QueryBot.class,loggin.getCookies());
+//        query.urlRequest();
+//        boolean collegato=query.isBot();
+//        int a=87;
+        //@todo login provvisorio
 
         //--Parte dalla lista di tutti i (long) pageIds della categoria
         //--Deve riuscire a gestire una lista di circa 430.000 long per la category BioBot
         inizio = System.currentTimeMillis();
-        listaPageIdsCategoria = wikiApi.getLongCat(category);
+        listaPageIdsCategoria = wikiBot.getLongCat(category, AETypeUser.user);
         logger.info(AETypeLog.bio, String.format("I %d pageIds della categoria [%s] sono stati recuperati in %s", listaPageIdsCategoria.size(), category, date.deltaTextEsatto(inizio)));
 
         //--Usa la lista di pageIds e si recupera una lista (stessa lunghezza) di miniWrap

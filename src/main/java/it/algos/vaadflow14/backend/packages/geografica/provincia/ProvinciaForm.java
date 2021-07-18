@@ -46,9 +46,6 @@ public class ProvinciaForm extends AForm {
     @Autowired
     public StatoService statoLogic;
 
-    public ProvinciaForm(ALogicOld logic, WrapForm wrap) {
-        super(logic,wrap);
-    }
 
 
     /**

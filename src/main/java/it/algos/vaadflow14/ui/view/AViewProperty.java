@@ -45,7 +45,7 @@ public abstract class AViewProperty extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ATextService text;
+    public TextService text;
 
 
     /**
@@ -54,7 +54,7 @@ public abstract class AViewProperty extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AArrayService array;
+    public ArrayService array;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -62,7 +62,7 @@ public abstract class AViewProperty extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AReflectionService reflection;
+    public ReflectionService reflection;
 
 
     /**
@@ -71,7 +71,7 @@ public abstract class AViewProperty extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AAnnotationService annotation;
+    public AnnotationService annotation;
 
 
     /**
@@ -96,7 +96,7 @@ public abstract class AViewProperty extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AClassService classService;
+    public ClassService classService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>

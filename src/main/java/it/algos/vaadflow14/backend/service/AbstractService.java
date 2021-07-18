@@ -26,7 +26,7 @@ import org.springframework.core.env.*;
  * La sottoclasse NON è annotated with @SpringComponent (inutile, esiste già @Service) <br>
  * La sottoclasse è annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
  */
-public abstract class AAbstractService {
+public abstract class AbstractService {
 
 
     /**
@@ -43,7 +43,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ATextService text;
+    public TextService text;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -51,7 +51,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AArrayService array;
+    public ArrayService array;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -59,7 +59,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AReflectionService reflection;
+    public ReflectionService reflection;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -67,7 +67,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AAnnotationService annotation;
+    public AnnotationService annotation;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -99,7 +99,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ADateService date;
+    public DateService date;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -124,7 +124,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AFileService fileService;
+    public FileService fileService;
 
 
     /**
@@ -133,7 +133,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AResourceService resourceService;
+    public ResourceService resourceService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -149,7 +149,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ABeanService beanService;
+    public BeanService beanService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -157,7 +157,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AHtmlService html;
+    public HtmlService html;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -173,7 +173,7 @@ public abstract class AAbstractService {
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AClassService classService;
+    public ClassService classService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -181,7 +181,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AUtilityService utility;
+    public UtilityService utility;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -189,7 +189,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ADataProviderService provider;
+    public DataProviderService provider;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -197,7 +197,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AWebService web;
+    public WebService web;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -213,7 +213,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AMathService math;
+    public MathService math;
 
 
     /**
@@ -222,7 +222,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AEnumerationService enumService;
+    public EnumerationService enumService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>

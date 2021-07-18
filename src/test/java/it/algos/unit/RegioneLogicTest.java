@@ -1,8 +1,8 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.service.AFileService;
-import it.algos.vaadflow14.backend.service.AResourceService;
+import it.algos.vaadflow14.backend.service.FileService;
+import it.algos.vaadflow14.backend.service.ResourceService;
 import it.algos.vaadflow14.wiki.AWikiApiService;
 import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
 import it.algos.vaadflow14.backend.wrapper.WrapTreStringhe;
@@ -42,10 +42,10 @@ public class RegioneLogicTest extends ATest {
     AWikiApiService service;
 
     @InjectMocks
-    AResourceService resource;
+    ResourceService resource;
 
     @InjectMocks
-    AFileService fileService;
+    FileService fileService;
 
     private List<String> listaAlfaDue;
 
@@ -260,14 +260,14 @@ public class RegioneLogicTest extends ATest {
     //    }
 
 
-    private void printWrap(List<WrapDueStringhe> listaWrap) {
-        System.out.println("********");
-        if (array.isAllValid(listaWrap)) {
-            for (WrapDueStringhe wrap : listaWrap) {
-                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
-            }
-        }
-    }
+//    private void printWrap(List<WrapDueStringhe> listaWrap) {
+//        System.out.println("********");
+//        if (array.isAllValid(listaWrap)) {
+//            for (WrapDueStringhe wrap : listaWrap) {
+//                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
+//            }
+//        }
+//    }
 
 
     /**

@@ -1,12 +1,15 @@
 package it.algos.vaadflow14.backend.logic;
 
 import ch.carnet.kasparscherrer.*;
+import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.component.grid.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.data.provider.*;
+import com.vaadin.flow.server.*;
 import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -19,6 +22,7 @@ import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.list.*;
+import org.vaadin.haijian.*;
 
 import java.util.*;
 
@@ -895,6 +899,26 @@ public abstract class LogicList extends Logic {
         if (alertList != null) {
             alertList.add(new Anchor(http, span));
         }
+    }
+
+    protected void export() {
+        Grid grid = new Grid(entityClazz, false);
+        grid.setColumns("nome");
+        grid.setItems(mongo.findAll(entityClazz));
+
+        String message = "Export";
+        InputStreamFactory factory = Exporter.exportAsExcel(grid);
+        StreamResource streamRes = new StreamResource(message + ".xls", factory);
+
+        Anchor anchorEsporta = new Anchor(streamRes, "Download");
+        anchorEsporta.getElement().setAttribute("style", "color: red");
+        anchorEsporta.getElement().setAttribute("Export", true);
+        Button button = new Button(new Icon(VaadinIcon.DOWNLOAD_ALT));
+        button.getElement().setAttribute("style", "color: red");
+        anchorEsporta.add(button);
+        //        exportPlaceholder.removeAll();
+        //        exportPlaceholder.add(anchorEsporta);
+
     }
 
 }

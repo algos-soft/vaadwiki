@@ -40,7 +40,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AFieldService extends AAbstractService {
+public class AFieldService extends AbstractService {
 
     /**
      * versione della classe per la serializzazione

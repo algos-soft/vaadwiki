@@ -28,7 +28,7 @@ import java.text.DecimalFormat;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AMathService extends AAbstractService {
+public class MathService extends AbstractService {
 
     /**
      * versione della classe per la serializzazione

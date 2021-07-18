@@ -38,7 +38,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class ABeanService extends AAbstractService {
+public class BeanService extends AbstractService {
 
     /**
      * versione della classe per la serializzazione
@@ -52,7 +52,7 @@ public class ABeanService extends AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AAnnotationService annotation;
+    public AnnotationService annotation;
 
 
     /**
@@ -61,7 +61,7 @@ public class ABeanService extends AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AReflectionService reflection;
+    public ReflectionService reflection;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>

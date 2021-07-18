@@ -20,7 +20,7 @@ import org.mockito.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Test sulle funzioni di gestione dei testi in html")
+@DisplayName("HtmlService - Gestione dei testi html.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class HtmlServiceTest extends ATest {
 
@@ -29,7 +29,7 @@ public class HtmlServiceTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AHtmlService service;
+    HtmlService service;
 
 
     /**

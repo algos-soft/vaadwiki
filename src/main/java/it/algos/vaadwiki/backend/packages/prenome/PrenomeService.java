@@ -141,7 +141,7 @@ public class PrenomeService extends WikiService {
         String tag = A_CAPO + "\\*";
         String[] righe = null;
         String nome;
-        String testoPagina = wikiApi.leggeQueryTxt(wikiTitle);
+        String testoPagina = wikiBot.leggeQueryTxt(wikiTitle);
 
         if (text.isValid(testoPagina)) {
             righe = testoPagina.split(tag);

@@ -35,7 +35,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class ALayoutService extends AAbstractService {
+public class ALayoutService extends AbstractService {
 
     //    /**
     //     * Menu drawer toggle a sinistra. <br>
