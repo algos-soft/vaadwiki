@@ -1,9 +1,9 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.NAME_VAADFLOW;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import it.algos.vaadflow14.wizard.scripts.*;
@@ -36,6 +36,9 @@ public class WizCostTest extends ATest {
     @InjectMocks
     WizService service;
 
+    @InjectMocks
+    WizCostServiceInjector injector;
+
     private List<AEWizCost> listaWiz;
 
     /**
@@ -50,6 +53,14 @@ public class WizCostTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
+
+        MockitoAnnotations.initMocks(injector);
+        Assertions.assertNotNull(injector);
+        injector.file = file;
+        injector.text = text;
+        injector.logger = logger;
+        injector.postConstruct();
+
         service.text = text;
         service.array = array;
         service.file = file;
@@ -236,7 +247,6 @@ public class WizCostTest extends ATest {
     }
 
 
-
     @Test
     @Order(17)
     @DisplayName("17 - getValide")
@@ -265,10 +275,11 @@ public class WizCostTest extends ATest {
         assertEquals(previsto, ottenuto);
         assertEquals(previstoBooleano, ottenutoBooleano);
 
+        previsto = NAME_VAADFLOW;
+        FlowVar.projectNameUpper = previsto;
         service.fixAEWizCost();
 
         previstoBooleano = true;
-        previsto = NAME_VAADFLOW;
         ottenutoBooleano = AEWizCost.nameCurrentProjectUpper.isValida();
         ottenuto = AEWizCost.nameCurrentProjectUpper.getValue();
         assertEquals(previsto, ottenuto);

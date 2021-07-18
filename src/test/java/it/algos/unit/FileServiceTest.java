@@ -1552,20 +1552,6 @@ public class FileServiceTest extends ATest {
         for (String name : lista) {
             System.out.println(name);
         }
-
-        tag = "src/main/java/it/algos/simple/backend/packages";
-        unaDirectory = new File(tag);
-        pathName = unaDirectory.getAbsolutePath();
-        lista = file.getAllSubFilesEntity(pathName);
-
-        assertTrue(array.isAllValid(lista));
-        System.out.println(VUOTA);
-        System.out.println("getAllSubFilesEntity");
-        System.out.println("Ci sono " + lista.size() + " files di tipo AEntity nel modulo Simple");
-        System.out.println(VUOTA);
-        for (String name : lista) {
-            System.out.println(name);
-        }
     }
 
 

@@ -669,6 +669,7 @@ public enum AEWizCost {
         this.valida = !value.startsWith(VALORE_MANCANTE);
     }
 
+
     public static void fixValoriDerivati() {
         for (AEWizCost aeWizCost : AEWizCost.values()) {
             aeWizCost.fixValue();
