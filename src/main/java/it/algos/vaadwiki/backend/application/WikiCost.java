@@ -52,4 +52,8 @@ public abstract class WikiCost {
 
     public static final String KEY_MAP_GRAFFE_LISTA_WRAPPER = "keyMapGraffeListaWrapper";
 
+    public static final String NO_CAT = "Non ci sono pagine nella categoria";
+
+    public static final String NO_PAGES_CAT = "Non esiste la categoria";
+
 }// end of static class

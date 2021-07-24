@@ -6,9 +6,9 @@ import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.backend.service.WebService.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.*;
 import org.mockito.*;
 
 import java.util.*;
@@ -25,7 +25,7 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("WebService")
+@Tag("testAllValido")
 @DisplayName("WebService - Collegamenti base del web.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WebServiceTest extends ATest {
@@ -80,15 +80,21 @@ public class WebServiceTest extends ATest {
         ottenutoRisultato = service.legge(sorgente);
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isErrato());
+        assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
+        assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertTrue(ottenutoRisultato.getErrorCode().equals(UNKNOWN_HOST));
         assertTrue(ottenutoRisultato.getErrorMessage().equals(UNKNOWN_HOST));
+        assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));
+        assertTrue(text.isEmpty(ottenutoRisultato.getResponse()));
+        assertTrue(ottenutoRisultato.getValue() == 0);
 
-        System.out.println(String.format("Non ha trovato il domain %s richiesto", sorgente));
+        System.out.println(String.format("Non ha trovato il domain '%s' richiesto", ottenutoRisultato.getUrl()));
         System.out.println("Genera un messaggio di errore:");
         System.out.println(ottenutoRisultato.getErrorMessage());
 
         ottenuto = service.leggeWebTxt(sorgente);
         assertNotNull(ottenuto);
-        assertFalse(text.isValid(ottenuto));
+        assertTrue(text.isEmpty(ottenuto));
     }
 
     @Test
@@ -99,18 +105,27 @@ public class WebServiceTest extends ATest {
         previsto = "<!DOCTYPE html><html><body><h1>Telefoni</h1><p style=\"font-family:verdana;font-size:60px\">Gac: 338 9235040</p>";
 
         ottenutoRisultato = service.legge(sorgente);
+        assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
+        assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
+        assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
+        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(ottenutoRisultato.getResponse().startsWith(previsto));
+        assertTrue(ottenutoRisultato.getValue() == 0);
 
         ottenuto = service.leggeWebTxt(sorgente);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
-        assertTrue(ottenuto.equals(ottenutoRisultato.getText()));
+        assertTrue(ottenuto.equals(ottenutoRisultato.getResponse()));
         assertTrue(ottenuto.startsWith(previsto));
 
         System.out.println(String.format("2 - Legge il testo grezzo di una pagina web"));
-        System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getMessage()));
+        System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getUrl()));
         System.out.println("Risultato restituito in formato html");
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
         System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
 
         System.out.println(VUOTA);
@@ -126,19 +141,30 @@ public class WebServiceTest extends ATest {
         previsto2 = "<p style=\"font-family:verdana;font-size:60px\">2NT-3F: No</p>";
 
         ottenutoRisultato = service.leggeBodyWeb(sorgente);
+        assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
+        assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
+        assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
+        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(ottenutoRisultato.getResponse().startsWith(previsto));
+        assertTrue(ottenutoRisultato.getResponse().endsWith(previsto2));
+        assertTrue(ottenutoRisultato.getValue() == 0);
 
         ottenuto = service.leggeBodyWebTxt(sorgente);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
-        assertTrue(ottenuto.equals(ottenutoRisultato.getText()));
+        assertTrue(ottenuto.equals(ottenutoRisultato.getResponse()));
         assertTrue(ottenuto.startsWith(previsto));
+        assertTrue(ottenuto.endsWith(previsto2));
 
         System.out.println(String.format("3 - Legge il body di una pagina web"));
-        System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getMessage()));
+        System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getUrl()));
         System.out.println("Risultato restituito in formato html");
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
-        System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
+        System.out.println("Faccio vedere solo l'inizio e la fine, perché troppo lungo");
 
         System.out.println(VUOTA);
         System.out.println(ottenuto.substring(0, previsto.length()));
@@ -152,17 +178,26 @@ public class WebServiceTest extends ATest {
         sorgente = URL_WIKI_GENERICO;
 
         ottenutoRisultato = service.legge(sorgente);
+        assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
+        assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
+        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
+        assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
+        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(ottenutoRisultato.getValue() == 0);
 
         ottenuto = service.leggeWebTxt(sorgente);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
-        assertTrue(ottenuto.equals(ottenutoRisultato.getText()));
+        assertTrue(ottenuto.equals(ottenutoRisultato.getResponse()));
 
-        System.out.println(String.format("4 - Legge il sorgente di una pagina wiki"));
-        System.out.println(String.format("La pagina wiki è: %s", ottenutoRisultato.getMessage()));
+        System.out.println(String.format("4 - Legge il sorgente di una pagina wiki letta come url e non come titolo"));
+        System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getUrl()));
         System.out.println("Risultato restituito in formato html");
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
         System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
 
         System.out.println(VUOTA);
@@ -175,19 +210,31 @@ public class WebServiceTest extends ATest {
     @DisplayName("5 - Legge una pagina wiki")
     public void leggeWiki() {
         sorgente = PAGINA;
+        previsto = "<!DOCTYPE html><html class=\"client-nojs\" lang=\"it\" dir=\"ltr\"><head><meta charset=\"UTF-8\"/><title>ISO 3166-2:IT - Wikipedia";
 
         ottenutoRisultato = service.leggeWiki(sorgente);
+        assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
+        assertTrue(text.isValid(ottenutoRisultato.getWikiTitle()));
+        assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
+        assertTrue(text.isValid(ottenutoRisultato.getUrl()));
+        assertEquals(TAG_WIKI + sorgente, ottenutoRisultato.getUrl());
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
+        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(ottenutoRisultato.getResponse().startsWith(previsto));
+        assertTrue(ottenutoRisultato.getValue() == 0);
 
         ottenuto = service.leggeWikiTxt(sorgente);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
-        assertTrue(ottenuto.equals(ottenutoRisultato.getText()));
+        assertTrue(ottenuto.equals(ottenutoRisultato.getResponse()));
 
         System.out.println(String.format("5 - Legge il sorgente di una pagina wiki"));
-        System.out.println(String.format("La pagina wiki è: %s", ottenutoRisultato.getMessage()));
+        System.out.println(String.format("La pagina wiki è: %s", ottenutoRisultato.getWikiTitle()));
         System.out.println("Risultato restituito in formato html");
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
         System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
 
         System.out.println(VUOTA);
@@ -202,7 +249,18 @@ public class WebServiceTest extends ATest {
         sorgente = "Pagina inesistente";
 
         ottenutoRisultato = service.leggeWiki(sorgente);
+        assertNotNull(ottenutoRisultato);
+        assertFalse(ottenutoRisultato.isValido());
         assertTrue(ottenutoRisultato.isErrato());
+        assertTrue(text.isValid(ottenutoRisultato.getWikiTitle()));
+        assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
+        assertTrue(text.isValid(ottenutoRisultato.getUrl()));
+        assertEquals(TAG_WIKI + sorgente, ottenutoRisultato.getUrl());
+        assertEquals(ERROR_FILE_WIKI + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getErrorCode());
+        assertEquals(ERROR_FILE_WIKI + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getErrorMessage());
+        assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));
+        assertTrue(text.isEmpty(ottenutoRisultato.getResponse()));
+        assertTrue(ottenutoRisultato.getValue() == 0);
 
         System.out.println(String.format("6 - Cerca di leggere la pagina wiki: %s in formato html", ottenutoRisultato.getMessage()));
         System.out.println(VUOTA);

@@ -57,14 +57,16 @@ public class QueryBot {
     private Map cookies;
 
     private boolean bot;
+
+    private String testoPost;
+
     /**
      * Costruttore base senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * Usa: appContext.getBean(QueryBot.class) <br>
      */
-    public QueryBot(Map cookies) {
+    public QueryBot() {
         super();
-        this.cookies = cookies;
     }// end of constructor
 
     /**
@@ -73,7 +75,8 @@ public class QueryBot {
      * <p>
      * La response viene elaborata per confermare il login andato a buon fine <br>
      */
-    public String urlRequest() {
+    public String urlRequest(Map cookies) {
+        this.cookies = cookies;
         String urlDomain = WIKI + WIKI_QUERY_BOT;
         String urlResponse;
         URLConnection urlConn;
@@ -81,6 +84,7 @@ public class QueryBot {
         try {
             urlConn = this.creaGetConnection(urlDomain);
             uploadCookies(urlConn);
+            addPostConnection(urlConn);
             urlResponse = sendRequest(urlConn);
             this.elaboraResponse(urlResponse);
         } catch (Exception unErrore) {
@@ -89,20 +93,6 @@ public class QueryBot {
         return VUOTA;
     }
 
-    /**
-     * Elabora la risposta <br>
-     * <p>
-     * Recupera il token 'logintoken' dalla preliminaryRequestGet <br>
-     * Viene convertito in lgtoken necessario per la successiva secondaryRequestPost <br>
-     */
-    protected void elaboraResponse(String rispostaDellaQuery) {
-        JSONObject jsonAll;
-        JSONObject jsonQuery = null;
-        JSONObject jsonTokens = null;
-
-        jsonAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
-int a=87;
-    }
 
     /**
      * Crea la connessione base (GET) <br>
@@ -206,8 +196,58 @@ int a=87;
         return cookiesTxt;
     }
 
-  public boolean isBot() {
-        return bot;
-  }
 
-  }
+    /**
+     * Aggiunge il POST della request <br>
+     *
+     * @param urlConn connessione con la request
+     */
+    protected void addPostConnection(URLConnection urlConn) throws Exception {
+        if (urlConn != null) {
+            PrintWriter out = new PrintWriter(urlConn.getOutputStream());
+            out.print(elaboraPost());
+            out.close();
+        }
+    }
+
+    /**
+     * Crea il testo del POST della request <br>
+     */
+    protected String elaboraPost() {
+        String testoPost = VUOTA;
+
+        //        testoPost += TAG_NAME;
+        //        testoPost += text.isValid(lgname) ? lgname : LG_NAME;
+        //        testoPost += TAG_PASSWORD;
+        //        testoPost += text.isValid(lgpassword) ? lgpassword : LG_PASSWORD;
+        //        testoPost += TAG_TOKEN;
+        //        testoPost += lgtoken;
+
+        testoPost = this.testoPost;
+        return testoPost;
+    }
+
+    /**
+     * Elabora la risposta <br>
+     * <p>
+     * Recupera il token 'logintoken' dalla preliminaryRequestGet <br>
+     * Viene convertito in lgtoken necessario per la successiva secondaryRequestPost <br>
+     */
+    protected void elaboraResponse(String rispostaDellaQuery) {
+        JSONObject jsonAll;
+        JSONObject jsonQuery = null;
+        JSONObject jsonTokens = null;
+
+        jsonAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
+        int a = 87;
+    }
+
+    public boolean isBot() {
+        return bot;
+    }
+
+    public void setTestoPost(String testoPost) {
+        this.testoPost = testoPost;
+    }
+
+}

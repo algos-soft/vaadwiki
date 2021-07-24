@@ -242,7 +242,7 @@ public class BioService extends AService {
         logger.info(AETypeLog.bio, String.format("Nella categoria [%s] ci sono %d pagine", category, totale));
 
         //@todo login provvisorio
-//        AQueryLogin loggin= appContext.getBean(AQueryLogin.class);
+//        QueryLogin loggin= appContext.getBean(AQueryLogin.class);
 //        loggin.urlRequest();
 //        loggin.getCookies();
 //        QueryBot query= appContext.getBean(QueryBot.class,loggin.getCookies());

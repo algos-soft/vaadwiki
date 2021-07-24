@@ -1,7 +1,6 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import static it.algos.unit.WikiApiServiceTest.*;
 import it.algos.vaadflow14.wiki.*;
 import static it.algos.vaadwiki.backend.service.AWikiBotService.*;
 import it.algos.vaadwiki.wiki.query.*;
@@ -33,8 +32,10 @@ public class QueryLoginTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AQueryLogin istanza;
+    private QueryLogin istanza;
 
+    @InjectMocks
+    private QueryBot queryBot;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -45,12 +46,15 @@ public class QueryLoginTest extends ATest {
     void setUpAll() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(istanza);
         Assertions.assertNotNull(istanza);
         istanza.wikiApi = wikiApi;
         istanza.text = text;
         istanza.logger = logger;
+
+        MockitoAnnotations.initMocks(queryBot);
+        Assertions.assertNotNull(queryBot);
+        queryBot.text = text;
     }
 
 
@@ -77,10 +81,14 @@ public class QueryLoginTest extends ATest {
 
         String url = WIKI_PARSE + PAGINA_TEST + WIKI_QUERY_BOT;
         ottenutoRisultato = web.legge(url);
-        Map mappa = istanza.getCookies();
-        QueryBot query = appContext.getBean(QueryBot.class, mappa);
-        query.urlRequest();
-        boolean collegato = query.isBot();
+        Map mappaUno = istanza.getCookiesFromPreliminary();
+        Map mappaDue = istanza.getCookiesFromSecondary();
+        String token=istanza.getLgtoken();
+        mappaDue.put("itwikiToken",token);
+//        queryBot = appContext.getBean(QueryBot.class, mappa);
+        queryBot.setTestoPost(istanza.getTestoPost());
+        queryBot.urlRequest(mappaDue);
+        boolean collegato = queryBot.isBot();
         int a = 87;
 
     }

@@ -14,29 +14,43 @@ public interface AIResult {
 
     boolean isValido();
 
+    void setValido(final boolean valido);
+
     boolean isErrato();
 
-    String getText();
+    String getResponse();
 
-    void setText(final String text);
+    void setResponse(final String response);
 
     String getMessage();
 
-    AIResult setMessage(final String message);
+    void setMessage(final String message);
 
     String getErrorMessage();
 
     AIResult setErrorMessage(final String message);
 
-    String getValidationMessage();
+    String getErrorCode();
 
-    AIResult setValidationMessage(final String message);
+    void setErrorCode(String errorCode);
 
-    int getValore();
+    String getValidMessage();
 
-    void setValore(int value);
+    void setValidMessage(String validMessage);
 
-    void print(final  ALogService logger, final AETypeLog typeLog);
+    int getValue();
+
+    void setValue(int value);
+
+    void print(final ALogService logger, final AETypeLog typeLog);
+
+    String getUrl();
+
+    void setUrl(String url);
+
+    String getWikiTitle();
+
+    void setWikiTitle(String wikiTitle);
 
 }// end of interface
 

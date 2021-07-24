@@ -415,7 +415,7 @@ public class WizService {
                 else {
                     result = file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, firstDir);
                     message = String.format("il file %s %s non esisteva ed è stato creato.", pathBreve, type);
-                    result.setValidationMessage(message);
+                    result.setValidMessage(message);
                 }
                 break;
             default:

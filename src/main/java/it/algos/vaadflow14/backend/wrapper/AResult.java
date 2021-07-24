@@ -20,21 +20,20 @@ public class AResult implements AIResult {
 
     private boolean valido;
 
+    private String wikiTitle = VUOTA;
+
+    private String url = VUOTA;
+
+    private String errorCode = VUOTA;
+
     private String errorMessage = VUOTA;
 
-    private String validationMessage = VUOTA;
+    private String validMessage = VUOTA;
 
-    private String text = VUOTA;
+    private String response = VUOTA;
 
-    //    /**
-    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-    //     */
-    //    @Autowired
-    //    private ATextService text;
 
-    private int valore = 0;
+    private int value = 0;
 
     private AResult() {
         this(true, VUOTA);
@@ -44,36 +43,36 @@ public class AResult implements AIResult {
         this(valido, message, 0);
     }
 
-    private AResult(final boolean valido, final String message, final int valore) {
+    private AResult(final boolean valido, final String message, final int value) {
         this.valido = valido;
         if (valido) {
-            this.validationMessage = message;
+            this.validMessage = message;
         }
         else {
             this.errorMessage = message;
         }
-        this.valore = valore;
+        this.value = value;
     }
 
     public static AIResult valido() {
         return new AResult();
     }
 
-    public static AIResult valido(final String validationMessage) {
-        return new AResult(true, validationMessage);
+    public static AIResult valido(final String validMessage) {
+        return new AResult(true, validMessage);
     }
 
-    public static AIResult valido(final String validationMessage, final int valore) {
-        return new AResult(true, validationMessage, valore);
+    public static AIResult valido(final String validMessage, final int value) {
+        return new AResult(true, validMessage, value);
     }
 
-    public static AIResult contenuto(final String text, final String message) {
+    public static AIResult contenuto(final String text, final String source) {
         AResult result = new AResult();
 
         if (text != null && text.length() > 0) {
             result.setValido(true);
-            result.setText(text);
-            result.setMessage(message);
+            result.setResponse(text);
+            result.setValidMessage(JSON_SUCCESS);
         }
         else {
             result.setValido(false);
@@ -95,7 +94,9 @@ public class AResult implements AIResult {
     }
 
     public static AIResult errato(final String errorMessage) {
-        return new AResult(false, errorMessage);
+        AResult result = new AResult(false, errorMessage);
+        result.setErrorCode(errorMessage);
+        return result;
     }
 
     @Override
@@ -103,6 +104,7 @@ public class AResult implements AIResult {
         return valido;
     }
 
+    @Override
     public void setValido(final boolean valido) {
         this.valido = valido;
     }
@@ -112,24 +114,30 @@ public class AResult implements AIResult {
         return !valido;
     }
 
-    @Override
-    public String getText() {
-        return text;
-    }
-
-    public void setText(final String text) {
-        this.text = text;
-    }
 
     @Override
     public String getMessage() {
-        return isValido() ? getValidationMessage() : getErrorMessage();
+        return isValido() ? getValidMessage() : getErrorMessage();
     }
 
     @Override
-    public AIResult setValidationMessage(final String message) {
-        validationMessage = message;
-        return this;
+    public void setMessage(final String message) {
+        if (isValido()) {
+            setValidMessage(message);
+        }
+        else {
+            setErrorMessage(message);
+        }
+    }
+
+    @Override
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    @Override
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
     }
 
     @Override
@@ -138,41 +146,65 @@ public class AResult implements AIResult {
         return this;
     }
 
-
-    @Override
-    public AIResult setMessage(final String message) {
-        if (isValido()) {
-            return setValidationMessage(message);
-        }
-        else {
-            return setErrorMessage(message);
-        }
-    }
-
     @Override
     public String getErrorMessage() {
         return errorMessage;
     }
 
     @Override
-    public String getValidationMessage() {
-        return validationMessage;
+    public String getValidMessage() {
+        return validMessage;
     }
 
     @Override
-    public int getValore() {
-        return valore;
+    public void setValidMessage(String validMessage) {
+        this.validMessage = validMessage;
     }
 
     @Override
-    public void setValore(int value) {
-        valore = value;
+    public String getWikiTitle() {
+        return wikiTitle;
+    }
+
+    @Override
+    public void setWikiTitle(String wikiTitle) {
+        this.wikiTitle = wikiTitle;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String getResponse() {
+        return response;
+    }
+
+    @Override
+    public void setResponse(String response) {
+        this.response = response;
+    }
+
+    @Override
+    public int getValue() {
+        return value;
+    }
+
+    @Override
+    public void setValue(int value) {
+        this.value = value;
     }
 
     @Override
     public void print(final ALogService logger, final AETypeLog typeLog) {
         if (isValido()) {
-            logger.log(typeLog, getValidationMessage());
+            logger.log(typeLog, getValidMessage());
         }
         else {
             logger.log(typeLog, getErrorMessage());

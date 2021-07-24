@@ -100,7 +100,7 @@ public class WebService extends AbstractService {
      * @return risultato col testo grezzo in formato html oppure BSON
      */
     public String leggeWebTxt(final String urlDomain) {
-        return legge(urlDomain).getText();
+        return legge(urlDomain).getResponse();
     }
 
     /**
@@ -116,7 +116,7 @@ public class WebService extends AbstractService {
      */
     public AIResult legge(final String urlDomain) {
         AIResult result;
-        String codiceSorgente ;
+        String codiceSorgente;
         URLConnection urlConn;
         String tag = TAG_INIZIALE;
         String tag2 = TAG_INIZIALE_SECURE;
@@ -129,6 +129,7 @@ public class WebService extends AbstractService {
         } catch (Exception unErrore) {
             result = AResult.errato(unErrore.toString());
         }
+        result.setUrl(urlDomain);
 
         return result;
     }
@@ -145,7 +146,7 @@ public class WebService extends AbstractService {
      * @return risultato col body in formato html oppure BSON
      */
     public String leggeBodyWebTxt(final String urlDomain) {
-        return leggeBodyWeb(urlDomain).getText();
+        return leggeBodyWeb(urlDomain).getResponse();
     }
 
     /**
@@ -163,13 +164,14 @@ public class WebService extends AbstractService {
         AIResult result = legge(urlDomain);
         String bodyText;
 
-        if (result.isValido() && text.isValid(result.getText())) {
-            bodyText = text.estrae(result.getText(), "<body>", "</body>");
-            result.setText(bodyText);
+        if (result.isValido() && text.isValid(result.getResponse())) {
+            bodyText = text.estrae(result.getResponse(), "<body>", "</body>");
+            result.setResponse(bodyText);
         }
 
         return result;
     }
+
     /**
      * Request di tipo GET <br>
      * Sorgente completo di una pagina wiki <br>
@@ -181,7 +183,7 @@ public class WebService extends AbstractService {
      * @return testo sorgente completo della pagina web in formato html
      */
     public String leggeWikiTxt(String wikiTitleGrezzo) {
-        return leggeWiki(wikiTitleGrezzo).getText();
+        return leggeWiki(wikiTitleGrezzo).getResponse();
     }
 
 
@@ -200,9 +202,8 @@ public class WebService extends AbstractService {
         String wikiTitleElaborato = wikiTitleGrezzo.replaceAll(SPAZIO, UNDERSCORE);
         result = legge(TAG_WIKI + wikiTitleElaborato);
 
-        if (result.isValido()) {
-            result.setMessage(wikiTitleGrezzo);
-        }
+        result.setWikiTitle(wikiTitleGrezzo);
+        result.setUrl(TAG_WIKI + wikiTitleGrezzo);
 
         return result;
     }

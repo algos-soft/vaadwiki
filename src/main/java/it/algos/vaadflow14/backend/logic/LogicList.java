@@ -815,7 +815,7 @@ public abstract class LogicList extends Logic {
     protected final void openReset() {
         appContext.getBean(AResetDialog.class).open(this::clickReset);
 
-                MessageDialog messageDialog;
+        MessageDialog messageDialog;
         //        String message = "Vuoi veramente ripristinare i valori originali predeterminati di questa collezione? L' operazione cancellerà tutti i valori originali. Eventuali valori inseriti manualmente NON vengono cancellati/modificati";
         //        VaadinIcon icon = VaadinIcon.WARNING;
         //
@@ -845,7 +845,7 @@ public abstract class LogicList extends Logic {
 
         AIResult result = entityService.reset();
         if (result.isValido()) {
-            numRec = result.getValore();
+            numRec = result.getValue();
             type = result.getMessage();
             message = String.format("Nella collezione %s sono stati re-inseriti %d elementi %s", collection, numRec, type);
             logger.log(AETypeLog.reset, message);

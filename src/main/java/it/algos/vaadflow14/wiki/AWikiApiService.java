@@ -64,10 +64,6 @@ public class AWikiApiService extends AbstractService {
 
     public static final String RESULT = "result";
 
-    public static final String SUCCESS = "Success";
-
-    public static final String ERROR = "error";
-
     public static final String LOGIN_TOKEN = "logintoken";
 
     public static final String LOGIN_USER_ID = "lguserid";
@@ -577,7 +573,7 @@ public class AWikiApiService extends AbstractService {
     }
 
     public boolean jsonValida(final JSONObject jsonRisposta) {
-        return jsonRisposta.get(ERROR) == null;
+        return jsonRisposta.get(JSON_ERROR) == null;
     }
 
     /**

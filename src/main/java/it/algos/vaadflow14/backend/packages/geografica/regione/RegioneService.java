@@ -253,7 +253,7 @@ public class RegioneService extends AService {
                     logger.log(AETypeLog.checkData, "Non sono riuscito a creare le regioni di " + stato.stato);
                 }
                 else {
-                    numRec = numRec + result.getValore();
+                    numRec = numRec + result.getValue();
                 }
             }
             return AResult.valido("Sono state create " + numRec + " regioni di " + listaStati.size() + " stati " + AETypeReset.wikipedia.get());
@@ -377,7 +377,7 @@ public class RegioneService extends AService {
             return resultCollectionPropedeutica;
         }
 
-//        creaRegioniAllStati();
+        //        creaRegioniAllStati();
         creaRegioniDiUnoStato(statoService.findByKey("Italia"));
         return AResult.valido(AETypeReset.wikipedia.get(), numRec);
     }

@@ -46,6 +46,8 @@ public class AWikiBotService extends AbstractService {
 
     public static final String TAG_BIO = "Bio";
 
+    public static final String CATEGORIA = "Categoria:";
+
     public static final String WIKI = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query";
 
     public static final String WIKI_QUERY = WIKI + "&rvslots=main&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
@@ -58,7 +60,7 @@ public class AWikiBotService extends AbstractService {
 
     public static final String WIKI_QUERY_TIMESTAMP = WIKI + "&prop=revisions&rvprop=ids|timestamp&limit=" + LIMIT_USER + "&pageids=";
 
-    public static final String WIKI_QUERY_CATEGORY = WIKI + "&list=categorymembers&cmtitle=Categoria:";
+    public static final String WIKI_QUERY_CATEGORY = WIKI + "&list=categorymembers&cmtitle=" + CATEGORIA;
 
     public static final String WIKI_QUERY_CAT_LIMIT_USER = "&cmlimit=500";
 
@@ -70,7 +72,7 @@ public class AWikiBotService extends AbstractService {
 
     public static final String WIKI_QUERY_CAT_PROP = "&cmprop=";
 
-    public static final String WIKI_QUERY_CAT_TOTALE = WIKI + "&prop=categoryinfo&titles=Categoria:";
+    public static final String WIKI_QUERY_CAT_TOTALE = WIKI + "&prop=categoryinfo&titles=" + CATEGORIA;
 
     public static final String WIKI_QUERY_USER = "&assert=user";
 
@@ -85,7 +87,6 @@ public class AWikiBotService extends AbstractService {
      */
     @Autowired
     public AWikiApiService wikiApi;
-
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -116,6 +117,7 @@ public class AWikiBotService extends AbstractService {
 
         return wrapTime.isAfter(mongoTime);
     };
+
 
     /**
      * Legge (come user) una pagina dal server wiki <br>
@@ -243,9 +245,9 @@ public class AWikiBotService extends AbstractService {
 
         webUrl = WIKI_QUERY_TIMESTAMP + pageIds;
         result = web.legge(webUrl);
-        rispostaAPI = result.getText();
+        rispostaAPI = result.getResponse();
 
-        JSONArray jsonPages = this.getArrayPagine(rispostaAPI);
+        JSONArray jsonPages = jSonService.getArrayPagine(rispostaAPI);
         if (jsonPages != null) {
             wraps = new ArrayList<>();
             for (Object obj : jsonPages) {
@@ -834,10 +836,10 @@ public class AWikiBotService extends AbstractService {
         List<WrapPage> wraps = null;
         pageIds = wikiApi.fixWikiTitle(pageIds);
         String webUrl = WIKI_QUERY_PAGEIDS + pageIds;
-        String rispostaAPI = web.legge(webUrl).getText();
+        String rispostaAPI = web.legge(webUrl).getResponse();
         WrapPage wrap = null;
 
-        JSONArray jsonPages = getArrayPagine(rispostaAPI);
+        JSONArray jsonPages = jSonService.getArrayPagine(rispostaAPI);
         if (jsonPages != null) {
             wraps = new ArrayList<>();
             for (Object obj : jsonPages) {
@@ -878,66 +880,66 @@ public class AWikiBotService extends AbstractService {
      * @return wrapper con testo completo (visibile) della pagina wiki
      */
     private WrapPage creaPage(final String webUrl, String tagTemplate) {
-        String rispostaAPI = web.legge(webUrl).getText();
-        JSONObject jsonPageZero = getObjectPage(rispostaAPI);
+        String rispostaAPI = web.legge(webUrl).getResponse();
+        JSONObject jsonPageZero = jSonService.getObjectPage(rispostaAPI);
         return creaPage(webUrl, jsonPageZero, tagTemplate);
     }
 
-    /**
-     * Recupera una singola page dal testo JSON di risposta ad una query <br>
-     *
-     * @param rispostaDellaQuery in ingresso
-     *
-     * @return singola page (la prima)
-     */
-    public JSONObject getObjectPage(String rispostaDellaQuery) {
-        JSONObject objectPage = null;
-        JSONArray arrayPagine = this.getArrayPagine(rispostaDellaQuery);
+    //    /**
+    //     * Recupera una singola page dal testo JSON di risposta ad una query <br>
+    //     *
+    //     * @param rispostaDellaQuery in ingresso
+    //     *
+    //     * @return singola page (la prima)
+    //     */
+    //    public JSONObject getObjectPage(String rispostaDellaQuery) {
+    //        JSONObject objectPage = null;
+    //        JSONArray arrayPagine = jSonService.getArrayPagine(rispostaDellaQuery);
+    //
+    //        if (arrayPagine != null) {
+    //            objectPage = (JSONObject) arrayPagine.get(0);
+    //        }
+    //
+    //        return objectPage;
+    //    }
 
-        if (arrayPagine != null) {
-            objectPage = (JSONObject) arrayPagine.get(0);
-        }
+    //    /**
+    //     * Recupera un array di pages dal testo JSON di risposta ad una query <br>
+    //     *
+    //     * @param rispostaDellaQuery in ingresso
+    //     *
+    //     * @return array di pages
+    //     */
+    //    public JSONArray getArrayPagine(String rispostaDellaQuery) {
+    //        JSONArray arrayQuery = null;
+    //        JSONObject objectQuery = getPages(rispostaDellaQuery);
+    //
+    //        //--recupera i valori dei parametri pages
+    //        if (objectQuery != null && objectQuery.get(PAGES) != null && objectQuery.get(PAGES) instanceof JSONArray) {
+    //            arrayQuery = (JSONArray) objectQuery.get(PAGES);
+    //        }
+    //
+    //        return arrayQuery;
+    //    }
 
-        return objectPage;
-    }
-
-    /**
-     * Recupera un array di pages dal testo JSON di risposta ad una query <br>
-     *
-     * @param rispostaDellaQuery in ingresso
-     *
-     * @return array di pages
-     */
-    public JSONArray getArrayPagine(String rispostaDellaQuery) {
-        JSONArray arrayQuery = null;
-        JSONObject objectQuery = getPages(rispostaDellaQuery);
-
-        //--recupera i valori dei parametri pages
-        if (objectQuery != null && objectQuery.get(PAGES) != null && objectQuery.get(PAGES) instanceof JSONArray) {
-            arrayQuery = (JSONArray) objectQuery.get(PAGES);
-        }
-
-        return arrayQuery;
-    }
-
-    /**
-     * Recupera l'oggetto 'pages'' dal testo JSON di una pagina action=query
-     *
-     * @param rispostaDellaQuery in ingresso
-     *
-     * @return oggetto 'pages'
-     */
-    public JSONObject getPages(String rispostaDellaQuery) {
-        JSONObject objectQuery = null;
-        JSONObject objectAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
-
-        //--recupera i valori dei parametri pages
-        if (objectAll != null && objectAll.get(QUERY) != null && objectAll.get(QUERY) instanceof JSONObject) {
-            objectQuery = (JSONObject) objectAll.get(QUERY);
-        }
-
-        return objectQuery;
-    }
+    //    /**
+    //     * Recupera l'oggetto 'pages'' dal testo JSON di una pagina action=query
+    //     *
+    //     * @param rispostaDellaQuery in ingresso
+    //     *
+    //     * @return oggetto 'pages'
+    //     */
+    //    public JSONObject getPages(String rispostaDellaQuery) {
+    //        JSONObject objectQuery = null;
+    //        JSONObject objectAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
+    //
+    //        //--recupera i valori dei parametri pages
+    //        if (objectAll != null && objectAll.get(QUERY) != null && objectAll.get(QUERY) instanceof JSONObject) {
+    //            objectQuery = (JSONObject) objectAll.get(QUERY);
+    //        }
+    //
+    //        return objectQuery;
+    //    }
 
     private WrapPage creaPage(final String webUrl, final JSONObject jsonPage, String tagTemplate) {
         long pageid;
@@ -1011,7 +1013,7 @@ public class AWikiBotService extends AbstractService {
      */
     public String estraeTestoPaginaWiki(final String rispostaDellaQuery) {
         String testoPagina = VUOTA;
-        JSONObject jsonPageZero = getObjectPage(rispostaDellaQuery);
+        JSONObject jsonPageZero = jSonService.getObjectPage(rispostaDellaQuery);
 
         if (jsonPageZero != null) {
             testoPagina = this.getContent(jsonPageZero);
@@ -1078,8 +1080,8 @@ public class AWikiBotService extends AbstractService {
 
     public WikiPage getWikiPageFromTitle(String wikiTitle) {
         String rispostaDellaQuery = leggeJsonTxt(wikiTitle);
-        JSONObject jsonPageZero = getObjectPage(rispostaDellaQuery);
-        Map<String, Object> mappa = getMappaJSON(jsonPageZero);
+        JSONObject jsonPageZero = jSonService.getObjectPage(rispostaDellaQuery);
+        Map<String, Object> mappa = jSonService.getMappaJSON(jsonPageZero);
 
         return getWikiPageFromMappa(mappa);
     }
@@ -1094,7 +1096,7 @@ public class AWikiBotService extends AbstractService {
      * @return risultato col testo completo in formato JSON della pagina wiki, che può contenere più 'pages'
      */
     public String leggeJsonTxt(final String wikiTitle) {
-        return leggeJson(wikiTitle).getText();
+        return leggeJson(wikiTitle).getResponse();
     }
 
     /**
@@ -1114,106 +1116,105 @@ public class AWikiBotService extends AbstractService {
         return web.legge(WIKI_QUERY_TITLES + wikiTitle);
     }
 
+    //    /**
+    //     * Crea una mappa standard (valori reali) da una singola page JSON di una multi-pagina action=query <br>
+    //     *
+    //     * @param paginaJSON in ingresso
+    //     *
+    //     * @return mappa query (valori reali)
+    //     */
+    //    public HashMap<String, Object> getMappaJSON(JSONObject paginaJSON) {
+    //        HashMap<String, Object> mappa = new HashMap<String, Object>();
+    //        HashMap<String, Object> mappaRev;
+    //        JSONArray arrayRev;
+    //        String keyPage;
+    //        Object value;
+    //
+    //        if (paginaJSON == null) {
+    //            return null;
+    //        }
+    //
+    //        //--recupera i valori dei parametri info
+    //        for (PagePar par : PagePar.getRead()) {
+    //            keyPage = par.toString();
+    //            if (paginaJSON.get(keyPage) != null) {
+    //                value = paginaJSON.get(keyPage);
+    //                mappa.put(keyPage, value);
+    //            }
+    //        }
+    //
+    //        //--recupera i valori dei parametri revisions
+    //        arrayRev = (JSONArray) paginaJSON.get(REVISIONS);
+    //        if (arrayRev != null) {
+    //            mappaRev = estraeMappaJsonPar(arrayRev);
+    //            for (String key : mappaRev.keySet()) {
+    //                value = mappaRev.get(key);
+    //                mappa.put(key, value);
+    //            }
+    //        }
+    //
+    //        return mappa;
+    //    }
 
-    /**
-     * Crea una mappa standard (valori reali) da una singola page JSON di una multi-pagina action=query <br>
-     *
-     * @param paginaJSON in ingresso
-     *
-     * @return mappa query (valori reali)
-     */
-    public HashMap<String, Object> getMappaJSON(JSONObject paginaJSON) {
-        HashMap<String, Object> mappa = new HashMap<String, Object>();
-        HashMap<String, Object> mappaRev;
-        JSONArray arrayRev;
-        String keyPage;
-        Object value;
+    //    /**
+    //     * Estrae una mappa standard da un JSONArray
+    //     * Considera SOLO i valori della Enumeration PagePar
+    //     *
+    //     * @param arrayJson JSONArray in ingresso
+    //     *
+    //     * @return mappa standard (valori String)
+    //     */
+    //    private HashMap<String, Object> estraeMappaJsonPar(JSONArray arrayJson) {
+    //        return estraeMappaJsonPar(arrayJson, 0);
+    //    }
 
-        if (paginaJSON == null) {
-            return null;
-        }
-
-        //--recupera i valori dei parametri info
-        for (PagePar par : PagePar.getRead()) {
-            keyPage = par.toString();
-            if (paginaJSON.get(keyPage) != null) {
-                value = paginaJSON.get(keyPage);
-                mappa.put(keyPage, value);
-            }
-        }
-
-        //--recupera i valori dei parametri revisions
-        arrayRev = (JSONArray) paginaJSON.get(REVISIONS);
-        if (arrayRev != null) {
-            mappaRev = estraeMappaJsonPar(arrayRev);
-            for (String key : mappaRev.keySet()) {
-                value = mappaRev.get(key);
-                mappa.put(key, value);
-            }
-        }
-
-        return mappa;
-    }
-
-    /**
-     * Estrae una mappa standard da un JSONArray
-     * Considera SOLO i valori della Enumeration PagePar
-     *
-     * @param arrayJson JSONArray in ingresso
-     *
-     * @return mappa standard (valori String)
-     */
-    private HashMap<String, Object> estraeMappaJsonPar(JSONArray arrayJson) {
-        return estraeMappaJsonPar(arrayJson, 0);
-    }
-
-    /**
-     * Estrae una mappa standard da un JSONArray
-     * Considera SOLO i valori della Enumeration PagePar
-     *
-     * @param arrayJson JSONArray in ingresso
-     * @param pos       elemento da estrarre
-     *
-     * @return mappa standard (valori String)
-     */
-    public HashMap<String, Object> estraeMappaJsonPar(JSONArray arrayJson, int pos) {
-        HashMap<String, Object> mappaOut = new HashMap<String, Object>();
-        JSONObject mappaJSON = null;
-        String key;
-        Object value;
-        String slots = "slots";
-        String main = "main";
-        String contentName = "content";
-        String content = VUOTA;
-        JSONObject slotsObject = null;
-        JSONObject mainObject = null;
-        JSONObject contentObject = null;
-
-        if (arrayJson != null && arrayJson.size() > pos) {
-            if (arrayJson.get(pos) != null && arrayJson.get(pos) instanceof JSONObject) {
-                mappaJSON = (JSONObject) arrayJson.get(pos);
-            }
-        }
-
-        if (mappaJSON != null) {
-            for (PagePar par : PagePar.getRead()) {
-                key = par.toString();
-                if (mappaJSON.get(key) != null) {
-                    value = mappaJSON.get(key);
-                    mappaOut.put(key, value);
-                }
-            }
-        }
-
-        //--content
-        if (mappaJSON.get(slots) != null) {
-            slotsObject = (JSONObject) mappaJSON.get(slots);
-            mainObject = (JSONObject) slotsObject.get(main);
-            mappaOut.put(contentName, mainObject.get(contentName));
-        }
-
-        return mappaOut;
-    }
+    //    /**
+    //     * Estrae una mappa standard da un JSONArray
+    //     * Considera SOLO i valori della Enumeration PagePar
+    //     *
+    //     * @param arrayJson JSONArray in ingresso
+    //     * @param pos       elemento da estrarre
+    //     *
+    //     * @return mappa standard (valori String)
+    //     */
+    //    public HashMap<String, Object> estraeMappaJsonPar(JSONArray arrayJson, int pos) {
+    //        HashMap<String, Object> mappaOut = new HashMap<String, Object>();
+    //        JSONObject mappaJSON = null;
+    //        String key;
+    //        Object value;
+    //        String slots = "slots";
+    //        String main = "main";
+    //        String contentName = "content";
+    //        String content = VUOTA;
+    //        JSONObject slotsObject = null;
+    //        JSONObject mainObject = null;
+    //        JSONObject contentObject = null;
+    //
+    //        if (arrayJson != null && arrayJson.size() > pos) {
+    //            if (arrayJson.get(pos) != null && arrayJson.get(pos) instanceof JSONObject) {
+    //                mappaJSON = (JSONObject) arrayJson.get(pos);
+    //            }
+    //        }
+    //
+    //        if (mappaJSON != null) {
+    //            for (PagePar par : PagePar.getRead()) {
+    //                key = par.toString();
+    //                if (mappaJSON.get(key) != null) {
+    //                    value = mappaJSON.get(key);
+    //                    mappaOut.put(key, value);
+    //                }
+    //            }
+    //        }
+    //
+    //        //--content
+    //        if (mappaJSON.get(slots) != null) {
+    //            slotsObject = (JSONObject) mappaJSON.get(slots);
+    //            mainObject = (JSONObject) slotsObject.get(main);
+    //            mappaOut.put(contentName, mainObject.get(contentName));
+    //        }
+    //
+    //        return mappaOut;
+    //    }
 
     public WikiPage getWikiPageFromMappa(Map<String, Object> mappa) {
         WikiPage wiki = new WikiPage();
@@ -1287,9 +1288,9 @@ public class AWikiBotService extends AbstractService {
         webUrl = webUrlQuery(wikiTitleGrezzo);
         if (text.isValid(webUrl)) {
             result = web.legge(webUrl);
-            rispostaDellaQuery = result.getText();
+            rispostaDellaQuery = result.getResponse();
             testoValido = estraeTestoPaginaWiki(rispostaDellaQuery);
-            result.setText(testoValido);
+            result.setResponse(testoValido);
             return result;
         }
         else {
@@ -1338,6 +1339,76 @@ public class AWikiBotService extends AbstractService {
     }
 
     /**
+     * Controlla (come anonymous) l'esistenza di una pagina/categoria wiki <br>
+     *
+     * @param wikiSimplePageCategoryTitle della pagina/categoria wiki
+     *
+     * @return true se esiste, false se non esiste
+     */
+    public AIResult isEsisteResult(final String wikiSimplePageCategoryTitle) {
+        AIResult resultWiki;
+        AIResult resultWeb;
+        String wikiTitleElaborato;
+        String rispostaDellaQuery;
+        JSONObject objectJson;
+
+        if (text.isEmpty(wikiSimplePageCategoryTitle)) {
+            return AResult.errato(ERROR_WIKI_TITLE);
+        }
+        wikiTitleElaborato = wikiSimplePageCategoryTitle.replaceAll(SPAZIO, UNDERSCORE);
+
+        resultWeb = web.legge(WIKI_PARSE + wikiTitleElaborato);
+        rispostaDellaQuery = resultWeb.isValido() ? resultWeb.getResponse() : VUOTA;
+        if (text.isValid(rispostaDellaQuery)) {
+            objectJson = jSonService.getObjectJSON(rispostaDellaQuery);
+            if (objectJson == null) {
+                return resultWeb;
+            }
+            else {
+                if (objectJson.get(JSON_ERROR) != null) {
+                    resultWiki = AResult.errato(ERROR_WIKI_PAGINA);
+                    resultWiki.setWikiTitle(wikiSimplePageCategoryTitle);
+                    resultWiki.setUrl(resultWeb.getUrl());
+                    resultWiki.setResponse(rispostaDellaQuery);
+                    return resultWiki;
+                }
+                else {
+                    resultWeb.setWikiTitle(wikiSimplePageCategoryTitle);
+                    return resultWeb;
+                }
+            }
+        }
+        else {
+            return resultWeb;
+        }
+    }
+
+    /**
+     * Controlla (come anonymous) l'esistenza di una pagina/categoria wiki <br>
+     *
+     * @param wikiSimplePageCategoryTitle della pagina/categoria wiki
+     *
+     * @return true se esiste, false se non esiste
+     */
+    public boolean isEsiste(final String wikiSimplePageCategoryTitle) {
+        AIResult result = isEsisteResult(wikiSimplePageCategoryTitle);
+        return result.isValido();
+    }
+
+
+    /**
+     * Controlla (come anonymous) l'esistenza di una categoria wiki <br>
+     *
+     * @param wikiSimpleCategoryTitle della categoria wiki
+     *
+     * @return true se esiste, false se non esiste
+     */
+    public boolean isEsisteCat(final String wikiSimpleCategoryTitle) {
+        String catTitle = wikiSimpleCategoryTitle.startsWith(CATEGORIA) ? wikiSimpleCategoryTitle : CATEGORIA + wikiSimpleCategoryTitle;
+        return isEsiste(catTitle);
+    }
+
+    /**
      * Legge una lista di pageid di una categoria wiki <br>
      * Se non si mette 'cmlimit' restituisce 10 pagine <br>
      * Valore massimo di 'cmlimit' (come user) 500 pagine <br>
@@ -1352,11 +1423,36 @@ public class AWikiBotService extends AbstractService {
         return getLongCat(catTitle, null);
     }
 
+
+    /**
+     * Legge una categoria wiki <br>
+     * Senza cicli. Legge una volta sola. Restituisce il risultato <br>
+     *
+     * @param catTitle da cui estrarre le pagine
+     * @param userType selezione tra (anonymous, user, bot)
+     *
+     * @return lista di pageid
+     */
+    public AIResult getResultCat(final String catTitle, final AETypeUser userType) {
+        AIResult result;
+        String catType = AECatType.page.getTag();
+        String propType = AECatProp.pageid.getTag();
+        String urlDomain = fixUrlCat(catTitle, catType, propType, userType, VUOTA);
+
+        result = readCategory(catTitle, urlDomain);
+
+        return result;
+    }
+
     /**
      * Legge una lista di pageid di una categoria wiki <br>
-//     * Se non si mette 'cmlimit' restituisce 10 pagine <br>
-//     * Valore massimo di 'cmlimit' (come user) 500 pagine <br>
-//     * Il valore massimo (come user) di 'cmlimit' è 20 <br>
+     * Se arriva userType=null oppure userType=anonymous:
+     * mette &cmlimit=500
+     * non mette &assert=
+     * ed esegue regolarmente tutti i cicli necessari (ci mette un po) <br>
+     * //     * Se non si mette 'cmlimit' restituisce 10 pagine <br>
+     * //     * Valore massimo di 'cmlimit' (come user) 500 pagine <br>
+     * //     * Il valore massimo (come user) di 'cmlimit' è 20 <br>
      * Esegue dei cicli di dimensioni uguali a 'cmlimit' ammesso <br>
      * La query restituisce SOLO pageid <br>
      *
@@ -1375,13 +1471,47 @@ public class AWikiBotService extends AbstractService {
 
         do {
             urlDomain = fixUrlCat(catTitle, catType, propType, userType, continueParam);
-            result = web.legge(urlDomain);
-            lista.addAll(getListaLongCategoria(result.getText()));
-            continueParam = getContinuaCategoria(result.getText());
+            result = readCategory(catTitle, urlDomain);
+            lista.addAll(getListaLongCategoria(result.getResponse()));
+            continueParam = getContinuaCategoria(result.getResponse());
         }
         while (text.isValid(continueParam));
 
         return lista;
+    }
+
+
+    /**
+     * Legge la pagina web <br>
+     * Interpreta la response ricevuta <br>
+     * Se è falsa, non fa nulla e rinvia la response falsa <br>
+     * Se è valida, conta le pagine e regola il valore numerico <br>
+     * Se le pagine sono 0, mette a false la result <br>
+     *
+     * @param catTitle  da cui estrarre le pagine
+     * @param urlDomain da cui estrarre le pagine
+     *
+     * @return result della query
+     */
+    public AIResult readCategory(final String catTitle, final String urlDomain) {
+        AIResult result = web.legge(urlDomain);
+        JSONArray jsonPagine;
+        boolean valido = result != null && result.isValido();
+        int totalePagine;
+
+        if (valido) {
+            jsonPagine = jSonService.getJsonPagine(result.getResponse());
+            totalePagine = jsonPagine != null ? jsonPagine.size() : 0;
+            valido = totalePagine > 0;
+            result.setValue(totalePagine);
+            result.setValido(valido);
+            result.setMessage(valido ? VUOTA : String.format("%s", NO_PAGES_CAT, catTitle));
+        }
+        else {
+            result.setMessage(String.format("%s", NO_CAT, urlDomain));
+        }
+
+        return result;
     }
 
     /**
@@ -1422,8 +1552,8 @@ public class AWikiBotService extends AbstractService {
         do {
             urlDomain = fixUrlCat(catTitle, catType, propType, userType, continueParam);
             result = web.legge(urlDomain);
-            lista.addAll(getListaTitleCategoria(result.getText()));
-            continueParam = getContinuaCategoria(result.getText());
+            lista.addAll(getListaTitleCategoria(result.getResponse()));
+            continueParam = getContinuaCategoria(result.getResponse());
         }
         while (text.isValid(continueParam));
 
@@ -1452,7 +1582,6 @@ public class AWikiBotService extends AbstractService {
         String user = userType != null ? userType.affermazione() : AETypeUser.anonymous.affermazione();
         String continua = WIKI_QUERY_CAT_CONTINUE + continueParam;
 
-        String alfa = String.format("%s%s%s%s%s%s", query, type, prop, limit, user, continua);
         return String.format("%s%s%s%s%s%s", query, type, prop, limit, user, continua);
     }
 
@@ -1464,7 +1593,7 @@ public class AWikiBotService extends AbstractService {
      * @return array di pageid
      */
     private List<Long> getListaLongCategoria(String rispostaDellaQuery) {
-        JSONArray jsonPagine = getJsonPagine(rispostaDellaQuery);
+        JSONArray jsonPagine = jSonService.getJsonPagine(rispostaDellaQuery);
         return getListaLongCategoria(jsonPagine);
     }
 
@@ -1497,7 +1626,7 @@ public class AWikiBotService extends AbstractService {
      * @return array di pageid
      */
     private List<String> getListaTitleCategoria(String rispostaDellaQuery) {
-        JSONArray jsonPagine = getJsonPagine(rispostaDellaQuery);
+        JSONArray jsonPagine = jSonService.getJsonPagine(rispostaDellaQuery);
         return getListaTitleCategoria(jsonPagine);
     }
 
@@ -1522,25 +1651,6 @@ public class AWikiBotService extends AbstractService {
         return lista;
     }
 
-    /**
-     * Recupera le 'pagine' dal testo JSON di risposta ad una query <br>
-     *
-     * @param rispostaDellaQuery in ingresso
-     *
-     * @return array di 'pagine''
-     */
-    public JSONArray getJsonPagine(String rispostaDellaQuery) {
-        JSONArray jsonPagine = null;
-        JSONObject objectQuery = getPages(rispostaDellaQuery);
-
-        //--recupera i valori dei parametri
-        if (objectQuery != null && objectQuery.get(CATEGORY) != null && objectQuery.get(CATEGORY) instanceof JSONArray) {
-            jsonPagine = (JSONArray) objectQuery.get(CATEGORY);
-        }
-
-        return jsonPagine;
-    }
-
 
     /**
      * Legge (come anonymous) le info di una categoria wiki <br>
@@ -1552,17 +1662,46 @@ public class AWikiBotService extends AbstractService {
      */
     public AIResult getInfoCategoria(final String categoryTitle) {
         AIResult result;
+        String catTitleUnderscored;
+        String catTitle;
         int totale;
         String rispostaDellaQuery;
-        String webUrl = WIKI_QUERY_CAT_TOTALE + categoryTitle;
-        result = web.legge(webUrl);
+        String webUrl;
 
-        if (result == null || result.isErrato()) {
-            return AResult.errato();
+        catTitleUnderscored = categoryTitle.replaceAll(SPAZIO, UNDERSCORE);
+        catTitle = catTitleUnderscored.startsWith(CATEGORIA) ? catTitleUnderscored : CATEGORIA + catTitleUnderscored;
+        result = isEsisteResult(catTitle);
+
+        if (result.isValido()) {
+            webUrl = WIKI_QUERY_CAT_TOTALE + catTitleUnderscored;
+            result = web.legge(webUrl);
+            result.setWikiTitle(categoryTitle);
+        }
+        else {
+            result.setWikiTitle(categoryTitle);
+            result.setErrorCode(ERROR_WIKI_CATEGORIA);
+            result.setErrorMessage(ERROR_WIKI_CATEGORIA);
+            return result;
         }
 
-        rispostaDellaQuery = result.getText();
-        JSONObject jsonPageZero = this.getObjectPage(rispostaDellaQuery);
+//        if (isEsisteCat(catTitle)) {
+//        }
+//        else {
+//            result = web.legge(WIKI_PARSE + catTitle);
+//            //            result= AResult.errato();
+//            result.setWikiTitle(categoryTitle);
+//            result.setUrl(catTitle);
+//            result.setErrorMessage(String.format("Non esiste la categoria %s", categoryTitle));
+//            return result;
+//        }
+//
+//        result = web.legge(catTitle);
+//        if (result == null || result.isErrato()) {
+//            return AResult.errato();
+//        }
+
+        rispostaDellaQuery = result.getResponse();
+        JSONObject jsonPageZero = jSonService.getObjectPage(rispostaDellaQuery);
         if (isMissing(jsonPageZero)) {
             return AResult.errato();
         }
@@ -1570,7 +1709,7 @@ public class AWikiBotService extends AbstractService {
         JSONObject categoryInfo = (JSONObject) jsonPageZero.get(CATEGORY_INFO);
         if (categoryInfo != null && categoryInfo.get(CATEGORY_PAGES) != null) {
             totale = ((Long) categoryInfo.get(CATEGORY_PAGES)).intValue();
-            result.setValore(totale);
+            result.setValue(totale);
         }
 
         return result;
@@ -1587,7 +1726,7 @@ public class AWikiBotService extends AbstractService {
         AIResult result = getInfoCategoria(categoryTitle);
 
         if (result != null && result.isValido()) {
-            return result.getValore();
+            return result.getValue();
         }
         else {
             return 0;
@@ -1655,8 +1794,8 @@ public class AWikiBotService extends AbstractService {
             urlDomain = fixUrlCat(catTitle, catType, propType, null, continueParam);
             result = web.legge(urlDomain);
             if (result.isValido()) {
-                lista.addAll(getListaWrapCategoria(result.getText()));
-                continueParam = getContinuaCategoria(result.getText());
+                lista.addAll(getListaWrapCategoria(result.getResponse()));
+                continueParam = getContinuaCategoria(result.getResponse());
             }
             else {
                 int a = 87;
@@ -1675,7 +1814,7 @@ public class AWikiBotService extends AbstractService {
      * @return array di WrapCat
      */
     private List<WrapCat> getListaWrapCategoria(String rispostaDellaQuery) {
-        JSONArray jsonPagine = getJsonPagine(rispostaDellaQuery);
+        JSONArray jsonPagine = jSonService.getJsonPagine(rispostaDellaQuery);
         return getListaWrapCategoria(jsonPagine);
     }
 
@@ -1741,7 +1880,7 @@ public class AWikiBotService extends AbstractService {
      * @return risultato col testo completo (visibile) della pagina wiki
      */
     public String leggeQueryTxt(final String wikiTitle) {
-        return leggeQuery(wikiTitle).getText();
+        return leggeQuery(wikiTitle).getResponse();
     }
 
     /**

@@ -330,7 +330,7 @@ public abstract class WizElabora implements WizRecipient {
                     wizService.regolaAEToken(nameTargetProjectUpper, nameTargetProjectModulo, packageName, fileName);
                     risultato = elaboraDoc(packageName, pack);
                     if (risultato.isValido()) {
-                        message = risultato.getValidationMessage();
+                        message = risultato.getValidMessage();
                         numFiles++;
                     }
                 }

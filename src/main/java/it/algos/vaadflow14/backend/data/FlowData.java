@@ -229,8 +229,8 @@ public class FlowData implements AIData {
         }
 
         if (result != null) {
-            numRec = result.getValore();
-            type = result.getValidationMessage();
+            numRec = result.getValue();
+            type = result.getValidMessage();
             if (result.isValido()) {
                 message = String.format("Nel package %s sono stati inseriti %d elementi %s col metodo %s.%s() ", packageName, numRec, type, nameService, metodo);
             }
