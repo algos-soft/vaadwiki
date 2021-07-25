@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.service;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.wiki.*;
+import it.algos.vaadwiki.backend.login.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
 import org.springframework.core.env.*;
@@ -247,6 +248,14 @@ public abstract class AbstractService {
      */
     @Autowired
     public JSonService jSonService;
+
+    /**
+     * Istanza di una interfaccia <br>
+     * Iniettata automaticamente dal framework SpringBoot con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public BotLogin login;
 
     @Autowired
     public Environment env;

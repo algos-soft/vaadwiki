@@ -182,10 +182,7 @@ public class JSonService extends AbstractService {
      * @return oggetto JSON
      */
     public JSONObject getObjectJSON(String rispostaDellaQuery) {
-        Object alfa= JSONValue.parse(rispostaDellaQuery);
-        JSONObject obj=(JSONObject)alfa;
-        return obj;
-        //        return text.isValid(rispostaDellaQuery) ? (JSONObject) JSONValue.parse(rispostaDellaQuery) : new JSONObject();
+        return text.isValid(rispostaDellaQuery) ? (JSONObject) JSONValue.parse(rispostaDellaQuery) : new JSONObject();
     }
 
     /**
@@ -222,7 +219,6 @@ public class JSonService extends AbstractService {
 
         return objectJson;
     }
-
 
 
     /**

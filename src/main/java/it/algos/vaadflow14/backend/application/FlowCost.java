@@ -300,6 +300,8 @@ public abstract class FlowCost {
 
     public static final String KEY_JSON_CONTENT = "content";
 
+    public static final String KEY_JSON_VALID = "batchcomplete";
+
     public static final String QUADRA_INI = "[";
 
     public static final String DOPPIE_QUADRE_INI = QUADRA_INI + QUADRA_INI;
@@ -383,9 +385,11 @@ public abstract class FlowCost {
     public static final String JSON_SUCCESS = "Success";
 
     public static final String JSON_ERROR = "error";
+
     public static final String JSON_NO_BOT = "assertbotfailed";
 
     public static final String JSON_CODE = "code";
+
     public static final String JSON_INFO = "info";
 
     public static final String ERROR_WIKI_TITLE = "Manca il titolo wiki";

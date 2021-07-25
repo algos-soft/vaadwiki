@@ -688,7 +688,7 @@ public class WikiBotServiceTest extends ATest {
         printLong(listaPageIdsCategoria);
 
         //--B - Usa tutta la lista di pageIds e si recupera una lista (stessa lunghezza) di miniWrap
-        listaMiniWrap = service.getMiniWrap(listaPageIdsCategoria);
+        listaMiniWrap = service.getMiniWrap(CAT_1167,listaPageIdsCategoria);
         assertNotNull(listaMiniWrap);
         System.out.println(VUOTA);
         System.out.println(VUOTA);

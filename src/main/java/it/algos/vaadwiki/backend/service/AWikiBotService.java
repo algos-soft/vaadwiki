@@ -184,7 +184,7 @@ public class AWikiBotService extends AbstractService {
      */
     public List<MiniWrap> getMiniWrap(final String categoryTitle) {
         List<Long> listaPageids = this.getLongCat(categoryTitle, AETypeUser.anonymous);
-        return getMiniWrap(listaPageids);
+        return getMiniWrap(categoryTitle,listaPageids);
     }
 
     /**
@@ -192,14 +192,15 @@ public class AWikiBotService extends AbstractService {
      * Usa una API con action=query SENZA bisogno di loggarsi <br>
      * Recupera dalla urlRequest  pageid e timestamp <br>
      *
-     * @param categoryTitle da recuperare
+     * @param catTitle da recuperare
      *
      * @return lista di MiniWrap con 'pageid' e 'lastModifica'
      */
-    public List<MiniWrap> getMiniWrap(final List<Long> listaPageids) {
+    public List<MiniWrap> getMiniWrap(final String catTitle, final List<Long> listaPageids) {
         List<MiniWrap> wraps = new ArrayList<>();
         long inizio = System.currentTimeMillis();
         int limit = LIMIT_USER;
+        limit=500;
         int dimLista = listaPageids.size();
         int cicli = (dimLista / limit) + 1;
         String strisciaIds = VUOTA;
@@ -214,7 +215,7 @@ public class AWikiBotService extends AbstractService {
             wraps.addAll(fixPages(strisciaIds));
         }
 
-        logger.info(AETypeLog.bio, String.format("Recuperata una lista di %s miniWrap con pageId e lastModifica in %s", wraps.size(), date.deltaTextEsatto(inizio)));
+        logger.info(AETypeLog.bio, String.format("La categoria [%s] ha %s miniWrap letti con %s cicli di %d in %s", catTitle, text.format(wraps.size()), cicli, limit, date.deltaTextEsatto(inizio)));
 
         return wraps;
     }
@@ -239,9 +240,9 @@ public class AWikiBotService extends AbstractService {
             return null;
         }
 
-        if (pageIds.split(PIPE_REGEX).length > LIMIT_USER) {
-            return null;
-        }
+//        if (pageIds.split(PIPE_REGEX).length > LIMIT_USER) {
+//            return null;
+//        }
 
         webUrl = WIKI_QUERY_TIMESTAMP + pageIds;
         result = web.legge(webUrl);
@@ -1468,14 +1469,20 @@ public class AWikiBotService extends AbstractService {
         String propType = AECatProp.pageid.getTag();
         AIResult result;
         String continueParam = VUOTA;
+        AETypeUser loggedUserType = userType != null ? userType : login.getUserType();
+        long inizio = System.currentTimeMillis();
+        int cicli = 0;
 
         do {
-            urlDomain = fixUrlCat(catTitle, catType, propType, userType, continueParam);
+            urlDomain = fixUrlCat(catTitle, catType, propType, loggedUserType, continueParam);
             result = readCategory(catTitle, urlDomain);
             lista.addAll(getListaLongCategoria(result.getResponse()));
             continueParam = getContinuaCategoria(result.getResponse());
+            cicli++;
         }
         while (text.isValid(continueParam));
+
+        logger.info(AETypeLog.bio, String.format("La categoria [%s] ha %s pageIds letti con %s cicli di %s in %s", catTitle, text.format(lista.size()), cicli, loggedUserType.limit(), date.deltaTextEsatto(inizio)));
 
         return lista;
     }
@@ -1684,21 +1691,21 @@ public class AWikiBotService extends AbstractService {
             return result;
         }
 
-//        if (isEsisteCat(catTitle)) {
-//        }
-//        else {
-//            result = web.legge(WIKI_PARSE + catTitle);
-//            //            result= AResult.errato();
-//            result.setWikiTitle(categoryTitle);
-//            result.setUrl(catTitle);
-//            result.setErrorMessage(String.format("Non esiste la categoria %s", categoryTitle));
-//            return result;
-//        }
-//
-//        result = web.legge(catTitle);
-//        if (result == null || result.isErrato()) {
-//            return AResult.errato();
-//        }
+        //        if (isEsisteCat(catTitle)) {
+        //        }
+        //        else {
+        //            result = web.legge(WIKI_PARSE + catTitle);
+        //            //            result= AResult.errato();
+        //            result.setWikiTitle(categoryTitle);
+        //            result.setUrl(catTitle);
+        //            result.setErrorMessage(String.format("Non esiste la categoria %s", categoryTitle));
+        //            return result;
+        //        }
+        //
+        //        result = web.legge(catTitle);
+        //        if (result == null || result.isErrato()) {
+        //            return AResult.errato();
+        //        }
 
         rispostaDellaQuery = result.getResponse();
         JSONObject jsonPageZero = jSonService.getObjectPage(rispostaDellaQuery);
@@ -1726,9 +1733,11 @@ public class AWikiBotService extends AbstractService {
         AIResult result = getInfoCategoria(categoryTitle);
 
         if (result != null && result.isValido()) {
+            logger.info(AETypeLog.bio, String.format("La categoria [%s] esiste e ci sono %s voci", categoryTitle, text.format(result.getValue())));
             return result.getValue();
         }
         else {
+            logger.info(AETypeLog.bio, String.format("La categoria [%s] non esiste oppure è vuota", categoryTitle));
             return 0;
         }
     }
@@ -1887,7 +1896,7 @@ public class AWikiBotService extends AbstractService {
      * Controlla di essere loggato come bot <br>
      */
     public boolean checkCollegamentoComeBot() {
-        return appContext.getBean(QueryBot.class).isBot();
+        return appContext.getBean(QueryAssert.class).isValida();
     }
 
 }

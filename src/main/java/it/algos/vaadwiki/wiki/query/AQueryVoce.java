@@ -35,7 +35,7 @@ public abstract class AQueryVoce extends AQueryPage {
      *
      * @param titoloWiki della pagina (necessita di codifica) usato nella urlRequest
      */
-    @Override
+//    @Override
     public String urlRequest(String titoloWiki) {
         String contenutoTesto = "";
 //        Page page = super.pageResponse(titoloWiki);
