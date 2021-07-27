@@ -3,12 +3,14 @@ package it.algos.vaadwiki.wiki.query;
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import org.json.simple.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.io.*;
 import java.net.*;
 import java.util.*;
 
@@ -48,17 +50,13 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class QueryLogin extends AQuery {
 
-    /**
-     * Valori di controllo ricevuto <br>
-     */
-    public static final int LG_ID = 124123;
 
 
     /**
      * Valore di collegamento iniziale <br>
-     * Eventualmente inseribile nella cartella 'config' <br>
+     * Eventualmente inseribile nella cartella 'config' (meglio) <br>
      */
-    public static final String LG_NAME = "Biobot";
+    public static String LG_NAME = "Biobot";
 
     /**
      * Valore di collegamento iniziale <br>
@@ -66,10 +64,6 @@ public class QueryLogin extends AQuery {
      */
     public static final String LG_PASSWORD = "lhgfmeb8ckefkniq85qmhul18r689nbq";
 
-    /**
-     * Tag per recuperare il valore della 'session' dai cookies ricevuti dalla preliminaryRequestGet <br>
-     */
-    private static final String TAG_SESSION = "itwikiSession";
 
     /**
      * Tag per il testo POS da inviare nella secondaryRequestPost <br>
@@ -85,7 +79,6 @@ public class QueryLogin extends AQuery {
      * Tag per il testo POS da inviare nella secondaryRequestPost <br>
      */
     private static final String TAG_TOKEN = "&lgtoken=";
-
 
     /**
      * Token recuperato dalla preliminaryRequestGet <br>
@@ -109,18 +102,6 @@ public class QueryLogin extends AQuery {
      */
     private String lgpassword;
 
-
-    /**
-     * Cookies ricevuti dalla preliminaryGetRequest ed elaborati per la successiva urlPostRequest <br>
-     */
-    private Map cookiesFromPreliminary;
-
-    /**
-     * Cookies ricevuti dalla secondaryRequestPost ed memorizzati in BotLogin <br>
-     */
-    private Map cookiesFromSecondary;
-
-
     /**
      * Property indispensabile ricevuta nella secondaryResponse <br>
      */
@@ -130,17 +111,6 @@ public class QueryLogin extends AQuery {
      * Property indispensabile ricevuta nella secondaryResponse <br>
      */
     private String lgusername;
-
-    /**
-     * Property regolata dopo la urlGetRequest <br>
-     */
-    private String preliminaryResponse;
-
-    /**
-     * Property regolata dopo la urlPostRequest <br>
-     */
-    private String secondaryResponse;
-
 
     /**
      * Property regolata dopo la urlPostRequest <br>
@@ -163,15 +133,19 @@ public class QueryLogin extends AQuery {
      * Scrive il testo post con i valori di lgname, lgpassword e lgtoken <br>
      * <p>
      * La response viene elaborata per confermare il login andato a buon fine <br>
+     *
+     * @return wrapper di informazioni
      */
-    public String urlRequest() {
+    public AIResult urlRequest() {
+        AIResult result = null;
+
         //--La prima request è di tipo GET
-        this.preliminaryRequestGet();
+        result = this.preliminaryRequestGet();
 
         //--La seconda request è di tipo POST
         //--Indispensabile aggiungere i cookies
         //--Indispensabile aggiungere il testo POST
-        return this.secondaryRequestPost();
+        return this.secondaryRequestPost(result);
     }
 
     /**
@@ -189,20 +163,22 @@ public class QueryLogin extends AQuery {
      * Recupera i cookies della connessione (in particolare 'itwikisession') <br>
      * Recupera il logintoken dalla urlResponse <br>
      */
-    public void preliminaryRequestGet() {
+    public AIResult preliminaryRequestGet() {
+        AIResult result = AResult.valido();
         String urlDomain = TAG_PRELIMINARY_REQUEST_GET;
         String urlResponse = VUOTA;
         URLConnection urlConn;
 
+        result.setUrlPreliminary(TAG_PRELIMINARY_REQUEST_GET);
         try {
             urlConn = this.creaGetConnection(urlDomain);
             urlResponse = sendRequest(urlConn);
-            cookiesFromPreliminary = downlodCookies(urlConn);
+             result.setMappa(downlodCookies(urlConn));
         } catch (Exception unErrore) {
             logger.error(AETypeLog.login, unErrore.getMessage());
         }
 
-        elaboraPreliminaryResponse(urlResponse);
+        return elaboraPreliminaryResponse(result, urlResponse);
     }
 
 
@@ -212,11 +188,13 @@ public class QueryLogin extends AQuery {
      * Recupera il token 'logintoken' dalla preliminaryRequestGet <br>
      * Viene convertito in lgtoken necessario per la successiva secondaryRequestPost <br>
      */
-    protected void elaboraPreliminaryResponse(final String rispostaDellaQuery) {
+    protected AIResult elaboraPreliminaryResponse(final AIResult result, final String rispostaDellaQuery) {
         JSONObject jsonAll;
         JSONObject jsonQuery = null;
         JSONObject jsonTokens = null;
 
+        result.setQueryType(TypeQuery.login.get());
+        result.setPreliminaryResponse(rispostaDellaQuery);
         jsonAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
 
         if (jsonAll != null && jsonAll.get(QUERY) != null) {
@@ -233,10 +211,11 @@ public class QueryLogin extends AQuery {
 
         try {
             lgtoken = URLEncoder.encode(logintoken, ENCODE);
+            result.setToken(lgtoken);
         } catch (Exception unErrore) {
         }
 
-        preliminaryResponse = rispostaDellaQuery;
+        return result;
     }
 
 
@@ -263,22 +242,25 @@ public class QueryLogin extends AQuery {
      * Risposta in formato testo JSON <br>
      * La response viene sempre elaborata per estrarre le informazioni richieste <br>
      * Recupera i cookies allegati alla risposta e li memorizza in WikiLogin per poterli usare in query successive <br>
+     *
+     * @return true se il collegamento come bot è confermato
      */
-    public String secondaryRequestPost() {
+    public AIResult secondaryRequestPost(final AIResult result) {
         String urlDomain = TAG_SECONDARY_REQUEST_POST;
         String urlResponse = VUOTA;
         URLConnection urlConn;
+        result.setUrlRequest(urlDomain);
 
         try {
             urlConn = this.creaGetConnection(urlDomain);
-            uploadCookies(urlConn, cookiesFromPreliminary);
+            uploadCookies(urlConn, result.getMappa());
             addPostConnection(urlConn);
             urlResponse = sendRequest(urlConn);
-            cookiesFromSecondary = downlodCookies(urlConn);
+            result.setMappa(downlodCookies(urlConn));
         } catch (Exception unErrore) {
         }
 
-        return elaboraSecondaryResponse(urlResponse);
+        return elaboraSecondaryResponse(result, urlResponse);
     }
 
 
@@ -303,16 +285,17 @@ public class QueryLogin extends AQuery {
     }
 
 
-
     /**
      * Elabora la risposta <br>
      * <p>
      * Informazioni, contenuto e validità della risposta
      * Controllo del contenuto (testo) ricevuto
+     *
+     * @return true se il collegamento come bot è confermato
      */
-    protected String elaboraSecondaryResponse(String rispostaDellaQuery) {
+    protected AIResult elaboraSecondaryResponse(final AIResult result, final String rispostaDellaQuery) {
         JSONObject jsonLogin = null;
-        String jsonResult;
+        String jsonResult=VUOTA;
         JSONObject jsonAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
 
         if (jsonAll != null && jsonAll.get(LOGIN) != null) {
@@ -324,6 +307,17 @@ public class QueryLogin extends AQuery {
                 jsonResult = (String) jsonLogin.get(RESULT);
                 loginValido = text.isValid(jsonResult) && jsonResult.equals(JSON_SUCCESS);
             }
+            if (loginValido) {
+                result.setCodeMessage(JSON_SUCCESS);
+            }
+            else {
+                result.setValido(false);
+                result.setErrorCode(jsonResult.toString());
+                result.setErrorMessage((String) jsonLogin.get(JSON_REASON));
+                result.setResponse(jsonLogin.toString());
+                return result;
+            }
+
             if ((Long) jsonLogin.get(LOGIN_USER_ID) > 0) {
                 lguserid = (Long) jsonLogin.get(LOGIN_USER_ID);
             }
@@ -334,7 +328,7 @@ public class QueryLogin extends AQuery {
 
         //--controllo finale tramite una query GET coi cookies che controlla assert=bot
         if (loginValido) {
-            loginValido = new QueryAssert().urlRequest(cookiesFromSecondary);
+//            loginValido = new QueryAssert().urlRequest(result.getMappa());
         }
 
         //--trasferisce nella istanza singleton BotLogin i cookies per essere utilizzati in tutte le query
@@ -342,12 +336,13 @@ public class QueryLogin extends AQuery {
             botLogin.setBot(true);
             botLogin.setLguserid(lguserid);
             botLogin.setLgusername(lgusername);
-            botLogin.setCookies(cookiesFromSecondary);
+            botLogin.setResult(result);
+            result.setResponse(jsonLogin.toString());
+            result.setValidMessage(String.format("%s: %d, %s: %s",LOGIN_USER_ID,lguserid,LOGIN_USER_NAME,lgusername));
         }
 
-        secondaryResponse = jsonLogin.toString();
-
-        return loginValido ? JSON_SUCCESS : JSON_ERROR;
+        result.setResponse(jsonLogin.toString());
+        return result;
     }
 
 
@@ -362,5 +357,10 @@ public class QueryLogin extends AQuery {
     public String getLgusername() {
         return lgusername;
     }
+
+    public String getStatus() {
+        return loginValido ? JSON_SUCCESS : JSON_ERROR;
+    }
+
 
 }

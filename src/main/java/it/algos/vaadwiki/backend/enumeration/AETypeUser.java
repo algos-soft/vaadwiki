@@ -13,7 +13,7 @@ public enum AETypeUser {
 
     anonymous(VUOTA, 500),
     user("user", 500),
-    bot("bot", 500),
+    bot("bot", 5000),
     ;
 
     private static final String ASSERT = "&assert=";
@@ -24,7 +24,7 @@ public enum AETypeUser {
 
     private final int limit;
 
-    private AETypeUser(String affermazione, int limit) {
+     AETypeUser(String affermazione, int limit) {
         this.affermazione = affermazione;
         this.limit = limit;
     }

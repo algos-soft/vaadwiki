@@ -1,24 +1,24 @@
 package it.algos.vaadwiki.backend.boot;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.boot.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.data.*;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadwiki.backend.packages.bio.Bio;
-import it.algos.vaadwiki.backend.packages.prenome.Prenome;
 import it.algos.vaadwiki.backend.enumeration.*;
-import it.algos.vaadwiki.backend.packages.professione.Professione;
-import it.algos.vaadwiki.backend.packages.nazionalita.Nazionalita;
-import it.algos.vaadwiki.backend.packages.attivita.Attivita;
-import it.algos.vaadwiki.backend.packages.genere.Genere;
-import it.algos.vaadflow14.backend.boot.FlowBoot;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadwiki.backend.packages.attivita.*;
+import it.algos.vaadwiki.backend.packages.bio.*;
+import it.algos.vaadwiki.backend.packages.genere.*;
+import it.algos.vaadwiki.backend.packages.nazionalita.*;
+import it.algos.vaadwiki.backend.packages.prenome.*;
+import it.algos.vaadwiki.backend.packages.professione.*;
+import it.algos.vaadwiki.wiki.query.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.time.LocalDate;
+import java.time.*;
 import java.util.*;
 
 /**
@@ -79,13 +79,13 @@ public class WikiBoot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.dataClazz = WikiData.class;
         FlowVar.usaSecurity = false;
-        FlowVar.projectNameDirectoryIdea= "vaadwiki";
+        FlowVar.projectNameDirectoryIdea = "vaadwiki";
         FlowVar.projectNameModulo = "vaadwiki";
         FlowVar.projectNameUpper = "Wiki";
         FlowVar.projectDescrizione = "Gestione di BioBot";
         FlowVar.projectVersion = environment.getProperty("algos.wiki.version") != null ? Double.parseDouble(environment.getProperty("algos.wiki.version")) : 0.0;
         FlowVar.preferenzeSpecificheList = Arrays.asList(AEWikiPreferenza.values());
-        FlowVar.versionDate = LocalDate.of(2021,4,14);
+        FlowVar.versionDate = LocalDate.of(2021, 4, 14);
         FlowVar.projectNote = "Sviluppo di una applicazione in Vaadin14";
         FlowVar.usaCronoPackages = false;
         FlowVar.usaGeografiaPackages = false;
@@ -109,8 +109,6 @@ public class WikiBoot extends FlowBoot {
     }
 
 
-
-
     /**
      * Aggiunge al menu le @Route (view) standard e specifiche <br>
      * <p>
@@ -126,7 +124,7 @@ public class WikiBoot extends FlowBoot {
     @Override
     protected void fixMenuRoutes() {
         super.fixMenuRoutes();
-		FlowVar.menuRouteList.add(Prenome.class);
+        FlowVar.menuRouteList.add(Prenome.class);
         FlowVar.menuRouteList.add(Genere.class);
         FlowVar.menuRouteList.add(Professione.class);
         FlowVar.menuRouteList.add(Attivita.class);
@@ -153,6 +151,7 @@ public class WikiBoot extends FlowBoot {
      */
     @Override
     protected void fixUsers() {
+        appContext.getBean(QueryLogin.class).urlRequest();
     }
 
     /**

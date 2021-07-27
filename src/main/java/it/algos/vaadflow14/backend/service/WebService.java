@@ -129,7 +129,7 @@ public class WebService extends AbstractService {
         } catch (Exception unErrore) {
             result = AResult.errato(unErrore.toString());
         }
-        result.setUrl(urlDomain);
+        result.setUrlRequest(urlDomain);
 
         return result;
     }
@@ -203,7 +203,7 @@ public class WebService extends AbstractService {
         result = legge(TAG_WIKI + wikiTitleElaborato);
 
         result.setWikiTitle(wikiTitleGrezzo);
-        result.setUrl(TAG_WIKI + wikiTitleGrezzo);
+        result.setUrlRequest(TAG_WIKI + wikiTitleGrezzo);
 
         return result;
     }

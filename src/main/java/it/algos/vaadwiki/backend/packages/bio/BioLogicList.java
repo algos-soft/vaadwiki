@@ -2,6 +2,7 @@ package it.algos.vaadwiki.backend.packages.bio;
 
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.dialog.*;
+import com.vaadin.flow.component.notification.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.router.*;

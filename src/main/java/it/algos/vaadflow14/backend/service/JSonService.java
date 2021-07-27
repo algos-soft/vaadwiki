@@ -221,6 +221,7 @@ public class JSonService extends AbstractService {
     }
 
 
+
     /**
      * Recupera un array di pages dal testo JSON di risposta ad una query <br>
      *

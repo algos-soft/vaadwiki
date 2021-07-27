@@ -58,6 +58,14 @@ public abstract class AQuery {
 
 
     /**
+     * Tag per la costruzione del 'urlDomain' completo per la ricerca dei pageIds di una categoria <br>
+     */
+    protected static final String TAG_REQUEST_CAT = TAG_QUERY + "&cmprop=ids&list=categorymembers&cmtitle=Categoria:";
+
+
+
+
+    /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>

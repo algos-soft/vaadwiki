@@ -302,6 +302,8 @@ public abstract class FlowCost {
 
     public static final String KEY_JSON_VALID = "batchcomplete";
 
+    public static final String KEY_JSON_MEMBERS = "categorymembers";
+
     public static final String QUADRA_INI = "[";
 
     public static final String DOPPIE_QUADRE_INI = QUADRA_INI + QUADRA_INI;
@@ -385,6 +387,15 @@ public abstract class FlowCost {
     public static final String JSON_SUCCESS = "Success";
 
     public static final String JSON_ERROR = "error";
+
+    public static final String JSON_REASON = "reason";
+
+    public static final String JSON_FAILED = "Failed";
+
+    public static final String JSON_COOKIES = "cookies";
+
+    public static final String JSON_BOT_LOGIN = "botLogin";
+    public static final String JSON_NOT_QUERY_LOGIN = "notQueryLogin";
 
     public static final String JSON_NO_BOT = "assertbotfailed";
 

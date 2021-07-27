@@ -2,11 +2,13 @@ package it.algos.vaadwiki.wiki.query;
 
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import org.json.simple.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.io.*;
 import java.net.*;
 import java.util.*;
 
@@ -27,61 +29,67 @@ import java.util.*;
 public class QueryAssert extends AQuery {
 
 
-    private boolean requestNonAncoraEffettuata = true;
-
     private boolean valida = false;
 
+//    private String urlResponse = VUOTA;
+
+    //    /**
+    //     * La request effettiva <br>
+    //     *
+    //     * @return wrapper di informazioni
+    //     */
+    //    public AIResult urlRequest() {
+    //        return urlRequest(botLogin != null ? botLogin.getCookies() : null);
+    //    }
 
     /**
-     * Costruttore con parametri <br>
-     * I cookies sono indispensabili <br>
-     * Possono arrivare nel costruttore, oppure direttamente nel metodo urlRequest <br>
-     */
-    public QueryAssert() {
-    } // end of SpringBoot constructor
-
-
-    /**
-     * Costruttore con parametri <br>
-     * I cookies sono indispensabili <br>
-     * Possono arrivare nel costruttore, oppure direttamente nel metodo urlRequest <br>
+     * La request unica <br>
      *
-     * @param cookies coi parametri di controllo indispensabili
+     * @return wrapper di informazioni
      */
-    public QueryAssert(final Map<String, Object> cookies) {
-        this.urlRequest(cookies);
-    } // end of SpringBoot constructor
-
-
-    /**
-     * La request effettiva viene eseguita una volta sola <br>
-     * o dal metodo postConstruct()
-     * o da una chiamata diretta al metodo urlRequest()
-     *
-     * @return true se il collegamento come bot è confermato
-     */
-    public boolean urlRequest(final Map<String, Object> cookies) {
+    public AIResult urlRequest() {
+        AIResult result = AResult.valido();
+        Map<String, Object> cookies;
         String urlDomain = TAG_REQUEST_ASSERT;
         String urlResponse = VUOTA;
         URLConnection urlConn;
 
+        result.setUrlRequest(TAG_REQUEST_ASSERT);
+        result.setQueryType(TypeQuery.getCookies.get());
+
+        //--se manca il botLogin
+        if (botLogin == null) {
+            result.setValido(false);
+            result.setErrorCode(JSON_BOT_LOGIN);
+            result.setMessage("Manca il botLogin");
+            return result;
+        }
+
+        //--se il botLogin non ha registrato nessuna chiamata di QueryLogin
+        if (botLogin.getResult() == null) {
+            result.setValido(false);
+            result.setErrorCode(JSON_NOT_QUERY_LOGIN);
+            result.setMessage("Il botLogin non ha registrato nessuna chiamata di QueryLogin");
+            return result;
+        }
+
         //--se mancano i cookies
+        cookies = botLogin.getCookies();
         if (cookies == null || cookies.size() < 1) {
-            return false;
+            result.setValido(false);
+            result.setErrorCode(JSON_COOKIES);
+            result.setMessage("Mancano i cookies nel result di botLogin");
+            return result;
         }
 
-        //--se il metodo non è ancora stato chiamato
-        if (requestNonAncoraEffettuata) {
-            try {
-                urlConn = this.creaGetConnection(urlDomain);
-                uploadCookies(urlConn, cookies);
-                urlResponse = sendRequest(urlConn);
-            } catch (Exception unErrore) {
-            }
-            requestNonAncoraEffettuata = false;
+        try {
+            urlConn = this.creaGetConnection(urlDomain);
+            uploadCookies(urlConn, cookies);
+            urlResponse = sendRequest(urlConn);
+        } catch (Exception unErrore) {
         }
 
-        return elaboraResponse(urlResponse);
+        return elaboraResponse(result, urlResponse);
     }
 
 
@@ -91,22 +99,54 @@ public class QueryAssert extends AQuery {
      * Recupera il token 'logintoken' dalla preliminaryRequestGet <br>
      * Viene convertito in lgtoken necessario per la successiva secondaryRequestPost <br>
      */
-    protected boolean elaboraResponse(final String rispostaDellaQuery) {
-        valida = false;
+    protected AIResult elaboraResponse(final AIResult result, final String rispostaDellaQuery) {
+         valida = false;
         JSONObject jsonAll;
+        JSONObject jsonError;
+        String jsonCode;
+        String jsonInfo;
 
         jsonAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
 
         if (jsonAll != null && jsonAll.get(KEY_JSON_VALID) != null) {
             valida = (boolean) jsonAll.get(KEY_JSON_VALID);
-            return valida;
+            if (valida) {
+                result.setCodeMessage(KEY_JSON_VALID);
+                result.setValidMessage("Collegato come bot");
+                result.setResponse(jsonAll.toJSONString());
+                return result;
+            }
+            else {
+                int a=87;
+            }
+
+
+//            urlResponse = jsonAll.toJSONString();
+            return result;
         }
 
-        return valida;
+        if (jsonAll != null && jsonAll.get(JSON_ERROR) != null) {
+            jsonError = (JSONObject) jsonAll.get(JSON_ERROR);
+            jsonCode = (String) jsonError.get(JSON_CODE);
+            jsonInfo = (String) jsonError.get(JSON_INFO);
+            result.setValido(false);
+            result.setErrorCode(jsonCode);
+            result.setErrorMessage(jsonInfo);
+            return result;
+        }
+
+        return result;
     }
 
-    public boolean isValida() {
-        return valida;
-    }
+//    public boolean isValida() {
+//        return valida;
+//    }
+//
+//    public String getUrlResponse() {
+//        return urlResponse;
+//    }
+        public boolean isValida() {
+            return valida;
+        }
 
 }

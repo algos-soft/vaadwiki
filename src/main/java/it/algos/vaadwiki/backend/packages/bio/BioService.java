@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.backend.packages.bio;
 
+import com.vaadin.flow.component.notification.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -8,6 +9,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
 import org.springframework.beans.factory.annotation.*;
@@ -66,6 +68,14 @@ public class BioService extends AService {
      */
     @Autowired
     public AWikiBotService wikiBot;
+
+    /**
+     * Istanza di una interfaccia <br>
+     * Iniettata automaticamente dal framework SpringBoot con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public BotLogin login;
 
     /**
      * Costruttore senza parametri <br>
@@ -238,15 +248,11 @@ public class BioService extends AService {
         //--Si collega come anonymous; non serve essere loggati <br>
         wikiBot.getTotaleCategoria(catTitle);
 
-        //@todo login provvisorio
-        //        QueryLogin loggin= appContext.getBean(AQueryLogin.class);
-        //        loggin.urlRequest();
-        //        loggin.getCookies();
-        //        QueryBot query= appContext.getBean(QueryBot.class,loggin.getCookies());
-        //        query.urlRequest();
-        //        boolean collegato=query.isBot();
-        //        int a=87;
-        //@todo login provvisorio
+        //--Controlla il collegamento come bot
+        if (login == null || login.nonCollegato()) {
+            logger.warn("Bot non collegato");
+            return;
+        }
 
         //--Parte dalla lista di tutti i (long) pageIds della categoria
         //--Deve riuscire a gestire una lista di circa 430.000 long per la category BioBot
@@ -254,7 +260,7 @@ public class BioService extends AService {
 
         //--Usa la lista di pageIds e si recupera una lista (stessa lunghezza) di miniWrap
         //--Deve riuscire a gestire una lista di circa 430.000 miniWrap per la category BioBot
-        listaMiniWrap = wikiBot.getMiniWrap(catTitle,listaPageIdsCategoria);
+        listaMiniWrap = wikiBot.getMiniWrap(catTitle, listaPageIdsCategoria);
 
         //--Elabora la lista di miniWrap e costruisce una lista di pageIds da leggere
         //--Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb

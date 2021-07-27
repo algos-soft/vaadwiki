@@ -6,6 +6,8 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.stereotype.*;
 
+import java.util.*;
+
 /**
  * Project vaadflow14
  * Created by Algos
@@ -22,18 +24,31 @@ public class AResult implements AIResult {
 
     private String wikiTitle = VUOTA;
 
-    private String url = VUOTA;
+    private String urlPreliminary = VUOTA;
+
+    private String urlRequest = VUOTA;
 
     private String errorCode = VUOTA;
 
     private String errorMessage = VUOTA;
 
+    private String codeMessage = VUOTA;
+
     private String validMessage = VUOTA;
+
+    private String preliminaryResponse = VUOTA;
 
     private String response = VUOTA;
 
+    private String token = VUOTA;
+
+    private String queryType = VUOTA;
 
     private int value = 0;
+
+    private List lista = null;
+
+    private Map mappa = null;
 
     private AResult() {
         this(true, VUOTA);
@@ -114,6 +129,15 @@ public class AResult implements AIResult {
         return !valido;
     }
 
+    @Override
+    public String getCodeMessage() {
+        return codeMessage;
+    }
+
+    @Override
+    public void setCodeMessage(String codeMessage) {
+        this.codeMessage = codeMessage;
+    }
 
     @Override
     public String getMessage() {
@@ -171,15 +195,6 @@ public class AResult implements AIResult {
         this.wikiTitle = wikiTitle;
     }
 
-    @Override
-    public String getUrl() {
-        return url;
-    }
-
-    @Override
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     @Override
     public String getResponse() {
@@ -199,6 +214,76 @@ public class AResult implements AIResult {
     @Override
     public void setValue(int value) {
         this.value = value;
+    }
+
+    @Override
+    public List getLista() {
+        return lista;
+    }
+
+    @Override
+    public void setLista(List lista) {
+        this.lista = lista;
+    }
+
+    @Override
+    public String getUrlPreliminary() {
+        return urlPreliminary;
+    }
+
+    @Override
+    public void setUrlPreliminary(String urlPreliminary) {
+        this.urlPreliminary = urlPreliminary;
+    }
+
+    @Override
+    public String getUrlRequest() {
+        return urlRequest;
+    }
+
+    @Override
+    public void setUrlRequest(String urlRequest) {
+        this.urlRequest = urlRequest;
+    }
+
+    @Override
+    public Map getMappa() {
+        return mappa;
+    }
+
+    @Override
+    public void setMappa(Map mappa) {
+        this.mappa = mappa;
+    }
+
+    @Override
+    public String getPreliminaryResponse() {
+        return preliminaryResponse;
+    }
+
+    @Override
+    public void setPreliminaryResponse(String preliminaryResponse) {
+        this.preliminaryResponse = preliminaryResponse;
+    }
+
+    @Override
+    public String getToken() {
+        return token;
+    }
+
+    @Override
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    @Override
+    public String getQueryType() {
+        return queryType;
+    }
+
+    @Override
+    public void setQueryType(String queryType) {
+        this.queryType = queryType;
     }
 
     @Override

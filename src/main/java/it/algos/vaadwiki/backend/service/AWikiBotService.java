@@ -9,6 +9,7 @@ import it.algos.vaadflow14.wiki.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.enumeration.*;
+import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.wiki.*;
 import it.algos.vaadwiki.wiki.query.*;
@@ -95,6 +96,14 @@ public class AWikiBotService extends AbstractService {
      */
     @Autowired
     public BioUtility utility;
+
+    /**
+     * Istanza di una interfaccia <br>
+     * Iniettata automaticamente dal framework SpringBoot con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public BotLogin login;
 
     /**
      * Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb <br>
@@ -231,13 +240,13 @@ public class AWikiBotService extends AbstractService {
      * @return lista di MiniWrap con 'pageid' e 'lastModifica'
      */
     public List<MiniWrap> fixPages(final String pageIds) {
-        List<MiniWrap> wraps = null;
+        List<MiniWrap> wraps = new ArrayList<>();
         String webUrl;
         AIResult result;
         String rispostaAPI;
 
         if (text.isEmpty(pageIds)) {
-            return null;
+            return wraps;
         }
 
 //        if (pageIds.split(PIPE_REGEX).length > LIMIT_USER) {
@@ -250,7 +259,6 @@ public class AWikiBotService extends AbstractService {
 
         JSONArray jsonPages = jSonService.getArrayPagine(rispostaAPI);
         if (jsonPages != null) {
-            wraps = new ArrayList<>();
             for (Object obj : jsonPages) {
                 wraps.add(creaPage((JSONObject) obj));
             }
@@ -1369,7 +1377,7 @@ public class AWikiBotService extends AbstractService {
                 if (objectJson.get(JSON_ERROR) != null) {
                     resultWiki = AResult.errato(ERROR_WIKI_PAGINA);
                     resultWiki.setWikiTitle(wikiSimplePageCategoryTitle);
-                    resultWiki.setUrl(resultWeb.getUrl());
+                    resultWiki.setUrlRequest(resultWeb.getUrlRequest());
                     resultWiki.setResponse(rispostaDellaQuery);
                     return resultWiki;
                 }
@@ -1473,8 +1481,10 @@ public class AWikiBotService extends AbstractService {
         long inizio = System.currentTimeMillis();
         int cicli = 0;
 
+
         do {
             urlDomain = fixUrlCat(catTitle, catType, propType, loggedUserType, continueParam);
+            //devo fare una POST e non una GET
             result = readCategory(catTitle, urlDomain);
             lista.addAll(getListaLongCategoria(result.getResponse()));
             continueParam = getContinuaCategoria(result.getResponse());

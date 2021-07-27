@@ -621,5 +621,25 @@ public abstract class ATest {
         }
     }
 
+    protected void printRisultato(AIResult result) {
+        System.out.println(VUOTA);
+        System.out.println("Risultato");
+        System.out.println(String.format("Status: %s", result.isValido() ? "true" : "false"));
+        System.out.println(String.format("Query: %s", result.getQueryType()));
+        System.out.println(String.format("Title: %s", result.getWikiTitle()));
+        System.out.println(String.format("Preliminary url: %s", result.getUrlPreliminary()));
+        System.out.println(String.format("Secondary url: %s", result.getUrlRequest()));
+        System.out.println(String.format("Preliminary response: %s", result.getPreliminaryResponse()));
+        System.out.println(String.format("Token: %s", result.getToken()));
+        System.out.println(String.format("Secondary response: %s", result.getResponse()));
+        System.out.println(String.format("Message code: %s", result.getCodeMessage()));
+        System.out.println(String.format("Message: %s", result.getMessage()));
+        System.out.println(String.format("Error code: %s", result.getErrorCode()));
+        System.out.println(String.format("Error message: %s", result.getErrorMessage()));
+        System.out.println(String.format("Valid message: %s", result.getValidMessage()));
+        System.out.println(String.format("Numeric value: %d", result.getValue()));
+        System.out.println(String.format("List value: %s", result.getLista()));
+        System.out.println(String.format("Map value: %s", result.getMappa()));
+    }
 
 }// end of class
