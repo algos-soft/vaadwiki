@@ -954,7 +954,7 @@ public class DateService extends AbstractService {
      */
     public String deltaTextEsatto(long inizio) {
         long fine = System.currentTimeMillis();
-        return (fine - inizio) + MILLI_SECONDI;
+        return text.format(fine - inizio) + MILLI_SECONDI;
     }
 
     /**

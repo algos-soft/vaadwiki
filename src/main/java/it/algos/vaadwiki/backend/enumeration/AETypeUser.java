@@ -11,7 +11,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  */
 public enum AETypeUser {
 
-    anonymous(VUOTA, 500),
+    anonymous(VUOTA, 50),
     user("user", 500),
     bot("bot", 5000),
     ;

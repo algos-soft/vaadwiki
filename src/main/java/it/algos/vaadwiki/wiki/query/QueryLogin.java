@@ -12,7 +12,6 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
 import java.net.*;
-import java.util.*;
 
 /**
  * Project vaadwiki
@@ -51,19 +50,11 @@ import java.util.*;
 public class QueryLogin extends AQuery {
 
 
-
-    /**
-     * Valore di collegamento iniziale <br>
-     * Eventualmente inseribile nella cartella 'config' (meglio) <br>
-     */
-    public static String LG_NAME = "Biobot";
-
     /**
      * Valore di collegamento iniziale <br>
      * Eventualmente inseribile nella cartella 'config' <br>
      */
     public static final String LG_PASSWORD = "lhgfmeb8ckefkniq85qmhul18r689nbq";
-
 
     /**
      * Tag per il testo POS da inviare nella secondaryRequestPost <br>
@@ -79,6 +70,14 @@ public class QueryLogin extends AQuery {
      * Tag per il testo POS da inviare nella secondaryRequestPost <br>
      */
     private static final String TAG_TOKEN = "&lgtoken=";
+
+    /**
+     * Valore di collegamento iniziale <br>
+     * Eventualmente inseribile nella cartella 'config' (meglio) <br>
+     */
+    public static String LG_NAME = "Biobot";
+
+    public QueryAssert queryAssert;
 
     /**
      * Token recuperato dalla preliminaryRequestGet <br>
@@ -111,12 +110,6 @@ public class QueryLogin extends AQuery {
      * Property indispensabile ricevuta nella secondaryResponse <br>
      */
     private String lgusername;
-
-    /**
-     * Property regolata dopo la urlPostRequest <br>
-     */
-    private boolean loginValido;
-
 
     /**
      * Request al software mediawiki composta di due request <br>
@@ -173,7 +166,7 @@ public class QueryLogin extends AQuery {
         try {
             urlConn = this.creaGetConnection(urlDomain);
             urlResponse = sendRequest(urlConn);
-             result.setMappa(downlodCookies(urlConn));
+            result.setMappa(downlodCookies(urlConn));
         } catch (Exception unErrore) {
             logger.error(AETypeLog.login, unErrore.getMessage());
         }
@@ -293,13 +286,19 @@ public class QueryLogin extends AQuery {
      *
      * @return true se il collegamento come bot è confermato
      */
-    protected AIResult elaboraSecondaryResponse(final AIResult result, final String rispostaDellaQuery) {
+    protected AIResult elaboraSecondaryResponse(AIResult result, final String rispostaDellaQuery) {
+        AIResult assertResult;
         JSONObject jsonLogin = null;
-        String jsonResult=VUOTA;
+        boolean loginValido = false;
+        String jsonResult = VUOTA;
         JSONObject jsonAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
 
         if (jsonAll != null && jsonAll.get(LOGIN) != null) {
             jsonLogin = (JSONObject) jsonAll.get(LOGIN);
+        }
+
+        if (jsonLogin != null) {
+            result.setResponse(jsonLogin.toString());
         }
 
         if (jsonLogin != null && jsonLogin.get(RESULT) != null) {
@@ -314,7 +313,6 @@ public class QueryLogin extends AQuery {
                 result.setValido(false);
                 result.setErrorCode(jsonResult.toString());
                 result.setErrorMessage((String) jsonLogin.get(JSON_REASON));
-                result.setResponse(jsonLogin.toString());
                 return result;
             }
 
@@ -326,11 +324,6 @@ public class QueryLogin extends AQuery {
             }
         }
 
-        //--controllo finale tramite una query GET coi cookies che controlla assert=bot
-        if (loginValido) {
-//            loginValido = new QueryAssert().urlRequest(result.getMappa());
-        }
-
         //--trasferisce nella istanza singleton BotLogin i cookies per essere utilizzati in tutte le query
         if (loginValido) {
             botLogin.setBot(true);
@@ -338,29 +331,23 @@ public class QueryLogin extends AQuery {
             botLogin.setLgusername(lgusername);
             botLogin.setResult(result);
             result.setResponse(jsonLogin.toString());
-            result.setValidMessage(String.format("%s: %d, %s: %s",LOGIN_USER_ID,lguserid,LOGIN_USER_NAME,lgusername));
+            result.setValidMessage(String.format("%s: %d, %s: %s", LOGIN_USER_ID, lguserid, LOGIN_USER_NAME, lgusername));
         }
 
-        result.setResponse(jsonLogin.toString());
+        //--controllo finale tramite una query GET coi cookies che controlla assert=bot
+        if (loginValido) {
+            //--controlla l'esistenza e la validità del collegamento come bot
+//            result=checkBot(result);
+            queryAssert = queryAssert != null ? queryAssert : appContext.getBean(QueryAssert.class);
+            queryAssert.botLogin = botLogin;
+
+            assertResult = queryAssert.urlRequest();
+            if (assertResult.isErrato()) {
+                result = assertResult;
+            }
+        }
+
         return result;
     }
-
-
-    public boolean isLoginValido() {
-        return loginValido;
-    }
-
-    public long getLguserid() {
-        return lguserid;
-    }
-
-    public String getLgusername() {
-        return lgusername;
-    }
-
-    public String getStatus() {
-        return loginValido ? JSON_SUCCESS : JSON_ERROR;
-    }
-
 
 }

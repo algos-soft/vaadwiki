@@ -1,11 +1,13 @@
 package it.algos.vaadwiki.wiki.query;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wiki.*;
 import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 
 import java.io.*;
 import java.net.*;
@@ -56,14 +58,18 @@ public abstract class AQuery {
      */
     protected static final String TAG_REQUEST_ASSERT = TAG_QUERY + "&assert=bot";
 
-
     /**
      * Tag per la costruzione del 'urlDomain' completo per la ricerca dei pageIds di una categoria <br>
      */
-    protected static final String TAG_REQUEST_CAT = TAG_QUERY + "&cmprop=ids&list=categorymembers&cmtitle=Categoria:";
+    protected static final String TAG_REQUEST_CAT = TAG_QUERY + "&list=categorymembers&cmtitle=Categoria:";
 
-
-
+    /**
+     * Istanza di una interfaccia <br>
+     * Iniettata automaticamente dal framework SpringBoot con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ApplicationContext appContext;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -105,6 +111,45 @@ public abstract class AQuery {
     @Autowired
     public BotLogin botLogin;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ArrayService array;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public DateService date;
+
+    public QueryAssert queryAssert;
+
+
+    /**
+     * Controlla l'esistenza e la validità del collegamento come bot <br>
+     *
+     * @param result di informazioni eventualmente da modificare
+     *
+     * @return true se la connessione è valida
+     */
+    protected AIResult checkBot(AIResult result)  {
+        AIResult assertResult;
+
+//        queryAssert = queryAssert != null ? queryAssert : appContext.getBean(QueryAssert.class);
+//        assertResult = queryAssert.urlRequest();
+//        if (assertResult.isErrato()) {
+//            result.setValido(false);
+//            result.setErrorCode(assertResult.getErrorCode());
+//            result.setErrorMessage(assertResult.getErrorMessage());
+//        }
+
+        return result;
+    }
 
     /**
      * Crea la connessione base (GET) <br>
@@ -190,7 +235,6 @@ public abstract class AQuery {
     }
 
 
-
     /**
      * Invia la request (GET oppure POST) <br>
      *
@@ -234,7 +278,7 @@ public abstract class AQuery {
      * @param urlConn connessione
      */
     protected Map downlodCookies(URLConnection urlConn) {
-       Map cookiesMap = new HashMap();
+        Map cookiesMap = new HashMap();
         String headerName;
         String cookie;
         String name;
@@ -255,29 +299,5 @@ public abstract class AQuery {
         return cookiesMap;
     }
 
-
-    //    /**
-//     * Request principale <br>
-//     * <p>
-//     * La stringa urlDomain per la request viene controllata ed elaborata <br>
-//     * Crea la connessione base di tipo GET
-//     * Alcune request (non tutte) hanno bisogno di inviare i cookies nella request <br>
-//     * In alcune request (non tutte) si aggiunge anche il POST <br>
-//     * Alcune request (non tutte) scaricano e memorizzano i cookies ricevuti nella connessione <br>
-//     * Invia la request con (eventuale) testo POST e con i cookies <br>
-//     * <p>
-//     * Risposta in formato testo JSON <br>
-//     * Recupera i cookies allegati alla risposta e li memorizza in WikiLogin per poterli usare in query successive <br>
-//     * La response viene sempre elaborata per estrarre le informazioni richieste <br>
-//     *
-//     * @param urlDomain indirizzo web usato nella urlRequest
-//     */
-//    public String urlRequest(String urlDomainGrezzo) {
-//        String urlResponse = VUOTA;
-//        URLConnection urlConn;
-//        String urlDomain;
-//
-//        return "";
-//    }
 
 }

@@ -282,6 +282,10 @@ public abstract class FlowCost {
 
     public static final String KEY_JSON_QUERY = "query";
 
+    public static final String KEY_JSON_CONTINUE = "continue";
+
+    public static final String KEY_JSON_CONTINUE_CM = "cmcontinue";
+
     public static final String KEY_JSON_PAGES = "pages";
 
     public static final String KEY_JSON_PAGE_ID = "pageid";
@@ -395,6 +399,7 @@ public abstract class FlowCost {
     public static final String JSON_COOKIES = "cookies";
 
     public static final String JSON_BOT_LOGIN = "botLogin";
+
     public static final String JSON_NOT_QUERY_LOGIN = "notQueryLogin";
 
     public static final String JSON_NO_BOT = "assertbotfailed";

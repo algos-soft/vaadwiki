@@ -31,16 +31,9 @@ public class QueryAssert extends AQuery {
 
     private boolean valida = false;
 
-//    private String urlResponse = VUOTA;
-
-    //    /**
-    //     * La request effettiva <br>
-    //     *
-    //     * @return wrapper di informazioni
-    //     */
-    //    public AIResult urlRequest() {
-    //        return urlRequest(botLogin != null ? botLogin.getCookies() : null);
-    //    }
+    public QueryAssert() {
+        super();
+    }
 
     /**
      * La request unica <br>
@@ -100,7 +93,7 @@ public class QueryAssert extends AQuery {
      * Viene convertito in lgtoken necessario per la successiva secondaryRequestPost <br>
      */
     protected AIResult elaboraResponse(final AIResult result, final String rispostaDellaQuery) {
-         valida = false;
+        valida = false;
         JSONObject jsonAll;
         JSONObject jsonError;
         String jsonCode;
@@ -116,13 +109,6 @@ public class QueryAssert extends AQuery {
                 result.setResponse(jsonAll.toJSONString());
                 return result;
             }
-            else {
-                int a=87;
-            }
-
-
-//            urlResponse = jsonAll.toJSONString();
-            return result;
         }
 
         if (jsonAll != null && jsonAll.get(JSON_ERROR) != null) {
@@ -138,15 +124,8 @@ public class QueryAssert extends AQuery {
         return result;
     }
 
-//    public boolean isValida() {
-//        return valida;
-//    }
-//
-//    public String getUrlResponse() {
-//        return urlResponse;
-//    }
-        public boolean isValida() {
-            return valida;
-        }
+    public boolean isValida() {
+        return valida;
+    }
 
 }

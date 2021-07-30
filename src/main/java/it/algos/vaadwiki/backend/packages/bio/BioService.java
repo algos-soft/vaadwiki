@@ -12,6 +12,7 @@ import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
+import it.algos.vaadwiki.wiki.query.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -256,7 +257,7 @@ public class BioService extends AService {
 
         //--Parte dalla lista di tutti i (long) pageIds della categoria
         //--Deve riuscire a gestire una lista di circa 430.000 long per la category BioBot
-        listaPageIdsCategoria = wikiBot.getLongCat(catTitle);
+        listaPageIdsCategoria = appContext.getBean(QueryCat.class).urlRequest(catTitle).getLista();
 
         //--Usa la lista di pageIds e si recupera una lista (stessa lunghezza) di miniWrap
         //--Deve riuscire a gestire una lista di circa 430.000 miniWrap per la category BioBot

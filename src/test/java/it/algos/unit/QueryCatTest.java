@@ -2,7 +2,10 @@ package it.algos.unit;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadwiki.backend.login.*;
+import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.query.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
@@ -54,6 +57,9 @@ public class QueryCatTest extends ATest {
     @InjectMocks
     public BotLogin botLogin;
 
+    @InjectMocks
+    public AWikiBotService wikiBot;
+
     /**
      * Classe principale di riferimento <br>
      */
@@ -62,6 +68,9 @@ public class QueryCatTest extends ATest {
 
     @InjectMocks
     private QueryLogin queryLogin;
+
+    @InjectMocks
+    private QueryAssert queryAssert;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -78,19 +87,33 @@ public class QueryCatTest extends ATest {
         istanza.text = text;
         istanza.logger = logger;
         istanza.wikiApi = wikiApi;
+        istanza.wikiBot = wikiBot;
+        istanza.date = date;
+        istanza.appContext = appContext;
+        wikiBot.text = text;
+        wikiBot.web = web;
+        wikiBot.jSonService = jSonService;
+        jSonService.text = text;
 
         MockitoAnnotations.initMocks(queryLogin);
         Assertions.assertNotNull(queryLogin);
+        queryLogin.wikiApi = wikiApi;
         queryLogin.text = text;
+        queryLogin.logger = logger;
+        queryLogin.appContext = appContext;
 
         MockitoAnnotations.initMocks(botLogin);
         Assertions.assertNotNull(botLogin);
         istanza.botLogin = botLogin;
         queryLogin.botLogin = botLogin;
 
+        MockitoAnnotations.initMocks(queryAssert);
+        Assertions.assertNotNull(queryAssert);
+        queryAssert.botLogin = botLogin;
+        queryLogin.queryAssert = queryAssert;
+        istanza.queryAssert = queryAssert;
+
         assertTrue(queryLogin.urlRequest().isValido());
-        assertTrue(queryLogin.isLoginValido());
-        assertEquals(JSON_SUCCESS, queryLogin.getStatus());
     }
 
 
@@ -106,50 +129,88 @@ public class QueryCatTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("Primo test")
+    @DisplayName("1 - Cerca di leggere (come bot) una lista di pageid di una categoria wiki inesistente")
     void urlRequest() {
-        System.out.println("1 - Legge (come bot) una lista di pageid di una categoria wiki");
+        System.out.println("1 - Cerca di leggere (come bot) una lista di pageid di una categoria wiki inesistente");
 
         sorgente = CAT_INESISTENTE;
-        previstoIntero = 0;
-        ottenutoArrayLong = istanza.urlRequest(sorgente).getLista();
-        ottenuto = istanza.getUrlResponse();
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria '%s' non esiste", sorgente));
-        System.out.println(String.format("UrlResponse: %s", istanza.getUrlResponse()));
+        previsto = "Inesistente";
+        ottenutoRisultato = istanza.urlRequest(sorgente);
+        assertFalse(ottenutoRisultato.isValido());
+        assertEquals(previsto, ottenutoRisultato.getErrorCode());
+        printRisultato(ottenutoRisultato);
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - Cerca di leggere (senza bot) una lista di pageid di una categoria wiki")
+    void urlRequest2() {
+        System.out.println("2 - Cerca di leggere (senza bot) una lista di pageid di una categoria wiki");
+
+        //--tarocco -provvisoriamente- la mappa di botLogin
+        Map cookiesValidi = botLogin.getCookies();
+        Map mappaNewTaroccata = new HashMap();
+        mappaNewTaroccata.put("key", "value");
+        AIResult result = AResult.errato();
+        result.setMappa(mappaNewTaroccata);
+        botLogin.setResult(result);
 
         sorgente = CAT_1167;
-        previstoIntero = 6;
-        ottenutoArrayLong = istanza.urlRequest(sorgente).getLista();
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati in %s", sorgente, ottenutoArrayLong.size(), getTime()));
-        System.out.println(String.format("UrlResponse: %s", istanza.getUrlResponse()));
-        print10(ottenutoArrayLong);
+        previsto = JSON_NO_BOT;
+        ottenutoRisultato = istanza.urlRequest(sorgente);
+        assertFalse(ottenutoRisultato.isValido());
+        assertEquals(previsto, ottenutoRisultato.getErrorCode());
+        printRisultato(ottenutoRisultato);
+
+        //--ripristino la mappa di botLogin
+        botLogin.getResult().setMappa(cookiesValidi);
+    }
+
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - Legge (come bot) una lista corta di pageid di una categoria wiki")
+    void urlRequest3() {
+        System.out.println("3 - Legge (come bot) una lista corta di pageid di una categoria wiki");
 
         sorgente = CAT_1435;
-        previstoIntero = TOT_1435;
-        ottenutoArrayLong = istanza.urlRequest(sorgente).getLista();
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati in %s", sorgente, ottenutoArrayLong.size(), getTime()));
-        System.out.println(String.format("UrlResponse: %s", istanza.getUrlResponse()));
-        print10(ottenutoArrayLong);
+        previsto = JSON_SUCCESS;
+        ottenutoRisultato = istanza.urlRequest(sorgente);
+        assertTrue(ottenutoRisultato.isValido());
+        assertEquals(previsto, ottenutoRisultato.getCodeMessage());
+        printRisultato(ottenutoRisultato);
+        System.out.println(String.format("Risultato ottenuto in esattamente %s", date.deltaTextEsatto(inizio)));
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("4 - Legge (come bot) una lista media di pageid di una categoria wiki")
+    void urlRequest4() {
+        System.out.println("4 - Legge (come bot) una lista media di pageid di una categoria wiki");
 
         sorgente = CAT_1935;
-        previstoIntero = TOT_1935;
-        ottenutoArrayLong = istanza.urlRequest(sorgente).getLista();
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria '%s' contiene %s pageIds recuperati in %s", sorgente, text.format(ottenutoArrayLong.size()), date.deltaText(inizio)));
-        System.out.println(String.format("UrlResponse: %s", istanza.getUrlResponse()));
-        print10(ottenutoArrayLong);
+        previsto = JSON_SUCCESS;
+        ottenutoRisultato = istanza.urlRequest(sorgente);
+        assertTrue(ottenutoRisultato.isValido());
+        assertEquals(previsto, ottenutoRisultato.getCodeMessage());
+        printRisultato(ottenutoRisultato);
+        System.out.println(String.format("Risultato ottenuto in esattamente %s", date.deltaTextEsatto(inizio)));
+    }
 
+//    @Test
+    @Order(5)
+    @DisplayName("5 - Legge (come bot) una lista lunga di pageid di una categoria wiki")
+    void urlRequest5() {
+        System.out.println("5 - Legge (come bot) una lista lunga di pageid di una categoria wiki");
+
+        sorgente = CATEGORIA_BIO;
+        previsto = JSON_SUCCESS;
+        ottenutoRisultato = istanza.urlRequest(sorgente);
+        assertTrue(ottenutoRisultato.isValido());
+        assertEquals(previsto, ottenutoRisultato.getCodeMessage());
+        printRisultato(ottenutoRisultato);
+        System.out.println(String.format("Risultato ottenuto in esattamente %s", date.deltaTextEsatto(inizio)));
     }
 
     void print10(List<Long> lista) {

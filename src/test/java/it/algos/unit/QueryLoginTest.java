@@ -60,6 +60,7 @@ public class QueryLoginTest extends ATest {
         istanza.wikiApi = wikiApi;
         istanza.text = text;
         istanza.logger = logger;
+        istanza.appContext = appContext;
 
         MockitoAnnotations.initMocks(botLogin);
         Assertions.assertNotNull(botLogin);
@@ -68,6 +69,7 @@ public class QueryLoginTest extends ATest {
         MockitoAnnotations.initMocks(queryAssert);
         Assertions.assertNotNull(queryAssert);
         queryAssert.botLogin = botLogin;
+        istanza.queryAssert = queryAssert;
     }
 
 
@@ -87,12 +89,19 @@ public class QueryLoginTest extends ATest {
         istanza.text = text;
         istanza.logger = logger;
         istanza.botLogin = botLogin;
+        istanza.appContext = appContext;
+        istanza.queryAssert = queryAssert;
 
         MockitoAnnotations.initMocks(botLogin);
         Assertions.assertNotNull(botLogin);
         istanza.botLogin = botLogin;
         queryAssert.botLogin = botLogin;
         botLogin.setResult(null);
+
+        MockitoAnnotations.initMocks(queryAssert);
+        Assertions.assertNotNull(queryAssert);
+        queryAssert.botLogin = botLogin;
+        istanza.queryAssert = queryAssert;
     }
 
     @Test
@@ -158,6 +167,7 @@ public class QueryLoginTest extends ATest {
     @DisplayName("5 - urlRequest di queryAssert (errata)")
     void urlRequest5() {
         System.out.println("5 - La mappa di botLogin non è valida/corretta");
+
         //--tarocco la mappa di botLogin
         Map mappa = new HashMap();
         mappa.put("key", "value");
