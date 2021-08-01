@@ -52,6 +52,14 @@ public @interface AIField {
      *
      * @return the class
      */
+    Class<?> serviceClazz() default Object.class;
+
+    /**
+     * (Optional) Classe della property.
+     * Utilizzato nei fields calcolati (ed altro).
+     *
+     * @return the class
+     */
     Class<?> logicClazz() default Object.class;
 
     /**

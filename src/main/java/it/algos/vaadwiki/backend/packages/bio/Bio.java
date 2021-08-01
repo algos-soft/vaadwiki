@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
@@ -55,7 +56,7 @@ import java.time.*;
 @AIEntity(recordName = "Bio", keyPropertyName = "pageId")
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "lastMongo")
 @AIList(fields = "pageId,wikiTitle,valido,lastServer,lastMongo", usaRowIndex = true)
-@AIForm(fields = "pageId,wikiTitle,valido,lastServer,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
+@AIForm(fields = "pageId,wikiTitle,valido,lastServer,lastMongo,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 
 
@@ -136,6 +137,16 @@ public class Bio extends AEntity {
     @AIField(type = AETypeField.text, required = false, widthEM = WIDTHEM)
     @AIColumn(widthEM = WIDTHEM)
     public String cognome;
+
+
+    /**
+     * giorno di nascita (facoltativo, non unica)
+     * riferimento dinamico CON @DBRef
+     */
+    @DBRef
+    @AIField(type = AETypeField.combo, serviceClazz = GiornoService.class, help = "Giorno nato")
+    @AIColumn(header = "giornoNascita", widthEM = 8)
+    public Giorno giornoNato;
 
 
     /**

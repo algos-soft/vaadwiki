@@ -138,6 +138,7 @@ public class QueryCatTest extends ATest {
         ottenutoRisultato = istanza.urlRequest(sorgente);
         assertFalse(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getErrorCode());
+        assertEquals(VUOTA, ottenutoRisultato.getCodeMessage());
         printRisultato(ottenutoRisultato);
     }
 

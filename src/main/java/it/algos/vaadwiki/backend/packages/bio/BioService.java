@@ -1,6 +1,5 @@
 package it.algos.vaadwiki.backend.packages.bio;
 
-import com.vaadin.flow.component.notification.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -113,6 +112,19 @@ public class BioService extends AService {
     @Override
     public Bio newEntity() {
         return newEntity(0, VUOTA, VUOTA, null);
+    }
+
+    /**
+     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
+     * Usa il @Builder di Lombok <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     *
+     * @param wrap per i dati base essenziali di una biografia
+     *
+     * @return la nuova entityBean appena creata (non salvata)
+     */
+    public Bio newEntity(final WrapBio wrap) {
+        return newEntity(wrap.getPageid(), wrap.getTitle(), wrap.getTemplBio(), wrap.getTime());
     }
 
     /**
@@ -240,10 +252,11 @@ public class BioService extends AService {
         String catTitle = CATEGORIA_TEST_TRE;
         //@todo Categoria provvisorio
 
-        List<Long> listaPageIdsCategoria = null;
+        List<Long> listaPageIds = null;
         List<MiniWrap> listaMiniWrap = null;
         List<Long> listaPageIdsDaLeggere = null;
         List<WrapPage> listaWrapPage = null;
+        List<WrapBio> listaWrapBio = null;
 
         //--Controlla quante pagine ci sono nella categoria
         //--Si collega come anonymous; non serve essere loggati <br>
@@ -257,11 +270,14 @@ public class BioService extends AService {
 
         //--Parte dalla lista di tutti i (long) pageIds della categoria
         //--Deve riuscire a gestire una lista di circa 430.000 long per la category BioBot
-        listaPageIdsCategoria = appContext.getBean(QueryCat.class).urlRequest(catTitle).getLista();
+        //--Tempo medio previsto = circa 1 minuto (come bot la categoria legge 5.000 pagine per volta)
+        listaPageIds = appContext.getBean(QueryCat.class).urlRequest(catTitle).getLista();
 
-        //--Usa la lista di pageIds e si recupera una lista (stessa lunghezza) di miniWrap
+        //--Usa la lista di pageIds e recupera una lista (stessa lunghezza) di miniWrap
         //--Deve riuscire a gestire una lista di circa 430.000 miniWrap per la category BioBot
-        listaMiniWrap = wikiBot.getMiniWrap(catTitle, listaPageIdsCategoria);
+        //--Tempo medio previsto = circa 20 minuti  (come bot la query legge 500 pagine per volta
+        //        listaMiniWrap = wikiBot.getMiniWrap(catTitle, listaPageIdsCategoria);
+        listaMiniWrap = appContext.getBean(QueryTimestamp.class).urlRequest(listaPageIds).getLista();
 
         //--Elabora la lista di miniWrap e costruisce una lista di pageIds da leggere
         //--Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb
@@ -271,13 +287,37 @@ public class BioService extends AService {
         listaPageIdsDaLeggere = wikiBot.elaboraMiniWrap(listaMiniWrap);
 
         //--meglio suddividere in blocchi più piccoli
-        listaWrapPage = wikiBot.leggePages(listaPageIdsDaLeggere);
-        if (listaWrapPage != null && listaWrapPage.size() > 0) {
-            for (WrapPage wrap : listaWrapPage) {
-                creaBio(wrap);
-            }
+        //        listaWrapPage = wikiBot.leggePages(listaPageIdsDaLeggere);
+        //        if (listaWrapPage != null && listaWrapPage.size() > 0) {
+        //            for (WrapPage wrap : listaWrapPage) {
+        //                creaBio(wrap);
+        //            }
+        //        }
+
+        //--recupera i dati di tutte le biografie da creare/modificare
+        listaWrapBio = appContext.getBean(QueryPages.class).urlRequest(listaPageIdsDaLeggere).getLista();
+
+        //--crea/aggiorna le biografie
+        creaListaBio(listaWrapBio);
+    }
+
+    /**
+     * Crea/aggiorna una serie di entities <br>
+     */
+    public void creaListaBio(List<WrapBio> listaWrapBio) {
+        for (WrapBio wrap : listaWrapBio) {
+            creaBio(wrap);
         }
     }
+
+    /**
+     * Crea/aggiorna una singola entity <br>
+     */
+    public void creaBio(WrapBio wrap) {
+        Bio bio = newEntity(wrap);
+        save(bio, AEOperation.newEditNoLog);
+    }
+
 
     /**
      * Scarica una singola biografia <br>

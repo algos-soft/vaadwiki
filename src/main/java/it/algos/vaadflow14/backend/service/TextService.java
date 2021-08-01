@@ -1580,4 +1580,18 @@ public class TextService extends AbstractService {
         return levaDopo(entrata, CIRCA);
     }
 
+    /**
+     * Elimina gli spazi multipli eventualmente presenti <br>
+     * Tutti gli spazi multipli vengono ridotti ad uno spazio singolo <br>
+     *
+     * @param line in ingresso
+     *
+     * @return stringa elaborata con tutti gli spazi ridotti ad 1 ed eliminati spazi in testa ed in coda
+     */
+    public String fixOneSpace(String line) {
+        String regexSpazioVariabile = "\\s+"; // una o più occorrenze
+
+        return line.replaceAll(regexSpazioVariabile, SPAZIO).trim();
+    }
+
 }

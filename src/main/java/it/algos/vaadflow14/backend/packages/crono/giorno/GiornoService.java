@@ -119,6 +119,34 @@ public class GiornoService extends AService {
         return (Giorno) fixKey(newEntityBean);
     }
 
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Giorno findById(final String keyID) {
+        return (Giorno) super.findById(keyID);
+    }
+
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Giorno findByKey(final String keyValue) {
+        return (Giorno) super.findByKey(keyValue);
+    }
 
     private AIResult checkMese() {
         String packageName = Giorno.class.getSimpleName().toLowerCase();

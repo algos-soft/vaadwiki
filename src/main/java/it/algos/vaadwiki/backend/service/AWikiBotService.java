@@ -59,7 +59,7 @@ public class AWikiBotService extends AbstractService {
 
     public static final String WIKI_QUERY_PAGEIDS = WIKI + "&rvslots=main&prop=revisions&rvprop=content|ids|timestamp&pageids=";
 
-    public static final String WIKI_QUERY_TIMESTAMP = WIKI + "&prop=revisions&rvprop=timestamp&limit=" + LIMIT_USER + "&pageids=";
+    public static final String WIKI_QUERY_TIMESTAMP = WIKI + "&prop=revisions&rvprop=timestamp&pageids=";
 
     public static final String WIKI_QUERY_CATEGORY = WIKI + "&list=categorymembers&cmtitle=" + CATEGORIA;
 

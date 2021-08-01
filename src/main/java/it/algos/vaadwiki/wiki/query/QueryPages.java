@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import static it.algos.vaadwiki.backend.service.AWikiBotService.*;
 import it.algos.vaadwiki.wiki.*;
@@ -18,21 +19,12 @@ import java.util.*;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: mer, 28-lug-2021
- * Time: 21:29
- * Query per recuperare i timestamp da una serie di pageIds <br>
- * È di tipo GET <br>
- * Necessita dei cookies, recuperati da BotLogin (singleton) <br>
- * Restituisce una lista di MiniWrap con 'pageid' e 'lastModifica' <br>
- * <p>
- * Riceve una lista di pageIds ed esegue una serie di request ognuna col valore massimo di elementi ammissibile per le API di MediWiki <br>
- * Accumula i risultati <br>
- * La query restituisce SOLO MiniWrap <br>
+ * Date: ven, 30-lug-2021
+ * Time: 19:52
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class QueryTimestamp extends AQuery {
-
+public class QueryPages extends AQuery {
 
     /**
      * Request principale <br>
@@ -42,7 +34,7 @@ public class QueryTimestamp extends AQuery {
      */
     public AIResult urlRequest(List<Long> listaPageids) {
         AIResult result = AResult.valido();
-        String urlDomain = WIKI_QUERY_TIMESTAMP + listaPageids.subList(0, Math.min(10, listaPageids.size()));
+        String urlDomain = WIKI_QUERY_PAGEIDS + listaPageids.subList(0, Math.min(10, listaPageids.size()));
         AIResult assertResult;
         String strisciaIds;
         int totPageIds = listaPageids.size();
@@ -78,7 +70,7 @@ public class QueryTimestamp extends AQuery {
      */
     public AIResult request(AIResult result, final String pageIds) {
         String urlDomain;
-        urlDomain = WIKI_QUERY_TIMESTAMP + pageIds + WIKI_QUERY_BOT;
+        urlDomain = WIKI_QUERY_PAGEIDS + pageIds + WIKI_QUERY_BOT;
         String urlResponse;
         URLConnection urlConn;
         String ERROR_TOO_LONG = "java.io.IOException: Server returned HTTP response code: 414";
@@ -108,14 +100,15 @@ public class QueryTimestamp extends AQuery {
      * Viene convertito in lgtoken necessario per la successiva secondaryRequestPost <br>
      */
     protected AIResult elaboraResponse(AIResult result, final String rispostaDellaQuery) {
-        List<MiniWrap> listaNew = new ArrayList<>();
-        List<MiniWrap> listaOld;
+        List<WrapBio> listaNew = new ArrayList<>();
+        List<WrapBio> listaOld;
         boolean valida = false;
         JSONObject jsonAll;
         JSONObject jsonError;
         JSONObject jsonQuery;
         JSONArray jsonPages = null;
-        MiniWrap wrap;
+        WrapBio wrap = null;
+        int pagesNonValide = 0;
 
         jsonAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
 
@@ -141,13 +134,19 @@ public class QueryTimestamp extends AQuery {
         if (jsonPages != null) {
             if (jsonPages.size() > 0) {
                 for (Object obj : jsonPages) {
-                    wrap = creaWrap((JSONObject) obj);
+                    wrap = creaWrapBio((JSONObject) obj);
                     if (wrap != null) {
-                        listaNew.add(wrap);
+                        if (wrap != null && wrap.isValida()) {
+                            listaNew.add(wrap);
+                        }
+                        else {
+                            pagesNonValide++;
+                        }
                     }
                 }
+                result.setValue(result.getValue() + pagesNonValide);
                 result.setCodeMessage(JSON_SUCCESS);
-                listaOld = (List<MiniWrap>) result.getLista();
+                listaOld = (List<WrapBio>) result.getLista();
                 if (listaOld != null) {
                     listaOld.addAll(listaNew);
                 }
@@ -166,20 +165,51 @@ public class QueryTimestamp extends AQuery {
         return result;
     }
 
-    public MiniWrap creaWrap(final JSONObject jsonPage) {
-        long pageid;
-        String stringTimestamp;
 
-        if (jsonPage.get(KEY_JSON_MISSING) != null) {
-            return null;
-        }
+    private WrapBio creaWrapBio(final JSONObject jsonPage) {
+        long pageid;
+        String title;
+        String stringTimestamp;
+        String content;
+        String tmplBio;
+
+        title = (String) jsonPage.get(KEY_JSON_TITLE);
 
         pageid = (long) jsonPage.get(KEY_JSON_PAGE_ID);
+        if (jsonPage.get(KEY_JSON_MISSING) != null && (boolean) jsonPage.get(KEY_JSON_MISSING)) {
+            return new WrapBio(pageid, title, AETypePage.nonEsiste);
+        }
+
         JSONArray jsonRevisions = (JSONArray) jsonPage.get(KEY_JSON_REVISIONS);
         JSONObject jsonRevZero = (JSONObject) jsonRevisions.get(0);
         stringTimestamp = (String) jsonRevZero.get(KEY_JSON_TIMESTAMP);
+        JSONObject jsonSlots = (JSONObject) jsonRevZero.get(KEY_JSON_SLOTS);
+        JSONObject jsonMain = (JSONObject) jsonSlots.get(KEY_JSON_MAIN);
+        content = (String) jsonMain.get(KEY_JSON_CONTENT);
 
-        return new MiniWrap(pageid, stringTimestamp);
+        //--la pagina esiste ma il content no
+        if (text.isEmpty(content)) {
+            return new WrapBio(pageid, title, VUOTA, stringTimestamp, AETypePage.testoVuoto);
+        }
+
+        //--contenuto inizia col tag della disambigua
+        if (content.startsWith(TAG_DISAMBIGUA_UNO) || content.startsWith(TAG_DISAMBIGUA_DUE)) {
+            return new WrapBio(title, AETypePage.disambigua);
+        }
+
+        //--contenuto inizia col tag del redirect
+        if (content.startsWith(TAG_REDIRECT_UNO) || content.startsWith(TAG_REDIRECT_DUE) || content.startsWith(TAG_REDIRECT_TRE) || content.startsWith(TAG_REDIRECT_QUATTRO)) {
+            return new WrapBio(title, AETypePage.redirect);
+        }
+
+        //--estrazione del template
+        tmplBio = wikiApi.estraeTmpl(content, "Bio");
+        if (text.isValid(tmplBio)) {
+            return new WrapBio(pageid, title, tmplBio, stringTimestamp, AETypePage.testoConTmpl);
+        }
+        else {
+            return new WrapBio(pageid, title, VUOTA, stringTimestamp, AETypePage.testoSenzaTmpl);
+        }
     }
 
 }
