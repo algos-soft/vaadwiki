@@ -3,7 +3,9 @@ package it.algos.vaadwiki.backend.boot;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadwiki.backend.packages.nome.Nome;
 import it.algos.vaadflow14.backend.boot.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.data.*;
 import it.algos.vaadwiki.backend.enumeration.*;
@@ -13,6 +15,7 @@ import it.algos.vaadwiki.backend.packages.genere.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
 import it.algos.vaadwiki.backend.packages.prenome.*;
 import it.algos.vaadwiki.backend.packages.professione.*;
+import it.algos.vaadwiki.backend.packages.wikiGiorno.*;
 import it.algos.vaadwiki.wiki.query.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -124,6 +127,8 @@ public class WikiBoot extends FlowBoot {
     @Override
     protected void fixMenuRoutes() {
         super.fixMenuRoutes();
+		FlowVar.menuRouteList.add(Nome.class);
+		FlowVar.menuRouteList.add(WikiGiornoLogicList.class);
         FlowVar.menuRouteList.add(Prenome.class);
         FlowVar.menuRouteList.add(Genere.class);
         FlowVar.menuRouteList.add(Professione.class);

@@ -32,8 +32,8 @@ public class BioUtility extends AbstractService {
 
 
     /**
-     * Estrae una mappa chiave/valore dal testo contenuto tutto in una riga
-     * Presuppone che la riga sia unica ed i parametri siano separati da pipe
+     * Estrae una mappa chiave/valore dal testo contenuto tutto in una riga <br>
+     * Presuppone che la riga sia unica ed i parametri siano separati da pipe <br>
      *
      * @param testo
      *
@@ -94,6 +94,10 @@ public class BioUtility extends AbstractService {
 
         if (!tmplBioServer.equals(VUOTA)) {
             continua = true;
+        }
+
+        if (tmplBioServer.startsWith(DOPPIE_GRAFFE_INI) && tmplBioServer.endsWith(DOPPIE_GRAFFE_END)) {
+            tmplBioServer = text.setNoDoppieGraffe(tmplBioServer);
         }
 
         if (continua) {

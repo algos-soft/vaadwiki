@@ -280,6 +280,11 @@ public abstract class LogicProperty extends VerticalLayout {
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
+    protected boolean usaBottoneElabora;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
     protected boolean usaBottoneExport;
 
     /**

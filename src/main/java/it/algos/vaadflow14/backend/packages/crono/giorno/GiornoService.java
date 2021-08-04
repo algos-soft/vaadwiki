@@ -148,6 +148,7 @@ public class GiornoService extends AService {
         return (Giorno) super.findByKey(keyValue);
     }
 
+
     private AIResult checkMese() {
         String packageName = Giorno.class.getSimpleName().toLowerCase();
         String collection = "mese";

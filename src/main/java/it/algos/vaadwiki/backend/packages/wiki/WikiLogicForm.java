@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.*;
  */
 public abstract class WikiLogicForm extends LogicForm {
 
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -42,7 +43,7 @@ public abstract class WikiLogicForm extends LogicForm {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public BioUtility bio;
+    public BioUtility bioUtility;
 
     /**
      * Costruttore con parametri <br>
@@ -96,6 +97,9 @@ public abstract class WikiLogicForm extends LogicForm {
 
         status = true;
         switch (azione) {
+            case elabora:
+                elabora();
+                break;
             case wikiPaginaView:
                 openWikiPage(AWikiApiService.API_VIEW);
                 break;
@@ -111,6 +115,13 @@ public abstract class WikiLogicForm extends LogicForm {
         }
 
         return status;
+    }
+
+    /**
+     * Elabora una singola biografia. <br>
+     * DEVE essere sovrascritto, SENZA invocare prima il metodo della superclasse <br>
+     */
+    protected void elabora() {
     }
 
     /**

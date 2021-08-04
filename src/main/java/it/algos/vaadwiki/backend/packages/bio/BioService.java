@@ -51,6 +51,7 @@ public class BioService extends AService {
     public static final String CATEGORIA_TEST = "Nati nel 1167";
 
     public static final String CATEGORIA_TEST_DUE = "Nati nel 1168";
+    public static final String CAT_1435 = "Nati nel 1435";
 
     public static final String CATEGORIA_TEST_TRE = "Nati nel 1935";
 
@@ -178,6 +179,23 @@ public class BioService extends AService {
     }
 
     /**
+     * Fetches all entities of the type <br>
+     * <p>
+     * Ordinate secondo l'annotation @AIView(sortProperty) della entityClazz <br>
+     * Ordinate secondo la property 'ordine', se esiste <br>
+     * Ordinate secondo la property 'code', se esiste <br>
+     * Ordinate secondo la property 'descrizione', se esiste <br>
+     * Altrimenti, ordinate in ordine di inserimento nel DB mongo <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
+     *
+     * @return all ordered entities
+     */
+    @Override
+    public List<Bio> fetch() {
+        return (List<Bio>)super.fetch();
+    }
+
+    /**
      * Retrieves an entity by its id.
      *
      * @param keyID must not be {@literal null}.
@@ -249,7 +267,7 @@ public class BioService extends AService {
      */
     public void ciclo() {
         //@todo Categoria provvisorio
-        String catTitle = CATEGORIA_TEST_TRE;
+        String catTitle = CAT_1435;
         //@todo Categoria provvisorio
 
         List<Long> listaPageIds = null;

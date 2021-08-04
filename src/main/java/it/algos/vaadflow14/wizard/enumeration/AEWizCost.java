@@ -303,7 +303,7 @@ public enum AEWizCost {
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirTestUnit(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root/test/UNIT (da %s)", nameVaadFlow14Upper.value),   "src/test/java/it/algos/unit", AECopyWiz.dirAddingOnly, VUOTA, "test"),
+    dirTestUnit(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root/test/UNIT (da %s)", nameVaadFlow14Upper.value), "src/test/java/it/algos/unit", AECopyWiz.dirAddingOnly, VUOTA, "test"),
 
     //==========================================================================
     // Valori calcolati automaticamente dal programma alla partenza del Wizard.
@@ -388,11 +388,11 @@ public enum AEWizCost {
             if (pathCurrentProjectRoot.valida) {
                 valueSystem = file.estraeDirectoryFinaleSenzaSlash(pathCurrentProjectRoot.get()).toLowerCase();
                 if (text.isValid(this.value)) {
-//                    if (!valueSystem.equals(this.value)) {
-//                        message = String.format("FlowVar.projectNameModulo=%s mentre il programma gira in %s", this.value, valueSystem);
-//                        logger.log(AETypeLog.wizard, message);
-//                        this.value = ERRORE;
-//                    }
+                    //                    if (!valueSystem.equals(this.value)) {
+                    //                        message = String.format("FlowVar.projectNameModulo=%s mentre il programma gira in %s", this.value, valueSystem);
+                    //                        logger.log(AETypeLog.wizard, message);
+                    //                        this.value = ERRORE;
+                    //                    }
                 }
                 else {
                     message = String.format("Il programma gira in %s ma manca il valore di FlowVar.projectNameModulo come controllo", valueSystem);
@@ -554,7 +554,7 @@ public enum AEWizCost {
         public void fixValue() {
             nameTargetPackagePunto.fixValue();
             if (nameTargetPackagePunto.valida) {
-                this.value = text.fixPuntoToSlash(nameTargetPackagePunto.get());
+                this.value = text.fixPuntoToSlash(nameTargetPackagePunto.get()).toLowerCase();
                 this.setValida(true);
             }
         }

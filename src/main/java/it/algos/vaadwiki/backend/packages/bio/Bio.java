@@ -6,8 +6,11 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.packages.attivita.*;
+import it.algos.vaadwiki.backend.packages.nazionalita.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.*;
@@ -55,8 +58,8 @@ import java.time.*;
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Bio", keyPropertyName = "pageId")
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "lastMongo")
-@AIList(fields = "pageId,wikiTitle,valido,lastServer,lastMongo", usaRowIndex = true)
-@AIForm(fields = "pageId,wikiTitle,valido,lastServer,lastMongo,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
+@AIList(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo", usaRowIndex = true)
+@AIForm(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 
 
@@ -144,10 +147,75 @@ public class Bio extends AEntity {
      * riferimento dinamico CON @DBRef
      */
     @DBRef
-    @AIField(type = AETypeField.combo, serviceClazz = GiornoService.class, help = "Giorno nato")
-    @AIColumn(header = "giornoNascita", widthEM = 8)
+    @AIField(type = AETypeField.combo, comboClazz = GiornoService.class, help = "Giorno nato")
+    @AIColumn(header = "Nato", widthEM = 8)
     public Giorno giornoNato;
 
+
+    /**
+     * anno di nascita (facoltativo, non unica)
+     * riferimento dinamico CON @DBRef
+     */
+    @DBRef
+    @AIField(type = AETypeField.combo, serviceClazz = AnnoService.class, help = "Anno nato")
+    @AIColumn(header = "Nato", widthEM = 8)
+    public Anno annoNato;
+
+    /**
+     * giorno di morte (facoltativo, non unica)
+     * riferimento dinamico CON @DBRef
+     */
+    @DBRef
+    @AIField(type = AETypeField.combo, comboClazz = GiornoService.class, help = "Giorno morto")
+    @AIColumn(header = "Morto", widthEM = 8)
+    public Giorno giornoMorto;
+
+    /**
+     * anno di norte (facoltativo, non unica)
+     * riferimento dinamico CON @DBRef
+     */
+    @DBRef
+    @AIField(type = AETypeField.combo, serviceClazz = AnnoService.class, help = "Anno morto")
+    @AIColumn(header = "Morto", widthEM = 8)
+    public Anno annoMorto;
+
+    /**
+     * attività principale (facoltativo, non unica)
+     * riferimento dinamico CON @DBRef
+     */
+    @DBRef
+    @AIField(type = AETypeField.combo, comboClazz = AttivitaService.class, help = "Attività")
+    @AIColumn(header = "attivita", widthEM = 8)
+    public Attivita attivita;
+
+    /**
+     * seconda attività (facoltativo, non unica)
+     * riferimento dinamico CON @DBRef
+     */
+    @DBRef
+    @AIField(type = AETypeField.combo, comboClazz = AttivitaService.class, help = "Attività2")
+    @AIColumn(header = "attivita2", widthEM = 8)
+    public Attivita attivita2;
+
+    /**
+     * terza attività (facoltativo, non unica)
+     * riferimento dinamico CON @DBRef
+     */
+    @DBRef
+    @AIField(type = AETypeField.combo, comboClazz = AttivitaService.class, help = "Attività3")
+    @AIColumn(header = "attivita3", widthEM = 8)
+    public Attivita attivita3;
+
+
+    /**
+     * nazionalità (facoltativo, non unica)
+     * riferimento dinamico CON @DBRef
+     */
+    @DBRef
+    @Field("naz")
+    @AIField(type = AETypeField.combo, comboClazz = NazionalitaService.class, help = "Nazionalità")
+    @AIColumn(header = "nazionalita", widthEM = 8)
+    public Nazionalita nazionalita;
 
     /**
      * @return a string representation of the object.

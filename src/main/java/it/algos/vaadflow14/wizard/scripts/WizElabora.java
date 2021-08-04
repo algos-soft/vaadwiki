@@ -273,14 +273,13 @@ public abstract class WizElabora implements WizRecipient {
         String oldText = VUOTA;
         String newText = VUOTA;
         String nomeFileTextSorgente = "Boot";
-        String tagOld = "import it.algos.vaadflow14.backend.application.FlowVar;";
-        String project = AEWizCost.nameCurrentProjectUpper.get();
+        String tagOld = "import it.algos.vaadflow14.backend.application.*;";
         String pack = AEWizCost.nameTargetPackagePunto.get();
         String clazz = AEWizCost.nameTargetFileUpper.get();
-        String packageName = AEWizCost.nameTargetFileUpper.get();
+        String packageName = AEWizCost.nameTargetPackagePunto.get().toLowerCase();
         String pathFileBoot = AEWizCost.pathTargetProjectBoot.get();
         pathFileBoot += AEWizCost.nameTargetProjectUpper.get() + nomeFileTextSorgente + JAVA_SUFFIX;
-        String tagNew = "import it.algos." + project + ".backend.packages." + pack + "." + clazz + ";";
+        String tagNew = "import it.algos." + AEWizCost.nameTargetProjectModulo.get() + ".backend.packages." + packageName + "." + clazz + ";";
         String pathEntity = AEWizCost.pathTargetPackageSlash.get() + text.primaMaiuscola(pack);
         String pathBreveEntity = file.findPathBreve(pathEntity, DIR_PACKAGES);
         String pathBreveBoot = file.findPathBreve(pathFileBoot, DIR_BACKEND);

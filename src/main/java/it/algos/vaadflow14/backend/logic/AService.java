@@ -35,7 +35,7 @@ public abstract class AService extends AbstractService implements AIService {
     /**
      * The Entity Class  (obbligatoria sempre e final)
      */
-    public final Class<? extends AEntity> entityClazz;
+    protected final Class<? extends AEntity> entityClazz;
 
 
     /**

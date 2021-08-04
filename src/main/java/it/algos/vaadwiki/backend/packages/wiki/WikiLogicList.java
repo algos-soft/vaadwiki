@@ -11,6 +11,8 @@ import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadwiki.backend.enumeration.*;
+import it.algos.vaadwiki.backend.packages.bio.*;
+import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.ui.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
@@ -42,6 +44,23 @@ public abstract class WikiLogicList extends LogicList {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     protected WikiService wikiService;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ElaboraService elaboraService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public BioService bioService;
 
 
     /**
@@ -126,6 +145,12 @@ public abstract class WikiLogicList extends LogicList {
 
     protected String anche;
 
+    protected boolean usaColonnaWiki;
+
+    protected boolean usaColonnaTest;
+
+    protected boolean usaColonnaUpload;
+
     /**
      * Costruttore con parametri <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
@@ -158,6 +183,10 @@ public abstract class WikiLogicList extends LogicList {
         this.usaBottoneUploadAll = true;
         this.usaBottoneUploadStatistiche = true;
         super.maxNumeroBottoniPrimaRiga = 3;
+
+        this.usaColonnaWiki = false;
+        this.usaColonnaTest = false;
+        this.usaColonnaUpload = false;
     }
 
     /**
@@ -270,23 +299,27 @@ public abstract class WikiLogicList extends LogicList {
         if (bodyPlaceHolder != null && grid != null) {
             realGrid = grid.getGrid();
 
-            renderer = new ComponentRenderer<>(this::createWikiButton);
-            colonna = realGrid.addColumn(renderer);
-            colonna.setHeader("Wiki");
-            colonna.setWidth(lar);
-            colonna.setFlexGrow(0);
-
-            renderer = new ComponentRenderer<>(this::createTestButton);
-            colonna = realGrid.addColumn(renderer);
-            colonna.setHeader("Test");
-            colonna.setWidth(lar);
-            colonna.setFlexGrow(0);
-
-            renderer = new ComponentRenderer<>(this::createUploadButton);
-            colonna = realGrid.addColumn(renderer);
-            colonna.setHeader("Upload");
-            colonna.setWidth(lar);
-            colonna.setFlexGrow(0);
+            if (usaColonnaWiki) {
+                renderer = new ComponentRenderer<>(this::createWikiButton);
+                colonna = realGrid.addColumn(renderer);
+                colonna.setHeader("Wiki");
+                colonna.setWidth(lar);
+                colonna.setFlexGrow(0);
+            }
+            if (usaColonnaTest) {
+                renderer = new ComponentRenderer<>(this::createTestButton);
+                colonna = realGrid.addColumn(renderer);
+                colonna.setHeader("Test");
+                colonna.setWidth(lar);
+                colonna.setFlexGrow(0);
+            }
+            if (usaColonnaUpload) {
+                renderer = new ComponentRenderer<>(this::createUploadButton);
+                colonna = realGrid.addColumn(renderer);
+                colonna.setHeader("Upload");
+                colonna.setWidth(lar);
+                colonna.setFlexGrow(0);
+            }
         }
     }
 
@@ -333,16 +366,15 @@ public abstract class WikiLogicList extends LogicList {
         boolean status = super.performAction(iAzione);
         AEWikiAction azione = iAzione instanceof AEWikiAction ? (AEWikiAction) iAzione : null;
 
-        if (status) {
-            return true;
-        }
-
         if (azione == null) {
-            return false;
+            return status;
         }
 
         status = true;
         switch (azione) {
+            case elabora:
+                elabora();
+                break;
             case modulo:
                 openWikiPage(wikiModuloTitle);
                 break;
@@ -358,6 +390,15 @@ public abstract class WikiLogicList extends LogicList {
         }
 
         return status;
+    }
+
+    /**
+     * Esegue un azione di elaborazione, specifica del programma/package in corso <br>
+     *
+     * @return true se l'azione è stata eseguita
+     */
+    public boolean elabora() {
+        return elaboraService.esegue(bioService.fetch());
     }
 
     /**

@@ -1580,6 +1580,7 @@ public class TextService extends AbstractService {
         return levaDopo(entrata, CIRCA);
     }
 
+
     /**
      * Elimina gli spazi multipli eventualmente presenti <br>
      * Tutti gli spazi multipli vengono ridotti ad uno spazio singolo <br>

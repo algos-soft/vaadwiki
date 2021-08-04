@@ -26,7 +26,7 @@ public enum AEWikiButton implements AIButton {
 
     update("Update", VaadinIcon.LIST, "error", AEWikiAction.update, true, "Update di una pagina", "cross"),
     modulo("Modulo", VaadinIcon.LIST, "secondary", AEWikiAction.modulo, true, "Modulo di Wikipedia", "cross"),
-    elabora("Elabora", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.elabora, true, "Elabora un documento", "cross"),
+    elabora("Elabora", VaadinIcon.REFRESH, "error", AEWikiAction.elabora, true, "Elabora un documento", "cross"),
     check("Check", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.elabora, true, "Controlla un documento", "cross"),
     test("Test", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.test, true, "Test di una funzionalità", "cross"),
     statistiche("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statistiche, true, "Elaborazione statistiche", "cross"),

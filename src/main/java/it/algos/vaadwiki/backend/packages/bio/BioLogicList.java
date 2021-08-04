@@ -2,16 +2,15 @@ package it.algos.vaadwiki.backend.packages.bio;
 
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.dialog.*;
-import com.vaadin.flow.component.notification.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadwiki.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
 
@@ -36,7 +35,7 @@ import org.springframework.beans.factory.annotation.*;
 @Route(value = "bio", layout = MainLayout.class)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.list, doc = AEWizDoc.inizioRevisione)
-public class BioLogicList extends LogicList {
+public class BioLogicList extends WikiLogicList {
 
     /**
      * versione della classe per la serializzazione
@@ -85,6 +84,13 @@ public class BioLogicList extends LogicList {
         super.fixPreferenze();
 
         super.usaBottoneDownload = true;
+        super.usaBottoneElabora = true;
+        super.usaBottoneModulo = false;
+        super.usaBottoneStatistiche = false;
+        super.usaBottoneUploadStatistiche = false;
+        super.usaBottoneUploadAll = false;
+        super.usaBottoneElabora = true;
+        super.maxNumeroBottoniPrimaRiga = 5;
     }
 
     /**

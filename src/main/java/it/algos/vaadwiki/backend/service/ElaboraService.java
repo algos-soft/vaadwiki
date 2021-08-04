@@ -1,12 +1,19 @@
 package it.algos.vaadwiki.backend.service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadwiki.backend.packages.attivita.*;
+import it.algos.vaadwiki.backend.packages.bio.*;
+import it.algos.vaadwiki.backend.packages.nazionalita.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
+
+import java.util.*;
 
 /**
  * Project vaadwiki
@@ -37,6 +44,140 @@ public class ElaboraService extends AbstractService {
     @Autowired
     public GiornoService giornoService;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AnnoService annoService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AttivitaService attivitaService;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public NazionalitaService nazionalitaService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public BioUtility bioUtility;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public BioService bioService;
+
+
+    /**
+     * Elabora le voci biografiche indicate <br>
+     */
+    public boolean esegue(List<Bio> listaBio) {
+        long inizio = System.currentTimeMillis();
+
+        if (listaBio != null && listaBio.size() > 0) {
+            for (Bio bio : listaBio) {
+                esegue(bio);
+                bioService.save(bio, null);
+            }
+        }
+
+        logger.info(AETypeLog.elabora, String.format("Sono state elaborate %s pagine in %s", text.format(listaBio.size()), date.deltaText(inizio)));
+        return true;
+    }
+
+    /**
+     * Elabora la singola voce biografica <br>
+     * Estrae dal tmplBioServer i singoli parametri previsti nella enumeration ParBio <br>
+     * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
+     * Quello che resta è affidabile ed utilizzabile per le liste <br>
+     */
+    public Bio esegue(Bio bio) {
+
+        //--Recupera i valori base di tutti i parametri dal tmplBioServer
+        LinkedHashMap<String, String> mappa = bioUtility.estraeMappa(bio.getTmplBio());
+
+        //--Elabora valori validi dei parametri significativi
+        //--Inserisce i valori nella entity Bio
+        if (mappa != null) {
+            try {
+                setValue(bio, mappa);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "esegue");
+            }
+        }
+
+        return bio;
+    }
+
+
+    //--Inserisce i valori nella entity Bio
+    public void setValue(Bio bio, HashMap<String, String> mappa) {
+        String value;
+
+        try {
+            if (bio != null) {
+
+                //                // patch per i luoghi di nascita e morte
+                //                // se è pieno il parametro link, lo usa
+                //                if (text.isValid(mappa.get(ParBio.luogoNascitaLink.getTag()))) {
+                //                    mappa.put(ParBio.luogoNascita.getTag(), mappa.get(ParBio.luogoNascitaLink.getTag()));
+                //                }// end of if cycle
+                //                if (text.isValid(mappa.get(ParBio.luogoMorteLink.getTag()))) {
+                //                    mappa.put(ParBio.luogoMorte.getTag(), mappa.get(ParBio.luogoMorteLink.getTag()));
+                //                }// end of if cycle
+
+                for (ParBio par : ParBio.values()) {
+                    value = mappa.get(par.getTag());
+                    if (value != null) {
+                        par.setValue(bio, value);
+                    }
+                }
+            }
+        } catch (Exception unErrore) {
+            logger.error(unErrore.toString());
+        }
+    }
+
+    /**
+     * Regola la property <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public String fixNomeValido(String testoGrezzo) {
+        return fixValoreGrezzo(testoGrezzo);
+    }
+
+
+    /**
+     * Regola la property <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public String fixCognomeValido(String testoGrezzo) {
+        return fixValoreGrezzo(testoGrezzo);
+    }
 
     /**
      * Regola la property <br>
@@ -66,6 +207,83 @@ public class ElaboraService extends AbstractService {
         return giorno;
     }
 
+    /**
+     * Regola la property <br>
+     * <p>
+     * Elimina il testo successivo a vari tag (fixPropertyBase) <br>
+     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese) <br>
+     * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese) <br>
+     * Elimina eventuali spazi vuoti (trim) <br>
+     * Controlla che il valore esista nella collezione Anno <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di anno valido
+     */
+    public Anno fixAnnoLink(String testoGrezzo) {
+        Anno anno = null;
+        String testoValido = "";
+
+        if (text.isValid(testoGrezzo)) {
+            testoValido = fixAnnoValido(testoGrezzo);
+        }
+
+        if (text.isValid(testoValido)) {
+            anno = annoService.findByKey(testoValido);
+        }
+
+        return anno;
+    }
+
+    /**
+     * Regola la property <br>
+     * <p>
+     * Elimina il testo successivo a vari tag (fixPropertyBase) <br>
+     * Controlla che il valore esista nella collezione Attività <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di attività valida
+     */
+    public Attivita fixAttivitaLink(String testoGrezzo) {
+        Attivita attivita = null;
+        String testoValido = VUOTA;
+
+        if (text.isValid(testoGrezzo)) {
+            testoValido = fixAttivitaValida(testoGrezzo);
+        }
+
+        if (text.isValid(testoValido)) {
+            attivita = attivitaService.findByKey(testoValido);
+        }
+
+        return attivita;
+    }
+
+    /**
+     * Regola la property <br>
+     * <p>
+     * Elimina il testo successivo a vari tag (fixPropertyBase) <br>
+     * Controlla che il valore esista nella collezione Nazionalità <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di nazionalità valida
+     */
+    public Nazionalita fixNazionalitaLink(String testoGrezzo) {
+        Nazionalita nazionalita = null;
+        String testoValido = VUOTA;
+
+        if (text.isValid(testoGrezzo)) {
+            testoValido = fixNazionalitaValida(testoGrezzo);
+        }
+
+        if (text.isValid(testoValido)) {
+            nazionalita = nazionalitaService.findByKey(testoValido);
+        }
+
+        return nazionalita;
+    }
 
     /**
      * Regola questa property <br>
@@ -75,9 +293,6 @@ public class ElaboraService extends AbstractService {
      * Elimina eventuali spazi vuoti DOPPI o TRIPLI (tipico della data tra il giorno ed il mese) <br>
      * Forza a minuscolo il primo carattere del mese <br>
      * Forza a ordinale un eventuale primo giorno del mese scritto come numero o come grado <br>
-     * A seconda del flag:
-     * CONTROLLA che il valore esista nella collezione Giorno <br>
-     * NON controlla che il valore esista nella collezione Giorno <br>
      *
      * @param testoGrezzo in entrata da elaborare
      *
@@ -153,6 +368,42 @@ public class ElaboraService extends AbstractService {
 
 
     /**
+     * Regola questa property <br>
+     * <p>
+     * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
+     * Elimina il testo se contiene la dicitura 'circa' (tipico dell'anno)
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testo/parametro regolato in uscita
+     */
+    public String fixAnnoValido(String testoGrezzo) {
+        String testoValido = fixValoreGrezzo(testoGrezzo);
+
+        //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
+        if (testoGrezzo.trim().equals("?")) {
+            return testoGrezzo;
+        }
+
+        if (text.isEmpty(testoGrezzo)) {
+            return VUOTA;
+        }
+
+        testoValido = text.levaDopo(testoValido, CIRCA);
+
+        if (text.isValid(testoValido)) {
+                if (annoService.isEsiste(testoValido)) {
+                    return testoValido.trim();
+                } else {
+                    return VUOTA;
+                }
+        } else {
+            return VUOTA;
+        }
+    }
+
+
+    /**
      * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
      * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
      * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
@@ -170,9 +421,30 @@ public class ElaboraService extends AbstractService {
 
         valoreValido = text.setNoQuadre(valoreValido);
 
+        //--elimina ref in coda
+        valoreValido = text.levaDopo(valoreValido, REF);
+
         return valoreValido.trim();
     }
 
+    /**
+     * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+     *
+     * @param valoreGrezzo in entrata da elaborare
+     *
+     * @return valore finale valido del parametro
+     */
+    public String fixMinuscola(String valoreGrezzo) {
+        String valoreValido = fixValoreGrezzo(valoreGrezzo);
+
+        if (text.isEmpty(valoreGrezzo)) {
+            return VUOTA;
+        }
+
+        valoreValido = text.primaMinuscola(valoreValido);
+
+        return valoreValido.trim();
+    }
 
     public String separaMese(String testoTuttoAttaccato) {
         String testoSeparato = testoTuttoAttaccato.trim();
@@ -208,6 +480,123 @@ public class ElaboraService extends AbstractService {
         }
 
         return testoSeparato;
+    }
+
+
+    /**
+     * Regola questa property <br>
+     * <p>
+     * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testo/parametro regolato in uscita
+     */
+    public String fixAttivitaValida(String testoGrezzo) {
+        String testoValido = fixValoreGrezzo(testoGrezzo).toLowerCase();
+        //        String tag1 = "ex ";
+        //        String tag2 = "ex-";
+
+        if (text.isEmpty(testoValido)) {
+            return VUOTA;
+        }
+
+        if (text.isValid(testoValido)) {
+            if (attivitaService.isEsiste(testoValido)) {
+                return testoValido.trim();
+            }
+            else {
+                return VUOTA;
+            }
+        }
+        else {
+            return VUOTA;
+        }
+    }
+
+    /**
+     * Regola questa property <br>
+     * <p>
+     * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testo/parametro regolato in uscita
+     */
+    public String fixNazionalitaValida(String testoGrezzo) {
+        String testoValido = fixValoreGrezzo(testoGrezzo).toLowerCase();
+
+        if (text.isEmpty(testoValido)) {
+            return VUOTA;
+        }
+
+        ////        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Nazionalita.class, "singolare", testoValido)) {
+        //        if (text.isValid(testoValido)) {
+        //            return testoValido.trim();
+        //        } else {
+        //            return VUOTA;
+        //        }// end of if/else cycle
+
+        if (text.isValid(testoValido)) {
+            if (nazionalitaService.isEsiste(testoValido)) {
+                return testoValido.trim();
+            }
+            else {
+                return VUOTA;
+            }
+        }
+        else {
+            return VUOTA;
+        }
+    }
+
+    /**
+     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+     * Elimina il punto interrogativo, se da solo <br>
+     * Mantiene il punto interrogativo, se da solo <br>
+     *
+     * @param testoOriginario in entrata da elaborare
+     *
+     * @return testoGrezzo troncato
+     */
+    public String troncaParteFinaleGiornoAnno(String testoOriginario) {
+        String testoGrezzo = text.levaDopoVirgola(testoOriginario);
+
+        return troncaParteFinalePuntoInterrogativo(testoGrezzo);
+    }
+
+
+    /**
+     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+     * Elimina il punto interrogativo, se da solo <br>
+     * Mantiene il punto interrogativo, se da solo <br>
+     *
+     * @param testoOriginario in entrata da elaborare
+     *
+     * @return testoGrezzo troncato
+     */
+    public String troncaParteFinalePuntoInterrogativo(String testoOriginario) {
+        String testoGrezzo = VUOTA;
+
+        if (text.isEmpty(testoOriginario)) {
+            return VUOTA;
+        }
+
+        testoGrezzo = testoOriginario.trim();
+        testoGrezzo = text.levaDopoRef(testoGrezzo);
+        testoGrezzo = text.levaDopoNote(testoGrezzo);
+        testoGrezzo = text.levaDopoGraffe(testoGrezzo);
+        //        testoGrezzo = text.levaDopoVirgola(testoGrezzo);
+        testoGrezzo = text.levaDopoCirca(testoGrezzo);
+        if (!testoGrezzo.equals("?")) {
+            testoGrezzo = text.levaDopoInterrogativo(testoGrezzo);
+        }
+
+        testoGrezzo = testoGrezzo.trim();
+
+        return testoGrezzo;
     }
 
 }

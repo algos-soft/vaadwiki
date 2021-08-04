@@ -13,7 +13,6 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.fields.*;
-import it.algos.vaadflow14.wiki.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadwiki.backend.service.*;
@@ -46,9 +45,15 @@ import java.util.*;
 @AIScript(sovraScrivibile = false, type = AETypeFile.form, doc = AEWizDoc.inizioRevisione)
 public class BioLogicForm extends WikiLogicForm {
 
-    private BioService bioService;
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ElaboraService elaboraService;
 
-    private BioUtility bioUtility;
+    private BioService bioService;
 
     /**
      * Costruttore con parametro <br>
@@ -63,7 +68,7 @@ public class BioLogicForm extends WikiLogicForm {
     public BioLogicForm(@Autowired @Qualifier("bioService") final AIService bioService, final BioUtility bioUtility) {
         super(bioService, Bio.class);
         this.bioService = (BioService) bioService;
-        this.bioUtility = bioUtility;
+        super.bioUtility = bioUtility;
     }// end of Vaadin/@Route constructor
 
 
@@ -83,7 +88,8 @@ public class BioLogicForm extends WikiLogicForm {
         super.fixPreferenze();
 
         super.usaBottoneDownload = true;
-        //        super.usaBottonePaginaWiki = true;
+        super.maxNumeroBottoniPrimaRiga = 5;
+        super.usaBottoneElabora = true;
         super.wikiPageTitle = ((Bio) entityBean).wikiTitle;
     }
 
@@ -103,6 +109,7 @@ public class BioLogicForm extends WikiLogicForm {
         addSpanBlu(String.format("%s di una singola scheda indicando l'%s wikiTitle", down, esatto));
         addSpanVerde(String.format("Normalmente il %s avviene in automatico in maniera %s", download, massiccia));
         addSpanVerde(String.format("Qui si può cercare la %s voce eventualmente sfuggita al ciclo di %s", singola, download));
+        addSpanVerde(String.format("Elabora la singola biografia"));
     }
 
     /**
@@ -117,6 +124,10 @@ public class BioLogicForm extends WikiLogicForm {
         super.creaAEBottoniTop();
 
         Button button;
+
+        if (usaBottoneElabora) {
+            putMappa(AEWikiButton.elabora);
+        }
 
         button = AEButton.wiki.get("View");
         button.addClickListener(event -> performAction(AEWikiAction.wikiPaginaView));
@@ -232,7 +243,16 @@ public class BioLogicForm extends WikiLogicForm {
         return true;
     }
 
-
+    /**
+     * Elabora una singola biografia. <br>
+     * DEVE essere sovrascritto, SENZA invocare prima il metodo della superclasse <br>
+     */
+    @Override
+    protected void elabora() {
+        Bio bio = (Bio) entityBean;
+        bio = elaboraService.esegue(bio);
+        bioService.save(bio, null);
+    }
 
     private void printMappa(Map mappa) {
         for (Object key : mappa.keySet()) {
