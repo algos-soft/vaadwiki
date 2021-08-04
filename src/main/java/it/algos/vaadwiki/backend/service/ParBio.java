@@ -25,20 +25,32 @@ public enum ParBio {
     titolo("Titolo", "titolo", false, false, false, false, false) {
     },// end of single enumeration
 
+//    nome("Nome", "nome", true, true, true, true, false) {
+//        @Override
+//        public void setValue(final Bio bio, final String value) {
+//            bio.nome = text.isValid(value) ? elabora.fixNomeValido(value) : null;
+//        }
+//
+//        @Override
+//        public String fixValoreGrezzo(final String valoreGrezzo) {
+//            return elabora.fixMinuscola(valoreGrezzo);
+//        }
+//
+//        @Override
+//        public String getValue(final Bio bio) {
+//            return bio != null && bio.nome != null ? bio.nome : VUOTA;
+//        }
+//    },// end of single enumeration
+
     nome("Nome", "nome", true, true, true, true, false) {
         @Override
         public void setValue(final Bio bio, final String value) {
-            bio.nome = text.isValid(value) ? elabora.fixNomeValido(value) : null;
-        }
-
-        @Override
-        public String fixValoreGrezzo(final String valoreGrezzo) {
-            return elabora.fixMinuscola(valoreGrezzo);
+            bio.nome =  elabora.fixNomeLink(value);
         }
 
         @Override
         public String getValue(final Bio bio) {
-            return bio != null && bio.nome != null ? bio.nome : VUOTA;
+            return bio != null && bio.nome != null ? bio.nome.getNome() : VUOTA;
         }
     },// end of single enumeration
 

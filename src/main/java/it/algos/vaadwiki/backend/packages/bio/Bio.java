@@ -11,6 +11,7 @@ import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
+import it.algos.vaadwiki.backend.packages.nome.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.*;
@@ -58,7 +59,7 @@ import java.time.*;
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Bio", keyPropertyName = "pageId")
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "lastMongo")
-@AIList(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo", usaRowIndex = true)
+@AIList(fields = "pageId,wikiTitle,valido,nome,nomeLink,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo", usaRowIndex = true)
 @AIForm(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 
@@ -128,11 +129,14 @@ public class Bio extends AEntity {
     public boolean valido;
 
 
-    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
-    @Size(min = 2, max = 50)
-    @AIField(type = AETypeField.text, required = false, widthEM = WIDTHEM)
-    @AIColumn(widthEM = WIDTHEM)
-    public String nome;
+    /**
+     * nome (facoltativo, non unico)
+     * riferimento dinamico CON @DBRef
+     */
+    @DBRef
+    @AIField(type = AETypeField.link, comboClazz = NomeService.class, help = "Nome proprio")
+    @AIColumn(header = "Nome", widthEM = 8)
+    public Nome nome;
 
 
     @Indexed(unique = false, direction = IndexDirection.DESCENDING)

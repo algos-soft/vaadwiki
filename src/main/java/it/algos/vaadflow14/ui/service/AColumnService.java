@@ -136,6 +136,7 @@ public class AColumnService extends AbstractService {
                         return new Label(testo);
                     }));//end of lambda expressions and anonymous inner class
                     break;
+                case link:
                 case combo:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         String testo = VUOTA;

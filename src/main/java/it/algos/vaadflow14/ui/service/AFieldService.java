@@ -441,6 +441,10 @@ public class AFieldService extends AbstractService {
         else {
             items = mongo.findAll(comboClazz);
             combo = new ComboBox<>();
+            if (array.isEmpty(items)) {
+                items = new ArrayList();
+                items.add("test");
+            }
             combo.setItems(items);
         }
 

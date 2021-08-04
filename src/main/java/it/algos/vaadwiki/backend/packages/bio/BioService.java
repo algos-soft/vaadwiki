@@ -51,6 +51,7 @@ public class BioService extends AService {
     public static final String CATEGORIA_TEST = "Nati nel 1167";
 
     public static final String CATEGORIA_TEST_DUE = "Nati nel 1168";
+
     public static final String CAT_1435 = "Nati nel 1435";
 
     public static final String CATEGORIA_TEST_TRE = "Nati nel 1935";
@@ -192,7 +193,7 @@ public class BioService extends AService {
      */
     @Override
     public List<Bio> fetch() {
-        return (List<Bio>)super.fetch();
+        return (List<Bio>) super.fetch();
     }
 
     /**
@@ -267,7 +268,7 @@ public class BioService extends AService {
      */
     public void ciclo() {
         //@todo Categoria provvisorio
-        String catTitle = CAT_1435;
+        String catTitle = CATEGORIA_TEST_TRE;
         //@todo Categoria provvisorio
 
         List<Long> listaPageIds = null;

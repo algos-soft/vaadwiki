@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
+import it.algos.vaadwiki.backend.packages.nome.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -68,6 +69,14 @@ public class ElaboraService extends AbstractService {
      */
     @Autowired
     public NazionalitaService nazionalitaService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public NomeService nomeService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -163,10 +172,41 @@ public class ElaboraService extends AbstractService {
      *
      * @return testoValido regolato in uscita
      */
-    public String fixNomeValido(String testoGrezzo) {
+    public String fixNomeValido(final String testoGrezzo) {
         return fixValoreGrezzo(testoGrezzo);
     }
 
+
+    /**
+     * Regola la property <br>
+     * Controlla che il valore esista nella collezione Nome <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di nome valida
+     */
+    public Nome fixNomeLink(final String testoGrezzo) {
+        Nome nome = null;
+        String testoValido = VUOTA;
+
+        if (text.isValid(testoGrezzo)) {
+            testoValido = fixNomeValido(testoGrezzo);
+        }
+
+        if (text.isValid(testoValido)) {
+            nome = nomeService.findByKey(testoValido);
+            if (nome == null) {
+                nome = nomeService.newEntity(1, testoValido, true);
+                nomeService.save(nome, null);
+            }
+            else {
+                nome.setVoci(nome.getVoci() + 1);
+                nomeService.save(nome, null);
+            }
+        }
+
+        return nome;
+    }
 
     /**
      * Regola la property <br>
@@ -392,12 +432,14 @@ public class ElaboraService extends AbstractService {
         testoValido = text.levaDopo(testoValido, CIRCA);
 
         if (text.isValid(testoValido)) {
-                if (annoService.isEsiste(testoValido)) {
-                    return testoValido.trim();
-                } else {
-                    return VUOTA;
-                }
-        } else {
+            if (annoService.isEsiste(testoValido)) {
+                return testoValido.trim();
+            }
+            else {
+                return VUOTA;
+            }
+        }
+        else {
             return VUOTA;
         }
     }
