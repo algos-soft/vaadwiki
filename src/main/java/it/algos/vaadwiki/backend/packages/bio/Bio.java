@@ -59,7 +59,7 @@ import java.time.*;
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Bio", keyPropertyName = "pageId")
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "lastMongo")
-@AIList(fields = "pageId,wikiTitle,valido,nome,nomeLink,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo", usaRowIndex = true)
+@AIList(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo", usaRowIndex = true)
 @AIForm(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 

@@ -88,7 +88,7 @@ public class WikiBoot extends FlowBoot {
         FlowVar.projectDescrizione = "Gestione di BioBot";
         FlowVar.projectVersion = environment.getProperty("algos.wiki.version") != null ? Double.parseDouble(environment.getProperty("algos.wiki.version")) : 0.0;
         FlowVar.preferenzeSpecificheList = Arrays.asList(AEWikiPreferenza.values());
-        FlowVar.versionDate = LocalDate.of(2021, 4, 14);
+        FlowVar.versionDate = LocalDate.of(2021, 8, 7);
         FlowVar.projectNote = "Sviluppo di una applicazione in Vaadin14";
         FlowVar.usaCronoPackages = false;
         FlowVar.usaGeografiaPackages = false;
