@@ -226,24 +226,24 @@ public enum ParBio {
     },// end of single enumeration
 
     luogoMorteLink("LuogoMorteLink", "luogoMortoLink", true, false, true, true, false) {
-        //        @Override
-        //        public void setValue(Bio bio, String value, LibBio libBio) {
-        //            bio.luogoNatoLink = value.equals("") ? null : libBio.fixLuogoValido(value);
-        //        }
-
-        //        public String fixValore(String valoreGrezzo) {
-        //            return valoreGrezzo;
-        //        }
-
-        //        @Override
-        //        public String fix(String value, LibBio libBio) {
-        //            return libBio.fixLuogoValido(value);
-        //        }
-
-        //        @Override
-        //        public String getValue(Bio bio) {
-        //            return bio.luogoMortoLink != null ? bio.luogoMortoLink : "";
-        //        }
+//                @Override
+//                public void setValue(Bio bio, String value, LibBio libBio) {
+//                    bio.luogoNatoLink = value.equals("") ? null : libBio.fixLuogoValido(value);
+//                }
+//
+//                public String fixValore(String valoreGrezzo) {
+//                    return valoreGrezzo;
+//                }
+//
+//                @Override
+//                public String fix(String value, LibBio libBio) {
+//                    return libBio.fixLuogoValido(value);
+//                }
+//
+//                @Override
+//                public String getValue(Bio bio) {
+//                    return bio.luogoMortoLink != null ? bio.luogoMortoLink : "";
+//                }
     },// end of single enumeration
 
     luogoMorteAlt("LuogoMorteAlt", "luogoMortoAlt", false, false, true, false, false) {

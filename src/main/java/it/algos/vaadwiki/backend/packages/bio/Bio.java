@@ -59,8 +59,10 @@ import java.time.*;
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Bio", keyPropertyName = "pageId")
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "lastMongo")
-@AIList(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo", usaRowIndex = true)
-@AIForm(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
+@AIList(fields = "pageId,wikiTitle", usaRowIndex = true)
+//@AIList(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo", usaRowIndex = true)
+@AIForm(fields = "pageId,wikiTitle,valido,attivita", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
+//@AIForm(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 
 
@@ -128,98 +130,98 @@ public class Bio extends AEntity {
     @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "OK", widthEM = 5)
     public boolean valido;
 
-
-    /**
-     * nome (facoltativo, non unico)
-     * riferimento dinamico CON @DBRef
-     */
-    @DBRef
-    @AIField(type = AETypeField.link, comboClazz = NomeService.class, help = "Nome proprio")
-    @AIColumn(header = "Nome", widthEM = 8)
-    public Nome nome;
-
-
-    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
-    @Size(min = 2, max = 50)
-    @AIField(type = AETypeField.text, required = false, widthEM = WIDTHEM)
-    @AIColumn(widthEM = WIDTHEM)
-    public String cognome;
+        /**
+         * nome (facoltativo, non unico)
+         * riferimento dinamico CON @DBRef
+         */
+//        @DBRef
+//        @AIField(type = AETypeField.link, comboClazz = NomeService.class, help = "Nome proprio")
+//        @AIColumn(header = "Nome", widthEM = 8)
+        public Nome nome;
 
 
-    /**
-     * giorno di nascita (facoltativo, non unica)
-     * riferimento dinamico CON @DBRef
-     */
-    @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = GiornoService.class, help = "Giorno nato")
-    @AIColumn(header = "Nato", widthEM = 8)
-    public Giorno giornoNato;
+        @Indexed(unique = false, direction = IndexDirection.DESCENDING)
+        @Size(min = 2, max = 50)
+//        @AIField(type = AETypeField.text, required = false, widthEM = WIDTHEM)
+//        @AIColumn(widthEM = WIDTHEM)
+        public String cognome;
 
 
-    /**
-     * anno di nascita (facoltativo, non unica)
-     * riferimento dinamico CON @DBRef
-     */
-    @DBRef
-    @AIField(type = AETypeField.combo, serviceClazz = AnnoService.class, help = "Anno nato")
-    @AIColumn(header = "Nato", widthEM = 8)
-    public Anno annoNato;
+        /**
+         * giorno di nascita (facoltativo, non unica)
+         * riferimento dinamico CON @DBRef
+         */
+//        @DBRef
+//        @AIField(type = AETypeField.combo, comboClazz = Giorno.class, help = "Giorno nato")
+//        @AIColumn(header = "Nato", widthEM = 8)
+        public Giorno giornoNato;
 
-    /**
-     * giorno di morte (facoltativo, non unica)
-     * riferimento dinamico CON @DBRef
-     */
-    @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = GiornoService.class, help = "Giorno morto")
-    @AIColumn(header = "Morto", widthEM = 8)
-    public Giorno giornoMorto;
 
-    /**
-     * anno di norte (facoltativo, non unica)
-     * riferimento dinamico CON @DBRef
-     */
-    @DBRef
-    @AIField(type = AETypeField.combo, serviceClazz = AnnoService.class, help = "Anno morto")
-    @AIColumn(header = "Morto", widthEM = 8)
-    public Anno annoMorto;
+        /**
+         * anno di nascita (facoltativo, non unica)
+         * riferimento dinamico CON @DBRef
+         */
+//        @DBRef
+//        @AIField(type = AETypeField.combo, serviceClazz = Anno.class, help = "Anno nato")
+//        @AIColumn(header = "Nato", widthEM = 8)
+        public Anno annoNato;
+
+        /**
+         * giorno di morte (facoltativo, non unica)
+         * riferimento dinamico CON @DBRef
+         */
+//        @DBRef
+//        @AIField(type = AETypeField.combo, comboClazz = Giorno.class, help = "Giorno morto")
+//        @AIColumn(header = "Morto", widthEM = 8)
+        public Giorno giornoMorto;
+
+        /**
+         * anno di norte (facoltativo, non unica)
+         * riferimento dinamico CON @DBRef
+         */
+//        @DBRef
+//        @AIField(type = AETypeField.combo, comboClazz = Anno.class, help = "Anno morto")
+//        @AIColumn(header = "Morto", widthEM = 8)
+        public Anno annoMorto;
+
 
     /**
      * attività principale (facoltativo, non unica)
      * riferimento dinamico CON @DBRef
      */
-    @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = AttivitaService.class, help = "Attività")
-    @AIColumn(header = "attivita", widthEM = 8)
+//    @DBRef
+//    @AIField(type = AETypeField.combo, comboClazz = Attivita.class, help = "Attività")
+//    @AIColumn(header = "attivita", widthEM = 8)
     public Attivita attivita;
 
-    /**
-     * seconda attività (facoltativo, non unica)
-     * riferimento dinamico CON @DBRef
-     */
-    @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = AttivitaService.class, help = "Attività2")
-    @AIColumn(header = "attivita2", widthEM = 8)
-    public Attivita attivita2;
+        /**
+         * seconda attività (facoltativo, non unica)
+         * riferimento dinamico CON @DBRef
+         */
+//        @DBRef
+//        @AIField(type = AETypeField.combo, comboClazz = Attivita.class, help = "Attività2")
+//        @AIColumn(header = "attivita2", widthEM = 8)
+        public Attivita attivita2;
 
-    /**
-     * terza attività (facoltativo, non unica)
-     * riferimento dinamico CON @DBRef
-     */
-    @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = AttivitaService.class, help = "Attività3")
-    @AIColumn(header = "attivita3", widthEM = 8)
-    public Attivita attivita3;
+        /**
+         * terza attività (facoltativo, non unica)
+         * riferimento dinamico CON @DBRef
+         */
+//        @DBRef
+//        @AIField(type = AETypeField.combo, comboClazz = Attivita.class, help = "Attività3")
+//        @AIColumn(header = "attivita3", widthEM = 8)
+        public Attivita attivita3;
 
 
-    /**
-     * nazionalità (facoltativo, non unica)
-     * riferimento dinamico CON @DBRef
-     */
-    @DBRef
-    @Field("naz")
-    @AIField(type = AETypeField.combo, comboClazz = NazionalitaService.class, help = "Nazionalità")
-    @AIColumn(header = "nazionalita", widthEM = 8)
-    public Nazionalita nazionalita;
+        /**
+         * nazionalità (facoltativo, non unica)
+         * riferimento dinamico CON @DBRef
+         */
+//        @DBRef
+        @Field("naz")
+//        @AIField(type = AETypeField.combo, comboClazz = Nazionalita.class, help = "Nazionalità")
+//        @AIColumn(header = "nazionalita", widthEM = 8)
+        public Nazionalita nazionalita;
 
     /**
      * @return a string representation of the object.
