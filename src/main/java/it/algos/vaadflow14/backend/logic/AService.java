@@ -4,6 +4,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -120,8 +121,15 @@ public abstract class AService extends AbstractService implements AIService {
      * @return true se la entity è stata creata e salvata
      */
     protected boolean creaReset(final AREntity newEntity) {
+        boolean status = false;
         newEntity.reset = true;
-        return save(newEntity, AEOperation.addNew) != null;
+        try {
+            status = save(newEntity, AEOperation.addNew) != null;
+        } catch (AMongoException unErrore) {
+            logger.error(unErrore, this.getClass(), "creaReset");
+        }
+
+        return status;
     }
 
     /**
@@ -184,7 +192,7 @@ public abstract class AService extends AbstractService implements AIService {
      * @return la entityBean appena registrata, null se non registrata
      */
     @Override
-    public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) {
+    public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AMongoException {
         AEntity entityBean;
         AEntity entityBeanOld = mongo.find(entityBeanDaRegistrare);
 

@@ -193,7 +193,7 @@ public class AWikiBotService extends AbstractService {
      */
     public List<MiniWrap> getMiniWrap(final String categoryTitle) {
         List<Long> listaPageids = this.getLongCat(categoryTitle, AETypeUser.anonymous);
-        return getMiniWrap(categoryTitle,listaPageids);
+        return getMiniWrap(categoryTitle, listaPageids);
     }
 
     /**
@@ -209,7 +209,7 @@ public class AWikiBotService extends AbstractService {
         List<MiniWrap> wraps = new ArrayList<>();
         long inizio = System.currentTimeMillis();
         int limit = LIMIT_USER;
-        limit=500;
+        limit = 500;
         int dimLista = listaPageids.size();
         int cicli = (dimLista / limit) + 1;
         String strisciaIds = VUOTA;
@@ -249,9 +249,9 @@ public class AWikiBotService extends AbstractService {
             return wraps;
         }
 
-//        if (pageIds.split(PIPE_REGEX).length > LIMIT_USER) {
-//            return null;
-//        }
+        //        if (pageIds.split(PIPE_REGEX).length > LIMIT_USER) {
+        //            return null;
+        //        }
 
         webUrl = WIKI_QUERY_TIMESTAMP + pageIds;
         result = web.legge(webUrl);
@@ -324,8 +324,7 @@ public class AWikiBotService extends AbstractService {
             listaPageIdsDaLeggere.add(wrap.getPageid());
         }
 
-        message = String.format("Elaborata una lista di miniWrap da leggere: %d nuove e %d modificate (%d totali) in %s", nuove, modificate, totali, date.deltaTextEsatto(inizio));
-
+        message = String.format("Elaborata una lista di miniWrap da leggere: %s nuove e %s modificate (%s totali) in %s", text.format(nuove), text.format(modificate), text.format(totali), date.deltaText(inizio));
         logger.info(AETypeLog.bio, message);
 
         return listaPageIdsDaLeggere;
@@ -1003,7 +1002,7 @@ public class AWikiBotService extends AbstractService {
         }
     }
 
-    private boolean isMissing(final JSONObject jsonPage) {
+    public boolean isMissing(final JSONObject jsonPage) {
         return jsonPage.get(KEY_JSON_MISSING) != null && (boolean) jsonPage.get(KEY_JSON_MISSING);
     }
 
@@ -1480,7 +1479,6 @@ public class AWikiBotService extends AbstractService {
         AETypeUser loggedUserType = userType != null ? userType : login.getUserType();
         long inizio = System.currentTimeMillis();
         int cicli = 0;
-
 
         do {
             urlDomain = fixUrlCat(catTitle, catType, propType, loggedUserType, continueParam);

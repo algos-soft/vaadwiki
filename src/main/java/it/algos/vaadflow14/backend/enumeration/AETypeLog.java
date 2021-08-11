@@ -25,6 +25,7 @@ public enum AETypeLog implements AILogType {
     modifica("modifica"),
     delete("delete"),
     deleteAll("deleteAll"),
+    mongo("mongoDB"),
     debug("debug"),
     info("info"),
     warn("warn"),

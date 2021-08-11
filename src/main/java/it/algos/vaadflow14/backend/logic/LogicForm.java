@@ -8,6 +8,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.form.*;
@@ -555,7 +556,10 @@ public abstract class LogicForm extends Logic {
             writeSpecificFields();
 
             //--passa al service per la registrazione della entityBean
-            entityService.save(entityBean,operationForm);
+            try {
+                entityService.save(entityBean,operationForm);
+            } catch (AMongoException unErrore) {
+            }
 
             //--chiude questa view e torna a LogicList tramite @Route
             this.backToList();
@@ -598,7 +602,10 @@ public abstract class LogicForm extends Logic {
                 entityBean = entityService.fixKey(entityBean);
             }
             oldEntityBean = mongo.find(entityBean);
-            entityBean = mongo.save(entityBean);
+            try {
+                entityBean = mongo.save(entityBean);
+            } catch (AMongoException unErrore) {
+            }
             status = entityBean != null;
             if (status) {
                 if (operationForm == AEOperation.addNew) {

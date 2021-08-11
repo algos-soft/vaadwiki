@@ -74,9 +74,11 @@ public class Nome extends AEntity {
 
     /**
      * nome di riferimento (obbligatorio, unico) <br>
+     * se in Bio il riferimento è @DBRef, unique = true
+     * se in Bio il riferimento NON è @DBRef, unique = false
      */
     @NotBlank(message = "Il nome è obbligatorio")
-    @Indexed(unique = true, direction = IndexDirection.ASCENDING)
+    @Indexed(unique = false, direction = IndexDirection.ASCENDING)
     @Size(min = 2, max = 50)
     @AIField(type = AETypeField.text, required = true, focus = true, caption = "nome", widthEM = 20)
     @AIColumn(header = "nome", widthEM = 20)

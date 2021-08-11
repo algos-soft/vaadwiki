@@ -4,6 +4,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -78,6 +79,14 @@ public class BioService extends AService {
      */
     @Autowired
     public BotLogin login;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ElaboraService elaboraService;
 
     /**
      * Costruttore senza parametri <br>
@@ -291,12 +300,13 @@ public class BioService extends AService {
         //--Deve riuscire a gestire una lista di circa 430.000 long per la category BioBot
         //--Tempo medio previsto = circa 1 minuto (come bot la categoria legge 5.000 pagine per volta)
         listaPageIds = appContext.getBean(QueryCat.class).urlRequest(catTitle).getLista();
+        //--Nella listaPageIds possono esserci anche voci SENZA il tmpl BIO, che verranno scartate dopo
 
         //--Usa la lista di pageIds e recupera una lista (stessa lunghezza) di miniWrap
         //--Deve riuscire a gestire una lista di circa 430.000 miniWrap per la category BioBot
         //--Tempo medio previsto = circa 20 minuti  (come bot la query legge 500 pagine per volta
-        //        listaMiniWrap = wikiBot.getMiniWrap(catTitle, listaPageIdsCategoria);
         listaMiniWrap = appContext.getBean(QueryTimestamp.class).urlRequest(listaPageIds).getLista();
+        //--Nella listaMiniWrap possono esserci anche voci SENZA il tmpl BIO, che verranno scartate dopo
 
         //--Elabora la lista di miniWrap e costruisce una lista di pageIds da leggere
         //--Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb
@@ -304,37 +314,50 @@ public class BioService extends AService {
         //--A regime deve probabilmente gestire una lista di circa 10.000 miniWrap
         //--si tratta delle voci nuove e di quelle modificate nelle ultime 24 ore
         listaPageIdsDaLeggere = wikiBot.elaboraMiniWrap(listaMiniWrap);
+        //--Nella listaPageIdsDaLeggere possono esserci anche voci SENZA il tmpl BIO, che verranno scartate dopo
 
-        //--meglio suddividere in blocchi più piccoli
-        //        listaWrapPage = wikiBot.leggePages(listaPageIdsDaLeggere);
-        //        if (listaWrapPage != null && listaWrapPage.size() > 0) {
-        //            for (WrapPage wrap : listaWrapPage) {
-        //                creaBio(wrap);
-        //            }
-        //        }
-
-        //--recupera i dati di tutte le biografie da creare/modificare
+        //--Legge tutte le pagine
+        //--Recupera i contenuti di tutte le voci biografiche da creare/modificare
+        //--Controlla che esiste il tmpl BIO <br>
         listaWrapBio = appContext.getBean(QueryPages.class).urlRequest(listaPageIdsDaLeggere).getLista();
+        //--Nella listaWrapBio possono ci sono solo voci CON il tmpl BIO valido
 
-        //--crea/aggiorna le biografie
-        creaListaBio(listaWrapBio);
+        //--Crea/aggiorna le voci biografiche
+        //--Salva le entities Bio su mongoDB
+        //--Elabora (e salva) le entities Bio
+        creaElaboraListaBio(listaWrapBio);
     }
 
+
     /**
-     * Crea/aggiorna una serie di entities <br>
+     * Crea/aggiorna una serie di voci biografiche <br>
      */
-    public void creaListaBio(List<WrapBio> listaWrapBio) {
+    public void creaElaboraListaBio(List<WrapBio> listaWrapBio) {
+        String message;
+        int modificate = 0;
+        long inizio = System.currentTimeMillis();
+
         for (WrapBio wrap : listaWrapBio) {
-            creaBio(wrap);
+            modificate = creaElaboraBio(wrap) ? modificate + 1 : modificate;
         }
+        message = String.format("Create o aggiornate %s biografie in %s", text.format(modificate), date.deltaText(inizio));
+        logger.info(AETypeLog.bio, message);
     }
 
     /**
      * Crea/aggiorna una singola entity <br>
      */
-    public void creaBio(WrapBio wrap) {
+    public boolean creaElaboraBio(WrapBio wrap) {
         Bio bio = newEntity(wrap);
-        save(bio, AEOperation.newEditNoLog);
+
+        elaboraService.esegue(bio);
+        try {
+            save(bio, AEOperation.newEditNoLog);
+        } catch (AMongoException unErrore) {
+            logger.log(AETypeLog.mongo, text.setQuadre(unErrore.getEntityBean().toString()) + SPAZIO + unErrore.getMessage());
+        }
+
+        return true;
     }
 
 
@@ -359,7 +382,10 @@ public class BioService extends AService {
 
         if (wrap != null && wrap.isValida()) {
             bio = this.newEntity(wrap);
-            this.save(bio, AEOperation.newEditNoLog);
+            try {
+                save(bio, AEOperation.newEditNoLog);
+            } catch (AMongoException unErrore) {
+            }
             logger.info(AETypeLog.download, String.format("Download della pagina %s", wrap.getTitle()));
         }
         else {

@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.service;
 
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 
 /**
@@ -52,11 +53,11 @@ public interface AIService {
      * per eventuali side effects su altre collections collegate o dipendenti <br>
      *
      * @param entityBeanDaRegistrare (nuova o esistente)
-     * @param operation  del dialogo (NEW, Edit)
+     * @param operation              del dialogo (NEW, Edit)
      *
      * @return la entityBean appena registrata, null se non registrata
      */
-    AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation);
+    AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AMongoException;
 
 
     /**

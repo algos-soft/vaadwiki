@@ -50,15 +50,15 @@ public class AResult implements AIResult {
 
     private Map mappa = null;
 
-    private AResult() {
+    protected AResult() {
         this(true, VUOTA);
     }
 
-    private AResult(final boolean valido, final String message) {
+    protected AResult(final boolean valido, final String message) {
         this(valido, message, 0);
     }
 
-    private AResult(final boolean valido, final String message, final int value) {
+    protected AResult(final boolean valido, final String message, final int value) {
         this.valido = valido;
         if (valido) {
             this.validMessage = message;

@@ -79,9 +79,10 @@ public class AComboField<T> extends AField<Object> {
     /**
      * Costruttore con parametri <br>
      * L' istanza viene costruita con appContext.getBean(AComboField.class, comboBox) <br>
+     *
      */
     public AComboField(ComboBox comboBox) {
-        this.comboBox = comboBox;
+        this.comboBox=comboBox;
         this.comboBox.setClearButtonVisible(false);
         add(this.comboBox);
     } // end of SpringBoot constructor
@@ -107,9 +108,7 @@ public class AComboField<T> extends AField<Object> {
 
     @Override
     protected void setPresentationValue(Object value) {
-        if (value != null) {
-            comboBox.setValue(value);
-        }
+        comboBox.setValue(value);
     }
 
 

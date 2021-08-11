@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Scope;
  * No upload cookies
  * No bot needed
  */
-public abstract class AQueryVoce extends AQueryPage {
+public abstract class AQueryVoce  {
 
 
     /**

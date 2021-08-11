@@ -6,12 +6,7 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.packages.crono.anno.*;
-import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
-import it.algos.vaadwiki.backend.packages.attivita.*;
-import it.algos.vaadwiki.backend.packages.nazionalita.*;
-import it.algos.vaadwiki.backend.packages.nome.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.*;
@@ -59,10 +54,8 @@ import java.time.*;
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Bio", keyPropertyName = "pageId")
 @AIView(menuName = "Bio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "wikiTitle", sortProperty = "lastMongo")
-@AIList(fields = "pageId,wikiTitle", usaRowIndex = true)
-//@AIList(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo", usaRowIndex = true)
-@AIForm(fields = "pageId,wikiTitle,valido,attivita", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
-//@AIForm(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
+@AIList(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,luogoNato,giornoMorto,annoMorto,luogoMorto,attivita,nazionalita", usaRowIndex = true)
+@AIForm(fields = "pageId,wikiTitle,valido,nome,cognome,giornoNato,annoNato,giornoMorto,annoMorto,attivita,nazionalita,lastServer,lastMongo,tmplBio", operationForm = AEOperation.edit, usaSpostamentoTraSchede = false)
 public class Bio extends AEntity {
 
 
@@ -76,9 +69,19 @@ public class Bio extends AEntity {
      */
     private static final transient int WIDTHEM_ID = 7;
 
-    private static final transient int WIDTHEM_TITLE = 20;
+    private static final transient int WIDTHEM_TITLE = 18;
 
-    private static final transient int WIDTHEM = 12;
+    private static final transient int WIDTHEM_NOME = 11;
+
+    private static final transient int WIDTHEM_COGNOME = 12;
+
+    private static final transient int WIDTH_GIORNO = 8;
+
+    private static final transient int WIDTH_CITTA = 10;
+
+    private static final transient int WIDTH_ANNO = 6;
+
+    private static final transient int WIDTH_ATTNAZ = 9;
 
     /**
      * pageId (obbligatorio, unico) <br>
@@ -127,101 +130,103 @@ public class Bio extends AEntity {
      * valido se lastLettura >= lastModifica
      */
     @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "valido")
-    @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "OK", widthEM = 5)
+    @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "x", widthEM = 4)
     public boolean valido;
 
-        /**
-         * nome (facoltativo, non unico)
-         * riferimento dinamico CON @DBRef
-         */
-//        @DBRef
-//        @AIField(type = AETypeField.link, comboClazz = NomeService.class, help = "Nome proprio")
-//        @AIColumn(header = "Nome", widthEM = 8)
-        public Nome nome;
+    /**
+     * nome (facoltativo, non unico)
+     */
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(widthEM = WIDTHEM_NOME)
+    public String nome;
 
+    /**
+     * cognome (facoltativo, non unico)
+     */
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @Size(min = 2, max = 50)
+    @AIColumn(widthEM = WIDTHEM_COGNOME)
+    public String cognome;
 
-        @Indexed(unique = false, direction = IndexDirection.DESCENDING)
-        @Size(min = 2, max = 50)
-//        @AIField(type = AETypeField.text, required = false, widthEM = WIDTHEM)
-//        @AIColumn(widthEM = WIDTHEM)
-        public String cognome;
+    /**
+     * sesso (facoltativo, non unico)
+     * ammette solo M o F
+     */
+    @AIColumn(header = "X", widthEM = 2)
+    public String sesso;
 
+    /**
+     * giorno di nascita (facoltativo, non unico)
+     */
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(header = "Nascita", widthEM = WIDTH_GIORNO)
+    public String giornoNato;
 
-        /**
-         * giorno di nascita (facoltativo, non unica)
-         * riferimento dinamico CON @DBRef
-         */
-//        @DBRef
-//        @AIField(type = AETypeField.combo, comboClazz = Giorno.class, help = "Giorno nato")
-//        @AIColumn(header = "Nato", widthEM = 8)
-        public Giorno giornoNato;
+    /**
+     * anno di nascita (facoltativo, non unico)
+     */
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(header = "Anno", widthEM = WIDTH_ANNO)
+    public String annoNato;
 
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(header = "Nato", widthEM = WIDTH_CITTA)
+    public String luogoNato;
 
-        /**
-         * anno di nascita (facoltativo, non unica)
-         * riferimento dinamico CON @DBRef
-         */
-//        @DBRef
-//        @AIField(type = AETypeField.combo, serviceClazz = Anno.class, help = "Anno nato")
-//        @AIColumn(header = "Nato", widthEM = 8)
-        public Anno annoNato;
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(header = "NatoLink", widthEM = WIDTH_CITTA)
+    public String luogoNatoLink;
 
-        /**
-         * giorno di morte (facoltativo, non unica)
-         * riferimento dinamico CON @DBRef
-         */
-//        @DBRef
-//        @AIField(type = AETypeField.combo, comboClazz = Giorno.class, help = "Giorno morto")
-//        @AIColumn(header = "Morto", widthEM = 8)
-        public Giorno giornoMorto;
+    /**
+     * giorno di morte (facoltativo, non unico)
+     */
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(header = "Morte", widthEM = WIDTH_GIORNO)
+    public String giornoMorto;
 
-        /**
-         * anno di norte (facoltativo, non unica)
-         * riferimento dinamico CON @DBRef
-         */
-//        @DBRef
-//        @AIField(type = AETypeField.combo, comboClazz = Anno.class, help = "Anno morto")
-//        @AIColumn(header = "Morto", widthEM = 8)
-        public Anno annoMorto;
+    /**
+     * anno di norte (facoltativo, non unico)
+     */
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(header = "Anno", widthEM = WIDTH_ANNO)
+    public String annoMorto;
+
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(header = "Morto", widthEM = WIDTH_CITTA)
+    public String luogoMorto;
+
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(header = "MortoLink", widthEM = WIDTH_CITTA)
+    public String luogoMortoLink;
+
+    /**
+     * attività principale (facoltativa, non unica)
+     */
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(widthEM = WIDTH_ATTNAZ)
+    public String attivita;
+
+    /**
+     * seconda attività (facoltativa, non unica)
+     */
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(widthEM = WIDTH_ATTNAZ)
+    public String attivita2;
+
+    /**
+     * terza attività (facoltativa, non unica)
+     */
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(widthEM = WIDTH_ATTNAZ)
+    public String attivita3;
 
 
     /**
-     * attività principale (facoltativo, non unica)
-     * riferimento dinamico CON @DBRef
+     * nazionalità (facoltativa, non unica)
      */
-//    @DBRef
-//    @AIField(type = AETypeField.combo, comboClazz = Attivita.class, help = "Attività")
-//    @AIColumn(header = "attivita", widthEM = 8)
-    public Attivita attivita;
-
-        /**
-         * seconda attività (facoltativo, non unica)
-         * riferimento dinamico CON @DBRef
-         */
-//        @DBRef
-//        @AIField(type = AETypeField.combo, comboClazz = Attivita.class, help = "Attività2")
-//        @AIColumn(header = "attivita2", widthEM = 8)
-        public Attivita attivita2;
-
-        /**
-         * terza attività (facoltativo, non unica)
-         * riferimento dinamico CON @DBRef
-         */
-//        @DBRef
-//        @AIField(type = AETypeField.combo, comboClazz = Attivita.class, help = "Attività3")
-//        @AIColumn(header = "attivita3", widthEM = 8)
-        public Attivita attivita3;
-
-
-        /**
-         * nazionalità (facoltativo, non unica)
-         * riferimento dinamico CON @DBRef
-         */
-//        @DBRef
-        @Field("naz")
-//        @AIField(type = AETypeField.combo, comboClazz = Nazionalita.class, help = "Nazionalità")
-//        @AIColumn(header = "nazionalita", widthEM = 8)
-        public Nazionalita nazionalita;
+    @Indexed(direction = IndexDirection.DESCENDING)
+    @AIColumn(widthEM = WIDTH_ATTNAZ)
+    public String nazionalita;
 
     /**
      * @return a string representation of the object.

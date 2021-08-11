@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.enumeration;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -204,7 +205,10 @@ public enum AEPreferenza implements AIPreferenza {
     public void setValue(Object value) {
         Preferenza pref = preferenzaService.findByKey(this.keyCode);
         pref.setValue(pref.type.objectToBytes(value));
-        preferenzaService.save(pref,AEOperation.newEdit);
+        try {
+            preferenzaService.save(pref,AEOperation.newEdit);
+        } catch (AMongoException unErrore) {
+        }
     }
 
     public String getStr() {

@@ -2,6 +2,7 @@ package it.algos.vaadwiki.backend.service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -104,7 +105,10 @@ public class ElaboraService extends AbstractService {
         if (listaBio != null && listaBio.size() > 0) {
             for (Bio bio : listaBio) {
                 esegue(bio);
-                bioService.save(bio, null);
+                try {
+                    bioService.save(bio, null);
+                } catch (AMongoException unErrore) {
+                }
             }
         }
 
@@ -179,13 +183,13 @@ public class ElaboraService extends AbstractService {
 
     /**
      * Regola la property <br>
-     * Controlla che il valore esista nella collezione Nome <br>
+     * Controlla che il valore esista nella collezione Nome <br> ??????
      *
      * @param testoGrezzo in entrata da elaborare
      *
      * @return istanza di nome valida
      */
-    public Nome fixNomeLink(final String testoGrezzo) {
+    public String fixNomeLink(final String testoGrezzo) {
         Nome nome = null;
         String testoValido = VUOTA;
 
@@ -197,15 +201,17 @@ public class ElaboraService extends AbstractService {
             nome = nomeService.findByKey(testoValido);
             if (nome == null) {
                 nome = nomeService.newEntity(1, testoValido, true);
-                nomeService.save(nome, null);
             }
             else {
                 nome.setVoci(nome.getVoci() + 1);
+            }
+            try {
                 nomeService.save(nome, null);
+            } catch (AMongoException unErrore) {
             }
         }
 
-        return nome;
+        return testoValido;
     }
 
     /**
@@ -444,6 +450,35 @@ public class ElaboraService extends AbstractService {
         }
     }
 
+    /**
+     * Regola questa property <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testoValido regolato in uscita
+     */
+    public String fixLuogoValido(String testoGrezzo) {
+        String testoValido;
+
+        if (text.isEmpty(testoGrezzo)) {
+            return VUOTA;
+        }
+
+        testoValido = testoGrezzo.trim();
+        testoValido = text.levaDopoRef(testoValido);
+        testoValido = text.levaDopoNote(testoValido);
+        testoValido = text.levaDopoGraffe(testoValido);
+        testoValido = text.levaDopoInterrogativo(testoValido);
+        testoValido = text.setNoQuadre(testoValido);
+        testoValido = testoValido.trim();
+
+        if (testoValido.length() > 253) {
+            testoValido = testoValido.substring(0, 252);
+            //@todo manca warning
+        }
+
+        return testoValido;
+    }
 
     /**
      * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
@@ -464,7 +499,7 @@ public class ElaboraService extends AbstractService {
         valoreValido = text.setNoQuadre(valoreValido);
 
         //--elimina ref in coda
-        valoreValido = text.levaDopo(valoreValido, REF);
+        valoreValido = text.levaDopo(valoreValido, REF_OPEN);
 
         return valoreValido.trim();
     }

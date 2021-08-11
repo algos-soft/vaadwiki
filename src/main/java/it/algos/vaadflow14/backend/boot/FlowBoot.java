@@ -4,6 +4,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.data.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
@@ -341,8 +342,6 @@ public abstract class FlowBoot implements ServletContextListener {
     }
 
 
-
-
     /**
      * Crea le preferenze standard e specifiche dell'applicazione <br>
      * Se non esistono, le crea <br>
@@ -456,9 +455,12 @@ public abstract class FlowBoot implements ServletContextListener {
         if (entityBean == null) {
             entityBean = new Versione(codeVersione, LocalDate.now(), descVersione);
             entityBean.id = codeVersione;
-            mongo.save(entityBean);
+            try {
+                mongo.save(entityBean);
+            } catch (AMongoException unErrore) {
+                logger.error(unErrore, this.getClass(), "fixVersioni");
+            }
         }
-
     }
 
 

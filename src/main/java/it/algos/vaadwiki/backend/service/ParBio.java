@@ -25,32 +25,32 @@ public enum ParBio {
     titolo("Titolo", "titolo", false, false, false, false, false) {
     },// end of single enumeration
 
-//    nome("Nome", "nome", true, true, true, true, false) {
-//        @Override
-//        public void setValue(final Bio bio, final String value) {
-//            bio.nome = text.isValid(value) ? elabora.fixNomeValido(value) : null;
-//        }
-//
-//        @Override
-//        public String fixValoreGrezzo(final String valoreGrezzo) {
-//            return elabora.fixMinuscola(valoreGrezzo);
-//        }
-//
-//        @Override
-//        public String getValue(final Bio bio) {
-//            return bio != null && bio.nome != null ? bio.nome : VUOTA;
-//        }
-//    },// end of single enumeration
+    //    nome("Nome", "nome", true, true, true, true, false) {
+    //        @Override
+    //        public void setValue(final Bio bio, final String value) {
+    //            bio.nome = text.isValid(value) ? elabora.fixNomeValido(value) : null;
+    //        }
+    //
+    //        @Override
+    //        public String fixValoreGrezzo(final String valoreGrezzo) {
+    //            return elabora.fixMinuscola(valoreGrezzo);
+    //        }
+    //
+    //        @Override
+    //        public String getValue(final Bio bio) {
+    //            return bio != null && bio.nome != null ? bio.nome : VUOTA;
+    //        }
+    //    },// end of single enumeration
 
     nome("Nome", "nome", true, true, true, true, false) {
         @Override
         public void setValue(final Bio bio, final String value) {
-            bio.nome =  elabora.fixNomeLink(value);
+            bio.nome = text.isValid(value) ? elabora.fixNomeValido(value) : null;
         }
 
         @Override
         public String getValue(final Bio bio) {
-            return bio != null && bio.nome != null ? bio.nome.getNome() : VUOTA;
+            return bio != null ? bio.nome : VUOTA;
         }
     },// end of single enumeration
 
@@ -67,7 +67,7 @@ public enum ParBio {
 
         @Override
         public String getValue(final Bio bio) {
-            return bio != null && bio.cognome != null ? bio.cognome : VUOTA;
+            return bio != null ? bio.cognome : VUOTA;
         }
     },// end of single enumeration
 
@@ -113,23 +113,23 @@ public enum ParBio {
     },// end of single enumeration
 
     luogoNascita("LuogoNascita", "luogoNato", true, true, true, true, false) {
-        //        @Override
-        //        public void setValue(Bio bio, String value, LibBio libBio) {
-        //            bio.luogoNato = value.equals("") ? null : libBio.fixLuogoValido(value);
-        //        }
+                @Override
+                public void setValue(Bio bio, String value) {
+                    bio.luogoNato = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
+                }
 
-        //        public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
-        //            return libBio.estraeValoreInizialeGrezzoPuntoAmmesso(valorePropertyTmplBioServer);
-        //        }
+//                public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
+//                    return elabora.estraeValoreInizialeGrezzoPuntoAmmesso(valorePropertyTmplBioServer);
+//                }
+//
+//                public String fixValoreGrezzo(String valoreGrezzo) {
+//                    return elabora.fixMaiuscola(valoreGrezzo);
+//                }
 
-        //        public String fixValoreGrezzo(String valoreGrezzo) {
-        //            return libBio.fixMaiuscola(valoreGrezzo);
-        //        }
-
-        //        @Override
-        //        public String getValue(Bio bio) {
-        //            return bio.luogoNato != null ? bio.luogoNato : "";
-        //        }
+                @Override
+                public String getValue(Bio bio) {
+                    return bio != null ? bio.luogoNato : VUOTA;
+                }
     },// end of single enumeration
 
     luogoNascitaLink("LuogoNascitaLink", "luogoNatoLink", true, false, true, true, false) {
@@ -148,63 +148,61 @@ public enum ParBio {
     },// end of single enumeration
 
     giornoMeseNascita("GiornoMeseNascita", "giornoNato", true, true, true, true, false) {
-                @Override
-                public void setValue(Bio bio, String value) {
-                    bio.giornoNato = value.equals(VUOTA) ? null : elabora.fixGiornoLink(value);
-                }
+        @Override
+        public void setValue(Bio bio, String value) {
+            bio.giornoNato = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
+        }
 
-                public String estraeValoreInizialeGrezzo(String testoOriginario) {
-                    return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-                }
+        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
+        }
 
-                public String fixValoreGrezzo(String valoreGrezzo) {
-                    return elabora.fixGiornoValido(valoreGrezzo);
-                }
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return elabora.fixGiornoValido(valoreGrezzo);
+        }
 
-                public String fixParametro(String valoreGrezzo) {
-                    return elabora.fixGiornoValido(valoreGrezzo);
-                }
+        public String fixParametro(String valoreGrezzo) {
+            return elabora.fixGiornoValido(valoreGrezzo);
+        }
 
-                @Override
-                public String getValue(Bio bio) {
-                    Giorno giorno = bio.giornoNato;
-                    return giorno != null ? giorno.giorno : VUOTA;
-                }
+        @Override
+        public String getValue(Bio bio) {
+            return bio != null ? bio.giornoNato : VUOTA;
+        }
     },// end of single enumeration
 
     annoNascita("AnnoNascita", "annoNato", true, true, true, true, false) {
-                @Override
-                public void setValue(Bio bio, String value) {
-                    bio.annoNato = value.equals(VUOTA) ? null : elabora.fixAnnoLink(value);
-                }
+        @Override
+        public void setValue(Bio bio, String value) {
+            bio.annoNato = value.equals(VUOTA) ? null : elabora.fixAnnoValido(value);
+        }
 
-                public String estraeValoreInizialeGrezzo(String testoOriginario) {
-                    return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-                }
+        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
+        }
 
-                public String fixValoreGrezzo(String valoreGrezzo) {
-                    return elabora.fixAnnoValido(valoreGrezzo);
-                }
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return elabora.fixAnnoValido(valoreGrezzo);
+        }
 
-                public String fixParametro(String valoreGrezzo) {
-                    return elabora.fixAnnoValido(valoreGrezzo);
-                }
+        public String fixParametro(String valoreGrezzo) {
+            return elabora.fixAnnoValido(valoreGrezzo);
+        }
 
-                @Override
-                public String getValue(Bio bio) {
-                    Anno anno = bio.annoNato;
-                    return anno != null ? anno.anno : VUOTA;
-                }
+        @Override
+        public String getValue(Bio bio) {
+            return bio != null ? bio.annoNato : VUOTA;
+        }
     },// end of single enumeration
 
     noteNascita("NoteNascita", "NoteNascita", false, false, true, false, false) {
     },// end of single enumeration
 
     luogoMorte("LuogoMorte", "luogoMorto", true, true, true, true, false) {
-        //        @Override
-        //        public void setValue(Bio bio, String value, LibBio libBio) {
-        //            bio.luogoMorto = value.equals("") ? null : libBio.fixLuogoValido(value);
-        //        }
+        @Override
+        public void setValue(Bio bio, String value) {
+            bio.luogoMorto = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
+        }
 
         //        public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
         //            return libBio.estraeValoreInizialeGrezzoPuntoAmmesso(valorePropertyTmplBioServer);
@@ -219,84 +217,82 @@ public enum ParBio {
         //            return libBio.fixLuogoValido(value);
         //        }
 
-        //        @Override
-        //        public String getValue(Bio bio) {
-        //            return bio.luogoMorto != null ? bio.luogoMorto : "";
-        //        }
+                @Override
+                public String getValue(Bio bio) {
+                    return bio != null ? bio.luogoMorto : VUOTA;
+                }
     },// end of single enumeration
 
     luogoMorteLink("LuogoMorteLink", "luogoMortoLink", true, false, true, true, false) {
-//                @Override
-//                public void setValue(Bio bio, String value, LibBio libBio) {
-//                    bio.luogoNatoLink = value.equals("") ? null : libBio.fixLuogoValido(value);
-//                }
-//
-//                public String fixValore(String valoreGrezzo) {
-//                    return valoreGrezzo;
-//                }
-//
-//                @Override
-//                public String fix(String value, LibBio libBio) {
-//                    return libBio.fixLuogoValido(value);
-//                }
-//
-//                @Override
-//                public String getValue(Bio bio) {
-//                    return bio.luogoMortoLink != null ? bio.luogoMortoLink : "";
-//                }
+        //                @Override
+        //                public void setValue(Bio bio, String value, LibBio libBio) {
+        //                    bio.luogoNatoLink = value.equals("") ? null : libBio.fixLuogoValido(value);
+        //                }
+        //
+        //                public String fixValore(String valoreGrezzo) {
+        //                    return valoreGrezzo;
+        //                }
+        //
+        //                @Override
+        //                public String fix(String value, LibBio libBio) {
+        //                    return libBio.fixLuogoValido(value);
+        //                }
+        //
+        //                @Override
+        //                public String getValue(Bio bio) {
+        //                    return bio.luogoMortoLink != null ? bio.luogoMortoLink : "";
+        //                }
     },// end of single enumeration
 
     luogoMorteAlt("LuogoMorteAlt", "luogoMortoAlt", false, false, true, false, false) {
     },// end of single enumeration
 
     giornoMeseMorte("GiornoMeseMorte", "giornoMorte", true, true, true, true, false) {
-                @Override
-                public void setValue(Bio bio, String value) {
-                    bio.giornoMorto = value.equals(VUOTA) ? null : elabora.fixGiornoLink(value);
-                }
+        @Override
+        public void setValue(Bio bio, String value) {
+            bio.giornoMorto = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
+        }
 
-                public String estraeValoreInizialeGrezzo(String testoOriginario) {
-                    return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-                }
+        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
+        }
 
-                public String fixValoreGrezzo(String valoreGrezzo) {
-                    return elabora.fixGiornoValido(valoreGrezzo);
-                }
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return elabora.fixGiornoValido(valoreGrezzo);
+        }
 
-                public String fixParametro(String valoreGrezzo) {
-                    return elabora.fixGiornoValido(valoreGrezzo);
-                }
+        public String fixParametro(String valoreGrezzo) {
+            return elabora.fixGiornoValido(valoreGrezzo);
+        }
 
-                @Override
-                public String getValue(Bio bio) {
-                    Giorno giorno = bio.giornoMorto;
-                    return giorno != null ? giorno.giorno : VUOTA;
-                }
+        @Override
+        public String getValue(Bio bio) {
+            return bio != null ? bio.giornoMorto : VUOTA;
+        }
     },// end of single enumeration
 
     annoMorte("AnnoMorte", "AnnoMorto", true, true, true, true, false) {
-                @Override
-                public void setValue(Bio bio, String value) {
-                    bio.annoMorto = value.equals(VUOTA) ? null : elabora.fixAnnoLink(value);
-                }
+        @Override
+        public void setValue(Bio bio, String value) {
+            bio.annoMorto = value.equals(VUOTA) ? null : elabora.fixAnnoValido(value);
+        }
 
-                public String estraeValoreInizialeGrezzo(String testoOriginario) {
-                    return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-                }
+        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
+        }
 
-                public String fixValoreGrezzo(String valoreGrezzo) {
-                    return elabora.fixAnnoValido(valoreGrezzo);
-                }
+        public String fixValoreGrezzo(String valoreGrezzo) {
+            return elabora.fixAnnoValido(valoreGrezzo);
+        }
 
-                public String fixParametro(String valoreGrezzo) {
-                    return elabora.fixAnnoValido(valoreGrezzo);
-                }
+        public String fixParametro(String valoreGrezzo) {
+            return elabora.fixAnnoValido(valoreGrezzo);
+        }
 
-                @Override
-                public String getValue(Bio bio) {
-                    Anno anno = bio.annoMorto;
-                    return anno != null ? anno.anno : VUOTA;
-                }
+        @Override
+        public String getValue(Bio bio) {
+            return bio != null ? bio.annoMorto : VUOTA;
+        }
     },// end of single enumeration
 
     noteMorte("NoteMorte", "NoteMorte", false, false, true, false, false) {
@@ -314,7 +310,7 @@ public enum ParBio {
     attivita("Attività", "attivita", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) {
-            bio.attivita = value.equals(VUOTA) ? null : elabora.fixAttivitaLink(value);
+            bio.attivita = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(value);
         }
 
         public String fixValoreGrezzo(String valoreGrezzo) {
@@ -327,15 +323,14 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            Attivita attivita = bio.attivita;
-            return attivita != null ? attivita.singolare : VUOTA;
+            return bio != null ? bio.attivita : VUOTA;
         }
     },// end of single enumeration
 
     attivita2("Attività2", "attivita2", true, false, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) {
-            bio.attivita2 = value.equals("") ? null : elabora.fixAttivitaLink(value);
+            bio.attivita2 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(value);
         }
 
         public String fixValoreGrezzo(String valoreGrezzo) {
@@ -348,15 +343,14 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            Attivita attivita = bio.attivita2;
-            return attivita != null ? attivita.singolare : "";
+            return bio != null ? bio.attivita2 : VUOTA;
         }
     },// end of single enumeration
 
     attivita3("Attività3", "attivita3", true, false, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) {
-            bio.attivita3 = value.equals("") ? null : elabora.fixAttivitaLink(value);
+            bio.attivita3 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(value);
         }
 
         public String fixValoreGrezzo(String valoreGrezzo) {
@@ -369,8 +363,7 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            Attivita attivita = bio.attivita3;
-            return attivita != null ? attivita.singolare : "";
+            return bio != null ? bio.attivita3 : VUOTA;
         }
     },// end of single enumeration
 
@@ -380,7 +373,7 @@ public enum ParBio {
     nazionalita("Nazionalità", "nazionalita", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) {
-            bio.nazionalita = value.equals("") ? null : elabora.fixNazionalitaLink(value);
+            bio.nazionalita = value.equals("") ? null : elabora.fixNazionalitaValida(value);
         }
 
         public String fixValoreGrezzo(String valoreGrezzo) {
@@ -393,8 +386,7 @@ public enum ParBio {
 
         @Override
         public String getValue(Bio bio) {
-            Nazionalita nazionalita = bio.nazionalita;
-            return nazionalita != null ? nazionalita.singolare : VUOTA;
+            return bio != null ? bio.nazionalita : VUOTA;
         }
     },// end of single enumeration
 

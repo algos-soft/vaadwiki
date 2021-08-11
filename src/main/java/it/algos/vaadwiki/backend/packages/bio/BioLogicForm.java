@@ -9,6 +9,7 @@ import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
@@ -251,7 +252,10 @@ public class BioLogicForm extends WikiLogicForm {
     protected void elabora() {
         Bio bio = (Bio) entityBean;
         bio = elaboraService.esegue(bio);
-        bioService.save(bio, null);
+        try {
+            bioService.save(bio, null);
+        } catch (AMongoException unErrore) {
+        }
     }
 
     private void printMappa(Map mappa) {

@@ -21,6 +21,8 @@ import java.util.*;
  * User: gac
  * Date: ven, 30-lug-2021
  * Time: 19:52
+ *
+ * Legge una serie di pagine individuate da listaPageids <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

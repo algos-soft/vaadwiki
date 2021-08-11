@@ -61,6 +61,8 @@ public abstract class FlowCost {
 
     public static final String REF = "<ref>";
 
+    public static final String REF_OPEN = "<ref";
+
     public static final String ECC = "ecc.";
 
     public static final String NOTE = "<!--";
@@ -281,6 +283,9 @@ public abstract class FlowCost {
     public static final String KEY_BUTTON_DELETE = "Delete";
 
     public static final String KEY_JSON_QUERY = "query";
+
+    public static final String KEY_JSON_NORMALIZED = "normalized";
+    public static final String KEY_JSON_ENCODED = "fromencoded";
 
     public static final String KEY_JSON_CONTINUE = "continue";
 

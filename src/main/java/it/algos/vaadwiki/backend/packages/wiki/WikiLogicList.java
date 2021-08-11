@@ -398,7 +398,10 @@ public abstract class WikiLogicList extends LogicList {
      * @return true se l'azione è stata eseguita
      */
     public boolean elabora() {
-        return elaboraService.esegue(bioService.fetch());
+         elaboraService.esegue(bioService.fetch());
+        super.reload();
+
+        return true;
     }
 
     /**
