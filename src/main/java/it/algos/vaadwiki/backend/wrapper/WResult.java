@@ -27,12 +27,22 @@ public class WResult extends AResult {
         this.wrap = wrap;
     }
 
-    public static AIResult crea(WrapBio wrap) {
+    public static WResult crea(WrapBio wrap) {
         return new WResult(wrap);
+    }
+
+    public static WResult errato() {
+        WResult wResult = new WResult();
+        wResult.setValido(false);
+        return wResult;
     }
 
     public WrapBio getWrap() {
         return wrap;
+    }
+
+    public void setWrap(WrapBio wrap) {
+        this.wrap = wrap;
     }
 
 }

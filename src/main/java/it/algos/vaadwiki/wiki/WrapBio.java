@@ -25,7 +25,7 @@ public class WrapBio {
 
     private String templBio;
 
-    private boolean valida;
+    private boolean valido;
 
     public WrapBio(final String title, final AETypePage type) {
         this(0, title, VUOTA, VUOTA, type);
@@ -41,7 +41,7 @@ public class WrapBio {
         this.templBio = templBio;
         this.time = (stringTimestamp != null && stringTimestamp.length() > 0) ? LocalDateTime.parse(stringTimestamp, DateTimeFormatter.ISO_DATE_TIME) : null;
         this.type = type;
-        this.valida = type == AETypePage.testoConTmpl;
+        this.valido = type == AETypePage.testoConTmpl;
     }
 
     public AETypePage getType() {
@@ -64,8 +64,8 @@ public class WrapBio {
         return templBio;
     }
 
-    public boolean isValida() {
-        return valida;
+    public boolean isValido() {
+        return valido;
     }
 
 }

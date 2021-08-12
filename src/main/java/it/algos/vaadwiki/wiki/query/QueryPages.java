@@ -138,7 +138,7 @@ public class QueryPages extends AQuery {
                 for (Object obj : jsonPages) {
                     wrap = creaWrapBio((JSONObject) obj);
                     if (wrap != null) {
-                        if (wrap != null && wrap.isValida()) {
+                        if (wrap != null && wrap.isValido()) {
                             listaNew.add(wrap);
                         }
                         else {

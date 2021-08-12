@@ -12,7 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
  * Time: 09:25
  */
 public enum TypeQuery {
-    get("GET"),
+    get("GET senza loginCookies"),
     getCookies("GET con loginCookies"),
     post("POST"),
     login("preliminary GET + POST"),

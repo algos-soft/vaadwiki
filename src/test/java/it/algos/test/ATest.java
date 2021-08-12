@@ -442,6 +442,8 @@ public abstract class ATest {
         reflection.text = text;
         gSonService.text = text;
         gSonService.array = array;
+        jSonService.text = text;
+        jSonService.array = array;
         bean.mongo = mongo;
         mongo.text = text;
         mongo.annotation = annotation;

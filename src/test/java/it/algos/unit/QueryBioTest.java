@@ -1,7 +1,9 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.wiki.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadwiki.backend.wrapper.*;
+import it.algos.vaadwiki.wiki.*;
 import it.algos.vaadwiki.wiki.query.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
@@ -30,8 +32,16 @@ public class QueryBioTest extends ATest {
 
     public static final String PAGINA_INESISTENTE_CON_SPAZI = "Questa pagina non esiste";
 
-    @InjectMocks
-    public AWikiApiService wikiApi;
+    public static final String PAGINA_DISAMBIGUA = "Costa (disambigua)";
+
+    public static final String PAGINA_REDIRECT = "Alberto Gines Lopez";
+
+    public static final String PAGINA_SENZA_TMPL_BIO = "Costa (Conegliano)";
+
+    public static final String PAGINA_BIOGRAFICA = "Cesare Costa";
+
+    //    @InjectMocks
+    //    public AWikiApiService wikiApi;
 
     /**
      * Classe principale di riferimento <br>
@@ -56,11 +66,11 @@ public class QueryBioTest extends ATest {
         istanza.text = text;
         istanza.wikiApi = wikiApi;
 
-        MockitoAnnotations.initMocks(wikiApi);
-        Assertions.assertNotNull(wikiApi);
-        wikiApi.text = text;
-        wikiApi.web = web;
-        wikiApi.jSonService = jSonService;
+        //        MockitoAnnotations.initMocks(wikiApi);
+        //        Assertions.assertNotNull(wikiApi);
+        //        wikiApi.text = text;
+        //        wikiApi.web = web;
+        //        wikiApi.jSonService = jSonService;
     }
 
 
@@ -78,44 +88,113 @@ public class QueryBioTest extends ATest {
     @Order(1)
     @DisplayName("1 - Cerca di leggere una pagina inesistente")
     void urlRequest() {
-        ottenutoRisultato = istanza.urlRequest(PAGINA_INESISTENTE);
+        sorgente = PAGINA_INESISTENTE_MINUSCOLA;
+        ottenutoRisultato = istanza.urlRequest(sorgente);
         assertNotNull(ottenutoRisultato);
         assertFalse(ottenutoRisultato.isValido());
+        System.out.println("Titolo errato senza spazi");
+        System.out.println(VUOTA);
         printRisultato(ottenutoRisultato);
     }
 
     @Test
     @Order(2)
-    @DisplayName("2 - Legge una pagina di redirect")
+    @DisplayName("2 - Cerca di leggere una pagina inesistente")
     void urlRequest2() {
+        sorgente = PAGINA_INESISTENTE_CON_SPAZI;
+        ottenutoRisultato = istanza.urlRequest(sorgente);
+        assertNotNull(ottenutoRisultato);
+        assertFalse(ottenutoRisultato.isValido());
+        System.out.println("Titolo errato con spazi");
+        System.out.println(VUOTA);
+        printRisultato(ottenutoRisultato);
     }
+
 
     @Test
     @Order(3)
     @DisplayName("3 - Legge una pagina di disambigua")
     void urlRequest3() {
+        sorgente = PAGINA_DISAMBIGUA;
+        ottenutoRisultato = istanza.urlRequest(sorgente);
+        assertNotNull(ottenutoRisultato);
+        assertFalse(ottenutoRisultato.isValido());
+        System.out.println("Pagina di disambigua");
+        System.out.println(VUOTA);
+        printRisultato(ottenutoRisultato);
+        System.out.println(VUOTA);
+        printWrapBio(((WResult)ottenutoRisultato).getWrap());
     }
 
     @Test
     @Order(4)
-    @DisplayName("4 - Legge una pagina SENZA tmpl Bio")
+    @DisplayName("4 - Legge una pagina di redirect")
     void urlRequest4() {
+        sorgente = PAGINA_REDIRECT;
+        ottenutoRisultato = istanza.urlRequest(sorgente);
+        assertNotNull(ottenutoRisultato);
+        assertFalse(ottenutoRisultato.isValido());
+        System.out.println("Pagina di redirect");
+        System.out.println(VUOTA);
+        printRisultato(ottenutoRisultato);
+        System.out.println(VUOTA);
+        printWrapBio(((WResult)ottenutoRisultato).getWrap());
     }
 
     @Test
     @Order(5)
-    @DisplayName("5 - Legge una pagina con tmpl Bio")
+    @DisplayName("5 - Legge una pagina SENZA tmpl Bio")
     void urlRequest5() {
-        //        System.out.println("5 - Legge (con bot) una lista (breve) di pagine");
-
-        //        sorgenteArrayLong = LISTA_BREVE;
-        //        previsto = JSON_SUCCESS;
-        //        ottenutoRisultato = istanza.urlRequest(sorgenteArrayLong);
-        //        assertTrue(ottenutoRisultato.isValido());
-        //        assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        //        printRisultato(ottenutoRisultato);
+        sorgente = PAGINA_SENZA_TMPL_BIO;
+        ottenutoRisultato = istanza.urlRequest(sorgente);
+        assertNotNull(ottenutoRisultato);
+        assertFalse(ottenutoRisultato.isValido());
+        System.out.println("Pagina SENZA tmpl Bio");
+        System.out.println(VUOTA);
+        printRisultato(ottenutoRisultato);
+        System.out.println(VUOTA);
+        printWrapBio(((WResult)ottenutoRisultato).getWrap());
     }
 
+    @Test
+    @Order(6)
+    @DisplayName("6 - Legge una pagina con tmpl Bio")
+    void urlRequest6() {
+        sorgente = PAGINA_BIOGRAFICA;
+        ottenutoRisultato = istanza.urlRequest(sorgente);
+        assertNotNull(ottenutoRisultato);
+        assertTrue(ottenutoRisultato.isValido());
+        System.out.println("Pagina biografica con tmpl Bio");
+        System.out.println(VUOTA);
+        printRisultato(ottenutoRisultato);
+        System.out.println(VUOTA);
+        printWrapBio(((WResult)ottenutoRisultato).getWrap());
+
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("7 - Recupera un wrapBio")
+    void urlRequest7() {
+        WrapBio wrap;
+        sorgente = PAGINA_BIOGRAFICA;
+        wrap =  istanza.urlRequest(sorgente).getWrap();
+        assertNotNull(wrap);
+        assertTrue(wrap.isValido());
+        printWrapBio(wrap);
+    }
+
+
+    protected void printWrapBio(WrapBio wrap) {
+
+        System.out.println("WrapBio");
+        System.out.println(VUOTA);
+        System.out.println("Titolo:" + SPAZIO + wrap.getTitle());
+        System.out.println("PageId:" + SPAZIO + wrap.getPageid());
+        System.out.println("Type:" + SPAZIO + wrap.getType());
+        System.out.println("Timestamp:" + SPAZIO + wrap.getTime());
+        System.out.println("Template:" + SPAZIO + wrap.getTemplBio());
+    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>
