@@ -28,24 +28,6 @@ import java.util.*;
  */
 public abstract class WikiLogicList extends LogicList {
 
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    protected WebService web;
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Viene iniettata nel costruttore della sottoclasse <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    protected WikiService wikiService;
-
-
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -62,6 +44,25 @@ public abstract class WikiLogicList extends LogicList {
     @Autowired
     public BioService bioService;
 
+    protected Button buttonUploadOneNato;
+
+    protected Button buttonUploadOneMorto;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected WebService web;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Viene iniettata nel costruttore della sottoclasse <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    protected WikiService wikiService;
 
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
@@ -334,7 +335,7 @@ public abstract class WikiLogicList extends LogicList {
     protected Button createTestButton(AEntity entityBean) {
         Button viewButton = new Button(new Icon(VaadinIcon.SERVER));
         viewButton.getElement().setAttribute("theme", "secondary");
-        //        viewButton.addClickListener(e -> testAttivita(entityBean));
+        viewButton.addClickListener(e -> testWiki(entityBean));
 
         return viewButton;
     }
@@ -349,6 +350,9 @@ public abstract class WikiLogicList extends LogicList {
 
 
     protected void wikiPage(AEntity entityBean) {
+    }
+
+    protected void testWiki(AEntity entityBean) {
     }
 
     /**
@@ -398,7 +402,7 @@ public abstract class WikiLogicList extends LogicList {
      * @return true se l'azione è stata eseguita
      */
     public boolean elabora() {
-         elaboraService.esegue(bioService.fetch());
+        elaboraService.esegue(bioService.fetch());
         super.reload();
 
         return true;

@@ -120,7 +120,7 @@ public class ElaboraService extends AbstractService {
      * Elabora la singola voce biografica <br>
      * Estrae dal tmplBioServer i singoli parametri previsti nella enumeration ParBio <br>
      * Ogni parametro viene 'pulito' se presentato in maniera 'impropria' <br>
-     * Quello che resta è affidabile ed utilizzabile per le liste <br>
+     * Quello che resta è affidabile e utilizzabile per le liste <br>
      */
     public Bio esegue(Bio bio) {
 
@@ -160,7 +160,11 @@ public class ElaboraService extends AbstractService {
                 for (ParBio par : ParBio.values()) {
                     value = mappa.get(par.getTag());
                     if (value != null) {
-                        par.setValue(bio, value);
+                        try {
+                            par.setValue(bio, value);
+                        } catch (Exception unErrore) {
+                            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+                        }
                     }
                 }
             }
@@ -177,7 +181,16 @@ public class ElaboraService extends AbstractService {
      * @return testoValido regolato in uscita
      */
     public String fixNomeValido(final String testoGrezzo) {
-        return fixValoreGrezzo(testoGrezzo);
+        String testoValido = fixValoreGrezzo(testoGrezzo);
+
+        //--primo nome
+        if (testoValido.contains(SPAZIO)) {
+            testoValido = testoValido.substring(0, testoValido.indexOf(SPAZIO)).trim();
+        }
+
+        //--nomi doppi
+
+        return testoValido;
     }
 
 

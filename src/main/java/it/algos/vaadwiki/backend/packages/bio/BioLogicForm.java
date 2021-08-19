@@ -225,7 +225,7 @@ public class BioLogicForm extends WikiLogicForm {
      * Titolo della pagina wiki <br>
      */
     private String getWikiTitle() {
-        String valueWikiTitle = VUOTA;
+        String valueWikiTitle;
         AField fieldWikiTitle = currentForm.getField("wikiTitle");
         valueWikiTitle = fieldWikiTitle != null ? (String) fieldWikiTitle.getValue() : VUOTA;
 
@@ -240,7 +240,9 @@ public class BioLogicForm extends WikiLogicForm {
      * @return true se l'azione è stata eseguita
      */
     public boolean download() {
-        ((BioService) entityService).downloadBio(getWikiTitle());
+        entityBean = bioService.downloadBio(getWikiTitle());
+        currentForm.binder.readBean(entityBean);
+
         return true;
     }
 
@@ -250,13 +252,10 @@ public class BioLogicForm extends WikiLogicForm {
      */
     @Override
     protected void elabora() {
-        Bio bio = (Bio) entityBean;
-        bio = elaboraService.esegue(bio);
-        try {
-            bioService.save(bio, null);
-        } catch (AMongoException unErrore) {
-        }
+        entityBean = elaboraService.esegue((Bio)entityBean);
+        currentForm.binder.readBean(entityBean);
     }
+
 
     private void printMappa(Map mappa) {
         for (Object key : mappa.keySet()) {

@@ -580,6 +580,10 @@ public class ALogService extends AbstractService {
         typeTxt = text.fixSizeQuadre(typeTxt, 10);
         message = typeTxt + DOPPIO_SPAZIO + message;
 
+        if (adminLogger == null) {
+            return;
+        }
+
         if (clazz != null) {
             clazzTxt = clazz.getSimpleName();
             message += sep + clazzTxt;

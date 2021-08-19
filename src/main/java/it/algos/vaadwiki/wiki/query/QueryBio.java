@@ -114,12 +114,13 @@ public class QueryBio extends AQuery {
                 result.setValido(false);
                 result.setErrorCode("missing=true");
                 result.setErrorMessage(String.format("La pagina wiki '%s' non esiste", result.getWikiTitle()));
+                wrap = new WrapBio(result.getWikiTitle(), AETypePage.nonEsiste);
+                result.setWrap(wrap);
                 return result;
             }
         }
 
         //--pageId
-
         if (jsonPageZero != null && jsonPageZero.get(KEY_JSON_PAGE_ID) != null) {
             pageId = (long) jsonPageZero.get(KEY_JSON_PAGE_ID);
         }

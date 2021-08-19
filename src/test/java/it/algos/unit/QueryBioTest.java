@@ -95,6 +95,8 @@ public class QueryBioTest extends ATest {
         System.out.println("Titolo errato senza spazi");
         System.out.println(VUOTA);
         printRisultato(ottenutoRisultato);
+        System.out.println(VUOTA);
+        printWrapBio(((WResult) ottenutoRisultato).getWrap());
     }
 
     @Test
@@ -108,6 +110,8 @@ public class QueryBioTest extends ATest {
         System.out.println("Titolo errato con spazi");
         System.out.println(VUOTA);
         printRisultato(ottenutoRisultato);
+        System.out.println(VUOTA);
+        printWrapBio(((WResult) ottenutoRisultato).getWrap());
     }
 
 
@@ -123,7 +127,7 @@ public class QueryBioTest extends ATest {
         System.out.println(VUOTA);
         printRisultato(ottenutoRisultato);
         System.out.println(VUOTA);
-        printWrapBio(((WResult)ottenutoRisultato).getWrap());
+        printWrapBio(((WResult) ottenutoRisultato).getWrap());
     }
 
     @Test
@@ -138,7 +142,7 @@ public class QueryBioTest extends ATest {
         System.out.println(VUOTA);
         printRisultato(ottenutoRisultato);
         System.out.println(VUOTA);
-        printWrapBio(((WResult)ottenutoRisultato).getWrap());
+        printWrapBio(((WResult) ottenutoRisultato).getWrap());
     }
 
     @Test
@@ -153,7 +157,7 @@ public class QueryBioTest extends ATest {
         System.out.println(VUOTA);
         printRisultato(ottenutoRisultato);
         System.out.println(VUOTA);
-        printWrapBio(((WResult)ottenutoRisultato).getWrap());
+        printWrapBio(((WResult) ottenutoRisultato).getWrap());
     }
 
     @Test
@@ -168,7 +172,7 @@ public class QueryBioTest extends ATest {
         System.out.println(VUOTA);
         printRisultato(ottenutoRisultato);
         System.out.println(VUOTA);
-        printWrapBio(((WResult)ottenutoRisultato).getWrap());
+        printWrapBio(((WResult) ottenutoRisultato).getWrap());
 
     }
 
@@ -178,7 +182,7 @@ public class QueryBioTest extends ATest {
     void urlRequest7() {
         WrapBio wrap;
         sorgente = PAGINA_BIOGRAFICA;
-        wrap =  istanza.urlRequest(sorgente).getWrap();
+        wrap = istanza.urlRequest(sorgente).getWrap();
         assertNotNull(wrap);
         assertTrue(wrap.isValido());
         printWrapBio(wrap);
@@ -189,6 +193,7 @@ public class QueryBioTest extends ATest {
 
         System.out.println("WrapBio");
         System.out.println(VUOTA);
+        System.out.println("Wrap valido: " + wrap.isValido());
         System.out.println("Titolo:" + SPAZIO + wrap.getTitle());
         System.out.println("PageId:" + SPAZIO + wrap.getPageid());
         System.out.println("Type:" + SPAZIO + wrap.getType());

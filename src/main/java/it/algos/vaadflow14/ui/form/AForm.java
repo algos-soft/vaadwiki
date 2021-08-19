@@ -169,7 +169,7 @@ public abstract class AForm extends VerticalLayout {
     protected AEntity entityBean;
 
     //--collegamento tra i fields e la entityBean
-    protected Binder binder;
+    public Binder binder;
 
     /**
      * The Entity Class  (obbligatorio per liste e form)

@@ -2,12 +2,8 @@ package it.algos.vaadwiki.backend.service;
 
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.packages.crono.anno.*;
-import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
-import it.algos.vaadwiki.backend.packages.nazionalita.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
@@ -113,23 +109,23 @@ public enum ParBio {
     },// end of single enumeration
 
     luogoNascita("LuogoNascita", "luogoNato", true, true, true, true, false) {
-                @Override
-                public void setValue(Bio bio, String value) {
-                    bio.luogoNato = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
-                }
+        @Override
+        public void setValue(Bio bio, String value) {
+            bio.luogoNato = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
+        }
 
-//                public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
-//                    return elabora.estraeValoreInizialeGrezzoPuntoAmmesso(valorePropertyTmplBioServer);
-//                }
-//
-//                public String fixValoreGrezzo(String valoreGrezzo) {
-//                    return elabora.fixMaiuscola(valoreGrezzo);
-//                }
+        //                public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
+        //                    return elabora.estraeValoreInizialeGrezzoPuntoAmmesso(valorePropertyTmplBioServer);
+        //                }
+        //
+        //                public String fixValoreGrezzo(String valoreGrezzo) {
+        //                    return elabora.fixMaiuscola(valoreGrezzo);
+        //                }
 
-                @Override
-                public String getValue(Bio bio) {
-                    return bio != null ? bio.luogoNato : VUOTA;
-                }
+        @Override
+        public String getValue(Bio bio) {
+            return bio != null ? bio.luogoNato : VUOTA;
+        }
     },// end of single enumeration
 
     luogoNascitaLink("LuogoNascitaLink", "luogoNatoLink", true, false, true, true, false) {
@@ -149,7 +145,7 @@ public enum ParBio {
 
     giornoMeseNascita("GiornoMeseNascita", "giornoNato", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value) throws Exception {
             bio.giornoNato = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
         }
 
@@ -173,7 +169,7 @@ public enum ParBio {
 
     annoNascita("AnnoNascita", "annoNato", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value) throws Exception {
             bio.annoNato = value.equals(VUOTA) ? null : elabora.fixAnnoValido(value);
         }
 
@@ -200,7 +196,7 @@ public enum ParBio {
 
     luogoMorte("LuogoMorte", "luogoMorto", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value) throws Exception {
             bio.luogoMorto = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
         }
 
@@ -217,10 +213,10 @@ public enum ParBio {
         //            return libBio.fixLuogoValido(value);
         //        }
 
-                @Override
-                public String getValue(Bio bio) {
-                    return bio != null ? bio.luogoMorto : VUOTA;
-                }
+        @Override
+        public String getValue(Bio bio) {
+            return bio != null ? bio.luogoMorto : VUOTA;
+        }
     },// end of single enumeration
 
     luogoMorteLink("LuogoMorteLink", "luogoMortoLink", true, false, true, true, false) {
@@ -249,7 +245,7 @@ public enum ParBio {
 
     giornoMeseMorte("GiornoMeseMorte", "giornoMorte", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value) throws Exception {
             bio.giornoMorto = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
         }
 
@@ -273,8 +269,11 @@ public enum ParBio {
 
     annoMorte("AnnoMorte", "AnnoMorto", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) {
-            bio.annoMorto = value.equals(VUOTA) ? null : elabora.fixAnnoValido(value);
+        public void setValue(Bio bio, String value) throws Exception {
+            if (text.isValid(value)) {
+                Object alfa = elabora.fixAnnoValido(value);
+                int a=87;
+            }
         }
 
         public String estraeValoreInizialeGrezzo(String testoOriginario) {
@@ -309,7 +308,7 @@ public enum ParBio {
 
     attivita("Attività", "attivita", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value) throws Exception {
             bio.attivita = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(value);
         }
 
@@ -329,7 +328,7 @@ public enum ParBio {
 
     attivita2("Attività2", "attivita2", true, false, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value) throws Exception {
             bio.attivita2 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(value);
         }
 
@@ -349,7 +348,7 @@ public enum ParBio {
 
     attivita3("Attività3", "attivita3", true, false, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value) throws Exception {
             bio.attivita3 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(value);
         }
 
@@ -372,7 +371,7 @@ public enum ParBio {
 
     nazionalita("Nazionalità", "nazionalita", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value) throws Exception {
             bio.nazionalita = value.equals("") ? null : elabora.fixNazionalitaValida(value);
         }
 
@@ -763,7 +762,7 @@ public enum ParBio {
      * @param bio   istanza da regolare
      * @param value valore da inserire
      */
-    public void setValue(final Bio bio, final String value) {
+    public void setValue(final Bio bio, final String value) throws Exception {
     }
 
     /**
@@ -837,6 +836,7 @@ public enum ParBio {
      */
     public void setBioValidaSesso(Bio istanza) {
     }// end of method
+
 
     public String getRiga(String value) {
         String riga = VUOTA;

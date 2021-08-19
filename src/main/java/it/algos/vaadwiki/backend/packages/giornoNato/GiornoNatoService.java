@@ -1,16 +1,13 @@
-package it.algos.vaadwiki.backend.packages.wikiGiorno;
+package it.algos.vaadwiki.backend.packages.giornoNato;
 
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
-import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project: vaadwiki <br>
@@ -38,7 +35,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-public class WikiGiornoService extends AService {
+public class GiornoNatoService extends AService {
 
 
     /**
@@ -51,7 +48,7 @@ public class WikiGiornoService extends AService {
      * Costruttore senza parametri <br>
      * Regola la entityClazz (final) associata a questo service <br>
      */
-    public WikiGiornoService() {
+    public GiornoNatoService() {
         super(Giorno.class);
     }
 

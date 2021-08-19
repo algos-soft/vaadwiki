@@ -190,6 +190,8 @@ public abstract class AService extends AbstractService implements AIService {
      * @param operation              del dialogo (new o modifica)
      *
      * @return la entityBean appena registrata, null se non registrata
+     *
+     * @throws
      */
     @Override
     public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AMongoException {

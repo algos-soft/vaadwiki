@@ -283,7 +283,8 @@ public class TextService extends AbstractService {
         String tag = VUOTA;
 
         if (this.isValid(testoOut) && this.isValid(tagInterrompi)) {
-            tag = tagInterrompi.trim();
+            tag = tagInterrompi.equals(SPAZIO) ? tagInterrompi : tagInterrompi.trim();
+
             if (testoOut.contains(tag)) {
                 testoOut = testoOut.substring(0, testoOut.lastIndexOf(tag));
             }
@@ -1239,7 +1240,7 @@ public class TextService extends AbstractService {
         int pos;
 
         //--controllo di congruità
-        if (text.isValid(testoDaSpazzolare) && text.isValid(tag)) {
+        if (this.isValid(testoDaSpazzolare) && this.isValid(tag)) {
             if (testoDaSpazzolare.contains(tag)) {
                 pos = testoDaSpazzolare.indexOf(tag);
                 while (pos != -1) {

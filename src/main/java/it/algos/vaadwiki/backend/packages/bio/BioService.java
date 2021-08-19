@@ -365,14 +365,102 @@ public class BioService extends AService {
      * Scarica una singola biografia <br>
      */
     public Bio downloadBio(String wikiTitle) {
-        WrapPage wrap = null;
+        Bio bio = null;
+        WrapBio wrap = null;
 
         if (text.isValid(wikiTitle)) {
-            wrap = wikiBot.leggePage(wikiTitle);
+            wrap = appContext.getBean(QueryBio.class).urlRequest(wikiTitle).getWrap();
         }
 
-        return wrap != null ? creaBio(wrap) : null;
+        return fixBio(wrap);
     }
+    /**
+     * Costruisce una singola biografia <br>
+     */
+    public Bio fixBio(WrapBio wrap) {
+        Bio bio = null;
+
+        if (wrap != null && wrap.isValido()) {
+            bio = this.newEntity(wrap);
+            bio = elaboraService.esegue(bio);
+            bio.setLastMongo(LocalDateTime.now());
+        }
+
+        return bio;
+    }
+
+    /**
+     * Costruisce una singola biografia <br>
+     * Aggiorna la singola biografia se già esistente <br>
+     */
+    public Bio fixBioOld(WrapBio wrap) {
+        Bio bio = null;
+
+        if (wrap != null && wrap.isValido()) {
+            bio = findById(Long.toString(wrap.getPageid()));
+            mongo.delete(bio);
+            bio = this.newEntity(wrap);
+            elaboraService.esegue(bio);
+            try {
+                save(bio, null);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            }
+
+            //            if (isEsiste(String.valueOf(wrap.getPageid()))) {
+            //                modificaBio(wrap);
+            //            }
+            //            else {
+            //                nuovaBio(wrap);
+            //            }
+        }
+        else {
+            if (wrap == null) {
+                logger.warn(AETypeLog.download, "Qualcosa non ha funzionato");
+            }
+            else {
+                logger.info(AETypeLog.download, String.format("Su wiki non esiste la pagina %s", wrap.getTitle()));
+            }
+        }
+
+        return bio;
+    }
+
+    /**
+     * Aggiorna una biografia già esistente <br>
+     */
+    public Bio modificaBio(WrapBio wrap) {
+        Bio bio = null;
+        return bio;
+    }
+
+
+    /**
+     * Costruisce una nuova biografia <br>
+     */
+    public Bio nuovaBio(WrapBio wrap) {
+        Bio bio = null;
+
+        if (wrap != null && wrap.isValido()) {
+            bio = this.newEntity(wrap);
+            try {
+                save(bio, AEOperation.newEditNoLog);
+            } catch (AMongoException unErrore) {
+            }
+            logger.info(AETypeLog.download, String.format("Download della pagina %s", wrap.getTitle()));
+        }
+        else {
+            if (wrap == null) {
+                logger.warn(AETypeLog.download, "Qualcosa non ha funzionato");
+            }
+            else {
+                logger.info(AETypeLog.download, String.format("Su wiki non esiste la pagina %s", wrap.getTitle()));
+            }
+        }
+
+        return bio;
+    }
+
 
     /**
      * Costruisce una singola biografia <br>

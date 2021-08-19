@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.service;
 import com.mongodb.*;
 import com.vaadin.flow.data.provider.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -69,7 +70,15 @@ public class DataProviderService extends AbstractService {
                     // Converto il tipo di sort
                     sortSpring = utility.sortVaadinToSpring(sortVaadinList, entityClazz);
 
-                    return mongo.fetch(entityClazz, (Map<String, AFiltro>) null, sortSpring, offset, limit).stream();
+                    try {
+                        return mongo.fetch(entityClazz, (Map<String, AFiltro>) null, sortSpring, offset, limit).stream();
+                    } catch (AQueryException unErrore) {
+                        logger.error(unErrore, this.getClass(), "fromCallbacks");
+                        return null;
+                    } catch (AMongoException unErrore) {
+                        logger.error(unErrore, this.getClass(), "fromCallbacks");
+                        return null;
+                    }
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
@@ -104,14 +113,33 @@ public class DataProviderService extends AbstractService {
                     // Converto il tipo di sort
                     sortSpring = utility.sortVaadinToSpring(sortVaadinList, entityClazz);
 
-                    return mongo.fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();
+                    try {
+                        return mongo.fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();
+                    } catch (AMongoException unErrore) {
+                        logger.error(unErrore, this.getClass(), "fromCallbacks");
+                        return null;
+                    } catch (AQueryException unErrore) {
+                        logger.error(unErrore, this.getClass(), "fromCallbacks");
+                        return null;
+                    }
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                countCallback -> mongo.fetch(entityClazz, mappaFiltri).size()
+                countCallback -> {
+                    try {
+                        return mongo.fetch(entityClazz, mappaFiltri).size();
+                    } catch (AMongoException unErrore) {
+                        logger.error(unErrore, this.getClass(), "fromCallbacks");
+                        return 0;
+                    } catch (AQueryException unErrore) {
+                        logger.error(unErrore, this.getClass(), "fromCallbacks");
+                        return 0;
+                    }
+
+
+                }
         );
-        //                countCallback -> mongo.count(entityClazz, mappaFiltri));
 
         return dataProvider;
     }

@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {WikiApplication.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DisplayName("Text Service")
+@DisplayName("Elabora Service")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ElaboraServiceIntegrationTest extends ATest {
 

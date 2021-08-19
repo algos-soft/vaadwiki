@@ -68,7 +68,7 @@ public class Giorno extends AREntity {
      */
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.integer, caption = "progressivo", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#", widthEM = 3)
+    @AIColumn(header = "#", widthEM = 4)
     public int ordine;
 
 
@@ -78,7 +78,7 @@ public class Giorno extends AREntity {
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn(flexGrow = true)
+    @AIColumn(widthEM = 8)
     public String giorno;
 
 

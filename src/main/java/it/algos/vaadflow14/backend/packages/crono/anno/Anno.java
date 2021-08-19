@@ -95,7 +95,7 @@ public class Anno extends AREntity {
     @NotNull
     @DBRef
     @AIField(type = AETypeField.combo, comboClazz = Secolo.class, usaComboBox = true, widthEM = 12)
-    @AIColumn(flexGrow = true)
+    @AIColumn(widthEM = 8)
     public Secolo secolo;
 
 
