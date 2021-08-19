@@ -208,7 +208,7 @@ public class GiornoService extends AService {
         for (HashMap mappaGiorno : lista) {
             titolo = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_TITOLO);
             titoloMese = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_MESE_TESTO);
-            mese = (Mese) mongo.findById(Mese.class, titoloMese);
+            mese = (Mese) mongo.findByIdOld(Mese.class, titoloMese);
             ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
 
             numRec = creaReset(ordine, titolo, mese)  ? numRec + 1 : numRec;

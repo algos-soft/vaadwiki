@@ -36,6 +36,7 @@ import org.mockito.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DidascaliaServiceTest extends WTest {
 
+    private static final String DATA_BASE_NAME = "vaadflow14";
 
     @InjectMocks
     public DidascaliaService service;
@@ -93,8 +94,8 @@ public class DidascaliaServiceTest extends WTest {
     @InjectMocks
     protected DateService date;
 
-    @InjectMocks
-    protected AMongoService mongoService;
+//    @InjectMocks
+//    protected AMongoService mongoService;
 
     /**
      * Classe principale di riferimento <br>
@@ -108,6 +109,9 @@ public class DidascaliaServiceTest extends WTest {
     @InjectMocks
     DidascaliaGiornoNato didascaliaGiornoNato;
 
+    @InjectMocks
+    private GsonService gSonService;
+
     private String wikiTitle = "Adone Asinari";
 
     private String wikiTitleDue = "Sonia Todd";
@@ -118,6 +122,8 @@ public class DidascaliaServiceTest extends WTest {
 
     @BeforeAll
     public void setUp() {
+        super.setUpStartUp();
+
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
@@ -153,7 +159,7 @@ public class DidascaliaServiceTest extends WTest {
         MockitoAnnotations.initMocks(giornoService);
         MockitoAnnotations.initMocks(giorno);
         MockitoAnnotations.initMocks(reflection);
-        MockitoAnnotations.initMocks(mongoService);
+//        MockitoAnnotations.initMocks(mongoService);
         MockitoAnnotations.initMocks(text);
         //        MockitoAnnotations.initMocks(didascalia);
         MockitoAnnotations.initMocks(giornoNato);
@@ -202,12 +208,19 @@ public class DidascaliaServiceTest extends WTest {
         //        didascaliaService.text = text;
         text.mongo = mongo;
         annoService.mongo = mongo;
+        mongo.text = text;
 
         for (ParBio parBio : ParBio.values()) {
             parBio.setText(text);
             parBio.setWikiBot(wikiBot);
             parBio.setElabora(elaboraService);
         }
+
+        MockitoAnnotations.initMocks(gSonService);
+        Assertions.assertNotNull(gSonService);
+
+        mongo.fixProperties(DATA_BASE_NAME);
+        gSonService.fixProperties(DATA_BASE_NAME);
     }// end of method
 
     /**

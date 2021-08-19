@@ -129,7 +129,7 @@ public enum AEStato {
 
 
     public Stato getStato() {
-        return (Stato) mongo.findById(Stato.class, nome);
+        return (Stato) mongo.findByIdOld(Stato.class, nome);
     }
 
 

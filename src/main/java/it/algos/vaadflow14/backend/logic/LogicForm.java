@@ -522,7 +522,7 @@ public abstract class LogicForm extends Logic {
             return;
         }
         backSteps += -1;
-        final AEntity newEntityBean = mongo.findById(entityClazz, newEntityBeanID);
+        final AEntity newEntityBean = mongo.findByIdOld(entityClazz, newEntityBeanID);
         final Object valueProperty = reflection.getPropertyValue(newEntityBean, sortProperty);
         final String beanPrevID = mongo.findPreviousID(entityClazz, sortProperty, valueProperty);
         final String beanNextID = mongo.findNextID(entityClazz, sortProperty, valueProperty);

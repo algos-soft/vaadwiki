@@ -128,6 +128,7 @@ public class MongoServiceTest extends ATest {
         assertFalse(ottenutoBooleano);
         printCollection(sorgente, "non esiste");
 
+
         sorgente = COLLEZIONE_VALIDA;
         ottenutoBooleano = service.isExists(sorgente);
         assertTrue(ottenutoBooleano);
@@ -145,6 +146,7 @@ public class MongoServiceTest extends ATest {
         assertFalse(ottenutoBooleano);
         printCollection(sorgente, "non è valida");
 
+
         sorgente = COLLEZIONE_VALIDA;
         ottenutoBooleano = service.isValid(sorgente);
         assertTrue(ottenutoBooleano);
@@ -156,9 +158,24 @@ public class MongoServiceTest extends ATest {
 
     @Test
     @Order(3)
-    @DisplayName("3 - Lista di tutte le entities")
+    @DisplayName("3 - Singola entity")
+    void find() {
+        System.out.println("3 - Singola entity");
+
+        sorgente = "piazza";
+        clazz = Via.class;
+        entityBean = service.findById(clazz, sorgente);
+        assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
+        System.out.println(entityBean);
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("4 - Lista di tutte le entities")
     void fetch() {
-        System.out.println("3 - Lista di tutte le entities");
+        System.out.println("4 - Lista di tutte le entities");
 
         sorgenteClasse = Via.class;
         previstoIntero = 26;
@@ -200,7 +217,6 @@ public class MongoServiceTest extends ATest {
         assertEquals(previstoIntero, listaBean.size());
         System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), text.format(listaBean.size()), date.deltaTextEsatto(inizio)));
     }
-
 
     //    @ParameterizedTest
     //    @MethodSource(value = "COLLEZIONI")

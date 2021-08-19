@@ -1052,7 +1052,7 @@ public class AMongoService<capture> extends AbstractService {
             objRef = elementRef.getAsJsonObject();
             objID = objRef.get("id");
             valueID = objID.getAsString();
-            entityRef = findById(clazzRef, valueID);
+            entityRef = findByIdOld(clazzRef, valueID);
             try {
                 field.set(entityBean, entityRef);
             } catch (Exception unErrore) {
@@ -1084,7 +1084,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return if the entity exist
      */
     public boolean isExist(Class<? extends AEntity> entityClazz, String keyId) {
-        return findById(entityClazz, keyId) != null;
+        return findByIdOld(entityClazz, keyId) != null;
     }
 
     /**
@@ -1096,7 +1096,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return the founded entity
      */
     public AEntity find(Class<? extends AEntity> entityClazz, String keyId) {
-        return findById(entityClazz, keyId);
+        return findByIdOld(entityClazz, keyId);
     }
 
     /**
@@ -1108,6 +1108,39 @@ public class AMongoService<capture> extends AbstractService {
      * @return the founded entity
      */
     public AEntity findById(Class<? extends AEntity> entityClazz, String keyId) {
+        AEntity entityBean = null;
+        MongoCollection<Document> collection = getCollection(entityClazz);
+        FindIterable<Document> iterable = null;
+
+        if (entityClazz == null) {
+            return null;
+        }
+
+        if (collection != null) {
+            Bson condition = new Document("_id", keyId);
+            iterable = getCollection(entityClazz).find(condition);
+        }
+
+        if (iterable != null) {
+            for (Document doc : iterable) {
+                entityBean = gSonService.crea(doc, entityClazz);
+                break;
+            }
+        }
+
+        return entityBean;
+    }
+
+
+    /**
+     * Cerca una singola entity di una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return the founded entity
+     */
+    public AEntity findByIdOld(Class<? extends AEntity> entityClazz, String keyId) {
         AEntity entity = null;
         if (entityClazz == null) {
             return null;
@@ -1136,7 +1169,7 @@ public class AMongoService<capture> extends AbstractService {
             return findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
         }
         else {
-            return findById(entityClazz, keyPropertyValue);
+            return findByIdOld(entityClazz, keyPropertyValue);
         }
     }
 
@@ -1430,7 +1463,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return the founded entity
      */
     public AEntity find(AEntity entityBean) {
-        return entityBean != null ? findById(entityBean.getClass(), entityBean.getId()) : null;
+        return entityBean != null ? findByIdOld(entityBean.getClass(), entityBean.getId()) : null;
     }
 
     /**
@@ -1454,7 +1487,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return true if exist
      */
     public boolean isEsiste(Class<? extends AEntity> entityClazz, long keyId) {
-        return findById(entityClazz, Long.toString(keyId)) != null;
+        return findByIdOld(entityClazz, Long.toString(keyId)) != null;
     }
 
     /**

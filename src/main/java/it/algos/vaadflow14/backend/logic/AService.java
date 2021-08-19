@@ -372,7 +372,7 @@ public abstract class AService extends AbstractService implements AIService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     public AEntity findById(final String keyID) {
-        return mongo.findById(entityClazz, keyID);
+        return mongo.findByIdOld(entityClazz, keyID);
     }
 
 

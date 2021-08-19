@@ -3,7 +3,6 @@ package it.algos.vaadflow14.backend.packages.crono.anno;
 import com.google.gson.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
@@ -247,7 +246,7 @@ public class AnnoService extends AService {
             titoloSecolo = secoloEnum.getNome();
             titoloSecolo = titoloSecolo.toLowerCase();
             titoloSecolo = text.levaSpazi(titoloSecolo);
-            secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
+            secolo = (Secolo) mongo.findByIdOld(Secolo.class, titoloSecolo);
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
                 if (creaReset(ordine, nome, bisestile, secolo)) {
@@ -264,7 +263,7 @@ public class AnnoService extends AService {
             titoloSecolo = secoloEnum.getNome();
             titoloSecolo = titoloSecolo.toLowerCase();
             titoloSecolo = text.levaSpazi(titoloSecolo);
-            secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
+            secolo = (Secolo) mongo.findByIdOld(Secolo.class, titoloSecolo);
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
                 if (creaReset(ordine, nome, bisestile, secolo)) {

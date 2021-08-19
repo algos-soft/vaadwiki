@@ -476,7 +476,7 @@ public abstract class ATest {
 
 
     /**
-     * Qui passa ad ogni test delle sottoclassi <br>
+     * Qui passa a ogni test delle sottoclassi <br>
      */
     protected void setUp() {
         inizio = System.currentTimeMillis();
