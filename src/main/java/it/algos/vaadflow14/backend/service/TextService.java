@@ -658,6 +658,35 @@ public class TextService extends AbstractService {
         return stringaOut.trim();
     }
 
+    /**
+     * Aggiunge parentesi graffe singole in testa e coda alla stringa. <br>
+     * Aggiunge SOLO se gia non esistono <br>
+     * Se arriva una stringa vuota, restituisce una stringa vuota <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     * Elimina eventuali graffe già presenti, per evitare di metterle doppie <br>
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con parentesi graffe aggiunte
+     */
+    public String setGraffe(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (this.isValid(stringaOut)) {
+            stringaOut = this.setNoQuadre(stringaIn);
+            if (this.isValid(stringaOut)) {
+                if (!stringaOut.startsWith(GRAFFA_INI)) {
+                    stringaOut = GRAFFA_INI + stringaOut;
+                }
+                if (!stringaOut.endsWith(GRAFFA_END)) {
+                    stringaOut = stringaOut + GRAFFA_END;
+                }
+            }
+        }
+
+        return stringaOut.trim();
+    }
+
 
     /**
      * Aggiunge parentesi quadre singole in testa e coda alla stringa. <br>

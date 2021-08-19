@@ -72,14 +72,17 @@ public class AMongoService<capture> extends AbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AGSonService agSonService;
+    public GsonService agSonService;
 
     @Value("${spring.data.mongodb.database}")
     private String databaseName;
 
     private MongoClient mongoClient;
 
-    private MongoDatabase database;
+    private MongoDatabase dataBase;
+
+    private List<String> collezioni;
+
 
     /**
      * Costruttore @Autowired. <br>
@@ -103,10 +106,18 @@ public class AMongoService<capture> extends AbstractService {
      * Se esistono delle sottoclassi, passa di qui per ognuna di esse (oltre a questa classe madre) <br>
      */
     @PostConstruct
-    protected void postConstruct() {
+    private void postConstruct() {
         fixProperties();
     }
 
+    /**
+     * Creazione iniziale di eventuali properties indispensabili per l'istanza <br>
+     * Metodo chiamato dall'esterno (tipicamente da un Test) <br>
+     */
+    public void fixProperties(final String databaseName) {
+        this.databaseName = databaseName;
+        this.fixProperties();
+    }
 
     /**
      * Creazione iniziale di eventuali properties indispensabili per l'istanza <br>
@@ -114,8 +125,7 @@ public class AMongoService<capture> extends AbstractService {
      * Metodo private che NON può essere sovrascritto <br>
      */
     private void fixProperties() {
-        //        mongoClient = new MongoClient("localhost");
-
+        MongoIterable<String> nomiCollezioni;
         ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/" + databaseName);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
@@ -123,7 +133,15 @@ public class AMongoService<capture> extends AbstractService {
         mongoClient = MongoClients.create(mongoClientSettings);
 
         if (text.isValid(databaseName)) {
-            database = mongoClient.getDatabase(databaseName);
+            dataBase = mongoClient.getDatabase(databaseName);
+        }
+
+        if (dataBase != null) {
+            collezioni = new ArrayList<>();
+            nomiCollezioni = dataBase.listCollectionNames();
+            for (String stringa : nomiCollezioni) {
+                collezioni.add(stringa);
+            }
         }
     }
 
@@ -149,7 +167,7 @@ public class AMongoService<capture> extends AbstractService {
      */
     private MongoCollection<Document> getCollection(String collectionName) {
         if (text.isValid(collectionName)) {
-            return database != null ? database.getCollection(collectionName) : null;
+            return dataBase != null ? dataBase.getCollection(collectionName) : null;
         }
         else {
             return null;
@@ -160,12 +178,12 @@ public class AMongoService<capture> extends AbstractService {
     /**
      * Check the existence of a collection. <br>
      *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param collectionName corrispondente ad una collection sul database mongoDB
      *
      * @return true if the collection has entities
      */
     public boolean isValid(String collectionName) {
-        return count(collectionName) > 0;
+        return isExists(collectionName) ? count(collectionName) > 0 : false;
     }
 
     /**
@@ -187,7 +205,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return true if the collection exist
      */
     public boolean isExists(Class<? extends AEntity> entityClazz) {
-        return isExists(entityClazz.getClass().getSimpleName());
+        return isExists(entityClazz.getSimpleName().toLowerCase());
     }
 
     /**
@@ -209,7 +227,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return true if the collection exist
      */
     public boolean isExists(String collectionName) {
-        return mongoOp.collectionExists(collectionName);
+        return collezioni != null ? collezioni.contains(collectionName) : false;
     }
 
     /**
@@ -258,7 +276,19 @@ public class AMongoService<capture> extends AbstractService {
      * @return numero totale di entities
      */
     public int count(String collectionName) {
-        return count(collectionName, (Query) null);
+        int totale = 0;
+        MongoCollection<Document> collection = getCollection(collectionName);
+        Long risultato = null;
+
+        if (collection != null) {
+            risultato = collection.estimatedDocumentCount();
+        }
+
+        if (risultato != null) {
+            totale = risultato.intValue();
+        }
+
+        return totale;
     }
 
 
@@ -270,7 +300,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return numero totale di entities
      */
     public int count(Class<? extends AEntity> entityClazz) {
-        return count(entityClazz, (Query) null);
+        return count(entityClazz.getSimpleName().toLowerCase());
     }
 
 
@@ -606,12 +636,29 @@ public class AMongoService<capture> extends AbstractService {
      * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
      * Rimanda al metodo base 'fetch' (unico usato) <br>
      *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param entityClazz corrispondente a una collection sul database mongoDB. Obbligatoria.
      *
      * @return lista di entityBeans
      */
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz) throws AMongoException, AQueryException {
-        return fetch(entityClazz, (AFiltro) null);
+        List<AEntity> listaEntities = null;
+        AEntity entityBean;
+        MongoCollection<Document> collection = getCollection(entityClazz);
+        FindIterable<Document> iterable = null;
+
+        if (collection != null) {
+            iterable = collection.find();
+        }
+
+        if (iterable != null) {
+            listaEntities = new ArrayList<>();
+            for (Document doc : iterable) {
+                entityBean = gSonService.crea(doc, entityClazz);
+                listaEntities.add(entityBean);
+            }
+        }
+
+        return listaEntities;
     }
 
     /**
@@ -708,7 +755,7 @@ public class AMongoService<capture> extends AbstractService {
         try {
             listaEntities = (List<AEntity>) mongoOp.find(query, entityClazz);
         } catch (Exception unErrore) {
-            throw new AMongoException(unErrore,null);
+            throw new AMongoException(unErrore, null);
         }
 
         return listaEntities;
@@ -1742,6 +1789,18 @@ public class AMongoService<capture> extends AbstractService {
      */
     public void fixMaxBytes() {
         this.setMaxBlockingSortBytes(EXPECTED_ALGOS_MAX_BYTES);
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    public MongoDatabase getDataBase() {
+        return dataBase;
+    }
+
+    public List<String> getCollezioni() {
+        return collezioni;
     }
 
 }

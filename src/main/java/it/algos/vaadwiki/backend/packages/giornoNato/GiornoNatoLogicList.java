@@ -145,7 +145,7 @@ public class GiornoNatoLogicList extends WikiLogicList {
     @Override
     protected void wikiPage(AEntity entityBean) {
         String tag = "Nati il ";
-        wikiApi.openWikiPage(tag + ((Giorno) entityBean).giorno);
+        wikiApi.openWikiPage(tag + ((Giorno) entityBean).titolo);
     }
 
     @Override

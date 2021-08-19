@@ -74,14 +74,14 @@ public class GiornoService extends AService {
     /**
      * Crea e registra una entityBean col flag reset=true <br>
      *
-     * @param giorno (obbligatorio, unico)
+     * @param titolo (obbligatorio, unico)
      * @param ordine (obbligatorio, unico)
      * @param mese   di riferimento (obbligatorio)
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final int ordine, final String giorno, final Mese mese) {
-        return super.creaReset(newEntity(ordine, giorno, mese));
+    private boolean creaReset(final int ordine, final String titolo, final Mese mese) {
+        return super.creaReset(newEntity(ordine, titolo, mese));
     }
 
 
@@ -104,15 +104,15 @@ public class GiornoService extends AService {
      * Eventuali regolazioni iniziali delle property <br>
      *
      * @param ordine (obbligatorio, unico)
-     * @param giorno (obbligatorio, unico)
+     * @param titolo (obbligatorio, unico)
      * @param mese   di riferimento (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Giorno newEntity(final int ordine,final String giorno,final Mese mese) {
+    public Giorno newEntity(final int ordine,final String titolo,final Mese mese) {
         Giorno newEntityBean = Giorno.builderGiorno()
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
-                .giorno(text.isValid(giorno) ? giorno : null)
+                .titolo(text.isValid(titolo) ? titolo : null)
                 .mese(mese)
                 .build();
 

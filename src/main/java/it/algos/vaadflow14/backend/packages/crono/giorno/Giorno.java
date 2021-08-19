@@ -51,10 +51,10 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Giorno", keyPropertyName = "giorno", usaBoot = true, usaNew = false)
-@AIView(menuIcon = VaadinIcon.CALENDAR, searchProperty = "giorno", sortProperty = "ordine")
-@AIList(fields = "ordine,giorno", usaRowIndex = false)
-@AIForm(fields = "ordine,giorno,mese", usaSpostamentoTraSchede = false)
+@AIEntity(recordName = "Giorno", keyPropertyName = "titolo", usaBoot = true, usaNew = false)
+@AIView(menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine")
+@AIList(fields = "ordine,titolo", usaRowIndex = false)
+@AIForm(fields = "ordine,titolo,mese", usaSpostamentoTraSchede = false)
 public class Giorno extends AREntity {
 
     /**
@@ -79,7 +79,7 @@ public class Giorno extends AREntity {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true)
     @AIColumn(widthEM = 8)
-    public String giorno;
+    public String titolo;
 
 
     /**
@@ -98,7 +98,7 @@ public class Giorno extends AREntity {
      */
     @Override
     public String toString() {
-        return giorno;
+        return titolo;
     }
 
 }

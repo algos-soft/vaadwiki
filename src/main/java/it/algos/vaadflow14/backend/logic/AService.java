@@ -123,6 +123,7 @@ public abstract class AService extends AbstractService implements AIService {
     protected boolean creaReset(final AREntity newEntity) {
         boolean status = false;
         newEntity.reset = true;
+
         try {
             status = save(newEntity, AEOperation.addNew) != null;
         } catch (AMongoException unErrore) {
