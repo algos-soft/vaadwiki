@@ -25,10 +25,10 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("QueryCatTest")
-@DisplayName("Test di unit")
+@Tag("test singolo")
+@DisplayName("QueryCat - Istanza per il login.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class QueryCatTest extends ATest {
+public class QueryCatTest extends WTest {
 
     public static final String CAT_INESISTENTE = "Nati nel 3435";
 
@@ -54,23 +54,11 @@ public class QueryCatTest extends ATest {
 
     private static final String CATEGORIA_BIO = "BioBot";
 
-    @InjectMocks
-    public BotLogin botLogin;
-
-    @InjectMocks
-    public WikiBotService wikiBot;
-
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    QueryCat istanza;
-
-    @InjectMocks
-    private QueryLogin queryLogin;
-
-    @InjectMocks
-    private QueryAssert queryAssert;
+    private QueryCat istanza;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -118,14 +106,21 @@ public class QueryCatTest extends ATest {
 
 
     /**
-     * Qui passa ad ogni test delle sottoclassi <br>
+     * Qui passa a ogni test delle sottoclassi <br>
      * Invocare PRIMA il metodo setUp() della superclasse <br>
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeEach
-    void setUpEach() {
+     void setUpEach() {
         super.setUp();
+
+        //--reindirizzo l'istanza della superclasse
+        istanza = queryCat;
+
+        istanza.botLogin = botLogin;
+        istanza.queryAssert = queryAssert;
     }
+
 
     @Test
     @Order(1)
@@ -174,6 +169,9 @@ public class QueryCatTest extends ATest {
     @DisplayName("3 - Legge (come bot) una lista corta di pageid di una categoria wiki")
     void urlRequest3() {
         System.out.println("3 - Legge (come bot) una lista corta di pageid di una categoria wiki");
+
+        //--abilita il bot
+        queryLogin.urlRequest();
 
         sorgente = CAT_1435;
         previsto = JSON_SUCCESS;

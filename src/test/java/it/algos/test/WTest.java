@@ -40,6 +40,7 @@ public abstract class WTest extends ATest {
 
     protected static final String PAGINA_REDIRECT = "Regno di Napoli (1805-1815)";
 
+
     protected String didascalia;
 
     protected WrapBio wrap;
@@ -82,6 +83,9 @@ public abstract class WTest extends ATest {
 
     @InjectMocks
     protected QueryAssert queryAssert;
+
+    @InjectMocks
+    protected QueryCat queryCat;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -130,6 +134,15 @@ public abstract class WTest extends ATest {
 
         MockitoAnnotations.initMocks(botLogin);
         Assertions.assertNotNull(botLogin);
+
+        MockitoAnnotations.initMocks(queryLogin);
+        Assertions.assertNotNull(queryLogin);
+
+        MockitoAnnotations.initMocks(queryAssert);
+        Assertions.assertNotNull(queryAssert);
+
+        MockitoAnnotations.initMocks(queryCat);
+        Assertions.assertNotNull(queryCat);
     }
 
 
@@ -146,6 +159,29 @@ public abstract class WTest extends ATest {
         wikiBotService.wikiApi = wikiApiService;
         wikiBotService.date = dateService;
         wikiBotService.login = botLogin;
+
+        elaboraService.text = textService;
+        elaboraService.giornoService = giornoService;
+        elaboraService.annoService = annoService;
+        giornoService.annotation = annotationService;
+        giornoService.text = textService;
+        giornoService.mongo = mongoService;
+        annoService.text = textService;
+        annoService.mongo = mongoService;
+        annoService.annotation = annotationService;
+
+        queryAssert.botLogin = botLogin;
+        queryLogin.queryAssert = queryAssert;
+
+        queryLogin.text = textService;
+        queryLogin.wikiApi = wikiApiService;
+        queryLogin.logger = loggerService;
+        queryLogin.appContext = appContext;
+
+        queryCat.wikiApi = wikiApiService;
+        queryCat.wikiBot = wikiBotService;
+        queryLogin.botLogin = botLogin;
+        queryCat.logger = loggerService;
     }
 
 
@@ -156,22 +192,6 @@ public abstract class WTest extends ATest {
      */
     protected void setUp() {
         super.setUp();
-
-        queryLogin = new QueryLogin();
-        MockitoAnnotations.initMocks(queryLogin);
-        Assertions.assertNotNull(queryLogin);
-
-        queryLogin.text = textService;
-        queryLogin.wikiApi = wikiApiService;
-        queryLogin.logger = loggerService;
-        queryLogin.botLogin = botLogin;
-        queryLogin.appContext = appContext;
-
-        MockitoAnnotations.initMocks(queryAssert);
-        Assertions.assertNotNull(queryAssert);
-        queryAssert.botLogin = botLogin;
-
-        botLogin.reset();
     }
 
 

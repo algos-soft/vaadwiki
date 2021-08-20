@@ -87,67 +87,67 @@ public class ElaboraServiceIntegrationTest extends ATest {
         previstoGiorno = null;
 
         sorgente = "testo errato";
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNull(ottenutoGiorno);
 
         sorgente = "31 febbraio";
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNull(ottenutoGiorno);
 
         sorgente = "4 termidoro";
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNull(ottenutoGiorno);
 
         sorgente = "17 marzo";
         previstoGiorno = giornoService.findByKey("17 marzo");
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = "5 Agosto";
         previstoGiorno = giornoService.findByKey("5 agosto");
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = "3ottobre";
         previstoGiorno = giornoService.findByKey("3 ottobre");
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = "24  maggio";
         previstoGiorno = giornoService.findByKey("24 maggio");
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = " 8   gennaio ";
         previstoGiorno = giornoService.findByKey("8 gennaio");
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = "?";
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNull(ottenutoGiorno);
 
         sorgente = "11 luglio <ref>Marcello";
         previstoGiorno = giornoService.findByKey("11 luglio");
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = "21 dicembre circa";
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNull(ottenutoGiorno);
 
         sorgente = "5 maggio?";
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNull(ottenutoGiorno);
 
         sorgente = "settembre";
-        ottenutoGiorno = service.fixGiornoLink(sorgente);
+        ottenutoGiorno = service.fixGiorno(sorgente);
         assertNull(ottenutoGiorno);
     }
 

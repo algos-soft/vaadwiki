@@ -77,7 +77,6 @@ public class QueryLogin extends AQuery {
      */
     public static String LG_NAME = "Biobot";
 
-    public QueryAssert queryAssert;
 
     /**
      * Token recuperato dalla preliminaryRequestGet <br>
@@ -130,7 +129,8 @@ public class QueryLogin extends AQuery {
      * @return wrapper di informazioni
      */
     public AIResult urlRequest() {
-        AIResult result = null;
+        AIResult result;
+        this.reset();
 
         //--La prima request è di tipo GET
         result = this.preliminaryRequestGet();
@@ -337,7 +337,7 @@ public class QueryLogin extends AQuery {
         //--controllo finale tramite una query GET coi cookies che controlla assert=bot
         if (loginValido) {
             //--controlla l'esistenza e la validità del collegamento come bot
-//            result=checkBot(result);
+            //            result=checkBot(result);
             queryAssert = queryAssert != null ? queryAssert : appContext.getBean(QueryAssert.class);
             queryAssert.botLogin = botLogin;
 
@@ -349,5 +349,15 @@ public class QueryLogin extends AQuery {
 
         return result;
     }
+
+    public void reset() {
+        logintoken = VUOTA;
+        lgtoken = VUOTA;
+        lgname = VUOTA;
+        lgpassword = VUOTA;
+        lguserid = 0;
+        lgusername = VUOTA;
+    }
+
 
 }

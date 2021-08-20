@@ -251,7 +251,7 @@ public class ElaboraService extends AbstractService {
      *
      * @return istanza di giorno valido
      */
-    public Giorno fixGiornoLink(String testoGrezzo) {
+    public Giorno fixGiorno(String testoGrezzo) {
         Giorno giorno = null;
         String testoValido = VUOTA;
 
@@ -279,7 +279,7 @@ public class ElaboraService extends AbstractService {
      *
      * @return istanza di anno valido
      */
-    public Anno fixAnnoLink(String testoGrezzo) {
+    public Anno fixAnno(String testoGrezzo) {
         Anno anno = null;
         String testoValido = "";
 

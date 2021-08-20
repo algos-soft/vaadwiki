@@ -4,10 +4,10 @@ import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.wiki.query.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 import java.util.*;
 
@@ -23,8 +23,8 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("testAllValidoWiki")
-@DisplayName("Test di unit")
+@Tag("test singolo")
+@DisplayName("QueryLoginTest - Istanza per il login.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class QueryLoginTest extends WTest {
 
@@ -38,7 +38,6 @@ public class QueryLoginTest extends WTest {
      * Gia 'costruita' nella superclasse <br>
      */
     private QueryLogin istanza;
-
 
 
     /**
@@ -63,16 +62,29 @@ public class QueryLoginTest extends WTest {
 
         //--reindirizzo l'istanza della superclasse
         istanza = queryLogin;
-
-        istanza.botLogin = botLogin;
-        istanza.queryAssert = queryAssert;
     }
 
+
+    //--login iniziale per registrare i dati/mappa/cookies in botLogin
     @Test
     @Order(1)
-    @DisplayName("1 - urlRequest di queryLogin (errata)")
+    @DisplayName("1 - urlRequest di queryLogin (valida)")
+    void urlRequest2() {
+        System.out.println("1 - urlRequest di queryLogin (valida) che registra i valori in botLogin");
+
+        previsto = JSON_SUCCESS;
+        ottenutoRisultato = istanza.urlRequest();
+        assertTrue(ottenutoRisultato.isValido());
+        assertEquals(previsto, ottenutoRisultato.getCodeMessage());
+        printRisultato(ottenutoRisultato);
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - urlRequest di queryLogin (errata)")
     void urlRequest() {
-        System.out.println("1 - Valore errato di LG_NAME");
+        System.out.println("2 - Valore errato di LG_NAME");
 
         String oldValue = istanza.LG_NAME;
         istanza.LG_NAME = "Valore errato per questo test";
@@ -86,24 +98,14 @@ public class QueryLoginTest extends WTest {
         istanza.LG_NAME = oldValue;
     }
 
-    @Test
-    @Order(2)
-    @DisplayName("2 - urlRequest di queryLogin (valida)")
-    void urlRequest2() {
-        System.out.println("2 - Valori validi");
-
-        previsto = JSON_SUCCESS;
-        ottenutoRisultato = istanza.urlRequest();
-        assertTrue(ottenutoRisultato.isValido());
-        assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
-    }
 
     @Test
     @Order(3)
     @DisplayName("3 -urlRequest di queryAssert (errata)")
     void urlRequest3() {
         System.out.println("3 - Manca il botLogin");
+
+        BotLogin botLoginOld = queryAssert.botLogin;
         queryAssert.botLogin = null;
 
         previsto = JSON_BOT_LOGIN;
@@ -111,26 +113,16 @@ public class QueryLoginTest extends WTest {
         assertFalse(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getErrorCode());
         printRisultato(ottenutoRisultato);
+
+        queryAssert.botLogin = botLoginOld;
     }
+
 
     @Test
     @Order(4)
     @DisplayName("4 - urlRequest di queryAssert (errata)")
     void urlRequest4() {
-        System.out.println("4 - Il botLogin non ha registrato nessuna chiamata di QueryLogin");
-
-        previsto = JSON_NOT_QUERY_LOGIN;
-        ottenutoRisultato = queryAssert.urlRequest();
-        assertFalse(ottenutoRisultato.isValido());
-        assertEquals(previsto, ottenutoRisultato.getErrorCode());
-        printRisultato(ottenutoRisultato);
-    }
-
-    @Test
-    @Order(5)
-    @DisplayName("5 - urlRequest di queryAssert (errata)")
-    void urlRequest5() {
-        System.out.println("5 - La mappa di botLogin non è valida/corretta");
+        System.out.println("4 - La mappa di botLogin non è valida/corretta");
 
         //--tarocco la mappa di botLogin
         Map mappa = new HashMap();
@@ -145,6 +137,23 @@ public class QueryLoginTest extends WTest {
         assertEquals(previsto, ottenutoRisultato.getErrorCode());
         printRisultato(ottenutoRisultato);
     }
+
+
+    @Test
+    @Order(5)
+    @DisplayName("5 - urlRequest di queryAssert (errata)")
+    void urlRequest5() {
+        System.out.println("4 - Il botLogin non ha registrato nessuna chiamata di QueryLogin");
+
+        botLogin.reset();
+
+        previsto = JSON_NOT_QUERY_LOGIN;
+        ottenutoRisultato = queryAssert.urlRequest();
+        assertFalse(ottenutoRisultato.isValido());
+        assertEquals(previsto, ottenutoRisultato.getErrorCode());
+        printRisultato(ottenutoRisultato);
+    }
+
 
     @Test
     @Order(6)
