@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.backend.login;
 
 import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import org.springframework.beans.factory.config.*;
@@ -22,6 +23,7 @@ public class BotLogin {
     private boolean bot = false;
 
     private AIResult result;
+
     /**
      * Property indispensabile ricevuta da QueryLogin <br>
      */
@@ -38,6 +40,10 @@ public class BotLogin {
         return bot;
     }
 
+    public void setBot(boolean bot) {
+        this.bot = bot;
+    }
+
     public boolean nonCollegato() {
         return !isBot();
     }
@@ -47,15 +53,15 @@ public class BotLogin {
     }
 
     public Map getCookies() {
-        return result!=null?result.getMappa():null;
-    }
-
-    public void setBot(boolean bot) {
-        this.bot = bot;
+        return result != null ? result.getMappa() : null;
     }
 
     public AIResult getResult() {
         return result;
+    }
+
+    public void setResult(AIResult result) {
+        this.result = result;
     }
 
     public long getLguserid() {
@@ -74,8 +80,12 @@ public class BotLogin {
         this.lgusername = lgusername;
     }
 
-    public void setResult(AIResult result) {
-        this.result = result;
+    public void reset() {
+        this.bot = false;
+        this.result = null;
+        this.lguserid = 0;
+        this.lgusername = VUOTA;
+        this.userType = AETypeUser.anonymous;
     }
 
 }

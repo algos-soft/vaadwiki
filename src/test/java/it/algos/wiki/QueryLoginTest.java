@@ -4,7 +4,6 @@ import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
-import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.wiki.query.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
@@ -24,10 +23,10 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("testAllValido")
+@Tag("testAllValidoWiki")
 @DisplayName("Test di unit")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class QueryLoginTest extends ATest {
+public class QueryLoginTest extends WTest {
 
     /**
      * Valori di controllo ricevuto <br>
@@ -36,15 +35,11 @@ public class QueryLoginTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
     private QueryLogin istanza;
 
-    @InjectMocks
-    private BotLogin botLogin;
 
-    @InjectMocks
-    private QueryAssert queryAssert;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -54,27 +49,11 @@ public class QueryLoginTest extends ATest {
     @BeforeAll
     void setUpAll() {
         super.setUpStartUp();
-
-        MockitoAnnotations.initMocks(istanza);
-        Assertions.assertNotNull(istanza);
-//        istanza.wikiApi = wikiApi;
-//        istanza.text = text;
-//        istanza.logger = logger;
-        istanza.appContext = appContext;
-
-        MockitoAnnotations.initMocks(botLogin);
-        Assertions.assertNotNull(botLogin);
-        istanza.botLogin = botLogin;
-
-        MockitoAnnotations.initMocks(queryAssert);
-        Assertions.assertNotNull(queryAssert);
-        queryAssert.botLogin = botLogin;
-        istanza.queryAssert = queryAssert;
     }
 
 
     /**
-     * Qui passa ad ogni test delle sottoclassi <br>
+     * Qui passa a ogni test delle sottoclassi <br>
      * Invocare PRIMA il metodo setUp() della superclasse <br>
      * Si possono aggiungere regolazioni specifiche <br>
      */
@@ -82,26 +61,11 @@ public class QueryLoginTest extends ATest {
     void setUpEach() {
         super.setUp();
 
-//        istanza = new QueryLogin();
-//        MockitoAnnotations.initMocks(istanza);
-//        Assertions.assertNotNull(istanza);
-//        istanza.wikiApi = wikiApi;
-//        istanza.text = text;
-//        istanza.logger = logger;
-//        istanza.botLogin = botLogin;
-//        istanza.appContext = appContext;
-//        istanza.queryAssert = queryAssert;
-//
-//        MockitoAnnotations.initMocks(botLogin);
-//        Assertions.assertNotNull(botLogin);
-//        istanza.botLogin = botLogin;
-//        queryAssert.botLogin = botLogin;
-//        botLogin.setResult(null);
-//
-//        MockitoAnnotations.initMocks(queryAssert);
-//        Assertions.assertNotNull(queryAssert);
-//        queryAssert.botLogin = botLogin;
-//        istanza.queryAssert = queryAssert;
+        //--reindirizzo l'istanza della superclasse
+        istanza = queryLogin;
+
+        istanza.botLogin = botLogin;
+        istanza.queryAssert = queryAssert;
     }
 
     @Test
@@ -111,7 +75,7 @@ public class QueryLoginTest extends ATest {
         System.out.println("1 - Valore errato di LG_NAME");
 
         String oldValue = istanza.LG_NAME;
-        istanza.LG_NAME = "Valore errato";
+        istanza.LG_NAME = "Valore errato per questo test";
 
         previsto = JSON_FAILED;
         ottenutoRisultato = istanza.urlRequest();

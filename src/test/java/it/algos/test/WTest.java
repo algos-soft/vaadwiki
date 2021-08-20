@@ -3,11 +3,13 @@ package it.algos.test;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
+import it.algos.vaadwiki.wiki.query.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 
@@ -72,17 +74,25 @@ public abstract class WTest extends ATest {
     @InjectMocks
     protected ElaboraService elaboraService;
 
+    @InjectMocks
+    protected BotLogin botLogin;
+
+    @InjectMocks
+    protected QueryLogin queryLogin;
+
+    @InjectMocks
+    protected QueryAssert queryAssert;
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      * Invocare PRIMA il metodo setUpStartUp() della superclasse <br>
      * Si possono aggiungere regolazioni specifiche <br>
      */
-    @BeforeAll
-    void setUpIniziale() {
+    protected void setUpStartUp() {
         super.setUpStartUp();
 
-        initMocks();
-        fixRiferimentiIncrociati();
+        wInitMocks();
+        wFixRiferimentiIncrociati();
     }
 
 
@@ -90,7 +100,7 @@ public abstract class WTest extends ATest {
      * Inizializzazione dei service
      * Devono essere tutti 'mockati' prima di iniettare i riferimenti incrociati <br>
      */
-    protected void initMocks() {
+    protected void wInitMocks() {
         MockitoAnnotations.initMocks(giornoService);
         Assertions.assertNotNull(giornoService);
 
@@ -117,15 +127,53 @@ public abstract class WTest extends ATest {
 
         MockitoAnnotations.initMocks(elaboraService);
         Assertions.assertNotNull(elaboraService);
+
+        MockitoAnnotations.initMocks(botLogin);
+        Assertions.assertNotNull(botLogin);
     }
+
 
     /**
      * Regola tutti riferimenti incrociati <br>
      * Deve essere fatto dopo aver costruito le referenze 'mockate' <br>
      * Nelle sottoclassi di testi devono essere regolati i riferimenti dei service specifici <br>
      */
-    protected void fixRiferimentiIncrociati() {
+    protected void wFixRiferimentiIncrociati() {
+        wikiBotService.text = textService;
+        wikiBotService.web = webService;
+        wikiBotService.jSonService = jSonService;
+        wikiBotService.logger = loggerService;
+        wikiBotService.wikiApi = wikiApiService;
+        wikiBotService.date = dateService;
+        wikiBotService.login = botLogin;
     }
+
+
+   /**
+     * Qui passa a ogni test delle sottoclassi <br>
+     * Invocare PRIMA il metodo setUp() della superclasse <br>
+     * Si possono aggiungere regolazioni specifiche <br>
+     */
+    protected void setUp() {
+        super.setUp();
+
+        queryLogin = new QueryLogin();
+        MockitoAnnotations.initMocks(queryLogin);
+        Assertions.assertNotNull(queryLogin);
+
+        queryLogin.text = textService;
+        queryLogin.wikiApi = wikiApiService;
+        queryLogin.logger = loggerService;
+        queryLogin.botLogin = botLogin;
+        queryLogin.appContext = appContext;
+
+        MockitoAnnotations.initMocks(queryAssert);
+        Assertions.assertNotNull(queryAssert);
+        queryAssert.botLogin = botLogin;
+
+        botLogin.reset();
+    }
+
 
     protected void print(final Bio bio, final String nomeCognome, final String attivitaNazionalita) {
         System.out.println(VUOTA);

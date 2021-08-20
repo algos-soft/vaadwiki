@@ -26,10 +26,10 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("WikiBotServiceTest")
-@DisplayName("Test di unit")
+@Tag("testAllValidoWiki")
+@DisplayName("WikiBotService - Accesso alle pagine wiki.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class WikiBotServiceTest extends ATest {
+public class WikiBotServiceTest extends WTest {
 
     public static final String CAT_INESISTENTE = "Nati nel 3435";
 
@@ -41,24 +41,21 @@ public class WikiBotServiceTest extends ATest {
 
     public static final String CAT_1935 = "Nati nel 1935";
 
-    public static final int TOT_1935 = 1990;
+    public static final int TOT_1935 = 1993;
 
     public static final String CAT_1713 = "Nati nel 1713";
 
     public static final String CAT_2020 = "Morti nel 2020";
 
-    public static final int TOT_2020 = 2392;
+    public static final int TOT_2020 = 2404;
 
     public static final String CAT_ROMANI = "Personaggi della storia romana";
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    WikiBotService service;
-
-    @InjectMocks
-    BioService bioService;
+    private WikiBotService service;
 
 
     /**
@@ -67,24 +64,11 @@ public class WikiBotServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-
-//        service.text = text;
-//        service.array = array;
-//        service.web = web;
-//        service.logger = logger;
-//        service.date = date;
-//        service.mongo = mongo;
-//        service.wikiApi = wikiApi;
-//        wikiApi.array = array;
-//
-//        service.text = text;
-//        service.jSonService = jSonService;
+        //--reindirizzo l'istanza della superclasse
+        service = wikiBotService;
     }
 
 
