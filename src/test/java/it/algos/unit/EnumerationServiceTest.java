@@ -1,19 +1,15 @@
 package it.algos.unit;
 
-import it.algos.test.*;
-import it.algos.vaadflow14.backend.service.EnumerationService;
-import org.junit.Assert;
-import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static com.helger.commons.mock.CommonsAssert.assertEquals;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static org.junit.Assert.assertTrue;
+import it.algos.test.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.junit.*;
+import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -21,6 +17,7 @@ import static org.junit.Assert.assertTrue;
  * User: gac
  * Date: dom, 30-ago-2020
  * Time: 10:23
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -28,15 +25,15 @@ import static org.junit.Assert.assertTrue;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("EnumerationService - Persistenza nel mongoDB delle enumeration")
+@DisplayName("EnumerationService - Persistenza nel mongoDB delle enumeration.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class EnumerationServiceTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    EnumerationService service;
+    private EnumerationService service;
 
     private String rawValues;
 
@@ -51,14 +48,11 @@ public class EnumerationServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
+        //--reindirizzo l'istanza della superclasse
+        service = enumerationService;
     }
 
 
@@ -100,49 +94,49 @@ public class EnumerationServiceTest extends ATest {
         previsto = "alfa,beta,gamma;beta";
 
         ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         rawValues = "alfa,beta,gamma";
         singleValue = VUOTA;
         ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         rawValues = VUOTA;
         singleValue = "beta";
         ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         rawValues = "alfa,beta,gamma";
         singleValue = "delta";
         ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         rawValues = "alfa";
         singleValue = "alfa";
         previsto2 = "alfa;alfa";
         ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto2, ottenuto);
 
         rawValues = "alfa,beta;gamma";
         singleValue = "delta";
         ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         rawValues = "alfa,beta,gamma";
         singleValue = "beta,gamma";
         ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         rawValues = "alfa,beta,gamma";
         singleValue = "beta;gamma";
         ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         rawValues = "alfa,beta,gamma";
         singleValue = "beta";
         ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
     }
 
@@ -154,49 +148,49 @@ public class EnumerationServiceTest extends ATest {
         previsto = "alfa,beta,gamma;beta";
 
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
-        listValues = array.fromStringa("alfa,beta,gamma");
+        listValues = arrayService.fromStringa("alfa,beta,gamma");
         singleValue = VUOTA;
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         listValues = null;
         singleValue = "beta";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
-        listValues = array.fromStringa("alfa,beta,gamma");
+        listValues = arrayService.fromStringa("alfa,beta,gamma");
         singleValue = "delta";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
-        listValues = array.fromStringa("alfa");
+        listValues = arrayService.fromStringa("alfa");
         singleValue = "alfa";
         previsto2 = "alfa;alfa";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto2, ottenuto);
 
-        listValues = array.fromStringa("alfa,beta;gamma");
+        listValues = arrayService.fromStringa("alfa,beta;gamma");
         singleValue = "delta";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
-        listValues = array.fromStringa("alfa,beta,gamma");
+        listValues = arrayService.fromStringa("alfa,beta,gamma");
         singleValue = "beta,gamma";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
-        listValues = array.fromStringa("alfa,beta,gamma");
+        listValues = arrayService.fromStringa("alfa,beta,gamma");
         singleValue = "beta;gamma";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
-        listValues = array.fromStringa("alfa,beta,gamma");
+        listValues = arrayService.fromStringa("alfa,beta,gamma");
         singleValue = "beta";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
     }
 
@@ -320,7 +314,7 @@ public class EnumerationServiceTest extends ATest {
     }
 
 
-        @Test
+    @Test
     @Order(6)
     @DisplayName("6 - Modifica la stringa da memorizzare")
     void convertToModel() {

@@ -8,7 +8,6 @@ import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 import java.util.*;
 
@@ -18,6 +17,7 @@ import java.util.*;
  * User: gac
  * Date: mar, 17-ago-2021
  * Time: 19:49
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -33,9 +33,9 @@ public class GsonServiceTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    GsonService service;
+    private GsonService service;
 
 
     /**
@@ -44,24 +44,15 @@ public class GsonServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
-        service.logger = logger;
-        service.reflection = reflection;
-        service.annotation = annotation;
-
-        service.fixProperties(DATA_BASE_NAME);
+        //--reindirizzo l'istanza della superclasse
+        service = gSonService;
     }
 
-
     /**
-     * Qui passa ad ogni test delle sottoclassi <br>
+     * Qui passa a ogni test delle sottoclassi <br>
      * Invocare PRIMA il metodo setUp() della superclasse <br>
      * Si possono aggiungere regolazioni specifiche <br>
      */
@@ -107,11 +98,11 @@ public class GsonServiceTest extends ATest {
     void estraeGraffa() {
         sorgente = VUOTA;
         ottenuto = service.estraeGraffa(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
         ottenuto = service.estraeGraffa(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno\"}";
         previsto = "\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},";
@@ -126,7 +117,7 @@ public class GsonServiceTest extends ATest {
     void eliminaGraffa() {
         sorgente = VUOTA;
         ottenuto = service.eliminaGraffa(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
         previsto = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
@@ -156,7 +147,7 @@ public class GsonServiceTest extends ATest {
         System.out.println("array di un solo elemento col testo originale completo");
         sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
         previstoIntero = 1;
-        previstoArray = array.creaArraySingolo(sorgente);
+        previstoArray = arrayService.creaArraySingolo(sorgente);
         ottenutoArray = service.estraeGraffe(sorgente);
         assertEquals(previstoIntero, ottenutoArray.size());
         assertEquals(previstoArray, ottenutoArray);

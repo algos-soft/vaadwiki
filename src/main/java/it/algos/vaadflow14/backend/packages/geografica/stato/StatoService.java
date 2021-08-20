@@ -188,7 +188,6 @@ public class StatoService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Stato findByKey(final String keyValue) {
         return (Stato) super.findByKey(keyValue);
     }

@@ -1,7 +1,7 @@
-package it.algos.unit;
+package it.algos.wiki;
 
 import it.algos.test.*;
-import static it.algos.unit.QueryCatTest.*;
+import static it.algos.wiki.QueryCatTest.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -10,7 +10,7 @@ import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.query.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
+import org.mockito.InjectMocks;
 
 import java.util.*;
 
@@ -18,8 +18,8 @@ import java.util.*;
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: mer, 28-lug-2021
- * Time: 21:45
+ * Date: ven, 30-lug-2021
+ * Time: 19:52
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -27,19 +27,17 @@ import java.util.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Test QueryTimestamp")
+@DisplayName("Test QueryPages")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class QueryTimestampTest extends ATest {
-
+public class QueryPagesTest extends ATest {
 
     private static final List<Long> LISTA_BREVE = List.of(Long.valueOf(876876), Long.valueOf(793444), Long.valueOf(22223), Long.valueOf(50030044));
-
 
     /**
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    QueryTimestamp istanza;
+    QueryPages istanza;
 
     @InjectMocks
     public BotLogin botLogin;
@@ -51,7 +49,7 @@ public class QueryTimestampTest extends ATest {
     private QueryAssert queryAssert;
 
     @InjectMocks
-    public AWikiBotService wikiBot;
+    public WikiBotService wikiBot;
 
     @InjectMocks
     private QueryCat queryCat;
@@ -66,48 +64,50 @@ public class QueryTimestampTest extends ATest {
     void setUpAll() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(istanza);
-        Assertions.assertNotNull(istanza);
-        istanza.array = array;
-        istanza.botLogin = botLogin;
-
-        MockitoAnnotations.initMocks(queryLogin);
-        Assertions.assertNotNull(queryLogin);
-        queryLogin.wikiApi = wikiApi;
-        queryLogin.text = text;
-        queryLogin.logger = logger;
-        queryLogin.appContext = appContext;
-
-        MockitoAnnotations.initMocks(botLogin);
-        Assertions.assertNotNull(botLogin);
-        queryCat.botLogin = botLogin;
-        queryLogin.botLogin = botLogin;
-
-        MockitoAnnotations.initMocks(queryAssert);
-        Assertions.assertNotNull(queryAssert);
-        queryAssert.botLogin = botLogin;
-        queryLogin.queryAssert = queryAssert;
-        istanza.queryAssert = queryAssert;
-
-        MockitoAnnotations.initMocks(queryCat);
-        Assertions.assertNotNull(queryCat);
-        queryCat.text = text;
-        queryCat.logger = logger;
-        queryCat.wikiApi = wikiApi;
-        queryCat.date = date;
-        queryCat.appContext = appContext;
-        jSonService.text = text;
-        queryCat.wikiBot = wikiBot;
-        queryCat.queryAssert = queryAssert;
-
-        MockitoAnnotations.initMocks(wikiBot);
-        Assertions.assertNotNull(wikiBot);
-        wikiBot.text = text;
-        wikiBot.web = web;
-        wikiBot.jSonService = jSonService;
-
-        assertTrue(queryLogin.urlRequest().isValido());
+//        MockitoAnnotations.initMocks(this);
+//        MockitoAnnotations.initMocks(istanza);
+//        Assertions.assertNotNull(istanza);
+//        istanza.array = array;
+//        istanza.botLogin = botLogin;
+//        istanza.text = text;
+//        istanza.wikiApi = wikiApi;
+//
+//        MockitoAnnotations.initMocks(queryLogin);
+//        Assertions.assertNotNull(queryLogin);
+//        queryLogin.wikiApi = wikiApi;
+//        queryLogin.text = text;
+//        queryLogin.logger = logger;
+//        queryLogin.appContext = appContext;
+//
+//        MockitoAnnotations.initMocks(botLogin);
+//        Assertions.assertNotNull(botLogin);
+//        queryCat.botLogin = botLogin;
+//        queryLogin.botLogin = botLogin;
+//
+//        MockitoAnnotations.initMocks(queryAssert);
+//        Assertions.assertNotNull(queryAssert);
+//        queryAssert.botLogin = botLogin;
+//        queryLogin.queryAssert = queryAssert;
+//        istanza.queryAssert = queryAssert;
+//
+//        MockitoAnnotations.initMocks(queryCat);
+//        Assertions.assertNotNull(queryCat);
+//        queryCat.text = text;
+//        queryCat.logger = logger;
+//        queryCat.wikiApi = wikiApi;
+//        queryCat.date = date;
+//        queryCat.appContext = appContext;
+//        jSonService.text = text;
+//        queryCat.wikiBot = wikiBot;
+//        queryCat.queryAssert = queryAssert;
+//
+//        MockitoAnnotations.initMocks(wikiBot);
+//        Assertions.assertNotNull(wikiBot);
+//        wikiBot.text = text;
+//        wikiBot.web = web;
+//        wikiBot.jSonService = jSonService;
+//
+//        assertTrue(queryLogin.urlRequest().isValido());
     }
 
 
@@ -123,9 +123,9 @@ public class QueryTimestampTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("1 - Cerca di leggere (senza bot) una lista di pageIds da controllare")
+    @DisplayName("1 - Cerca di leggere (senza bot) una lista di pagine")
     void urlRequest() {
-        System.out.println("1 - Cerca di leggere (senza bot) una lista di pageIds da controllare");
+        System.out.println("1 - Cerca di leggere (senza bot) una lista di pagine");
 
         //--tarocco -provvisoriamente- la mappa di botLogin
         Map cookiesValidi = botLogin.getCookies();
@@ -147,11 +147,12 @@ public class QueryTimestampTest extends ATest {
         botLogin.getResult().setMappa(cookiesValidi);
     }
 
+
     @Test
     @Order(2)
-    @DisplayName("2 - Legge (con bot) una lista (breve) di pageIds da controllare")
+    @DisplayName("2 - Legge (con bot) una lista (breve) di pagine")
     void urlRequest2() {
-        System.out.println("2 - Legge (con bot) una lista (breve) di pageIds da controllare");
+        System.out.println("2 - Legge (con bot) una lista (breve) di pagine");
 
         sorgenteArrayLong = LISTA_BREVE;
         previsto = JSON_SUCCESS;
@@ -164,21 +165,22 @@ public class QueryTimestampTest extends ATest {
 
     @Test
     @Order(3)
-    @DisplayName("3 - Legge (con bot) una lista (media) di pageIds da controllare")
+    @DisplayName("3 - Legge (con bot) una lista (media) di pagine")
     void urlRequest3() {
-        System.out.println("3 - Legge (con bot) una lista (media) di pageIds da controllare");
+        System.out.println("3 - Legge (con bot) una lista (media) di pagine");
 
         sorgente = CAT_1935;
         previsto = JSON_SUCCESS;
         ottenutoRisultato = queryCat.urlRequest(sorgente);
         assertTrue(ottenutoRisultato.isValido());
-
         sorgenteArrayLong = ottenutoRisultato.getLista();
         previsto = JSON_SUCCESS;
         ottenutoRisultato = istanza.urlRequest(sorgenteArrayLong);
-//        assertFalse(ottenutoRisultato.isValido());
+        assertTrue(ottenutoRisultato.isValido());
+        assertEquals(previsto, ottenutoRisultato.getCodeMessage());
         printRisultato(ottenutoRisultato);
     }
+
 
     /**
      * Qui passa al termine di ogni singolo test <br>

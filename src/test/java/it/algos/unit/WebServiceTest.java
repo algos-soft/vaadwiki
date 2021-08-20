@@ -6,10 +6,9 @@ import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.backend.service.WebService.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.mockito.*;
+import org.junit.jupiter.api.*;
 
 import java.util.*;
 
@@ -19,6 +18,7 @@ import java.util.*;
  * User: gac
  * Date: gio, 07-mag-2020
  * Time: 07:56
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -38,11 +38,13 @@ public class WebServiceTest extends ATest {
 
     private static String PAGINA = "ISO 3166-2:IT";
 
+
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    protected WebService service;
+    private WebService service;
+
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -50,8 +52,11 @@ public class WebServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
+
+        //--reindirizzo l'istanza della superclasse
+        service = webService;
     }
 
 
@@ -63,11 +68,6 @@ public class WebServiceTest extends ATest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
-
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
     }
 
 
@@ -80,12 +80,12 @@ public class WebServiceTest extends ATest {
         ottenutoRisultato = service.legge(sorgente);
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isErrato());
-        assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getWikiTitle()));
         assertEquals(sorgente, ottenutoRisultato.getUrlRequest());
         assertTrue(ottenutoRisultato.getErrorCode().equals(UNKNOWN_HOST));
         assertTrue(ottenutoRisultato.getErrorMessage().equals(UNKNOWN_HOST));
-        assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getValidMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getValue() == 0);
 
         System.out.println(String.format("Non ha trovato il domain '%s' richiesto", ottenutoRisultato.getUrlRequest()));
@@ -94,7 +94,7 @@ public class WebServiceTest extends ATest {
 
         ottenuto = service.leggeWebTxt(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
     }
 
     @Test
@@ -107,18 +107,18 @@ public class WebServiceTest extends ATest {
         ottenutoRisultato = service.legge(sorgente);
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
-        assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getWikiTitle()));
         assertEquals(sorgente, ottenutoRisultato.getUrlRequest());
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getResponse().startsWith(previsto));
         assertTrue(ottenutoRisultato.getValue() == 0);
 
         ottenuto = service.leggeWebTxt(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.equals(ottenutoRisultato.getResponse()));
         assertTrue(ottenuto.startsWith(previsto));
 
@@ -143,19 +143,19 @@ public class WebServiceTest extends ATest {
         ottenutoRisultato = service.leggeBodyWeb(sorgente);
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
-        assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getWikiTitle()));
         assertEquals(sorgente, ottenutoRisultato.getUrlRequest());
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getResponse().startsWith(previsto));
         assertTrue(ottenutoRisultato.getResponse().endsWith(previsto2));
         assertTrue(ottenutoRisultato.getValue() == 0);
 
         ottenuto = service.leggeBodyWebTxt(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.equals(ottenutoRisultato.getResponse()));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
@@ -180,18 +180,18 @@ public class WebServiceTest extends ATest {
         ottenutoRisultato = service.legge(sorgente);
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
-        assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getWikiTitle()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
         assertEquals(sorgente, ottenutoRisultato.getUrlRequest());
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getValue() == 0);
 
         ottenuto = service.leggeWebTxt(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.equals(ottenutoRisultato.getResponse()));
 
         System.out.println(String.format("4 - Legge il sorgente di una pagina wiki letta come url e non come titolo"));
@@ -215,20 +215,20 @@ public class WebServiceTest extends ATest {
         ottenutoRisultato = service.leggeWiki(sorgente);
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
-        assertTrue(text.isValid(ottenutoRisultato.getWikiTitle()));
+        assertTrue(textService.isValid(ottenutoRisultato.getWikiTitle()));
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertTrue(text.isValid(ottenutoRisultato.getUrlRequest()));
+        assertTrue(textService.isValid(ottenutoRisultato.getUrlRequest()));
         assertEquals(TAG_WIKI + sorgente, ottenutoRisultato.getUrlRequest());
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getResponse().startsWith(previsto));
         assertTrue(ottenutoRisultato.getValue() == 0);
 
         ottenuto = service.leggeWikiTxt(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.equals(ottenutoRisultato.getResponse()));
 
         System.out.println(String.format("5 - Legge il sorgente di una pagina wiki"));
@@ -252,14 +252,14 @@ public class WebServiceTest extends ATest {
         assertNotNull(ottenutoRisultato);
         assertFalse(ottenutoRisultato.isValido());
         assertTrue(ottenutoRisultato.isErrato());
-        assertTrue(text.isValid(ottenutoRisultato.getWikiTitle()));
+        assertTrue(textService.isValid(ottenutoRisultato.getWikiTitle()));
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertTrue(text.isValid(ottenutoRisultato.getUrlRequest()));
+        assertTrue(textService.isValid(ottenutoRisultato.getUrlRequest()));
         assertEquals(TAG_WIKI + sorgente, ottenutoRisultato.getUrlRequest());
         assertEquals(ERROR_FILE_WIKI + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getErrorCode());
         assertEquals(ERROR_FILE_WIKI + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getErrorMessage());
-        assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getValidMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getValue() == 0);
 
         System.out.println(String.format("6 - Cerca di leggere la pagina wiki: %s in formato html", ottenutoRisultato.getMessage()));
@@ -269,7 +269,7 @@ public class WebServiceTest extends ATest {
 
         ottenuto = service.leggeWikiTxt(sorgente);
         assertNotNull(ottenuto);
-        assertFalse(text.isValid(ottenuto));
+        assertFalse(textService.isValid(ottenuto));
     }
 
 
@@ -283,7 +283,7 @@ public class WebServiceTest extends ATest {
         previsto = VUOTA;
         ottenuto = service.costruisceTagTitoliTable(null);
         assertNotNull(ottenuto);
-        assertFalse(text.isValid(ottenuto));
+        assertFalse(textService.isValid(ottenuto));
 
         titoli = new String[]{"Codice"};
         previsto = VUOTA;
@@ -349,7 +349,7 @@ public class WebServiceTest extends ATest {
 
         ottenuto = service.estraeTableWiki(sorgente, titoli);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
 
         System.out.println(String.format("8 - Estrae una table"));
         System.out.println(String.format("La pagina wiki è: %s", PAGINA));
@@ -372,7 +372,7 @@ public class WebServiceTest extends ATest {
 
         ottenuto = service.estraeTableWiki(sorgente, titoli);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
 
         System.out.println(String.format("9 - Estrae un'altra table"));
         System.out.println(String.format("La pagina wiki è: %s", PAGINA));

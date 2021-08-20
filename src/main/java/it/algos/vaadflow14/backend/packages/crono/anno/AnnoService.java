@@ -15,6 +15,7 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -85,14 +86,14 @@ public class AnnoService extends AService {
      * Crea e registra una entityBean col flag reset=true <br>
      *
      * @param ordine    (obbligatorio, unico)
-     * @param anno   (obbligatorio, unico)
+     * @param titolo   (obbligatorio, unico)
      * @param bisestile (obbligatorio)
      * @param secolo    di riferimento (obbligatorio)
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final int ordine, final String anno, final boolean bisestile, final Secolo secolo) {
-        return super.creaReset(newEntity(ordine, anno, bisestile, secolo));
+    private boolean creaReset(final int ordine, final String titolo, final boolean bisestile, final Secolo secolo) {
+        return super.creaReset(newEntity(ordine, titolo, bisestile, secolo));
     }
 
 
@@ -117,16 +118,16 @@ public class AnnoService extends AService {
      * All properties <br>
      *
      * @param ordine    (obbligatorio, unico)
-     * @param anno      (obbligatorio, unico)
+     * @param titolo      (obbligatorio, unico)
      * @param bisestile (obbligatorio)
      * @param secolo    di riferimento (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Anno newEntity(final int ordine, final String anno, final boolean bisestile, final Secolo secolo) {
+    public Anno newEntity(final int ordine, final String titolo, final boolean bisestile, final Secolo secolo) {
         Anno newEntityBean = Anno.builderAnno()
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
-                .anno(text.isValid(anno) ? anno : null)
+                .titolo(text.isValid(titolo) ? titolo : null)
                 .bisestile(bisestile)
                 .secolo(secolo)
                 .build();
@@ -151,6 +152,21 @@ public class AnnoService extends AService {
 
 
     /**
+     * Retrieves an entity by a keyProperty.
+     * Cerca una singola entity con una query. <br>
+     * Restituisce un valore valido SOLO se ne esiste una sola <br>
+     *
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the founded entity unique or {@literal null} if none found
+     */
+    @Override
+    public Anno findByProperty(String propertyName, Serializable propertyValue) {
+        return (Anno) super.findByProperty(propertyName, propertyValue);
+    }
+
+    /**
      * Retrieves an entity by its keyProperty.
      *
      * @param keyValue must not be {@literal null}.
@@ -160,7 +176,7 @@ public class AnnoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Anno findByKey(final String keyValue) {
+    public Anno findByKey(final Serializable keyValue) {
         return (Anno) super.findByKey(keyValue);
     }
 
@@ -220,7 +236,7 @@ public class AnnoService extends AService {
         int numRec = 0;
         AIResult resultCollectionPropedeutica;
         int ordine;
-        String nome;
+        String titolo;
         AESecolo secoloEnum;
         Secolo secolo;
         String titoloSecolo;
@@ -241,15 +257,15 @@ public class AnnoService extends AService {
         //--costruisce gli anni prima di cristo dal 1000
         for (int k = ANTE_CRISTO; k > 0; k--) {
             ordine = ANNO_INIZIALE - k;
-            nome = k + AESecolo.TAG_AC;
+            titolo = k + AESecolo.TAG_AC;
             secoloEnum = AESecolo.getSecoloAC(k);
             titoloSecolo = secoloEnum.getNome();
             titoloSecolo = titoloSecolo.toLowerCase();
             titoloSecolo = text.levaSpazi(titoloSecolo);
             secolo = (Secolo) mongo.findByIdOld(Secolo.class, titoloSecolo);
             bisestile = false; //non ci sono anni bisestili prima di Cristo
-            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                if (creaReset(ordine, nome, bisestile, secolo)) {
+            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
+                if (creaReset(ordine, titolo, bisestile, secolo)) {
                     numRec++;
                 }
             }
@@ -258,15 +274,15 @@ public class AnnoService extends AService {
         //--costruisce gli anni dopo cristo fino al 2030
         for (int k = 1; k <= DOPO_CRISTO; k++) {
             ordine = k + ANNO_INIZIALE;
-            nome = k + VUOTA;
+            titolo = k + VUOTA;
             secoloEnum = AESecolo.getSecoloDC(k);
             titoloSecolo = secoloEnum.getNome();
             titoloSecolo = titoloSecolo.toLowerCase();
             titoloSecolo = text.levaSpazi(titoloSecolo);
             secolo = (Secolo) mongo.findByIdOld(Secolo.class, titoloSecolo);
             bisestile = date.bisestile(k);
-            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                if (creaReset(ordine, nome, bisestile, secolo)) {
+            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
+                if (creaReset(ordine, titolo, bisestile, secolo)) {
                     numRec++;
                 }
             }

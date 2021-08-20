@@ -1,4 +1,4 @@
-package it.algos.unit;
+package it.algos.wiki;
 
 import it.algos.test.*;
 import it.algos.vaadwiki.backend.service.*;
@@ -44,9 +44,9 @@ public class BioServiceTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         assertNotNull(service);
-        service.text = text;
-        service.array = array;
-        service.wikiApi = wikiApi;
+//        service.text = text;
+//        service.array = array;
+//        service.wikiApi = wikiApi;
     }
 
 

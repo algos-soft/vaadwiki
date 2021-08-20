@@ -6,7 +6,6 @@ import it.algos.vaadflow14.backend.service.*;
 import org.json.simple.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.*;
 
 /**
  * Project vaadflow14
@@ -14,6 +13,7 @@ import org.mockito.*;
  * User: gac
  * Date: lun, 19-lug-2021
  * Time: 13:02
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -28,15 +28,17 @@ public class JSonServiceTest extends ATest {
 
     public static final String SORGENTE_UNO = "{\"error\":{\"code\":\"missingtitle\",\"info\":\"The page you specified doesn't exist.\",\"docref\":\"See https://it.wikipedia.org/w/api.php for API usage. Subscribe to the mediawiki-api-announce mailing list at &lt;https://lists.wikimedia.org/mailman/listinfo/mediawiki-api-announce&gt; for notice of API deprecations and breaking changes.\"},\"servedby\":\"mw2330\"}";
 
-    /**
-     * Classe principale di riferimento <br>
-     */
-    @InjectMocks
-    JSonService service;
 
     private JSONObject objectAll;
 
     private JSONObject objectJson;
+
+    /**
+     * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
+     */
+    private JSonService service;
+
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -44,14 +46,11 @@ public class JSonServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        assertNotNull(service);
-        service.text = text;
-        service.array = array;
+        //--reindirizzo l'istanza della superclasse
+        service = jSonService;
     }
 
 

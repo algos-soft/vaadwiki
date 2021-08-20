@@ -1,4 +1,4 @@
-package it.algos.unit;
+package it.algos.wiki;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -6,7 +6,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
-import static it.algos.vaadwiki.backend.service.AWikiBotService.*;
+import static it.algos.vaadwiki.backend.service.WikiBotService.*;
 import it.algos.vaadwiki.wiki.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
@@ -55,7 +55,7 @@ public class WikiBotServiceTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AWikiBotService service;
+    WikiBotService service;
 
     @InjectMocks
     BioService bioService;
@@ -74,17 +74,17 @@ public class WikiBotServiceTest extends ATest {
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
 
-        service.text = text;
-        service.array = array;
-        service.web = web;
-        service.logger = logger;
-        service.date = date;
-        service.mongo = mongo;
-        service.wikiApi = wikiApi;
-        wikiApi.array = array;
-
-        service.text = text;
-        service.jSonService = jSonService;
+//        service.text = text;
+//        service.array = array;
+//        service.web = web;
+//        service.logger = logger;
+//        service.date = date;
+//        service.mongo = mongo;
+//        service.wikiApi = wikiApi;
+//        wikiApi.array = array;
+//
+//        service.text = text;
+//        service.jSonService = jSonService;
     }
 
 
@@ -109,12 +109,12 @@ public class WikiBotServiceTest extends ATest {
         assertNotNull(ottenutoRisultato);
         assertFalse(ottenutoRisultato.isValido());
         assertTrue(ottenutoRisultato.isErrato());
-        assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getUrlRequest()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getWikiTitle()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getUrlRequest()));
         assertEquals(ERROR_WIKI_TITLE, ottenutoRisultato.getErrorCode());
         assertEquals(ERROR_WIKI_TITLE, ottenutoRisultato.getErrorMessage());
-        assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getValidMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getValue() == 0);
         printResult(ottenutoRisultato);
 
@@ -127,8 +127,8 @@ public class WikiBotServiceTest extends ATest {
         assertEquals(WIKI_PARSE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
         assertEquals(ERROR_WIKI_PAGINA, ottenutoRisultato.getErrorCode());
         assertEquals(ERROR_WIKI_PAGINA, ottenutoRisultato.getErrorMessage());
-        assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getValidMessage()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getValue() == 0);
         printResult(ottenutoRisultato);
 
@@ -141,8 +141,8 @@ public class WikiBotServiceTest extends ATest {
         assertEquals(WIKI_PARSE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
         assertEquals(ERROR_WIKI_PAGINA, ottenutoRisultato.getErrorCode());
         assertEquals(ERROR_WIKI_PAGINA, ottenutoRisultato.getErrorMessage());
-        assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getValidMessage()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getValue() == 0);
         printResult(ottenutoRisultato);
 
@@ -153,10 +153,10 @@ public class WikiBotServiceTest extends ATest {
         assertFalse(ottenutoRisultato.isErrato());
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
         assertEquals(WIKI_PARSE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getValue() == 0);
         printResult(ottenutoRisultato);
 
@@ -167,10 +167,10 @@ public class WikiBotServiceTest extends ATest {
         assertFalse(ottenutoRisultato.isErrato());
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
         assertEquals(WIKI_PARSE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getValue() == 0);
         printResult(ottenutoRisultato);
     }
@@ -243,8 +243,8 @@ public class WikiBotServiceTest extends ATest {
         assertEquals(WIKI_PARSE + CATEGORIA + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
         assertEquals(ERROR_WIKI_CATEGORIA, ottenutoRisultato.getErrorCode());
         assertEquals(ERROR_WIKI_CATEGORIA, ottenutoRisultato.getErrorMessage());
-        assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getValidMessage()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getValue() == 0);
         printResult(ottenutoRisultato);
 
@@ -257,10 +257,10 @@ public class WikiBotServiceTest extends ATest {
         assertFalse(ottenutoRisultato.isErrato());
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
         assertEquals(WIKI_QUERY_CAT_TOTALE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertEquals(previstoIntero, ottenutoRisultato.getValue());
         printResult(ottenutoRisultato);
 
@@ -273,10 +273,10 @@ public class WikiBotServiceTest extends ATest {
         assertFalse(ottenutoRisultato.isErrato());
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
         assertEquals(WIKI_QUERY_CAT_TOTALE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertEquals(previstoIntero, ottenutoRisultato.getValue());
         printResult(ottenutoRisultato);
 
@@ -289,10 +289,10 @@ public class WikiBotServiceTest extends ATest {
         assertFalse(ottenutoRisultato.isErrato());
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
         assertEquals(WIKI_QUERY_CAT_TOTALE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertEquals(previstoIntero, ottenutoRisultato.getValue());
         printResult(ottenutoRisultato);
 
@@ -305,10 +305,10 @@ public class WikiBotServiceTest extends ATest {
         assertFalse(ottenutoRisultato.isErrato());
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
         assertEquals(WIKI_QUERY_CAT_TOTALE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
+        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(text.isValid(ottenutoRisultato.getResponse()));
+        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
         assertEquals(previstoIntero, ottenutoRisultato.getValue());
         printResult(ottenutoRisultato);
     }
@@ -570,7 +570,7 @@ public class WikiBotServiceTest extends ATest {
         sorgente = CAT_1435;
         previstoIntero = 33;
         sorgente2 = service.getPageidsCat(sorgente);
-        assertTrue(text.isValid(sorgente2));
+        assertTrue(textService.isValid(sorgente2));
 
         wrapLista = service.fixPages(sorgente2);
         assertNotNull(wrapLista);
@@ -773,7 +773,7 @@ public class WikiBotServiceTest extends ATest {
             System.out.print(") ");
             System.out.print(wrap.getPageid());
             System.out.print(SEP);
-            System.out.println(date.get(wrap.getLastModifica()));
+            System.out.println(dateService.get(wrap.getLastModifica()));
         }
     }
 

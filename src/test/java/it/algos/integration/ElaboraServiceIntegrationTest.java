@@ -51,27 +51,27 @@ public class ElaboraServiceIntegrationTest extends ATest {
     void setUpAll() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
-        service.giornoService = giornoService;
-
-        MockitoAnnotations.initMocks(giornoService);
-        Assertions.assertNotNull(giornoService);
-        giornoService.text = text;
-        giornoService.array = array;
-        giornoService.reflection = reflection;
-        giornoService.annotation = annotation;
-        giornoService.wikiApi = wikiApi;
-        giornoService.date = date;
-        giornoService.logger = logger;
-        giornoService.mongo = mongo;
-        giornoService.keyPropertyName="giorno";
-
-        MockitoAnnotations.initMocks(mongoOp);
-        Assertions.assertNotNull(mongoOp);
-        mongo.mongoOp = mongoOp;
+//        MockitoAnnotations.initMocks(this);
+//        MockitoAnnotations.initMocks(service);
+//        Assertions.assertNotNull(service);
+//        service.text = text;
+//        service.giornoService = giornoService;
+//
+//        MockitoAnnotations.initMocks(giornoService);
+//        Assertions.assertNotNull(giornoService);
+//        giornoService.text = text;
+//        giornoService.array = array;
+//        giornoService.reflection = reflection;
+//        giornoService.annotation = annotation;
+//        giornoService.wikiApi = wikiApi;
+//        giornoService.date = date;
+//        giornoService.logger = logger;
+//        giornoService.mongo = mongo;
+//        giornoService.keyPropertyName="giorno";
+//
+//        MockitoAnnotations.initMocks(mongoOp);
+//        Assertions.assertNotNull(mongoOp);
+//        mongo.mongoOp = mongoOp;
     }
 
 

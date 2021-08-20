@@ -620,12 +620,9 @@ public class ElaboraService extends AbstractService {
             return VUOTA;
         }
 
-        ////        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Nazionalita.class, "singolare", testoValido)) {
-        //        if (text.isValid(testoValido)) {
-        //            return testoValido.trim();
-        //        } else {
-        //            return VUOTA;
-        //        }// end of if/else cycle
+        if (text.isEmpty(testoValido)) {
+            return VUOTA;
+        }
 
         if (text.isValid(testoValido)) {
             if (nazionalitaService.isEsiste(testoValido)) {

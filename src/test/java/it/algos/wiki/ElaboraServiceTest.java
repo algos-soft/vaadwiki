@@ -1,4 +1,4 @@
-package it.algos.unit;
+package it.algos.wiki;
 
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
@@ -52,26 +52,26 @@ public class ElaboraServiceTest extends ATest {
     void setUpAll() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
-        service.giornoService = giornoService;
-
-        MockitoAnnotations.initMocks(giornoService);
-        Assertions.assertNotNull(giornoService);
-        giornoService.text = text;
-        giornoService.array = array;
-        giornoService.reflection = reflection;
-        giornoService.annotation = annotation;
-        giornoService.wikiApi = wikiApi;
-        giornoService.date = date;
-        giornoService.logger = logger;
-        giornoService.mongo = mongo;
-
-//        MockitoAnnotations.initMocks(mongoOp);
-        Assertions.assertNotNull(mongoOp);
-        mongo.mongoOp = mongoOp;
+//        MockitoAnnotations.initMocks(this);
+//        MockitoAnnotations.initMocks(service);
+//        Assertions.assertNotNull(service);
+//        service.text = text;
+//        service.giornoService = giornoService;
+//
+//        MockitoAnnotations.initMocks(giornoService);
+//        Assertions.assertNotNull(giornoService);
+//        giornoService.text = text;
+//        giornoService.array = array;
+//        giornoService.reflection = reflection;
+//        giornoService.annotation = annotation;
+//        giornoService.wikiApi = wikiApi;
+//        giornoService.date = date;
+//        giornoService.logger = logger;
+//        giornoService.mongo = mongo;
+//
+////        MockitoAnnotations.initMocks(mongoOp);
+//        Assertions.assertNotNull(mongoOp);
+//        mongo.mongoOp = mongoOp;
     }
 
 

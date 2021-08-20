@@ -43,7 +43,7 @@ import java.util.stream.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AWikiBotService extends AbstractService {
+public class WikiBotService extends AbstractService {
 
     public static final String TAG_BIO = "Bio";
 

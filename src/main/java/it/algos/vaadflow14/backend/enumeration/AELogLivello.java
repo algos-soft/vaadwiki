@@ -6,8 +6,8 @@ import it.algos.vaadflow14.backend.interfaces.AIEnum;
 import static com.vaadin.flow.server.frontend.FrontendUtils.GREEN;
 import static com.vaadin.flow.server.frontend.FrontendUtils.RED;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static it.algos.vaadflow14.backend.service.AConsoleColorService.BLUE;
-import static it.algos.vaadflow14.backend.service.AConsoleColorService.PURPLE;
+import static it.algos.vaadflow14.backend.service.ConsoleColorService.BLUE;
+import static it.algos.vaadflow14.backend.service.ConsoleColorService.PURPLE;
 
 /**
  * Created by gac on 22 ago 2015.

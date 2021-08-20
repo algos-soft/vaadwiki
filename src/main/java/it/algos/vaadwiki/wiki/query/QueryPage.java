@@ -6,7 +6,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
-import static it.algos.vaadwiki.backend.service.AWikiBotService.*;
 import org.json.simple.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;

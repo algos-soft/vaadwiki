@@ -2,10 +2,9 @@ package it.algos.vaadwiki.wiki.query;
 
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.interfaces.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import it.algos.vaadwiki.backend.enumeration.*;
-import static it.algos.vaadwiki.backend.service.AWikiBotService.*;
+import static it.algos.vaadwiki.backend.service.WikiBotService.*;
 import it.algos.vaadwiki.backend.wrapper.*;
 import it.algos.vaadwiki.wiki.*;
 import org.json.simple.*;

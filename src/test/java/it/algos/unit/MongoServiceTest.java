@@ -10,7 +10,6 @@ import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 /**
  * Project vaadflow14
@@ -18,6 +17,7 @@ import org.mockito.*;
  * User: gac
  * Date: ven, 30-apr-2021
  * Time: 07:51
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -39,12 +39,9 @@ public class MongoServiceTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
     private AMongoService service;
-
-    @InjectMocks
-    private GsonService gSonService;
 
     private static String[] COLLEZIONI() {
         return new String[]{"pomeriggio", "alfa", "via"};
@@ -56,28 +53,11 @@ public class MongoServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-
-        MockitoAnnotations.initMocks(gSonService);
-        Assertions.assertNotNull(gSonService);
-
-        service.text = text;
-        service.array = array;
-        service.annotation = annotation;
-        service.gSonService = gSonService;
-
-        gSonService.text = text;
-        gSonService.array = array;
-        gSonService.reflection = reflection;
-        gSonService.annotation = annotation;
-
-        service.fixProperties(DATA_BASE_NAME);
-        gSonService.fixProperties(DATA_BASE_NAME);
+        //--reindirizzo l'istanza della superclasse
+        service = mongoService;
     }
 
 
@@ -101,7 +81,7 @@ public class MongoServiceTest extends ATest {
 
         previsto = DATA_BASE_NAME;
         ottenuto = service.getDatabaseName();
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
         System.out.println(VUOTA);
         System.out.println(String.format("Nome del dataBase corrente: [%s]", ottenuto));
@@ -128,7 +108,6 @@ public class MongoServiceTest extends ATest {
         assertFalse(ottenutoBooleano);
         printCollection(sorgente, "non esiste");
 
-
         sorgente = COLLEZIONE_VALIDA;
         ottenutoBooleano = service.isExists(sorgente);
         assertTrue(ottenutoBooleano);
@@ -146,7 +125,6 @@ public class MongoServiceTest extends ATest {
         assertFalse(ottenutoBooleano);
         printCollection(sorgente, "non è valida");
 
-
         sorgente = COLLEZIONE_VALIDA;
         ottenutoBooleano = service.isValid(sorgente);
         assertTrue(ottenutoBooleano);
@@ -159,7 +137,7 @@ public class MongoServiceTest extends ATest {
     @Test
     @Order(3)
     @DisplayName("3 - Singola entity")
-    void find() {
+    void findById() {
         System.out.println("3 - Singola entity");
 
         sorgente = "piazza";
@@ -171,11 +149,29 @@ public class MongoServiceTest extends ATest {
         System.out.println(entityBean);
     }
 
+
     @Test
     @Order(4)
-    @DisplayName("4 - Lista di tutte le entities")
+    @DisplayName("4 - Singola entity by key")
+    void findByKey() {
+        System.out.println("4 - Singola entity by key");
+
+        clazz = Via.class;
+        sorgente = "nome";
+        sorgente2 = "piazza";
+        entityBean = service.findByKey(clazz, sorgente, sorgente2);
+        assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("EntityBean di classe %s recuperato dal valore '%s' della property '%s'", clazz.getSimpleName(), sorgente2, sorgente));
+        System.out.println(entityBean);
+    }
+
+
+    //    @Test
+    @Order(5)
+    @DisplayName("5 - Lista di tutte le entities")
     void fetch() {
-        System.out.println("4 - Lista di tutte le entities");
+        System.out.println("5 - Lista di tutte le entities");
 
         sorgenteClasse = Via.class;
         previstoIntero = 26;
@@ -183,11 +179,11 @@ public class MongoServiceTest extends ATest {
         try {
             listaBean = service.fetch(sorgenteClasse);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "fetch");
+            loggerService.error(unErrore, this.getClass(), "fetch");
         }
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), text.format(listaBean.size()), date.deltaTextEsatto(inizio)));
+        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), textService.format(listaBean.size()), dateService.deltaTextEsatto(inizio)));
 
         sorgenteClasse = Giorno.class;
         previstoIntero = 366;
@@ -195,13 +191,13 @@ public class MongoServiceTest extends ATest {
         try {
             listaBean = service.fetch(sorgenteClasse);
         } catch (AQueryException unErrore) {
-            logger.error(unErrore, this.getClass(), "fetch");
+            loggerService.error(unErrore, this.getClass(), "fetch");
         } catch (AMongoException unErrore) {
-            logger.error(unErrore, this.getClass(), "fetch");
+            loggerService.error(unErrore, this.getClass(), "fetch");
         }
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), text.format(listaBean.size()), date.deltaTextEsatto(inizio)));
+        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), textService.format(listaBean.size()), dateService.deltaTextEsatto(inizio)));
 
         sorgenteClasse = Anno.class;
         previstoIntero = 3030;
@@ -209,13 +205,13 @@ public class MongoServiceTest extends ATest {
         try {
             listaBean = service.fetch(sorgenteClasse);
         } catch (AQueryException unErrore) {
-            logger.error(unErrore, this.getClass(), "fetch");
+            loggerService.error(unErrore, this.getClass(), "fetch");
         } catch (AMongoException unErrore) {
-            logger.error(unErrore, this.getClass(), "fetch");
+            loggerService.error(unErrore, this.getClass(), "fetch");
         }
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), text.format(listaBean.size()), date.deltaTextEsatto(inizio)));
+        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), textService.format(listaBean.size()), dateService.deltaTextEsatto(inizio)));
     }
 
     //    @ParameterizedTest

@@ -40,7 +40,7 @@ public enum ParBio {
 
     nome("Nome", "nome", true, true, true, true, false) {
         @Override
-        public void setValue(final Bio bio, final String value) {
+        public void setValue(Bio bio, String value) throws Exception {
             bio.nome = text.isValid(value) ? elabora.fixNomeValido(value) : null;
         }
 
@@ -52,7 +52,7 @@ public enum ParBio {
 
     cognome("Cognome", "cognome", true, true, true, true, false) {
         @Override
-        public void setValue(final Bio bio, final String value) {
+        public void setValue(Bio bio, String value) throws Exception {
             bio.cognome = text.isValid(value) ? elabora.fixCognomeValido(value) : null;
         }
 
@@ -110,7 +110,7 @@ public enum ParBio {
 
     luogoNascita("LuogoNascita", "luogoNato", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) {
+        public void setValue(Bio bio, String value) throws Exception {
             bio.luogoNato = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
         }
 
@@ -271,8 +271,7 @@ public enum ParBio {
         @Override
         public void setValue(Bio bio, String value) throws Exception {
             if (text.isValid(value)) {
-                Object alfa = elabora.fixAnnoValido(value);
-                int a=87;
+                bio.annoMorto = elabora.fixAnnoValido(value);
             }
         }
 
@@ -372,7 +371,7 @@ public enum ParBio {
     nazionalita("Nazionalità", "nazionalita", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws Exception {
-            bio.nazionalita = value.equals("") ? null : elabora.fixNazionalitaValida(value);
+            bio.nazionalita = value.equals(VUOTA) ? null : elabora.fixNazionalitaValida(value);
         }
 
         public String fixValoreGrezzo(String valoreGrezzo) {
@@ -425,7 +424,7 @@ public enum ParBio {
     //    protected LibBio libBio;
 
     // @Autowired nella classe statica interna  @Component ParInjector
-    public AWikiBotService wikiBot;
+    public WikiBotService wikiBot;
 
     // @Autowired nella classe statica interna  @Component ParInjector
     protected TextService text;
@@ -925,7 +924,7 @@ public enum ParBio {
         this.campoPunta = campoPunta;
     }
 
-    public void setWikiBot(AWikiBotService wikiBot) {
+    public void setWikiBot(WikiBotService wikiBot) {
         this.wikiBot = wikiBot;
     }
 
@@ -944,7 +943,7 @@ public enum ParBio {
         private TextService text;
 
         @Autowired
-        private AWikiBotService wikiBot;
+        private WikiBotService wikiBot;
 
         @Autowired
         private ElaboraService elabora;

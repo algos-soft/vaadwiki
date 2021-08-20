@@ -38,7 +38,7 @@ public class BioFormTmpl extends AVerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AWikiBotService wikiBot;
+    public WikiBotService wikiBot;
 
     private String minWidthForm = "40em";
 

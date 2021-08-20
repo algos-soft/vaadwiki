@@ -8,7 +8,7 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
-import static it.algos.vaadflow14.backend.service.AConsoleColorService.*;
+import static it.algos.vaadflow14.backend.service.ConsoleColorService.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;

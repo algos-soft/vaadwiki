@@ -13,6 +13,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.query.*;
 
 import javax.annotation.*;
+import java.io.*;
 import java.time.*;
 import java.util.*;
 
@@ -38,12 +39,11 @@ public abstract class AService extends AbstractService implements AIService {
      */
     protected final Class<? extends AEntity> entityClazz;
 
-
-    /**
-     * Flag di preferenza per specificare la property della entity da usare come ID <br>
-     * (public perché usata in un test)
-     */
-    public String keyPropertyName;
+    //    /**
+    //     * Flag di preferenza per specificare la property della entity da usare come ID <br>
+    //     * (public perché usata in un test)
+    //     */
+    //    public String keyPropertyName;
 
 
     /**
@@ -64,18 +64,17 @@ public abstract class AService extends AbstractService implements AIService {
      */
     @PostConstruct
     protected void postConstruct() {
-        this.fixPreferenze();
+        //        this.fixPreferenze();
     }
 
-
-    /**
-     * Preferenze usate da questo service <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void fixPreferenze() {
-        this.keyPropertyName = annotation.getKeyPropertyName(entityClazz);
-    }
+    //    /**
+    //     * Preferenze usate da questo service <br>
+    //     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+    //     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     */
+    //    protected void fixPreferenze() {
+    //        this.keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+    //    }
 
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
@@ -343,6 +342,7 @@ public abstract class AService extends AbstractService implements AIService {
     public AEntity fixKey(final AEntity newEntityBean) {
         String keyPropertyValue;
         Company company;
+        String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
 
         if (text.isEmpty(newEntityBean.id)) {
             if (text.isValid(keyPropertyName)) {
@@ -371,8 +371,9 @@ public abstract class AService extends AbstractService implements AIService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
+    @Override
     public AEntity findById(final String keyID) {
-        return mongo.findByIdOld(entityClazz, keyID);
+        return mongo.findById(entityClazz, keyID);
     }
 
 
@@ -385,14 +386,35 @@ public abstract class AService extends AbstractService implements AIService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public AEntity findByKey(final String keyPropertyValue) {
+    @Override
+    public AEntity findByKey(final Serializable keyPropertyValue) {
+        String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+
         if (text.isValid(keyPropertyName)) {
-            return mongo.findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
+            return findByProperty(keyPropertyName, keyPropertyValue);
         }
         else {
-            return findById(keyPropertyValue);
+            return null;
         }
     }
+
+
+    /**
+     * Retrieves an entity by a keyProperty.
+     * Cerca una singola entity di una collection con una query. <br>
+     * Restituisce un valore valido SOLO se ne esiste una sola <br>
+     *
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the founded entity unique or {@literal null} if none found
+     *
+     * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
+     */
+    public AEntity findByProperty(String propertyName, Serializable propertyValue) {
+        return mongo.findByKey(entityClazz, propertyName, propertyValue);
+    }
+
 
     /**
      * Cancella la collection <br>

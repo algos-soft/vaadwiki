@@ -155,7 +155,6 @@ public class ProvinciaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Provincia findByKey(final String keyValue) {
         return (Provincia) super.findByKey(keyValue);
     }

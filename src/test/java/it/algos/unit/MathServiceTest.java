@@ -1,10 +1,8 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.service.MathService;
+import it.algos.vaadflow14.backend.service.*;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -13,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * User: gac
  * Date: gio, 13-ago-2020
  * Time: 19:23
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -27,9 +26,9 @@ public class MathServiceTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    MathService service;
+    private MathService service;
 
 
     /**
@@ -38,8 +37,11 @@ public class MathServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
+
+        //--reindirizzo l'istanza della superclasse
+        service = mathService;
     }
 
 

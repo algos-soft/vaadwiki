@@ -6,7 +6,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import it.algos.vaadwiki.backend.enumeration.*;
-import static it.algos.vaadwiki.backend.service.AWikiBotService.*;
+import static it.algos.vaadwiki.backend.service.WikiBotService.*;
 import it.algos.vaadwiki.wiki.*;
 import org.json.simple.*;
 import org.springframework.beans.factory.config.*;

@@ -1,4 +1,4 @@
-package it.algos.unit;
+package it.algos.wiki;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -58,7 +58,7 @@ public class QueryCatTest extends ATest {
     public BotLogin botLogin;
 
     @InjectMocks
-    public AWikiBotService wikiBot;
+    public WikiBotService wikiBot;
 
     /**
      * Classe principale di riferimento <br>
@@ -81,39 +81,39 @@ public class QueryCatTest extends ATest {
     void setUpAll() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(istanza);
-        Assertions.assertNotNull(istanza);
-        istanza.text = text;
-        istanza.logger = logger;
-        istanza.wikiApi = wikiApi;
-        istanza.wikiBot = wikiBot;
-        istanza.date = date;
-        istanza.appContext = appContext;
-        wikiBot.text = text;
-        wikiBot.web = web;
-        wikiBot.jSonService = jSonService;
-        jSonService.text = text;
-
-        MockitoAnnotations.initMocks(queryLogin);
-        Assertions.assertNotNull(queryLogin);
-        queryLogin.wikiApi = wikiApi;
-        queryLogin.text = text;
-        queryLogin.logger = logger;
-        queryLogin.appContext = appContext;
-
-        MockitoAnnotations.initMocks(botLogin);
-        Assertions.assertNotNull(botLogin);
-        istanza.botLogin = botLogin;
-        queryLogin.botLogin = botLogin;
-
-        MockitoAnnotations.initMocks(queryAssert);
-        Assertions.assertNotNull(queryAssert);
-        queryAssert.botLogin = botLogin;
-        queryLogin.queryAssert = queryAssert;
-        istanza.queryAssert = queryAssert;
-
-        assertTrue(queryLogin.urlRequest().isValido());
+//        MockitoAnnotations.initMocks(this);
+//        MockitoAnnotations.initMocks(istanza);
+//        Assertions.assertNotNull(istanza);
+//        istanza.text = text;
+//        istanza.logger = logger;
+//        istanza.wikiApi = wikiApi;
+//        istanza.wikiBot = wikiBot;
+//        istanza.date = date;
+//        istanza.appContext = appContext;
+//        wikiBot.text = text;
+//        wikiBot.web = web;
+//        wikiBot.jSonService = jSonService;
+//        jSonService.text = text;
+//
+//        MockitoAnnotations.initMocks(queryLogin);
+//        Assertions.assertNotNull(queryLogin);
+//        queryLogin.wikiApi = wikiApi;
+//        queryLogin.text = text;
+//        queryLogin.logger = logger;
+//        queryLogin.appContext = appContext;
+//
+//        MockitoAnnotations.initMocks(botLogin);
+//        Assertions.assertNotNull(botLogin);
+//        istanza.botLogin = botLogin;
+//        queryLogin.botLogin = botLogin;
+//
+//        MockitoAnnotations.initMocks(queryAssert);
+//        Assertions.assertNotNull(queryAssert);
+//        queryAssert.botLogin = botLogin;
+//        queryLogin.queryAssert = queryAssert;
+//        istanza.queryAssert = queryAssert;
+//
+//        assertTrue(queryLogin.urlRequest().isValido());
     }
 
 
@@ -181,7 +181,7 @@ public class QueryCatTest extends ATest {
         assertTrue(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getCodeMessage());
         printRisultato(ottenutoRisultato);
-        System.out.println(String.format("Risultato ottenuto in esattamente %s", date.deltaTextEsatto(inizio)));
+        System.out.println(String.format("Risultato ottenuto in esattamente %s", dateService.deltaTextEsatto(inizio)));
     }
 
     @Test
@@ -196,7 +196,7 @@ public class QueryCatTest extends ATest {
         assertTrue(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getCodeMessage());
         printRisultato(ottenutoRisultato);
-        System.out.println(String.format("Risultato ottenuto in esattamente %s", date.deltaTextEsatto(inizio)));
+        System.out.println(String.format("Risultato ottenuto in esattamente %s", dateService.deltaTextEsatto(inizio)));
     }
 
 //    @Test
@@ -211,7 +211,7 @@ public class QueryCatTest extends ATest {
         assertTrue(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getCodeMessage());
         printRisultato(ottenutoRisultato);
-        System.out.println(String.format("Risultato ottenuto in esattamente %s", date.deltaTextEsatto(inizio)));
+        System.out.println(String.format("Risultato ottenuto in esattamente %s", dateService.deltaTextEsatto(inizio)));
     }
 
     void print10(List<Long> lista) {

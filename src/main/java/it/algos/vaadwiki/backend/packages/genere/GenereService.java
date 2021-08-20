@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -164,6 +165,21 @@ public class GenereService extends WikiService {
 
 
     /**
+     * Retrieves an entity by a keyProperty.
+     * Cerca una singola entity con una query. <br>
+     * Restituisce un valore valido SOLO se ne esiste una sola <br>
+     *
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the founded entity unique or {@literal null} if none found
+     */
+    @Override
+    public Genere findByProperty(String propertyName, Serializable propertyValue) {
+        return (Genere) super.findByProperty(propertyName, propertyValue);
+    }
+
+    /**
      * Retrieves an entity by its keyProperty.
      *
      * @param keyValue must not be {@literal null}.
@@ -173,7 +189,7 @@ public class GenereService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Genere findByKey(final String keyValue) {
+    public Genere findByKey(final Serializable keyValue) {
         return (Genere) super.findByKey(keyValue);
     }
 

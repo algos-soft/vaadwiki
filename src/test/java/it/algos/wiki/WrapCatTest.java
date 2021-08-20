@@ -1,4 +1,4 @@
-package it.algos.unit;
+package it.algos.wiki;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -350,7 +350,7 @@ public class WrapCatTest extends ATest {
 
     protected void printWrap(List<WrapDueStringhe> listaWrap) {
         System.out.println("********");
-        if (array.isAllValid(listaWrap)) {
+        if (arrayService.isAllValid(listaWrap)) {
             for (WrapDueStringhe wrap : listaWrap) {
                 System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
             }

@@ -152,7 +152,6 @@ public class CompanyService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Company findByKey(final String keyValue) {
         return (Company) super.findByKey(keyValue);
     }

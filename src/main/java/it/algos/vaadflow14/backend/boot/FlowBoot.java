@@ -148,7 +148,7 @@ public abstract class FlowBoot implements ServletContextListener {
 
         this.fixDBMongo();
         this.fixVariabili();
-        this.fixPreferenze();
+//        this.fixPreferenze();
         this.fixData();
         this.fixMenuRoutes();
         this.fixSchedules();
@@ -451,7 +451,7 @@ public abstract class FlowBoot implements ServletContextListener {
         //--inizio
         codeVersione = "Setup";
         descVersione = "Creazione ed installazione iniziale dell'applicazione";
-        entityBean = (Versione) mongo.findByKey(Versione.class, codeVersione);
+        entityBean = (Versione) mongo.findByKeyOld(Versione.class, codeVersione);
         if (entityBean == null) {
             entityBean = new Versione(codeVersione, LocalDate.now(), descVersione);
             entityBean.id = codeVersione;

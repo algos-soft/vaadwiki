@@ -128,7 +128,6 @@ public class VersioneService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Versione findByKey(final String keyValue) {
         return (Versione) super.findByKey(keyValue);
     }

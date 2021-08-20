@@ -38,6 +38,7 @@ import java.util.*;
 @AIScript(sovraScrivibile = false)
 public abstract class ATest {
 
+
     /**
      * The constant PIENA.
      */
@@ -97,6 +98,8 @@ public abstract class ATest {
 
     protected static final String PAGINA_REDIRECT = "Regno di Napoli (1805-1815)";
 
+    private static final String DATA_BASE_NAME = "vaadflow14";
+
     protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
 
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
@@ -124,43 +127,43 @@ public abstract class ATest {
     protected ApplicationContext appContext;
 
     @InjectMocks
-    protected TextService text;
+    protected TextService textService;
 
     @InjectMocks
-    protected ArrayService array;
+    protected ArrayService arrayService;
 
     @InjectMocks
-    protected DateService date;
+    protected DateService dateService;
 
     @InjectMocks
-    protected AnnotationService annotation;
+    protected AnnotationService annotationService;
 
     @InjectMocks
-    protected ReflectionService reflection;
+    protected ReflectionService reflectionService;
 
     @InjectMocks
-    protected ALogService logger;
+    protected ALogService loggerService;
 
     @InjectMocks
-    protected BeanService bean;
+    protected BeanService beanService;
 
     @InjectMocks
-    protected AMongoService mongo;
+    protected AMongoService mongoService;
 
     @InjectMocks
-    protected WebService web;
+    protected WebService webService;
 
     @InjectMocks
-    protected AWikiApiService wikiApi;
+    protected AWikiApiService wikiApiService;
 
     @InjectMocks
-    protected AGeograficService geografic;
+    protected AGeograficService geograficService;
 
     @InjectMocks
-    protected FileService file;
+    protected FileService fileService;
 
     @InjectMocks
-    protected MathService math;
+    protected MathService mathService;
 
     @InjectMocks
     protected GsonService gSonService;
@@ -172,13 +175,19 @@ public abstract class ATest {
     protected UtilityService utilityService;
 
     @InjectMocks
-    protected HtmlService html;
+    protected HtmlService htmlService;
 
     @InjectMocks
     protected PreferenzaService preferenzaService;
 
     @InjectMocks
     protected JSonService jSonService;
+
+    @InjectMocks
+    protected EnumerationService enumerationService;
+
+    @InjectMocks
+    protected ResourceService resourceService;
 
     protected Logger adminLogger;
 
@@ -364,64 +373,79 @@ public abstract class ATest {
 
     protected WrapTreStringhe treStringhe;
 
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      */
     protected void setUpStartUp() {
+        initMocks();
+        fixRiferimentiIncrociati();
+    }
+
+
+    /**
+     * Inizializzazione dei service
+     * Devono essere tutti 'mockati' prima di iniettare i riferimenti incrociati <br>
+     */
+    protected void initMocks() {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(appContext);
         Assertions.assertNotNull(appContext);
 
-        MockitoAnnotations.initMocks(text);
-        Assertions.assertNotNull(text);
+        MockitoAnnotations.initMocks(textService);
+        Assertions.assertNotNull(textService);
 
-        MockitoAnnotations.initMocks(array);
-        Assertions.assertNotNull(array);
+        MockitoAnnotations.initMocks(arrayService);
+        Assertions.assertNotNull(arrayService);
 
-        MockitoAnnotations.initMocks(logger);
-        Assertions.assertNotNull(logger);
+        MockitoAnnotations.initMocks(loggerService);
+        Assertions.assertNotNull(loggerService);
 
-        MockitoAnnotations.initMocks(date);
-        Assertions.assertNotNull(date);
+        MockitoAnnotations.initMocks(dateService);
+        Assertions.assertNotNull(dateService);
 
         adminLogger = LoggerFactory.getLogger("wam.admin");
         Assertions.assertNotNull(adminLogger);
 
-        MockitoAnnotations.initMocks(annotation);
-        Assertions.assertNotNull(annotation);
+        MockitoAnnotations.initMocks(annotationService);
+        Assertions.assertNotNull(annotationService);
 
-        MockitoAnnotations.initMocks(reflection);
-        Assertions.assertNotNull(reflection);
+        MockitoAnnotations.initMocks(reflectionService);
+        Assertions.assertNotNull(reflectionService);
 
-        MockitoAnnotations.initMocks(bean);
-        Assertions.assertNotNull(bean);
+        MockitoAnnotations.initMocks(beanService);
+        Assertions.assertNotNull(beanService);
 
-        MockitoAnnotations.initMocks(mongo);
-        Assertions.assertNotNull(mongo);
+        MockitoAnnotations.initMocks(mongoService);
+        Assertions.assertNotNull(mongoService);
+        mongoService.text = textService;
+        mongoService.fixProperties(DATA_BASE_NAME);
 
-        MockitoAnnotations.initMocks(web);
-        Assertions.assertNotNull(web);
+        MockitoAnnotations.initMocks(webService);
+        Assertions.assertNotNull(webService);
 
-        MockitoAnnotations.initMocks(wikiApi);
-        Assertions.assertNotNull(wikiApi);
+        MockitoAnnotations.initMocks(wikiApiService);
+        Assertions.assertNotNull(wikiApiService);
 
-        MockitoAnnotations.initMocks(geografic);
-        Assertions.assertNotNull(geografic);
+        MockitoAnnotations.initMocks(geograficService);
+        Assertions.assertNotNull(geograficService);
 
-        MockitoAnnotations.initMocks(file);
-        Assertions.assertNotNull(file);
+        MockitoAnnotations.initMocks(fileService);
+        Assertions.assertNotNull(fileService);
 
-        MockitoAnnotations.initMocks(math);
-        Assertions.assertNotNull(math);
+        MockitoAnnotations.initMocks(mathService);
+        Assertions.assertNotNull(mathService);
 
         MockitoAnnotations.initMocks(gSonService);
         Assertions.assertNotNull(gSonService);
+        gSonService.text = textService;
+        gSonService.fixProperties(DATA_BASE_NAME);
 
         MockitoAnnotations.initMocks(utilityService);
         Assertions.assertNotNull(utilityService);
 
-        MockitoAnnotations.initMocks(html);
-        Assertions.assertNotNull(html);
+        MockitoAnnotations.initMocks(htmlService);
+        Assertions.assertNotNull(htmlService);
 
         MockitoAnnotations.initMocks(preferenzaService);
         Assertions.assertNotNull(preferenzaService);
@@ -429,49 +453,73 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(jSonService);
         Assertions.assertNotNull(jSonService);
 
-        array.text = text;
-        text.array = array;
-        logger.text = text;
-        logger.adminLogger = adminLogger;
-        annotation.text = text;
-        annotation.array = array;
-        annotation.logger = logger;
-        annotation.reflection = reflection;
-        reflection.array = array;
-        reflection.text = text;
-        gSonService.text = text;
-        gSonService.array = array;
-        jSonService.text = text;
-        jSonService.array = array;
-        bean.mongo = mongo;
-        mongo.text = text;
-        mongo.annotation = annotation;
-        mongo.reflection = reflection;
-        web.text = text;
-        web.logger = logger;
-        wikiApi.text = text;
-        wikiApi.web = web;
-        wikiApi.logger = logger;
-        wikiApi.html = html;
-        file.text = text;
-        file.array = array;
-        file.logger = logger;
-        date.math = math;
+        MockitoAnnotations.initMocks(classService);
+        Assertions.assertNotNull(classService);
+
+        MockitoAnnotations.initMocks(enumerationService);
+        Assertions.assertNotNull(enumerationService);
+
+        MockitoAnnotations.initMocks(resourceService);
+        Assertions.assertNotNull(resourceService);
+    }
+
+    /**
+     * Regola tutti riferimenti incrociati <br>
+     * Deve essere fatto dopo aver costruito le referenze 'mockate' <br>
+     * Nelle sottoclassi di testi devono essere regolati i riferimenti dei service specifici <br>
+     */
+    protected void fixRiferimentiIncrociati() {
+        arrayService.text = textService;
+        textService.array = arrayService;
+        loggerService.text = textService;
+        loggerService.adminLogger = adminLogger;
+        annotationService.text = textService;
+        annotationService.array = arrayService;
+        annotationService.logger = loggerService;
+        annotationService.reflection = reflectionService;
+        reflectionService.array = arrayService;
+        reflectionService.text = textService;
+        reflectionService.logger = loggerService;
+        gSonService.text = textService;
+        gSonService.array = arrayService;
+        jSonService.text = textService;
+        jSonService.array = arrayService;
+        beanService.mongo = mongoService;
+
+        mongoService.text = textService;
+        mongoService.annotation = annotationService;
+        mongoService.reflection = reflectionService;
+        mongoService.logger = loggerService;
+
+        webService.text = textService;
+        webService.logger = loggerService;
+        wikiApiService.text = textService;
+        wikiApiService.web = webService;
+        wikiApiService.logger = loggerService;
+        wikiApiService.html = htmlService;
+        fileService.text = textService;
+        fileService.array = arrayService;
+        fileService.logger = loggerService;
+        fileService.math = mathService;
         sortSpring = null;
-        classService.fileService = file;
-        classService.text = text;
-        classService.logger = logger;
-        classService.annotation = annotation;
-        preferenzaService.mongo = mongo;
-        utilityService.text = text;
-        html.text = text;
-        date.text = text;
-        sorgenteArray = null;
-        previstoArray = null;
-        ottenutoArray = null;
-        sorgenteArrayLong = null;
-        previstoArrayLong = null;
-        ottenutoArrayLong = null;
+        classService.fileService = fileService;
+        classService.text = textService;
+        classService.logger = loggerService;
+        classService.annotation = annotationService;
+        preferenzaService.mongo = mongoService;
+        utilityService.text = textService;
+        htmlService.text = textService;
+        dateService.text = textService;
+        mongoService.gSonService = gSonService;
+        gSonService.reflection = reflectionService;
+        gSonService.annotation = annotationService;
+        resourceService.fileService = fileService;
+        resourceService.text = textService;
+        utilityService.annotation = annotationService;
+        wikiApiService.array = arrayService;
+        enumerationService.text = textService;
+        enumerationService.array = arrayService;
+        dateService.math = mathService;
     }
 
 
@@ -491,13 +539,17 @@ public abstract class ATest {
         previsto2 = VUOTA;
         previsto3 = VUOTA;
         previstoIntero = 0;
+        sorgenteArray = null;
+        previstoArray = null;
+        ottenutoArray = null;
+        sorgenteArrayLong = null;
+        previstoArrayLong = null;
+        ottenutoArrayLong = null;
         sorgenteClasse = null;
         sorgenteField = null;
         sorgenteMatrice = null;
         previstoMatrice = null;
         ottenutoMatrice = null;
-        previstoArray = null;
-        ottenutoArray = null;
         previstoInteroArray = null;
         ottenutoInteroArray = null;
         query = null;
@@ -511,8 +563,8 @@ public abstract class ATest {
         listaStr = null;
         listaFields = null;
         bytes = null;
-        FIELD_ORDINE = reflection.getField(VIA_ENTITY_CLASS, NAME_ORDINE);
-        FIELD_NOME = reflection.getField(VIA_ENTITY_CLASS, NAME_NOME);
+        FIELD_ORDINE = reflectionService.getField(VIA_ENTITY_CLASS, NAME_ORDINE);
+        FIELD_NOME = reflectionService.getField(VIA_ENTITY_CLASS, NAME_NOME);
         entityBean = null;
         clazz = null;
         previstoRisultato = null;
@@ -520,7 +572,7 @@ public abstract class ATest {
     }
 
     protected String getTime() {
-        return date.deltaTextEsatto(inizio);
+        return dateService.deltaTextEsatto(inizio);
     }
 
     protected void printVuota(List<String> lista) {
@@ -529,7 +581,7 @@ public abstract class ATest {
     }
 
     protected void print(List<String> lista) {
-        if (array.isAllValid(lista)) {
+        if (arrayService.isAllValid(lista)) {
             for (String stringa : lista) {
                 System.out.println(stringa);
             }
@@ -538,10 +590,10 @@ public abstract class ATest {
 
 
     protected void printList(List<List<String>> listaTable) {
-        if (array.isAllValid(listaTable)) {
+        if (arrayService.isAllValid(listaTable)) {
             for (List<String> lista : listaTable) {
                 System.out.println(VUOTA);
-                if (array.isAllValid(lista)) {
+                if (arrayService.isAllValid(lista)) {
                     for (String stringa : lista) {
                         System.out.println(stringa);
                     }
@@ -553,11 +605,11 @@ public abstract class ATest {
 
     protected void printMappa(Map<String, List<String>> mappa) {
         List<String> lista;
-        if (array.isAllValid(mappa)) {
+        if (arrayService.isAllValid(mappa)) {
             for (String key : mappa.keySet()) {
                 lista = mappa.get(key);
                 System.out.println(VUOTA);
-                if (array.isAllValid(lista)) {
+                if (arrayService.isAllValid(lista)) {
                     printVuota(lista);
                 }
             }
@@ -599,10 +651,9 @@ public abstract class ATest {
     //    }
 
 
-
     protected void printWrap(List<WrapDueStringhe> listaWrap) {
         System.out.println("********");
-        if (array.isAllValid(listaWrap)) {
+        if (arrayService.isAllValid(listaWrap)) {
             for (WrapDueStringhe wrap : listaWrap) {
                 System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
             }
@@ -611,7 +662,7 @@ public abstract class ATest {
 
     protected void printWrapTre(List<WrapTreStringhe> listaWrap) {
         System.out.println(VUOTA);
-        if (array.isAllValid(listaWrap)) {
+        if (arrayService.isAllValid(listaWrap)) {
             for (WrapTreStringhe wrap : listaWrap) {
                 System.out.println(wrap.getPrima() + SEP + wrap.getSeconda() + SEP + wrap.getTerza());
             }
@@ -620,7 +671,7 @@ public abstract class ATest {
 
     protected void printWrapQuattro(List<WrapQuattro> listaWrap) {
         System.out.println(VUOTA);
-        if (array.isAllValid(listaWrap)) {
+        if (arrayService.isAllValid(listaWrap)) {
             for (WrapQuattro wrap : listaWrap) {
                 System.out.println(wrap.getPrima() + SEP + wrap.getSeconda() + SEP + wrap.getTerza());
             }
@@ -646,10 +697,10 @@ public abstract class ATest {
         System.out.println(String.format("Error code: %s", result.getErrorCode()));
         System.out.println(String.format("Error message: %s", result.getErrorMessage()));
         System.out.println(String.format("Valid message: %s", result.getValidMessage()));
-        System.out.println(String.format("Numeric value: %s", text.format(result.getValue())));
+        System.out.println(String.format("Numeric value: %s", textService.format(result.getValue())));
         System.out.println(String.format("List value: %s", lista));
         System.out.println(String.format("Map value: %s", result.getMappa()));
-        System.out.println(String.format("Risultato ottenuto in %s", date.deltaText(inizio)));
+        System.out.println(String.format("Risultato ottenuto in %s", dateService.deltaText(inizio)));
     }
 
 }// end of class

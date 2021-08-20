@@ -19,6 +19,7 @@ import java.util.*;
  * User: gac
  * Date: gio, 08-apr-2021
  * Time: 22:17
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -50,14 +51,14 @@ public class WizServiceTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
-        service.file = file;
+        service.text = textService;
+        service.array = arrayService;
+        service.file = fileService;
 
         for (AEWizCost cost : AEWizCost.values()) {
-            cost.setText(text);
-            cost.setFile(file);
-            cost.setLogger(logger);
+            cost.setText(textService);
+            cost.setFile(fileService);
+            cost.setLogger(loggerService);
         }
     }
 
@@ -307,7 +308,7 @@ public class WizServiceTest extends ATest {
         System.out.print(titolo);
         System.out.println(" (" + lista.size() + ")");
         System.out.println(VUOTA);
-        if (array.isAllValid(lista)) {
+        if (arrayService.isAllValid(lista)) {
             for (AEWizCost wiz : lista) {
                 riga = VUOTA;
                 riga += wiz.getWizValue();
@@ -334,7 +335,7 @@ public class WizServiceTest extends ATest {
         System.out.print(titolo);
         System.out.println(" (" + lista.size() + ")");
         System.out.println(VUOTA);
-        if (array.isAllValid(lista)) {
+        if (arrayService.isAllValid(lista)) {
             for (AEWizCost wiz : lista) {
                 riga = VUOTA;
                 riga += wiz.name();

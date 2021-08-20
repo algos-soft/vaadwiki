@@ -174,7 +174,6 @@ public class PreferenzaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Preferenza findByKey(final String keyValue) {
         //        return (Preferenza) mongo.findOneUnique(Preferenza.class, "code", keyValue);
         return (Preferenza) super.findByKey(keyValue);

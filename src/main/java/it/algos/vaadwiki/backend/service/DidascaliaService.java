@@ -107,7 +107,17 @@ public class DidascaliaService extends AbstractService {
         String attivitaNazionalita = VUOTA;
 
         if (text.isValid(attivita)) {
-            attivitaNazionalita = attivita;
+            attivitaNazionalita += attivita;
+        }
+
+        if (text.isValid(attivita2)) {
+            attivitaNazionalita += SPAZIO + "e" + SPAZIO;
+            attivitaNazionalita += attivita2;
+        }
+
+        if (text.isValid(nazionalita)) {
+            attivitaNazionalita += SPAZIO;
+            attivitaNazionalita += nazionalita;
         }
 
         return attivitaNazionalita;

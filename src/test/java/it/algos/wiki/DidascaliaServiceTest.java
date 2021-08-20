@@ -1,12 +1,9 @@
-package it.algos.unit;
+package it.algos.wiki;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static it.algos.vaadflow14.backend.enumeration.AETypeData.*;
-import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
-import it.algos.vaadflow14.backend.packages.preferenza.*;
-import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.didascalia.*;
 import static it.algos.vaadwiki.backend.enumeration.EDidascalia.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
@@ -36,192 +33,167 @@ import org.mockito.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DidascaliaServiceTest extends WTest {
 
-    private static final String DATA_BASE_NAME = "vaadflow14";
+    private static final String DATA_BASE_NAME = "vaadwiki";
 
-    @InjectMocks
-    public DidascaliaService service;
-    //    @InjectMocks
-    //    public Didascalia didascalia;
-
-    //    @InjectMocks
-    //    public DidascaliaService didascaliaService;
-
-    @InjectMocks
-    public GiornoService giornoService;
-
-    //    @InjectMocks
-    //    public DidascaliaAnnoNato annoNato;
-
-    //    @InjectMocks
-    //    public DidascaliaGiornoMorto giornoMorto;
-
-    //    @InjectMocks
-    //    public DidascaliaAnnoMorto annoMorto;
-
-    //    @InjectMocks
-    //    public DidascaliaListe standard;
-
-    //    @InjectMocks
-    //    public DidascaliaBiografie completa;
-
-    @InjectMocks
-    public AnnoService annoService;
-
-    @InjectMocks
-    public GiornoService giorno;
-
-    @InjectMocks
-    public AWikiBotService wikiBot;
-
-    @InjectMocks
-    public BioUtility bioUtility;
-
-    @InjectMocks
-    protected BioService bioService;
-
-    //    @InjectMocks
-    //    protected PageService pageService;
-
-    @InjectMocks
-    protected ElaboraService elaboraService;
-
-    @InjectMocks
-    protected ReflectionService reflection;
-
-    @InjectMocks
-    protected PreferenzaService pref;
-
-    @InjectMocks
-    protected DateService date;
-
-//    @InjectMocks
-//    protected AMongoService mongoService;
-
-    /**
-     * Classe principale di riferimento <br>
-     */
-    @InjectMocks
-    QueryBio queryBio;
 
     /**
      * Classe di riferimento <br>
      */
     @InjectMocks
-    DidascaliaGiornoNato didascaliaGiornoNato;
+    QueryBio queryBio;
 
-    @InjectMocks
-    private GsonService gSonService;
+//    /**
+//     * Classe di riferimento <br>
+//     */
+//    @InjectMocks
+//    DidascaliaGiornoNato didascaliaGiornoNato;
+
 
     private String wikiTitle = "Adone Asinari";
 
     private String wikiTitleDue = "Sonia Todd";
 
+    /**
+     * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
+     */
+    private DidascaliaService service;
+
+
+    /**
+     * Qui passa una volta sola, chiamato dalle sottoclassi <br>
+     * Invocare PRIMA il metodo setUpStartUp() della superclasse <br>
+     * Si possono aggiungere regolazioni specifiche <br>
+     */
+    @BeforeAll
+    void setUpIniziale() {
+        super.setUpStartUp();
+
+        //--reindirizzo l'istanza della superclasse
+        service = didascaliaService;
+    }
+
     public static String[] PAGINE() {
         return new String[]{PAGINA_UNO, PAGINA_DUE, PAGINA_TRE, PAGINA_QUATTRO, PAGINA_CINQUE, PAGINA_SEI, PAGINA_SETTE};
     }
 
-    @BeforeAll
-    public void setUp() {
-        super.setUpStartUp();
-
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-
-        service.text = text;
-
-        MockitoAnnotations.initMocks(queryBio);
-        Assertions.assertNotNull(queryBio);
-        queryBio.array = array;
-        queryBio.text = text;
-        queryBio.wikiApi = wikiApi;
-        wikiApi.text = text;
-        wikiApi.html = html;
-        html.text = text;
-        bioService.elaboraService = elaboraService;
-
-        MockitoAnnotations.initMocks(wikiBot);
-        Assertions.assertNotNull(wikiBot);
-
-        MockitoAnnotations.initMocks(bioUtility);
-        Assertions.assertNotNull(bioUtility);
-        elaboraService.bioUtility = bioUtility;
-        elaboraService.logger = logger;
-        bioUtility.text = text;
-        logger.text = text;
-        logger.adminLogger = adminLogger;
-
-        //        MockitoAnnotations.initMocks(api);
-        //        MockitoAnnotations.initMocks(pageService);
-        MockitoAnnotations.initMocks(bioService);
-        MockitoAnnotations.initMocks(elaboraService);
-        MockitoAnnotations.initMocks(annoService);
-        MockitoAnnotations.initMocks(giornoService);
-        MockitoAnnotations.initMocks(giorno);
-        MockitoAnnotations.initMocks(reflection);
-//        MockitoAnnotations.initMocks(mongoService);
-        MockitoAnnotations.initMocks(text);
-        //        MockitoAnnotations.initMocks(didascalia);
-        MockitoAnnotations.initMocks(giornoNato);
-        MockitoAnnotations.initMocks(annoNato);
-        MockitoAnnotations.initMocks(giornoMorto);
-        MockitoAnnotations.initMocks(annoMorto);
-        MockitoAnnotations.initMocks(standard);
-        //        MockitoAnnotations.initMocks(completa);
-        //        MockitoAnnotations.initMocks(didascaliaService);
-        MockitoAnnotations.initMocks(pref);
-        MockitoAnnotations.initMocks(date);
-        //        api.pageService = pageService;
-        //        api.text = text;
-        //        pageService.api = api;
-        //        pageService.text = text;
-        //        pageService.bioService = bioService;
-        //        pageService.elaboraService = elaboraService;
-        elaboraService.text = text;
-        elaboraService.annoService = annoService;
-        //        elaboraService.libBio = libBio;
-        //        libBio.giorno = giorno;
-        bioService.text = text;
-        //        libBio.mongo = mongoService;
-        //        mongoService.mongoOp = mongoOperations;
-        //        mongoService.reflection = reflection;
-        //        mongoService.text = text;
-        //        didascalia.text = text;
-        //        giornoNato.annoService = annoService;
-        //        giornoNato.text = text;
-        //        annoNato.text = text;
-        //        giornoMorto.text = text;
-        //        annoMorto.text = text;
-        //        standard.text = text;
-        //        completa.text = text;
-        //        didascalia.didascaliaCompleta = completa;
-        //        didascalia.didascaliaGiornoNato = giornoNato;
-        //        didascalia.didascaliaAnnoNato = annoNato;
-        //        didascalia.didascaliaGiornoMorto = giornoMorto;
-        //        didascalia.didascaliaAnnoMorto = annoMorto;
-        //        didascalia.didascaliaStandard = standard;
-        //        bio = api.leggeBio(wikiTitle);
-        //        didascaliaService.wikiTitle = wikiTitle;
-        //        didascaliaService.pref = pref;
-        //        didascaliaService.date = date;
-        //        didascaliaService.api = api;
-        //        didascaliaService.text = text;
-        text.mongo = mongo;
-        annoService.mongo = mongo;
-        mongo.text = text;
-
-        for (ParBio parBio : ParBio.values()) {
-            parBio.setText(text);
-            parBio.setWikiBot(wikiBot);
-            parBio.setElabora(elaboraService);
-        }
-
-        MockitoAnnotations.initMocks(gSonService);
-        Assertions.assertNotNull(gSonService);
-
-        mongo.fixProperties(DATA_BASE_NAME);
-        gSonService.fixProperties(DATA_BASE_NAME);
-    }// end of method
+//    @BeforeAll
+//    public void setUp() {
+//        super.setUpStartUp();
+//
+//        MockitoAnnotations.initMocks(this);
+//        MockitoAnnotations.initMocks(service);
+//        Assertions.assertNotNull(service);
+//
+//        service.text = text;
+//
+//        MockitoAnnotations.initMocks(queryBio);
+//        Assertions.assertNotNull(queryBio);
+//        queryBio.array = array;
+//        queryBio.text = text;
+//        queryBio.wikiApi = wikiApi;
+//        wikiApi.text = text;
+//        wikiApi.html = html;
+//        html.text = text;
+//        bioService.elaboraService = elaboraService;
+//
+//        MockitoAnnotations.initMocks(wikiBot);
+//        Assertions.assertNotNull(wikiBot);
+//
+//        MockitoAnnotations.initMocks(bioUtility);
+//        Assertions.assertNotNull(bioUtility);
+//        elaboraService.bioUtility = bioUtility;
+//        elaboraService.logger = logger;
+//        bioUtility.text = text;
+//        logger.text = text;
+//        logger.adminLogger = adminLogger;
+//
+//        //        MockitoAnnotations.initMocks(api);
+//        //        MockitoAnnotations.initMocks(pageService);
+//        MockitoAnnotations.initMocks(bioService);
+//        MockitoAnnotations.initMocks(elaboraService);
+//        MockitoAnnotations.initMocks(annoService);
+//        MockitoAnnotations.initMocks(giornoService);
+//        MockitoAnnotations.initMocks(giorno);
+//        MockitoAnnotations.initMocks(reflection);
+//        //        MockitoAnnotations.initMocks(mongoService);
+//        MockitoAnnotations.initMocks(text);
+//        //        MockitoAnnotations.initMocks(didascalia);
+//        MockitoAnnotations.initMocks(giornoNato);
+//        MockitoAnnotations.initMocks(annoNato);
+//        MockitoAnnotations.initMocks(giornoMorto);
+//        MockitoAnnotations.initMocks(annoMorto);
+//        MockitoAnnotations.initMocks(standard);
+//        //        MockitoAnnotations.initMocks(completa);
+//        //        MockitoAnnotations.initMocks(didascaliaService);
+//        MockitoAnnotations.initMocks(pref);
+//        MockitoAnnotations.initMocks(date);
+//        //        api.pageService = pageService;
+//        //        api.text = text;
+//        //        pageService.api = api;
+//        //        pageService.text = text;
+//        //        pageService.bioService = bioService;
+//        //        pageService.elaboraService = elaboraService;
+//        elaboraService.text = text;
+//        elaboraService.annoService = annoService;
+//        //        elaboraService.libBio = libBio;
+//        //        libBio.giorno = giorno;
+//        bioService.text = text;
+//        //        libBio.mongo = mongoService;
+//        //        mongoService.mongoOp = mongoOperations;
+//        //        mongoService.reflection = reflection;
+//        //        mongoService.text = text;
+//        //        didascalia.text = text;
+//        //        giornoNato.annoService = annoService;
+//        //        giornoNato.text = text;
+//        //        annoNato.text = text;
+//        //        giornoMorto.text = text;
+//        //        annoMorto.text = text;
+//        //        standard.text = text;
+//        //        completa.text = text;
+//        //        didascalia.didascaliaCompleta = completa;
+//        //        didascalia.didascaliaGiornoNato = giornoNato;
+//        //        didascalia.didascaliaAnnoNato = annoNato;
+//        //        didascalia.didascaliaGiornoMorto = giornoMorto;
+//        //        didascalia.didascaliaAnnoMorto = annoMorto;
+//        //        didascalia.didascaliaStandard = standard;
+//        //        bio = api.leggeBio(wikiTitle);
+//        //        didascaliaService.wikiTitle = wikiTitle;
+//        //        didascaliaService.pref = pref;
+//        //        didascaliaService.date = date;
+//        //        didascaliaService.api = api;
+//        //        didascaliaService.text = text;
+//        text.mongo = mongo;
+//        annoService.mongo = mongo;
+//        gSonService.text = text;
+//        gSonService.array = array;
+//        gSonService.reflection = reflection;
+//        gSonService.annotation = annotation;
+//        mongo.gSonService = gSonService;
+//        mongo.text = text;
+//
+//        MockitoAnnotations.initMocks(attivitaService);
+//
+//        elaboraService.annotation = annotation;
+//        elaboraService.reflection = reflection;
+//        elaboraService.array = array;
+//        elaboraService.attivitaService = attivitaService;
+//        elaboraService.nazionalitaService = nazionalitaService;
+//        attivitaService.mongo = mongo;
+//        nazionalitaService.mongo = mongo;
+//
+//        for (ParBio parBio : ParBio.values()) {
+//            parBio.setText(text);
+//            parBio.setWikiBot(wikiBot);
+//            parBio.setElabora(elaboraService);
+//        }
+//
+//        MockitoAnnotations.initMocks(gSonService);
+//        Assertions.assertNotNull(gSonService);
+//
+//        mongo.fixProperties(DATA_BASE_NAME);
+//        gSonService.fixProperties(DATA_BASE_NAME);
+//    }// end of method
 
     /**
      * Qui passa ad ogni test delle sottoclassi <br>
@@ -300,7 +272,7 @@ public class DidascaliaServiceTest extends WTest {
         sorgente3 = "Ribbung";
         previsto = "[[Sigurd Ribbung]]";
         ottenuto = service.getNomeCognome(sorgente, sorgente2, sorgente3);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
         print(sorgente, sorgente2, sorgente3, ottenuto);
 
@@ -310,7 +282,7 @@ public class DidascaliaServiceTest extends WTest {
         bio = bioService.newEntity(wrap);
         bio = elaboraService.esegue(bio);
         ottenuto = service.getNomeCognome(bio);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
         System.out.println(VUOTA);
         System.out.println(VUOTA);
@@ -329,7 +301,7 @@ public class DidascaliaServiceTest extends WTest {
         sorgente3 = "d'Armagnac";
         previsto = "[[Bernart Arnaut d'Armagnac]]";
         ottenuto = service.getNomeCognome(sorgente, sorgente2, sorgente3);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
         print(sorgente, sorgente2, sorgente3, ottenuto);
     }
@@ -345,7 +317,7 @@ public class DidascaliaServiceTest extends WTest {
         sorgente3 = "Pignatelli";
         previsto = "[[Francesco Maria Pignatelli]]";
         ottenuto = service.getNomeCognome(sorgente, sorgente2, sorgente3);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
         print(sorgente, sorgente2, sorgente3, ottenuto);
     }
@@ -361,7 +333,7 @@ public class DidascaliaServiceTest extends WTest {
         sorgente3 = "Campbell";
         previsto = "[[Colin Campbell (generale)|Colin Campbell]]";
         ottenuto = service.getNomeCognome(sorgente, sorgente2, sorgente3);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
         print(sorgente, sorgente2, sorgente3, ottenuto);
     }
@@ -379,12 +351,12 @@ public class DidascaliaServiceTest extends WTest {
         assertTrue(wrap.isValido());
         bio = bioService.newEntity(wrap);
         bio = elaboraService.esegue(bio);
-        previsto = text.setDoppieQuadre(bio.wikiTitle);
+        previsto = textService.setDoppieQuadre(bio.wikiTitle);
         ottenuto = service.getNomeCognome(bio);
         ottenuto2 = service.getAttivitaNazionalita(bio);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         System.out.println(VUOTA);
-        print(bio, ottenuto,ottenuto2);
+        print(bio, ottenuto, ottenuto2);
     }
 
     //    @Test

@@ -283,7 +283,7 @@ public class DataProviderService extends AbstractService {
             anno = new Anno();
             anno.setId(doc.getString("_id"));
             anno.setOrdine(doc.getInteger("ordine"));
-            anno.setAnno(doc.getString("anno"));
+            anno.setTitolo(doc.getString("anno"));
             anno.setBisestile(doc.getBoolean("bisestile"));
             anni.add(anno);
         }

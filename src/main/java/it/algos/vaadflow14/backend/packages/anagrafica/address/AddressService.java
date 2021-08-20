@@ -128,7 +128,6 @@ public class AddressService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Address findByKey(final String keyValue) {
         return (Address) super.findByKey(keyValue);
     }

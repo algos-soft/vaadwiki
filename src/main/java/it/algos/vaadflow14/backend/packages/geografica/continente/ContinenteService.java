@@ -123,7 +123,6 @@ public class ContinenteService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Continente findByKey(final String keyValue) {
         return (Continente) super.findByKey(keyValue);
     }

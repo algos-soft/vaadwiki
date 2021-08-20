@@ -1,4 +1,4 @@
-package it.algos.unit;
+package it.algos.wiki;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -57,9 +57,9 @@ public class QueryLoginTest extends ATest {
 
         MockitoAnnotations.initMocks(istanza);
         Assertions.assertNotNull(istanza);
-        istanza.wikiApi = wikiApi;
-        istanza.text = text;
-        istanza.logger = logger;
+//        istanza.wikiApi = wikiApi;
+//        istanza.text = text;
+//        istanza.logger = logger;
         istanza.appContext = appContext;
 
         MockitoAnnotations.initMocks(botLogin);
@@ -82,26 +82,26 @@ public class QueryLoginTest extends ATest {
     void setUpEach() {
         super.setUp();
 
-        istanza = new QueryLogin();
-        MockitoAnnotations.initMocks(istanza);
-        Assertions.assertNotNull(istanza);
-        istanza.wikiApi = wikiApi;
-        istanza.text = text;
-        istanza.logger = logger;
-        istanza.botLogin = botLogin;
-        istanza.appContext = appContext;
-        istanza.queryAssert = queryAssert;
-
-        MockitoAnnotations.initMocks(botLogin);
-        Assertions.assertNotNull(botLogin);
-        istanza.botLogin = botLogin;
-        queryAssert.botLogin = botLogin;
-        botLogin.setResult(null);
-
-        MockitoAnnotations.initMocks(queryAssert);
-        Assertions.assertNotNull(queryAssert);
-        queryAssert.botLogin = botLogin;
-        istanza.queryAssert = queryAssert;
+//        istanza = new QueryLogin();
+//        MockitoAnnotations.initMocks(istanza);
+//        Assertions.assertNotNull(istanza);
+//        istanza.wikiApi = wikiApi;
+//        istanza.text = text;
+//        istanza.logger = logger;
+//        istanza.botLogin = botLogin;
+//        istanza.appContext = appContext;
+//        istanza.queryAssert = queryAssert;
+//
+//        MockitoAnnotations.initMocks(botLogin);
+//        Assertions.assertNotNull(botLogin);
+//        istanza.botLogin = botLogin;
+//        queryAssert.botLogin = botLogin;
+//        botLogin.setResult(null);
+//
+//        MockitoAnnotations.initMocks(queryAssert);
+//        Assertions.assertNotNull(queryAssert);
+//        queryAssert.botLogin = botLogin;
+//        istanza.queryAssert = queryAssert;
     }
 
     @Test

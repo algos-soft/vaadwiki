@@ -35,7 +35,7 @@ public abstract class WikiLogicForm extends LogicForm {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AWikiBotService wikiBot;
+    public WikiBotService wikiBot;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>

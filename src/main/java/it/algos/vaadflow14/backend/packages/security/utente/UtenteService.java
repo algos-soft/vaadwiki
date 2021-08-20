@@ -187,7 +187,6 @@ public class UtenteService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Utente findByKey(final String keyValue) {
         return (Utente) super.findByKey(keyValue);
     }

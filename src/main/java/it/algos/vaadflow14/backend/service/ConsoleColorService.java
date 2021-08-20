@@ -7,7 +7,7 @@ package it.algos.vaadflow14.backend.service;
  * Date: mar, 03-dic-2019
  * Time: 19:06
  */
-public abstract class AConsoleColorService {
+public abstract class ConsoleColorService {
 
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset

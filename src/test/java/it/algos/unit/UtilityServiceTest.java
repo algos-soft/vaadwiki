@@ -6,7 +6,6 @@ import it.algos.vaadflow14.backend.service.*;
 import org.junit.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 import org.springframework.data.domain.*;
 
 import java.util.*;
@@ -17,6 +16,7 @@ import java.util.*;
  * User: gac
  * Date: ven, 30-apr-2021
  * Time: 08:34
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -31,9 +31,10 @@ public class UtilityServiceTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    UtilityService service;
+    private UtilityService service;
+
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -41,15 +42,11 @@ public class UtilityServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
-        service.annotation = annotation;
+        //--reindirizzo l'istanza della superclasse
+        service = utilityService;
     }
 
 
@@ -142,7 +139,7 @@ public class UtilityServiceTest extends ATest {
 
         previstoIntero = 1;
         previsto = "_id: ASC";
-        sortSpring = service.sortVaadinToSpring((List<QuerySortOrder>) null,null);
+        sortSpring = service.sortVaadinToSpring((List<QuerySortOrder>) null, null);
         Assert.assertNotNull(sortSpring);
         Assert.assertEquals(previstoIntero, sortSpring.stream().count());
         ottenuto = sortSpring.toString();
@@ -155,7 +152,7 @@ public class UtilityServiceTest extends ATest {
         sortVaadin = new QuerySortOrder(NAME_CODE, SortDirection.ASCENDING);
         sortVaadinList.add(sortVaadin);
 
-        sortSpring = service.sortVaadinToSpring(sortVaadinList,null);
+        sortSpring = service.sortVaadinToSpring(sortVaadinList, null);
         Assert.assertNotNull(sortSpring);
         Assert.assertEquals(3, sortSpring.stream().count());
     }

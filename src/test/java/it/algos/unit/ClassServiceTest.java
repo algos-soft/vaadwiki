@@ -5,7 +5,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 /**
  * Project vaadflow14
@@ -13,6 +12,7 @@ import org.mockito.*;
  * User: gac
  * Date: dom, 16-mag-2021
  * Time: 17:41
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -27,9 +27,9 @@ public class ClassServiceTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    ClassService service;
+    private ClassService service;
 
 
     /**
@@ -38,16 +38,11 @@ public class ClassServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
-        service.fileService = file;
-        service.logger = logger;
+        //--reindirizzo l'istanza della superclasse
+        service = classService;
     }
 
 
@@ -67,7 +62,7 @@ public class ClassServiceTest extends ATest {
     void first() {
         Class clazz = VIA_ENTITY_CLASS;
         String canonicalName = clazz.getCanonicalName();
-        assertTrue(text.isValid(canonicalName));
+        assertTrue(textService.isValid(canonicalName));
         System.out.println(canonicalName);
         Class clazz2 = null;
         Class clazz3 = null;
@@ -75,7 +70,7 @@ public class ClassServiceTest extends ATest {
         try {
             clazz2 = Class.forName(canonicalName);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            loggerService.error(unErrore, this.getClass(), "nomeDelMetodo");
         }
         assertNotNull(clazz2);
         System.out.println(clazz2.getSimpleName());
@@ -90,7 +85,7 @@ public class ClassServiceTest extends ATest {
         sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java";
 
         ottenuto = service.getNameFromPath(VUOTA);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         previsto = "it/algos/vaadflow14/backend/packages/anagrafica/via/Via";
         ottenuto = service.getNameFromPath(sorgente);
@@ -127,7 +122,6 @@ public class ClassServiceTest extends ATest {
         System.out.println(clazz.getCanonicalName());
         System.out.println(VUOTA);
     }
-
 
 
     @Test

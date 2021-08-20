@@ -18,6 +18,7 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
+import java.io.*;
 import java.time.*;
 import java.util.*;
 
@@ -70,7 +71,7 @@ public class BioService extends AService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AWikiBotService wikiBot;
+    public WikiBotService wikiBot;
 
     /**
      * Istanza di una interfaccia <br>
@@ -216,11 +217,24 @@ public class BioService extends AService {
      */
     @Override
     public Bio findById(final String keyID) {
-        Bio bio = (Bio) super.findById(keyID);
-        fixTransienti(bio);
-        return bio;
+        return (Bio) super.findById(keyID);
     }
 
+
+    /**
+     * Retrieves an entity by a keyProperty.
+     * Cerca una singola entity con una query. <br>
+     * Restituisce un valore valido SOLO se ne esiste una sola <br>
+     *
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the founded entity unique or {@literal null} if none found
+     */
+    @Override
+    public Bio findByProperty(String propertyName, Serializable propertyValue) {
+        return (Bio) super.findByProperty(propertyName, propertyValue);
+    }
 
     /**
      * Retrieves an entity by its keyProperty.
@@ -232,7 +246,7 @@ public class BioService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Bio findByKey(final String keyValue) {
+    public Bio findByKey(final Serializable keyValue) {
         return (Bio) super.findByKey(keyValue);
     }
 

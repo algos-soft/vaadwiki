@@ -6,7 +6,6 @@ import it.algos.vaadflow14.wiki.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.*;
 
 import java.util.*;
 
@@ -16,6 +15,7 @@ import java.util.*;
  * User: gac
  * Date: sab, 12-set-2020
  * Time: 20:25
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -44,11 +44,12 @@ public class WikiApiServiceTest extends ATest {
 
     public static final String CAT_ROMANI = "Personaggi della storia romana";
 
+
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    AWikiApiService service;
+    private AWikiApiService service;
 
 
     /**
@@ -57,16 +58,11 @@ public class WikiApiServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
-        service.web = web;
-        service.html = html;
+        //--reindirizzo l'istanza della superclasse
+        service = wikiApiService;
     }
 
 
@@ -94,7 +90,7 @@ public class WikiApiServiceTest extends ATest {
         previsto2 = ";});</script></body></html>";
 
         ottenuto = service.leggeHtml(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
 
@@ -125,7 +121,7 @@ public class WikiApiServiceTest extends ATest {
 
         ottenuto = service.leggeJSONParse(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
 
         System.out.println("2 - legge una pagina in formato JSON con una API action=parse di Mediawiki");
@@ -196,7 +192,7 @@ public class WikiApiServiceTest extends ATest {
 
         ottenuto = service.legge(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
 
         System.out.println(VUOTA);
@@ -213,7 +209,7 @@ public class WikiApiServiceTest extends ATest {
         inizio = System.currentTimeMillis();
         ottenuto = service.legge(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
 
         System.out.println(VUOTA);
@@ -268,7 +264,7 @@ public class WikiApiServiceTest extends ATest {
 
         //--regione
         ottenuto = service.leggeTable(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
         System.out.println("Legge una tabella wiki completa");
@@ -283,7 +279,7 @@ public class WikiApiServiceTest extends ATest {
         inizio = System.currentTimeMillis();
         ottenuto = service.leggeTable(sorgente, 2);
 
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
         System.out.println(VUOTA);
@@ -310,7 +306,7 @@ public class WikiApiServiceTest extends ATest {
         int end;
 
         ottenuto = service.leggeModulo(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
         System.out.println("Legge un modulo wiki completo");
@@ -343,10 +339,10 @@ public class WikiApiServiceTest extends ATest {
         mappaOttenuta = service.leggeMappaModulo(sorgente);
         assertNotNull(mappaOttenuta);
         ottenuto = mappaOttenuta.get(sorgente2);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(ottenuto, previsto);
         ottenuto = mappaOttenuta.get(sorgente3);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(ottenuto, previsto);
         System.out.println("Legge la mappa di un modulo wiki");
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
@@ -378,7 +374,7 @@ public class WikiApiServiceTest extends ATest {
         mappaOttenuta = service.leggeMappaModulo(sorgente);
         assertNotNull(mappaOttenuta);
         ottenuto = mappaOttenuta.get(sorgente2);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(ottenuto, previsto);
         System.out.println("Legge la mappa di un modulo wiki");
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
@@ -409,13 +405,13 @@ public class WikiApiServiceTest extends ATest {
         sorgente2 = "Divisione amministrativa";
 
         ottenuto = service.leggeTmpl(VUOTA, VUOTA);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         ottenuto = service.leggeTmpl(sorgente, VUOTA);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         ottenuto = service.leggeTmpl(sorgente, sorgente2);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         System.out.println("Legge un template amministrativo");
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
@@ -434,13 +430,13 @@ public class WikiApiServiceTest extends ATest {
         sorgente2 = "Bio";
 
         ottenuto = service.leggeTmpl(VUOTA, VUOTA);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         ottenuto = service.leggeTmpl(sorgente, VUOTA);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         ottenuto = service.leggeTmpl(sorgente, sorgente2);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         System.out.println("Legge un template bio");
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
@@ -599,7 +595,7 @@ public class WikiApiServiceTest extends ATest {
         previsto = "1º maggio";
         ottenuto = service.getRedirect(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         sorgente = sorgente.substring(0, sorgente.indexOf("\n"));
         System.out.println(String.format("Il testo che inizia con: '%s...' rinvia alla pagina %s", sorgente, ottenuto));
@@ -609,7 +605,7 @@ public class WikiApiServiceTest extends ATest {
         previsto = "6 dicembre";
         ottenuto = service.getRedirect(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         sorgente = sorgente.substring(0, sorgente.indexOf("\n"));
         System.out.println(String.format("Il testo: '%s...' rinvia alla pagina %s", sorgente, ottenuto));
@@ -630,32 +626,32 @@ public class WikiApiServiceTest extends ATest {
 
         ottenuto = service.legge(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
 
         System.out.println(VUOTA);
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
         System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         System.out.println(String.format("La pagina '%s' è un #redirect ad un altra pagina che è stata letta", sorgente));
-        System.out.println("Inizio pagina effettiva: "+previsto);
+        System.out.println("Inizio pagina effettiva: " + previsto);
 
         sorgente = "6 Dicembre";
         previsto = "{{dicembre}}\nIl '''6 dicembre''' è il 340º giorno";
 
         ottenuto = service.legge(sorgente);
         assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
 
         System.out.println(VUOTA);
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
         System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         System.out.println(String.format("La pagina '%s' è un #redirect ad un altra pagina che è stata letta", sorgente));
-        System.out.println("Inizio pagina effettiva: "+previsto);
+        System.out.println("Inizio pagina effettiva: " + previsto);
     }
 
     private void printColonna(List<String> listaColonna) {
-        if (array.isAllValid(listaColonna)) {
+        if (arrayService.isAllValid(listaColonna)) {
             for (String stringa : listaColonna) {
                 System.out.println(stringa);
             }

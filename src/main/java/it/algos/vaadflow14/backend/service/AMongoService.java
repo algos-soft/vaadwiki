@@ -1132,14 +1132,17 @@ public class AMongoService<capture> extends AbstractService {
     }
 
 
-    /**
-     * Cerca una singola entity di una collection con una determinata chiave. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param keyId       chiave identificativa
-     *
-     * @return the founded entity
-     */
+
+
+
+        /**
+         * Cerca una singola entity di una collection con una determinata chiave. <br>
+         *
+         * @param entityClazz corrispondente ad una collection sul database mongoDB
+         * @param keyId       chiave identificativa
+         *
+         * @return the founded entity
+         */
     public AEntity findByIdOld(Class<? extends AEntity> entityClazz, String keyId) {
         AEntity entity = null;
         if (entityClazz == null) {
@@ -1153,6 +1156,45 @@ public class AMongoService<capture> extends AbstractService {
         return entity;
     }
 
+
+    /**
+     * Retrieves an entity by a keyProperty.
+     * Cerca una singola entity di una collection con una query. <br>
+     * Restituisce un valore valido SOLO se ne esiste una sola <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the founded entity unique or {@literal null} if none found
+     *
+     * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
+     */
+    public AEntity findByKey(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
+        AEntity entityBean = null;
+        MongoCollection<Document> collection = getCollection(entityClazz);
+        FindIterable<Document> iterable = null;
+
+        if (entityClazz == null) {
+            return null;
+        }
+
+        if (collection != null) {
+            Bson condition = new Document(propertyName, propertyValue);
+            iterable = getCollection(entityClazz).find(condition);
+        }
+
+        if (iterable != null) {
+            for (Document doc : iterable) {
+                entityBean = gSonService.crea(doc, entityClazz);
+                break;
+            }
+        }
+
+        return entityBean;
+    }
+
+
     /**
      * Retrieves an entity by its keyProperty.
      *
@@ -1163,7 +1205,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public AEntity findByKey(Class<? extends AEntity> entityClazz, String keyPropertyValue) {
+    public AEntity findByKeyOld(Class<? extends AEntity> entityClazz, String keyPropertyValue) {
         String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
         if (text.isValid(keyPropertyName)) {
             return findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
@@ -1487,7 +1529,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return true if exist
      */
     public boolean isEsiste(Class<? extends AEntity> entityClazz, long keyId) {
-        return findByIdOld(entityClazz, Long.toString(keyId)) != null;
+        return findById(entityClazz, Long.toString(keyId)) != null;
     }
 
     /**

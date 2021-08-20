@@ -98,7 +98,7 @@ public class Giorno extends AREntity {
      */
     @Override
     public String toString() {
-        return titolo;
+        return getTitolo();
     }
 
 }

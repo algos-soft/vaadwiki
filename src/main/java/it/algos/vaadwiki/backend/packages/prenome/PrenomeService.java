@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
 import java.time.*;
 
 /**
@@ -102,6 +103,21 @@ public class PrenomeService extends WikiService {
 
 
     /**
+     * Retrieves an entity by a keyProperty.
+     * Cerca una singola entity con una query. <br>
+     * Restituisce un valore valido SOLO se ne esiste una sola <br>
+     *
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the founded entity unique or {@literal null} if none found
+     */
+    @Override
+    public Prenome findByProperty(String propertyName, Serializable propertyValue) {
+        return (Prenome) super.findByProperty(propertyName, propertyValue);
+    }
+
+    /**
      * Retrieves an entity by its keyProperty.
      *
      * @param keyValue must not be {@literal null}.
@@ -111,7 +127,7 @@ public class PrenomeService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Prenome findByKey(final String keyValue) {
+    public Prenome findByKey(final Serializable keyValue) {
         return (Prenome) super.findByKey(keyValue);
     }
 

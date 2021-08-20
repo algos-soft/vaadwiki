@@ -13,6 +13,7 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -109,7 +110,7 @@ public class GiornoService extends AService {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Giorno newEntity(final int ordine,final String titolo,final Mese mese) {
+    public Giorno newEntity(final int ordine, final String titolo, final Mese mese) {
         Giorno newEntityBean = Giorno.builderGiorno()
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
                 .titolo(text.isValid(titolo) ? titolo : null)
@@ -135,6 +136,21 @@ public class GiornoService extends AService {
 
 
     /**
+     * Retrieves an entity by a keyProperty.
+     * Cerca una singola entity con una query. <br>
+     * Restituisce un valore valido SOLO se ne esiste una sola <br>
+     *
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the founded entity unique or {@literal null} if none found
+     */
+    @Override
+    public Giorno findByProperty(String propertyName, Serializable propertyValue) {
+        return (Giorno) super.findByProperty(propertyName, propertyValue);
+    }
+
+    /**
      * Retrieves an entity by its keyProperty.
      *
      * @param keyValue must not be {@literal null}.
@@ -144,7 +160,7 @@ public class GiornoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Giorno findByKey(final String keyValue) {
+    public Giorno findByKey(final Serializable keyValue) {
         return (Giorno) super.findByKey(keyValue);
     }
 
@@ -211,7 +227,7 @@ public class GiornoService extends AService {
             mese = (Mese) mongo.findByIdOld(Mese.class, titoloMese);
             ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
 
-            numRec = creaReset(ordine, titolo, mese)  ? numRec + 1 : numRec;
+            numRec = creaReset(ordine, titolo, mese) ? numRec + 1 : numRec;
         }
 
         return AResult.valido(AETypeReset.hardCoded.get(), numRec);

@@ -1,8 +1,15 @@
 package it.algos.test;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
+import it.algos.vaadwiki.backend.packages.nazionalita.*;
+import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
+import org.junit.jupiter.api.*;
+import org.mockito.*;
 
 /**
  * Project vaadwiki
@@ -15,7 +22,7 @@ public abstract class WTest extends ATest {
 
     protected static final String PAGINA_UNO = "Roman Protasevič";
 
-    protected static final String PAGINA_DUE = "Sigurd Ribbung";
+    protected static final String PAGINA_DUE = "Gaetano Anzalone";
 
     protected static final String PAGINA_TRE = "Bernart Arnaut d'Armagnac";
 
@@ -37,7 +44,90 @@ public abstract class WTest extends ATest {
 
     protected Bio bio;
 
-    protected void print(final Bio bio, final String nomeCognome,final String attivitaNazionalita) {
+
+    @InjectMocks
+    protected GiornoService giornoService;
+
+    @InjectMocks
+    protected AnnoService annoService;
+
+    @InjectMocks
+    protected AttivitaService attivitaService;
+
+    @InjectMocks
+    protected NazionalitaService nazionalitaService;
+
+    @InjectMocks
+    protected DidascaliaService didascaliaService;
+
+    @InjectMocks
+    protected WikiBotService wikiBotService;
+
+    @InjectMocks
+    protected BioUtility bioUtilityService;
+
+    @InjectMocks
+    protected BioService bioService;
+
+    @InjectMocks
+    protected ElaboraService elaboraService;
+
+    /**
+     * Qui passa una volta sola, chiamato dalle sottoclassi <br>
+     * Invocare PRIMA il metodo setUpStartUp() della superclasse <br>
+     * Si possono aggiungere regolazioni specifiche <br>
+     */
+    @BeforeAll
+    void setUpIniziale() {
+        super.setUpStartUp();
+
+        initMocks();
+        fixRiferimentiIncrociati();
+    }
+
+
+    /**
+     * Inizializzazione dei service
+     * Devono essere tutti 'mockati' prima di iniettare i riferimenti incrociati <br>
+     */
+    protected void initMocks() {
+        MockitoAnnotations.initMocks(giornoService);
+        Assertions.assertNotNull(giornoService);
+
+        MockitoAnnotations.initMocks(annoService);
+        Assertions.assertNotNull(annoService);
+
+        MockitoAnnotations.initMocks(attivitaService);
+        Assertions.assertNotNull(attivitaService);
+
+        MockitoAnnotations.initMocks(nazionalitaService);
+        Assertions.assertNotNull(nazionalitaService);
+
+        MockitoAnnotations.initMocks(didascaliaService);
+        Assertions.assertNotNull(didascaliaService);
+
+        MockitoAnnotations.initMocks(wikiBotService);
+        Assertions.assertNotNull(wikiBotService);
+
+        MockitoAnnotations.initMocks(bioUtilityService);
+        Assertions.assertNotNull(bioUtilityService);
+
+        MockitoAnnotations.initMocks(bioService);
+        Assertions.assertNotNull(bioService);
+
+        MockitoAnnotations.initMocks(elaboraService);
+        Assertions.assertNotNull(elaboraService);
+    }
+
+    /**
+     * Regola tutti riferimenti incrociati <br>
+     * Deve essere fatto dopo aver costruito le referenze 'mockate' <br>
+     * Nelle sottoclassi di testi devono essere regolati i riferimenti dei service specifici <br>
+     */
+    protected void fixRiferimentiIncrociati() {
+    }
+
+    protected void print(final Bio bio, final String nomeCognome, final String attivitaNazionalita) {
         System.out.println(VUOTA);
         System.out.println(String.format("Titolo effettivo della voce: %s", sorgente));
         System.out.println(String.format("NomeCognome: %s", nomeCognome));

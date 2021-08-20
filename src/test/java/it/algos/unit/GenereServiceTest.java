@@ -48,9 +48,9 @@ public class GenereServiceTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
-        service.text = text;
-        service.wikiApi = wikiApi;
-        service.array = array;
+//        service.text = text;
+//        service.wikiApi = wikiApi;
+//        service.array = array;
     }
 
 
@@ -96,7 +96,7 @@ public class GenereServiceTest extends ATest {
         String tagM = "M";
         String tagF = "F";
 
-        Map<String, String> mappa = wikiApi.leggeMappaModulo(sorgente);
+        Map<String, String> mappa = wikiApiService.leggeMappaModulo(sorgente);
         if (mappa != null && mappa.size() > 0) {
             System.out.println("Entities create nella collection");
             System.out.println(VUOTA);
@@ -108,11 +108,11 @@ public class GenereServiceTest extends ATest {
                     pluraleMaschile = service.estraeMaschile(pluraliGrezzi);
                     pluraleFemminile = service.estraeFemminile(pluraliGrezzi);
 
-                    if (text.isValid(pluraleMaschile)) {
+                    if (textService.isValid(pluraleMaschile)) {
                         ciclo++;
                         print(ciclo, tagM, singolare, pluraleMaschile);
                     }
-                    if (text.isValid(pluraleFemminile)) {
+                    if (textService.isValid(pluraleFemminile)) {
                         ciclo++;
                         print(ciclo, tagF, singolare, pluraleFemminile);
                     }
@@ -148,7 +148,7 @@ public class GenereServiceTest extends ATest {
         String pluraleMaschile = VUOTA;
         String pluraleFemminile = VUOTA;
 
-        Map<String, String> mappa = wikiApi.leggeMappaModulo(sorgente);
+        Map<String, String> mappa = wikiApiService.leggeMappaModulo(sorgente);
         if (mappa != null && mappa.size() > 0) {
             System.out.println("Controllo dei valori più lunghi");
             System.out.println(VUOTA);
@@ -159,23 +159,23 @@ public class GenereServiceTest extends ATest {
                 pluraleMaschile = service.estraeMaschile(pluraliGrezzi);
                 pluraleFemminile = service.estraeFemminile(pluraliGrezzi);
 
-                if (text.isValid(singolare) && singolare.length() > maxTest) {
+                if (textService.isValid(singolare) && singolare.length() > maxTest) {
                     System.out.println("Singolare " + "(" + singolare.length() + ") " + singolare + " è più lungo di " + maxTest);
                 }
-                if (text.isValid(pluraleMaschile) && pluraleMaschile.length() > maxTest) {
+                if (textService.isValid(pluraleMaschile) && pluraleMaschile.length() > maxTest) {
                     System.out.println("Maschi " + "(" + pluraleMaschile.length() + ") " + pluraleMaschile + " è più lungo di " + maxTest);
                 }
-                if (text.isValid(pluraleFemminile) && pluraleFemminile.length() > maxTest) {
+                if (textService.isValid(pluraleFemminile) && pluraleFemminile.length() > maxTest) {
                     System.out.println("Femmine " + "(" + pluraleFemminile.length() + ") " + pluraleFemminile + " è più lungo di " + maxTest);
                 }
 
-                if (text.isValid(singolare) && singolare.length() > maxMongo) {
+                if (textService.isValid(singolare) && singolare.length() > maxMongo) {
                     System.out.println("ERRORE - Singolare " + "(" + singolare.length() + ") " + singolare + " è più lungo di " + maxMongo);
                 }
-                if (text.isValid(pluraleMaschile) && pluraleMaschile.length() > maxMongo) {
+                if (textService.isValid(pluraleMaschile) && pluraleMaschile.length() > maxMongo) {
                     System.out.println("ERRORE - Maschi " + "(" + pluraleMaschile.length() + ") " + pluraleMaschile + " è più lungo di " + maxMongo);
                 }
-                if (text.isValid(pluraleFemminile) && pluraleFemminile.length() > maxMongo) {
+                if (textService.isValid(pluraleFemminile) && pluraleFemminile.length() > maxMongo) {
                     System.out.println("ERRORE - Femmine " + "(" + pluraleFemminile.length() + ") " + pluraleFemminile + " è più lungo di " + maxMongo);
                 }
             }
@@ -193,23 +193,23 @@ public class GenereServiceTest extends ATest {
                 pluraleMaschile = service.estraeMaschile(pluraliGrezzi);
                 pluraleFemminile = service.estraeFemminile(pluraliGrezzi);
 
-                if (text.isValid(singolare) && singolare.length() < minTest) {
+                if (textService.isValid(singolare) && singolare.length() < minTest) {
                     System.out.println("Singolare " + "(" + singolare.length() + ") " + singolare + " è più corto di " + minTest);
                 }
-                if (text.isValid(pluraleMaschile) && pluraleMaschile.length() < minTest) {
+                if (textService.isValid(pluraleMaschile) && pluraleMaschile.length() < minTest) {
                     System.out.println("Maschi " + "(" + pluraleMaschile.length() + ") " + pluraleMaschile + " è più corto di " + minTest);
                 }
-                if (text.isValid(pluraleFemminile) && pluraleFemminile.length() < minTest) {
+                if (textService.isValid(pluraleFemminile) && pluraleFemminile.length() < minTest) {
                     System.out.println("Femmine " + "(" + pluraleFemminile.length() + ") " + pluraleFemminile + " è più corto di " + minTest);
                 }
 
-                if (text.isValid(singolare) && singolare.length() < minMongo) {
+                if (textService.isValid(singolare) && singolare.length() < minMongo) {
                     System.out.println("ERRORE - Singolare " + "(" + singolare.length() + ") " + singolare + " è più corto di " + minMongo);
                 }
-                if (text.isValid(pluraleMaschile) && pluraleMaschile.length() < minMongo) {
+                if (textService.isValid(pluraleMaschile) && pluraleMaschile.length() < minMongo) {
                     System.out.println("ERRORE - Maschi " + "(" + pluraleMaschile.length() + ") " + pluraleMaschile + " è più corto di " + minMongo);
                 }
-                if (text.isValid(pluraleFemminile) && pluraleFemminile.length() < minMongo) {
+                if (textService.isValid(pluraleFemminile) && pluraleFemminile.length() < minMongo) {
                     System.out.println("ERRORE - Femmine " + "(" + pluraleFemminile.length() + ") " + pluraleFemminile + " è più corto di " + minMongo);
                 }
             }

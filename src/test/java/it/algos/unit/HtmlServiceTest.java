@@ -5,7 +5,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 /**
  * Project vaadflow14
@@ -13,6 +12,7 @@ import org.mockito.*;
  * User: gac
  * Date: ven, 07-mag-2021
  * Time: 18:57
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -27,9 +27,9 @@ public class HtmlServiceTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    HtmlService service;
+    private HtmlService service;
 
 
     /**
@@ -38,25 +38,11 @@ public class HtmlServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
-    }
-
-
-    /**
-     * Qui passa ad ogni test delle sottoclassi <br>
-     * Invocare PRIMA il metodo setUp() della superclasse <br>
-     * Si possono aggiungere regolazioni specifiche <br>
-     */
-    @BeforeEach
-    void setUpEach() {
-        super.setUp();
+        //--reindirizzo l'istanza della superclasse
+        service = htmlService;
     }
 
     @Test

@@ -11,7 +11,6 @@ import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.*;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -22,6 +21,7 @@ import java.util.*;
  * User: gac
  * Date: sab, 05-set-2020
  * Time: 16:22
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -43,15 +43,17 @@ public class ReflectionServiceTest extends ATest {
 
     protected static Class<?> MESE_LOGIC_CLASS = MeseService.class;
 
-    /**
-     * Classe principale di riferimento <br>
-     */
-    @InjectMocks
-    ReflectionService service;
 
     private List<Field> listaFields;
 
     private AEntity CLASSE_UNO;
+
+
+    /**
+     * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
+     */
+    private ReflectionService service;
 
 
     /**
@@ -60,15 +62,11 @@ public class ReflectionServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
-        service.logger = logger;
+        //--reindirizzo l'istanza della superclasse
+        service = reflectionService;
     }
 
 
@@ -216,27 +214,27 @@ public class ReflectionServiceTest extends ATest {
         sorgente = FlowCost.FIELD_CODE;
         ottenutoField = service.getField(UTENTE_CLASS, sorgente);
         Assertions.assertNull(ottenutoField);
-        System.out.println("Non esiste " + UTENTE_CLASS.getSimpleName()  +PUNTO+ sorgente);
+        System.out.println("Non esiste " + UTENTE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FIELD_COMPANY;
         ottenutoField = service.getField(UTENTE_CLASS, sorgente);
         Assertions.assertNotNull(ottenutoField);
-        System.out.println("Trovato " + UTENTE_CLASS.getSimpleName() + PUNTO+ sorgente);
+        System.out.println("Trovato " + UTENTE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FIELD_NOTE;
         ottenutoField = service.getField(UTENTE_CLASS, sorgente);
         Assertions.assertNotNull(ottenutoField);
-        System.out.println("Trovato " + UTENTE_CLASS.getSimpleName() + PUNTO+ sorgente);
+        System.out.println("Trovato " + UTENTE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FlowCost.FIELD_ORDINE;
         ottenutoField = service.getField(MESE_CLASS, sorgente);
         Assertions.assertNotNull(ottenutoField);
-        System.out.println("Trovato " + MESE_CLASS.getSimpleName() + PUNTO+ sorgente);
+        System.out.println("Trovato " + MESE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FIELD_NOTE;
         ottenutoField = service.getField(MESE_LOGIC_CLASS, sorgente);
         Assertions.assertNull(ottenutoField);
-        System.out.println("Non esiste " + MESE_LOGIC_CLASS.getSimpleName() + PUNTO+ sorgente);
+        System.out.println("Non esiste " + MESE_LOGIC_CLASS.getSimpleName() + PUNTO + sorgente);
     }
 
 

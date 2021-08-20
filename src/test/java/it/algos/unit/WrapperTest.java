@@ -1,13 +1,9 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.wrapper.AResult;
+import it.algos.vaadflow14.backend.wrapper.*;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.*;
 
 /**
  * Project vaadflow14
@@ -15,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * User: gac
  * Date: ven, 27-nov-2020
  * Time: 15:02
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -67,24 +64,24 @@ public class WrapperTest extends ATest {
         sorgente2 = "Avviso per specificare il tipo di risultato positivo";
         sorgenteIntero = 87;
 
-//        result = AResult.valido();
-//        assertTrue(result.isValido());
-//        assertEquals(VUOTA, result.getErrorMessage());
-//
-//        result = AResult.errato(sorgente);
-//        assertFalse(result.isValido());
-//        assertEquals(sorgente, result.getErrorMessage());
-//
-//        result = AResult.valido(sorgente2);
-//        assertTrue(result.isValido());
-//        assertEquals(VUOTA, result.getErrorMessage());
-//        assertEquals(sorgente2, result.getValidationMessage());
-//
-//        result = AResult.valido(sorgente2,sorgenteIntero);
-//        assertTrue(result.isValido());
-//        assertEquals(VUOTA, result.getErrorMessage());
-//        assertEquals(sorgente2, result.getValidationMessage());
-//        assertEquals(sorgenteIntero, result.getValore());
+        //        result = AResult.valido();
+        //        assertTrue(result.isValido());
+        //        assertEquals(VUOTA, result.getErrorMessage());
+        //
+        //        result = AResult.errato(sorgente);
+        //        assertFalse(result.isValido());
+        //        assertEquals(sorgente, result.getErrorMessage());
+        //
+        //        result = AResult.valido(sorgente2);
+        //        assertTrue(result.isValido());
+        //        assertEquals(VUOTA, result.getErrorMessage());
+        //        assertEquals(sorgente2, result.getValidationMessage());
+        //
+        //        result = AResult.valido(sorgente2,sorgenteIntero);
+        //        assertTrue(result.isValido());
+        //        assertEquals(VUOTA, result.getErrorMessage());
+        //        assertEquals(sorgente2, result.getValidationMessage());
+        //        assertEquals(sorgenteIntero, result.getValore());
     }
 
 

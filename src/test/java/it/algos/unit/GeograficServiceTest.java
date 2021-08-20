@@ -16,6 +16,7 @@ import java.util.*;
  * User: gac
  * Date: lun, 12-lug-2021
  * Time: 13:31
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -23,22 +24,16 @@ import java.util.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("GeograficServiceTest")
-@DisplayName("Test di unit")
+@DisplayName("GeograficService - Entity geografiche")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class GeograficServiceTest extends ATest {
 
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    AGeograficService service;
-
-    /**
-     * Classe principale di riferimento <br>
-     */
-    @InjectMocks
-    AWikiApiService wikiApi;
+    private AGeograficService service;
 
 
     /**
@@ -47,21 +42,11 @@ public class GeograficServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        MockitoAnnotations.initMocks(wikiApi);
-        Assertions.assertNotNull(wikiApi);
-        service.text = text;
-        service.array = array;
-        service.wikiApi = wikiApi;
-        service.web = web;
-        wikiApi.web = web;
-        wikiApi.array = array;
-        wikiApi.text = text;
+        //--reindirizzo l'istanza della superclasse
+        service = geograficService;
     }
 
 
@@ -109,7 +94,7 @@ public class GeograficServiceTest extends ATest {
         sorgente = "ISO_3166-2:ES";
         sorgenteIntero = 1;
         previstoIntero = 17;
-        listaStr = wikiApi.getColonna(sorgente, sorgenteIntero, 2, 2);
+        listaStr = wikiApiService.getColonna(sorgente, sorgenteIntero, 2, 2);
         assertNotNull(listaStr);
         assertEquals(previstoIntero, listaStr.size());
         listaWrapTre = service.getTemplateList(listaStr);
@@ -129,7 +114,7 @@ public class GeograficServiceTest extends ATest {
         sorgente = "ISO_3166-2:ES";
         sorgenteIntero = 2;
         previstoIntero = 50;
-        listaStr = wikiApi.getColonna(sorgente, sorgenteIntero, 2, 2);
+        listaStr = wikiApiService.getColonna(sorgente, sorgenteIntero, 2, 2);
         assertNotNull(listaStr);
         assertEquals(previstoIntero, listaStr.size());
 
@@ -177,7 +162,7 @@ public class GeograficServiceTest extends ATest {
 
         //--province
         previstoIntero = 14;
-        listaWrapTre = geografic.getTemplateList(sorgente, 2, 3, 1, 3);
+        listaWrapTre = service.getTemplateList(sorgente, 2, 3, 1, 3);
         assertNotNull(listaWrapTre);
         assertEquals(previstoIntero, listaWrapTre.size());
         System.out.println(VUOTA);
@@ -224,7 +209,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableSvizzera() {
         sorgente = "ISO_3166-2:CH";
         previstoIntero = 26;
-        listaWrapTre = geografic.getTemplateList(sorgente, 1, 2, 2);
+        listaWrapTre = service.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -239,7 +224,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableAustria() {
         sorgente = "ISO_3166-2:AT";
         previstoIntero = 9;
-        listaWrapTre = geografic.getTemplateList(sorgente, 1, 2, 2);
+        listaWrapTre = service.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -254,7 +239,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableGermania() {
         sorgente = "ISO_3166-2:DE";
         previstoIntero = 16;
-        listaWrapTre = geografic.getTemplateList(sorgente, 1, 2, 2);
+        listaWrapTre = service.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -269,7 +254,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableSpagna() {
         sorgente = "ISO_3166-2:ES";
         previstoIntero = 17;
-        listaWrapTre = geografic.getTemplateList(sorgente, 1, 2, 2);
+        listaWrapTre = service.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -284,7 +269,7 @@ public class GeograficServiceTest extends ATest {
     public void getTablePortogallo() {
         sorgente = "ISO_3166-2:PT";
         previstoIntero = 18;
-        listaWrap = wikiApi.getDueColonne(sorgente, 1, 2, 2, 3);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 1, 2, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -299,7 +284,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableSlovenia() {
         sorgente = "ISO_3166-2:SI";
         previstoIntero = 211;
-        listaWrap = wikiApi.getDueColonne(sorgente, 1, 2, 1, 2);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 1, 2, 1, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -314,7 +299,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableBelgio() {
         sorgente = "ISO_3166-2:BE";
         previstoIntero = 3;
-        listaWrapTre = geografic.getTemplateList(sorgente, 1, 2, 2);
+        listaWrapTre = service.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -329,7 +314,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableOlanda() {
         sorgente = "ISO_3166-2:NL";
         previstoIntero = 12;
-        listaWrapTre = geografic.getTemplateList(sorgente, 1, 2, 3);
+        listaWrapTre = service.getTemplateList(sorgente, 1, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -344,7 +329,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableCroazia() {
         sorgente = "ISO_3166-2:HR";
         previstoIntero = 21;
-        listaWrap = wikiApi.getDueColonne(sorgente, 1, 2, 1, 2);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 1, 2, 1, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -359,7 +344,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableAlbania() {
         sorgente = "ISO_3166-2:AL";
         previstoIntero = 36;
-        listaWrap = wikiApi.getDueColonne(sorgente, 1, 1, 1, 2);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 1, 1, 1, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -376,7 +361,7 @@ public class GeograficServiceTest extends ATest {
 
         //--periferie
         previstoIntero = 13;
-        listaWrap = wikiApi.getDueColonne(sorgente, 1, 2, 1, 2);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 1, 2, 1, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -385,7 +370,7 @@ public class GeograficServiceTest extends ATest {
 
         //--prefetture
         previstoIntero = 52;
-        listaWrap = wikiApi.getDueColonne(sorgente, 2, 2, 2, 3);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 2, 2, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -400,7 +385,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableCechia() {
         sorgente = "ISO_3166-2:CZ";
         previstoIntero = 14;
-        listaWrapTre = geografic.getTemplateList(sorgente, 1, 2, 3);
+        listaWrapTre = service.getTemplateList(sorgente, 1, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -415,7 +400,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableSlovacchia() {
         sorgente = "ISO_3166-2:SK";
         previstoIntero = 8;
-        listaWrap = wikiApi.getDueColonne(sorgente, 1, 2, 1, 2);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 1, 2, 1, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -430,7 +415,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableUngheria() {
         sorgente = "ISO_3166-2:HU";
         previstoIntero = 19;
-        listaWrapTre = geografic.getTemplateList(sorgente, 1, 2, 2);
+        listaWrapTre = service.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -447,7 +432,7 @@ public class GeograficServiceTest extends ATest {
 
         //--distretti
         previstoIntero = 41;
-        listaWrap = wikiApi.getDueColonne(sorgente, 1, 2, 2, 3);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 1, 2, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -456,7 +441,7 @@ public class GeograficServiceTest extends ATest {
 
         //--capitale
         previstoIntero = 1;
-        listaWrap = wikiApi.getDueColonne(sorgente, 2, 2, 2, 3);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 2, 2, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -471,7 +456,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableBulgaria() {
         sorgente = "ISO_3166-2:BG";
         previstoIntero = 28;
-        listaWrap = wikiApi.getDueColonne(sorgente, 1, 2, 2, 3);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 1, 2, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -486,7 +471,7 @@ public class GeograficServiceTest extends ATest {
     public void getTablePolonia() {
         sorgente = "ISO_3166-2:PL";
         previstoIntero = 16;
-        listaWrap = wikiApi.getDueColonne(sorgente, 1, 2, 2, 3);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 1, 2, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -501,7 +486,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableDanimarca() {
         sorgente = "ISO_3166-2:DK";
         previstoIntero = 5;
-        listaWrap = wikiApi.getDueColonne(sorgente, 1, 2, 1, 2);
+        listaWrap = wikiApiService.getDueColonne(sorgente, 1, 2, 1, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -517,7 +502,7 @@ public class GeograficServiceTest extends ATest {
         sorgente = "ISO_3166-2:FI";
         previstoIntero = 19 + 1;
         try {
-            listaWrap = geografic.getRegioni(sorgente);
+            listaWrap = service.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -534,7 +519,7 @@ public class GeograficServiceTest extends ATest {
         sorgente = "ISO_3166-2:AZ";
         previstoIntero = 77 + 1;
         try {
-            listaWrap = geografic.getRegioni(sorgente);
+            listaWrap = service.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -551,7 +536,7 @@ public class GeograficServiceTest extends ATest {
         sorgente = "ISO_3166-2:BZ";
         previstoIntero = 6 + 1;
         try {
-            listaWrap = geografic.getRegioni(sorgente);
+            listaWrap = service.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -568,7 +553,7 @@ public class GeograficServiceTest extends ATest {
         sorgente = "ISO_3166-2:GT";
         previstoIntero = 22 + 1;
         try {
-            listaWrap = geografic.getRegioni(sorgente);
+            listaWrap = service.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -585,7 +570,7 @@ public class GeograficServiceTest extends ATest {
         sorgente = "ISO_3166-2:GW";
         previstoIntero = 9 + 1;
         try {
-            listaWrap = geografic.getRegioni(sorgente);
+            listaWrap = service.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -602,7 +587,7 @@ public class GeograficServiceTest extends ATest {
         sorgente = "ISO_3166-2:SI";
         previstoIntero = 211 + 1;
         try {
-            listaWrap = geografic.getRegioni(sorgente);
+            listaWrap = service.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -619,7 +604,7 @@ public class GeograficServiceTest extends ATest {
         sorgente = "ISO_3166-2:KG";
         previstoIntero = 8 + 1;
         try {
-            listaWrap = geografic.getRegioni(sorgente);
+            listaWrap = service.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -633,7 +618,7 @@ public class GeograficServiceTest extends ATest {
     @Order(40)
     @DisplayName("40 - legge le regioni dei primi 50 stati")
     public void readStati1() {
-        List<List<String>> listaStati = geografic.getStati();
+        List<List<String>> listaStati = service.getStati();
         assertNotNull(listaStati);
         listaStati = listaStati.subList(0, 50);
         readStati(listaStati);
@@ -643,7 +628,7 @@ public class GeograficServiceTest extends ATest {
     @Order(41)
     @DisplayName("41 - legge le regioni degli stati 50-100")
     public void readStati2() {
-        List<List<String>> listaStati = geografic.getStati();
+        List<List<String>> listaStati = service.getStati();
         assertNotNull(listaStati);
         listaStati = listaStati.subList(50, 100);
         readStati(listaStati);
@@ -653,7 +638,7 @@ public class GeograficServiceTest extends ATest {
     @Order(42)
     @DisplayName("42 - legge le regioni degli stati 100-150")
     public void readStati3() {
-        List<List<String>> listaStati = geografic.getStati();
+        List<List<String>> listaStati = service.getStati();
         assertNotNull(listaStati);
         listaStati = listaStati.subList(100, 150);
         readStati(listaStati);
@@ -663,7 +648,7 @@ public class GeograficServiceTest extends ATest {
     @Order(43)
     @DisplayName("43 - legge le regioni degli stati 150-200")
     public void readStati4() {
-        List<List<String>> listaStati = geografic.getStati();
+        List<List<String>> listaStati = service.getStati();
         assertNotNull(listaStati);
         listaStati = listaStati.subList(150, 200);
         readStati(listaStati);
@@ -673,7 +658,7 @@ public class GeograficServiceTest extends ATest {
     @Order(44)
     @DisplayName("44 - legge le regioni degli stati 200-250")
     public void readStati5() {
-        List<List<String>> listaStati = geografic.getStati();
+        List<List<String>> listaStati = service.getStati();
         assertNotNull(listaStati);
         listaStati = listaStati.subList(200, listaStati.size() - 1);
         readStati(listaStati);
@@ -693,7 +678,7 @@ public class GeograficServiceTest extends ATest {
             nome = lista.get(0);
             sorgente = tag + lista.get(3);
             try {
-                listaWrap = geografic.getRegioni(sorgente);
+                listaWrap = service.getRegioni(sorgente);
                 if (listaWrap != null && listaWrap.size() > 0) {
                     valide.add(nome);
                     System.out.println(nome);
@@ -714,7 +699,7 @@ public class GeograficServiceTest extends ATest {
     public void getTableProvinceItaliane() {
         previstoIntero = 107;
 
-        listaWrapQuattro = geografic.getProvince();
+        listaWrapQuattro = service.getProvince();
 
         assertNotNull(listaWrapQuattro);
         assertEquals(previstoIntero, listaWrapQuattro.size());

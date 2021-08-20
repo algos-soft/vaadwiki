@@ -212,7 +212,6 @@ public class RegioneService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Regione findByKey(final String keyValue) {
         return (Regione) super.findByKey(keyValue);
     }

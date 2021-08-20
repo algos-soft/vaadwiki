@@ -1,4 +1,4 @@
-package it.algos.unit;
+package it.algos.wiki;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -62,9 +62,9 @@ public class QueryBioTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(istanza);
         Assertions.assertNotNull(istanza);
-        istanza.array = array;
-        istanza.text = text;
-        istanza.wikiApi = wikiApi;
+//        istanza.array = array;
+//        istanza.text = text;
+//        istanza.wikiApi = wikiApi;
 
         //        MockitoAnnotations.initMocks(wikiApi);
         //        Assertions.assertNotNull(wikiApi);

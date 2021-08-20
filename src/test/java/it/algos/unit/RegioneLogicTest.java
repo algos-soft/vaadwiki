@@ -1,20 +1,12 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.service.FileService;
-import it.algos.vaadflow14.backend.service.ResourceService;
-import it.algos.vaadflow14.wiki.AWikiApiService;
-import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
-import it.algos.vaadflow14.backend.wrapper.WrapTreStringhe;
-import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -22,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * User: gac
  * Date: mer, 30-set-2020
  * Time: 20:56
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -35,17 +28,6 @@ public class RegioneLogicTest extends ATest {
 
     private static final String ISO = "ISO 3166-2:";
 
-    /**
-     * Classe principale di riferimento <br>
-     */
-    @InjectMocks
-    AWikiApiService service;
-
-    @InjectMocks
-    ResourceService resource;
-
-    @InjectMocks
-    FileService fileService;
 
     private List<String> listaAlfaDue;
 
@@ -66,21 +48,6 @@ public class RegioneLogicTest extends ATest {
     @BeforeAll
     void setUpAll() {
         super.setUpStartUp();
-
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        MockitoAnnotations.initMocks(resource);
-        Assertions.assertNotNull(resource);
-        MockitoAnnotations.initMocks(fileService);
-        Assertions.assertNotNull(fileService);
-        service.text = text;
-        service.array = array;
-        service.web = web;
-        service.logger = logger;
-        fileService.text = text;
-        resource.fileService = fileService;
-        fileService.logger = logger;
 
         creazioneLista();
     }
@@ -107,13 +74,13 @@ public class RegioneLogicTest extends ATest {
      */
     private void creazioneLista() {
         String[] parti = null;
-        ottenuto = resource.leggeConfig("3166-2");
+        ottenuto = resourceService.leggeConfig("3166-2");
         parti = ottenuto.split(A_CAPO);
         if (parti != null && parti.length > 0) {
             listaAlfaDue = new ArrayList<>();
             for (String riga : parti) {
-                riga = text.estrae(riga, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END);
-                riga = text.levaTestoPrimaDi(riga, PIPE);
+                riga = textService.estrae(riga, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END);
+                riga = textService.levaTestoPrimaDi(riga, PIPE);
                 listaAlfaDue.add(riga);
             }
         }
@@ -131,7 +98,7 @@ public class RegioneLogicTest extends ATest {
             alfaDue = listaAlfaDue.get(k);
             sorgente = ISO + alfaDue;
             try {
-                ottenuto = service.leggeTable(sorgente);
+                ottenuto = wikiApiService.leggeTable(sorgente);
             } catch (Exception unErrore) {
                 System.out.println(VUOTA);
                 System.out.println(unErrore.getMessage());
@@ -155,7 +122,7 @@ public class RegioneLogicTest extends ATest {
             alfaDue = listaAlfaDue.get(k);
             sorgente = ISO + alfaDue;
             try {
-                listaGrezza = service.getTable(sorgente);
+                listaGrezza = wikiApiService.getTable(sorgente);
             } catch (Exception unErrore) {
                 System.out.println(VUOTA);
                 System.out.println(unErrore.getMessage());
@@ -183,7 +150,7 @@ public class RegioneLogicTest extends ATest {
             alfaDue = listaAlfaDue.get(k);
             sorgente = ISO + alfaDue;
             try {
-                listaWrap = geografic.getRegioni(sorgente);
+                listaWrap = geograficService.getRegioni(sorgente);
             } catch (Exception unErrore) {
                 System.out.println(VUOTA);
                 System.out.println(unErrore.getMessage());
@@ -211,7 +178,7 @@ public class RegioneLogicTest extends ATest {
             alfaDue = listaAlfaDue.get(k);
             sorgente = ISO + alfaDue;
             try {
-                listaWrap = geografic.getRegioni(sorgente);
+                listaWrap = geograficService.getRegioni(sorgente);
             } catch (Exception unErrore) {
                 System.out.println(VUOTA);
                 System.out.println(unErrore.getMessage());
@@ -225,7 +192,8 @@ public class RegioneLogicTest extends ATest {
             System.out.println("Ci sono " + listaWrap.size() + " elementi");
             if (listaWrap.get(0) != null) {
                 System.out.println(listaWrap.get(0).getPrima() + SEP + listaWrap.get(0).getSeconda());
-            } else {
+            }
+            else {
                 System.out.println("Mancano i titoli");
             }
             System.out.println(listaWrap.get(1).getPrima() + SEP + listaWrap.get(1).getSeconda());
@@ -259,15 +227,14 @@ public class RegioneLogicTest extends ATest {
     //        }
     //    }
 
-
-//    private void printWrap(List<WrapDueStringhe> listaWrap) {
-//        System.out.println("********");
-//        if (array.isAllValid(listaWrap)) {
-//            for (WrapDueStringhe wrap : listaWrap) {
-//                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
-//            }
-//        }
-//    }
+    //    private void printWrap(List<WrapDueStringhe> listaWrap) {
+    //        System.out.println("********");
+    //        if (array.isAllValid(listaWrap)) {
+    //            for (WrapDueStringhe wrap : listaWrap) {
+    //                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
+    //            }
+    //        }
+    //    }
 
 
     /**

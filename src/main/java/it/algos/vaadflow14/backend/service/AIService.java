@@ -5,6 +5,8 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 
+import java.io.*;
+
 /**
  * Project vaadflow14
  * Created by Algos
@@ -139,7 +141,7 @@ public interface AIService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    AEntity findByKey(final String keyPropertyValue);
+    AEntity findByKey(final Serializable keyPropertyValue);
 
 
     /**
