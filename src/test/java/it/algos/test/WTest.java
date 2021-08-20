@@ -87,6 +87,15 @@ public abstract class WTest extends ATest {
     @InjectMocks
     protected QueryCat queryCat;
 
+    @InjectMocks
+    protected QueryPages queryPages;
+
+    @InjectMocks
+    protected QueryTimestamp queryTimestamp;
+
+    @InjectMocks
+    protected QueryBio queryBio;
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      * Invocare PRIMA il metodo setUpStartUp() della superclasse <br>
@@ -97,6 +106,9 @@ public abstract class WTest extends ATest {
 
         wInitMocks();
         wFixRiferimentiIncrociati();
+
+        //        //--abilita il bot
+        //        queryLogin.urlRequest();
     }
 
 
@@ -143,6 +155,15 @@ public abstract class WTest extends ATest {
 
         MockitoAnnotations.initMocks(queryCat);
         Assertions.assertNotNull(queryCat);
+
+        MockitoAnnotations.initMocks(queryPages);
+        Assertions.assertNotNull(queryPages);
+
+        MockitoAnnotations.initMocks(queryTimestamp);
+        Assertions.assertNotNull(queryTimestamp);
+
+        MockitoAnnotations.initMocks(queryBio);
+        Assertions.assertNotNull(queryBio);
     }
 
 
@@ -171,21 +192,45 @@ public abstract class WTest extends ATest {
         annoService.annotation = annotationService;
 
         queryAssert.botLogin = botLogin;
-        queryLogin.queryAssert = queryAssert;
 
+        queryLogin.queryAssert = queryAssert;
         queryLogin.text = textService;
         queryLogin.wikiApi = wikiApiService;
         queryLogin.logger = loggerService;
         queryLogin.appContext = appContext;
+        queryLogin.botLogin = botLogin;
 
         queryCat.wikiApi = wikiApiService;
         queryCat.wikiBot = wikiBotService;
-        queryLogin.botLogin = botLogin;
         queryCat.logger = loggerService;
+        queryCat.botLogin = botLogin;
+        queryCat.queryAssert = queryAssert;
+
+        queryPages.botLogin = botLogin;
+        queryPages.queryAssert = queryAssert;
+        queryPages.array = arrayService;
+
+        queryTimestamp.botLogin = botLogin;
+        queryTimestamp.queryAssert = queryAssert;
+        queryTimestamp.array = arrayService;
+
+        didascaliaService.text = textService;
+
+        bioService.text = textService;
+        bioService.annotation = annotationService;
+        bioService.reflection = reflectionService;
+
+        queryBio.text = textService;
+        queryBio.wikiApi = wikiApiService;
+
+        elaboraService.bioUtility = bioUtilityService;
+        elaboraService.logger = loggerService;
+
+        bioUtilityService.text = textService;
     }
 
 
-   /**
+    /**
      * Qui passa a ogni test delle sottoclassi <br>
      * Invocare PRIMA il metodo setUp() della superclasse <br>
      * Si possono aggiungere regolazioni specifiche <br>

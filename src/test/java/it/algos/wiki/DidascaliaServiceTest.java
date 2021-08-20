@@ -28,7 +28,7 @@ import org.mockito.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("testAllValido")
+@Tag("testAllValidoWiki")
 @DisplayName("Didascalia - Elaborazione delle didascalie.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DidascaliaServiceTest extends WTest {
@@ -36,22 +36,13 @@ public class DidascaliaServiceTest extends WTest {
     private static final String DATA_BASE_NAME = "vaadwiki";
 
 
-    /**
-     * Classe di riferimento <br>
-     */
-    @InjectMocks
-    QueryBio queryBio;
-
-//    /**
-//     * Classe di riferimento <br>
-//     */
-//    @InjectMocks
-//    DidascaliaGiornoNato didascaliaGiornoNato;
-
-
     private String wikiTitle = "Adone Asinari";
 
     private String wikiTitleDue = "Sonia Todd";
+
+    private static String[] PAGINE() {
+        return new String[]{PAGINA_UNO, PAGINA_DUE, PAGINA_TRE, PAGINA_QUATTRO, PAGINA_CINQUE, PAGINA_SEI, PAGINA_SETTE};
+    }
 
     /**
      * Classe principale di riferimento <br>
@@ -73,127 +64,6 @@ public class DidascaliaServiceTest extends WTest {
         service = didascaliaService;
     }
 
-    public static String[] PAGINE() {
-        return new String[]{PAGINA_UNO, PAGINA_DUE, PAGINA_TRE, PAGINA_QUATTRO, PAGINA_CINQUE, PAGINA_SEI, PAGINA_SETTE};
-    }
-
-//    @BeforeAll
-//    public void setUp() {
-//        super.setUpStartUp();
-//
-//        MockitoAnnotations.initMocks(this);
-//        MockitoAnnotations.initMocks(service);
-//        Assertions.assertNotNull(service);
-//
-//        service.text = text;
-//
-//        MockitoAnnotations.initMocks(queryBio);
-//        Assertions.assertNotNull(queryBio);
-//        queryBio.array = array;
-//        queryBio.text = text;
-//        queryBio.wikiApi = wikiApi;
-//        wikiApi.text = text;
-//        wikiApi.html = html;
-//        html.text = text;
-//        bioService.elaboraService = elaboraService;
-//
-//        MockitoAnnotations.initMocks(wikiBot);
-//        Assertions.assertNotNull(wikiBot);
-//
-//        MockitoAnnotations.initMocks(bioUtility);
-//        Assertions.assertNotNull(bioUtility);
-//        elaboraService.bioUtility = bioUtility;
-//        elaboraService.logger = logger;
-//        bioUtility.text = text;
-//        logger.text = text;
-//        logger.adminLogger = adminLogger;
-//
-//        //        MockitoAnnotations.initMocks(api);
-//        //        MockitoAnnotations.initMocks(pageService);
-//        MockitoAnnotations.initMocks(bioService);
-//        MockitoAnnotations.initMocks(elaboraService);
-//        MockitoAnnotations.initMocks(annoService);
-//        MockitoAnnotations.initMocks(giornoService);
-//        MockitoAnnotations.initMocks(giorno);
-//        MockitoAnnotations.initMocks(reflection);
-//        //        MockitoAnnotations.initMocks(mongoService);
-//        MockitoAnnotations.initMocks(text);
-//        //        MockitoAnnotations.initMocks(didascalia);
-//        MockitoAnnotations.initMocks(giornoNato);
-//        MockitoAnnotations.initMocks(annoNato);
-//        MockitoAnnotations.initMocks(giornoMorto);
-//        MockitoAnnotations.initMocks(annoMorto);
-//        MockitoAnnotations.initMocks(standard);
-//        //        MockitoAnnotations.initMocks(completa);
-//        //        MockitoAnnotations.initMocks(didascaliaService);
-//        MockitoAnnotations.initMocks(pref);
-//        MockitoAnnotations.initMocks(date);
-//        //        api.pageService = pageService;
-//        //        api.text = text;
-//        //        pageService.api = api;
-//        //        pageService.text = text;
-//        //        pageService.bioService = bioService;
-//        //        pageService.elaboraService = elaboraService;
-//        elaboraService.text = text;
-//        elaboraService.annoService = annoService;
-//        //        elaboraService.libBio = libBio;
-//        //        libBio.giorno = giorno;
-//        bioService.text = text;
-//        //        libBio.mongo = mongoService;
-//        //        mongoService.mongoOp = mongoOperations;
-//        //        mongoService.reflection = reflection;
-//        //        mongoService.text = text;
-//        //        didascalia.text = text;
-//        //        giornoNato.annoService = annoService;
-//        //        giornoNato.text = text;
-//        //        annoNato.text = text;
-//        //        giornoMorto.text = text;
-//        //        annoMorto.text = text;
-//        //        standard.text = text;
-//        //        completa.text = text;
-//        //        didascalia.didascaliaCompleta = completa;
-//        //        didascalia.didascaliaGiornoNato = giornoNato;
-//        //        didascalia.didascaliaAnnoNato = annoNato;
-//        //        didascalia.didascaliaGiornoMorto = giornoMorto;
-//        //        didascalia.didascaliaAnnoMorto = annoMorto;
-//        //        didascalia.didascaliaStandard = standard;
-//        //        bio = api.leggeBio(wikiTitle);
-//        //        didascaliaService.wikiTitle = wikiTitle;
-//        //        didascaliaService.pref = pref;
-//        //        didascaliaService.date = date;
-//        //        didascaliaService.api = api;
-//        //        didascaliaService.text = text;
-//        text.mongo = mongo;
-//        annoService.mongo = mongo;
-//        gSonService.text = text;
-//        gSonService.array = array;
-//        gSonService.reflection = reflection;
-//        gSonService.annotation = annotation;
-//        mongo.gSonService = gSonService;
-//        mongo.text = text;
-//
-//        MockitoAnnotations.initMocks(attivitaService);
-//
-//        elaboraService.annotation = annotation;
-//        elaboraService.reflection = reflection;
-//        elaboraService.array = array;
-//        elaboraService.attivitaService = attivitaService;
-//        elaboraService.nazionalitaService = nazionalitaService;
-//        attivitaService.mongo = mongo;
-//        nazionalitaService.mongo = mongo;
-//
-//        for (ParBio parBio : ParBio.values()) {
-//            parBio.setText(text);
-//            parBio.setWikiBot(wikiBot);
-//            parBio.setElabora(elaboraService);
-//        }
-//
-//        MockitoAnnotations.initMocks(gSonService);
-//        Assertions.assertNotNull(gSonService);
-//
-//        mongo.fixProperties(DATA_BASE_NAME);
-//        gSonService.fixProperties(DATA_BASE_NAME);
-//    }// end of method
 
     /**
      * Qui passa ad ogni test delle sottoclassi <br>

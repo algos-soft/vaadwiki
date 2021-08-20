@@ -47,7 +47,7 @@ public class WikiBotServiceTest extends WTest {
 
     public static final String CAT_2020 = "Morti nel 2020";
 
-    public static final int TOT_2020 = 2404;
+    public static final int TOT_2020 = 2405;
 
     public static final String CAT_ROMANI = "Personaggi della storia romana";
 

@@ -26,10 +26,10 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("testAllValido")
-@DisplayName("Test QueryTimestamp")
+@Tag("testAllValidoWiki")
+@DisplayName("QueryPages - Istanza per una query timestamp.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class QueryTimestampTest extends ATest {
+public class QueryTimestampTest extends WTest {
 
 
     private static final List<Long> LISTA_BREVE = List.of(Long.valueOf(876876), Long.valueOf(793444), Long.valueOf(22223), Long.valueOf(50030044));
@@ -37,24 +37,9 @@ public class QueryTimestampTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    QueryTimestamp istanza;
-
-    @InjectMocks
-    public BotLogin botLogin;
-
-    @InjectMocks
-    private QueryLogin queryLogin;
-
-    @InjectMocks
-    private QueryAssert queryAssert;
-
-    @InjectMocks
-    public WikiBotService wikiBot;
-
-    @InjectMocks
-    private QueryCat queryCat;
+    private QueryTimestamp istanza;
 
 
     /**
@@ -63,52 +48,13 @@ public class QueryTimestampTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-//        MockitoAnnotations.initMocks(this);
-//        MockitoAnnotations.initMocks(istanza);
-//        Assertions.assertNotNull(istanza);
-//        istanza.array = array;
-//        istanza.botLogin = botLogin;
-//
-//        MockitoAnnotations.initMocks(queryLogin);
-//        Assertions.assertNotNull(queryLogin);
-//        queryLogin.wikiApi = wikiApi;
-//        queryLogin.text = text;
-//        queryLogin.logger = logger;
-//        queryLogin.appContext = appContext;
-//
-//        MockitoAnnotations.initMocks(botLogin);
-//        Assertions.assertNotNull(botLogin);
-//        queryCat.botLogin = botLogin;
-//        queryLogin.botLogin = botLogin;
-//
-//        MockitoAnnotations.initMocks(queryAssert);
-//        Assertions.assertNotNull(queryAssert);
-//        queryAssert.botLogin = botLogin;
-//        queryLogin.queryAssert = queryAssert;
-//        istanza.queryAssert = queryAssert;
-//
-//        MockitoAnnotations.initMocks(queryCat);
-//        Assertions.assertNotNull(queryCat);
-//        queryCat.text = text;
-//        queryCat.logger = logger;
-//        queryCat.wikiApi = wikiApi;
-//        queryCat.date = date;
-//        queryCat.appContext = appContext;
-//        jSonService.text = text;
-//        queryCat.wikiBot = wikiBot;
-//        queryCat.queryAssert = queryAssert;
-//
-//        MockitoAnnotations.initMocks(wikiBot);
-//        Assertions.assertNotNull(wikiBot);
-//        wikiBot.text = text;
-//        wikiBot.web = web;
-//        wikiBot.jSonService = jSonService;
-//
-//        assertTrue(queryLogin.urlRequest().isValido());
+        //--reindirizzo l'istanza della superclasse
+        istanza = queryTimestamp;
     }
+
 
 
     /**

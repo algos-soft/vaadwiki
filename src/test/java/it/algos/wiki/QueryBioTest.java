@@ -56,7 +56,7 @@ public class QueryBioTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
         MockitoAnnotations.initMocks(this);

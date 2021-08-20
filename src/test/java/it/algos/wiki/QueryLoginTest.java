@@ -46,8 +46,11 @@ public class QueryLoginTest extends WTest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
+
+        //--reindirizzo l'istanza della superclasse
+        istanza = queryLogin;
     }
 
 
@@ -59,9 +62,6 @@ public class QueryLoginTest extends WTest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
-
-        //--reindirizzo l'istanza della superclasse
-        istanza = queryLogin;
     }
 
 

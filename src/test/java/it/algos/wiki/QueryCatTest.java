@@ -25,8 +25,8 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("test singolo")
-@DisplayName("QueryCat - Istanza per il login.")
+@Tag("testAllValidoWiki")
+@DisplayName("QueryCat - Istanza per una query categoria.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class QueryCatTest extends WTest {
 
@@ -66,42 +66,11 @@ public class QueryCatTest extends WTest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-//        MockitoAnnotations.initMocks(this);
-//        MockitoAnnotations.initMocks(istanza);
-//        Assertions.assertNotNull(istanza);
-//        istanza.text = text;
-//        istanza.logger = logger;
-//        istanza.wikiApi = wikiApi;
-//        istanza.wikiBot = wikiBot;
-//        istanza.date = date;
-//        istanza.appContext = appContext;
-//        wikiBot.text = text;
-//        wikiBot.web = web;
-//        wikiBot.jSonService = jSonService;
-//        jSonService.text = text;
-//
-//        MockitoAnnotations.initMocks(queryLogin);
-//        Assertions.assertNotNull(queryLogin);
-//        queryLogin.wikiApi = wikiApi;
-//        queryLogin.text = text;
-//        queryLogin.logger = logger;
-//        queryLogin.appContext = appContext;
-//
-//        MockitoAnnotations.initMocks(botLogin);
-//        Assertions.assertNotNull(botLogin);
-//        istanza.botLogin = botLogin;
-//        queryLogin.botLogin = botLogin;
-//
-//        MockitoAnnotations.initMocks(queryAssert);
-//        Assertions.assertNotNull(queryAssert);
-//        queryAssert.botLogin = botLogin;
-//        queryLogin.queryAssert = queryAssert;
-//        istanza.queryAssert = queryAssert;
-//
-//        assertTrue(queryLogin.urlRequest().isValido());
+        //--reindirizzo l'istanza della superclasse
+        istanza = queryCat;
     }
 
 
@@ -113,20 +82,28 @@ public class QueryCatTest extends WTest {
     @BeforeEach
      void setUpEach() {
         super.setUp();
-
-        //--reindirizzo l'istanza della superclasse
-        istanza = queryCat;
-
-        istanza.botLogin = botLogin;
-        istanza.queryAssert = queryAssert;
     }
-
 
     @Test
     @Order(1)
-    @DisplayName("1 - Cerca di leggere (come bot) una lista di pageid di una categoria wiki inesistente")
-    void urlRequest() {
-        System.out.println("1 - Cerca di leggere (come bot) una lista di pageid di una categoria wiki inesistente");
+    @DisplayName("1 - Legge (come bot) una lista corta di pageid di una categoria wiki")
+    void urlRequest1() {
+        System.out.println("1 - Legge (come bot) una lista corta di pageid di una categoria wiki");
+
+        sorgente = CAT_1435;
+        previsto = JSON_SUCCESS;
+        ottenutoRisultato = istanza.urlRequest(sorgente);
+        assertTrue(ottenutoRisultato.isValido());
+        assertEquals(previsto, ottenutoRisultato.getCodeMessage());
+        printRisultato(ottenutoRisultato);
+        System.out.println(String.format("Risultato ottenuto in esattamente %s", dateService.deltaTextEsatto(inizio)));
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - Cerca di leggere (come bot) una lista di pageid di una categoria wiki inesistente")
+    void urlRequest2() {
+        System.out.println("2 - Cerca di leggere (come bot) una lista di pageid di una categoria wiki inesistente");
 
         sorgente = CAT_INESISTENTE;
         previsto = "Inesistente";
@@ -139,10 +116,10 @@ public class QueryCatTest extends WTest {
 
 
     @Test
-    @Order(2)
-    @DisplayName("2 - Cerca di leggere (senza bot) una lista di pageid di una categoria wiki")
-    void urlRequest2() {
-        System.out.println("2 - Cerca di leggere (senza bot) una lista di pageid di una categoria wiki");
+    @Order(3)
+    @DisplayName("3 - Cerca di leggere (senza bot) una lista di pageid di una categoria wiki")
+    void urlRequest3() {
+        System.out.println("3 - Cerca di leggere (senza bot) una lista di pageid di una categoria wiki");
 
         //--tarocco -provvisoriamente- la mappa di botLogin
         Map cookiesValidi = botLogin.getCookies();
@@ -164,23 +141,6 @@ public class QueryCatTest extends WTest {
     }
 
 
-    @Test
-    @Order(3)
-    @DisplayName("3 - Legge (come bot) una lista corta di pageid di una categoria wiki")
-    void urlRequest3() {
-        System.out.println("3 - Legge (come bot) una lista corta di pageid di una categoria wiki");
-
-        //--abilita il bot
-        queryLogin.urlRequest();
-
-        sorgente = CAT_1435;
-        previsto = JSON_SUCCESS;
-        ottenutoRisultato = istanza.urlRequest(sorgente);
-        assertTrue(ottenutoRisultato.isValido());
-        assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
-        System.out.println(String.format("Risultato ottenuto in esattamente %s", dateService.deltaTextEsatto(inizio)));
-    }
 
     @Test
     @Order(4)
