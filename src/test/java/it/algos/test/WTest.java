@@ -1,6 +1,7 @@
 package it.algos.test;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadwiki.backend.login.*;
@@ -12,6 +13,8 @@ import it.algos.vaadwiki.wiki.*;
 import it.algos.vaadwiki.wiki.query.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
+
+import java.util.*;
 
 /**
  * Project vaadwiki
@@ -47,6 +50,7 @@ public abstract class WTest extends ATest {
 
     protected Bio bio;
 
+    protected String queryType = VUOTA;
 
     @InjectMocks
     protected GiornoService giornoService;
@@ -106,9 +110,6 @@ public abstract class WTest extends ATest {
 
         wInitMocks();
         wFixRiferimentiIncrociati();
-
-        //        //--abilita il bot
-        //        queryLogin.urlRequest();
     }
 
 
@@ -200,16 +201,20 @@ public abstract class WTest extends ATest {
         queryLogin.appContext = appContext;
         queryLogin.botLogin = botLogin;
 
+        queryCat.text = textService;
         queryCat.wikiApi = wikiApiService;
         queryCat.wikiBot = wikiBotService;
         queryCat.logger = loggerService;
         queryCat.botLogin = botLogin;
         queryCat.queryAssert = queryAssert;
 
+        queryPages.text = textService;
         queryPages.botLogin = botLogin;
         queryPages.queryAssert = queryAssert;
         queryPages.array = arrayService;
+        queryPages.wikiApi = wikiApiService;
 
+        queryTimestamp.text = textService;
         queryTimestamp.botLogin = botLogin;
         queryTimestamp.queryAssert = queryAssert;
         queryTimestamp.array = arrayService;
@@ -268,6 +273,107 @@ public abstract class WTest extends ATest {
         System.out.println("Type:" + SPAZIO + wrap.getType());
         System.out.println("Timestamp:" + SPAZIO + wrap.getTime());
         System.out.println("Template:" + SPAZIO + wrap.getTemplBio());
+    }
+
+    protected void printRisultato(AIResult result, String titolo) {
+        boolean miniWrap = false;
+        boolean wrapBio = false;
+        List lista = result.getLista();
+        List<Long> listaPagesIds = null;
+        List<String> listaTitles = null;
+        lista = lista != null && lista.size() > 20 ? lista.subList(0, 5) : lista;
+
+        if (lista != null && lista.get(0) instanceof MiniWrap) {
+            miniWrap = true;
+            listaPagesIds = new ArrayList<>();
+            for (Object obj : lista) {
+                listaPagesIds.add(((MiniWrap) obj).getPageid());
+            }
+        }
+
+        if (lista != null && lista.get(0) instanceof WrapBio) {
+            wrapBio = true;
+            listaTitles = new ArrayList<>();
+            for (Object obj : lista) {
+                listaTitles.add(((WrapBio) obj).getTitle());
+            }
+        }
+
+        System.out.println(VUOTA);
+        System.out.println(String.format("Risultato %s", titolo));
+        System.out.println(String.format("Status: %s", result.isValido() ? "true" : "false"));
+        System.out.println(String.format("Query: %s", result.getQueryType()));
+        System.out.println(String.format("Title: %s", result.getWikiTitle()));
+        System.out.println(String.format("Preliminary url: %s", result.getUrlPreliminary()));
+        System.out.println(String.format("Secondary url: %s", result.getUrlRequest()));
+        System.out.println(String.format("Preliminary response: %s", result.getPreliminaryResponse()));
+        System.out.println(String.format("Token: %s", result.getToken()));
+        System.out.println(String.format("Secondary response: %s", result.getResponse()));
+        System.out.println(String.format("Message code: %s", result.getCodeMessage()));
+        System.out.println(String.format("Message: %s", result.getMessage()));
+        System.out.println(String.format("Error code: %s", result.getErrorCode()));
+        System.out.println(String.format("Error message: %s", result.getErrorMessage()));
+        System.out.println(String.format("Valid message: %s", result.getValidMessage()));
+        System.out.println(String.format("Numeric value: %s", textService.format(result.getValue())));
+        if (miniWrap||wrapBio) {
+            if (miniWrap) {
+                System.out.println(String.format("List value: %s ...", listaPagesIds));
+            }
+            if (wrapBio) {
+                System.out.println(String.format("List value: %s ...", listaTitles));
+            }
+        }
+        else {
+            System.out.println(String.format("List value: %s ...", lista));
+        }
+        System.out.println(String.format("Map value: %s", result.getMappa()));
+        System.out.println(String.format("Risultato ottenuto in %s", dateService.deltaText(inizio)));
+    }
+
+    protected void printRisultato(AIResult result) {
+        printRisultato(result, VUOTA);
+    }
+
+    protected void print10long(List<Long> lista) {
+        int max = Math.min(10, lista.size());
+
+        System.out.print("PageIds (primi 10): ");
+        for (int k = 0; k < max - 1; k++) {
+            System.out.print(lista.get(k));
+            System.out.print(VIRGOLA_SPAZIO);
+        }
+        System.out.print(lista.get(max - 1));
+        System.out.println(VUOTA);
+    }
+
+    protected  void print10Mini(List<MiniWrap> lista) {
+        int max = Math.min(5, lista.size());
+
+        System.out.print("MiniWrap con pageId e lastModifica (primi 5): ");
+        for (int k = 0; k < max - 1; k++) {
+            System.out.print(QUADRA_INI);
+            System.out.print(lista.get(k).getPageid());
+            System.out.print(SPAZIO);
+            System.out.print(lista.get(k).getLastModifica());
+            System.out.print(QUADRA_END);
+            System.out.print(VIRGOLA_SPAZIO);
+        }
+        System.out.println(VUOTA);
+    }
+
+    protected  void print10Bio(List<WrapBio> lista) {
+        int max = Math.min(5, lista.size());
+
+        System.out.print("WrapBio (primi 5): ");
+        for (int k = 0; k < max - 1; k++) {
+            System.out.print(QUADRA_INI);
+            System.out.print(lista.get(k).getPageid());
+            System.out.print(SPAZIO);
+            System.out.print(lista.get(k).getTitle());
+            System.out.print(QUADRA_END);
+            System.out.print(VIRGOLA_SPAZIO);
+        }
+        System.out.println(VUOTA);
     }
 
 }

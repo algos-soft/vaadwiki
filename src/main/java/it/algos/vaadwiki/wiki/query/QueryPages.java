@@ -21,7 +21,7 @@ import java.util.*;
  * User: gac
  * Date: ven, 30-lug-2021
  * Time: 19:52
- *
+ * <p>
  * Legge una serie di pagine individuate da listaPageids <br>
  */
 @SpringComponent
@@ -40,9 +40,12 @@ public class QueryPages extends AQuery {
         AIResult assertResult;
         String strisciaIds;
         int totPageIds = listaPageids.size();
+        int valide = 0;
+        int errate = 0;
         int limit = 500;
         int cicli = (totPageIds / limit) + 1;
 
+        result.setWikiTitle("lista di pageIds");
         result.setQueryType(TypeQuery.getCookies.get());
         result.setUrlRequest(urlDomain);
 
@@ -61,6 +64,13 @@ public class QueryPages extends AQuery {
             strisciaIds = array.toStringaPipe(listaPageids.subList(k * limit, Math.min(k * limit + limit, listaPageids.size())));
             result = request(result, strisciaIds);
         }
+
+        result.setMessage("Recupera WrapBio");
+        valide = result.getValue();
+        errate = totPageIds - valide;
+        result.setErrorMessage(String.format("%s pageIds non erano voci biografiche valide", errate));
+        result.setErrorCode(errate+"");
+        result.setMessage(String.format("Recuperati %s WrapBio (con tmplBio) da una lista di %s pageIds'", text.format(valide), totPageIds));
 
         return result;
     }

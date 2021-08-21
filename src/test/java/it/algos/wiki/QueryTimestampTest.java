@@ -1,16 +1,14 @@
 package it.algos.wiki;
 
 import it.algos.test.*;
-import static it.algos.wiki.QueryCatTest.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
-import it.algos.vaadwiki.backend.login.*;
-import it.algos.vaadwiki.backend.service.*;
+import it.algos.vaadwiki.wiki.*;
 import it.algos.vaadwiki.wiki.query.*;
+import static it.algos.wiki.QueryCatTest.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 import java.util.*;
 
@@ -20,6 +18,7 @@ import java.util.*;
  * User: gac
  * Date: mer, 28-lug-2021
  * Time: 21:45
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -27,7 +26,7 @@ import java.util.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValidoWiki")
-@DisplayName("QueryPages - Istanza per una query timestamp.")
+@DisplayName("QueryTimestamp - Istanza per recuperare i timestamp.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class QueryTimestampTest extends WTest {
 
@@ -53,8 +52,13 @@ public class QueryTimestampTest extends WTest {
 
         //--reindirizzo l'istanza della superclasse
         istanza = queryTimestamp;
-    }
 
+        //--titolo della query
+        queryType = istanza.getClass().getSimpleName();
+
+        //--abilita il bot
+        queryLogin.urlRequest();
+    }
 
 
     /**
@@ -69,9 +73,9 @@ public class QueryTimestampTest extends WTest {
 
     @Test
     @Order(1)
-    @DisplayName("1 - Cerca di leggere (senza bot) una lista di pageIds da controllare")
+    @DisplayName("1 - Cerca di leggere (senza bot) una lista di MiniWrap da controllare")
     void urlRequest() {
-        System.out.println("1 - Cerca di leggere (senza bot) una lista di pageIds da controllare");
+        System.out.println("1 - Cerca di leggere (senza bot) una lista di MiniWrap da controllare");
 
         //--tarocco -provvisoriamente- la mappa di botLogin
         Map cookiesValidi = botLogin.getCookies();
@@ -87,7 +91,7 @@ public class QueryTimestampTest extends WTest {
         assertFalse(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getErrorCode());
         assertEquals(VUOTA, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
 
         //--ripristino la mappa di botLogin
         botLogin.getResult().setMappa(cookiesValidi);
@@ -95,24 +99,25 @@ public class QueryTimestampTest extends WTest {
 
     @Test
     @Order(2)
-    @DisplayName("2 - Legge (con bot) una lista (breve) di pageIds da controllare")
+    @DisplayName("2 - Legge (con bot) una lista (breve) di MiniWrap da controllare")
     void urlRequest2() {
-        System.out.println("2 - Legge (con bot) una lista (breve) di pageIds da controllare");
+        System.out.println("2 - Legge (con bot) una lista (breve) di MiniWrap da controllare");
 
         sorgenteArrayLong = LISTA_BREVE;
         previsto = JSON_SUCCESS;
         ottenutoRisultato = istanza.urlRequest(sorgenteArrayLong);
         assertTrue(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
+        print10Mini(ottenutoRisultato.getLista());
     }
 
 
     @Test
     @Order(3)
-    @DisplayName("3 - Legge (con bot) una lista (media) di pageIds da controllare")
+    @DisplayName("3 - Legge (con bot) una lista (media) di MiniWrap da controllare")
     void urlRequest3() {
-        System.out.println("3 - Legge (con bot) una lista (media) di pageIds da controllare");
+        System.out.println("3 - Legge (con bot) una lista (media) di MiniWrap da controllare");
 
         sorgente = CAT_1935;
         previsto = JSON_SUCCESS;
@@ -122,9 +127,11 @@ public class QueryTimestampTest extends WTest {
         sorgenteArrayLong = ottenutoRisultato.getLista();
         previsto = JSON_SUCCESS;
         ottenutoRisultato = istanza.urlRequest(sorgenteArrayLong);
-//        assertFalse(ottenutoRisultato.isValido());
-        printRisultato(ottenutoRisultato);
+        assertTrue(ottenutoRisultato.isValido());
+        printRisultato(ottenutoRisultato, queryType);
+        print10Mini(ottenutoRisultato.getLista());
     }
+
 
     /**
      * Qui passa al termine di ogni singolo test <br>

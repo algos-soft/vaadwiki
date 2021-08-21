@@ -438,27 +438,27 @@ public class WikiBotServiceTest extends WTest {
         System.out.println(VUOTA);
         System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
 
-        //--senza specificare il type di user, in automatico mette anonymous
-        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
-        sorgente = CAT_1935;
-        userType = AETypeUser.anonymous;
-        previstoIntero = TOT_1935;
-        ottenutoArrayLong = service.getLongCat(sorgente, userType);
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+//        //--senza specificare il type di user, in automatico mette anonymous
+//        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+//        sorgente = CAT_1935;
+//        userType = AETypeUser.anonymous;
+//        previstoIntero = TOT_1935;
+//        ottenutoArrayLong = service.getLongCat(sorgente, userType);
+//        assertNotNull(ottenutoArrayLong);
+//        assertEquals(previstoIntero, ottenutoArrayLong.size());
+//        System.out.println(VUOTA);
+//        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
 
-        //--senza specificare il type di user, in automatico mette anonymous
-        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
-        sorgente = CAT_2020;
-        userType = AETypeUser.anonymous;
-        previstoIntero = TOT_2020;
-        ottenutoArrayLong = service.getLongCat(sorgente, userType);
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+//        //--senza specificare il type di user, in automatico mette anonymous
+//        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+//        sorgente = CAT_2020;
+//        userType = AETypeUser.anonymous;
+//        previstoIntero = TOT_2020;
+//        ottenutoArrayLong = service.getLongCat(sorgente, userType);
+//        assertNotNull(ottenutoArrayLong);
+//        assertEquals(previstoIntero, ottenutoArrayLong.size());
+//        System.out.println(VUOTA);
+//        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
     }
 
     //    @Test

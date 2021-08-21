@@ -4,12 +4,9 @@ import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
-import it.algos.vaadwiki.backend.login.*;
-import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.query.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 import java.util.*;
 
@@ -19,6 +16,7 @@ import java.util.*;
  * User: gac
  * Date: dom, 25-lug-2021
  * Time: 22:18
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -26,7 +24,7 @@ import java.util.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValidoWiki")
-@DisplayName("QueryCat - Istanza per una query categoria.")
+@DisplayName("QueryCat - Istanza per leggere una categoria.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class QueryCatTest extends WTest {
 
@@ -36,7 +34,9 @@ public class QueryCatTest extends WTest {
 
     public static final String CAT_1435 = "Nati nel 1435";
 
-    public static final int TOT_1435 = 33;
+    public static final int TOT_1435_PAGINE = 33;
+
+    public static final int TOT_1435_BIO = 32;
 
     public static final String CAT_1591 = "Nati nel 1591";
 
@@ -45,8 +45,6 @@ public class QueryCatTest extends WTest {
     public static final int TOT_1935 = 1990;
 
     public static final String CAT_1713 = "Nati nel 1713";
-
-    public static final String CAT_2020 = "Morti nel 2020";
 
     public static final int TOT_2020 = 2392;
 
@@ -71,6 +69,12 @@ public class QueryCatTest extends WTest {
 
         //--reindirizzo l'istanza della superclasse
         istanza = queryCat;
+
+        //--titolo della query
+        queryType = istanza.getClass().getSimpleName();
+
+        //--abilita il bot
+        queryLogin.urlRequest();
     }
 
 
@@ -80,30 +84,31 @@ public class QueryCatTest extends WTest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeEach
-     void setUpEach() {
+    void setUpEach() {
         super.setUp();
     }
 
     @Test
     @Order(1)
-    @DisplayName("1 - Legge (come bot) una lista corta di pageid di una categoria wiki")
+    @DisplayName("1 - Legge (come bot) una lista corta di pageIds di una categoria wiki")
     void urlRequest1() {
-        System.out.println("1 - Legge (come bot) una lista corta di pageid di una categoria wiki");
+        System.out.println("1 - Legge (come bot) una lista corta di pageIds di una categoria wiki");
 
         sorgente = CAT_1435;
         previsto = JSON_SUCCESS;
         ottenutoRisultato = istanza.urlRequest(sorgente);
         assertTrue(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
         System.out.println(String.format("Risultato ottenuto in esattamente %s", dateService.deltaTextEsatto(inizio)));
+        print10long(ottenutoRisultato.getLista());
     }
 
     @Test
     @Order(2)
-    @DisplayName("2 - Cerca di leggere (come bot) una lista di pageid di una categoria wiki inesistente")
+    @DisplayName("2 - Cerca di leggere (come bot) una lista di pageIds di una categoria wiki inesistente")
     void urlRequest2() {
-        System.out.println("2 - Cerca di leggere (come bot) una lista di pageid di una categoria wiki inesistente");
+        System.out.println("2 - Cerca di leggere (come bot) una lista di pageIds di una categoria wiki inesistente");
 
         sorgente = CAT_INESISTENTE;
         previsto = "Inesistente";
@@ -111,15 +116,15 @@ public class QueryCatTest extends WTest {
         assertFalse(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getErrorCode());
         assertEquals(VUOTA, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
     }
 
 
     @Test
     @Order(3)
-    @DisplayName("3 - Cerca di leggere (senza bot) una lista di pageid di una categoria wiki")
+    @DisplayName("3 - Cerca di leggere (senza bot) una lista di pageIds di una categoria wiki")
     void urlRequest3() {
-        System.out.println("3 - Cerca di leggere (senza bot) una lista di pageid di una categoria wiki");
+        System.out.println("3 - Cerca di leggere (senza bot) una lista di pageIds di una categoria wiki");
 
         //--tarocco -provvisoriamente- la mappa di botLogin
         Map cookiesValidi = botLogin.getCookies();
@@ -134,55 +139,30 @@ public class QueryCatTest extends WTest {
         ottenutoRisultato = istanza.urlRequest(sorgente);
         assertFalse(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getErrorCode());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
 
         //--ripristino la mappa di botLogin
         botLogin.getResult().setMappa(cookiesValidi);
     }
 
 
-
     @Test
     @Order(4)
-    @DisplayName("4 - Legge (come bot) una lista media di pageid di una categoria wiki")
+    @DisplayName("4 - Legge (come bot) una lista media di pageIds di una categoria wiki")
     void urlRequest4() {
-        System.out.println("4 - Legge (come bot) una lista media di pageid di una categoria wiki");
+        System.out.println("4 - Legge (come bot) una lista media di pageIds di una categoria wiki");
 
         sorgente = CAT_1935;
         previsto = JSON_SUCCESS;
         ottenutoRisultato = istanza.urlRequest(sorgente);
         assertTrue(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
         System.out.println(String.format("Risultato ottenuto in esattamente %s", dateService.deltaTextEsatto(inizio)));
+        print10long(ottenutoRisultato.getLista());
     }
 
-//    @Test
-    @Order(5)
-    @DisplayName("5 - Legge (come bot) una lista lunga di pageid di una categoria wiki")
-    void urlRequest5() {
-        System.out.println("5 - Legge (come bot) una lista lunga di pageid di una categoria wiki");
 
-        sorgente = CATEGORIA_BIO;
-        previsto = JSON_SUCCESS;
-        ottenutoRisultato = istanza.urlRequest(sorgente);
-        assertTrue(ottenutoRisultato.isValido());
-        assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
-        System.out.println(String.format("Risultato ottenuto in esattamente %s", dateService.deltaTextEsatto(inizio)));
-    }
-
-    void print10(List<Long> lista) {
-        int max = Math.min(10, lista.size());
-
-        System.out.print("PageIds (primi 10): ");
-        for (int k = 0; k < max - 1; k++) {
-            System.out.print(lista.get(k));
-            System.out.print(VIRGOLA_SPAZIO);
-        }
-        System.out.print(lista.get(max - 1));
-        System.out.println(VUOTA);
-    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>

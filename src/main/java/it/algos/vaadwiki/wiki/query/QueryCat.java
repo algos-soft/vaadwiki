@@ -47,10 +47,11 @@ public class QueryCat extends AQuery {
         String urlDomain;
         URLConnection urlConn;
         AIResult assertResult;
+        int pageIdsRecuperati = 0;
 
         result.setWikiTitle(catTitle);
-        result.setUrlRequest(fixUrlCat(catTitle, VUOTA));
         result.setQueryType(TypeQuery.getCookies.get());
+        result.setUrlRequest(fixUrlCat(catTitle, VUOTA));
 
         //--controlla l'esistenza della categoria
         if (!wikiBot.isEsisteCat(catTitle)) {
@@ -83,6 +84,9 @@ public class QueryCat extends AQuery {
         } catch (Exception unErrore) {
             logger.info(unErrore.toString());
         }
+
+        pageIdsRecuperati = result.getValue();
+        result.setMessage(String.format("Recuperati %s pageIds dalla categoria '%s'", text.format(pageIdsRecuperati), catTitle));
 
         return result;
     }

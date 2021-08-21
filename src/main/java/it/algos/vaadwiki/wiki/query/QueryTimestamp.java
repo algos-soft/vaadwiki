@@ -48,7 +48,9 @@ public class QueryTimestamp extends AQuery {
         int totPageIds = listaPageids.size();
         int limit = 500;
         int cicli = (totPageIds / limit) + 1;
+        int miniWrapRecuperati = 0;
 
+        result.setWikiTitle("lista di pageIds");
         result.setQueryType(TypeQuery.getCookies.get());
         result.setUrlRequest(urlDomain);
 
@@ -67,6 +69,9 @@ public class QueryTimestamp extends AQuery {
             strisciaIds = array.toStringaPipe(listaPageids.subList(k * limit, Math.min(k * limit + limit, listaPageids.size())));
             result = request(result, strisciaIds);
         }
+
+        miniWrapRecuperati = result.getValue();
+        result.setMessage(String.format("Recuperati %s MiniWrap (pageid e lastModifica) da una lista di %s pageIds", text.format(miniWrapRecuperati), totPageIds));
 
         return result;
     }

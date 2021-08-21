@@ -17,13 +17,14 @@ import java.util.*;
  * User: gac
  * Date: gio, 08-lug-2021
  * Time: 19:01
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("test singolo")
+@Tag("testAllValidoWiki")
 @DisplayName("QueryLoginTest - Istanza per il login.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class QueryLoginTest extends WTest {
@@ -51,6 +52,9 @@ public class QueryLoginTest extends WTest {
 
         //--reindirizzo l'istanza della superclasse
         istanza = queryLogin;
+
+        //--titolo della query
+        queryType = istanza.getClass().getSimpleName();
     }
 
 
@@ -76,7 +80,7 @@ public class QueryLoginTest extends WTest {
         ottenutoRisultato = istanza.urlRequest();
         assertTrue(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
     }
 
 
@@ -93,7 +97,7 @@ public class QueryLoginTest extends WTest {
         ottenutoRisultato = istanza.urlRequest();
         assertFalse(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getErrorCode());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
 
         istanza.LG_NAME = oldValue;
     }
@@ -112,7 +116,7 @@ public class QueryLoginTest extends WTest {
         ottenutoRisultato = queryAssert.urlRequest();
         assertFalse(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getErrorCode());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
 
         queryAssert.botLogin = botLoginOld;
     }
@@ -135,7 +139,7 @@ public class QueryLoginTest extends WTest {
         ottenutoRisultato = queryAssert.urlRequest();
         assertFalse(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getErrorCode());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
     }
 
 
@@ -151,7 +155,7 @@ public class QueryLoginTest extends WTest {
         ottenutoRisultato = queryAssert.urlRequest();
         assertFalse(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getErrorCode());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
     }
 
 
@@ -166,7 +170,7 @@ public class QueryLoginTest extends WTest {
         ottenutoRisultato = queryAssert.urlRequest();
         assertTrue(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
     }
 
     //    @Test

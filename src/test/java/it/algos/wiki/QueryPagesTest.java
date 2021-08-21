@@ -1,16 +1,13 @@
 package it.algos.wiki;
 
 import it.algos.test.*;
-import static it.algos.wiki.QueryCatTest.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
-import it.algos.vaadwiki.backend.login.*;
-import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.query.*;
+import static it.algos.wiki.QueryCatTest.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
 
 import java.util.*;
 
@@ -20,6 +17,7 @@ import java.util.*;
  * User: gac
  * Date: ven, 30-lug-2021
  * Time: 19:52
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -31,7 +29,7 @@ import java.util.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class QueryPagesTest extends WTest {
 
-    private static final List<Long> LISTA_BREVE = List.of(Long.valueOf(876876), Long.valueOf(793444), Long.valueOf(22223), Long.valueOf(50030044));
+    private static final List<Long> LISTA_BREVE = List.of(Long.valueOf(4255944), Long.valueOf(59193), Long.valueOf(4444), Long.valueOf(22223), Long.valueOf(8941544));
 
 
     /**
@@ -51,8 +49,13 @@ public class QueryPagesTest extends WTest {
 
         //--reindirizzo l'istanza della superclasse
         istanza = queryPages;
-    }
 
+        //--titolo della query
+        queryType = istanza.getClass().getSimpleName();
+
+        //--abilita il bot
+        queryLogin.urlRequest();
+    }
 
 
     /**
@@ -86,7 +89,7 @@ public class QueryPagesTest extends WTest {
         assertFalse(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getErrorCode());
         assertEquals(VUOTA, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
 
         //--ripristino la mappa di botLogin
         botLogin.getResult().setMappa(cookiesValidi);
@@ -95,35 +98,37 @@ public class QueryPagesTest extends WTest {
 
     @Test
     @Order(2)
-    @DisplayName("2 - Legge (con bot) una lista (breve) di pagine")
+    @DisplayName("2 - Legge (con bot) una lista (brevissima) di pagine")
     void urlRequest2() {
-        System.out.println("2 - Legge (con bot) una lista (breve) di pagine");
+        System.out.println("2 - Legge (con bot) una lista (brevissima) di pagine");
 
         sorgenteArrayLong = LISTA_BREVE;
         previsto = JSON_SUCCESS;
         ottenutoRisultato = istanza.urlRequest(sorgenteArrayLong);
         assertTrue(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
+        printRisultato(ottenutoRisultato, queryType);
     }
 
 
     @Test
     @Order(3)
-    @DisplayName("3 - Legge (con bot) una lista (media) di pagine")
+    @DisplayName("3 - Legge (con bot) una lista (breve) di pagine")
     void urlRequest3() {
-        System.out.println("3 - Legge (con bot) una lista (media) di pagine");
+        System.out.println("3 - Legge (con bot) una lista (breve) di pagine");
 
-        sorgente = CAT_1935;
+        sorgente = CAT_1435;
         previsto = JSON_SUCCESS;
         ottenutoRisultato = queryCat.urlRequest(sorgente);
         assertTrue(ottenutoRisultato.isValido());
         sorgenteArrayLong = ottenutoRisultato.getLista();
         previsto = JSON_SUCCESS;
+        previstoIntero = TOT_1435_BIO;
         ottenutoRisultato = istanza.urlRequest(sorgenteArrayLong);
         assertTrue(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        printRisultato(ottenutoRisultato);
+        assertEquals(previstoIntero, ottenutoRisultato.getValue());
+        printRisultato(ottenutoRisultato, queryType);
     }
 
 
