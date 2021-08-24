@@ -48,6 +48,8 @@ public abstract class WTest extends ATest {
 
     protected WrapBio wrap;
 
+    protected List<WrapBio> listaWrapBio;
+
     protected Bio bio;
 
     protected String queryType = VUOTA;
@@ -224,6 +226,10 @@ public abstract class WTest extends ATest {
         bioService.text = textService;
         bioService.annotation = annotationService;
         bioService.reflection = reflectionService;
+        bioService.elaboraService = elaboraService;
+        bioService.mongo = mongoService;
+        bioService.logger = loggerService;
+        bioService.date = dateService;
 
         queryBio.text = textService;
         queryBio.wikiApi = wikiApiService;
@@ -242,6 +248,8 @@ public abstract class WTest extends ATest {
      */
     protected void setUp() {
         super.setUp();
+
+        listaWrapBio = null;
     }
 
 
@@ -315,7 +323,7 @@ public abstract class WTest extends ATest {
         System.out.println(String.format("Error message: %s", result.getErrorMessage()));
         System.out.println(String.format("Valid message: %s", result.getValidMessage()));
         System.out.println(String.format("Numeric value: %s", textService.format(result.getValue())));
-        if (miniWrap||wrapBio) {
+        if (miniWrap || wrapBio) {
             if (miniWrap) {
                 System.out.println(String.format("List value: %s ...", listaPagesIds));
             }
@@ -346,7 +354,7 @@ public abstract class WTest extends ATest {
         System.out.println(VUOTA);
     }
 
-    protected  void print10Mini(List<MiniWrap> lista) {
+    protected void print10Mini(List<MiniWrap> lista) {
         int max = Math.min(5, lista.size());
 
         System.out.print("MiniWrap con pageId e lastModifica (primi 5): ");
@@ -361,7 +369,7 @@ public abstract class WTest extends ATest {
         System.out.println(VUOTA);
     }
 
-    protected  void print10Bio(List<WrapBio> lista) {
+    protected void print10Bio(List<WrapBio> lista) {
         int max = Math.min(5, lista.size());
 
         System.out.print("WrapBio (primi 5): ");

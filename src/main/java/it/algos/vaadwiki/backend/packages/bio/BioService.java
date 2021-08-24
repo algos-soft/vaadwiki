@@ -362,9 +362,14 @@ public class BioService extends AService {
      * Crea/aggiorna una singola entity <br>
      */
     public boolean creaElaboraBio(WrapBio wrap) {
-        Bio bio = newEntity(wrap);
+        Bio bio = null;
 
-        elaboraService.esegue(bio);
+        if (wrap != null && wrap.isValido()) {
+            bio = this.newEntity(wrap);
+            bio = elaboraService.esegue(bio);
+            bio.setLastMongo(LocalDateTime.now());
+        }
+
         try {
             save(bio, AEOperation.newEditNoLog);
         } catch (AMongoException unErrore) {

@@ -1505,7 +1505,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return the founded entity
      */
     public AEntity find(AEntity entityBean) {
-        return entityBean != null ? findByIdOld(entityBean.getClass(), entityBean.getId()) : null;
+        return entityBean != null ? findById(entityBean.getClass(), entityBean.getId()) : null;
     }
 
     /**
