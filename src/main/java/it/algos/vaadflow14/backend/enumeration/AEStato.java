@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.enumeration;
 
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
-import it.algos.vaadflow14.backend.service.AMongoService;
+import it.algos.vaadflow14.backend.service.MongoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -88,7 +88,7 @@ public enum AEStato {
     private String paginaWiki;
 
     //--Link injettato da un metodo static
-    private AMongoService mongo;
+    private MongoService mongo;
 
 
     AEStato(String nome, String iso) {
@@ -103,7 +103,7 @@ public enum AEStato {
     }
 
 
-    public void setMongo(AMongoService mongo) {
+    public void setMongo(MongoService mongo) {
         this.mongo = mongo;
     }
 
@@ -137,7 +137,7 @@ public enum AEStato {
     public static class AMongoServiceInjector {
 
         @Autowired
-        private AMongoService mongo;
+        private MongoService mongo;
 
 
         @PostConstruct

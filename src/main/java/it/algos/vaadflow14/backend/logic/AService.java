@@ -204,7 +204,11 @@ public abstract class AService extends AbstractService implements AIService {
         //--esegue la registrazione sul database mongoDB
         //--con un controllo finale di congruità
         //--e gestione dell'eventuale errore
-        entityBean = entityBean != null ? mongo.save(entityBean) : null;
+        try {
+            mongo.save(entityBean);
+        } catch (AMongoException unErrore) {
+            System.out.println(unErrore);
+        }
 
         //--operazioni eseguite DOPO la registrazione (new o modifica)
         entityBean = entityBean != null ? this.afterSave(entityBean, operation) : null;

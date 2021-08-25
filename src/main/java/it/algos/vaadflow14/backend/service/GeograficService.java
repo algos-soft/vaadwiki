@@ -29,7 +29,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AGeograficService extends AbstractService {
+public class GeograficService extends AbstractService {
 
 
     /**

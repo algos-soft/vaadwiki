@@ -86,7 +86,7 @@ public abstract class FlowBoot implements ServletContextListener {
      * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
-    public AMongoService mongo;
+    public MongoService mongo;
 
 
     /**
@@ -148,7 +148,7 @@ public abstract class FlowBoot implements ServletContextListener {
 
         this.fixDBMongo();
         this.fixVariabili();
-//        this.fixPreferenze();
+        this.fixPreferenze();
         this.fixData();
         this.fixMenuRoutes();
         this.fixSchedules();
@@ -482,7 +482,7 @@ public abstract class FlowBoot implements ServletContextListener {
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public void setMongo(final AMongoService mongo) {
+    public void setMongo(final MongoService mongo) {
         this.mongo = mongo;
     }
 

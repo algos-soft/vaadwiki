@@ -175,8 +175,8 @@ public class PreferenzaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     public Preferenza findByKey(final String keyValue) {
-        //        return (Preferenza) mongo.findOneUnique(Preferenza.class, "code", keyValue);
-        return (Preferenza) super.findByKey(keyValue);
+                return (Preferenza) mongo.findOneUnique(Preferenza.class, "code", keyValue);
+//        return (Preferenza) super.findByKey(keyValue);
     }
 
     /**
@@ -217,9 +217,9 @@ public class PreferenzaService extends AService {
         }
 
         if ((numRecGen + numRecSpec) > 0) {
-            //            result = super.fixPostResetOnly(AETypeReset.enumeration, numRecGen + numRecSpec);
+//                        result = super.fixPostResetOnly(AETypeReset.enumeration, numRecGen + numRecSpec);
             message = String.format("Sono state create %d preferenze generali e %d specifiche di questa applicazione", numRecGen, numRecSpec);
-            result.setValidMessage(message);
+            result = AResult.valido(message);
         }
         else {
             result = AResult.errato();

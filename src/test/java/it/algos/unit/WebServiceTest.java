@@ -34,7 +34,7 @@ public class WebServiceTest extends ATest {
 
     public static final String URL_WEB_GAC = "http://www.algos.it/hellogac.html";
 
-    private static String URL_WIKI_GENERICO = "https://it.wikipedia.org/wiki/ISO_3166-2:IT";
+    private static String URL_WIKI_GENERICO = "https://it.wikipedia.org/wiki/Utente:Gac/T11";
 
     private static String PAGINA = "ISO 3166-2:IT";
 
@@ -180,6 +180,8 @@ public class WebServiceTest extends ATest {
         ottenutoRisultato = service.legge(sorgente);
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
+        previsto = ottenutoRisultato.getResponse();
+        previsto = previsto.length() > WIDTH ? previsto.substring(0, WIDTH) : previsto;
         assertTrue(textService.isEmpty(ottenutoRisultato.getWikiTitle()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
         assertEquals(sorgente, ottenutoRisultato.getUrlRequest());
@@ -192,7 +194,8 @@ public class WebServiceTest extends ATest {
         ottenuto = service.leggeWebTxt(sorgente);
         assertNotNull(ottenuto);
         assertTrue(textService.isValid(ottenuto));
-        assertTrue(ottenuto.equals(ottenutoRisultato.getResponse()));
+        ottenuto = ottenuto.length() > WIDTH ? ottenuto.substring(0, WIDTH) : ottenuto;
+        assertEquals(previsto, ottenuto);
 
         System.out.println(String.format("4 - Legge il sorgente di una pagina wiki letta come url e non come titolo"));
         System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getUrlRequest()));
@@ -215,6 +218,8 @@ public class WebServiceTest extends ATest {
         ottenutoRisultato = service.leggeWiki(sorgente);
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
+        previsto = ottenutoRisultato.getResponse();
+        previsto = previsto.length() > WIDTH ? previsto.substring(0, WIDTH) : previsto;
         assertTrue(textService.isValid(ottenutoRisultato.getWikiTitle()));
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
         assertTrue(textService.isValid(ottenutoRisultato.getUrlRequest()));
@@ -229,7 +234,8 @@ public class WebServiceTest extends ATest {
         ottenuto = service.leggeWikiTxt(sorgente);
         assertNotNull(ottenuto);
         assertTrue(textService.isValid(ottenuto));
-        assertTrue(ottenuto.equals(ottenutoRisultato.getResponse()));
+        ottenuto = ottenuto.length() > WIDTH ? ottenuto.substring(0, WIDTH) : ottenuto;
+        assertEquals(previsto, ottenuto);
 
         System.out.println(String.format("5 - Legge il sorgente di una pagina wiki"));
         System.out.println(String.format("La pagina wiki è: %s", ottenutoRisultato.getWikiTitle()));

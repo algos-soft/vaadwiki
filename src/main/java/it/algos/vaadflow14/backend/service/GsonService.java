@@ -1,5 +1,10 @@
 package it.algos.vaadflow14.backend.service;
 
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.*;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonParseException;
 import com.google.gson.*;
 import com.mongodb.*;
 import com.mongodb.client.MongoClient;
@@ -169,10 +174,13 @@ public class GsonService extends AbstractService {
 
         testoOut = text.setNoGraffe(testoOut);
         ini = testoOut.indexOf(GRAFFA_INI);
-        end = testoOut.indexOf(GRAFFA_END, ini) + 2; //graffa più virgola
+        end = testoOut.indexOf(GRAFFA_END, ini) + 1; //graffa
         ini = testoOut.lastIndexOf(VIRGOLA, ini) + 1;
-        testoOut = testoOut.substring(ini, end);
-        //        testoOut = text.setNoDoppiApici(testoOut);
+        try {
+            testoOut = testoOut.substring(ini, end);
+        } catch (Exception unErrore) {
+            int a = 87;
+        }
 
         return testoOut.trim();
     }
@@ -186,9 +194,12 @@ public class GsonService extends AbstractService {
      * @return contenuto della graffa COMPRESI gli estremi e il nome del paragrafo
      */
     public String eliminaGraffa(final String jsonString) {
-        String testoOut;
+        String testoOut = jsonString;
         String testoGraffa = estraeGraffa(jsonString);
-        testoOut = jsonString.replace(testoGraffa, VUOTA);
+
+        if (text.isValid(testoGraffa)) {
+            testoOut = jsonString.replace(VIRGOLA + testoGraffa, VUOTA);
+        }
 
         return testoOut.trim();
     }
@@ -221,7 +232,7 @@ public class GsonService extends AbstractService {
         testo = text.setNoGraffe(testo);
         while (countGraffe(testo) > 0) {
             contenuto = estraeGraffa(testo);
-            testo = testo.replace(contenuto, VUOTA);
+            testo = testo.replace(VIRGOLA + contenuto, VUOTA);
             contenuto = text.levaCoda(contenuto, VIRGOLA);
 
             if (lista.size() == 0) {
@@ -281,22 +292,124 @@ public class GsonService extends AbstractService {
         return stringaJSON;
     }
 
+
     /**
      * Costruzione della entity partendo dal valore della keyID <br>
      *
      * @param entityClazz della AEntity
-     * @param valueID     della entityBean
+     * @param keyId       chiave identificativa della entityBean
      *
      * @return new entity
      */
-    public AEntity crea(final Class entityClazz, final String valueID) {
+    @Deprecated
+    public AEntity creaOld(final Class entityClazz, final String keyId) {
         AEntity entityBean = null;
+        String keyPropertyName;
         collection = dataBase.getCollection(entityClazz.getSimpleName().toLowerCase());
+
         query = new BasicDBObject();
-        query.put("_id", valueID);
+        query.put("_id", keyId);
 
         doc = collection.find(query).first();
-        entityBean = this.crea(doc, entityClazz);
+
+        if (doc != null) {
+            entityBean = this.creaOld(doc, entityClazz);
+            String pippoz = mongoToString(entityClazz, keyId);
+        }
+        else {
+            keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+            if (text.isValid(keyPropertyName)) {
+                query = new BasicDBObject();
+                query.put(keyPropertyName, keyId);
+                doc = collection.find(query).first();
+                entityBean = this.creaOld(doc, entityClazz);
+            }
+        }
+
+        return entityBean;
+    }
+
+    /**
+     * Costruzione di un testo JSON partendo dal valore della keyID <br>
+     *
+     * @param entityClazz della entityBean
+     * @param keyId       chiave identificativa della entityBean
+     *
+     * @return stringa json
+     */
+    public String mongoToString(final Class entityClazz, final String keyId) {
+        String jsonString = VUOTA;
+        collection = dataBase.getCollection(entityClazz.getSimpleName().toLowerCase());
+        Gson gSon;
+        String keyPropertyName;
+
+        if (collection != null) {
+            query = new BasicDBObject();
+            query.put("_id", keyId);
+            doc = collection.find(query).first();
+        }
+
+        if (doc != null) {
+            gSon = new Gson();
+            jsonString = gSon.toJson(doc);
+        }
+        else {
+            keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+            if (text.isValid(keyPropertyName)) {
+                query = new BasicDBObject();
+                query.put(keyPropertyName, keyId);
+                doc = collection.find(query).first();
+                if (doc != null) {
+                    gSon = new Gson();
+                    jsonString = gSon.toJson(doc);
+                }
+            }
+        }
+
+        return jsonString;
+    }
+
+    /**
+     * Costruzione della entity partendo da un documento JSON <br>
+     * 1) Non ci sono campi linkati con @DBRef <br>
+     * 2) Ci sono campi linkati con @DBRef <br>
+     *
+     * @param jsonString  'documento' JSon della collezione mongo
+     * @param entityClazz della AEntity
+     *
+     * @return new entity
+     */
+    public AEntity stringToEntity(final Class entityClazz, final String jsonString) {
+        AEntity entityBean = null;
+        List<String> listaNoDbRefAndGraffe = estraeGraffe(jsonString);
+
+        if (entityClazz != null && doc != null) {
+
+            entityBean = creaNoDbRef(entityClazz, listaNoDbRefAndGraffe.get(0));
+
+            if (isEsistonoDBRef(doc)) {
+                entityBean = addAllDBRef(doc, entityBean);
+            }
+        }
+
+        return entityBean;
+    }
+
+
+    /**
+     * Costruzione della entity partendo dal valore della keyID <br>
+     *
+     * @param entityClazz della AEntity
+     * @param keyId       chiave identificativa della entityBean
+     *
+     * @return new entity
+     */
+    public AEntity creaId(final Class entityClazz, final String keyId) {
+        AEntity entityBean;
+
+        String jsonString = this.mongoToString(entityClazz, keyId);
+        jsonString = fixStringa(jsonString);
+        entityBean = this.stringToEntity(entityClazz, jsonString);
 
         return entityBean;
     }
@@ -311,7 +424,8 @@ public class GsonService extends AbstractService {
      *
      * @return new entity
      */
-    public AEntity crea(final Document doc, final Class entityClazz) {
+    @Deprecated
+    public AEntity creaOld(final Document doc, final Class entityClazz) {
         AEntity entityBean = null;
         String jsonString = this.fixDoc(doc);
         List<String> listaNoDbRefAndGraffe = estraeGraffe(jsonString);
@@ -355,7 +469,7 @@ public class GsonService extends AbstractService {
      *
      * @return new entityBean
      */
-    public AEntity creaNoDbRef(final Class entityClazz, final String jsonString) {
+    public AEntity creaNoDbRef(final Class entityClazz, String jsonString) {
         AEntity entityBean = null;
         Gson gSon;
         GsonBuilder builder = new GsonBuilder();
@@ -382,7 +496,7 @@ public class GsonService extends AbstractService {
             }
         });
         gSon = builder.create();
-
+        jsonString = jsonString.replace("_id", "id");
         try {
             entityBean = (AEntity) gSon.fromJson(jsonString, entityClazz);
         } catch (JsonSyntaxException unErrore) {
@@ -482,7 +596,7 @@ public class GsonService extends AbstractService {
         query.put("_id", valueID);
         document = collection.find(query).first();
 
-        entityBeanLinkata = crea(document, entityLinkClazz);
+        entityBeanLinkata = creaOld(document, entityLinkClazz);
 
         try {
             field.set(entityBeanConDBRef, entityBeanLinkata);
@@ -493,5 +607,27 @@ public class GsonService extends AbstractService {
         return entityBeanConDBRef;
     }
 
+    /**
+     * Costruzione del testo Json per il mongoDB <br>
+     * Aggiungo: -class
+     * Modifica: -id
+     *
+     * @param entityBean (nuova o esistente)
+     *
+     * @return testo Json
+     */
+    public String entityToString(final AEntity entityBean) {
+        String jsonString = VUOTA;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        try {
+            jsonString = mapper.writeValueAsString(entityBean);
+        } catch (JsonProcessingException unErrore) {
+            System.out.println(unErrore);
+        }
+
+        return jsonString;
+    }
 
 }

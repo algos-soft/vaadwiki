@@ -6,7 +6,6 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wiki.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 import java.util.*;
 
@@ -33,7 +32,7 @@ public class GeograficServiceTest extends ATest {
      * Classe principale di riferimento <br>
      * Gia 'costruita' nella superclasse <br>
      */
-    private AGeograficService service;
+    private GeograficService service;
 
 
     /**

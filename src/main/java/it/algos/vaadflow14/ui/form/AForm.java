@@ -113,7 +113,7 @@ public abstract class AForm extends VerticalLayout {
 
 
     @Autowired
-    public AMongoService mongo;
+    public MongoService mongo;
 
     /**
      * Mappa di tutti i fields del form <br>

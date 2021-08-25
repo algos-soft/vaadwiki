@@ -50,7 +50,7 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AMongoService<capture> extends AbstractService {
+public class MongoService<capture> extends AbstractService {
 
     public final static int STANDARD_MONGO_MAX_BYTES = 33554432;
 
@@ -91,7 +91,7 @@ public class AMongoService<capture> extends AbstractService {
      * Se ci sono DUE o più costruttori, va in errore <br>
      * Se ci sono DUE costruttori, di cui uno senza parametri, inietta quello senza parametri <br>
      */
-    public AMongoService(MongoOperations mongoOp) {
+    public MongoService(MongoOperations mongoOp) {
         this.mongoOp = mongoOp;
     }
 
@@ -653,7 +653,7 @@ public class AMongoService<capture> extends AbstractService {
         if (iterable != null) {
             listaEntities = new ArrayList<>();
             for (Document doc : iterable) {
-                entityBean = gSonService.crea(doc, entityClazz);
+                entityBean = gSonService.creaOld(doc, entityClazz);
                 listaEntities.add(entityBean);
             }
         }
@@ -881,7 +881,7 @@ public class AMongoService<capture> extends AbstractService {
                         }
                     }
                     else {
-                        entityBean = agSonService.crea(doc, entityClazz);
+                        entityBean = agSonService.creaOld(doc, entityClazz);
 
                         //                        if (jsonString.contains("AM")||jsonString.contains("PM")) {
                         //                            logger.error("Non legge la data", this.getClass(), "findSet");
@@ -968,7 +968,7 @@ public class AMongoService<capture> extends AbstractService {
                         }
                     }
                     else {
-                        entityBean = agSonService.crea(doc, entityClazz);
+                        entityBean = agSonService.creaOld(doc, entityClazz);
 
                         //                        if (jsonString.contains("AM")||jsonString.contains("PM")) {
                         //                            logger.error("Non legge la data", this.getClass(), "findSet");
@@ -1072,7 +1072,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return new entity
      */
     public AEntity crea(final Class entityClazz, final String valueID) {
-        return agSonService.crea(entityClazz, valueID);
+        return agSonService.creaOld(entityClazz, valueID);
     }
 
     /**
@@ -1123,7 +1123,7 @@ public class AMongoService<capture> extends AbstractService {
 
         if (iterable != null) {
             for (Document doc : iterable) {
-                entityBean = gSonService.crea(doc, entityClazz);
+                entityBean = gSonService.creaOld(doc, entityClazz);
                 break;
             }
         }
@@ -1132,17 +1132,14 @@ public class AMongoService<capture> extends AbstractService {
     }
 
 
-
-
-
-        /**
-         * Cerca una singola entity di una collection con una determinata chiave. <br>
-         *
-         * @param entityClazz corrispondente ad una collection sul database mongoDB
-         * @param keyId       chiave identificativa
-         *
-         * @return the founded entity
-         */
+    /**
+     * Cerca una singola entity di una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return the founded entity
+     */
     public AEntity findByIdOld(Class<? extends AEntity> entityClazz, String keyId) {
         AEntity entity = null;
         if (entityClazz == null) {
@@ -1156,6 +1153,20 @@ public class AMongoService<capture> extends AbstractService {
         return entity;
     }
 
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyPropertyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    public AEntity findByKey(final Class<? extends AEntity> entityClazz, final Serializable keyPropertyValue) {
+        String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+
+        return findByKey(entityClazz, keyPropertyName, keyPropertyValue);
+    }
 
     /**
      * Retrieves an entity by a keyProperty.
@@ -1186,7 +1197,7 @@ public class AMongoService<capture> extends AbstractService {
 
         if (iterable != null) {
             for (Document doc : iterable) {
-                entityBean = gSonService.crea(doc, entityClazz);
+                entityBean = gSonService.creaOld(doc, entityClazz);
                 break;
             }
         }
@@ -1644,12 +1655,64 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.save/)
      */
-    public AEntity save(AEntity entityBean) throws AMongoException {
+    public AEntity saveOld(AEntity entityBean) throws AMongoException {
         try {
+            //            return mongo.save(entityBean);
             return mongoOp.save(entityBean);
         } catch (Exception unErrore) {
             throw new AMongoException(unErrore, entityBean);
         }
+    }
+
+    /**
+     * Saves a given entity. <br>
+     * Use the returned instance for further operations <br>
+     * as the save operation might have changed the entity instance completely <br>
+     * If the document does not contain an _id field, then the save() method calls the insert() method.
+     * During the operation, the mongo shell will create an ObjectId and assign it to the _id field.
+     * If the document contains an _id field, then the save() method is equivalent to an update
+     * with the upsert option set to true and the query predicate on the _id field.
+     *
+     * @param entityBean to be saved
+     *
+     * @return the saved entity
+     *
+     * @see(https://docs.mongodb.com/manual/reference/method/db.collection.save/)
+     */
+    public AEntity save(AEntity entityBean) throws AMongoException {
+        Class<? extends AEntity> entityClazz = entityBean.getClass();
+        MongoCollection<Document> collection = getCollection(entityClazz);
+        AEntity entityBeanOld;
+        AEntity entityBeanSaved = null;
+        String jsonStringNew;
+        String jsonStringOld;
+        Document document = null;
+        Bson bson;
+
+        if (collection != null) {
+            jsonStringNew = gSonService.entityToString(entityBean);
+            jsonStringNew = jsonStringNew.replace("id", "_id");
+            jsonStringNew = jsonStringNew.replace("}", ",\"_class\":\"via\"}");
+            try {
+                document = Document.parse(jsonStringNew);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "save");
+            }
+        }
+
+        if (document == null) {
+            return entityBeanSaved;
+        }
+
+        if (isEsiste(entityBean)) {
+            entityBeanOld = findById(entityClazz, entityBean.getId());
+            jsonStringOld = gSonService.mongoToString(entityClazz, entityBean.getId());
+            bson = BsonDocument.parse(jsonStringOld);
+            collection.deleteOne(bson);
+        }
+        collection.insertOne(document);
+
+        return entityBeanSaved;
     }
 
     /**
@@ -1844,11 +1907,11 @@ public class AMongoService<capture> extends AbstractService {
         numBytes = (int) getParameter("internalQueryExecMaxBlockingSortBytes");
         value = text.format(numBytes);
 
-        if (numBytes == AMongoService.STANDARD_MONGO_MAX_BYTES) {
+        if (numBytes == MongoService.STANDARD_MONGO_MAX_BYTES) {
             logger.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore standard iniziale settato da mongoDB: " + value);
         }
         else {
-            if (numBytes == AMongoService.EXPECTED_ALGOS_MAX_BYTES) {
+            if (numBytes == MongoService.EXPECTED_ALGOS_MAX_BYTES) {
                 logger.info("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore richiesto da Algos: " + value);
             }
             else {

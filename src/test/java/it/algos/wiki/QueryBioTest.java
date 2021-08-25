@@ -21,10 +21,10 @@ import org.mockito.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("testAllValido")
+@Tag("testAllValidoWiki")
 @DisplayName("Test QueryBio")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class QueryBioTest extends ATest {
+public class QueryBioTest extends WTest {
 
     public static final String PAGINA_ESISTENTE_MAIUSCOLA = "Pippoz";
 
@@ -45,10 +45,9 @@ public class QueryBioTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    QueryBio istanza;
-
+    private QueryBio istanza;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -59,18 +58,14 @@ public class QueryBioTest extends ATest {
     void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(istanza);
-        Assertions.assertNotNull(istanza);
-//        istanza.array = array;
-//        istanza.text = text;
-//        istanza.wikiApi = wikiApi;
+        //--reindirizzo l'istanza della superclasse
+        istanza = queryBio;
 
-        //        MockitoAnnotations.initMocks(wikiApi);
-        //        Assertions.assertNotNull(wikiApi);
-        //        wikiApi.text = text;
-        //        wikiApi.web = web;
-        //        wikiApi.jSonService = jSonService;
+        //--titolo della query
+        queryType = istanza.getClass().getSimpleName();
+
+        //--abilita il bot
+        queryLogin.urlRequest();
     }
 
 

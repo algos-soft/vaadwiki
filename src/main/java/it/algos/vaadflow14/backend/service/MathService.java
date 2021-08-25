@@ -1,10 +1,10 @@
 package it.algos.vaadflow14.backend.service;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.*;
 
-import java.text.DecimalFormat;
+import java.text.*;
 
 /**
  * Project vaadflow
@@ -133,6 +133,13 @@ public class MathService extends AbstractService {
      */
     public boolean divisibileEsatto(int dividendo, int divisore) {
         return dividendo % divisore == 0;
+    }
+
+    public int random() {
+        Long lungo = System.currentTimeMillis();
+        String stringa = lungo.toString();
+        String stringaTre = stringa.substring(stringa.length() - 3);
+        return Integer.parseInt(stringaTre);
     }
 
 }

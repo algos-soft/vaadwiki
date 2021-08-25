@@ -3,7 +3,7 @@ package it.algos.vaadflow14.backend.data;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.service.AnnotationService;
 import it.algos.vaadflow14.backend.service.ArrayService;
-import it.algos.vaadflow14.backend.service.AMongoService;
+import it.algos.vaadflow14.backend.service.MongoService;
 import it.algos.vaadflow14.backend.service.TextService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public abstract class ADataService {
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
-    protected AMongoService mongo;
+    protected MongoService mongo;
 
     /**
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation

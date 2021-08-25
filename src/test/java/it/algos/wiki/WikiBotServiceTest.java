@@ -41,7 +41,7 @@ public class WikiBotServiceTest extends WTest {
 
     public static final String CAT_1935 = "Nati nel 1935";
 
-    public static final int TOT_1935 = 1993;
+    public static final int TOT_1935 = 1994;
 
     public static final String CAT_1713 = "Nati nel 1713";
 

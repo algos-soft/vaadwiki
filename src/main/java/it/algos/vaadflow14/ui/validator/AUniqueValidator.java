@@ -7,7 +7,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.service.AMongoService;
+import it.algos.vaadflow14.backend.service.MongoService;
 import it.algos.vaadflow14.backend.service.TextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -44,7 +44,7 @@ public class AUniqueValidator implements Validator {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AMongoService mongo;
+    public MongoService mongo;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>

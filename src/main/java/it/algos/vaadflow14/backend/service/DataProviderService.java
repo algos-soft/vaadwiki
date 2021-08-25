@@ -44,7 +44,7 @@ public class DataProviderService extends AbstractService {
 
 
     @Autowired
-    private AMongoService mongo;
+    private MongoService mongo;
 
 
     public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz) {

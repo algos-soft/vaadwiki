@@ -81,7 +81,7 @@ public class AGrid {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AMongoService mongo;
+    public MongoService mongo;
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>

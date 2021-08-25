@@ -189,9 +189,9 @@ public abstract class WTest extends ATest {
         elaboraService.annoService = annoService;
         giornoService.annotation = annotationService;
         giornoService.text = textService;
-        giornoService.mongo = mongoService;
+//        giornoService.mongo = mongoService;
         annoService.text = textService;
-        annoService.mongo = mongoService;
+//        annoService.mongo = mongoService;
         annoService.annotation = annotationService;
 
         queryAssert.botLogin = botLogin;
@@ -227,7 +227,7 @@ public abstract class WTest extends ATest {
         bioService.annotation = annotationService;
         bioService.reflection = reflectionService;
         bioService.elaboraService = elaboraService;
-        bioService.mongo = mongoService;
+//        bioService.mongo = mongoService;
         bioService.logger = loggerService;
         bioService.date = dateService;
 
