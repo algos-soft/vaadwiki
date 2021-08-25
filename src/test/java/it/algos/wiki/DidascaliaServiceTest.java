@@ -2,18 +2,13 @@ package it.algos.wiki;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static it.algos.vaadflow14.backend.enumeration.AETypeData.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
-import it.algos.vaadwiki.backend.didascalia.*;
-import static it.algos.vaadwiki.backend.enumeration.EDidascalia.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
-import it.algos.vaadwiki.wiki.query.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
-import org.mockito.*;
 
 /**
  * Project vaadwiki
@@ -29,7 +24,7 @@ import org.mockito.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValidoWiki")
-@DisplayName("Didascalia - Elaborazione delle didascalie.")
+@DisplayName("DidascaliaService - Elaborazione delle didascalie.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DidascaliaServiceTest extends WTest {
 

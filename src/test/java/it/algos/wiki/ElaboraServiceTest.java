@@ -23,7 +23,7 @@ import org.junit.jupiter.params.provider.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("ElaboraServiceTest")
+@Tag("testAllValidoWiki")
 @DisplayName("ElaboraService - Elaborazione delle biografie.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ElaboraServiceTest extends WTest {
@@ -159,7 +159,9 @@ public class ElaboraServiceTest extends WTest {
         System.out.println(ottenutoAnno);
     }
 
-    private void printNome(final String grezzo, final String elaborato) {
+
+
+        private void printNome(final String grezzo, final String elaborato) {
         System.out.println(VUOTA);
         System.out.println(String.format("'%s' -> [%s]", grezzo, elaborato));
     }

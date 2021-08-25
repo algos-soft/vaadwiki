@@ -142,10 +142,9 @@ public class ElaboraService extends AbstractService {
 
 
     //--Inserisce i valori nella entity Bio
-    public void setValue(Bio bio, HashMap<String, String> mappa) {
+    public void setValue(Bio bio, HashMap<String, String> mappa) throws Exception {
         String value;
 
-        try {
             if (bio != null) {
 
                 //                // patch per i luoghi di nascita e morte
@@ -163,14 +162,12 @@ public class ElaboraService extends AbstractService {
                         try {
                             par.setValue(bio, value);
                         } catch (Exception unErrore) {
-                            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+                           throw new Exception(String.format("ParBio %s con value=%s - Errore '%s' ",par,value,unErrore.toString()));
                         }
+
                     }
                 }
             }
-        } catch (Exception unErrore) {
-            logger.error(unErrore.toString());
-        }
     }
 
     /**

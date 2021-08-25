@@ -189,10 +189,12 @@ public abstract class WTest extends ATest {
         elaboraService.annoService = annoService;
         giornoService.annotation = annotationService;
         giornoService.text = textService;
-//        giornoService.mongo = mongoService;
+        giornoService.mongo = mongoService;
         annoService.text = textService;
-//        annoService.mongo = mongoService;
+        annoService.mongo = mongoService;
         annoService.annotation = annotationService;
+        attivitaService.mongo = mongoService;
+        nazionalitaService.mongo = mongoService;
 
         queryAssert.botLogin = botLogin;
 
@@ -227,7 +229,7 @@ public abstract class WTest extends ATest {
         bioService.annotation = annotationService;
         bioService.reflection = reflectionService;
         bioService.elaboraService = elaboraService;
-//        bioService.mongo = mongoService;
+        bioService.mongo = mongoService;
         bioService.logger = loggerService;
         bioService.date = dateService;
 
@@ -236,8 +238,17 @@ public abstract class WTest extends ATest {
 
         elaboraService.bioUtility = bioUtilityService;
         elaboraService.logger = loggerService;
+        elaboraService.attivitaService = attivitaService;
+        elaboraService.nazionalitaService = nazionalitaService;
 
         bioUtilityService.text = textService;
+
+        for (ParBio par : ParBio.values()) {
+            par.setText(textService);
+            par.setWikiBot(wikiBotService);
+            par.setElabora(elaboraService);
+        }
+
     }
 
 
