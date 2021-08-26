@@ -13,6 +13,10 @@ public class AlgosException extends Exception {
 
     private AEntity entityBean;
 
+    public AlgosException(String message) {
+        super(message);
+    }
+
     public AlgosException(Throwable cause, AEntity entityBean) {
         super(cause);
         this.entityBean = entityBean;

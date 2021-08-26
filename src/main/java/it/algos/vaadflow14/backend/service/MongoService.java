@@ -1111,21 +1111,27 @@ public class MongoService<capture> extends AbstractService {
         AEntity entityBean = null;
         MongoCollection<Document> collection = getCollection(entityClazz);
         FindIterable<Document> iterable = null;
+        Document doc = null;
 
         if (entityClazz == null) {
             return null;
         }
 
-        if (collection != null) {
-            Bson condition = new Document("_id", keyId);
-            iterable = getCollection(entityClazz).find(condition);
+        if (mongoOp != null) {
+            entityBean = findByIdOld(entityClazz, keyId);
+            return entityBean;
         }
 
+        if (collection != null) {
+            Bson condition = new Document("_id", keyId);
+            iterable = collection.find(condition);
+        }
         if (iterable != null) {
-            for (Document doc : iterable) {
-                entityBean = gSonService.creaOld(doc, entityClazz);
-                break;
-            }
+            doc = iterable.first();
+        }
+
+        if (doc != null) {
+            entityBean = gSonService.creaOld(doc, entityClazz);
         }
 
         return entityBean;

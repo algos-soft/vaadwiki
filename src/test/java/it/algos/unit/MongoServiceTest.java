@@ -79,10 +79,8 @@ public class MongoServiceTest extends ATest {
         System.out.println("1- Stato del database");
         MongoDatabase dataBase;
 
-        previsto = DATA_BASE_NAME;
         ottenuto = service.getDatabaseName();
         assertTrue(textService.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
         System.out.println(VUOTA);
         System.out.println(String.format("Nome del dataBase corrente: [%s]", ottenuto));
 
@@ -140,7 +138,15 @@ public class MongoServiceTest extends ATest {
     void findById() {
         System.out.println("3 - Singola entity");
 
-        sorgente = "piazza";
+        sorgente = "104";
+        clazz = Anno.class;
+        entityBean = service.findById(clazz, sorgente);
+        assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Recupero di un bean di classe %s", clazz.getSimpleName()));
+        System.out.println(entityBean);
+
+        sorgente = "piazzale";
         clazz = Via.class;
         entityBean = service.findById(clazz, sorgente);
         assertNotNull(entityBean);

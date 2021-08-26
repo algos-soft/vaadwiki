@@ -2,6 +2,7 @@ package it.algos.vaadwiki.backend.service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -569,7 +570,7 @@ public class WikiBotService extends AbstractService {
      *
      * @return mappa con i valori 'elaborati'
      */
-    public LinkedHashMap<String, String> getMappaElaborata(LinkedHashMap<String, String> mappaTroncata) {
+    public LinkedHashMap<String, String> getMappaElaborata(LinkedHashMap<String, String> mappaTroncata) throws AlgosException {
         LinkedHashMap<String, String> mappa = null;
         ParBio par;
         String key;

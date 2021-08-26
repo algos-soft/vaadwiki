@@ -64,7 +64,6 @@ public class ClassService extends AbstractService {
     }
 
 
-
     /**
      * Controlla che esiste una classe xxxLogicList associata alla Entity inviata  <br>
      *
@@ -452,6 +451,18 @@ public class ClassService extends AbstractService {
      */
     public boolean isResetEntity(final Class genericClazz) {
         return genericClazz != null && AREntity.class.isAssignableFrom(genericClazz);
+    }
+
+    public String getProjectName() {
+        String projectName = VUOTA;
+        String pathCurrent = System.getProperty("user.dir") + SLASH;
+        projectName = fileService.estraeDirectoryFinale(pathCurrent);
+
+        if (projectName.endsWith(SLASH)) {
+            projectName = text.levaCoda(projectName, SLASH);
+        }
+
+        return projectName;
     }
 
 }

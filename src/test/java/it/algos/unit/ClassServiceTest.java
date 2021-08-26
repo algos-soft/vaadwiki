@@ -47,7 +47,7 @@ public class ClassServiceTest extends ATest {
 
 
     /**
-     * Qui passa ad ogni test delle sottoclassi <br>
+     * Qui passa a ogni test delle sottoclassi <br>
      * Invocare PRIMA il metodo setUp() della superclasse <br>
      * Si possono aggiungere regolazioni specifiche <br>
      */
@@ -143,6 +143,14 @@ public class ClassServiceTest extends ATest {
         System.out.println(VUOTA);
     }
 
+    @Test
+    @Order(5)
+    @DisplayName("5 - getProjectName")
+    void getProjectName() {
+        ottenuto = service.getProjectName();
+        assertTrue(textService.isValid(ottenuto));
+        System.out.println(String.format("Nome del progetto corrente: %s", ottenuto));
+    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>

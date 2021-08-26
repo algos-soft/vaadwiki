@@ -2,6 +2,7 @@ package it.algos.vaadwiki.backend.service;
 
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import org.springframework.beans.factory.annotation.*;
@@ -308,15 +309,15 @@ public enum ParBio {
     attivita("Attività", "attivita", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws Exception {
-            bio.attivita = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(value);
+            bio.attivita = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio,value);
         }
 
-        public String fixValoreGrezzo(String valoreGrezzo) {
-            return elabora.fixAttivitaValida(valoreGrezzo);
+        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
+            return elabora.fixAttivitaValida(bio,valoreGrezzo);
         }
 
-        public String fixParametro(String valoreGrezzo) {
-            return elabora.fixAttivitaValida(valoreGrezzo);
+        public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
+            return elabora.fixAttivitaValida(bio,valoreGrezzo);
         }
 
         @Override
@@ -328,15 +329,15 @@ public enum ParBio {
     attivita2("Attività2", "attivita2", true, false, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws Exception {
-            bio.attivita2 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(value);
+            bio.attivita2 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio,value);
         }
 
-        public String fixValoreGrezzo(String valoreGrezzo) {
-            return elabora.fixAttivitaValida(valoreGrezzo);
+        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
+            return elabora.fixAttivitaValida(bio,valoreGrezzo);
         }
 
-        public String fixParametro(String valoreGrezzo) {
-            return elabora.fixAttivitaValida(valoreGrezzo);
+        public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
+            return elabora.fixAttivitaValida(bio,valoreGrezzo);
         }
 
         @Override
@@ -348,15 +349,15 @@ public enum ParBio {
     attivita3("Attività3", "attivita3", true, false, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws Exception {
-            bio.attivita3 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(value);
+            bio.attivita3 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio,value);
         }
 
-        public String fixValoreGrezzo(String valoreGrezzo) {
-            return elabora.fixAttivitaValida(valoreGrezzo);
+        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
+            return elabora.fixAttivitaValida(bio,valoreGrezzo);
         }
 
-        public String fixParametro(String valoreGrezzo) {
-            return elabora.fixAttivitaValida(valoreGrezzo);
+        public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
+            return elabora.fixAttivitaValida(bio,valoreGrezzo);
         }
 
         @Override
@@ -592,7 +593,7 @@ public enum ParBio {
      *
      * @return valore finale valido del parametro
      */
-    public String fixValoreGrezzo(final String valoreGrezzo) {
+    public String fixValoreGrezzo(final String valoreGrezzo) throws AlgosException {
         return wikiBot.fixValoreGrezzo(valoreGrezzo);
     }
 
@@ -622,7 +623,7 @@ public enum ParBio {
      *
      * @return valore valido troncato ed elaborato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
      */
-    public String regolaValoreInizialeValido(String valorePropertyTmplBioServer) {
+    public String regolaValoreInizialeValido(String valorePropertyTmplBioServer) throws AlgosException {
         String valoreGrezzo = estraeValoreInizialeGrezzo(valorePropertyTmplBioServer);
         return fixValoreGrezzo(valoreGrezzo);
     }

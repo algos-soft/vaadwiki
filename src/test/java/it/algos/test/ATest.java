@@ -98,7 +98,7 @@ public abstract class ATest {
 
     protected static final String PAGINA_REDIRECT = "Regno di Napoli (1805-1815)";
 
-    private static final String DATA_BASE_NAME = "vaadflow14";
+    protected static final String DATA_BASE_NAME = "vaadflow14";
 
     protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
 
@@ -418,8 +418,6 @@ public abstract class ATest {
 
         MockitoAnnotations.initMocks(mongoService);
         Assertions.assertNotNull(mongoService);
-        mongoService.text = textService;
-        mongoService.fixProperties(DATA_BASE_NAME);
 
         MockitoAnnotations.initMocks(webService);
         Assertions.assertNotNull(webService);
@@ -438,8 +436,6 @@ public abstract class ATest {
 
         MockitoAnnotations.initMocks(gSonService);
         Assertions.assertNotNull(gSonService);
-        gSonService.text = textService;
-        gSonService.fixProperties(DATA_BASE_NAME);
 
         MockitoAnnotations.initMocks(utilityService);
         Assertions.assertNotNull(utilityService);
@@ -521,6 +517,9 @@ public abstract class ATest {
         enumerationService.text = textService;
         enumerationService.array = arrayService;
         dateService.math = mathService;
+
+        mongoService.fixProperties(classService.getProjectName());
+        gSonService.fixProperties(classService.getProjectName());
     }
 
 

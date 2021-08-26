@@ -43,6 +43,7 @@ public abstract class WTest extends ATest {
 
     protected static final String PAGINA_REDIRECT = "Regno di Napoli (1805-1815)";
 
+    protected static final String DATA_BASE_NAME_WIKI = "vaadwiki";
 
     protected String didascalia;
 

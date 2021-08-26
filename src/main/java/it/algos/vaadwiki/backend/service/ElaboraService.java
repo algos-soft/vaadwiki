@@ -132,6 +132,8 @@ public class ElaboraService extends AbstractService {
         if (mappa != null) {
             try {
                 setValue(bio, mappa);
+            } catch (AlgosException unErrore) {
+                logger.error(unErrore, this.getClass(), "esegue");
             } catch (Exception unErrore) {
                 logger.error(unErrore, this.getClass(), "esegue");
             }
@@ -145,29 +147,24 @@ public class ElaboraService extends AbstractService {
     public void setValue(Bio bio, HashMap<String, String> mappa) throws Exception {
         String value;
 
-            if (bio != null) {
+        if (bio != null) {
 
-                //                // patch per i luoghi di nascita e morte
-                //                // se è pieno il parametro link, lo usa
-                //                if (text.isValid(mappa.get(ParBio.luogoNascitaLink.getTag()))) {
-                //                    mappa.put(ParBio.luogoNascita.getTag(), mappa.get(ParBio.luogoNascitaLink.getTag()));
-                //                }// end of if cycle
-                //                if (text.isValid(mappa.get(ParBio.luogoMorteLink.getTag()))) {
-                //                    mappa.put(ParBio.luogoMorte.getTag(), mappa.get(ParBio.luogoMorteLink.getTag()));
-                //                }// end of if cycle
+            //                // patch per i luoghi di nascita e morte
+            //                // se è pieno il parametro link, lo usa
+            //                if (text.isValid(mappa.get(ParBio.luogoNascitaLink.getTag()))) {
+            //                    mappa.put(ParBio.luogoNascita.getTag(), mappa.get(ParBio.luogoNascitaLink.getTag()));
+            //                }// end of if cycle
+            //                if (text.isValid(mappa.get(ParBio.luogoMorteLink.getTag()))) {
+            //                    mappa.put(ParBio.luogoMorte.getTag(), mappa.get(ParBio.luogoMorteLink.getTag()));
+            //                }// end of if cycle
 
-                for (ParBio par : ParBio.values()) {
-                    value = mappa.get(par.getTag());
-                    if (value != null) {
-                        try {
-                            par.setValue(bio, value);
-                        } catch (Exception unErrore) {
-                           throw new Exception(String.format("ParBio %s con value=%s - Errore '%s' ",par,value,unErrore.toString()));
-                        }
-
-                    }
+            for (ParBio par : ParBio.values()) {
+                value = mappa.get(par.getTag());
+                if (value != null) {
+                    par.setValue(bio, value);
                 }
             }
+        }
     }
 
     /**
@@ -301,12 +298,12 @@ public class ElaboraService extends AbstractService {
      *
      * @return istanza di attività valida
      */
-    public Attivita fixAttivitaLink(String testoGrezzo) {
+    public Attivita fixAttivitaLink(Bio bio, String testoGrezzo) throws AlgosException {
         Attivita attivita = null;
         String testoValido = VUOTA;
 
         if (text.isValid(testoGrezzo)) {
-            testoValido = fixAttivitaValida(testoGrezzo);
+            testoValido = fixAttivitaValida(bio, testoGrezzo);
         }
 
         if (text.isValid(testoValido)) {
@@ -579,21 +576,20 @@ public class ElaboraService extends AbstractService {
      *
      * @return testo/parametro regolato in uscita
      */
-    public String fixAttivitaValida(String testoGrezzo) {
+    public String fixAttivitaValida(Bio bio, String testoGrezzo) throws AlgosException {
         String testoValido = fixValoreGrezzo(testoGrezzo).toLowerCase();
+        String message = VUOTA;
+
         //        String tag1 = "ex ";
         //        String tag2 = "ex-";
-
-        if (text.isEmpty(testoValido)) {
-            return VUOTA;
-        }
 
         if (text.isValid(testoValido)) {
             if (attivitaService.isEsiste(testoValido)) {
                 return testoValido.trim();
             }
             else {
-                return VUOTA;
+                message = String.format("Nella bio di %s, l'attività %s non è stata trovata", bio.wikiTitle, testoValido);
+                throw new AlgosException(message);
             }
         }
         else {
