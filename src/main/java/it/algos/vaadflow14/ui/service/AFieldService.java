@@ -439,7 +439,7 @@ public class AFieldService extends AbstractService {
             }
         }
         else {
-            items = mongo.findAll(comboClazz);
+            items = ((MongoService) mongo).findAll(comboClazz);//@todo da controllare
             combo = new ComboBox<>();
             if (array.isEmpty(items)) {
                 items = new ArrayList();
@@ -497,7 +497,7 @@ public class AFieldService extends AbstractService {
 
         linkClazz = annotation.getLinkClass(reflectionJavaField);
         linkProperty = annotation.getLinkProperty(reflectionJavaField);
-        items = mongo.findAll(linkClazz, linkProperty, entityBean);
+        items = ((MongoService) mongo).findAll(linkClazz, linkProperty, entityBean);//@todo da controllare
         gridProperties = annotation.getLinkProperties(reflectionJavaField);
         caption = annotation.getFormFieldName(reflectionJavaField);
         caption = AEPreferenza.usaFormFieldMaiuscola.is() ? text.primaMaiuscola(caption) : caption;

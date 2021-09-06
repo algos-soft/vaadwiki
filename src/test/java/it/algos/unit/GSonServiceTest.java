@@ -3,6 +3,7 @@ package it.algos.unit;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
@@ -198,9 +199,9 @@ public class GsonServiceTest extends ATest {
 
     @Test
     @Order(7)
-    @DisplayName("7 - creazione di un entityBean da un testo jSon")
+    @DisplayName("7 - crea una entityBean da un testo jSon di mongoDB")
     void crea() {
-        System.out.println("7 - creazione di un entityBean da un testo jSon");
+        System.out.println("7 - crea una entityBean da un testo jSon di mongoDB");
         String mongoToString ;
         String entityToString ;
         AEntity entityFromMongoString;
@@ -208,7 +209,10 @@ public class GsonServiceTest extends ATest {
 
         sorgente = "piazza";
         clazz = Via.class;
-        entityBean = mongoService.findById(clazz,sorgente);
+        try {
+            entityBean = mongoService.findById(clazz,sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNotNull(entityBean);
 
         mongoToString = service.mongoToString(clazz, sorgente);
@@ -220,9 +224,6 @@ public class GsonServiceTest extends ATest {
         assertNotNull(entityFromMongoString);
         assertNotNull(entityFromEntityString);
 
-        //        System.out.println(VUOTA);
-//        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
-//        System.out.println(entityBean);
 
         sorgente = "5gennaio";
         clazz = Giorno.class;
@@ -244,7 +245,10 @@ public class GsonServiceTest extends ATest {
 
         sorgente = "5gennaio";
         clazz = Giorno.class;
-        entityBean = mongoService.findById(clazz, sorgente);
+        try {
+            entityBean = mongoService.findById(clazz, sorgente);
+        } catch (Exception unErrore) {
+        }
         ottenuto = service.entityToString(entityBean);
 
         entityBean = service.stringToEntity(clazz, ottenuto);
@@ -329,7 +333,10 @@ public class GsonServiceTest extends ATest {
         sorgente = "piazzale";
         clazz = Via.class;
         previsto = "{\"_id\":\"piazzale\",\"ordine\":6,\"nome\":\"piazzale\",\"reset\":true,\"_class\":\"via\"}";
-        entityBean = mongoService.findById(clazz, sorgente);
+        try {
+            entityBean = mongoService.findById(clazz, sorgente);
+        } catch (Exception unErrore) {
+        }
         ottenuto = service.entityToString(entityBean);
         assertTrue(textService.isValid(ottenuto));
         //        assertEquals(previsto, ottenuto);
@@ -338,7 +345,10 @@ public class GsonServiceTest extends ATest {
         sorgente = "8marzo";
         clazz = Giorno.class;
         previsto = "{\"_id\":\"8marzo\",\"ordine\":68,\"titolo\":\"8 marzo\",\"mese\":{\"id\":\"marzo\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
-        entityBean = mongoService.findById(clazz, sorgente);
+        try {
+            entityBean = mongoService.findById(clazz, sorgente);
+        } catch (Exception unErrore) {
+        }
         ottenuto = service.entityToString(entityBean);
         assertTrue(textService.isValid(ottenuto));
         //        assertEquals(previsto, ottenuto);
@@ -347,7 +357,10 @@ public class GsonServiceTest extends ATest {
         sorgente = "23 ottobre";
         clazz = Giorno.class;
         previsto = "{\"_id\":\"23ottobre\",\"ordine\":297,\"titolo\":\"23 ottobre\",\"mese\":{\"id\":\"ottobre\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
-        entityBean = mongoService.findByKey(clazz, sorgente);
+        try {
+            entityBean = mongoService.findByKey(clazz, sorgente);
+        } catch (AMongoException unErrore) {
+        }
         ottenuto = service.entityToString(entityBean);
         assertTrue(textService.isValid(ottenuto));
         //        assertEquals(previsto, ottenuto);
@@ -370,7 +383,10 @@ public class GsonServiceTest extends ATest {
 
         System.out.println(VUOTA);
         System.out.println("11 - From entityBean to string ");
-        entityBean = mongoService.findById(clazz, sorgente);
+        try {
+            entityBean = mongoService.findById(clazz, sorgente);
+        } catch (Exception unErrore) {
+        }
         ottenuto = service.entityToString(entityBean);
         System.out.println(ottenuto);
         System.out.println("11 - Crea una entity col jsonString appena ottenuto");

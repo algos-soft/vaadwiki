@@ -344,14 +344,16 @@ public class ReflectionService extends AbstractService {
      * @return the string value
      */
     public String getPropertyValueStr(final AEntity entityBean, final String publicFieldName) {
-        String value;
+        String value = VUOTA;
         Object objValue = getPropertyValue(entityBean, publicFieldName);
 
-        if (objValue instanceof String) {
-            value = (String) objValue;
-        }
-        else {
-            value = objValue.toString();
+        if (objValue != null) {
+            if (objValue instanceof String) {
+                value = (String) objValue;
+            }
+            else {
+                value = objValue.toString();
+            }
         }
 
         return value;

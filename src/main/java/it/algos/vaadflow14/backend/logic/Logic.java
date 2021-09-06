@@ -64,6 +64,7 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * The entityService obbligatorio, singleton di tipo xxxService <br>
      * The entityBean obbligatorio, istanza di entityClazz per il Form <br>
      */
+    @Override
     protected void fixProperty() {
         super.fixProperty();
 
@@ -118,14 +119,6 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      *
      */
     protected void fixEntityBean() {
-        String keyID = routeParameter.get(KEY_BEAN_ENTITY) != null ? routeParameter.get(KEY_BEAN_ENTITY) : VUOTA;
-
-        if (text.isEmpty(keyID) || keyID.equals(KEY_NULL)) {
-            entityBean = entityService.newEntity();
-        }
-        else {
-            entityBean = entityService.findById(keyID);
-        }
     }
 
 

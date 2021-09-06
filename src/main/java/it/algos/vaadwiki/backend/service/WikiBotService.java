@@ -109,12 +109,26 @@ public class WikiBotService extends AbstractService {
     /**
      * Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb <br>
      */
-    protected Predicate<MiniWrap> checkNuovi = wrap -> mongo.isNotEsiste(Bio.class, wrap.getPageid());
+    protected Predicate<MiniWrap> checkNuovi = wrap -> {
+        try {
+            return ((MongoService) mongo).isNotEsiste(Bio.class, wrap.getPageid());
+        } catch (AMongoException unErrore) {
+            logger.warn(unErrore, this.getClass(), "checkNuovi");
+        }
+        return false;
+    };
 
     /**
      * Vengono usati quelli che hanno un miniWrap.pageid senza corrispondente bio.pageid nel mongoDb <br>
      */
-    protected Predicate<MiniWrap> checkEsistenti = wrap -> mongo.isEsiste(Bio.class, wrap.getPageid());
+    protected Predicate<MiniWrap> checkEsistenti = wrap -> {
+        try {
+            return ((MongoService) mongo).isEsiste(Bio.class, wrap.getPageid());
+        } catch (AMongoException unErrore) {
+            logger.warn(unErrore, this.getClass(), "checkEsistenti");
+        }
+        return false;
+    };
 
     /**
      * Vengono usati quelli che hanno miniWrap.lastModifica maggiore di bio.lastModifica <br>
@@ -122,7 +136,12 @@ public class WikiBotService extends AbstractService {
     protected Predicate<MiniWrap> checkModificati = wrap -> {
         LocalDateTime wrapTime = wrap.getLastModifica();
         String key = wrap.getPageid() + VUOTA;
-        Bio bio = (Bio) mongo.findById(Bio.class, key);
+        Bio bio = null;
+        try {
+            bio = (Bio) mongo.findById(Bio.class, key);
+        } catch (AMongoException unErrore) {
+            logger.warn(unErrore, this.getClass(), "checkModificati");
+        }
         LocalDateTime mongoTime = bio != null ? bio.getLastMongo() : MONGO_TIME_ORIGIN;
 
         return wrapTime.isAfter(mongoTime);

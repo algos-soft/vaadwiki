@@ -115,7 +115,7 @@ public abstract class AbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public MongoService mongo;
+    public AIMongoService mongo;
 
 
     /**

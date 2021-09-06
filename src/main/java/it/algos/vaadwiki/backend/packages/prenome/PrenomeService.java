@@ -1,18 +1,19 @@
 package it.algos.vaadwiki.backend.packages.prenome;
 
-import it.algos.vaadflow14.backend.annotation.AIScript;
+import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
 
 import java.io.*;
-import java.time.*;
 
 /**
  * Project: vaadwiki <br>
@@ -66,7 +67,7 @@ public class PrenomeService extends WikiService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Prenome crea(final String code) {
-        return (Prenome) mongo.insert(newEntity(code));
+        return (Prenome) ((MongoService) mongo).insert(newEntity(code));
     }
 
 
@@ -97,7 +98,7 @@ public class PrenomeService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Prenome findById(final String keyID) {
+    public Prenome findById(final String keyID) throws AMongoException {
         return (Prenome) super.findById(keyID);
     }
 
@@ -113,7 +114,7 @@ public class PrenomeService extends WikiService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Prenome findByProperty(String propertyName, Serializable propertyValue) {
+    public Prenome findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return (Prenome) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -127,7 +128,7 @@ public class PrenomeService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Prenome findByKey(final Serializable keyValue) {
+    public Prenome findByKey(final Serializable keyValue) throws AMongoException {
         return (Prenome) super.findByKey(keyValue);
     }
 
@@ -177,8 +178,9 @@ public class PrenomeService extends WikiService {
 
                 this.crea(nome);
             }
-        } else {
-            logger.error( "downloadModulo - Qualcosa non ha funzionato");
+        }
+        else {
+            logger.error("downloadModulo - Qualcosa non ha funzionato");
         }
 
         super.fixDataDownload();

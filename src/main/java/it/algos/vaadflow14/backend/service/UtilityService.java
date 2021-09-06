@@ -5,6 +5,7 @@ import com.vaadin.flow.data.provider.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.*;
@@ -272,7 +273,11 @@ public class UtilityService extends AbstractService {
 
         if (initialValue == null && comboClazz != null) {
             serviceClazz = classService.getServiceFromEntityClazz(comboClazz);
-            initialValue = serviceClazz.findByKey(textInitialValue);
+            try {
+                initialValue = serviceClazz.findByKey(textInitialValue);
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "creaComboBox");
+            }
         }
 
         if (initialValue != null) {

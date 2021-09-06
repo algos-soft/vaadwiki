@@ -3,7 +3,8 @@ package it.algos.vaadflow14.backend.packages.company;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -138,7 +139,7 @@ public class CompanyService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Company findById(final String keyID) {
+    public Company findById(final String keyID) throws AMongoException {
         return (Company) super.findById(keyID);
     }
 
@@ -152,8 +153,28 @@ public class CompanyService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Company findByKey(final String keyValue) {
+    public Company findByKey(final String keyValue) throws AMongoException {
         return (Company) super.findByKey(keyValue);
+    }
+
+    /**
+     * Crea e registra una entityBean <br>
+     * A livello UI i fields sono già stati verificati <br>
+     * Prevede un punto di controllo PRIMA della registrazione,
+     * per eventuale congruità dei parametri o per valori particolari in base alla BusinessLogic <br>
+     * Esegue la registrazione sul database mongoDB con un controllo finale di congruità <br>
+     * Prevede un punto di controllo DOPO la registrazione,
+     * per eventuali side effects su altre collections collegate o dipendenti <br>
+     *
+     * @param entityBeanDaRegistrare (nuova o esistente)
+     *
+     * @return la entityBean appena registrata, null se non registrata
+     *
+     * @throws
+     */
+    @Override
+    public Company save(AEntity entityBeanDaRegistrare) throws AMongoException {
+        return (Company) super.save(entityBeanDaRegistrare);
     }
 
 
@@ -177,7 +198,7 @@ public class CompanyService extends AService {
      */
     //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result=null;
+        AIResult result = null;
         //        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 
@@ -196,7 +217,14 @@ public class CompanyService extends AService {
      * Recupera dal db mongo la company (se esiste)
      */
     public Company getAlgos() {
-        return findById(FlowCost.COMPANY_ALGOS);
+        Company company = null;
+
+        try {
+            company = findById(FlowCost.COMPANY_ALGOS);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getDemo");
+        }
+        return company;
     }
 
 
@@ -204,7 +232,14 @@ public class CompanyService extends AService {
      * Recupera dal db mongo la company (se esiste)
      */
     public Company getDemo() {
-        return findById(FlowCost.COMPANY_DEMO);
+        Company company = null;
+
+        try {
+            company = findById(FlowCost.COMPANY_DEMO);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getDemo");
+        }
+        return company;
     }
 
 
@@ -212,7 +247,14 @@ public class CompanyService extends AService {
      * Recupera dal db mongo la company (se esiste)
      */
     public Company getTest() {
-        return findById(FlowCost.COMPANY_TEST);
+        Company company = null;
+
+        try {
+            company = findById(FlowCost.COMPANY_TEST);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getDemo");
+        }
+        return company;
     }
 
 }

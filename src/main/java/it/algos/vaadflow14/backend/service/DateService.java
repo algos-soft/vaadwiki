@@ -32,6 +32,9 @@ import java.util.*;
  * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ *
+ * @see https://www.baeldung.com/jackson-object-mapper-tutorial
+ * @see https://www.baeldung.com/jackson-serialize-dates
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)

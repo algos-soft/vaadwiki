@@ -137,7 +137,7 @@ public class StatoLogicList extends LogicList {
             return lista;
         }
 
-        esistonoRegioni = mongo.esistono(Regione.class, propertyStato, entityBean);
+        esistonoRegioni = ((MongoService) mongo).esistono(Regione.class, propertyStato, entityBean);//@todo da controllare
         if (!esistonoRegioni && lista.contains(tagRegioni)) {
             lista.remove(tagRegioni);
         }
@@ -153,7 +153,7 @@ public class StatoLogicList extends LogicList {
      * Carica il form relativo <br>
      */
     protected void prima(final AEntity currentEntityBean) {
-        AEntity previousEntityBean = mongo.findPrevious(entityClazz, currentEntityBean.id);
+        AEntity previousEntityBean = ((MongoService) mongo).findPrevious(entityClazz, currentEntityBean.id);//@todo da controllare
         executeRoute(previousEntityBean.id);
     }
 

@@ -2,6 +2,7 @@ package it.algos.vaadwiki.backend.packages.nome;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.AService;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.wrapper.AResult;
@@ -133,7 +134,7 @@ public class NomeService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Nome findById(final String keyID) {
+    public Nome findById(final String keyID) throws AMongoException {
         return (Nome) super.findById(keyID);
     }
 
@@ -149,7 +150,7 @@ public class NomeService extends AService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Nome findByProperty(String propertyName, Serializable propertyValue) {
+    public Nome findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return (Nome) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -163,7 +164,7 @@ public class NomeService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Nome findByKey(final Serializable keyValue) {
+    public Nome findByKey(final Serializable keyValue) throws AMongoException {
         return (Nome) super.findByKey(keyValue);
     }
 

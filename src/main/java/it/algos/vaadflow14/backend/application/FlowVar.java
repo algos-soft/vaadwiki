@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.application;
 
 
 import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import org.springframework.beans.factory.config.*;
@@ -128,6 +129,15 @@ public class FlowVar {
      * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
      */
     public static Class dataClazz;
+
+
+    /**
+     * Type da usare per la serializzazione dei dati in mongoDB  <br>
+     * Di default AETypeSerializing.spring <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
+     */
+    public static AETypeSerializing typeSerializing;
+
 
     //    /**
     //     * Service da usare per recuperare dal mongoDB l'utenza loggata tramite 'username' che è unico <br>

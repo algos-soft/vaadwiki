@@ -1,6 +1,7 @@
 package it.algos.unit;
 
 import it.algos.test.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
@@ -64,11 +65,17 @@ public class GiornoServiceTest extends ATest {
     @DisplayName("1 - findById")
     void findById() {
         sorgente = "29 gennaio";
-        entityBean = service.findById(sorgente);
+        try {
+            entityBean = service.findById(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNull(entityBean);
 
         sorgente = "29gennaio";
-        entityBean = service.findById(sorgente);
+        try {
+            entityBean = service.findById(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNotNull(entityBean);
     }
 
@@ -78,17 +85,26 @@ public class GiornoServiceTest extends ATest {
     @DisplayName("2 - findByProperty")
     void findByKey() {
         sorgente = "29gennaio";
-        entityBean = service.findByProperty( sorgente2, sorgente);
+        try {
+            entityBean = service.findByProperty( sorgente2, sorgente);
+        } catch (AMongoException unErrore) {
+        }
         assertNull(entityBean);
 
         sorgente = "29gennaio";
         sorgente2 = "titolo";
-        entityBean = service.findByProperty( sorgente2, sorgente);
+        try {
+            entityBean = service.findByProperty( sorgente2, sorgente);
+        } catch (AMongoException unErrore) {
+        }
         assertNull(entityBean);
 
         sorgente = "29 gennaio";
         sorgente2 = "titolo";
-        entityBean = service.findByProperty( sorgente2, sorgente);
+        try {
+            entityBean = service.findByProperty( sorgente2, sorgente);
+        } catch (AMongoException unErrore) {
+        }
         assertNotNull(entityBean);
     }
 
@@ -98,11 +114,17 @@ public class GiornoServiceTest extends ATest {
     @DisplayName("3 - findByKey")
     void findByKey3() {
         sorgente = "29gennaio";
-        entityBean = service.findByKey( sorgente);
+        try {
+            entityBean = service.findByKey( sorgente);
+        } catch (AMongoException unErrore) {
+        }
         assertNull(entityBean);
 
         sorgente = "29 gennaio";
-        entityBean = service.findByKey( sorgente);
+        try {
+            entityBean = service.findByKey( sorgente);
+        } catch (AMongoException unErrore) {
+        }
         assertNotNull(entityBean);
     }
 

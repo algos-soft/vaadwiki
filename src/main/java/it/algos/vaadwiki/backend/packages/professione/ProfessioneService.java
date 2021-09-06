@@ -2,6 +2,8 @@ package it.algos.vaadwiki.backend.packages.professione;
 
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -66,7 +68,9 @@ public class ProfessioneService extends WikiService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Professione creaOriginale(final String singolare, final String plurale) {
-        return (Professione) mongo.insert(newEntity(singolare, plurale,false));
+        Professione professione=null;
+        professione= (Professione) ((MongoService)mongo).insert(newEntity(singolare, plurale,false));
+        return professione;
     }
 
     /**
@@ -78,7 +82,7 @@ public class ProfessioneService extends WikiService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Professione creaAggiunta(final String singolare, final String plurale) {
-        return (Professione) mongo.insert(newEntity(singolare, plurale,true));
+        return (Professione) ((MongoService)mongo).insert(newEntity(singolare, plurale,true));
     }
 
 
@@ -113,7 +117,7 @@ public class ProfessioneService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Professione findById(final String keyID) {
+    public Professione findById(final String keyID) throws AMongoException {
         return (Professione) super.findById(keyID);
     }
 
@@ -129,7 +133,7 @@ public class ProfessioneService extends WikiService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Professione findByProperty(String propertyName, Serializable propertyValue) {
+    public Professione findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return (Professione) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -143,7 +147,7 @@ public class ProfessioneService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Professione findByKey(final Serializable keyValue) {
+    public Professione findByKey(final Serializable keyValue) throws AMongoException {
         return (Professione) super.findByKey(keyValue);
     }
 

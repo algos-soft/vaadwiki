@@ -70,8 +70,6 @@ public class QueryBio extends AQuery {
      */
     protected WResult elaboraResponse(WResult result, final String rispostaDellaQuery) {
         JSONObject jsonQuery = null;
-        JSONArray jsonNormalized = null;
-        JSONObject jsonNormalizedZero = null;
         JSONArray jsonPages = null;
         JSONObject jsonPageZero = null;
         JSONArray jsonRevisions = null;
@@ -81,7 +79,7 @@ public class QueryBio extends AQuery {
         JSONObject jsonMain = null;
         long pageId=0;
         String content = VUOTA;
-        String tmplBio = VUOTA;
+        String tmplBio;
         WrapBio wrap;
         JSONObject jsonAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
 

@@ -56,7 +56,7 @@ public class FlowData implements AIData {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public MongoService mongo;
+    public AIMongoService mongo;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -191,7 +191,7 @@ public class FlowData implements AIData {
         }
         if (annotation.usaReset(entityClazz)) {
             metodo = "reset";
-            if (mongo.isResetVuoto(entityClazz)) {
+            if (((MongoService) mongo).isResetVuoto(entityClazz)) {//@todo da controllare
                 try {
                     entityService.getClass().getDeclaredMethod("reset");
                     result = entityService.reset();
@@ -205,12 +205,12 @@ public class FlowData implements AIData {
                 }
             }
             else {
-                result = AResult.errato(mongo.countReset(entityClazz));
+                result = AResult.errato(((MongoService) mongo).countReset(entityClazz));//@todo da controllare
             }
         }
         else {
             metodo = "download";
-            if (mongo.isEmpty(entityClazz)) {
+            if (((MongoService) mongo).isEmptyCollection(entityClazz)) {//@todo da controllare
                 try {
                     entityService.getClass().getDeclaredMethod("reset");
                     result = entityService.reset();
@@ -224,7 +224,7 @@ public class FlowData implements AIData {
                 }
             }
             else {
-                result = AResult.errato(mongo.count(entityClazz));
+                result = AResult.errato(((MongoService) mongo).count(entityClazz));//@todo da controllare
             }
         }
 

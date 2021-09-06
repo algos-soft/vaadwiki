@@ -1,15 +1,23 @@
 package it.algos.unit;
 
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.*;
 import com.mongodb.client.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
+import org.bson.conversions.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
+
+import java.text.*;
 
 /**
  * Project vaadflow14
@@ -25,15 +33,15 @@ import org.junit.jupiter.api.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Mongo service")
+@DisplayName("Mongo Service (senza mongoOp)")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MongoServiceTest extends ATest {
 
     protected static final String COLLEZIONE_INESISTENTE = "pomeriggio";
 
-    protected static final String COLLEZIONE_VUOTA = "alfa";
+    protected static final String COLLEZIONE_VUOTA = "utente";
 
-    protected static final String COLLEZIONE_VALIDA = "via";
+    protected static final String COLLEZIONE_VALIDA = "giorno";
 
     private static final String DATA_BASE_NAME = "vaadflow14";
 
@@ -41,7 +49,13 @@ public class MongoServiceTest extends ATest {
      * Classe principale di riferimento <br>
      * Gia 'costruita' nella superclasse <br>
      */
-    private MongoService service;
+    protected AIMongoService service;
+
+    protected MongoCollection collection;
+
+    protected Bson bSon;
+
+    private AETypeSerializing oldType;
 
     private static String[] COLLEZIONI() {
         return new String[]{"pomeriggio", "alfa", "via"};
@@ -58,6 +72,8 @@ public class MongoServiceTest extends ATest {
 
         //--reindirizzo l'istanza della superclasse
         service = mongoService;
+
+        oldType = FlowVar.typeSerializing;
     }
 
 
@@ -69,86 +85,79 @@ public class MongoServiceTest extends ATest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
+
+        collection = null;
+        bSon = null;
+        FlowVar.typeSerializing = oldType;
     }
 
 
     @Test
-    @Order(1)
-    @DisplayName("1 - Stato del database")
-    void status() {
-        System.out.println("1- Stato del database");
-        MongoDatabase dataBase;
+    @Order(13)
+    @DisplayName("13 - Save base (gson) di una entity")
+    void save() {
+        System.out.println("13 - Save base (gson) di una entity");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        Company company = null;
+        Company companyReborn = null;
 
-        ottenuto = service.getDatabaseName();
-        assertTrue(textService.isValid(ottenuto));
-        System.out.println(VUOTA);
-        System.out.println(String.format("Nome del dataBase corrente: [%s]", ottenuto));
+        //--costruisco una entityBean
+        sorgente = "dop";
+        sorgente2 = "Porta Valori Associato";
+        company = companyService.newEntity(sorgente, sorgente2, VUOTA, VUOTA);
+        //        company.setCreazione(LocalDateTime.now());
+        assertNotNull(company);
 
-        dataBase = service.getDataBase();
-        assertNotNull(dataBase);
-        System.out.println(VUOTA);
-        System.out.println(String.format("DataBase corrente: [%s]", dataBase));
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+        try {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+            mapper.setDateFormat(format);
+            json = mapper.writeValueAsString(company);
+            System.out.println(json);
+        } catch (JsonProcessingException unErrore) {
+            System.out.println(unErrore);
+        }
 
-        listaStr = service.getCollezioni();
-        assertNotNull(listaStr);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Collezioni esistenti: %s", listaStr));
+        //        collection.insertOne(Document.parse(json));
+
+        //        --salvo la entityBean
+        try {
+            //            ((MongoService) service).save(company);
+            companyService.save(company);
+        } catch (AMongoException unErrore) {
+            System.out.println(unErrore);
+        }
     }
 
-    @Test
-    @Order(2)
-    @DisplayName("2 - Stato delle collezioni")
-    void isExists() {
-        System.out.println("2 - Esistenza delle collezioni");
-
-        sorgente = COLLEZIONE_INESISTENTE;
-        ottenutoBooleano = service.isExists(sorgente);
-        assertFalse(ottenutoBooleano);
-        printCollection(sorgente, "non esiste");
-
-        sorgente = COLLEZIONE_VALIDA;
-        ottenutoBooleano = service.isExists(sorgente);
-        assertTrue(ottenutoBooleano);
-        printCollection(sorgente, "esiste");
-        ottenutoBooleano = service.isExists(Via.class);
-        assertTrue(ottenutoBooleano);
-        printCollection(sorgente, " (letta dalla classe) esiste");
-
-        System.out.println(VUOTA);
-        System.out.println(VUOTA);
-        System.out.println("2 - Validità delle collezioni");
-
-        sorgente = COLLEZIONE_INESISTENTE;
-        ottenutoBooleano = service.isValid(sorgente);
-        assertFalse(ottenutoBooleano);
-        printCollection(sorgente, "non è valida");
-
-        sorgente = COLLEZIONE_VALIDA;
-        ottenutoBooleano = service.isValid(sorgente);
-        assertTrue(ottenutoBooleano);
-        printCollection(sorgente, "è valida");
-        ottenutoBooleano = service.isValid(Via.class);
-        assertTrue(ottenutoBooleano);
-        printCollection(sorgente, " (letta dalla classe) è valida");
-    }
-
-    @Test
-    @Order(3)
-    @DisplayName("3 - Singola entity")
+    //    @Test
+    @Order(13)
+    @DisplayName("13 - Trova singola entity by id")
     void findById() {
-        System.out.println("3 - Singola entity");
+        System.out.println("13 - Trova singola entity by id");
 
-        sorgente = "104";
-        clazz = Anno.class;
-        entityBean = service.findById(clazz, sorgente);
-        assertNotNull(entityBean);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Recupero di un bean di classe %s", clazz.getSimpleName()));
-        System.out.println(entityBean);
+        //            sorgente = "104";
+        //            clazz = Anno.class;
+        //            entityBean = service.findById(clazz, sorgente);
+        //            assertNotNull(entityBean);
+        //            System.out.println(VUOTA);
+        //            System.out.println(String.format("Recupero di un bean di classe %s", clazz.getSimpleName()));
+        //            System.out.println(entityBean);
+        //
+        //            sorgente = "via";
+        //            clazz = Via.class;
+        //            entityBean = service.findById(clazz, sorgente);
+        //            assertNotNull(entityBean);
+        //            System.out.println(VUOTA);
+        //            System.out.println(String.format("Recupero di un bean di classe %s", clazz.getSimpleName()));
+        //            System.out.println(entityBean);
 
-        sorgente = "piazzale";
-        clazz = Via.class;
-        entityBean = service.findById(clazz, sorgente);
+        sorgente = "terzo";
+        clazz = Company.class;
+        try {
+            entityBean = service.findById(clazz, sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNotNull(entityBean);
         System.out.println(VUOTA);
         System.out.println(String.format("Recupero di un bean di classe %s", clazz.getSimpleName()));
@@ -156,16 +165,19 @@ public class MongoServiceTest extends ATest {
     }
 
 
-    @Test
-    @Order(4)
-    @DisplayName("4 - Singola entity by key")
+    //    @Test
+    @Order(6)
+    @DisplayName("6 - Trova singola entity by key")
     void findByKey() {
-        System.out.println("4 - Singola entity by key");
+        System.out.println("6 - Trova singola entity by key");
 
         clazz = Giorno.class;
         sorgente = "titolo";
         sorgente2 = "4 novembre";
-        entityBean = service.findByKey(clazz, sorgente, sorgente2);
+        try {
+            entityBean = service.findByKey(clazz, sorgente, sorgente2);
+        } catch (AMongoException unErrore) {
+        }
         assertNotNull(entityBean);
         System.out.println(VUOTA);
         System.out.println(String.format("EntityBean di classe %s recuperato dal valore '%s' della property '%s'", clazz.getSimpleName(), sorgente2, sorgente));
@@ -173,11 +185,11 @@ public class MongoServiceTest extends ATest {
     }
 
 
-    @Test
-    @Order(5)
-    @DisplayName("5 - Save di una entity")
-    void save() {
-        System.out.println("5 - Save di una entity");
+    //    @Test
+    @Order(7)
+    @DisplayName("7 - Save di una entity")
+    void save2() {
+        System.out.println("7 - Save di una entity");
         int originario;
         int daModificare;
         int modificato;
@@ -187,7 +199,10 @@ public class MongoServiceTest extends ATest {
         //--leggo una entityBean e memorizzo una property
         clazz = Via.class;
         sorgente = "corte";
-        entityBean = service.findByKey(clazz, sorgente);
+        try {
+            entityBean = service.findByKey(clazz, sorgente);
+        } catch (AMongoException unErrore) {
+        }
         assertNotNull(entityBean);
         originario = ((Via) entityBean).getOrdine();
         System.out.println(VUOTA);
@@ -201,13 +216,16 @@ public class MongoServiceTest extends ATest {
         try {
             //            jsonInString = gSonService.legge(entityBean);
             //            System.out.println(String.format("Stringa in formato json -> %s", jsonInString));
-            service.save(entityBean);
+            ((MongoService) service).save(entityBean);
         } catch (AMongoException unErrore) {
             System.out.println(unErrore);
         }
 
         //--ri-leggo la entityBean (dal vecchio id) controllo la property per vedere se è stata modificata e registrata
-        entityBean = service.findById(clazz, entityBean.getId());
+        try {
+            entityBean = service.findById(clazz, entityBean.getId());
+        } catch (Exception unErrore) {
+        }
         modificato = ((Via) entityBean).getOrdine();
         assertEquals(daModificare, modificato);
         System.out.println(VUOTA);
@@ -218,13 +236,16 @@ public class MongoServiceTest extends ATest {
 
         //--ri-registro la entityBean come in origine
         try {
-            service.save(entityBean);
+            ((MongoService) service).save(entityBean);
         } catch (AMongoException unErrore) {
             System.out.println(unErrore);
         }
 
         //--ri-leggo la entityBean e ri-controllo la property
-        entityBean = service.findByKey(clazz, sorgente);
+        try {
+            entityBean = service.findByKey(clazz, sorgente);
+        } catch (AMongoException unErrore) {
+        }
         assertNotNull(entityBean);
         finale = ((Via) entityBean).getOrdine();
         assertEquals(originario, finale);
@@ -233,6 +254,31 @@ public class MongoServiceTest extends ATest {
 
     }
 
+    //    @Test
+    @Order(8)
+    @DisplayName("8 - Trova l'ordine successivo")
+    void sss() {
+        System.out.println("8 - Trova l'ordine successivo\"");
+
+        clazz = Via.class;
+        sorgente = "ordine";
+        try {
+            entityBean = service.findByKey(clazz, sorgente);
+        } catch (AMongoException unErrore) {
+        }
+
+        //--il database mongoDB potrebbe anche essere vuoto
+        if (service.isExistsCollection(clazz.getSimpleName().toLowerCase())) {
+            try {
+                ottenutoIntero = service.getNewOrder(clazz, sorgente);
+            } catch (AMongoException unErrore) {
+            }
+            System.out.println(String.format("Successivo ordine %d", ottenutoIntero));
+        }
+        else {
+            System.out.println("Il database 'via' è vuoto");
+        }
+    }
 
     //    @Test
     @Order(5)
@@ -244,7 +290,7 @@ public class MongoServiceTest extends ATest {
         previstoIntero = 26;
         inizio = System.currentTimeMillis();
         try {
-            listaBean = service.fetch(sorgenteClasse);
+            listaBean = ((MongoService) service).fetch(sorgenteClasse);
         } catch (Exception unErrore) {
             loggerService.error(unErrore, this.getClass(), "fetch");
         }
@@ -256,7 +302,7 @@ public class MongoServiceTest extends ATest {
         previstoIntero = 366;
         inizio = System.currentTimeMillis();
         try {
-            listaBean = service.fetch(sorgenteClasse);
+            listaBean = ((MongoService) service).fetch(sorgenteClasse);
         } catch (AQueryException unErrore) {
             loggerService.error(unErrore, this.getClass(), "fetch");
         } catch (AMongoException unErrore) {
@@ -270,7 +316,7 @@ public class MongoServiceTest extends ATest {
         previstoIntero = 3030;
         inizio = System.currentTimeMillis();
         try {
-            listaBean = service.fetch(sorgenteClasse);
+            listaBean = ((MongoService) service).fetch(sorgenteClasse);
         } catch (AQueryException unErrore) {
             loggerService.error(unErrore, this.getClass(), "fetch");
         } catch (AMongoException unErrore) {
@@ -293,10 +339,6 @@ public class MongoServiceTest extends ATest {
     //        assertFalse(ottenutoBooleano);
     //    }
 
-    protected void printCollection(final String collectionName, final String status) {
-        System.out.println(VUOTA);
-        System.out.println(String.format("La collezione '%s' %s", collectionName, status));
-    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>

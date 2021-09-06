@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.geografica.continente;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -109,7 +110,7 @@ public class ContinenteService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Continente findById(final String keyID) {
+    public Continente findById(final String keyID) throws AMongoException {
         return (Continente) super.findById(keyID);
     }
 
@@ -123,7 +124,7 @@ public class ContinenteService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Continente findByKey(final String keyValue) {
+    public Continente findByKey(final String keyValue) throws AMongoException {
         return (Continente) super.findByKey(keyValue);
     }
 

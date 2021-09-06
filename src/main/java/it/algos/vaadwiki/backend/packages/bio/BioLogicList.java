@@ -149,7 +149,7 @@ public class BioLogicList extends WikiLogicList {
 
 
     protected void newFormEsegue(String wikiTitle) {
-        Bio bio = ((BioService) entityService).downloadBio(wikiTitle);
+        Bio bio = ((BioService) entityService).downloadBioSave(wikiTitle);
 
         if (bio != null) {
             this.executeRoute(bio);

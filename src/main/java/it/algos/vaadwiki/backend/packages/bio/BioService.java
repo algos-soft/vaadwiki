@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.login.*;
@@ -216,7 +217,7 @@ public class BioService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Bio findById(final String keyID) {
+    public Bio findById(final String keyID) throws AMongoException {
         return (Bio) super.findById(keyID);
     }
 
@@ -232,7 +233,7 @@ public class BioService extends AService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Bio findByProperty(String propertyName, Serializable propertyValue) {
+    public Bio findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return (Bio) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -246,7 +247,7 @@ public class BioService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Bio findByKey(final Serializable keyValue) {
+    public Bio findByKey(final Serializable keyValue) throws AMongoException {
         return (Bio) super.findByKey(keyValue);
     }
 
@@ -280,6 +281,26 @@ public class BioService extends AService {
         return entityBean;
     }
 
+    /**
+     * Crea e registra una entityBean <br>
+     * A livello UI i fields sono già stati verificati <br>
+     * Prevede un punto di controllo PRIMA della registrazione,
+     * per eventuale congruità dei parametri o per valori particolari in base alla BusinessLogic <br>
+     * Esegue la registrazione sul database mongoDB con un controllo finale di congruità <br>
+     * Prevede un punto di controllo DOPO la registrazione,
+     * per eventuali side effects su altre collections collegate o dipendenti <br>
+     *
+     * @param entityBeanDaRegistrare (nuova o esistente)
+     * @param operation              del dialogo (new o modifica)
+     *
+     * @return la entityBean appena registrata, null se non registrata
+     *
+     * @throws
+     */
+    @Override
+    public Bio save(AEntity entityBeanDaRegistrare, AEOperation operation) throws AMongoException {
+        return (Bio) super.save(entityBeanDaRegistrare, operation);
+    }
 
     /**
      * Ciclo di download <br>
@@ -384,7 +405,6 @@ public class BioService extends AService {
      * Scarica una singola biografia <br>
      */
     public Bio downloadBio(String wikiTitle) {
-        Bio bio = null;
         WrapBio wrap = null;
 
         if (text.isValid(wikiTitle)) {
@@ -393,6 +413,25 @@ public class BioService extends AService {
 
         return fixBio(wrap);
     }
+
+
+    /**
+     * Scarica una singola biografia <br>
+     */
+    public Bio downloadBioSave(String wikiTitle) {
+        Bio bio = downloadBio(wikiTitle);
+
+        if (bio != null) {
+            try {
+                bio = save(bio, null);
+            } catch (AMongoException unErrore) {
+                logger.error(unErrore, this.getClass(), "downloadBioSave");
+            }
+        }
+
+        return bio;
+    }
+
     /**
      * Costruisce una singola biografia <br>
      */
@@ -416,14 +455,18 @@ public class BioService extends AService {
         Bio bio = null;
 
         if (wrap != null && wrap.isValido()) {
-            bio = findById(Long.toString(wrap.getPageid()));
-            mongo.delete(bio);
+            try {
+                bio = findById(Long.toString(wrap.getPageid()));
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixBioOld");
+            }
+            ((MongoService)mongo).delete(bio); //@todo sistemare
             bio = this.newEntity(wrap);
             elaboraService.esegue(bio);
             try {
                 save(bio, null);
             } catch (Exception unErrore) {
-                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+                logger.error(unErrore, this.getClass(), "fixBioOld");
             }
 
             //            if (isEsiste(String.valueOf(wrap.getPageid()))) {

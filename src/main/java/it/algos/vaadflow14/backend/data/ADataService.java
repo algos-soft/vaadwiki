@@ -1,15 +1,12 @@
 package it.algos.vaadflow14.backend.data;
 
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.service.AnnotationService;
-import it.algos.vaadflow14.backend.service.ArrayService;
-import it.algos.vaadflow14.backend.service.MongoService;
-import it.algos.vaadflow14.backend.service.TextService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.service.*;
+import lombok.extern.slf4j.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 
-import javax.annotation.PostConstruct;
+import javax.annotation.*;
 
 /**
  * Project vaadflow
@@ -56,14 +53,14 @@ public abstract class ADataService {
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
-    protected MongoService mongo;
+    protected AIMongoService mongo;
 
     /**
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
      * Si usa un @Qualifier(), per avere la sottoclasse specifica
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
      */
-    protected ADataService( ) {
+    protected ADataService() {
     }// end of Spring constructor
 
 
@@ -79,7 +76,7 @@ public abstract class ADataService {
      * @return the number of entities
      */
     public int count() {
-        return   mongo.count(entityClass);
+        return ((MongoService) mongo).count(entityClass);//@todo da controllare
     }// end of method
 
 
@@ -94,7 +91,8 @@ public abstract class ADataService {
         if (numRec == 0) {
             numRec = creaAll();
             log.warn("Algos - Data. La collezione " + collectionName + " è stata creata: " + numRec + " schede");
-        } else {
+        }
+        else {
             log.info("Algos - Data. La collezione " + collectionName + " è già presente: " + numRec + " schede");
         }// end of if/else cycle
     }// end of method

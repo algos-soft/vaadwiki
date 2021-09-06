@@ -764,8 +764,8 @@ public abstract class LogicList extends Logic {
 
         final String sortProperty = annotation.getSortProperty(entityClazz);
         final Object valueProperty = reflection.getPropertyValue(entityBean, sortProperty);
-        final String beanPrevID = text.isValid(entityBeanPrevID) ? entityBeanPrevID : mongo.findPreviousID(entityClazz, sortProperty, valueProperty);
-        final String beanNextID = text.isValid(entityBeanNextID) ? entityBeanPrevID : mongo.findNextID(entityClazz, sortProperty, valueProperty);
+        final String beanPrevID = text.isValid(entityBeanPrevID) ? entityBeanPrevID : ((MongoService) mongo).findPreviousID(entityClazz, sortProperty, valueProperty);//@todo da controllare
+        final String beanNextID = text.isValid(entityBeanNextID) ? entityBeanPrevID : ((MongoService) mongo).findNextID(entityClazz, sortProperty, valueProperty);//@todo da controllare
 
         executeRoute(entityBean.id, beanPrevID, beanNextID);
     }
@@ -781,7 +781,7 @@ public abstract class LogicList extends Logic {
         String message = "Vuoi veramente cancellare tutto? L' operazione non è reversibile.";
         VaadinIcon icon = VaadinIcon.WARNING;
 
-        if (mongo.isValid(entityClazz)) {
+        if (((MongoService) mongo).isValidCollection(entityClazz)) {//@todo da controllare
             messageDialog = new MessageDialog().setTitle("Delete").setMessage(message);
             messageDialog.addButton().text("Cancella").icon(icon).error().onClick(e -> clickDeleteAll()).closeOnClick();
             messageDialog.addButtonToLeft().text("Annulla").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
@@ -887,7 +887,7 @@ public abstract class LogicList extends Logic {
 
         if (grid != null && grid.getGrid() != null) {
             //            updateFiltri();
-            items = mongo.findAll(entityClazz);
+            items = ((MongoService) mongo).findAll(entityClazz);//@todo da controllare
             grid.getGrid().deselectAll();
             grid.setItems(items);
             grid.getGrid().getDataProvider().refreshAll();
@@ -904,7 +904,7 @@ public abstract class LogicList extends Logic {
     protected void export() {
         Grid grid = new Grid(entityClazz, false);
         grid.setColumns("nome");
-        grid.setItems(mongo.findAll(entityClazz));
+        grid.setItems(((MongoService) mongo).findAll(entityClazz));//@todo da controllare
 
         String message = "Export";
         InputStreamFactory factory = Exporter.exportAsExcel(grid);

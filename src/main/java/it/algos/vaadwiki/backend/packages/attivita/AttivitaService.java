@@ -3,6 +3,8 @@ package it.algos.vaadwiki.backend.packages.attivita;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.genere.*;
@@ -80,7 +82,7 @@ public class AttivitaService extends WikiService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Attivita creaOriginale(final String singolare, final String plurale) {
-        return (Attivita) mongo.insert(newEntity(singolare, plurale, false));
+        return (Attivita) ((MongoService)mongo).insert(newEntity(singolare, plurale, false));
     }
 
     /**
@@ -92,11 +94,11 @@ public class AttivitaService extends WikiService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Attivita creaAggiuntaIfNotExist(final String singolare, final String plurale) {
-        if (mongo.isExist(entityClazz, text.levaSpazi(singolare))) {
+        if (((MongoService)mongo).isExist(entityClazz, text.levaSpazi(singolare))) {
             return null;
         }
         else {
-            return (Attivita) mongo.insert(newEntity(singolare, plurale, true));
+            return (Attivita) ((MongoService)mongo).insert(newEntity(singolare, plurale, true));
         }
     }
 
@@ -131,7 +133,7 @@ public class AttivitaService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Attivita findById(final String keyID) {
+    public Attivita findById(final String keyID) throws AMongoException {
         return (Attivita) super.findById(keyID);
     }
 
@@ -147,7 +149,7 @@ public class AttivitaService extends WikiService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Attivita findByProperty(String propertyName, Serializable propertyValue) {
+    public Attivita findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return (Attivita) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -161,7 +163,7 @@ public class AttivitaService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Attivita findByKey(final Serializable keyValue) {
+    public Attivita findByKey(final Serializable keyValue) throws AMongoException {
         return (Attivita) super.findByKey(keyValue);
     }
 
@@ -231,7 +233,11 @@ public class AttivitaService extends WikiService {
                 }
 
                 if (text.isValid(attivitaSingolare)) {
-                    entity = findByKey(attivitaSingolare);
+                    try {
+                        entity = findByKey(attivitaSingolare);
+                    } catch (AMongoException unErrore) {
+                        logger.warn(unErrore, this.getClass(), "aggiunge");
+                    }
                 }
 
                 if (entity != null) {

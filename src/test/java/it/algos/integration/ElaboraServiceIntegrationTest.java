@@ -1,6 +1,7 @@
 package it.algos.integration;
 
 import it.algos.test.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadwiki.*;
 import it.algos.vaadwiki.backend.service.*;
@@ -99,31 +100,46 @@ public class ElaboraServiceIntegrationTest extends ATest {
         assertNull(ottenutoGiorno);
 
         sorgente = "17 marzo";
-        previstoGiorno = giornoService.findByKey("17 marzo");
+        try {
+            previstoGiorno = giornoService.findByKey("17 marzo");
+        } catch (AMongoException unErrore) {
+        }
         ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = "5 Agosto";
-        previstoGiorno = giornoService.findByKey("5 agosto");
+        try {
+            previstoGiorno = giornoService.findByKey("5 agosto");
+        } catch (AMongoException unErrore) {
+        }
         ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = "3ottobre";
-        previstoGiorno = giornoService.findByKey("3 ottobre");
+        try {
+            previstoGiorno = giornoService.findByKey("3 ottobre");
+        } catch (AMongoException unErrore) {
+        }
         ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = "24  maggio";
-        previstoGiorno = giornoService.findByKey("24 maggio");
+        try {
+            previstoGiorno = giornoService.findByKey("24 maggio");
+        } catch (AMongoException unErrore) {
+        }
         ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = " 8   gennaio ";
-        previstoGiorno = giornoService.findByKey("8 gennaio");
+        try {
+            previstoGiorno = giornoService.findByKey("8 gennaio");
+        } catch (AMongoException unErrore) {
+        }
         ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
@@ -133,7 +149,10 @@ public class ElaboraServiceIntegrationTest extends ATest {
         assertNull(ottenutoGiorno);
 
         sorgente = "11 luglio <ref>Marcello";
-        previstoGiorno = giornoService.findByKey("11 luglio");
+        try {
+            previstoGiorno = giornoService.findByKey("11 luglio");
+        } catch (AMongoException unErrore) {
+        }
         ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);

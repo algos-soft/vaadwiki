@@ -3,6 +3,8 @@ package it.algos.vaadwiki.backend.packages.nazionalita;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -68,7 +70,7 @@ public class NazionalitaService extends WikiService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Nazionalita crea(final String singolare, final String plurale) {
-        return (Nazionalita) mongo.insert(newEntity(singolare, plurale));
+        return (Nazionalita) ((MongoService)mongo).insert(newEntity(singolare, plurale));
     }
 
 
@@ -101,7 +103,7 @@ public class NazionalitaService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Nazionalita findById(final String keyID) {
+    public Nazionalita findById(final String keyID) throws AMongoException {
         return (Nazionalita) super.findById(keyID);
     }
 
@@ -117,7 +119,7 @@ public class NazionalitaService extends WikiService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Nazionalita findByProperty(String propertyName, Serializable propertyValue) {
+    public Nazionalita findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return (Nazionalita) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -131,7 +133,7 @@ public class NazionalitaService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Nazionalita findByKey(final Serializable keyValue) {
+    public Nazionalita findByKey(final Serializable keyValue) throws AMongoException {
         return (Nazionalita) super.findByKey(keyValue);
     }
 

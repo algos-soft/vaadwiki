@@ -3,8 +3,10 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
@@ -159,8 +161,7 @@ public class PreferenzaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Preferenza findById(final String keyID) {
-        //        return (Preferenza) mongo.findById(Preferenza.class, keyID);
+    public Preferenza findById(final String keyID) throws AMongoException {
         return (Preferenza) super.findById(keyID);
     }
 
@@ -175,7 +176,7 @@ public class PreferenzaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     public Preferenza findByKey(final String keyValue) {
-                return (Preferenza) mongo.findOneUnique(Preferenza.class, "code", keyValue);
+        return (Preferenza) ((MongoService) mongo).findOneUnique(Preferenza.class, "code", keyValue);//@todo da controllare
 //        return (Preferenza) super.findByKey(keyValue);
     }
 

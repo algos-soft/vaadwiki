@@ -2,6 +2,7 @@ package it.algos.wiki;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
@@ -35,16 +36,15 @@ public class DidascaliaServiceTest extends WTest {
 
     private String wikiTitleDue = "Sonia Todd";
 
-    private static String[] PAGINE() {
-        return new String[]{PAGINA_UNO, PAGINA_DUE, PAGINA_TRE, PAGINA_QUATTRO, PAGINA_CINQUE, PAGINA_SEI, PAGINA_SETTE};
-    }
-
     /**
      * Classe principale di riferimento <br>
      * Gia 'costruita' nella superclasse <br>
      */
     private DidascaliaService service;
 
+    private static String[] PAGINE() {
+        return new String[]{PAGINA_UNO, PAGINA_DUE, PAGINA_TRE, PAGINA_QUATTRO, PAGINA_CINQUE, PAGINA_SEI, PAGINA_SETTE, PAGINA_OTTO};
+    }
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -57,6 +57,11 @@ public class DidascaliaServiceTest extends WTest {
 
         //--reindirizzo l'istanza della superclasse
         service = didascaliaService;
+
+        //        //--controllo una-tantum
+        //        for (String wikiTitle : PAGINE()) {
+        //            elabora(wikiTitle);
+        //        }
     }
 
 
@@ -203,12 +208,15 @@ public class DidascaliaServiceTest extends WTest {
         print(sorgente, sorgente2, sorgente3, ottenuto);
     }
 
+
     @ParameterizedTest
     @MethodSource(value = "PAGINE")
     @Order(5)
     @DisplayName("5 - Didascalie varie")
     void testWithStringParameter(String wikiTitle) {
         System.out.println("5 - Didascalie varie");
+        String ottenuto3;
+        String ottenuto4;
 
         sorgente = wikiTitle;
         wrap = queryBio.urlRequest(sorgente).getWrap();
@@ -219,9 +227,11 @@ public class DidascaliaServiceTest extends WTest {
         previsto = textService.setDoppieQuadre(bio.wikiTitle);
         ottenuto = service.getNomeCognome(bio);
         ottenuto2 = service.getAttivitaNazionalita(bio);
+        ottenuto3 = service.getNatoMorto(bio);
+        ottenuto4 = service.getLista(bio);
         assertTrue(textService.isValid(ottenuto));
         System.out.println(VUOTA);
-        print(bio, ottenuto, ottenuto2);
+        print(bio, ottenuto, ottenuto2, ottenuto3, ottenuto4);
     }
 
     //    @Test
@@ -278,5 +288,18 @@ public class DidascaliaServiceTest extends WTest {
     //        didascaliaService.esegue();
     //    }// end of single test
 
+    void elabora(String wikiTitle) {
+        sorgente = wikiTitle;
+        wrap = queryBio.urlRequest(sorgente).getWrap();
+        assertNotNull(wrap);
+        assertTrue(wrap.isValido());
+        bio = bioService.newEntity(wrap);
+        elaboraService.esegue(bio);
+        try {
+            bioService.save(bio, AEOperation.edit);
+        } catch (Exception unErrore) {
+            System.out.println("Errore");
+        }
+    }
 
 }// end of class

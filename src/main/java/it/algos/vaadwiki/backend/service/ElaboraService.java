@@ -205,7 +205,11 @@ public class ElaboraService extends AbstractService {
         }
 
         if (text.isValid(testoValido)) {
-            nome = nomeService.findByKey(testoValido);
+            try {
+                nome = nomeService.findByKey(testoValido);
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixNomeLink");
+            }
             if (nome == null) {
                 nome = nomeService.newEntity(1, testoValido, true);
             }
@@ -254,7 +258,11 @@ public class ElaboraService extends AbstractService {
         }
 
         if (text.isValid(testoValido)) {
-            giorno = giornoService.findByKey(testoValido);
+            try {
+                giorno = giornoService.findByKey(testoValido);
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixGiorno");
+            }
         }
 
         return giorno;
@@ -282,7 +290,11 @@ public class ElaboraService extends AbstractService {
         }
 
         if (text.isValid(testoValido)) {
-            anno = annoService.findByKey(testoValido);
+            try {
+                anno = annoService.findByKey(testoValido);
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixAnno");
+            }
         }
 
         return anno;
@@ -307,7 +319,11 @@ public class ElaboraService extends AbstractService {
         }
 
         if (text.isValid(testoValido)) {
-            attivita = attivitaService.findByKey(testoValido);
+            try {
+                attivita = attivitaService.findByKey(testoValido);
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixAttivitaLink");
+            }
         }
 
         return attivita;
@@ -332,7 +348,11 @@ public class ElaboraService extends AbstractService {
         }
 
         if (text.isValid(testoValido)) {
-            nazionalita = nazionalitaService.findByKey(testoValido);
+            try {
+                nazionalita = nazionalitaService.findByKey(testoValido);
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixNazionalitaLink");
+            }
         }
 
         return nazionalita;
@@ -407,10 +427,15 @@ public class ElaboraService extends AbstractService {
         }
 
         if (text.isValid(testoValido)) {
-            if (giornoService.findByKey(testoValido) != null) {
-                return testoValido.trim();
-            }
-            else {
+            try {
+                if (giornoService.findByKey(testoValido) != null) {
+                    return testoValido.trim();
+                }
+                else {
+                    return VUOTA;
+                }
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixGiornoValido");
                 return VUOTA;
             }
         }
@@ -445,10 +470,15 @@ public class ElaboraService extends AbstractService {
         testoValido = text.levaDopo(testoValido, CIRCA);
 
         if (text.isValid(testoValido)) {
-            if (annoService.isEsiste(testoValido)) {
-                return testoValido.trim();
-            }
-            else {
+            try {
+                if (annoService.isEsiste(testoValido)) {
+                    return testoValido.trim();
+                }
+                else {
+                    return VUOTA;
+                }
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixAnnoValido");
                 return VUOTA;
             }
         }
@@ -578,18 +608,23 @@ public class ElaboraService extends AbstractService {
      */
     public String fixAttivitaValida(Bio bio, String testoGrezzo) throws AlgosException {
         String testoValido = fixValoreGrezzo(testoGrezzo).toLowerCase();
-        String message = VUOTA;
+        String message;
 
         //        String tag1 = "ex ";
         //        String tag2 = "ex-";
 
         if (text.isValid(testoValido)) {
-            if (attivitaService.isEsiste(testoValido)) {
-                return testoValido.trim();
-            }
-            else {
-                message = String.format("Nella bio di %s, l'attività %s non è stata trovata", bio.wikiTitle, testoValido);
-                throw new AlgosException(message);
+            try {
+                if (attivitaService.isEsiste(testoValido)) {
+                    return testoValido.trim();
+                }
+                else {
+                    message = String.format("Nella bio di %s, l'attività %s non è stata trovata", bio.wikiTitle, testoValido);
+                    throw new AlgosException(message);
+                }
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixAttivitaValida");
+                return VUOTA;
             }
         }
         else {
@@ -608,6 +643,7 @@ public class ElaboraService extends AbstractService {
      */
     public String fixNazionalitaValida(String testoGrezzo) {
         String testoValido = fixValoreGrezzo(testoGrezzo).toLowerCase();
+        String message;
 
         if (text.isEmpty(testoValido)) {
             return VUOTA;
@@ -618,10 +654,16 @@ public class ElaboraService extends AbstractService {
         }
 
         if (text.isValid(testoValido)) {
-            if (nazionalitaService.isEsiste(testoValido)) {
-                return testoValido.trim();
-            }
-            else {
+            try {
+                if (nazionalitaService.isEsiste(testoValido)) {
+                    return testoValido.trim();
+                }
+                else {
+                    message = String.format("Nella bio di ?, la nazionalità %s non è stata trovata", testoValido);
+                    return VUOTA;
+                }
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixNazionalitaValida");
                 return VUOTA;
             }
         }

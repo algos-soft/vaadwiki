@@ -44,7 +44,7 @@ public class DataProviderService extends AbstractService {
 
 
     @Autowired
-    private MongoService mongo;
+    private AIMongoService mongo;
 
 
     public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz) {
@@ -70,8 +70,9 @@ public class DataProviderService extends AbstractService {
                     // Converto il tipo di sort
                     sortSpring = utility.sortVaadinToSpring(sortVaadinList, entityClazz);
 
+                    //@todo da controllare
                     try {
-                        return mongo.fetch(entityClazz, (Map<String, AFiltro>) null, sortSpring, offset, limit).stream();
+                        return ((MongoService) mongo).fetch(entityClazz, (Map<String, AFiltro>) null, sortSpring, offset, limit).stream();//@todo da controllare
                     } catch (AQueryException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
                         return null;
@@ -83,7 +84,7 @@ public class DataProviderService extends AbstractService {
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                countCallback -> mongo.count(entityClazz)
+                countCallback -> ((MongoService) mongo).count(entityClazz)//@todo da controllare
         );
 
         return dataProvider;
@@ -114,7 +115,7 @@ public class DataProviderService extends AbstractService {
                     sortSpring = utility.sortVaadinToSpring(sortVaadinList, entityClazz);
 
                     try {
-                        return mongo.fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();
+                        return ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();//@todo da controllare
                     } catch (AMongoException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
                         return null;
@@ -128,7 +129,7 @@ public class DataProviderService extends AbstractService {
                 // The grid can then use it to properly adjust the scrollbars.
                 countCallback -> {
                     try {
-                        return mongo.fetch(entityClazz, mappaFiltri).size();
+                        return ((MongoService) mongo).fetch(entityClazz, mappaFiltri).size();//@todo da controllare
                     } catch (AMongoException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
                         return 0;
@@ -158,12 +159,12 @@ public class DataProviderService extends AbstractService {
                     int limit = query.getLimit();
                     //                    limit = 50;//@todo Funzionalità ancora da implementare
                     //                    BasicDBObject sort = new BasicDBObject("nome", -1);
-                    return mongo.findSet(entityClazz, offset, limit, aQuery, aSort).stream();
+                    return ((MongoService) mongo).findSet(entityClazz, offset, limit, aQuery, aSort).stream();//@todo da controllare
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> mongo.count(entityClazz)
+                query -> ((MongoService) mongo).count(entityClazz)//@todo da controllare
         );
 
         return dataProvider;
@@ -183,12 +184,12 @@ public class DataProviderService extends AbstractService {
                     int limit = query.getLimit();
                     //                    limit = 50;//@todo Funzionalità ancora da implementare
                     //                    BasicDBObject sort = new BasicDBObject("nome", -1);
-                    return mongo.findSet(entityClazz, offset, limit, sort).stream();
+                    return ((MongoService) mongo).findSet(entityClazz, offset, limit, sort).stream();//@todo da controllare
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> mongo.count(entityClazz)
+                query -> ((MongoService) mongo).count(entityClazz)//@todo da controllare
         );
 
         return dataProvider;
@@ -216,7 +217,7 @@ public class DataProviderService extends AbstractService {
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
                 //                query -> mongo.count(T);
-                query -> mongo.count(Mese.class)
+                query -> ((MongoService) mongo).count(Mese.class)//@todo da controllare
         );
 
         return dataProvider;
@@ -225,7 +226,7 @@ public class DataProviderService extends AbstractService {
 
     private List<Mese> getItemsMese(int offset, int limit) {
 
-        Collection<Document> documents = mongo.mongoOp.getCollection("mese").find().skip(offset).limit(limit).into(new ArrayList());
+        Collection<Document> documents = ((MongoService) mongo).mongoOp.getCollection("mese").find().skip(offset).limit(limit).into(new ArrayList());//@todo da controllare
 
         List<Mese> mesi = new ArrayList();
         Mese mese;
@@ -264,7 +265,7 @@ public class DataProviderService extends AbstractService {
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> mongo.count(Anno.class)
+                query -> ((MongoService) mongo).count(Anno.class)//@todo da controllare
         );
 
         return dataProvider;
@@ -274,7 +275,7 @@ public class DataProviderService extends AbstractService {
     private List<Anno> getItemsAnno(int offset, int limit) {
         long inizio = System.currentTimeMillis();
 
-        Collection<Document> documents = mongo.mongoOp.getCollection("anno").find().skip(offset).limit(limit).into(new ArrayList());
+        Collection<Document> documents = ((MongoService) mongo).mongoOp.getCollection("anno").find().skip(offset).limit(limit).into(new ArrayList());//@todo da controllare
 
         long intermedio = System.currentTimeMillis();
         List<Anno> anni = new ArrayList();

@@ -22,7 +22,7 @@ import org.mockito.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValidoWiki")
-@DisplayName("Test QueryBio")
+@DisplayName("QueryBio - Istanza per recuperare una bio.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class QueryBioTest extends WTest {
 

@@ -3,7 +3,7 @@ package it.algos.vaadflow14.backend.packages.utility.versione;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
-import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -114,7 +114,7 @@ public class VersioneService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Versione findById(final String keyID) {
+    public Versione findById(final String keyID) throws AMongoException {
         return (Versione) super.findById(keyID);
     }
 
@@ -128,7 +128,7 @@ public class VersioneService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Versione findByKey(final String keyValue) {
+    public Versione findByKey(final String keyValue) throws AMongoException {
         return (Versione) super.findByKey(keyValue);
     }
 
@@ -152,7 +152,7 @@ public class VersioneService extends AService {
      */
     //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result=null;
+        AIResult result = null;
         //        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 

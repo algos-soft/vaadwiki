@@ -3,10 +3,12 @@ package it.algos.vaadflow14.backend.packages.geografica.provincia;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
@@ -141,7 +143,7 @@ public class ProvinciaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Provincia findById(final String keyID) {
+    public Provincia findById(final String keyID) throws AMongoException {
         return (Provincia) super.findById(keyID);
     }
 
@@ -155,7 +157,7 @@ public class ProvinciaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Provincia findByKey(final String keyValue) {
+    public Provincia findByKey(final String keyValue) throws AMongoException {
         return (Provincia) super.findByKey(keyValue);
     }
 
@@ -164,7 +166,7 @@ public class ProvinciaService extends AService {
         String packageName = Provincia.class.getSimpleName().toLowerCase();
         String collection = "regione";
 
-        if (mongo.isValid(collection)) {
+        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
@@ -185,7 +187,7 @@ public class ProvinciaService extends AService {
         String nome;
         String sigla;
         String regioneTxt;
-        Regione regione;
+        Regione regione = null;
         Stato stato = AEStato.italia.getStato();
         String iso;
         AETypeProvincia status = null;
@@ -197,9 +199,14 @@ public class ProvinciaService extends AService {
                 sigla = wrap.getPrima();
                 iso = sigla;
                 regioneTxt = wrap.getTerza().toLowerCase();
-                regione = regioneService.findById(regioneTxt);
-                status = AETypeProvincia.findByIso(Integer.parseInt(regione.sigla));
-                status = wrap.isValido() ? AETypeProvincia.metropolitana : status;
+
+                try {
+                    regione = regioneService.findById(regioneTxt);
+                    status = AETypeProvincia.findByIso(Integer.parseInt(regione.sigla));
+                    status = wrap.isValido() ? AETypeProvincia.metropolitana : status;
+                } catch (AMongoException unErrore) {
+                    logger.warn(unErrore, this.getClass(), "creaProvinceItaliane");
+                }
 
                 if (text.isValid(nome) && stato != null && regione != null && text.isValid(iso) && text.isValid(sigla)) {
                     if (creaReset(nome, sigla, regione, stato, iso, status)) {

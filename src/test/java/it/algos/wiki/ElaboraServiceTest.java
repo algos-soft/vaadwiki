@@ -2,6 +2,7 @@ package it.algos.wiki;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadwiki.backend.service.*;
@@ -129,7 +130,10 @@ public class ElaboraServiceTest extends WTest {
         assertNull(ottenutoGiorno);
 
         sorgente = "17 marzo";
-        previstoGiorno = giornoService.findByKey(sorgente);
+        try {
+            previstoGiorno = giornoService.findByKey(sorgente);
+        } catch (AMongoException unErrore) {
+        }
         ottenutoGiorno = service.fixGiorno(sorgente);
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
@@ -152,7 +156,10 @@ public class ElaboraServiceTest extends WTest {
         assertNull(ottenutoAnno);
 
         sorgente = "1874";
-        previstoAnno = annoService.findByKey(sorgente);
+        try {
+            previstoAnno = annoService.findByKey(sorgente);
+        } catch (AMongoException unErrore) {
+        }
         ottenutoAnno = service.fixAnno(sorgente);
         assertNotNull(ottenutoAnno);
         assertEquals(previstoAnno, ottenutoAnno);

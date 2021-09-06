@@ -141,7 +141,8 @@ public class BeanService extends AbstractService {
             return false;
         }
 
-        entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent);
+//        entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent);
+        System.out.println("Errore in BeanService.isModificata");
         return !entityBeanCurrent.equals(entityBeanRegistrataSulDatabaseMongo);
     }
 

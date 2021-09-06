@@ -2,7 +2,7 @@ package it.algos.vaadflow14.backend.packages.anagrafica.address;
 
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -54,7 +54,6 @@ public class AddressService extends AService {
         super(Address.class);
     }
 
-
     /**
      * Crea e registra una entityBean solo se non esisteva <br>
      * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
@@ -66,10 +65,10 @@ public class AddressService extends AService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-//    @Override
-//    public Address creaIfNotExist(final String keyPropertyValue) {
-//        return (Address) checkAndSave(newEntity(keyPropertyValue));
-//    }
+    //    @Override
+    //    public Address creaIfNotExist(final String keyPropertyValue) {
+    //        return (Address) checkAndSave(newEntity(keyPropertyValue));
+    //    }
 
 
     /**
@@ -114,7 +113,7 @@ public class AddressService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Address findById(final String keyID) {
+    public Address findById(final String keyID) throws AMongoException {
         return (Address) super.findById(keyID);
     }
 
@@ -128,7 +127,7 @@ public class AddressService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Address findByKey(final String keyValue) {
+    public Address findByKey(final String keyValue) throws AMongoException {
         return (Address) super.findByKey(keyValue);
     }
 
@@ -150,10 +149,10 @@ public class AddressService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-//    @Override
+    //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result=null;
-//        AIResult result = super.resetEmptyOnly();
+        AIResult result = null;
+        //        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 
         if (result.isErrato()) {
@@ -163,7 +162,7 @@ public class AddressService extends AService {
         //--da sostituire
         String message;
         message = String.format("Nel package %s la classe %s non ha ancora sviluppato il metodo resetEmptyOnly() ", "Address", "AddressService");
-//        return AResult.errato(message);
+        //        return AResult.errato(message);
 
         return result;
     }

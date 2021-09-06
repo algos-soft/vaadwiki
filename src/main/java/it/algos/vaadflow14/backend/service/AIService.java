@@ -69,7 +69,7 @@ public interface AIService {
      *
      * @return true if exist
      */
-    boolean isEsiste(final String keyId);
+    boolean isEsiste(final String keyId) throws AMongoException;
 
 
     /**
@@ -129,7 +129,7 @@ public interface AIService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    AEntity findById(final String keyID);
+    AEntity findById(final String keyID) throws AMongoException;
 
 
     /**
@@ -141,8 +141,22 @@ public interface AIService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    AEntity findByKey(final Serializable keyPropertyValue);
+    AEntity findByKey(final Serializable keyPropertyValue) throws AMongoException;
 
+
+    /**
+     * Retrieves an entity by a keyProperty.
+     * Cerca una singola entity di una collection con una query. <br>
+     * Restituisce un valore valido SOLO se ne esiste una sola <br>
+     *
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the founded entity unique or {@literal null} if none found
+     *
+     * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
+     */
+    AEntity findByProperty(String propertyName, Serializable propertyValue) throws AMongoException;
 
     /**
      * Cancella la collection <br>

@@ -4,9 +4,11 @@ import com.google.gson.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.bson.*;
@@ -86,7 +88,7 @@ public class AnnoService extends AService {
      * Crea e registra una entityBean col flag reset=true <br>
      *
      * @param ordine    (obbligatorio, unico)
-     * @param titolo   (obbligatorio, unico)
+     * @param titolo    (obbligatorio, unico)
      * @param bisestile (obbligatorio)
      * @param secolo    di riferimento (obbligatorio)
      *
@@ -118,7 +120,7 @@ public class AnnoService extends AService {
      * All properties <br>
      *
      * @param ordine    (obbligatorio, unico)
-     * @param titolo      (obbligatorio, unico)
+     * @param titolo    (obbligatorio, unico)
      * @param bisestile (obbligatorio)
      * @param secolo    di riferimento (obbligatorio)
      *
@@ -146,7 +148,7 @@ public class AnnoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Anno findById(final String keyID) {
+    public Anno findById(final String keyID) throws AMongoException {
         return (Anno) super.findById(keyID);
     }
 
@@ -162,7 +164,7 @@ public class AnnoService extends AService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Anno findByProperty(String propertyName, Serializable propertyValue) {
+    public Anno findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return (Anno) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -176,7 +178,7 @@ public class AnnoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Anno findByKey(final Serializable keyValue) {
+    public Anno findByKey(final Serializable keyValue) throws AMongoException {
         return (Anno) super.findByKey(keyValue);
     }
 
@@ -186,7 +188,7 @@ public class AnnoService extends AService {
         Gson gson = new Gson();
         Anno anno;
 
-        List<Document> products = mongo.mongoOp.getCollection("anno").find().skip(offset).limit(limit).into(new ArrayList<>());
+        List<Document> products = ((MongoService) mongo).mongoOp.getCollection("anno").find().skip(offset).limit(limit).into(new ArrayList<>());//@todo da controllare
 
         for (Document doc : products) {
 
@@ -203,7 +205,7 @@ public class AnnoService extends AService {
         String packageName = Anno.class.getSimpleName().toLowerCase();
         String collection = "secolo";
 
-        if (mongo.isValid(collection)) {
+        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
@@ -262,7 +264,7 @@ public class AnnoService extends AService {
             titoloSecolo = secoloEnum.getNome();
             titoloSecolo = titoloSecolo.toLowerCase();
             titoloSecolo = text.levaSpazi(titoloSecolo);
-            secolo = (Secolo) mongo.findByIdOld(Secolo.class, titoloSecolo);
+            secolo = (Secolo) ((MongoService) mongo).findByIdOld(Secolo.class, titoloSecolo);//@todo da controllare
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
                 if (creaReset(ordine, titolo, bisestile, secolo)) {
@@ -279,7 +281,7 @@ public class AnnoService extends AService {
             titoloSecolo = secoloEnum.getNome();
             titoloSecolo = titoloSecolo.toLowerCase();
             titoloSecolo = text.levaSpazi(titoloSecolo);
-            secolo = (Secolo) mongo.findByIdOld(Secolo.class, titoloSecolo);
+            secolo = (Secolo) ((MongoService) mongo).findByIdOld(Secolo.class, titoloSecolo);//@todo da controllare
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
                 if (creaReset(ordine, titolo, bisestile, secolo)) {

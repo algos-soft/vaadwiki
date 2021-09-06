@@ -5,6 +5,7 @@ import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -79,7 +80,7 @@ public class ADialogDelete<T> extends ADialog {
     public void confermaHandler() {
         //--azione locale
         if (entityBean != null) {
-            mongo.delete((AEntity) entityBean);
+            ((MongoService) mongo).delete((AEntity) entityBean);//@todo da controllare
             logger.info(AETypeLog.delete, String.format("Cancellata la entity %s%s%s", getCollection(), DUE_PUNTI, entityBean.toString()));
         }
         else {

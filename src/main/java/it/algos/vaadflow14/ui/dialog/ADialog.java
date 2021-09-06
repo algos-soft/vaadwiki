@@ -99,7 +99,7 @@ public class ADialog extends Dialog {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public MongoService mongo;
+    public AIMongoService mongo;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>

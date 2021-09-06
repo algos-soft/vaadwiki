@@ -3,9 +3,11 @@ package it.algos.vaadflow14.backend.packages.crono.giorno;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
@@ -130,7 +132,7 @@ public class GiornoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Giorno findById(final String keyID) {
+    public Giorno findById(final String keyID) throws AMongoException {
         return (Giorno) super.findById(keyID);
     }
 
@@ -146,7 +148,7 @@ public class GiornoService extends AService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Giorno findByProperty(String propertyName, Serializable propertyValue) {
+    public Giorno findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return (Giorno) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -160,7 +162,7 @@ public class GiornoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Giorno findByKey(final Serializable keyValue) {
+    public Giorno findByKey(final Serializable keyValue) throws AMongoException {
         return (Giorno) super.findByKey(keyValue);
     }
 
@@ -169,7 +171,7 @@ public class GiornoService extends AService {
         String packageName = Giorno.class.getSimpleName().toLowerCase();
         String collection = "mese";
 
-        if (mongo.isValid(collection)) {
+        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
@@ -224,7 +226,7 @@ public class GiornoService extends AService {
         for (HashMap mappaGiorno : lista) {
             titolo = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_TITOLO);
             titoloMese = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_MESE_TESTO);
-            mese = (Mese) mongo.findByIdOld(Mese.class, titoloMese);
+            mese = (Mese) ((MongoService) mongo).findByIdOld(Mese.class, titoloMese);//@todo da controllare
             ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
 
             numRec = creaReset(ordine, titolo, mese) ? numRec + 1 : numRec;

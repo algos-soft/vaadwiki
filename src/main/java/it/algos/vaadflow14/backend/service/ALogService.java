@@ -186,8 +186,10 @@ public class ALogService extends AbstractService {
      *
      * @param entityBean da modificare
      */
+    @Deprecated
     public void modifica(AEntity entityBean) {
-        modifica(entityBean, mongo.find(entityBean));
+//        modifica(entityBean, mongo.find(entityBean));
+        System.out.println("Errore in ALogService.modifica");
     }
 
     /**

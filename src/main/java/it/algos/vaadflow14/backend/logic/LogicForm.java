@@ -79,6 +79,24 @@ public abstract class LogicForm extends Logic {
     protected void fixEntityBean() {
         super.fixEntityBean();
 
+        String message;
+        String clazzName;
+        String keyID = routeParameter.get(KEY_BEAN_ENTITY) != null ? routeParameter.get(KEY_BEAN_ENTITY) : VUOTA;
+
+        if (text.isEmpty(keyID) || keyID.equals(KEY_NULL)) {
+            entityBean = entityService.newEntity();
+        }
+        else {
+            clazzName = text.primaMaiuscola(getClass().getSimpleName());
+            keyID = "polloz";
+            try {
+                entityBean = entityService.findById(keyID);
+            } catch (AMongoException unErrore) {
+                message = String.format("%s.%s: %s --- %s.%s()", entityClazz.getSimpleName(), entityBean, unErrore.getMessage(), clazzName, "fixEntityBean");
+                logger.error(AETypeLog.mongo, message);
+            }
+        }
+
         if (routeParameter.get(KEY_BEAN_PREV_ID) != null) {
             entityBeanPrevID = routeParameter.get(KEY_BEAN_PREV_ID);
         }
@@ -459,7 +477,7 @@ public abstract class LogicForm extends Logic {
         boolean status = false;
         AEntity entityBean = (currentForm != null) ? currentForm.getValidBean() : null;
 
-        if (mongo.delete(entityBean)) {
+        if (((MongoService) mongo).delete(entityBean)) {//@todo da controllare
             status = true;
             logger.delete(entityBean);
         }
@@ -484,7 +502,7 @@ public abstract class LogicForm extends Logic {
         }
 
         if (currentForm.isModificato()) {
-            if (mongo.isValid(entityClazz)) {
+            if (((MongoService) mongo).isValidCollection(entityClazz)) {//@todo da controllare
                 messageDialog = new MessageDialog().setTitle("Ritorno alla lista").setMessage(message);
                 messageDialog.addButton().text("Rimani").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
                 messageDialog.addButtonToLeft().text("Back").icon(iconBack).error().onClick(e -> backToList()).closeOnClick();
@@ -522,20 +540,20 @@ public abstract class LogicForm extends Logic {
             return;
         }
         backSteps += -1;
-        final AEntity newEntityBean = mongo.findByIdOld(entityClazz, newEntityBeanID);
+        final AEntity newEntityBean = ((MongoService) mongo).findByIdOld(entityClazz, newEntityBeanID);//@todo da controllare
         final Object valueProperty = reflection.getPropertyValue(newEntityBean, sortProperty);
-        final String beanPrevID = mongo.findPreviousID(entityClazz, sortProperty, valueProperty);
-        final String beanNextID = mongo.findNextID(entityClazz, sortProperty, valueProperty);
+        final String beanPrevID = ((MongoService) mongo).findPreviousID(entityClazz, sortProperty, valueProperty);//@todo da controllare
+        final String beanNextID = ((MongoService) mongo).findNextID(entityClazz, sortProperty, valueProperty);//@todo da controllare
 
         executeRoute(newEntityBeanID, beanPrevID, beanNextID);
     }
 
     protected boolean isNotPrimo() {
-        return mongo.findPrevious(entityClazz, entityBean.id) != null;
+        return ((MongoService) mongo).findPrevious(entityClazz, entityBean.id) != null;//@todo da controllare
     }
 
     protected boolean isNotUltimo() {
-        return mongo.findNext(entityClazz, entityBean.id) != null;
+        return ((MongoService) mongo).findNext(entityClazz, entityBean.id) != null;//@todo da controllare
     }
 
     /**
@@ -546,19 +564,28 @@ public abstract class LogicForm extends Logic {
      * .       false se manca qualche field e la situazione è recuperabile; resta nella view
      */
     public void saveClicked() {
+        //        String entityClazz;
+        String clazzName;
+        String message;
+
         //--passa al metodo del currentForm
         //--associa i fields del binder alla entityBean. Dalla UI alla business logic
         //--restituisce una entityBean solo se è valida, altrimenti null
         entityBean = currentForm != null ? currentForm.getValidBean() : null;
 
         if (entityBean != null) {
+            //            entityClazz = text.primaMaiuscola(entityBean.getClass().getSimpleName());
+            clazzName = text.primaMaiuscola(getClass().getSimpleName());
+
             //--regola in scrittura eventuali fields della UI NON associati al binder <br>
             writeSpecificFields();
 
             //--passa al service per la registrazione della entityBean
             try {
-                entityService.save(entityBean,operationForm);
+                entityService.save(entityBean, operationForm);
             } catch (AMongoException unErrore) {
+                message = String.format("%s.%s: %s --- %s.%s()", entityClazz.getSimpleName(), entityBean, unErrore.getMessage(), clazzName, "saveClicked");
+                logger.error(AETypeLog.mongo, message);
             }
 
             //--chiude questa view e torna a LogicList tramite @Route
@@ -584,7 +611,7 @@ public abstract class LogicForm extends Logic {
      */
     public boolean save(final AEntity entityToSave) {
         boolean status = false;
-        AEntity oldEntityBean;
+        AEntity oldEntityBean=null;
         //        AEntity entityBean = beforeSave(entityToSave, operationForm);
         AEntity entityBean = entityToSave;
 
@@ -601,10 +628,15 @@ public abstract class LogicForm extends Logic {
             if (operationForm == AEOperation.addNew && entityBean.id == null) {
                 entityBean = entityService.fixKey(entityBean);
             }
-            oldEntityBean = mongo.find(entityBean);
             try {
-                mongo.save(entityBean);
+                oldEntityBean = ((MongoService) mongo).find(entityBean);//@todo da controllare
             } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "save");
+            }
+            try {
+                ((MongoService) mongo).save(entityBean);//@todo da controllare
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "save");
             }
             status = entityBean != null;
             if (status) {

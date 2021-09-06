@@ -81,7 +81,7 @@ public class AGrid {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public MongoService mongo;
+    public AIMongoService mongo;
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
@@ -253,7 +253,7 @@ public class AGrid {
         String tag2 = "4.0" + TAG_EM;
         String tag3 = "5.0" + TAG_EM;
 
-        int dim = mongo.count(entityClazz);
+        int dim =  ((MongoService) mongo).count(entityClazz);//@todo da controllare
 
         if (dim < dim1) {
             indexWidth = tag1;
@@ -385,7 +385,7 @@ public class AGrid {
      * DataProvider è già filtrato (a monte) e vuole una query nulla <br>
      */
     public void fixGridHeader() {
-        int totRec = mongo.count(entityClazz);
+        int totRec =  ((MongoService) mongo).count(entityClazz);//@todo da controllare
         int itemsFiltrati = grid.getDataProvider().size(null);
         String message = VUOTA;
 

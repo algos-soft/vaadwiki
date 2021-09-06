@@ -1,21 +1,16 @@
 package it.algos.vaadflow14.ui.validator;
 
-import com.vaadin.flow.data.binder.ValidationResult;
-import com.vaadin.flow.data.binder.Validator;
-import com.vaadin.flow.data.binder.ValueContext;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.service.MongoService;
-import it.algos.vaadflow14.backend.service.TextService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.data.binder.*;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.io.Serializable;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.io.*;
 
 /**
  * Project vaadflow14
@@ -44,7 +39,7 @@ public class AUniqueValidator implements Validator {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public MongoService mongo;
+    public AIMongoService mongo;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -112,17 +107,20 @@ public class AUniqueValidator implements Validator {
             message = text.primaMaiuscola(propertyName) + " indicato esiste già";
 
             if (operationForm == AEOperation.addNew) {
-                entity = mongo.findOneUnique(entityBean.getClass(), propertyName, (Serializable) obj);
+                entity = ((MongoService) mongo).findOneUnique(entityBean.getClass(), propertyName, (Serializable) obj);//@todo da controllare
                 return entity != null ? ValidationResult.error(message) : ValidationResult.ok();
-            } else {
+            }
+            else {
                 if (propertyNewValue.equals(propertyOldValue)) {
                     return ValidationResult.ok();
-                } else {
-                    entity = mongo.findOneUnique(entityBean.getClass(), propertyName, (Serializable) obj);
+                }
+                else {
+                    entity = ((MongoService) mongo).findOneUnique(entityBean.getClass(), propertyName, (Serializable) obj);//@todo da controllare
                     return entity != null ? ValidationResult.error(message) : ValidationResult.ok();
                 }
             }
-        } else {
+        }
+        else {
             return ValidationResult.ok();
         }
     }

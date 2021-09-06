@@ -3,6 +3,8 @@ package it.algos.vaadwiki.backend.packages.genere;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
@@ -70,7 +72,7 @@ public class GenereService extends WikiService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Genere crea(final String singolare, final String pluraleMaschile, final String pluraleFemminile) {
-        return (Genere) mongo.insert(newEntity(singolare, pluraleMaschile, pluraleFemminile));
+        return (Genere) ((MongoService)mongo).insert(newEntity(singolare, pluraleMaschile, pluraleFemminile));
     }
 
 
@@ -159,7 +161,7 @@ public class GenereService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Genere findById(final String keyID) {
+    public Genere findById(final String keyID) throws AMongoException {
         return (Genere) super.findById(keyID);
     }
 
@@ -175,7 +177,7 @@ public class GenereService extends WikiService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Genere findByProperty(String propertyName, Serializable propertyValue) {
+    public Genere findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return (Genere) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -189,7 +191,7 @@ public class GenereService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Genere findByKey(final Serializable keyValue) {
+    public Genere findByKey(final Serializable keyValue) throws AMongoException {
         return (Genere) super.findByKey(keyValue);
     }
 

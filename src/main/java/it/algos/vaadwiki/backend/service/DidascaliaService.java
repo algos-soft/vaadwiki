@@ -30,6 +30,21 @@ public class DidascaliaService extends AbstractService {
 
 
     /**
+     * Costruisce la didascalia completa per una lista (persone di nome, persone di cognome) <br>
+     *
+     * @param bio completa
+     *
+     * @return didascalia completa
+     */
+    public String getLista(final Bio bio) {
+        String nomeCognome = this.getNomeCognome(bio);
+        String attivitaNazionalita = this.getAttivitaNazionalita(bio);
+        String natoMorto = this.getNatoMorto(bio);
+
+        return String.format("%s%s%s%s%s", nomeCognome, VIRGOLA_SPAZIO, attivitaNazionalita, SPAZIO, natoMorto);
+    }
+
+    /**
      * Costruisce il nome e cognome (obbligatori) <br>
      * Si usa il titolo della voce direttamente, se non contiene parentesi <br>
      *
@@ -122,5 +137,59 @@ public class DidascaliaService extends AbstractService {
 
         return attivitaNazionalita;
     }
+
+    /**
+     * Costruisce il blocco luogo-anno-nascita-morte (facoltativi) <br>
+     *
+     * @param bio completa
+     *
+     * @return luogo-anno-nascita-morte
+     */
+    public String getNatoMorto(final Bio bio) {
+        String natoMorto = VUOTA;
+        String tagNato = "n.";
+        String tagMorto = "†";
+        String wikiTitle;
+        String luogoNato = text.isValid(bio.luogoNato) ? bio.luogoNato : VUOTA;
+        String luogoNatoLink = bio.luogoNatoLink;
+        String annoNato = text.isValid(bio.annoNato) ? tagNato + bio.annoNato : VUOTA;
+        String luogoMorto = text.isValid(bio.luogoMorto) ? bio.luogoMorto : VUOTA;
+        String luogoMortoLink = bio.luogoMortoLink;
+        String annoMorto = text.isValid(bio.annoMorto) ? tagMorto + bio.annoMorto : VUOTA;
+
+        natoMorto += luogoNato;
+        natoMorto += VIRGOLA_SPAZIO;
+        natoMorto += annoNato;
+        natoMorto += SEP;
+        natoMorto += luogoMorto;
+        natoMorto += VIRGOLA_SPAZIO;
+        natoMorto += annoMorto;
+
+        natoMorto = text.levaCoda(natoMorto, SEP);
+        return text.setTonde(natoMorto);
+    }
+
+    //    /**
+    //     * Costruisce il blocco luogo-anno-nascita-morte (facoltativi) <br>
+    //     *
+    //     * @param wikiTitle      della pagina sul server wiki
+    //     * @param luogoNato      facoltativo
+    //     * @param luogoNatoLink  facoltativo
+    //     * @param annoNato       facoltativo
+    //     * @param luogoMorto     facoltativo
+    //     * @param luogoMortoLink facoltativo
+    //     * @param annoMorto      facoltativo
+    //     *
+    //     * @return luogo-anno-nascita-morte
+    //     */
+    //    public String getNatoMorto(final String wikiTitle, final String luogoNato, final String luogoNatoLink, final String annoNato, final String luogoMorto, final String luogoMortoLink, final String annoMorto) {
+    //        String natoMorto = VUOTA;
+    //
+    //        natoMorto+=luogoNato;
+    //        natoMorto+=luogoMorto;
+    //
+    //        return text.setTonde(natoMorto);
+    //    }
+
 
 }

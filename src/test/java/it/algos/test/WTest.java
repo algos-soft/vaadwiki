@@ -39,6 +39,8 @@ public abstract class WTest extends ATest {
 
     protected static final String PAGINA_SETTE = "Louis Winslow Austin";
 
+    protected static final String PAGINA_OTTO = "Sergio Ferrero";
+
     protected static final String PAGINA_DISAMBIGUA = "Rossi";
 
     protected static final String PAGINA_REDIRECT = "Regno di Napoli (1805-1815)";
@@ -236,6 +238,7 @@ public abstract class WTest extends ATest {
 
         queryBio.text = textService;
         queryBio.wikiApi = wikiApiService;
+        queryBio.appContext = appContext;
 
         elaboraService.bioUtility = bioUtilityService;
         elaboraService.logger = loggerService;
@@ -270,6 +273,23 @@ public abstract class WTest extends ATest {
         System.out.println(String.format("Titolo effettivo della voce: %s", sorgente));
         System.out.println(String.format("NomeCognome: %s", nomeCognome));
         System.out.println(String.format("AttivitaNazionalita: %s", attivitaNazionalita));
+    }
+
+    protected void print(final Bio bio, final String nomeCognome, final String attivitaNazionalita, String natoMorto) {
+        System.out.println(VUOTA);
+        System.out.println(String.format("Titolo effettivo della voce: %s", sorgente));
+        System.out.println(String.format("NomeCognome: %s", nomeCognome));
+        System.out.println(String.format("AttivitaNazionalita: %s", attivitaNazionalita));
+        System.out.println(String.format("Luogo-anno-nascita-morte: %s", natoMorto));
+    }
+
+    protected void print(final Bio bio, final String nomeCognome, final String attivitaNazionalita, String natoMorto, String didascaliaLista) {
+        System.out.println(VUOTA);
+        System.out.println(String.format("Titolo effettivo della voce: %s", sorgente));
+        System.out.println(String.format("NomeCognome: %s", nomeCognome));
+        System.out.println(String.format("AttivitaNazionalita: %s", attivitaNazionalita));
+        System.out.println(String.format("Luogo-anno-nascita-morte: %s", natoMorto));
+        System.out.println(String.format("Didascalia lista: %s", didascaliaLista));
     }
 
     protected void print(final Bio bio, final String ottenuto) {

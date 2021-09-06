@@ -19,8 +19,6 @@ public class AFiltro implements Serializable {
 
     private Criteria criteria;
 
-    //    private BasicDBObject query;
-
     private Sort sort;
 
     private String tag;
