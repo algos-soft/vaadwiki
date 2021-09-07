@@ -88,7 +88,6 @@ public abstract class LogicForm extends Logic {
         }
         else {
             clazzName = text.primaMaiuscola(getClass().getSimpleName());
-            keyID = "polloz";
             try {
                 entityBean = entityService.findById(keyID);
             } catch (AMongoException unErrore) {
@@ -117,13 +116,13 @@ public abstract class LogicForm extends Logic {
         super.fixPreferenze();
 
         boolean usaNew = annotation.usaNew(entityClazz);
-        boolean isResetMethod = false;
-
-        try {
-            isResetMethod = entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null;
-        } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
-        }
+//        boolean isResetMethod = false;
+//
+//        try {
+//            isResetMethod = entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null;
+//        } catch (Exception unErrore) {
+//            logger.error(unErrore, this.getClass(), "fixPreferenze");
+//        }
 
         //        super.usaBottoneCancella = AEPreferenza.usaMenuReset.is() && annotation.usaDelete(entityClazz);
         //        super.usaBottoneRegistra = AEPreferenza.usaMenuReset.is() && annotation.usaModifica(entityClazz);
@@ -133,7 +132,7 @@ public abstract class LogicForm extends Logic {
         super.usaBottoneAnnulla = false;
         super.usaBottoneCancella = usaNew && operationForm != AEOperation.addNew;
         super.usaBottoneConferma = false;
-        super.usaBottoneRegistra = usaNew || annotation.usaReset(entityClazz) && isResetMethod;
+//        super.usaBottoneRegistra = usaNew || annotation.usaReset(entityClazz) && isResetMethod;
 
         this.fixOperationForm();
     }
