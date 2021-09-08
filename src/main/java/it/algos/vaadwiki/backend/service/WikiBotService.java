@@ -44,7 +44,7 @@ import java.util.stream.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class WikiBotService extends AbstractService {
+public class WikiBotService extends WService {
 
     public static final String TAG_BIO = "Bio";
 
@@ -553,61 +553,61 @@ public class WikiBotService extends AbstractService {
         return mappa;
     }
 
-    /**
-     * Mappa chiave-valore con i valori 'troncati' <br>
-     * Valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) e senza la 'coda' risultante <br>
-     *
-     * @param mappaDownload coi valori originali provenienti dalla property tmplBioServer della entity Bio
-     *
-     * @return mappa con i valori 'troncati'
-     */
-    public LinkedHashMap<String, String> getMappaTroncata(LinkedHashMap<String, String> mappaDownload) {
-        LinkedHashMap<String, String> mappa = null;
-        ParBio par;
-        String key;
-        String value;
+//    /**
+//     * Mappa chiave-valore con i valori 'troncati' <br>
+//     * Valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) e senza la 'coda' risultante <br>
+//     *
+//     * @param mappaDownload coi valori originali provenienti dalla property tmplBioServer della entity Bio
+//     *
+//     * @return mappa con i valori 'troncati'
+//     */
+//    public LinkedHashMap<String, String> getMappaTroncata(LinkedHashMap<String, String> mappaDownload) {
+//        LinkedHashMap<String, String> mappa = null;
+//        ParBio par;
+//        String key;
+//        String value;
+//
+//        if (mappaDownload != null) {
+//            mappa = new LinkedHashMap<>();
+//            for (Map.Entry<String, String> entry : mappaDownload.entrySet()) {
+//                key = entry.getKey();
+//                value = entry.getValue();
+//                par = ParBio.getType(key);
+//                value = par.estraeValoreInizialeGrezzo(value);
+//                mappa.put(entry.getKey(), value);
+//            }
+//        }
+//
+//        return mappa;
+//    }
 
-        if (mappaDownload != null) {
-            mappa = new LinkedHashMap<>();
-            for (Map.Entry<String, String> entry : mappaDownload.entrySet()) {
-                key = entry.getKey();
-                value = entry.getValue();
-                par = ParBio.getType(key);
-                value = par.estraeValoreInizialeGrezzo(value);
-                mappa.put(entry.getKey(), value);
-            }
-        }
-
-        return mappa;
-    }
-
-    /**
-     * Mappa chiave-valore con i valori 'elaborati' <br>
-     * Valore elaborato valido (minuscole, quadre, ecc.) <br>
-     *
-     * @param mappaTroncata dopo alcuni tag chiave (<ref>, {{, ecc.) e senza la 'coda' risultante
-     *
-     * @return mappa con i valori 'elaborati'
-     */
-    public LinkedHashMap<String, String> getMappaElaborata(LinkedHashMap<String, String> mappaTroncata) throws AlgosException {
-        LinkedHashMap<String, String> mappa = null;
-        ParBio par;
-        String key;
-        String value;
-
-        if (mappaTroncata != null) {
-            mappa = new LinkedHashMap<>();
-            for (Map.Entry<String, String> entry : mappaTroncata.entrySet()) {
-                key = entry.getKey();
-                value = entry.getValue();
-                par = ParBio.getType(key);
-                value = par.regolaValoreInizialeValido(value);
-                mappa.put(entry.getKey(), value);
-            }
-        }
-
-        return mappa;
-    }
+//    /**
+//     * Mappa chiave-valore con i valori 'elaborati' <br>
+//     * Valore elaborato valido (minuscole, quadre, ecc.) <br>
+//     *
+//     * @param mappaTroncata dopo alcuni tag chiave (<ref>, {{, ecc.) e senza la 'coda' risultante
+//     *
+//     * @return mappa con i valori 'elaborati'
+//     */
+//    public LinkedHashMap<String, String> getMappaElaborata(LinkedHashMap<String, String> mappaTroncata) throws AlgosException {
+//        LinkedHashMap<String, String> mappa = null;
+//        ParBio par;
+//        String key;
+//        String value;
+//
+//        if (mappaTroncata != null) {
+//            mappa = new LinkedHashMap<>();
+//            for (Map.Entry<String, String> entry : mappaTroncata.entrySet()) {
+//                key = entry.getKey();
+//                value = entry.getValue();
+//                par = ParBio.getType(key);
+//                value = par.regolaValoreInizialeValido(value);
+//                mappa.put(entry.getKey(), value);
+//            }
+//        }
+//
+//        return mappa;
+//    }
 
 
     /**
@@ -733,24 +733,24 @@ public class WikiBotService extends AbstractService {
         return valoreValido.trim();
     }
 
-    /**
-     * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
-     *
-     * @param valoreGrezzo in entrata da elaborare
-     *
-     * @return valore finale valido del parametro
-     */
-    public String fixMaiuscola(String valoreGrezzo) {
-        String valoreValido = fixValoreGrezzo(valoreGrezzo);
-
-        if (text.isEmpty(valoreGrezzo)) {
-            return VUOTA;
-        }
-
-        valoreValido = text.primaMaiuscola(valoreValido);
-
-        return valoreValido.trim();
-    }
+//    /**
+//     * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+//     *
+//     * @param valoreGrezzo in entrata da elaborare
+//     *
+//     * @return valore finale valido del parametro
+//     */
+//    public String fixMaiuscola(String valoreGrezzo) {
+//        String valoreValido = fixValoreGrezzo(valoreGrezzo);
+//
+//        if (text.isEmpty(valoreGrezzo)) {
+//            return VUOTA;
+//        }
+//
+//        valoreValido = text.primaMaiuscola(valoreValido);
+//
+//        return valoreValido.trim();
+//    }
 
 
     /**

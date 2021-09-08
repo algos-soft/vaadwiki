@@ -229,7 +229,6 @@ public abstract class AService extends AbstractService implements AIService {
         //--precedenti (eventuali) valori per evidenziare le modifiche
         entityBeanOld = mongo.find(entityBeanDaRegistrare);//@todo da controllare QUI CE UN ERRORE
 
-
         //--esegue la registrazione sul database mongoDB
         //--con un controllo finale di congruità
         //--e gestione dell'eventuale errore
@@ -349,10 +348,17 @@ public abstract class AService extends AbstractService implements AIService {
         }
 
         if (sort != null) {
-            lista = ((MongoService) mongo).findAll(entityClazz, sort);//@todo da controllare
+            //            lista = ((MongoService) mongo).findAll(entityClazz, sort);//@todo da controllare
+
+            try {
+                lista = ((MongoService<?>) mongo).fetch(entityClazz);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+                return null;
+            }
         }
         else {
-            lista = ((MongoService) mongo).findAll(entityClazz, (Sort) null);//@todo da controllare
+            //            lista = ((MongoService) mongo).findAll(entityClazz, (Sort) null);//@todo da controllare
         }
 
         return lista;

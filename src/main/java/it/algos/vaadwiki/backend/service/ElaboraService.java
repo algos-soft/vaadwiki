@@ -5,13 +5,10 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
-import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
 import it.algos.vaadwiki.backend.packages.nome.*;
-import it.algos.vaadwiki.backend.packages.prenome.*;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -37,72 +34,13 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class ElaboraService extends AbstractService {
+public class ElaboraService extends WService {
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public GiornoService giornoService;
+    public static final List<String> MASCHI = Arrays.asList(new String[]{"M", "m", "Maschio", "maschio", "Uomo", "uomo"});
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public AnnoService annoService;
+    public static final List<String> FEMMINE = Arrays.asList(new String[]{"F", "f", "Femmina", "femmina", "Donna", "donna"});
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public AttivitaService attivitaService;
-
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public NazionalitaService nazionalitaService;
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public NomeService nomeService;
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public PrenomeService prenomeService;
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public BioUtility bioUtility;
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public BioService bioService;
+    public static final List<String> TRANS = Arrays.asList(new String[]{"trans", "incerto", "non si sa", "dubbio", "?"});
 
 
     /**
@@ -170,7 +108,7 @@ public class ElaboraService extends AbstractService {
                     } catch (AlgosException unErrore) {
                         logger.info(unErrore, this.getClass(), "setValue");
                     } catch (Exception unErrore) {
-                        logger.info(String.format("%s nel ParBio %s",unErrore.toString(),par.getTag()), this.getClass(), "setValue");
+                        logger.info(String.format("%s nel ParBio %s", unErrore.toString(), par.getTag()), this.getClass(), "setValue");
                     }
                 }
             }
@@ -187,8 +125,8 @@ public class ElaboraService extends AbstractService {
      *
      * @return testoValido regolato in uscita
      */
-    public String fixNomeValido(final String testoGrezzo) {
-        String testoValido = fixValoreGrezzo(testoGrezzo);
+    public String fixNome(final String testoGrezzo) {
+        String testoValido = wikiBotService.estraeValoreInizialeGrezzoPuntoAmmesso(testoGrezzo);
         List<String> listaPrenomi;
 
         if (testoValido.contains(SPAZIO)) {
@@ -215,7 +153,7 @@ public class ElaboraService extends AbstractService {
         String testoValido = VUOTA;
 
         if (text.isValid(testoGrezzo)) {
-            testoValido = fixNomeValido(testoGrezzo);
+            testoValido = fixNome(testoGrezzo);
         }
 
         if (text.isValid(testoValido)) {
@@ -246,8 +184,43 @@ public class ElaboraService extends AbstractService {
      *
      * @return testoValido regolato in uscita
      */
-    public String fixCognomeValido(String testoGrezzo) {
+    public String fixCognome(String testoGrezzo) {
         return fixValoreGrezzo(testoGrezzo);
+    }
+
+
+    /**
+     * Regola questa property <br>
+     * <p>
+     * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
+     * A seconda del flag:
+     * CONTROLLA che il valore sia valido - solo M o F <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testo/parametro regolato in uscita
+     */
+    public String fixSesso(String testoGrezzo) {
+        String testoValido = fixValoreGrezzo(testoGrezzo);
+        testoValido = testoValido.toLowerCase();
+
+        //        if (testoValido.equals("m") || testoValido.equals("maschio") || testoValido.equals("uomo")) {
+        //            testoValido = "M";
+        //        }
+
+        //                if (MASCHI.) {
+        //                    testoValido = "M";
+        //                }
+
+        if (testoValido.equals("f") || testoValido.equals("femmina") || testoValido.equals("donna")) {
+            testoValido = "F";
+        }
+
+        if (testoValido.equals("trans") || testoValido.equals("incerto") || testoValido.equals("non si sa") || testoValido.equals("dubbio") || testoValido.equals("?")) {
+            testoValido = VUOTA;
+        }
+
+        return testoValido;
     }
 
     /**
@@ -556,6 +529,9 @@ public class ElaboraService extends AbstractService {
 
         //--elimina ref in coda
         valoreValido = text.levaDopo(valoreValido, REF_OPEN);
+
+        //--elimina quadra in coda
+        valoreValido = text.levaDopo(valoreValido, QUADRA_INI);
 
         return valoreValido.trim();
     }

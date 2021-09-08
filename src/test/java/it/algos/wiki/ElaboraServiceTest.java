@@ -1,8 +1,8 @@
 package it.algos.wiki;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
@@ -118,6 +118,18 @@ public class ElaboraServiceTest extends WTest {
         return new String[]{ANNO_UNO, ANNO_DUE, ANNO_TRE, ANNO_QUATTRO, ANNO_CINQUE, ANNO_SEI, ANNO_SETTE};
     }
 
+//    public static String[] MASCHI() {
+//        return new String[]{"M", "m", "Maschio", "maschio", "Uomo", "uomo"};
+//    }
+//
+//    public static String[] FEMMINE() {
+//        return new String[]{"F", "f", "Femmina", "femmina", "Donna", "donna"};
+//    }
+//
+//    public static String[] TRANS() {
+//        return new String[]{"trans", "incerto", "non si sa", "dubbio", "?"};
+//    }
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      * Invocare PRIMA il metodo setUpStartUp() della superclasse <br>
@@ -133,6 +145,7 @@ public class ElaboraServiceTest extends WTest {
         service.mongo = mongoService;
         service.text = textService;
         service.annotation = annotationService;
+        service.wikiBotService = wikiBotService;
     }
 
 
@@ -159,7 +172,7 @@ public class ElaboraServiceTest extends WTest {
         FlowVar.typeSerializing = AETypeSerializing.gson;
 
         sorgente = nome;
-        ottenuto = service.fixNomeValido(sorgente);
+        ottenuto = service.fixNome(sorgente);
         assertTrue(textService.isValid(ottenuto));
         printNome(sorgente, ottenuto);
     }
@@ -173,17 +186,42 @@ public class ElaboraServiceTest extends WTest {
         System.out.println("2 - fixCognome");
 
         sorgente = cognome;
-        ottenuto = service.fixCognomeValido(sorgente);
+        ottenuto = service.fixCognome(sorgente);
         assertTrue(textService.isValid(ottenuto));
         printNome(sorgente, ottenuto);
     }
 
-
     @Test
     @Order(3)
-    @DisplayName("3 - fixGiorno")
+    @DisplayName("3 - fixSesso")
+    void fixSesso() {
+        System.out.println("3 - fixSesso");
+        System.out.println(VUOTA);
+
+        System.out.println("**********");
+        for (String tagInput : ElaboraService.MASCHI) {
+            ottenuto = service.fixSesso(tagInput);
+            printSesso(tagInput,ottenuto);
+        }
+
+        System.out.println("**********");
+        for (String tagInput : ElaboraService.FEMMINE) {
+            ottenuto = service.fixSesso(tagInput);
+            printSesso(tagInput,ottenuto);
+        }
+
+        System.out.println("**********");
+        for (String tagInput : ElaboraService.TRANS) {
+            ottenuto = service.fixSesso(tagInput);
+            printSesso(tagInput,ottenuto);
+        }
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("4 - fixGiorno")
     void fixGiorno() {
-        System.out.println("3 - fixGiorno");
+        System.out.println("4 - fixGiorno");
         FlowVar.typeSerializing = AETypeSerializing.gson;
 
         sorgente = "testo errato";
@@ -211,10 +249,10 @@ public class ElaboraServiceTest extends WTest {
 
 
     @Test
-    @Order(4)
-    @DisplayName("4 - fixAnno")
+    @Order(5)
+    @DisplayName("5 - fixAnno")
     void fixAnno() {
-        System.out.println("4 - fixAnno");
+        System.out.println("5 - fixAnno");
         FlowVar.typeSerializing = AETypeSerializing.gson;
 
         sorgente = "testo errato";
@@ -242,8 +280,8 @@ public class ElaboraServiceTest extends WTest {
     }
 
     @Test
-    @Order(5)
-    @DisplayName("5 - fixAttivita")
+    @Order(6)
+    @DisplayName("6 - fixAttivita")
     void fixAttivita() {
 
         sorgente = "testo errato";
@@ -271,20 +309,25 @@ public class ElaboraServiceTest extends WTest {
     }
 
     @Test
-    @Order(6)
-    @DisplayName("6 - fixAttivita")
+    @Order(7)
+    @DisplayName("7 - fixNazionalita")
     void fixNazionalita() {
     }
+
     @Test
     @Order(10)
-    @DisplayName("10 - fixAttivita")
+    @DisplayName("10 - fixxxx")
     void fixNazionxxxalita() {
     }
 
 
-
     private void printNome(final String grezzo, final String elaborato) {
         System.out.println(String.format("'%s' -> [%s]", grezzo, elaborato));
+        System.out.println(VUOTA);
+    }
+
+    private void printSesso(final String tagInput, final String tagValido) {
+        System.out.println(String.format("'%s' -> [%s]", tagInput, tagValido));
         System.out.println(VUOTA);
     }
 

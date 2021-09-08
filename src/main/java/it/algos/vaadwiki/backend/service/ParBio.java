@@ -22,27 +22,10 @@ public enum ParBio {
     titolo("Titolo", "titolo", false, false, false, false, false) {
     },// end of single enumeration
 
-    //    nome("Nome", "nome", true, true, true, true, false) {
-    //        @Override
-    //        public void setValue(final Bio bio, final String value) {
-    //            bio.nome = text.isValid(value) ? elabora.fixNomeValido(value) : null;
-    //        }
-    //
-    //        @Override
-    //        public String fixValoreGrezzo(final String valoreGrezzo) {
-    //            return elabora.fixMinuscola(valoreGrezzo);
-    //        }
-    //
-    //        @Override
-    //        public String getValue(final Bio bio) {
-    //            return bio != null && bio.nome != null ? bio.nome : VUOTA;
-    //        }
-    //    },// end of single enumeration
-
     nome("Nome", "nome", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws AlgosException {
-            bio.nome = text.isValid(value) ? elabora.fixNomeValido(value) : null;
+            bio.nome = text.isValid(value) ? elabora.fixNome(value) : null;
         }
 
         @Override
@@ -54,13 +37,13 @@ public enum ParBio {
     cognome("Cognome", "cognome", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws AlgosException {
-            bio.cognome = text.isValid(value) ? elabora.fixCognomeValido(value) : null;
+            bio.cognome = text.isValid(value) ? elabora.fixCognome(value) : null;
         }
 
-        @Override
-        public String fixValoreGrezzo(final String valoreGrezzo) {
-            return elabora.fixMinuscola(valoreGrezzo);
-        }
+        //        @Override
+        //        public String fixValoreGrezzo(final String valoreGrezzo) {
+        //            return elabora.fixMinuscola(valoreGrezzo);
+        //        }
 
         @Override
         public String getValue(final Bio bio) {
@@ -90,10 +73,10 @@ public enum ParBio {
     },// end of single enumeration
 
     sesso("Sesso", "sesso", true, true, true, true, false) {
-        //        @Override
-        //        public void setValue(Bio bio, String value, LibBio libBio) {
-        //            bio.sesso = value.equals("") ? null : libBio.fixSessoValido(value, true);
-        //        }
+        @Override
+        public void setValue(Bio bio, String value) throws AlgosException {
+            bio.sesso = value.equals("") ? null : elabora.fixSesso(value);
+        }
 
         //        public String fixValoreGrezzo(String valoreGrezzo) {
         //            return libBio.fixSessoValido(valoreGrezzo, false);
@@ -103,10 +86,10 @@ public enum ParBio {
         //            return libBio.fixSessoValido(valoreGrezzo, true);
         //        }
 
-        //        @Override
-        //        public String getValue(Bio bio) {
-        //            return bio.sesso != null ? bio.sesso : "";
-        //        }
+        @Override
+        public String getValue(Bio bio) {
+            return bio.sesso != null ? bio.sesso : VUOTA;
+        }
     },// end of single enumeration
 
     luogoNascita("LuogoNascita", "luogoNato", true, true, true, true, false) {
@@ -150,17 +133,17 @@ public enum ParBio {
             bio.giornoNato = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
         }
 
-        public String estraeValoreInizialeGrezzo(String testoOriginario) {
-            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-        }
-
-        public String fixValoreGrezzo(String valoreGrezzo) {
-            return elabora.fixGiornoValido(valoreGrezzo);
-        }
-
-        public String fixParametro(String valoreGrezzo) {
-            return elabora.fixGiornoValido(valoreGrezzo);
-        }
+        //        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+        //            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
+        //        }
+        //
+        //        public String fixValoreGrezzo(String valoreGrezzo) {
+        //            return elabora.fixGiornoValido(valoreGrezzo);
+        //        }
+        //
+        //        public String fixParametro(String valoreGrezzo) {
+        //            return elabora.fixGiornoValido(valoreGrezzo);
+        //        }
 
         @Override
         public String getValue(Bio bio) {
@@ -201,18 +184,18 @@ public enum ParBio {
             bio.luogoMorto = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
         }
 
-        //        public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
-        //            return libBio.estraeValoreInizialeGrezzoPuntoAmmesso(valorePropertyTmplBioServer);
-        //        }
-
-        //        public String fixValoreGrezzo(String valoreGrezzo) {
-        //            return libBio.fixMaiuscola(valoreGrezzo);
-        //        }
-
-        //        @Override
-        //        public String fix(String value, LibBio libBio) {
-        //            return libBio.fixLuogoValido(value);
-        //        }
+        //                public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
+        //                    return libBio.estraeValoreInizialeGrezzoPuntoAmmesso(valorePropertyTmplBioServer);
+        //                }
+        //
+        //                public String fixValoreGrezzo(String valoreGrezzo) {
+        //                    return libBio.fixMaiuscola(valoreGrezzo);
+        //                }
+        //
+        //                @Override
+        //                public String fix(String value, LibBio libBio) {
+        //                    return libBio.fixLuogoValido(value);
+        //                }
 
         @Override
         public String getValue(Bio bio) {
@@ -250,17 +233,17 @@ public enum ParBio {
             bio.giornoMorto = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
         }
 
-        public String estraeValoreInizialeGrezzo(String testoOriginario) {
-            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-        }
-
-        public String fixValoreGrezzo(String valoreGrezzo) {
-            return elabora.fixGiornoValido(valoreGrezzo);
-        }
-
-        public String fixParametro(String valoreGrezzo) {
-            return elabora.fixGiornoValido(valoreGrezzo);
-        }
+        //        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+        //            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
+        //        }
+        //
+        //        public String fixValoreGrezzo(String valoreGrezzo) {
+        //            return elabora.fixGiornoValido(valoreGrezzo);
+        //        }
+        //
+        //        public String fixParametro(String valoreGrezzo) {
+        //            return elabora.fixGiornoValido(valoreGrezzo);
+        //        }
 
         @Override
         public String getValue(Bio bio) {
@@ -276,17 +259,17 @@ public enum ParBio {
             }
         }
 
-        public String estraeValoreInizialeGrezzo(String testoOriginario) {
-            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-        }
-
-        public String fixValoreGrezzo(String valoreGrezzo) throws AlgosException {
-            return elabora.fixAnnoValido(valoreGrezzo);
-        }
-
-        public String fixParametro(String valoreGrezzo) throws AlgosException {
-            return elabora.fixAnnoValido(valoreGrezzo);
-        }
+        //        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+        //            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
+        //        }
+        //
+        //        public String fixValoreGrezzo(String valoreGrezzo) throws AlgosException {
+        //            return elabora.fixAnnoValido(valoreGrezzo);
+        //        }
+        //
+        //        public String fixParametro(String valoreGrezzo) throws AlgosException {
+        //            return elabora.fixAnnoValido(valoreGrezzo);
+        //        }
 
         @Override
         public String getValue(Bio bio) {
@@ -312,13 +295,13 @@ public enum ParBio {
             bio.attivita = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio, value);
         }
 
-        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio, valoreGrezzo);
-        }
-
-        public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio, valoreGrezzo);
-        }
+        //        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
+        //            return elabora.fixAttivitaValida(bio, valoreGrezzo);
+        //        }
+        //
+        //        public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
+        //            return elabora.fixAttivitaValida(bio, valoreGrezzo);
+        //        }
 
         @Override
         public String getValue(Bio bio) {
@@ -332,13 +315,13 @@ public enum ParBio {
             bio.attivita2 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio, value);
         }
 
-        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio, valoreGrezzo);
-        }
-
-        public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio, valoreGrezzo);
-        }
+        //        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
+        //            return elabora.fixAttivitaValida(bio, valoreGrezzo);
+        //        }
+        //
+        //        public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
+        //            return elabora.fixAttivitaValida(bio, valoreGrezzo);
+        //        }
 
         @Override
         public String getValue(Bio bio) {
@@ -352,13 +335,13 @@ public enum ParBio {
             bio.attivita3 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio, value);
         }
 
-        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio, valoreGrezzo);
-        }
-
-        public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio, valoreGrezzo);
-        }
+        //        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
+        //            return elabora.fixAttivitaValida(bio, valoreGrezzo);
+        //        }
+        //
+        //        public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
+        //            return elabora.fixAttivitaValida(bio, valoreGrezzo);
+        //        }
 
         @Override
         public String getValue(Bio bio) {
@@ -375,13 +358,13 @@ public enum ParBio {
             bio.nazionalita = value.equals(VUOTA) ? null : elabora.fixNazionalitaValida(value);
         }
 
-        public String fixValoreGrezzo(String valoreGrezzo) {
-            return elabora.fixNazionalitaValida(valoreGrezzo);
-        }
-
-        public String fixParametro(String valoreGrezzo) {
-            return elabora.fixNazionalitaValida(valoreGrezzo);
-        }
+        //        public String fixValoreGrezzo(String valoreGrezzo) {
+        //            return elabora.fixNazionalitaValida(valoreGrezzo);
+        //        }
+        //
+        //        public String fixParametro(String valoreGrezzo) {
+        //            return elabora.fixNazionalitaValida(valoreGrezzo);
+        //        }
 
         @Override
         public String getValue(Bio bio) {
@@ -578,34 +561,34 @@ public enum ParBio {
         return lista;
     }// end of method
 
-    /**
-     * Restituisce un valore grezzo troncato dopo alcuni tag chiave <br>
-     * <p>
-     * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
-     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
-     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
-     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
-     *
-     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
-     *
-     * @return valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
-     */
-    public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
-        return wikiBot.estraeValoreInizialeGrezzoPuntoEscluso(valorePropertyTmplBioServer);
-    }
+    //    /**
+    //     * Restituisce un valore grezzo troncato dopo alcuni tag chiave <br>
+    //     * <p>
+    //     * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+    //     * Restituisce un valore GREZZO che deve essere ancora elaborato <br>
+    //     * Eventuali parti terminali inutili vengono scartate ma devono essere conservate a parte per il template <br>
+    //     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+    //     *
+    //     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
+    //     *
+    //     * @return valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
+    //     */
+    //    public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
+    //        return wikiBot.estraeValoreInizialeGrezzoPuntoEscluso(valorePropertyTmplBioServer);
+    //    }
 
-    /**
-     * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
-     * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
-     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
-     *
-     * @param valoreGrezzo in entrata da elaborare
-     *
-     * @return valore finale valido del parametro
-     */
-    public String fixValoreGrezzo(final String valoreGrezzo) throws AlgosException {
-        return wikiBot.fixValoreGrezzo(valoreGrezzo);
-    }
+    //    /**
+    //     * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+    //     * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+    //     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+    //     *
+    //     * @param valoreGrezzo in entrata da elaborare
+    //     *
+    //     * @return valore finale valido del parametro
+    //     */
+    //    public String fixValoreGrezzo(final String valoreGrezzo) throws AlgosException {
+    //        return wikiBot.fixValoreGrezzo(valoreGrezzo);
+    //    }
 
     /**
      * Elabora un valore GREZZO e restituisce un parametro VALIDO <br>
@@ -621,22 +604,22 @@ public enum ParBio {
     //        return libBio.fixValoreGrezzo(valoreGrezzo);
     //    }
 
-    /**
-     * Restituisce un valore valido troncato dopo alcuni tag chiave ed elaborato <br>
-     * <p>
-     * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
-     * Elabora il valore grezzo (minuscole, quadre, ecc.), che diventa valido e restituibile al server <br>
-     * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
-     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
-     *
-     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
-     *
-     * @return valore valido troncato ed elaborato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
-     */
-    public String regolaValoreInizialeValido(String valorePropertyTmplBioServer) throws AlgosException {
-        String valoreGrezzo = estraeValoreInizialeGrezzo(valorePropertyTmplBioServer);
-        return fixValoreGrezzo(valoreGrezzo);
-    }
+    //    /**
+    //     * Restituisce un valore valido troncato dopo alcuni tag chiave ed elaborato <br>
+    //     * <p>
+    //     * ELIMINA gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
+    //     * Elabora il valore grezzo (minuscole, quadre, ecc.), che diventa valido e restituibile al server <br>
+    //     * NON controlla la corrispondenza dei parametri linkati (Giorno, Anno, Attivita, Nazionalita) <br>
+    //     * Può essere sottoscritto da alcuni parametri che rispondono in modo particolare <br>
+    //     *
+    //     * @param valorePropertyTmplBioServer testo originale proveniente dalla property tmplBioServer della entity Bio
+    //     *
+    //     * @return valore valido troncato ed elaborato dopo alcuni tag chiave (<ref>, {{, ecc.) <br>
+    //     */
+    //    public String regolaValoreInizialeValido(String valorePropertyTmplBioServer) throws AlgosException {
+    //        String valoreGrezzo = estraeValoreInizialeGrezzo(valorePropertyTmplBioServer);
+    //        return fixValoreGrezzo(valoreGrezzo);
+    //    }
 
     /**
      * Restituisce un valore valido del parametro <br>
