@@ -146,7 +146,7 @@ public class GenereService extends WikiService {
      */
     @Override
     public List<Genere> fetch() {
-        return (List<Genere>)super.fetch();
+            return (List<Genere>)super.fetch();
     }
 
 

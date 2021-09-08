@@ -154,6 +154,21 @@ public class AnnoService extends AService {
 
 
     /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Anno findByKey(final Serializable keyValue) throws AMongoException {
+        return (Anno) super.findByKey(keyValue);
+    }
+
+
+    /**
      * Retrieves an entity by a keyProperty.
      * Cerca una singola entity con una query. <br>
      * Restituisce un valore valido SOLO se ne esiste una sola <br>
@@ -166,20 +181,6 @@ public class AnnoService extends AService {
     @Override
     public Anno findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return (Anno) super.findByProperty(propertyName, propertyValue);
-    }
-
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param keyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Anno findByKey(final Serializable keyValue) throws AMongoException {
-        return (Anno) super.findByKey(keyValue);
     }
 
 

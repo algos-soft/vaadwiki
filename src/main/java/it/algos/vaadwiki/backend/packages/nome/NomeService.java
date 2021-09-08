@@ -140,6 +140,20 @@ public class NomeService extends AService {
 
 
     /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Nome findByKey(final Serializable keyValue) throws AMongoException {
+        return (Nome) super.findByKey(keyValue);
+    }
+
+    /**
      * Retrieves an entity by a keyProperty.
      * Cerca una singola entity con una query. <br>
      * Restituisce un valore valido SOLO se ne esiste una sola <br>
@@ -154,19 +168,6 @@ public class NomeService extends AService {
         return (Nome) super.findByProperty(propertyName, propertyValue);
     }
 
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param keyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Nome findByKey(final Serializable keyValue) throws AMongoException {
-        return (Nome) super.findByKey(keyValue);
-    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>

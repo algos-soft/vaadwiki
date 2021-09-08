@@ -229,6 +229,7 @@ public abstract class AService extends AbstractService implements AIService {
         //--precedenti (eventuali) valori per evidenziare le modifiche
         entityBeanOld = mongo.find(entityBeanDaRegistrare);//@todo da controllare QUI CE UN ERRORE
 
+
         //--esegue la registrazione sul database mongoDB
         //--con un controllo finale di congruità
         //--e gestione dell'eventuale errore
@@ -390,6 +391,7 @@ public abstract class AService extends AbstractService implements AIService {
         return newEntityBean;
     }
 
+
     /**
      * Retrieves an entity by its id.
      *
@@ -403,11 +405,17 @@ public abstract class AService extends AbstractService implements AIService {
     public AEntity findById(final String keyID) throws AMongoException {
         AEntity entityBean = null;
 
-        try {
-            entityBean = mongo.findById(entityClazz, keyID);
-        } catch (AMongoException unErrore) {
-            logger.error(unErrore, this.getClass(), "findById");
-        }
+        entityBean = mongo.findById(entityClazz, keyID);
+//        try {
+//            entityBean = mongo.findById(entityClazz, keyID);
+//        } catch (AMongoException unErrore) {
+//            if (logger != null) {
+//                logger.error(unErrore, this.getClass(), "findById");
+//            }
+//            else {
+//                throw new AMongoException(unErrore);
+//            }
+//        }
 
         return entityBean;
     }
@@ -448,7 +456,7 @@ public abstract class AService extends AbstractService implements AIService {
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
     public AEntity findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
-        return mongo.findByKey(entityClazz, propertyName, propertyValue);
+        return mongo.findByProperty(entityClazz, propertyName, propertyValue);
     }
 
 

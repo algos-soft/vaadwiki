@@ -504,7 +504,7 @@ public class GsonService extends AbstractService {
         try {
             entityBean = (AEntity) gSon.fromJson(jsonString, entityClazz);
         } catch (JsonSyntaxException unErrore) {
-            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            logger.error(unErrore, this.getClass(), "creaNoDbRef");
         }
 
         return entityBean;

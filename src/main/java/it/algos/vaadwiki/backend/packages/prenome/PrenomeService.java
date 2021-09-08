@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * Project: vaadwiki <br>
@@ -132,6 +133,38 @@ public class PrenomeService extends WikiService {
         return (Prenome) super.findByKey(keyValue);
     }
 
+    /**
+     * Fetches all entities of the type <br>
+     * <p>
+     * Ordinate secondo l'annotation @AIView(sortProperty) della entityClazz <br>
+     * Ordinate secondo la property 'ordine', se esiste <br>
+     * Ordinate secondo la property 'code', se esiste <br>
+     * Ordinate secondo la property 'descrizione', se esiste <br>
+     * Altrimenti, ordinate in ordine di inserimento nel DB mongo <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
+     *
+     * @return all ordered entities
+     */
+    @Override
+    public List<Prenome> fetch() {
+        return (List<Prenome>) super.fetch();
+    }
+
+    /**
+     * Fetches all code of Prenome <br>
+     *
+     * @return all selected property
+     */
+    public List<String> fetchCode() {
+        List<String> lista = new ArrayList<>();
+        List<Prenome> listaEntities = fetch();
+
+        for (Prenome prenome : listaEntities) {
+            lista.add(prenome.code);
+        }
+
+        return lista;
+    }
 
     /**
      * Esegue un azione di download, specifica del programma/package in corso <br>

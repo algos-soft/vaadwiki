@@ -1,12 +1,16 @@
 package it.algos.unit;
 
 import it.algos.test.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
-import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
+
+import java.io.*;
 
 /**
  * Project vaadflow14
@@ -33,6 +37,7 @@ public class GiornoServiceTest extends ATest {
     @InjectMocks
     private GiornoService service;
 
+    private Giorno giorno;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -57,75 +62,157 @@ public class GiornoServiceTest extends ATest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
+
+        giorno = null;
     }
 
 
     @Test
     @Order(1)
-    @DisplayName("1 - findById")
+    @DisplayName("1 - findById (gson)")
     void findById() {
-        sorgente = "29 gennaio";
+        System.out.println("1 - findById (gson)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+
+        sorgente = "43 novembre";
         try {
-            entityBean = service.findById(sorgente);
+            giorno = service.findById(sorgente);
+            assertNotNull(giorno);
+            printGiornoID(sorgente, giorno);
         } catch (Exception unErrore) {
+            assertNull(giorno);
+            printGiornoID(sorgente, giorno);
+            System.out.println(unErrore);
         }
-        assertNull(entityBean);
 
         sorgente = "29gennaio";
+        giorno = null;
         try {
-            entityBean = service.findById(sorgente);
+            giorno = service.findById(sorgente);
+            assertNotNull(giorno);
+            printGiornoID(sorgente, giorno);
         } catch (Exception unErrore) {
+            assertNull(giorno);
+            printGiornoID(sorgente, giorno);
+            System.out.println(unErrore);
         }
-        assertNotNull(entityBean);
+
+        sorgente = "29 gennaio";
+        giorno = null;
+        try {
+            giorno = service.findById(sorgente);
+            assertNotNull(giorno);
+            printGiornoID(sorgente, giorno);
+        } catch (Exception unErrore) {
+            assertNull(giorno);
+            printGiornoID(sorgente, giorno);
+            System.out.println(unErrore);
+        }
     }
 
 
     @Test
     @Order(2)
-    @DisplayName("2 - findByProperty")
+    @DisplayName("2 - findByKey (gson)")
     void findByKey() {
-        sorgente = "29gennaio";
+        System.out.println("2 - findByKey (gson)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+
+        sorgente = "43 novembre";
         try {
-            entityBean = service.findByProperty( sorgente2, sorgente);
-        } catch (AMongoException unErrore) {
+            giorno = service.findByKey(sorgente);
+            assertNotNull(giorno);
+            printGiornoKey(sorgente, giorno);
+        } catch (Exception unErrore) {
+            assertNull(giorno);
+            printGiornoKey(sorgente, giorno);
+            System.out.println(unErrore);
         }
-        assertNull(entityBean);
 
         sorgente = "29gennaio";
-        sorgente2 = "titolo";
+        giorno = null;
         try {
-            entityBean = service.findByProperty( sorgente2, sorgente);
-        } catch (AMongoException unErrore) {
+            giorno = service.findByKey(sorgente);
+            assertNotNull(giorno);
+            printGiornoKey(sorgente, giorno);
+        } catch (Exception unErrore) {
+            assertNull(giorno);
+            printGiornoKey(sorgente, giorno);
+            System.out.println(unErrore);
         }
-        assertNull(entityBean);
 
         sorgente = "29 gennaio";
-        sorgente2 = "titolo";
+        giorno = null;
         try {
-            entityBean = service.findByProperty( sorgente2, sorgente);
-        } catch (AMongoException unErrore) {
+            giorno = service.findByKey(sorgente);
+            assertNotNull(giorno);
+            printGiornoKey(sorgente, giorno);
+        } catch (Exception unErrore) {
+            assertNull(giorno);
+            printGiornoKey(sorgente, giorno);
+            System.out.println(unErrore);
         }
-        assertNotNull(entityBean);
     }
 
 
     @Test
     @Order(3)
-    @DisplayName("3 - findByKey")
-    void findByKey3() {
-        sorgente = "29gennaio";
-        try {
-            entityBean = service.findByKey( sorgente);
-        } catch (AMongoException unErrore) {
-        }
-        assertNull(entityBean);
+    @DisplayName("3 - findByProperty (gson)")
+    void findByProperty() {
+        System.out.println("3 - findByProperty (gson)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        sorgente = "titolo";
 
-        sorgente = "29 gennaio";
+        sorgente2 = "29gennaio";
         try {
-            entityBean = service.findByKey( sorgente);
+            giorno = service.findByProperty(sorgente, sorgente2);
+            assertNotNull(giorno);
+            printGiornoProperty(sorgente, sorgente2, giorno);
         } catch (AMongoException unErrore) {
+            assertNull(giorno);
+            printGiornoProperty(sorgente, sorgente2, giorno);
+            System.out.println(unErrore);
         }
-        assertNotNull(entityBean);
+
+        sorgente2 = "29 gennaio";
+        try {
+            giorno = service.findByProperty(sorgente, sorgente2);
+            assertNotNull(giorno);
+            printGiornoProperty(sorgente, sorgente2, giorno);
+        } catch (AMongoException unErrore) {
+            assertNull(giorno);
+            printGiornoProperty(sorgente, sorgente2, giorno);
+            System.out.println(unErrore);
+        }
+    }
+
+    void printGiornoID(final String keyId, final Giorno giorno) {
+        printGiorno("keyID", keyId, giorno);
+    }
+
+    void printGiornoKey(final String keyPropertyValue, final Giorno giorno) {
+        printGiorno("keyValue", keyPropertyValue, giorno);
+    }
+
+    void printGiornoProperty(final String propertyName, final Serializable propertyValue, final Giorno giorno) {
+        printGiorno(propertyName, (String) propertyValue, giorno);
+    }
+
+    void printGiorno(final String tag, final String value, final Giorno giorno) {
+        System.out.println(VUOTA);
+        if (giorno == null) {
+            System.out.println(String.format("Non esiste il giorno con %s=%s", tag, value));
+        }
+        else {
+            System.out.println(String.format("Ho trovato il giorno con %s=%s", tag, value));
+            System.out.print(String.format("%s", value));
+            System.out.print(String.format("%s", FORWARD));
+            System.out.print(String.format("[%s]", giorno.ordine));
+            System.out.print(String.format("%s", VIRGOLA_SPAZIO));
+            System.out.print(String.format("[%s]", giorno.titolo));
+            System.out.print(String.format("%s", VIRGOLA_SPAZIO));
+            System.out.println(String.format("[%s]", giorno.mese));
+        }
     }
 
 

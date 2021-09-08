@@ -138,6 +138,21 @@ public class GiornoService extends AService {
 
 
     /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Giorno findByKey(final Serializable keyValue) throws AMongoException {
+        return (Giorno) super.findByKey(keyValue);
+    }
+
+
+    /**
      * Retrieves an entity by a keyProperty.
      * Cerca una singola entity con una query. <br>
      * Restituisce un valore valido SOLO se ne esiste una sola <br>
@@ -152,19 +167,6 @@ public class GiornoService extends AService {
         return (Giorno) super.findByProperty(propertyName, propertyValue);
     }
 
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param keyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Giorno findByKey(final Serializable keyValue) throws AMongoException {
-        return (Giorno) super.findByKey(keyValue);
-    }
 
 
     private AIResult checkMese() {

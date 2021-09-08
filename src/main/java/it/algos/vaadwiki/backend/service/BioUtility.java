@@ -82,8 +82,9 @@ public class BioUtility extends AbstractService {
      *
      * @return mappa chiave-valore
      */
-    public LinkedHashMap estraeMappa(String tmplBioServer) {
-        LinkedHashMap mappa = null;
+    public LinkedHashMap<String,String> estraeMappa(final String tmplBioServer) {
+        String tmplBio = tmplBioServer;
+        LinkedHashMap<String,String> mappa = null;
         LinkedHashMap mappaGraffe = null;
         boolean continua = false;
         String sepRE = "\n\\|";
@@ -92,29 +93,29 @@ public class BioUtility extends AbstractService {
         String valore;
         int pos;
 
-        if (!tmplBioServer.equals(VUOTA)) {
+        if (!tmplBio.equals(VUOTA)) {
             continua = true;
         }
 
-        if (tmplBioServer.startsWith(DOPPIE_GRAFFE_INI) && tmplBioServer.endsWith(DOPPIE_GRAFFE_END)) {
-            tmplBioServer = text.setNoDoppieGraffe(tmplBioServer);
+        if (tmplBio.startsWith(DOPPIE_GRAFFE_INI) && tmplBio.endsWith(DOPPIE_GRAFFE_END)) {
+            tmplBio = text.setNoDoppieGraffe(tmplBio);
         }
 
         if (continua) {
-            mappaGraffe = checkGraffe(tmplBioServer);
+            mappaGraffe = checkGraffe(tmplBio);
             if (mappaGraffe.containsKey(KEY_MAP_GRAFFE_ESISTONO)) {
                 //                testoTemplate = (String) mappaGraffe.get(KEY_MAP_GRAFFE_TESTO); //@todo non chiaro
             }
         }
 
         if (continua) {
-            if (tmplBioServer.startsWith(PIPE)) {
-                tmplBioServer = tmplBioServer.substring(1).trim();
+            if (tmplBio.startsWith(PIPE)) {
+                tmplBio = tmplBio.substring(1).trim();
             }
 
-            righe = tmplBioServer.split(sepRE);
+            righe = tmplBio.split(sepRE);
             if (righe.length == 1) {
-                mappa = getMappaRigaUnica(tmplBioServer);
+                mappa = getMappaRigaUnica(tmplBio);
                 continua = false;
             }
         }

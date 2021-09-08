@@ -18,6 +18,7 @@ import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 
 import java.text.*;
+import java.time.*;
 
 /**
  * Project vaadflow14
@@ -55,7 +56,6 @@ public class MongoServiceTest extends ATest {
 
     protected Bson bSon;
 
-    private AETypeSerializing oldType;
 
     private static String[] COLLEZIONI() {
         return new String[]{"pomeriggio", "alfa", "via"};
@@ -72,8 +72,6 @@ public class MongoServiceTest extends ATest {
 
         //--reindirizzo l'istanza della superclasse
         service = mongoService;
-
-        oldType = FlowVar.typeSerializing;
     }
 
 
@@ -88,7 +86,6 @@ public class MongoServiceTest extends ATest {
 
         collection = null;
         bSon = null;
-        FlowVar.typeSerializing = oldType;
     }
 
 
@@ -102,10 +99,10 @@ public class MongoServiceTest extends ATest {
         Company companyReborn = null;
 
         //--costruisco una entityBean
-        sorgente = "dop";
+        sorgente = "doppia";
         sorgente2 = "Porta Valori Associato";
         company = companyService.newEntity(sorgente, sorgente2, VUOTA, VUOTA);
-        //        company.setCreazione(LocalDateTime.now());
+                company.setCreazione(LocalDateTime.now());
         assertNotNull(company);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -126,7 +123,8 @@ public class MongoServiceTest extends ATest {
             //            ((MongoService) service).save(company);
             companyService.save(company);
         } catch (AMongoException unErrore) {
-            System.out.println(unErrore);
+//            System.out.println(unErrore);
+            loggerService.info(unErrore.getMessage());
         }
     }
 
@@ -175,7 +173,7 @@ public class MongoServiceTest extends ATest {
         sorgente = "titolo";
         sorgente2 = "4 novembre";
         try {
-            entityBean = service.findByKey(clazz, sorgente, sorgente2);
+            entityBean = service.findByProperty(clazz, sorgente, sorgente2);
         } catch (AMongoException unErrore) {
         }
         assertNotNull(entityBean);

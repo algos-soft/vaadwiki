@@ -1,6 +1,9 @@
 package it.algos.unit;
 
 import it.algos.test.*;
+import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import static org.junit.Assert.*;
@@ -14,6 +17,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import com.vaadin.flow.component.textfield.TextField;
+
+import java.io.*;
 
 /**
  * Project vaadflow14
@@ -29,7 +34,7 @@ import com.vaadin.flow.component.textfield.TextField;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Anno service")
+@DisplayName("AnnoService - Entity cronologica")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AnnoServiceTest extends ATest {
 
@@ -39,6 +44,8 @@ public class AnnoServiceTest extends ATest {
      */
     @InjectMocks
     private AnnoService service;
+
+    private Anno anno;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -63,74 +70,163 @@ public class AnnoServiceTest extends ATest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
+
+        anno = null;
     }
 
 
     @Test
     @Order(1)
-    @DisplayName("1 - findById")
+    @DisplayName("1 - findById (gson)")
     void findById() {
+        System.out.println("1 - findById (gson)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+
         sorgente = "1946dc";
         try {
-            entityBean = service.findById(sorgente);
+            anno = service.findById(sorgente);
+            assertNotNull(anno);
+            printAnnoID(sorgente, anno);
         } catch (Exception unErrore) {
+            assertNull(anno);
+            printAnnoID(sorgente, anno);
+            System.out.println(unErrore);
         }
-        assertNull(entityBean);
 
         sorgente = "1946";
+        anno = null;
         try {
-            entityBean = service.findById(sorgente);
+            anno = service.findById(sorgente);
+            assertNotNull(anno);
+            printAnnoID(sorgente, anno);
         } catch (Exception unErrore) {
+            assertNull(anno);
+            printAnnoID(sorgente, anno);
+            System.out.println(unErrore);
         }
-        assertNotNull(entityBean);
 
-        sorgente = "847a.c.";
+        sorgente = "13946";
+        anno = null;
         try {
-            entityBean = service.findById(sorgente);
+            anno = service.findById(sorgente);
+            assertNotNull(anno);
+            printAnnoID(sorgente, anno);
         } catch (Exception unErrore) {
+            assertNull(anno);
+            printAnnoID(sorgente, anno);
+            System.out.println(unErrore);
         }
-        assertNotNull(entityBean);
     }
 
 
     @Test
     @Order(2)
-    @DisplayName("2 - findByProperty")
+    @DisplayName("2 - findByKey (gson)")
     void findByKey() {
-        sorgente = "847a.c.";
-        try {
-            entityBean = service.findByProperty( sorgente2, sorgente);
-        } catch (AMongoException unErrore) {
-        }
-        assertNull(entityBean);
+        System.out.println("2 - findByKey (gson)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
 
-        sorgente = "847 a.C.";
-        sorgente2 = "titolo";
+        sorgente = "1946dc";
         try {
-            entityBean = service.findByProperty( sorgente2, sorgente);
-        } catch (AMongoException unErrore) {
+            anno = service.findByKey(sorgente);
+            assertNotNull(anno);
+            printAnnoKey(sorgente, anno);
+        } catch (Exception unErrore) {
+            assertNull(anno);
+            printAnnoKey(sorgente, anno);
+            System.out.println(unErrore);
         }
-        assertNotNull(entityBean);
+
+        sorgente = "1946";
+        anno = null;
+        try {
+            anno = service.findByKey(sorgente);
+            assertNotNull(anno);
+            printAnnoKey(sorgente, anno);
+        } catch (Exception unErrore) {
+            assertNull(anno);
+            printAnnoKey(sorgente, anno);
+            System.out.println(unErrore);
+        }
+
+        sorgente = "1948";
+        anno = null;
+        try {
+            anno = service.findByKey(sorgente);
+            assertNotNull(anno);
+            printAnnoKey(sorgente, anno);
+        } catch (Exception unErrore) {
+            assertNull(anno);
+            printAnnoKey(sorgente, anno);
+            System.out.println(unErrore);
+        }
     }
+
+
 
 
     @Test
     @Order(3)
-    @DisplayName("3 - findByKey")
-    void findByKey3() {
-        sorgente = "847a.c.";
-        try {
-            entityBean = service.findByKey( sorgente);
-        } catch (AMongoException unErrore) {
-        }
-        assertNull(entityBean);
+    @DisplayName("3 - findByProperty (gson)")
+    void findByProperty() {
+        System.out.println("3 - findByProperty (gson)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        sorgente = "titolo";
 
-        sorgente = "847 a.C.";
+        sorgente2 = "847a.c.";
         try {
-            entityBean = service.findByKey( sorgente);
+            anno = service.findByProperty(sorgente, sorgente2);
+            assertNotNull(anno);
+            printAnnoProperty(sorgente, sorgente2, anno);
         } catch (AMongoException unErrore) {
+            assertNull(anno);
+            printAnnoProperty(sorgente, sorgente2, anno);
+            System.out.println(unErrore);
         }
-        assertNotNull(entityBean);
+
+        sorgente2 = "847 a.C.";
+        anno = null;
+        try {
+            anno = service.findByProperty(sorgente, sorgente2);
+            assertNotNull(anno);
+            printAnnoProperty(sorgente, sorgente2, anno);
+        } catch (AMongoException unErrore) {
+            assertNull(anno);
+            printAnnoProperty(sorgente, sorgente2, anno);
+            System.out.println(unErrore);
+        }
+    }
+
+
+    void printAnnoID(final String keyId, final Anno anno) {
+        printAnno("keyID", keyId, anno);
+    }
+
+    void printAnnoKey(final String keyPropertyValue, final Anno anno) {
+        printAnno("keyValue", keyPropertyValue, anno);
+    }
+
+    void printAnnoProperty(final String propertyName, final Serializable propertyValue, final Anno anno) {
+        printAnno(propertyName, (String) propertyValue, anno);
+    }
+
+    void printAnno(final String tag, final String value, final Anno anno) {
+        System.out.println(VUOTA);
+        if (anno == null) {
+            System.out.println(String.format("Non esiste l'anno con %s=%s", tag, value));
+        }
+        else {
+            System.out.println(String.format("Ho trovato l'anno con %s=%s", tag, value));
+            System.out.print(String.format("%s", value));
+            System.out.print(String.format("%s", FORWARD));
+            System.out.print(String.format("[%s]", anno.ordine));
+            System.out.print(String.format("%s", VIRGOLA_SPAZIO));
+            System.out.print(String.format("[%s]", anno.titolo));
+            System.out.print(String.format("%s", VIRGOLA_SPAZIO));
+            System.out.print(String.format("[%s]", anno.bisestile));
+            System.out.print(String.format("%s", VIRGOLA_SPAZIO));
+            System.out.println(String.format("[%s]", anno.secolo));
+        }
     }
 
 

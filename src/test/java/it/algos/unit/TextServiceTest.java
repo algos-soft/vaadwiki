@@ -450,12 +450,14 @@ public class TextServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
         print(sorgente, ottenuto);
 
+        previsto = "mario]";
         sorgente = "[mario]]";
         ottenuto = text.setNoQuadre(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
         print(sorgente, ottenuto);
 
+        previsto = "mario";
         sorgente = "[[mario]]";
         ottenuto = text.setNoQuadre(sorgente);
         assertNotNull(ottenuto);
@@ -495,6 +497,13 @@ public class TextServiceTest extends ATest {
         print(sorgente, ottenuto);
 
         sorgente = " m[ario";
+        ottenuto = text.setNoQuadre(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+
+        previsto = "mario [interne]";
+        sorgente = "mario [interne]";
         ottenuto = text.setNoQuadre(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
@@ -605,12 +614,14 @@ public class TextServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
         print(sorgente, ottenuto);
 
+        previsto = "[[mario]]";
         sorgente = "[mario]]";
         ottenuto = text.setDoppieQuadre(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
         print(sorgente, ottenuto);
 
+        previsto = "[[mario]]";
         sorgente = "[[mario]]";
         ottenuto = text.setDoppieQuadre(sorgente);
         assertNotNull(ottenuto);

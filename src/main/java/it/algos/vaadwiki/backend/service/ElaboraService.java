@@ -10,6 +10,7 @@ import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
 import it.algos.vaadwiki.backend.packages.nome.*;
+import it.algos.vaadwiki.backend.packages.prenome.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -85,6 +86,14 @@ public class ElaboraService extends AbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
+    public PrenomeService prenomeService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
     public BioUtility bioUtility;
 
     /**
@@ -130,13 +139,7 @@ public class ElaboraService extends AbstractService {
         //--Elabora valori validi dei parametri significativi
         //--Inserisce i valori nella entity Bio
         if (mappa != null) {
-            try {
-                setValue(bio, mappa);
-            } catch (AlgosException unErrore) {
-                logger.error(unErrore, this.getClass(), "esegue");
-            } catch (Exception unErrore) {
-                logger.error(unErrore, this.getClass(), "esegue");
-            }
+            setValue(bio, mappa);
         }
 
         return bio;
@@ -144,7 +147,7 @@ public class ElaboraService extends AbstractService {
 
 
     //--Inserisce i valori nella entity Bio
-    public void setValue(Bio bio, HashMap<String, String> mappa) throws Exception {
+    public void setValue(Bio bio, HashMap<String, String> mappa) {
         String value;
 
         if (bio != null) {
@@ -161,7 +164,14 @@ public class ElaboraService extends AbstractService {
             for (ParBio par : ParBio.values()) {
                 value = mappa.get(par.getTag());
                 if (value != null) {
-                    par.setValue(bio, value);
+
+                    try {
+                        par.setValue(bio, value);
+                    } catch (AlgosException unErrore) {
+                        logger.info(unErrore, this.getClass(), "setValue");
+                    } catch (Exception unErrore) {
+                        logger.info(String.format("%s nel ParBio %s",unErrore.toString(),par.getTag()), this.getClass(), "setValue");
+                    }
                 }
             }
         }
@@ -169,6 +179,9 @@ public class ElaboraService extends AbstractService {
 
     /**
      * Regola la property <br>
+     * Indipendente dalla lista di Nomi <br>
+     * Nei nomi composti, prende solo il primo <br>
+     * Se esiste nella lista dei Prenomi (nomi doppi), lo accetta <br>
      *
      * @param testoGrezzo in entrata da elaborare
      *
@@ -176,13 +189,14 @@ public class ElaboraService extends AbstractService {
      */
     public String fixNomeValido(final String testoGrezzo) {
         String testoValido = fixValoreGrezzo(testoGrezzo);
+        List<String> listaPrenomi;
 
-        //--primo nome
         if (testoValido.contains(SPAZIO)) {
-            testoValido = testoValido.substring(0, testoValido.indexOf(SPAZIO)).trim();
+            listaPrenomi = prenomeService.fetchCode();
+            if (!listaPrenomi.contains(testoValido)) {
+                testoValido = testoValido.substring(0, testoValido.indexOf(SPAZIO)).trim();
+            }
         }
-
-        //--nomi doppi
 
         return testoValido;
     }
@@ -254,7 +268,11 @@ public class ElaboraService extends AbstractService {
         String testoValido = VUOTA;
 
         if (text.isValid(testoGrezzo)) {
-            testoValido = fixGiornoValido(testoGrezzo);
+            try {
+                testoValido = fixGiornoValido(testoGrezzo);
+            } catch (Exception unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixGiorno");
+            }
         }
 
         if (text.isValid(testoValido)) {
@@ -281,7 +299,7 @@ public class ElaboraService extends AbstractService {
      *
      * @return istanza di anno valido
      */
-    public Anno fixAnno(String testoGrezzo) {
+    public Anno fixAnno(String testoGrezzo) throws AlgosException {
         Anno anno = null;
         String testoValido = "";
 
@@ -435,7 +453,7 @@ public class ElaboraService extends AbstractService {
                     return VUOTA;
                 }
             } catch (AMongoException unErrore) {
-                logger.warn(unErrore, this.getClass(), "fixGiornoValido");
+                logger.info(unErrore, this.getClass(), "fixGiornoValido");
                 return VUOTA;
             }
         }
@@ -455,7 +473,7 @@ public class ElaboraService extends AbstractService {
      *
      * @return testo/parametro regolato in uscita
      */
-    public String fixAnnoValido(String testoGrezzo) {
+    public String fixAnnoValido(String testoGrezzo) throws AlgosException {
         String testoValido = fixValoreGrezzo(testoGrezzo);
 
         //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
@@ -478,8 +496,9 @@ public class ElaboraService extends AbstractService {
                     return VUOTA;
                 }
             } catch (AMongoException unErrore) {
-                logger.warn(unErrore, this.getClass(), "fixAnnoValido");
-                return VUOTA;
+                throw new AlgosException(unErrore, null, "pippoz");
+                //                logger.error(unErrore, this.getClass(), "fixAnnoValido");
+                //                return VUOTA;
             }
         }
         else {

@@ -41,7 +41,7 @@ public enum ParBio {
 
     nome("Nome", "nome", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
+        public void setValue(Bio bio, String value) throws AlgosException {
             bio.nome = text.isValid(value) ? elabora.fixNomeValido(value) : null;
         }
 
@@ -53,7 +53,7 @@ public enum ParBio {
 
     cognome("Cognome", "cognome", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
+        public void setValue(Bio bio, String value) throws AlgosException {
             bio.cognome = text.isValid(value) ? elabora.fixCognomeValido(value) : null;
         }
 
@@ -111,7 +111,7 @@ public enum ParBio {
 
     luogoNascita("LuogoNascita", "luogoNato", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
+        public void setValue(Bio bio, String value) throws AlgosException {
             bio.luogoNato = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
         }
 
@@ -146,7 +146,7 @@ public enum ParBio {
 
     giornoMeseNascita("GiornoMeseNascita", "giornoNato", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
+        public void setValue(Bio bio, String value) throws AlgosException {
             bio.giornoNato = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
         }
 
@@ -170,7 +170,7 @@ public enum ParBio {
 
     annoNascita("AnnoNascita", "annoNato", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
+        public void setValue(Bio bio, String value) throws AlgosException {
             bio.annoNato = value.equals(VUOTA) ? null : elabora.fixAnnoValido(value);
         }
 
@@ -178,11 +178,11 @@ public enum ParBio {
             return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
         }
 
-        public String fixValoreGrezzo(String valoreGrezzo) {
+        public String fixValoreGrezzo(String valoreGrezzo) throws AlgosException {
             return elabora.fixAnnoValido(valoreGrezzo);
         }
 
-        public String fixParametro(String valoreGrezzo) {
+        public String fixParametro(String valoreGrezzo) throws AlgosException {
             return elabora.fixAnnoValido(valoreGrezzo);
         }
 
@@ -197,7 +197,7 @@ public enum ParBio {
 
     luogoMorte("LuogoMorte", "luogoMorto", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
+        public void setValue(Bio bio, String value) throws AlgosException {
             bio.luogoMorto = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
         }
 
@@ -246,7 +246,7 @@ public enum ParBio {
 
     giornoMeseMorte("GiornoMeseMorte", "giornoMorte", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
+        public void setValue(Bio bio, String value) throws AlgosException {
             bio.giornoMorto = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
         }
 
@@ -270,7 +270,7 @@ public enum ParBio {
 
     annoMorte("AnnoMorte", "AnnoMorto", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
+        public void setValue(Bio bio, String value) throws AlgosException {
             if (text.isValid(value)) {
                 bio.annoMorto = elabora.fixAnnoValido(value);
             }
@@ -280,11 +280,11 @@ public enum ParBio {
             return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
         }
 
-        public String fixValoreGrezzo(String valoreGrezzo) {
+        public String fixValoreGrezzo(String valoreGrezzo) throws AlgosException {
             return elabora.fixAnnoValido(valoreGrezzo);
         }
 
-        public String fixParametro(String valoreGrezzo) {
+        public String fixParametro(String valoreGrezzo) throws AlgosException {
             return elabora.fixAnnoValido(valoreGrezzo);
         }
 
@@ -308,16 +308,16 @@ public enum ParBio {
 
     attivita("Attività", "attivita", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
-            bio.attivita = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio,value);
+        public void setValue(Bio bio, String value) throws AlgosException {
+            bio.attivita = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio, value);
         }
 
         public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio,valoreGrezzo);
+            return elabora.fixAttivitaValida(bio, valoreGrezzo);
         }
 
         public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio,valoreGrezzo);
+            return elabora.fixAttivitaValida(bio, valoreGrezzo);
         }
 
         @Override
@@ -328,16 +328,16 @@ public enum ParBio {
 
     attivita2("Attività2", "attivita2", true, false, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
-            bio.attivita2 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio,value);
+        public void setValue(Bio bio, String value) throws AlgosException {
+            bio.attivita2 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio, value);
         }
 
         public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio,valoreGrezzo);
+            return elabora.fixAttivitaValida(bio, valoreGrezzo);
         }
 
         public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio,valoreGrezzo);
+            return elabora.fixAttivitaValida(bio, valoreGrezzo);
         }
 
         @Override
@@ -348,16 +348,16 @@ public enum ParBio {
 
     attivita3("Attività3", "attivita3", true, false, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
-            bio.attivita3 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio,value);
+        public void setValue(Bio bio, String value) throws AlgosException {
+            bio.attivita3 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio, value);
         }
 
         public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio,valoreGrezzo);
+            return elabora.fixAttivitaValida(bio, valoreGrezzo);
         }
 
         public String fixParametro(Bio bio, String valoreGrezzo) throws AlgosException {
-            return elabora.fixAttivitaValida(bio,valoreGrezzo);
+            return elabora.fixAttivitaValida(bio, valoreGrezzo);
         }
 
         @Override
@@ -371,7 +371,7 @@ public enum ParBio {
 
     nazionalita("Nazionalità", "nazionalita", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws Exception {
+        public void setValue(Bio bio, String value) throws AlgosException {
             bio.nazionalita = value.equals(VUOTA) ? null : elabora.fixNazionalitaValida(value);
         }
 
@@ -439,13 +439,13 @@ public enum ParBio {
 
     private boolean visibileLista = false;
 
-    private boolean campoNormale = false;
+    private boolean campoObbligatorio = false;
 
     private boolean campoSignificativo = false;
 
     private SingularAttribute<Bio, String> attributo;
 
-    private boolean campoValido = false;
+    private boolean campoNormale = false;
 
     private boolean campoPunta = false;
 
@@ -454,9 +454,9 @@ public enum ParBio {
         this.setTag(tag);
         this.setDbName(dbName);
         this.setVisibileLista(visibileLista);
-        this.setCampoNormale(campoNormale);
+        this.setCampoObbligatorio(campoNormale);
         this.setCampoSignificativo(campoSignificativo);
-        this.setCampoValido(campoValido);
+        this.setCampoNormale(campoValido);
         this.setCampoPunta(campoPunta);
     }// end of general constructor
 
@@ -517,8 +517,18 @@ public enum ParBio {
     }// end of method
 
 
+    public static ArrayList<ParBio> getValues() {
+        ArrayList<ParBio> lista = new ArrayList<>();
+
+        for (ParBio par : ParBio.values()) {
+            lista.add(par);
+        }
+
+        return lista;
+    }
+
     public static ArrayList<ParBio> getCampiSignificativi() {
-        ArrayList<ParBio> lista = new ArrayList<ParBio>();
+        ArrayList<ParBio> lista = new ArrayList<>();
 
         for (ParBio par : ParBio.values()) {
             if (par.isCampoSignificativo()) {
@@ -527,11 +537,24 @@ public enum ParBio {
         }
 
         return lista;
-    }// end of method
+    }
+
+
+    public static ArrayList<ParBio> getCampiObbligatori() {
+        ArrayList<ParBio> lista = new ArrayList<>();
+
+        for (ParBio par : ParBio.values()) {
+            if (par.isCampoObbligatorio()) {
+                lista.add(par);
+            }
+        }
+
+        return lista;
+    }
 
 
     public static ArrayList<ParBio> getCampiNormali() {
-        ArrayList<ParBio> lista = new ArrayList<ParBio>();
+        ArrayList<ParBio> lista = new ArrayList<>();
 
         for (ParBio par : ParBio.values()) {
             if (par.isCampoNormale()) {
@@ -540,20 +563,7 @@ public enum ParBio {
         }
 
         return lista;
-    }// end of method
-
-
-    public static ArrayList<ParBio> getCampiValidi() {
-        ArrayList<ParBio> lista = new ArrayList<ParBio>();
-
-        for (ParBio par : ParBio.values()) {
-            if (par.isCampoValido()) {
-                lista.add(par);
-            }
-        }
-
-        return lista;
-    }// end of method
+    }
 
 
     public static ArrayList<ParBio> getCampiPunta() {
@@ -762,7 +772,7 @@ public enum ParBio {
      * @param bio   istanza da regolare
      * @param value valore da inserire
      */
-    public void setValue(final Bio bio, final String value) throws Exception {
+    public void setValue(final Bio bio, final String value) throws AlgosException {
     }
 
     /**
@@ -802,7 +812,7 @@ public enum ParBio {
     public String getKeyValue(Bio bio) {
         String value = getValue(bio);
 
-        if (!value.equals("") || this.isCampoNormale()) {
+        if (!value.equals("") || this.isCampoObbligatorio()) {
             return "|" + tag + " = " + value + "\n";
         }
         else {
@@ -819,7 +829,7 @@ public enum ParBio {
      * @return testo della coppia key e value
      */
     public String getKeyValue(String value) {
-        if (!value.equals("") || this.isCampoNormale()) {
+        if (!value.equals("") || this.isCampoObbligatorio()) {
             return "|" + tag + " = " + value + "\n";
         }
         else {
@@ -901,20 +911,20 @@ public enum ParBio {
         this.attributo = attributo;
     }
 
+    public boolean isCampoObbligatorio() {
+        return campoObbligatorio;
+    }
+
+    public void setCampoObbligatorio(boolean campoObbligatorio) {
+        this.campoObbligatorio = campoObbligatorio;
+    }
+
     public boolean isCampoNormale() {
         return campoNormale;
     }
 
     public void setCampoNormale(boolean campoNormale) {
         this.campoNormale = campoNormale;
-    }
-
-    public boolean isCampoValido() {
-        return campoValido;
-    }
-
-    public void setCampoValido(boolean campoValido) {
-        this.campoValido = campoValido;
     }
 
     public boolean isCampoPunta() {

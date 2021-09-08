@@ -1205,6 +1205,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
+    @Override
     public AEntity findById(Class<? extends AEntity> entityClazz, String keyId) throws AMongoException {
         AEntity entityBean = null;
         MongoCollection<Document> collection;
@@ -1217,7 +1218,11 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         switch (FlowVar.typeSerializing) {
             case spring:
-                entityBean = mongoOp.findById(keyId, entityClazz);
+                try {
+                    entityBean = mongoOp.findById(keyId, entityClazz);
+                } catch (Exception unErrore) {
+                    throw new AMongoException(unErrore);
+                }
                 break;
             case gson:
                 collection = getCollection(entityClazz);
@@ -1230,7 +1235,14 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 }
 
                 if (doc != null) {
-                    entityBean = gSonService.creaId(entityClazz, keyId);
+                    try {
+                        entityBean = gSonService.creaId(entityClazz, keyId);
+                    } catch (Exception unErrore) {
+                        throw new AMongoException(unErrore, null, keyId);
+                    }
+                }
+                else {
+                    throw new AMongoException(null, null, String.format("Non sono riuscito a trovare una entity con keyId=%s", keyId));
                 }
                 break;
             case jackson:
@@ -1245,33 +1257,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
 
     /**
-     * Cerca una singola entity di una collection con una determinata chiave. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param keyId       chiave identificativa
-     *
-     * @return the founded entity
-     */
-    @Deprecated
-    public AEntity findByIdOld(Class<? extends AEntity> entityClazz, String keyId) {
-        AEntity entity = null;
-        if (entityClazz == null) {
-            return null;
-        }
-
-        if (text.isValid(keyId)) {
-            try {
-                entity = mongoOp.findById(keyId, entityClazz);
-            } catch (Exception unErrore) {
-                logger.error(unErrore, this.getClass(), "findByIdOld");
-            }
-
-        }
-
-        return entity;
-    }
-
-    /**
      * Retrieves an entity by its keyProperty.
      *
      * @param keyPropertyValue must not be {@literal null}.
@@ -1280,10 +1265,10 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
+    @Override
     public AEntity findByKey(final Class<? extends AEntity> entityClazz, final Serializable keyPropertyValue) throws AMongoException {
         String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
-
-        return findByKey(entityClazz, keyPropertyName, keyPropertyValue);
+        return findByProperty(entityClazz, keyPropertyName, keyPropertyValue);
     }
 
     /**
@@ -1299,51 +1284,56 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findByKey(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) throws AMongoException {
+    @Override
+    public AEntity findByProperty(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) throws AMongoException {
         AEntity entityBean = null;
-        MongoCollection<Document> collection = getCollection(entityClazz);
+        MongoCollection<Document> collection = null;
         FindIterable<Document> iterable = null;
+        Document doc = null;
 
         if (entityClazz == null) {
             return null;
         }
 
-        if (collection != null) {
-            Bson condition = new Document(propertyName, propertyValue);
-            iterable = getCollection(entityClazz).find(condition);
-        }
-
-        if (iterable != null) {
-            for (Document doc : iterable) {
-                entityBean = gSonService.creaOld(doc, entityClazz);
+        switch (FlowVar.typeSerializing) {
+            case spring:
+                //                try {
+                //                    entityBean = mongoOp.findById(keyId, entityClazz);
+                //                } catch (Exception unErrore) {
+                //                    throw new AMongoException(unErrore);
+                //                }
                 break;
-            }
+            case gson:
+                collection = getCollection(entityClazz);
+                if (collection != null) {
+                    Bson condition = new Document(propertyName, propertyValue);
+                    iterable = collection.find(condition);
+                }
+                if (iterable != null) {
+                    doc = iterable.first();
+                }
+
+                if (doc != null) {
+                    try {
+                        entityBean = gSonService.creaId(entityClazz, (String) propertyValue);
+                    } catch (Exception unErrore) {
+                        throw new AMongoException(unErrore, null, (String) propertyValue);
+                    }
+                }
+                else {
+                    throw new AMongoException(null, null, String.format("Non sono riuscito a trovare una entity con keyId=%s", (String) propertyValue));
+                }
+                break;
+            case jackson:
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "count");
+                break;
         }
 
         return entityBean;
     }
 
-
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param entityClazz      corrispondente ad una collection sul database mongoDB
-     * @param keyPropertyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Deprecated
-    public AEntity findByKeyOld(Class<? extends AEntity> entityClazz, String keyPropertyValue) {
-        String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
-        if (text.isValid(keyPropertyName)) {
-            return findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
-        }
-        else {
-            return findByIdOld(entityClazz, keyPropertyValue);
-        }
-    }
 
     /**
      * Cerca la entity successiva in una collection con un dato ordine. <br>
@@ -2078,6 +2068,55 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      */
     public void fixMaxBytes() {
         this.setMaxBlockingSortBytes(EXPECTED_ALGOS_MAX_BYTES);
+    }
+
+    /**
+     * Cerca una singola entity di una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return the founded entity
+     */
+    @Deprecated
+    public AEntity findByIdOld(Class<? extends AEntity> entityClazz, String keyId) {
+        AEntity entity = null;
+        if (entityClazz == null) {
+            return null;
+        }
+
+        if (text.isValid(keyId)) {
+            try {
+                entity = mongoOp.findById(keyId, entityClazz);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "findByIdOld");
+            }
+
+        }
+
+        return entity;
+    }
+
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param entityClazz      corrispondente ad una collection sul database mongoDB
+     * @param keyPropertyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Deprecated
+    public AEntity findByKeyOld(Class<? extends AEntity> entityClazz, String keyPropertyValue) {
+        String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+        if (text.isValid(keyPropertyName)) {
+            return findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
+        }
+        else {
+            return findByIdOld(entityClazz, keyPropertyValue);
+        }
     }
 
 

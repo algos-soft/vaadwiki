@@ -174,16 +174,31 @@ public class BioService extends AService {
      * @param pageId       di riferimento (obbligatorio, unico)
      * @param wikiTitle    di riferimento (obbligatorio, unico)
      * @param tmplBio      (obbligatorio, unico)
-     * @param lastModifica sul server wiki (obbligatorio)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Bio newEntity(final long pageId, final String wikiTitle, final String tmplBio, final LocalDateTime lastModifica) {
+    public Bio newEntity(final long pageId, final String wikiTitle, final String tmplBio) {
+        return newEntity(pageId,wikiTitle,tmplBio,(LocalDateTime)null);
+    }
+
+        /**
+         * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
+         * Usa il @Builder di Lombok <br>
+         * Eventuali regolazioni iniziali delle property <br>
+         *
+         * @param pageId       di riferimento (obbligatorio, unico)
+         * @param wikiTitle    di riferimento (obbligatorio, unico)
+         * @param tmplBio      (obbligatorio, unico)
+         * @param lastMongo sul server wiki (obbligatorio)
+         *
+         * @return la nuova entityBean appena creata (non salvata)
+         */
+    public Bio newEntity(final long pageId, final String wikiTitle, final String tmplBio, final LocalDateTime lastMongo) {
         Bio newEntityBean = Bio.builderBio()
                 .pageId(pageId)
                 .wikiTitle(text.isValid(wikiTitle) ? wikiTitle : null)
                 .tmplBio(text.isValid(tmplBio) ? tmplBio : null)
-                .lastServer(lastModifica != null ? lastModifica : LocalDateTime.now())
+                .lastServer(lastMongo != null ? lastMongo : LocalDateTime.now())
                 .lastMongo(LocalDateTime.now())
                 .build();
 

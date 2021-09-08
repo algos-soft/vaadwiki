@@ -4,7 +4,9 @@ import com.mongodb.*;
 import com.vaadin.flow.data.provider.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
@@ -17,6 +19,7 @@ import it.algos.vaadflow14.wiki.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.slf4j.*;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.query.Query;
@@ -191,6 +194,9 @@ public abstract class ATest {
 
     @InjectMocks
     protected CompanyService companyService;
+
+    @Autowired
+    protected FlowVar flowVar;
 
     protected Logger adminLogger;
 
@@ -376,6 +382,7 @@ public abstract class ATest {
 
     protected WrapTreStringhe treStringhe;
 
+    protected AETypeSerializing oldType;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -529,7 +536,6 @@ public abstract class ATest {
         ((MongoService) mongoService).fixProperties(classService.getProjectName());
         gSonService.fixProperties(classService.getProjectName());
 
-
         companyService.text = textService;
         companyService.logger = loggerService;
         companyService.annotation = annotationService;
@@ -585,6 +591,7 @@ public abstract class ATest {
         clazz = null;
         previstoRisultato = null;
         ottenutoRisultato = null;
+         FlowVar.typeSerializing= AETypeSerializing.spring;
     }
 
     protected String getTime() {

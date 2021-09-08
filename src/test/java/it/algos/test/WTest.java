@@ -1,6 +1,8 @@
 package it.algos.test;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
@@ -8,6 +10,7 @@ import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
+import it.algos.vaadwiki.backend.packages.prenome.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
 import it.algos.vaadwiki.wiki.query.*;
@@ -47,6 +50,74 @@ public abstract class WTest extends ATest {
 
     protected static final String DATA_BASE_NAME_WIKI = "vaadwiki";
 
+    protected static final String TMPL_UNO = "{{Bio\n" +
+            "|Nome = Annie\n" +
+            "|Cognome = Proulx\n" +
+            "|PostCognomeVirgola = all'anagrafe '''Edna Annie Proulx'''\n" +
+            "|PreData = /pruː/\n" +
+            "|Sesso = F\n" +
+            "|LuogoNascita = Norwich\n" +
+            "|LuogoNascitaLink = Norwich (Connecticut)\n" +
+            "|GiornoMeseNascita = 22 agosto\n" +
+            "|AnnoNascita = 1935\n" +
+            "|LuogoMorte = \n" +
+            "|GiornoMeseMorte = \n" +
+            "|AnnoMorte = \n" +
+            "|Epoca = 1900\n" +
+            "|Attività = scrittrice\n" +
+            "|Nazionalità = statunitense\n" +
+            "|PostNazionalità = e di origini [[Canada|canadesi]], vincitrice del [[Premio Pulitzer per la narrativa]] con il romanzo ''[[Avviso ai naviganti (romanzo)|Avviso ai naviganti]]''\n" +
+            "|Immagine = 2018-us-nationalbookfestival-annie-proulx.jpg\n" +
+            "|Didascalia = Annie Proulx al National Book Festival 2018\n" +
+            "}}";
+
+
+    protected static final String TMPL_DUE = "{{Bio\n" +
+            "|Nome = Alain Fabien Maurice Marcel\n" +
+            "|Cognome = Delon\n" +
+            "|Sesso = M\n" +
+            "|LuogoNascita = Sceaux\n" +
+            "|LuogoNascitaLink = Sceaux (Hauts-de-Seine)\n" +
+            "|GiornoMeseNascita = 8 novembre\n" +
+            "|AnnoNascita = 1935\n" +
+            "|LuogoMorte = \n" +
+            "|GiornoMeseMorte = \n" +
+            "|AnnoMorte = \n" +
+            "|Epoca = 1900\n" +
+            "|Epoca2 = 2000\n" +
+            "|Attività = attore\n" +
+            "|Attività2 = regista\n" +
+            "|Attività3 = produttore cinematografico\n" +
+            "|Nazionalità = francese\n" +
+            "|NazionalitàNaturalizzato = svizzero\n" +
+            "|PostNazionalità = dal 1999 con doppia cittadinanza\n" +
+            "|Immagine = Delon Le Guépard (cropped).jpg\n" +
+            "|Didascalia = Alain Delon nel film ''[[Il Gattopardo (film)|Il Gattopardo]]'' ([[1963]])\n" +
+            "}}";
+
+    protected static final String TMPL_TRE = "{{Bio\n" +
+            "|Nome = Andrea Giacomo\n" +
+            "|Cognome = Viterbi\n" +
+            "|PostCognome = anglicizzato in '''Andrew James Viterbi'''\n" +
+            "|ForzaOrdinamento = Viterbi ,Andrew\n" +
+            "|Sesso = M\n" +
+            "|LuogoNascita = Bergamo\n" +
+            "|GiornoMeseNascita = 9 marzo\n" +
+            "|AnnoNascita = 1935\n" +
+            "|LuogoMorte = \n" +
+            "|GiornoMeseMorte = \n" +
+            "|AnnoMorte = \n" +
+            "|Epoca = 1900\n" +
+            "|Epoca2 = 2000\n" +
+            "|Attività = ingegnere\n" +
+            "|Attività2 = imprenditore\n" +
+            "|Attività3 = accademico\n" +
+            "|Nazionalità = statunitense\n" +
+            "|PostNazionalità = delle [[telecomunicazione|telecomunicazioni]] di origine [[italia]]na, noto per l'[[algoritmo di Viterbi|algoritmo]] che porta il suo nome\n" +
+            "|Immagine = 10-08ViterbiBIG.jpg\n" +
+            "|Didascalia = Andrew Viterbi nel [[2005]].\n" +
+            "}}";
+
     protected String didascalia;
 
     protected WrapBio wrap;
@@ -54,6 +125,18 @@ public abstract class WTest extends ATest {
     protected List<WrapBio> listaWrapBio;
 
     protected Bio bio;
+
+    protected Bio bioTmplUno;
+
+    protected Bio bioTmplDue;
+
+    protected Bio bioTmplTre;
+
+    protected Bio bioUno;
+
+    protected Bio bioDue;
+
+    protected Bio bioTre;
 
     protected String queryType = VUOTA;
 
@@ -68,6 +151,9 @@ public abstract class WTest extends ATest {
 
     @InjectMocks
     protected NazionalitaService nazionalitaService;
+
+    @InjectMocks
+    protected PrenomeService prenomeService;
 
     @InjectMocks
     protected DidascaliaService didascaliaService;
@@ -115,6 +201,7 @@ public abstract class WTest extends ATest {
 
         wInitMocks();
         wFixRiferimentiIncrociati();
+        wCreaBio();
     }
 
 
@@ -134,6 +221,9 @@ public abstract class WTest extends ATest {
 
         MockitoAnnotations.initMocks(nazionalitaService);
         Assertions.assertNotNull(nazionalitaService);
+
+        MockitoAnnotations.initMocks(prenomeService);
+        Assertions.assertNotNull(prenomeService);
 
         MockitoAnnotations.initMocks(didascaliaService);
         Assertions.assertNotNull(didascaliaService);
@@ -244,6 +334,12 @@ public abstract class WTest extends ATest {
         elaboraService.logger = loggerService;
         elaboraService.attivitaService = attivitaService;
         elaboraService.nazionalitaService = nazionalitaService;
+        elaboraService.prenomeService = prenomeService;
+
+        prenomeService.annotation = annotationService;
+        prenomeService.reflection = reflectionService;
+        prenomeService.logger = loggerService;
+        prenomeService.mongo = mongoService;
 
         bioUtilityService.text = textService;
 
@@ -253,8 +349,34 @@ public abstract class WTest extends ATest {
             par.setElabora(elaboraService);
         }
 
+        FlowVar.typeSerializing = AETypeSerializing.spring;
     }
 
+    /**
+     * Crea alcune bio per i test, senza passare da mongoDB <br>
+     */
+    protected void wCreaBio() {
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        long pageId;
+
+        pageId = 211334;
+        sorgente = "Fabio Cudicini";
+        sorgente2 = TMPL_UNO;
+        bioTmplUno = bioService.newEntity(pageId, sorgente2, sorgente2);
+        bioUno = elaboraService.esegue(bioTmplUno);
+
+        pageId = 427;
+        sorgente = "Alain Delon";
+        sorgente2 = TMPL_DUE;
+        bioTmplDue = bioService.newEntity(pageId, sorgente, sorgente2);
+        bioDue = elaboraService.esegue(bioTmplDue);
+
+        pageId = 14926;
+        sorgente = "Andrew Viterbi";
+        sorgente2 = TMPL_TRE;
+        bioTmplTre = bioService.newEntity(pageId, sorgente, sorgente2);
+        bioTre = elaboraService.esegue(bioTmplTre);
+    }
 
     /**
      * Qui passa a ogni test delle sottoclassi <br>

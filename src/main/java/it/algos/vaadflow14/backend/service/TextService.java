@@ -622,10 +622,8 @@ public class TextService extends AbstractService {
         if (isValid(stringaIn)) {
             stringaOut = stringaIn.trim();
 
-            while (stringaOut.startsWith(QUADRA_INI)) {
+            while (stringaOut.startsWith(QUADRA_INI) && stringaOut.endsWith(QUADRA_END)) {
                 stringaOut = stringaOut.substring(1);
-            }
-            while (stringaOut.endsWith(QUADRA_END)) {
                 stringaOut = stringaOut.substring(0, stringaOut.length() - 1);
             }
         }
@@ -715,6 +713,7 @@ public class TextService extends AbstractService {
 
         return stringaOut.trim();
     }
+
     /**
      * Aggiunge parentesi quadre singole in testa e coda alla stringa. <br>
      * Aggiunge SOLO se gia non esistono <br>
@@ -756,17 +755,24 @@ public class TextService extends AbstractService {
      *
      * @return stringa con doppie parentesi quadre aggiunte
      */
-    public String setDoppieQuadre(String stringaIn) {
+    public String setDoppieQuadre(final String stringaIn) {
         String stringaOut = stringaIn;
 
         if (stringaIn != null && stringaIn.length() > 0) {
-            stringaOut = this.setNoQuadre(stringaIn);
+            stringaOut = this.setNoQuadre(stringaOut);
+            stringaOut = this.setNoQuadre(stringaOut);
             if (this.isValid(stringaOut)) {
-                if (!stringaOut.startsWith(QUADRA_INI)) {
+                if (!stringaOut.startsWith(DOPPIE_QUADRE_INI)) {
                     stringaOut = DOPPIE_QUADRE_INI + stringaOut;
                 }
-                if (!stringaOut.endsWith(QUADRA_END)) {
+                if (!stringaOut.endsWith(DOPPIE_QUADRE_END)) {
                     stringaOut = stringaOut + DOPPIE_QUADRE_END;
+                }
+                if (stringaOut.startsWith(QUADRA_INI+DOPPIE_QUADRE_INI)) {
+                    stringaOut = stringaOut.substring(1);
+                }
+                if (stringaOut.endsWith(QUADRA_END+DOPPIE_QUADRE_END)) {
+                    stringaOut = stringaOut.substring(0,stringaOut.length()-1);
                 }
             }
         }
