@@ -4,13 +4,11 @@ import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadwiki.backend.enumeration.*;
-import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
 import static it.algos.vaadwiki.backend.service.WikiBotService.*;
 import it.algos.vaadwiki.wiki.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 import java.util.*;
 
@@ -438,27 +436,27 @@ public class WikiBotServiceTest extends WTest {
         System.out.println(VUOTA);
         System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
 
-//        //--senza specificare il type di user, in automatico mette anonymous
-//        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
-//        sorgente = CAT_1935;
-//        userType = AETypeUser.anonymous;
-//        previstoIntero = TOT_1935;
-//        ottenutoArrayLong = service.getLongCat(sorgente, userType);
-//        assertNotNull(ottenutoArrayLong);
-//        assertEquals(previstoIntero, ottenutoArrayLong.size());
-//        System.out.println(VUOTA);
-//        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+        //        //--senza specificare il type di user, in automatico mette anonymous
+        //        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+        //        sorgente = CAT_1935;
+        //        userType = AETypeUser.anonymous;
+        //        previstoIntero = TOT_1935;
+        //        ottenutoArrayLong = service.getLongCat(sorgente, userType);
+        //        assertNotNull(ottenutoArrayLong);
+        //        assertEquals(previstoIntero, ottenutoArrayLong.size());
+        //        System.out.println(VUOTA);
+        //        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
 
-//        //--senza specificare il type di user, in automatico mette anonymous
-//        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
-//        sorgente = CAT_2020;
-//        userType = AETypeUser.anonymous;
-//        previstoIntero = TOT_2020;
-//        ottenutoArrayLong = service.getLongCat(sorgente, userType);
-//        assertNotNull(ottenutoArrayLong);
-//        assertEquals(previstoIntero, ottenutoArrayLong.size());
-//        System.out.println(VUOTA);
-//        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+        //        //--senza specificare il type di user, in automatico mette anonymous
+        //        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+        //        sorgente = CAT_2020;
+        //        userType = AETypeUser.anonymous;
+        //        previstoIntero = TOT_2020;
+        //        ottenutoArrayLong = service.getLongCat(sorgente, userType);
+        //        assertNotNull(ottenutoArrayLong);
+        //        assertEquals(previstoIntero, ottenutoArrayLong.size());
+        //        System.out.println(VUOTA);
+        //        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
     }
 
     //    @Test
@@ -672,7 +670,7 @@ public class WikiBotServiceTest extends WTest {
         printLong(listaPageIdsCategoria);
 
         //--B - Usa tutta la lista di pageIds e si recupera una lista (stessa lunghezza) di miniWrap
-        listaMiniWrap = service.getMiniWrap(CAT_1167,listaPageIdsCategoria);
+        listaMiniWrap = service.getMiniWrap(CAT_1167, listaPageIdsCategoria);
         assertNotNull(listaMiniWrap);
         System.out.println(VUOTA);
         System.out.println(VUOTA);
@@ -785,7 +783,7 @@ public class WikiBotServiceTest extends WTest {
     /**
      * Qui passa una volta sola, chiamato alla fine di tutti i tests <br>
      */
-    @AfterEach
+    @AfterAll
     void tearDownAll() {
     }
 

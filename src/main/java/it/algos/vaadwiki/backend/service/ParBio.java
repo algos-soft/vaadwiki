@@ -129,8 +129,8 @@ public enum ParBio {
 
     giornoMeseNascita("GiornoMeseNascita", "giornoNato", true, true, true, true, false) {
         @Override
-        public void setValue(Bio bio, String value) throws AlgosException {
-            bio.giornoNato = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
+        public void setValue(Bio bio, String value) throws Exception {
+            bio.giornoNato = value.equals(VUOTA) ? null : elabora.fixGiorno(value);
         }
 
         //        public String estraeValoreInizialeGrezzo(String testoOriginario) {
@@ -154,20 +154,20 @@ public enum ParBio {
     annoNascita("AnnoNascita", "annoNato", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws AlgosException {
-            bio.annoNato = value.equals(VUOTA) ? null : elabora.fixAnnoValido(value);
+            bio.annoNato = value.equals(VUOTA) ? null : elabora.fixAnno(value);
         }
 
-        public String estraeValoreInizialeGrezzo(String testoOriginario) {
-            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-        }
-
-        public String fixValoreGrezzo(String valoreGrezzo) throws AlgosException {
-            return elabora.fixAnnoValido(valoreGrezzo);
-        }
-
-        public String fixParametro(String valoreGrezzo) throws AlgosException {
-            return elabora.fixAnnoValido(valoreGrezzo);
-        }
+//        public String estraeValoreInizialeGrezzo(String testoOriginario) {
+//            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
+//        }
+//
+//        public String fixValoreGrezzo(String valoreGrezzo) throws AlgosException {
+//            return elabora.fixAnnoValido(valoreGrezzo);
+//        }
+//
+//        public String fixParametro(String valoreGrezzo) throws AlgosException {
+//            return elabora.fixAnnoValido(valoreGrezzo);
+//        }
 
         @Override
         public String getValue(Bio bio) {
@@ -230,7 +230,7 @@ public enum ParBio {
     giornoMeseMorte("GiornoMeseMorte", "giornoMorte", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws AlgosException {
-            bio.giornoMorto = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
+            bio.giornoMorto = value.equals(VUOTA) ? null : elabora.fixGiorno(value);
         }
 
         //        public String estraeValoreInizialeGrezzo(String testoOriginario) {
@@ -255,7 +255,7 @@ public enum ParBio {
         @Override
         public void setValue(Bio bio, String value) throws AlgosException {
             if (text.isValid(value)) {
-                bio.annoMorto = elabora.fixAnnoValido(value);
+                bio.annoMorto = elabora.fixAnno(value);
             }
         }
 
@@ -292,7 +292,7 @@ public enum ParBio {
     attivita("Attività", "attivita", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws AlgosException {
-            bio.attivita = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio, value);
+            bio.attivita = value.equals(VUOTA) ? null : elabora.fixAttivitaValida( value);
         }
 
         //        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
@@ -312,7 +312,7 @@ public enum ParBio {
     attivita2("Attività2", "attivita2", true, false, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws AlgosException {
-            bio.attivita2 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio, value);
+            bio.attivita2 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida( value);
         }
 
         //        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
@@ -332,7 +332,7 @@ public enum ParBio {
     attivita3("Attività3", "attivita3", true, false, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws AlgosException {
-            bio.attivita3 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida(bio, value);
+            bio.attivita3 = value.equals(VUOTA) ? null : elabora.fixAttivitaValida( value);
         }
 
         //        public String fixValoreGrezzo(Bio bio, String valoreGrezzo) throws AlgosException {
@@ -755,7 +755,7 @@ public enum ParBio {
      * @param bio   istanza da regolare
      * @param value valore da inserire
      */
-    public void setValue(final Bio bio, final String value) throws AlgosException {
+    public void setValue(final Bio bio, final String value) throws Exception {
     }
 
     /**

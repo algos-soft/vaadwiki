@@ -1,6 +1,7 @@
 package it.algos.wiki;
 
 import it.algos.test.*;
+import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
@@ -58,10 +59,7 @@ public class DidascaliaServiceTest extends WTest {
         //--reindirizzo l'istanza della superclasse
         service = didascaliaService;
 
-        //        //--controllo una-tantum
-        //        for (String wikiTitle : PAGINE()) {
-        //            elabora(wikiTitle);
-        //        }
+        FlowVar.typeSerializing = AETypeSerializing.gson;
     }
 
 
@@ -300,6 +298,14 @@ public class DidascaliaServiceTest extends WTest {
         } catch (Exception unErrore) {
             System.out.println("Errore");
         }
+    }
+
+    /**
+     * Qui passa una volta sola, chiamato alla fine di tutti i tests <br>
+     */
+    @AfterAll
+    void tearDownAll() {
+        FlowVar.typeSerializing = AETypeSerializing.spring;
     }
 
 }// end of class

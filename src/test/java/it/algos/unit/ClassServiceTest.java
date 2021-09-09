@@ -163,7 +163,7 @@ public class ClassServiceTest extends ATest {
     /**
      * Qui passa una volta sola, chiamato alla fine di tutti i tests <br>
      */
-    @AfterEach
+    @AfterAll
     void tearDownAll() {
     }
 

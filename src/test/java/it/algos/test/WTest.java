@@ -335,6 +335,7 @@ public abstract class WTest extends ATest {
         elaboraService.attivitaService = attivitaService;
         elaboraService.nazionalitaService = nazionalitaService;
         elaboraService.prenomeService = prenomeService;
+        elaboraService.wikiBotService = wikiBotService;
 
         prenomeService.annotation = annotationService;
         prenomeService.reflection = reflectionService;
@@ -348,8 +349,6 @@ public abstract class WTest extends ATest {
             par.setWikiBot(wikiBotService);
             par.setElabora(elaboraService);
         }
-
-        FlowVar.typeSerializing = AETypeSerializing.spring;
     }
 
     /**

@@ -591,7 +591,6 @@ public abstract class ATest {
         clazz = null;
         previstoRisultato = null;
         ottenutoRisultato = null;
-         FlowVar.typeSerializing= AETypeSerializing.spring;
     }
 
     protected String getTime() {

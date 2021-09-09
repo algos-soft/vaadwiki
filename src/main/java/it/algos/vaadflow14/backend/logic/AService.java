@@ -412,16 +412,16 @@ public abstract class AService extends AbstractService implements AIService {
         AEntity entityBean = null;
 
         entityBean = mongo.findById(entityClazz, keyID);
-//        try {
-//            entityBean = mongo.findById(entityClazz, keyID);
-//        } catch (AMongoException unErrore) {
-//            if (logger != null) {
-//                logger.error(unErrore, this.getClass(), "findById");
-//            }
-//            else {
-//                throw new AMongoException(unErrore);
-//            }
-//        }
+        //        try {
+        //            entityBean = mongo.findById(entityClazz, keyID);
+        //        } catch (AMongoException unErrore) {
+        //            if (logger != null) {
+        //                logger.error(unErrore, this.getClass(), "findById");
+        //            }
+        //            else {
+        //                throw new AMongoException(unErrore);
+        //            }
+        //        }
 
         return entityBean;
     }

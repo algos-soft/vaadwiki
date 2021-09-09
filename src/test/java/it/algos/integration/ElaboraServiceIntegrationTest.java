@@ -88,15 +88,25 @@ public class ElaboraServiceIntegrationTest extends ATest {
         previstoGiorno = null;
 
         sorgente = "testo errato";
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
+
         assertNull(ottenutoGiorno);
 
         sorgente = "31 febbraio";
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNull(ottenutoGiorno);
 
         sorgente = "4 termidoro";
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNull(ottenutoGiorno);
 
         sorgente = "17 marzo";
@@ -104,7 +114,10 @@ public class ElaboraServiceIntegrationTest extends ATest {
             previstoGiorno = giornoService.findByKey("17 marzo");
         } catch (AMongoException unErrore) {
         }
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
@@ -113,7 +126,10 @@ public class ElaboraServiceIntegrationTest extends ATest {
             previstoGiorno = giornoService.findByKey("5 agosto");
         } catch (AMongoException unErrore) {
         }
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
@@ -122,7 +138,10 @@ public class ElaboraServiceIntegrationTest extends ATest {
             previstoGiorno = giornoService.findByKey("3 ottobre");
         } catch (AMongoException unErrore) {
         }
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
@@ -131,7 +150,10 @@ public class ElaboraServiceIntegrationTest extends ATest {
             previstoGiorno = giornoService.findByKey("24 maggio");
         } catch (AMongoException unErrore) {
         }
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
@@ -140,12 +162,18 @@ public class ElaboraServiceIntegrationTest extends ATest {
             previstoGiorno = giornoService.findByKey("8 gennaio");
         } catch (AMongoException unErrore) {
         }
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = "?";
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNull(ottenutoGiorno);
 
         sorgente = "11 luglio <ref>Marcello";
@@ -153,20 +181,32 @@ public class ElaboraServiceIntegrationTest extends ATest {
             previstoGiorno = giornoService.findByKey("11 luglio");
         } catch (AMongoException unErrore) {
         }
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNotNull(ottenutoGiorno);
         assertEquals(previstoGiorno, ottenutoGiorno);
 
         sorgente = "21 dicembre circa";
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNull(ottenutoGiorno);
 
         sorgente = "5 maggio?";
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNull(ottenutoGiorno);
 
         sorgente = "settembre";
-        ottenutoGiorno = service.fixGiorno(sorgente);
+        try {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
         assertNull(ottenutoGiorno);
     }
 

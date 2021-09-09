@@ -54,13 +54,6 @@ public class GiornoService extends AService {
 
 
     /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
-     * al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    private MeseService meseService;
-
-    /**
      * Costruttore @Autowired. <br>
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation <br>
      * L' @Autowired (esplicito o implicito) funziona SOLO per UN costruttore <br>
@@ -68,9 +61,8 @@ public class GiornoService extends AService {
      * Se ci sono DUE costruttori, di cui uno senza parametri, inietta quello senza parametri <br>
      * Regola la entityClazz (final) associata a questo service <br>
      */
-    public GiornoService(final MeseService meseService) {
+    public GiornoService() {
         super(Giorno.class);
-        this.meseService = meseService;
     }
 
 

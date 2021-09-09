@@ -4,7 +4,6 @@ import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
-import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.enumeration.*;
@@ -83,7 +82,7 @@ public class AttivitaService extends WikiService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Attivita creaOriginale(final String singolare, final String plurale) {
-        return (Attivita) ((MongoService)mongo).insert(newEntity(singolare, plurale, false));
+        return (Attivita) ((MongoService) mongo).insert(newEntity(singolare, plurale, false));
     }
 
     /**
@@ -95,11 +94,11 @@ public class AttivitaService extends WikiService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Attivita creaAggiuntaIfNotExist(final String singolare, final String plurale) {
-        if (((MongoService)mongo).isExist(entityClazz, text.levaSpazi(singolare))) {
+        if (((MongoService) mongo).isExist(entityClazz, text.levaSpazi(singolare))) {
             return null;
         }
         else {
-            return (Attivita) ((MongoService)mongo).insert(newEntity(singolare, plurale, true));
+            return (Attivita) ((MongoService) mongo).insert(newEntity(singolare, plurale, true));
         }
     }
 
@@ -138,6 +137,19 @@ public class AttivitaService extends WikiService {
         return (Attivita) super.findById(keyID);
     }
 
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Attivita findByKey(final Serializable keyValue) throws AMongoException {
+        return (Attivita) super.findByKey(keyValue);
+    }
 
     /**
      * Retrieves an entity by a keyProperty.
@@ -163,11 +175,9 @@ public class AttivitaService extends WikiService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
-    public Attivita findByKey(final Serializable keyValue) throws AMongoException {
-        return (Attivita) super.findByKey(keyValue);
+    public boolean isEsisteSingolare(String keyValue) throws AMongoException {
+        return this.findByKey(keyValue) != null;
     }
-
 
     /**
      * Esegue un azione di download, specifica del programma/package in corso <br>

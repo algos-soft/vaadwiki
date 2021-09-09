@@ -36,11 +36,11 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class ElaboraService extends WService {
 
-    public static final List<String> MASCHI = Arrays.asList(new String[]{"M", "m", "Maschio", "maschio", "Uomo", "uomo"});
+    public static final List<String> MASCHI = Arrays.asList("M", "m", "Maschio", "maschio", "Uomo", "uomo");
 
-    public static final List<String> FEMMINE = Arrays.asList(new String[]{"F", "f", "Femmina", "femmina", "Donna", "donna"});
+    public static final List<String> FEMMINE = Arrays.asList("F", "f", "Femmina", "femmina", "Donna", "donna");
 
-    public static final List<String> TRANS = Arrays.asList(new String[]{"trans", "incerto", "non si sa", "dubbio", "?"});
+    public static final List<String> TRANS = Arrays.asList("", "trans", "incerto", "non si sa", "dubbio", "?","*","ǝ");
 
 
     /**
@@ -87,6 +87,7 @@ public class ElaboraService extends WService {
     //--Inserisce i valori nella entity Bio
     public void setValue(Bio bio, HashMap<String, String> mappa) {
         String value;
+        String message;
 
         if (bio != null) {
 
@@ -106,7 +107,8 @@ public class ElaboraService extends WService {
                     try {
                         par.setValue(bio, value);
                     } catch (AlgosException unErrore) {
-                        logger.info(unErrore, this.getClass(), "setValue");
+                        message = String.format("Exception %s nel ParBio %s della bio %s", unErrore.getMessage(), par.getTag(), bio.wikiTitle);
+                        logger.info(message, this.getClass(), "setValue");
                     } catch (Exception unErrore) {
                         logger.info(String.format("%s nel ParBio %s", unErrore.toString(), par.getTag()), this.getClass(), "setValue");
                     }
@@ -185,7 +187,7 @@ public class ElaboraService extends WService {
      * @return testoValido regolato in uscita
      */
     public String fixCognome(String testoGrezzo) {
-        return fixValoreGrezzo(testoGrezzo);
+        return wikiBotService.estraeValoreInizialeGrezzoPuntoAmmesso(testoGrezzo);
     }
 
 
@@ -204,149 +206,19 @@ public class ElaboraService extends WService {
         String testoValido = fixValoreGrezzo(testoGrezzo);
         testoValido = testoValido.toLowerCase();
 
-        //        if (testoValido.equals("m") || testoValido.equals("maschio") || testoValido.equals("uomo")) {
-        //            testoValido = "M";
-        //        }
+        if (ElaboraService.MASCHI.contains(testoValido)) {
+            testoValido = "M";
+        }
 
-        //                if (MASCHI.) {
-        //                    testoValido = "M";
-        //                }
-
-        if (testoValido.equals("f") || testoValido.equals("femmina") || testoValido.equals("donna")) {
+        if (ElaboraService.FEMMINE.contains(testoValido)) {
             testoValido = "F";
         }
 
-        if (testoValido.equals("trans") || testoValido.equals("incerto") || testoValido.equals("non si sa") || testoValido.equals("dubbio") || testoValido.equals("?")) {
+        if (ElaboraService.TRANS.contains(testoValido)) {
             testoValido = VUOTA;
         }
 
         return testoValido;
-    }
-
-    /**
-     * Regola la property <br>
-     * <p>
-     * Elimina il testo successivo a vari tag (fixPropertyBase) <br>
-     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese) <br>
-     * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese) <br>
-     * Elimina eventuali spazi vuoti (trim) <br>
-     * Controlla che il valore esista nella collezione Giorno <br>
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return istanza di giorno valido
-     */
-    public Giorno fixGiorno(String testoGrezzo) {
-        Giorno giorno = null;
-        String testoValido = VUOTA;
-
-        if (text.isValid(testoGrezzo)) {
-            try {
-                testoValido = fixGiornoValido(testoGrezzo);
-            } catch (Exception unErrore) {
-                logger.warn(unErrore, this.getClass(), "fixGiorno");
-            }
-        }
-
-        if (text.isValid(testoValido)) {
-            try {
-                giorno = giornoService.findByKey(testoValido);
-            } catch (AMongoException unErrore) {
-                logger.warn(unErrore, this.getClass(), "fixGiorno");
-            }
-        }
-
-        return giorno;
-    }
-
-    /**
-     * Regola la property <br>
-     * <p>
-     * Elimina il testo successivo a vari tag (fixPropertyBase) <br>
-     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese) <br>
-     * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese) <br>
-     * Elimina eventuali spazi vuoti (trim) <br>
-     * Controlla che il valore esista nella collezione Anno <br>
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return istanza di anno valido
-     */
-    public Anno fixAnno(String testoGrezzo) throws AlgosException {
-        Anno anno = null;
-        String testoValido = "";
-
-        if (text.isValid(testoGrezzo)) {
-            testoValido = fixAnnoValido(testoGrezzo);
-        }
-
-        if (text.isValid(testoValido)) {
-            try {
-                anno = annoService.findByKey(testoValido);
-            } catch (AMongoException unErrore) {
-                logger.warn(unErrore, this.getClass(), "fixAnno");
-            }
-        }
-
-        return anno;
-    }
-
-    /**
-     * Regola la property <br>
-     * <p>
-     * Elimina il testo successivo a vari tag (fixPropertyBase) <br>
-     * Controlla che il valore esista nella collezione Attività <br>
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return istanza di attività valida
-     */
-    public Attivita fixAttivitaLink(Bio bio, String testoGrezzo) throws AlgosException {
-        Attivita attivita = null;
-        String testoValido = VUOTA;
-
-        if (text.isValid(testoGrezzo)) {
-            testoValido = fixAttivitaValida(bio, testoGrezzo);
-        }
-
-        if (text.isValid(testoValido)) {
-            try {
-                attivita = attivitaService.findByKey(testoValido);
-            } catch (AMongoException unErrore) {
-                logger.warn(unErrore, this.getClass(), "fixAttivitaLink");
-            }
-        }
-
-        return attivita;
-    }
-
-    /**
-     * Regola la property <br>
-     * <p>
-     * Elimina il testo successivo a vari tag (fixPropertyBase) <br>
-     * Controlla che il valore esista nella collezione Nazionalità <br>
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return istanza di nazionalità valida
-     */
-    public Nazionalita fixNazionalitaLink(String testoGrezzo) {
-        Nazionalita nazionalita = null;
-        String testoValido = VUOTA;
-
-        if (text.isValid(testoGrezzo)) {
-            testoValido = fixNazionalitaValida(testoGrezzo);
-        }
-
-        if (text.isValid(testoValido)) {
-            try {
-                nazionalita = nazionalitaService.findByKey(testoValido);
-            } catch (AMongoException unErrore) {
-                logger.warn(unErrore, this.getClass(), "fixNazionalitaLink");
-            }
-        }
-
-        return nazionalita;
     }
 
     /**
@@ -362,8 +234,9 @@ public class ElaboraService extends WService {
      *
      * @return testo/parametro regolato in uscita
      */
-    public String fixGiornoValido(String testoGrezzo) {
-        String testoValido = fixValoreGrezzo(testoGrezzo);
+    public String fixGiorno(String testoGrezzo) {
+        //        String testoValido = fixValoreGrezzo(testoGrezzo);
+        String testoValido = wikiBotService.estraeValoreInizialeGrezzoPuntoAmmesso(testoGrezzo);
         int pos;
         String primo;
         String mese;
@@ -417,24 +290,51 @@ public class ElaboraService extends WService {
             }
         }
 
-        if (text.isValid(testoValido)) {
-            try {
-                if (giornoService.findByKey(testoValido) != null) {
-                    return testoValido.trim();
-                }
-                else {
-                    return VUOTA;
-                }
-            } catch (AMongoException unErrore) {
-                logger.info(unErrore, this.getClass(), "fixGiornoValido");
-                return VUOTA;
-            }
-        }
-        else {
-            return VUOTA;
-        }
+        //        if (text.isValid(testoValido)) {
+        //            try {
+        //                if (giornoService.findByKey(testoValido) != null) {
+        //                    return testoValido.trim();
+        //                }
+        //                else {
+        //                    return VUOTA;
+        //                }
+        //            } catch (AMongoException unErrore) {
+        //                logger.info(unErrore, this.getClass(), "fixGiornoValido");
+        //                return VUOTA;
+        //            }
+        //        }
+        //        else {
+        //            return VUOTA;
+        //        }
+
+        return testoValido.trim();
     }
 
+    /**
+     * Regola la property <br>
+     * <p>
+     * Elimina il testo successivo a vari tag (fixPropertyBase) <br>
+     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese) <br>
+     * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese) <br>
+     * Elimina eventuali spazi vuoti (trim) <br>
+     * Controlla che il valore esista nella collezione Giorno <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di giorno valido
+     */
+    public Giorno fixGiornoLink(String testoGrezzo) throws Exception {
+        Giorno giorno = null;
+        String testoValido = VUOTA;
+
+        testoValido = fixGiorno(testoGrezzo);
+
+        if (text.isValid(testoValido)) {
+            giorno = giornoService.findByKey(testoValido);
+        }
+
+        return giorno;
+    }
 
     /**
      * Regola questa property <br>
@@ -446,9 +346,9 @@ public class ElaboraService extends WService {
      *
      * @return testo/parametro regolato in uscita
      */
-    public String fixAnnoValido(String testoGrezzo) throws AlgosException {
-        String testoValido = fixValoreGrezzo(testoGrezzo);
-
+    public String fixAnno(String testoGrezzo)  {
+        //        String testoValido = fixValoreGrezzo(testoGrezzo);
+        String testoValido = wikiBotService.estraeValoreInizialeGrezzoPuntoAmmesso(testoGrezzo);
         //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
         if (testoGrezzo.trim().equals("?")) {
             return testoGrezzo;
@@ -460,24 +360,113 @@ public class ElaboraService extends WService {
 
         testoValido = text.levaDopo(testoValido, CIRCA);
 
+//        if (text.isValid(testoValido)) {
+//            try {
+//                if (annoService.isEsiste(testoValido)) {
+//                    return testoValido.trim();
+//                }
+//                else {
+//                    return VUOTA;
+//                }
+//            } catch (AMongoException unErrore) {
+//                throw new AlgosException(unErrore, null, "fixAnnoValido");
+//                //                logger.error(unErrore, this.getClass(), "fixAnnoValido");
+//                //                return VUOTA;
+//            }
+//        }
+//        else {
+//            return VUOTA;
+//        }
+
+        return testoValido.trim();
+    }
+
+    /**
+     * Regola la property <br>
+     * <p>
+     * Elimina il testo successivo a vari tag (fixPropertyBase) <br>
+     * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese) <br>
+     * Elimina eventuali DOPPI spazi vuoto (tipico della data tra il giorno ed il mese) <br>
+     * Elimina eventuali spazi vuoti (trim) <br>
+     * Controlla che il valore esista nella collezione Anno <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di anno valido
+     */
+    public Anno fixAnnoLink(String testoGrezzo) throws Exception {
+        Anno anno = null;
+        String testoValido = "";
+
+        if (text.isValid(testoGrezzo)) {
+            testoValido = fixAnno(testoGrezzo);
+        }
+
+        if (text.isValid(testoValido)) {
+            anno = annoService.findByKey(testoValido);
+        }
+
+        return anno;
+    }
+
+    /**
+     * Regola la property <br>
+     * <p>
+     * Elimina il testo successivo a vari tag (fixPropertyBase) <br>
+     * Controlla che il valore esista nella collezione Attività <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di attività valida
+     */
+    public Attivita fixAttivitaLink(Bio bio, String testoGrezzo) throws AlgosException {
+        Attivita attivita = null;
+        String testoValido = VUOTA;
+
+        if (text.isValid(testoGrezzo)) {
+            testoValido = fixAttivitaValida(testoGrezzo);
+        }
+
         if (text.isValid(testoValido)) {
             try {
-                if (annoService.isEsiste(testoValido)) {
-                    return testoValido.trim();
-                }
-                else {
-                    return VUOTA;
-                }
+                attivita = attivitaService.findByKey(testoValido);
             } catch (AMongoException unErrore) {
-                throw new AlgosException(unErrore, null, "pippoz");
-                //                logger.error(unErrore, this.getClass(), "fixAnnoValido");
-                //                return VUOTA;
+                logger.warn(unErrore, this.getClass(), "fixAttivitaLink");
             }
         }
-        else {
-            return VUOTA;
-        }
+
+        return attivita;
     }
+
+    /**
+     * Regola la property <br>
+     * <p>
+     * Elimina il testo successivo a vari tag (fixPropertyBase) <br>
+     * Controlla che il valore esista nella collezione Nazionalità <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return istanza di nazionalità valida
+     */
+    public Nazionalita fixNazionalitaLink(String testoGrezzo) {
+        Nazionalita nazionalita = null;
+        String testoValido = VUOTA;
+
+        if (text.isValid(testoGrezzo)) {
+            testoValido = fixNazionalitaValida(testoGrezzo);
+        }
+
+        if (text.isValid(testoValido)) {
+            try {
+                nazionalita = nazionalitaService.findByKey(testoValido);
+            } catch (AMongoException unErrore) {
+                logger.warn(unErrore, this.getClass(), "fixNazionalitaLink");
+            }
+        }
+
+        return nazionalita;
+    }
+
 
     /**
      * Regola questa property <br>
@@ -601,7 +590,7 @@ public class ElaboraService extends WService {
      *
      * @return testo/parametro regolato in uscita
      */
-    public String fixAttivitaValida(Bio bio, String testoGrezzo) throws AlgosException {
+    public String fixAttivitaValida(String testoGrezzo) throws AlgosException {
         String testoValido = fixValoreGrezzo(testoGrezzo).toLowerCase();
         String message;
 
@@ -610,11 +599,11 @@ public class ElaboraService extends WService {
 
         if (text.isValid(testoValido)) {
             try {
-                if (attivitaService.isEsiste(testoValido)) {
+                if (attivitaService.isEsisteSingolare(testoValido)) {
                     return testoValido.trim();
                 }
                 else {
-                    message = String.format("Nella bio di %s, l'attività %s non è stata trovata", bio.wikiTitle, testoValido);
+                    message = String.format("Nella bio di %s, l'attività %s non è stata trovata", testoValido);
                     throw new AlgosException(message);
                 }
             } catch (AMongoException unErrore) {

@@ -4,11 +4,9 @@ import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadwiki.backend.service.*;
-import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
@@ -31,7 +29,7 @@ import org.junit.jupiter.params.provider.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ElaboraServiceTest extends WTest {
 
-    protected static final String NOME_UNO = "testo errato";
+    protected static final String NOME_UNO = "";
 
     protected static final String NOME_DUE = "Marcello <ref>Da levare</ref>";
 
@@ -45,7 +43,9 @@ public class ElaboraServiceTest extends WTest {
 
     protected static final String NOME_SETTE = "Anna Maria";
 
-    protected static final String COGNOME_UNO = "testo errato";
+    protected static final String NOME_OTTO = "testo errato";
+
+    protected static final String COGNOME_UNO = "";
 
     protected static final String COGNOME_DUE = "Brambilla <ref>Da levare</ref>";
 
@@ -59,7 +59,9 @@ public class ElaboraServiceTest extends WTest {
 
     protected static final String COGNOME_SETTE = "de Bruillard";
 
-    protected static final String GIORNO_UNO = "testo errato";
+    protected static final String COGNOME_OTTO = "testo errato";
+
+    protected static final String GIORNO_UNO = "";
 
     protected static final String GIORNO_DUE = "31 febbraio";
 
@@ -67,19 +69,19 @@ public class ElaboraServiceTest extends WTest {
 
     protected static final String GIORNO_QUATTRO = "17 marzo";
 
-    protected static final String GIORNO_CINQUE = "";
+    protected static final String GIORNO_CINQUE = "testo errato";
 
     protected static final String GIORNO_SEI = "";
 
     protected static final String GIORNO_SETTE = "";
 
-    protected static final String ANNO_UNO = "testo errato";
+    protected static final String ANNO_UNO = "";
 
     protected static final String ANNO_DUE = "3145";
 
     protected static final String ANNO_TRE = "1874";
 
-    protected static final String ANNO_QUATTRO = "";
+    protected static final String ANNO_QUATTRO = "testo errato";
 
     protected static final String ANNO_CINQUE = "";
 
@@ -103,11 +105,11 @@ public class ElaboraServiceTest extends WTest {
     private ElaboraService service;
 
     public static String[] NOMI() {
-        return new String[]{NOME_UNO, NOME_DUE, NOME_TRE, NOME_QUATTRO, NOME_CINQUE, NOME_SEI, NOME_SETTE};
+        return new String[]{NOME_UNO, NOME_DUE, NOME_TRE, NOME_QUATTRO, NOME_CINQUE, NOME_SEI, NOME_SETTE, NOME_OTTO};
     }
 
     public static String[] COGNOMI() {
-        return new String[]{COGNOME_UNO, COGNOME_DUE, COGNOME_TRE, COGNOME_QUATTRO, COGNOME_CINQUE, COGNOME_SEI, COGNOME_SETTE};
+        return new String[]{COGNOME_UNO, COGNOME_DUE, COGNOME_TRE, COGNOME_QUATTRO, COGNOME_CINQUE, COGNOME_SEI, COGNOME_SETTE, COGNOME_OTTO};
     }
 
     public static String[] GIORNI() {
@@ -118,17 +120,10 @@ public class ElaboraServiceTest extends WTest {
         return new String[]{ANNO_UNO, ANNO_DUE, ANNO_TRE, ANNO_QUATTRO, ANNO_CINQUE, ANNO_SEI, ANNO_SETTE};
     }
 
-//    public static String[] MASCHI() {
-//        return new String[]{"M", "m", "Maschio", "maschio", "Uomo", "uomo"};
-//    }
-//
-//    public static String[] FEMMINE() {
-//        return new String[]{"F", "f", "Femmina", "femmina", "Donna", "donna"};
-//    }
-//
-//    public static String[] TRANS() {
-//        return new String[]{"trans", "incerto", "non si sa", "dubbio", "?"};
-//    }
+    public static String[] ATTIVITA() {
+        return new String[]{"errata", "medico", "dottoressa", "Medico", "ex ciclista"};
+    }
+
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -166,14 +161,13 @@ public class ElaboraServiceTest extends WTest {
     @ParameterizedTest
     @MethodSource(value = "NOMI")
     @Order(1)
-    @DisplayName("1 - fixNome")
+    @DisplayName("1 - fixNome (come stringa)")
     void testWithStringParameterNome(String nome) {
-        System.out.println("1 - fixNome");
+        System.out.println("1 - fixNome (come stringa)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
 
         sorgente = nome;
         ottenuto = service.fixNome(sorgente);
-        assertTrue(textService.isValid(ottenuto));
         printNome(sorgente, ottenuto);
     }
 
@@ -181,136 +175,152 @@ public class ElaboraServiceTest extends WTest {
     @ParameterizedTest
     @MethodSource(value = "COGNOMI")
     @Order(2)
-    @DisplayName("2 - fixCognome")
+    @DisplayName("2 - fixCognome (come stringa)")
     void testWithStringParameterCognome(String cognome) {
-        System.out.println("2 - fixCognome");
+        System.out.println("2 - fixCognome (come stringa)");
 
         sorgente = cognome;
         ottenuto = service.fixCognome(sorgente);
-        assertTrue(textService.isValid(ottenuto));
         printNome(sorgente, ottenuto);
     }
 
     @Test
     @Order(3)
-    @DisplayName("3 - fixSesso")
+    @DisplayName("3 - fixSesso (come stringa)")
     void fixSesso() {
-        System.out.println("3 - fixSesso");
+        System.out.println("3 - fixSesso (come stringa)");
         System.out.println(VUOTA);
 
         System.out.println("**********");
         for (String tagInput : ElaboraService.MASCHI) {
             ottenuto = service.fixSesso(tagInput);
-            printSesso(tagInput,ottenuto);
+            printSesso(tagInput, ottenuto);
         }
 
         System.out.println("**********");
         for (String tagInput : ElaboraService.FEMMINE) {
             ottenuto = service.fixSesso(tagInput);
-            printSesso(tagInput,ottenuto);
+            printSesso(tagInput, ottenuto);
         }
 
         System.out.println("**********");
         for (String tagInput : ElaboraService.TRANS) {
             ottenuto = service.fixSesso(tagInput);
-            printSesso(tagInput,ottenuto);
+            printSesso(tagInput, ottenuto);
         }
     }
 
-    @Test
+
+    @ParameterizedTest
+    @MethodSource(value = "GIORNI")
     @Order(4)
-    @DisplayName("4 - fixGiorno")
-    void fixGiorno() {
-        System.out.println("4 - fixGiorno");
-        FlowVar.typeSerializing = AETypeSerializing.gson;
+    @DisplayName("4 - fixGiorno (come stringa)")
+    void testWithStringParameterGiorno(String giorno) {
+        System.out.println("4 - fixGiorno (come stringa)");
 
-        sorgente = "testo errato";
-        ottenutoGiorno = service.fixGiorno(sorgente);
-        assertNull(ottenutoGiorno);
+        sorgente = giorno;
+        ottenuto = service.fixGiorno(sorgente);
+        printNome(sorgente, ottenuto);
 
-        sorgente = "31 febbraio";
-        ottenutoGiorno = service.fixGiorno(sorgente);
-        assertNull(ottenutoGiorno);
-
-        sorgente = "4 termidoro";
-        ottenutoGiorno = service.fixGiorno(sorgente);
-        assertNull(ottenutoGiorno);
-
-        sorgente = "17 marzo";
-        try {
-            previstoGiorno = giornoService.findByKey(sorgente);
-        } catch (AMongoException unErrore) {
-        }
-        ottenutoGiorno = service.fixGiorno(sorgente);
-        assertNotNull(ottenutoGiorno);
-        assertEquals(previstoGiorno, ottenutoGiorno);
-        System.out.println(ottenutoGiorno);
     }
 
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "GIORNI")
     @Order(5)
-    @DisplayName("5 - fixAnno")
-    void fixAnno() {
-        System.out.println("5 - fixAnno");
+    @DisplayName("5 - fixGiorno (come Giorno esistente)")
+    void testWithStringParameterGiornoLink(String giorno) {
+        System.out.println("5 - fixGiorno (come Giorno esistente)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
 
-        sorgente = "testo errato";
+        sorgente = giorno;
+        ottenutoGiorno = null;
         try {
-            ottenutoAnno = service.fixAnno(sorgente);
-        } catch (AlgosException unErrore) {
+            ottenutoGiorno = service.fixGiornoLink(sorgente);
+        } catch (Exception unErrore) {
         }
-
-        assertNull(ottenutoAnno);
-
-        sorgente = "3145";
-        try {
-            ottenutoAnno = service.fixAnno(sorgente);
-        } catch (AlgosException unErrore) {
-        }
-        assertNull(ottenutoAnno);
-
-        sorgente = "1874";
-        try {
-            ottenutoAnno = annoService.findByKey(sorgente);
-        } catch (AMongoException unErrore) {
-        }
-        assertNotNull(ottenutoAnno);
-        System.out.println(ottenutoAnno);
+        printGiorno(sorgente, ottenutoGiorno);
     }
 
-    @Test
+
+    @ParameterizedTest
+    @MethodSource(value = "ANNI")
     @Order(6)
-    @DisplayName("6 - fixAttivita")
-    void fixAttivita() {
+    @DisplayName("6 - fixAnno (come stringa)")
+    void testWithStringParameterAnno(String anno) {
+        System.out.println("6 - fixAnno (come stringa)");
 
-        sorgente = "testo errato";
-        //        try {
-        //            ottenuto = service.fixAttivitaValida(sorgente);
-        //        } catch (AlgosException unErrore) {
-        //        }
+        sorgente = anno;
+        ottenuto = service.fixAnno(sorgente);
+        printNome(sorgente, ottenuto);
 
-        assertNull(ottenutoAnno);
+    }
 
-        sorgente = "3145";
-        //        try {
-        //            ottenuto = service.fixAttivitaValida(sorgente);
-        //        } catch (AlgosException unErrore) {
-        //        }
-        assertNull(ottenutoAnno);
 
-        sorgente = "1874";
-        //        try {
-        //            ottenuto = service.fixAttivitaValida(sorgente);
-        //        } catch (AMongoException unErrore) {
-        //        }
-        assertNotNull(ottenutoAnno);
-        System.out.println(ottenutoAnno);
+    @ParameterizedTest
+    @MethodSource(value = "ANNI")
+    @Order(7)
+    @DisplayName("7 - fixAnno (come Anno esistente)")
+    void testWithStringParameterAnnoLink(String anno) {
+        System.out.println("7 - fixAnno (come Anno esistente)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+
+        sorgente = anno;
+        ottenutoAnno = null;
+        try {
+            ottenutoAnno = service.fixAnnoLink(sorgente);
+        } catch (Exception unErrore) {
+        }
+        printAnno(sorgente, ottenutoAnno);
+    }
+
+    //    @Test
+    //    @Order(6)
+    //    @DisplayName("6 - fixAnno")
+    //    void fixAnno() {
+    //        System.out.println("6 - fixAnno");
+    //        FlowVar.typeSerializing = AETypeSerializing.gson;
+    //
+    //        sorgente = "testo errato";
+    //        try {
+    //            ottenutoAnno = service.fixAnnoLink(sorgente);
+    //        } catch (Exception unErrore) {
+    //        }
+    //
+    //        assertNull(ottenutoAnno);
+    //
+    //        sorgente = "3145";
+    //        try {
+    //            ottenutoAnno = service.fixAnnoLink(sorgente);
+    //        } catch (Exception unErrore) {
+    //        }
+    //        assertNull(ottenutoAnno);
+    //
+    //        sorgente = "1874";
+    //        try {
+    //            ottenutoAnno = annoService.findByKey(sorgente);
+    //        } catch (AMongoException unErrore) {
+    //        }
+    //        assertNotNull(ottenutoAnno);
+    //        System.out.println(ottenutoAnno);
+    //    }
+
+    @ParameterizedTest
+    @MethodSource(value = "ATTIVITA")
+    @Order(8)
+    @DisplayName("8 - fixAttivita")
+    void testWithStringParameterAttivita(String attivita) {
+        System.out.println("8 - fixAttivita");
+
+        //        sorgente = attivita;
+        //        ottenuto = service.fixAttivitaValida(sorgente);
+        //        assertTrue(textService.isValid(ottenuto));
+        //        printNome(sorgente, ottenuto);
     }
 
     @Test
-    @Order(7)
-    @DisplayName("7 - fixNazionalita")
+    @Order(9)
+    @DisplayName("9 - fixNazionalita")
     void fixNazionalita() {
     }
 
@@ -321,14 +331,36 @@ public class ElaboraServiceTest extends WTest {
     }
 
 
-    private void printNome(final String grezzo, final String elaborato) {
-        System.out.println(String.format("'%s' -> [%s]", grezzo, elaborato));
+    private void printNome(final String tagInput, final String tagValido) {
+        System.out.println(String.format("'%s' -> [%s]", tagInput, tagValido));
         System.out.println(VUOTA);
     }
 
     private void printSesso(final String tagInput, final String tagValido) {
         System.out.println(String.format("'%s' -> [%s]", tagInput, tagValido));
         System.out.println(VUOTA);
+    }
+
+    private void printGiorno(final String tagInput, final Giorno giornoValido) {
+        if (giornoValido != null) {
+            System.out.println(String.format("'%s' -> [%s]", tagInput, giornoValido.titolo));
+            System.out.println(VUOTA);
+        }
+        else {
+            System.out.println(String.format("Non esiste un giorno corrispondente a '%s'", tagInput));
+            System.out.println(VUOTA);
+        }
+    }
+
+    private void printAnno(final String tagInput, final Anno annoValido) {
+        if (annoValido != null) {
+            System.out.println(String.format("'%s' -> [%s]", tagInput, annoValido.titolo));
+            System.out.println(VUOTA);
+        }
+        else {
+            System.out.println(String.format("Non esiste un anno corrispondente a '%s'", tagInput));
+            System.out.println(VUOTA);
+        }
     }
 
     /**
@@ -342,8 +374,9 @@ public class ElaboraServiceTest extends WTest {
     /**
      * Qui passa una volta sola, chiamato alla fine di tutti i tests <br>
      */
-    @AfterEach
+    @AfterAll
     void tearDownAll() {
+        FlowVar.typeSerializing = AETypeSerializing.spring;
     }
 
 }

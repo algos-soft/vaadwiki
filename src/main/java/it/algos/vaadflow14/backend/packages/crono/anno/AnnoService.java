@@ -62,12 +62,12 @@ public class AnnoService extends AService {
      */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
-     * al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    private SecoloService secoloService;
+//    /**
+//     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+//     * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
+//     * al termine del ciclo init() del costruttore di questa classe <br>
+//     */
+//    private SecoloService secoloService;
 
 
     /**
@@ -78,9 +78,8 @@ public class AnnoService extends AService {
      * Se ci sono DUE costruttori, di cui uno senza parametri, inietta quello senza parametri <br>
      * Regola la entityClazz (final) associata a questo service <br>
      */
-    public AnnoService(final SecoloService secoloService) {
+    public AnnoService() {
         super(Anno.class);
-        this.secoloService = secoloService;
     }
 
 
