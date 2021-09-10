@@ -282,6 +282,10 @@ public class ElaboraService extends WService {
             return VUOTA;
         }
 
+        //--elimina eventuali quadre (ini o end) rimaste
+        testoValido = testoValido.replaceAll(QUADRA_INI_REGEX,VUOTA);
+        testoValido = testoValido.replaceAll(QUADRA_END_REGEX,VUOTA);
+
         //--minuscola
         testoValido = testoValido.toLowerCase();
 

@@ -61,29 +61,35 @@ public class ElaboraServiceTest extends WTest {
 
     protected static final String COGNOME_OTTO = "testo errato";
 
-    protected static final String GIORNO_UNO = "";
+    protected static final String GIORNO_1 = "";
 
-    protected static final String GIORNO_DUE = "31 febbraio";
+    protected static final String GIORNO_2 = "31 febbraio";
 
-    protected static final String GIORNO_TRE = "4 termidoro";
+    protected static final String GIORNO_3 = "4 termidoro";
 
-    protected static final String GIORNO_QUATTRO = "17 marzo";
+    protected static final String GIORNO_4 = "17 marzo";
 
-    protected static final String GIORNO_CINQUE = "testo errato";
+    protected static final String GIORNO_5 = "testo errato";
 
-    protected static final String GIORNO_SEI = "12 luglio <ref>Da levare</ref>";
+    protected static final String GIORNO_6 = "12 [[Luglio]] <ref>Da levare</ref>";
 
-    protected static final String GIORNO_SETTE = "24aprile";
+    protected static final String GIORNO_7 = "24aprile";
 
-    protected static final String GIORNO_OTTO = "2 Novembre";
+    protected static final String GIORNO_8 = "2 Novembre";
 
-    protected static final String GIORNO_NOVE = "2Novembre";
+    protected static final String GIORNO_9 = "2Novembre";
 
-    protected static final String GIORNO_DIECI = "?";
+    protected static final String GIORNO_10 = "?";
 
-    protected static final String GIORNO_UNDICI = "3 dicembre?";
+    protected static final String GIORNO_11 = "3 dicembre?";
 
-    protected static final String GIORNO_DODICI = "3 dicembre circa";
+    protected static final String GIORNO_12 = "3 dicembre circa";
+
+    protected static final String GIORNO_13 = "[[8 agosto]]";
+
+    protected static final String GIORNO_14 = "21[Maggio]";
+
+    protected static final String GIORNO_15 = "[4 febbraio]";
 
     protected static final String ANNO_UNO = "";
 
@@ -123,7 +129,7 @@ public class ElaboraServiceTest extends WTest {
     }
 
     public static String[] GIORNI() {
-        return new String[]{GIORNO_UNO, GIORNO_DUE, GIORNO_TRE, GIORNO_QUATTRO, GIORNO_CINQUE, GIORNO_SEI, GIORNO_SETTE, GIORNO_OTTO, GIORNO_NOVE, GIORNO_DIECI, GIORNO_UNDICI, GIORNO_DODICI};
+        return new String[]{GIORNO_1, GIORNO_2, GIORNO_3, GIORNO_4, GIORNO_5, GIORNO_6, GIORNO_7, GIORNO_8, GIORNO_9, GIORNO_10, GIORNO_11, GIORNO_12, GIORNO_13, GIORNO_14, GIORNO_15};
     }
 
     public static String[] ANNI() {
@@ -367,18 +373,18 @@ public class ElaboraServiceTest extends WTest {
 
 
     private void printNome(final String tagInput, final String tagValido) {
-        System.out.println(String.format("'%s' -> [%s]", tagInput, tagValido));
+        System.out.println(String.format("'%s' -> '%s'", tagInput, tagValido));
         System.out.println(VUOTA);
     }
 
     private void printSesso(final String tagInput, final String tagValido) {
-        System.out.println(String.format("'%s' -> [%s]", tagInput, tagValido));
+        System.out.println(String.format("'%s' -> '%s'", tagInput, tagValido));
         System.out.println(VUOTA);
     }
 
     private void printGiorno(final String tagInput, final Giorno giornoValido) {
         if (giornoValido != null) {
-            System.out.println(String.format("'%s' -> [%s]", tagInput, giornoValido.titolo));
+            System.out.println(String.format("'%s' -> '%s'", tagInput, giornoValido.titolo));
             System.out.println(VUOTA);
         }
         else {

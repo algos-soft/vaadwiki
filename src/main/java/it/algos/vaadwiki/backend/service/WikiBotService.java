@@ -839,6 +839,7 @@ public class WikiBotService extends WService {
             return PUNTO_INTERROGATIVO;
         }
 
+        valoreGrezzo = text.setNoQuadre(valoreGrezzo);
         valoreGrezzo = text.levaDopoRef(valoreGrezzo);
         valoreGrezzo = text.levaDopoNote(valoreGrezzo);
         valoreGrezzo = text.levaDopoGraffe(valoreGrezzo);
