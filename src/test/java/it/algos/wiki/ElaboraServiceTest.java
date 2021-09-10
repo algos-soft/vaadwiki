@@ -91,6 +91,14 @@ public class ElaboraServiceTest extends WTest {
 
     protected static final String GIORNO_15 = "[4 febbraio]";
 
+    protected static final String GIORNO_16 = "settembre 5";
+
+    protected static final String GIORNO_17 = "27 ottobre <!--eh eh eh-->";
+
+    protected static final String GIORNO_18 = "29 giugno <nowiki> levare";
+
+    protected static final String GIORNO_19 = "dicembre";
+
     protected static final String ANNO_UNO = "";
 
     protected static final String ANNO_DUE = "3145";
@@ -129,7 +137,10 @@ public class ElaboraServiceTest extends WTest {
     }
 
     public static String[] GIORNI() {
-        return new String[]{GIORNO_1, GIORNO_2, GIORNO_3, GIORNO_4, GIORNO_5, GIORNO_6, GIORNO_7, GIORNO_8, GIORNO_9, GIORNO_10, GIORNO_11, GIORNO_12, GIORNO_13, GIORNO_14, GIORNO_15};
+        return new String[]{
+                GIORNO_1, GIORNO_2, GIORNO_3, GIORNO_4, GIORNO_5, GIORNO_6,
+                GIORNO_7, GIORNO_8, GIORNO_9, GIORNO_10, GIORNO_11, GIORNO_12,
+                GIORNO_13, GIORNO_14, GIORNO_15, GIORNO_16, GIORNO_17, GIORNO_18, GIORNO_19};
     }
 
     public static String[] ANNI() {

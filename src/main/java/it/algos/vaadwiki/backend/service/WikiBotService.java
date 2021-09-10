@@ -843,6 +843,7 @@ public class WikiBotService extends WService {
         valoreGrezzo = text.levaDopoRef(valoreGrezzo);
         valoreGrezzo = text.levaDopoNote(valoreGrezzo);
         valoreGrezzo = text.levaDopoGraffe(valoreGrezzo);
+        valoreGrezzo = text.levaDopoWiki(valoreGrezzo);
         valoreGrezzo = text.levaDopoUguale(valoreGrezzo);
 //        valoreGrezzo = text.levaDopoCirca(valoreGrezzo);
         valoreGrezzo = text.levaDopoEccetera(valoreGrezzo);

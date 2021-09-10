@@ -67,6 +67,8 @@ public abstract class FlowCost {
 
     public static final String NOTE = "<!--";
 
+    public static final String NO_WIKI = "<nowiki>";
+
     public static final String CIRCA = "circa";
 
     public static final String DOPPIO_SPAZIO = SPAZIO + SPAZIO;

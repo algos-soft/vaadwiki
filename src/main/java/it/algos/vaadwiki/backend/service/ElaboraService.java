@@ -286,6 +286,11 @@ public class ElaboraService extends WService {
         testoValido = testoValido.replaceAll(QUADRA_INI_REGEX,VUOTA);
         testoValido = testoValido.replaceAll(QUADRA_END_REGEX,VUOTA);
 
+        //--deve iniziare con un numero
+        if (!Character.isDigit(testoValido.charAt(0))) {
+            return VUOTA;
+        }
+
         //--minuscola
         testoValido = testoValido.toLowerCase();
 

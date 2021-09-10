@@ -1531,6 +1531,21 @@ public class TextService extends AbstractService {
         return levaDopo(entrata, NOTE);
     }
 
+    /**
+     * Elimina la parte di stringa successiva al tag <nowiki, se esiste.
+     * <p>
+     * Esegue solo se la stringa è valida
+     * Se manca il tag, restituisce la stringa
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa ridotta
+     */
+    public String levaDopoWiki(String entrata) {
+        return levaDopo(entrata, NO_WIKI);
+    }
+
 
     /**
      * Elimina la parte di stringa successiva al tag <!--, se esiste.
