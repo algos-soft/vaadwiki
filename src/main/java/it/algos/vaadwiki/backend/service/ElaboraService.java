@@ -40,7 +40,7 @@ public class ElaboraService extends WService {
 
     public static final List<String> FEMMINE = Arrays.asList("F", "f", "Femmina", "femmina", "Donna", "donna");
 
-    public static final List<String> TRANS = Arrays.asList("", "trans", "incerto", "non si sa", "dubbio", "?","*","ǝ");
+    public static final List<String> TRANS = Arrays.asList("", "trans", "incerto", "non si sa", "dubbio", "?", "*", "ǝ");
 
 
     /**
@@ -224,6 +224,30 @@ public class ElaboraService extends WService {
     /**
      * Regola questa property <br>
      * <p>
+     * Regola il testo con le regolazioni di base <br>
+     * Regola il testo con le regolazioni specifiche per i giorni <br>
+     * Controlla che il valore esista nella collezione Giorno <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testo/parametro regolato in uscita
+     */
+    public String fixGiornoValido(String testoGrezzo) {
+        String testoValido = fixGiorno(testoGrezzo);
+        Giorno giorno = null;
+
+        try {
+            giorno = giornoService.findByKey(testoValido);
+        } catch (Exception unErrore) {
+            logger.info(unErrore, this.getClass(), "fixGiornoValido");
+        }
+
+        return giorno != null ? giorno.getTitolo() : VUOTA;
+    }
+
+    /**
+     * Regola questa property <br>
+     * <p>
      * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
      * Elimina il testo se NON contiene una spazio vuoto (tipico della data giorno-mese) <br>
      * Elimina eventuali spazi vuoti DOPPI o TRIPLI (tipico della data tra il giorno ed il mese) <br>
@@ -235,33 +259,16 @@ public class ElaboraService extends WService {
      * @return testo/parametro regolato in uscita
      */
     public String fixGiorno(String testoGrezzo) {
-        //        String testoValido = fixValoreGrezzo(testoGrezzo);
-        String testoValido = wikiBotService.estraeValoreInizialeGrezzoPuntoAmmesso(testoGrezzo);
+        //--se contiene un punto interrogativo (in coda) è valido
+        String testoValido = wikiBotService.estraeValoreInizialeGrezzoPuntoEscluso(testoGrezzo);
         int pos;
         String primo;
         String mese;
 
-        //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
-        if (testoGrezzo.trim().equals("?")) {
-            return testoGrezzo;
-        }
-
-        //--se contiene un punto interrogativo non è valido
-        if (testoGrezzo.contains("?")) {
-            return testoGrezzo;
-        }
-
-        if (text.isEmpty(testoValido)) {
-            return VUOTA;
-        }
-
         //--solo date certe ed esatte
-        if (testoGrezzo.contains(CIRCA)) {
+        if (testoValido.contains(CIRCA)) {
             return VUOTA;
         }
-
-        //--elimina ref in coda. Data accettabile
-        testoValido = text.levaDopo(testoValido, REF);
 
         //--spazio singolo
         testoValido = text.fixOneSpace(testoValido);
@@ -290,23 +297,6 @@ public class ElaboraService extends WService {
             }
         }
 
-        //        if (text.isValid(testoValido)) {
-        //            try {
-        //                if (giornoService.findByKey(testoValido) != null) {
-        //                    return testoValido.trim();
-        //                }
-        //                else {
-        //                    return VUOTA;
-        //                }
-        //            } catch (AMongoException unErrore) {
-        //                logger.info(unErrore, this.getClass(), "fixGiornoValido");
-        //                return VUOTA;
-        //            }
-        //        }
-        //        else {
-        //            return VUOTA;
-        //        }
-
         return testoValido.trim();
     }
 
@@ -325,9 +315,7 @@ public class ElaboraService extends WService {
      */
     public Giorno fixGiornoLink(String testoGrezzo) throws Exception {
         Giorno giorno = null;
-        String testoValido = VUOTA;
-
-        testoValido = fixGiorno(testoGrezzo);
+        String testoValido = fixGiorno(testoGrezzo);
 
         if (text.isValid(testoValido)) {
             giorno = giornoService.findByKey(testoValido);
@@ -346,7 +334,7 @@ public class ElaboraService extends WService {
      *
      * @return testo/parametro regolato in uscita
      */
-    public String fixAnno(String testoGrezzo)  {
+    public String fixAnno(String testoGrezzo) {
         //        String testoValido = fixValoreGrezzo(testoGrezzo);
         String testoValido = wikiBotService.estraeValoreInizialeGrezzoPuntoAmmesso(testoGrezzo);
         //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
@@ -360,23 +348,23 @@ public class ElaboraService extends WService {
 
         testoValido = text.levaDopo(testoValido, CIRCA);
 
-//        if (text.isValid(testoValido)) {
-//            try {
-//                if (annoService.isEsiste(testoValido)) {
-//                    return testoValido.trim();
-//                }
-//                else {
-//                    return VUOTA;
-//                }
-//            } catch (AMongoException unErrore) {
-//                throw new AlgosException(unErrore, null, "fixAnnoValido");
-//                //                logger.error(unErrore, this.getClass(), "fixAnnoValido");
-//                //                return VUOTA;
-//            }
-//        }
-//        else {
-//            return VUOTA;
-//        }
+        //        if (text.isValid(testoValido)) {
+        //            try {
+        //                if (annoService.isEsiste(testoValido)) {
+        //                    return testoValido.trim();
+        //                }
+        //                else {
+        //                    return VUOTA;
+        //                }
+        //            } catch (AMongoException unErrore) {
+        //                throw new AlgosException(unErrore, null, "fixAnnoValido");
+        //                //                logger.error(unErrore, this.getClass(), "fixAnnoValido");
+        //                //                return VUOTA;
+        //            }
+        //        }
+        //        else {
+        //            return VUOTA;
+        //        }
 
         return testoValido.trim();
     }
@@ -549,6 +537,10 @@ public class ElaboraService extends WService {
         String giorno;
         String mese;
         String inizio;
+
+        if (text.isEmpty(testoTuttoAttaccato)) {
+            return VUOTA;
+        }
 
         if (testoSeparato.contains(SPAZIO)) {
             return testoSeparato;

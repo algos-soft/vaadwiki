@@ -71,9 +71,19 @@ public class ElaboraServiceTest extends WTest {
 
     protected static final String GIORNO_CINQUE = "testo errato";
 
-    protected static final String GIORNO_SEI = "";
+    protected static final String GIORNO_SEI = "12 luglio <ref>Da levare</ref>";
 
-    protected static final String GIORNO_SETTE = "";
+    protected static final String GIORNO_SETTE = "24aprile";
+
+    protected static final String GIORNO_OTTO = "2 Novembre";
+
+    protected static final String GIORNO_NOVE = "2Novembre";
+
+    protected static final String GIORNO_DIECI = "?";
+
+    protected static final String GIORNO_UNDICI = "3 dicembre?";
+
+    protected static final String GIORNO_DODICI = "3 dicembre circa";
 
     protected static final String ANNO_UNO = "";
 
@@ -113,7 +123,7 @@ public class ElaboraServiceTest extends WTest {
     }
 
     public static String[] GIORNI() {
-        return new String[]{GIORNO_UNO, GIORNO_DUE, GIORNO_TRE, GIORNO_QUATTRO, GIORNO_CINQUE, GIORNO_SEI, GIORNO_SETTE};
+        return new String[]{GIORNO_UNO, GIORNO_DUE, GIORNO_TRE, GIORNO_QUATTRO, GIORNO_CINQUE, GIORNO_SEI, GIORNO_SETTE, GIORNO_OTTO, GIORNO_NOVE, GIORNO_DIECI, GIORNO_UNDICI, GIORNO_DODICI};
     }
 
     public static String[] ANNI() {
@@ -221,16 +231,15 @@ public class ElaboraServiceTest extends WTest {
         sorgente = giorno;
         ottenuto = service.fixGiorno(sorgente);
         printNome(sorgente, ottenuto);
-
     }
 
 
     @ParameterizedTest
     @MethodSource(value = "GIORNI")
     @Order(5)
-    @DisplayName("5 - fixGiorno (come Giorno esistente)")
+    @DisplayName("5 - fixGiornoLink (come Giorno esistente)")
     void testWithStringParameterGiornoLink(String giorno) {
-        System.out.println("5 - fixGiorno (come Giorno esistente)");
+        System.out.println("5 - fixGiornoLink (come Giorno esistente)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
 
         sorgente = giorno;
@@ -242,13 +251,25 @@ public class ElaboraServiceTest extends WTest {
         printGiorno(sorgente, ottenutoGiorno);
     }
 
+    @ParameterizedTest
+    @MethodSource(value = "GIORNI")
+    @Order(6)
+    @DisplayName("6 - fixGiornoValido (come stringa)")
+    void testWithStringParameterGiornoValido(String giorno) {
+        System.out.println("6 - fixGiornoValido (come stringa)");
+
+        sorgente = giorno;
+        ottenuto = service.fixGiornoValido(sorgente);
+        printNome(sorgente, ottenuto);
+    }
+
 
     @ParameterizedTest
     @MethodSource(value = "ANNI")
-    @Order(6)
-    @DisplayName("6 - fixAnno (come stringa)")
+    @Order(7)
+    @DisplayName("7 - fixAnno (come stringa)")
     void testWithStringParameterAnno(String anno) {
-        System.out.println("6 - fixAnno (come stringa)");
+        System.out.println("7 - fixAnno (come stringa)");
 
         sorgente = anno;
         ottenuto = service.fixAnno(sorgente);
@@ -259,10 +280,10 @@ public class ElaboraServiceTest extends WTest {
 
     @ParameterizedTest
     @MethodSource(value = "ANNI")
-    @Order(7)
-    @DisplayName("7 - fixAnno (come Anno esistente)")
+    @Order(8)
+    @DisplayName("8 - fixAnno (come Anno esistente)")
     void testWithStringParameterAnnoLink(String anno) {
-        System.out.println("7 - fixAnno (come Anno esistente)");
+        System.out.println("8 - fixAnno (come Anno esistente)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
 
         sorgente = anno;
@@ -305,12 +326,26 @@ public class ElaboraServiceTest extends WTest {
     //        System.out.println(ottenutoAnno);
     //    }
 
+
+    @ParameterizedTest
+    @MethodSource(value = "ANNI")
+    @Order(9)
+    @DisplayName("9 - fixAnno (come stringa)")
+    void testWithStringParameterAnnoValido(String anno) {
+        System.out.println("9 - fixAnno (come stringa)");
+
+        sorgente = anno;
+        ottenuto = service.fixAnno(sorgente);
+        printNome(sorgente, ottenuto);
+
+    }
+
     @ParameterizedTest
     @MethodSource(value = "ATTIVITA")
-    @Order(8)
-    @DisplayName("8 - fixAttivita")
+    @Order(10)
+    @DisplayName("10 - fixAttivita")
     void testWithStringParameterAttivita(String attivita) {
-        System.out.println("8 - fixAttivita");
+        System.out.println("10 - fixAttivita");
 
         //        sorgente = attivita;
         //        ottenuto = service.fixAttivitaValida(sorgente);
@@ -319,14 +354,14 @@ public class ElaboraServiceTest extends WTest {
     }
 
     @Test
-    @Order(9)
-    @DisplayName("9 - fixNazionalita")
+    @Order(15)
+    @DisplayName("15 - fixNazionalita")
     void fixNazionalita() {
     }
 
     @Test
-    @Order(10)
-    @DisplayName("10 - fixxxx")
+    @Order(20)
+    @DisplayName("20 - fixxxx")
     void fixNazionxxxalita() {
     }
 

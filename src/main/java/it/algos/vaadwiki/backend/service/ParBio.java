@@ -130,7 +130,7 @@ public enum ParBio {
     giornoMeseNascita("GiornoMeseNascita", "giornoNato", true, true, true, true, false) {
         @Override
         public void setValue(Bio bio, String value) throws Exception {
-            bio.giornoNato = value.equals(VUOTA) ? null : elabora.fixGiorno(value);
+            bio.giornoNato = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
         }
 
         //        public String estraeValoreInizialeGrezzo(String testoOriginario) {
