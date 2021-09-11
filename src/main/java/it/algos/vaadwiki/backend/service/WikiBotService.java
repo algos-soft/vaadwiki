@@ -835,6 +835,11 @@ public class WikiBotService extends WService {
             return VUOTA;
         }
 
+        //--solo date certe ed esatte
+        if (valoreGrezzo.contains(CIRCA)) {
+            return VUOTA;
+        }
+
         if (valorePropertyTmplBioServer.equals(PUNTO_INTERROGATIVO) && puntoAmmesso) {
             return PUNTO_INTERROGATIVO;
         }

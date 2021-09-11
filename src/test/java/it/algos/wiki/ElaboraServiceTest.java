@@ -99,20 +99,49 @@ public class ElaboraServiceTest extends WTest {
 
     protected static final String GIORNO_19 = "dicembre";
 
-    protected static final String ANNO_UNO = "";
+    protected static final String GIORNO_20 = "12/5";
 
-    protected static final String ANNO_DUE = "3145";
+    protected static final String GIORNO_21 = "12-5";
 
-    protected static final String ANNO_TRE = "1874";
+    protected static final String ANNO_1 = "";
 
-    protected static final String ANNO_QUATTRO = "testo errato";
+    protected static final String ANNO_2 = "3145";
 
-    protected static final String ANNO_CINQUE = "";
+    protected static final String ANNO_3 = "1874";
 
-    protected static final String ANNO_SEI = "";
+    protected static final String ANNO_4 = "testo errato";
 
-    protected static final String ANNO_SETTE = "";
+    protected static final String ANNO_5 = "[[1954]]";
 
+    protected static final String ANNO_6 = "1512?";
+
+    protected static final String ANNO_7 = "?";
+
+    protected static final String ANNO_8 = "1649 circa";
+
+    protected static final String ANNO_9 = "1649 <ref>Da levare</ref>";
+
+    protected static final String ANNO_10 = "754 a.C.";
+
+    protected static final String ANNO_11 = "754 a.c.";
+
+    protected static final String ANNO_12 = "754a.c.";
+
+    protected static final String ANNO_13 = "754a.C.";
+
+    protected static final String ANNO_14 = "754 A.C.";
+
+    protected static final String ANNO_15 = "754 AC";
+
+    protected static final String ANNO_16 = "754 ac";
+
+    protected static final String ANNO_17 = "novecento";
+
+    protected static final String ANNO_18 = "3 secolo";
+
+    protected static final String ANNO_19 = "1532/1537";
+
+    protected static final String ANNO_20 = "754 a.C. circa";
 
     protected Giorno previstoGiorno;
 
@@ -138,13 +167,15 @@ public class ElaboraServiceTest extends WTest {
 
     public static String[] GIORNI() {
         return new String[]{
-                GIORNO_1, GIORNO_2, GIORNO_3, GIORNO_4, GIORNO_5, GIORNO_6,
-                GIORNO_7, GIORNO_8, GIORNO_9, GIORNO_10, GIORNO_11, GIORNO_12,
-                GIORNO_13, GIORNO_14, GIORNO_15, GIORNO_16, GIORNO_17, GIORNO_18, GIORNO_19};
+                GIORNO_1, GIORNO_2, GIORNO_3, GIORNO_4, GIORNO_5, GIORNO_6, GIORNO_7,
+                GIORNO_8, GIORNO_9, GIORNO_10, GIORNO_11, GIORNO_12, GIORNO_13, GIORNO_14,
+                GIORNO_15, GIORNO_16, GIORNO_17, GIORNO_18, GIORNO_19, GIORNO_20, GIORNO_21};
     }
 
     public static String[] ANNI() {
-        return new String[]{ANNO_UNO, ANNO_DUE, ANNO_TRE, ANNO_QUATTRO, ANNO_CINQUE, ANNO_SEI, ANNO_SETTE};
+        return new String[]{
+                ANNO_1, ANNO_2, ANNO_3, ANNO_4, ANNO_5, ANNO_6, ANNO_7, ANNO_8, ANNO_9, ANNO_10,
+                ANNO_11, ANNO_12, ANNO_13, ANNO_14, ANNO_15, ANNO_16, ANNO_17, ANNO_18, ANNO_19, ANNO_20};
     }
 
     public static String[] ATTIVITA() {

@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
 import java.util.*;
+import java.util.regex.*;
 
 /**
  * Project vaadwiki
@@ -265,11 +266,6 @@ public class ElaboraService extends WService {
         String primo;
         String mese;
 
-        //--solo date certe ed esatte
-        if (testoValido.contains(CIRCA)) {
-            return VUOTA;
-        }
-
         //--spazio singolo
         testoValido = text.fixOneSpace(testoValido);
 
@@ -283,11 +279,16 @@ public class ElaboraService extends WService {
         }
 
         //--elimina eventuali quadre (ini o end) rimaste
-        testoValido = testoValido.replaceAll(QUADRA_INI_REGEX,VUOTA);
-        testoValido = testoValido.replaceAll(QUADRA_END_REGEX,VUOTA);
+        testoValido = testoValido.replaceAll(QUADRA_INI_REGEX, VUOTA);
+        testoValido = testoValido.replaceAll(QUADRA_END_REGEX, VUOTA);
 
         //--deve iniziare con un numero
         if (!Character.isDigit(testoValido.charAt(0))) {
+            return VUOTA;
+        }
+
+        //--deve finire con una lettera
+        if (Character.isDigit(testoValido.charAt(testoValido.length() - 1))) {
             return VUOTA;
         }
 
@@ -346,36 +347,49 @@ public class ElaboraService extends WService {
     public String fixAnno(String testoGrezzo) {
         //        String testoValido = fixValoreGrezzo(testoGrezzo);
         String testoValido = wikiBotService.estraeValoreInizialeGrezzoPuntoAmmesso(testoGrezzo);
-        //--il punto interrogativo da solo è valido (il metodo fixPropertyBase lo elimina)
-        if (testoGrezzo.trim().equals("?")) {
-            return testoGrezzo;
-        }
 
-        if (text.isEmpty(testoGrezzo)) {
+        if (text.isEmpty(testoValido)) {
             return VUOTA;
         }
 
-        testoValido = text.levaDopo(testoValido, CIRCA);
+        //--deve iniziare con un numero
+        if (!Character.isDigit(testoValido.charAt(0))) {
+            return VUOTA;
+        }
 
-        //        if (text.isValid(testoValido)) {
-        //            try {
-        //                if (annoService.isEsiste(testoValido)) {
-        //                    return testoValido.trim();
-        //                }
-        //                else {
-        //                    return VUOTA;
-        //                }
-        //            } catch (AMongoException unErrore) {
-        //                throw new AlgosException(unErrore, null, "fixAnnoValido");
-        //                //                logger.error(unErrore, this.getClass(), "fixAnnoValido");
-        //                //                return VUOTA;
-        //            }
-        //        }
-        //        else {
-        //            return VUOTA;
-        //        }
+        //--tag non ammesso
+        if (testoValido.contains("secolo")) {
+            return VUOTA;
+        }
+
+        //--non deve contenere caratteri alfabetici
+        //--solo (eventualmente): A, a, C, c
+        //--per gli anni prima di Cristo
+        if (contieneCaratteriAlfabetici(testoValido)) {
+            return VUOTA;
+        }
+
+        //--non deve contenere caratteri divisivi di due anni
+        if (testoValido.contains(SLASH) || testoValido.contains(PIPE) || testoValido.contains(TRATTINO)) {
+            return VUOTA;
+        }
 
         return testoValido.trim();
+    }
+
+    public boolean contieneCaratteriAlfabetici(String testoIn) {
+        boolean contiene = false;
+        // Create a Pattern object
+        Pattern pattern = Pattern.compile("[bd-zBD-Z]");
+
+        // Now create matcher object.
+        Matcher matcher = pattern.matcher(testoIn);
+
+        if (matcher != null && matcher.find()) {
+            return true;
+        }
+
+        return contiene;
     }
 
     /**
@@ -391,17 +405,57 @@ public class ElaboraService extends WService {
      *
      * @return istanza di anno valido
      */
-    public Anno fixAnnoLink(String testoGrezzo) throws Exception {
+    public Anno fixAnnoLink(final String testoGrezzo) throws Exception {
         Anno anno = null;
-        String testoValido = "";
+        String titoloAncheAnteCristo = VUOTA;
 
         if (text.isValid(testoGrezzo)) {
-            testoValido = fixAnno(testoGrezzo);
+            titoloAncheAnteCristo = fixAnno(testoGrezzo);
         }
 
-        if (text.isValid(testoValido)) {
-            anno = annoService.findByKey(testoValido);
+        if (text.isValid(titoloAncheAnteCristo)) {
+            anno = this.findByKey(titoloAncheAnteCristo);
         }
+
+        return anno;
+    }
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     * Considera anche gli anni Ante Cristo, eventualmente scritti male <br>
+     *
+     * @param titoloAncheAnteCristo must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     */
+    public Anno findByKey(final String titoloAncheAnteCristo) throws Exception {
+        Anno anno = null;
+        String titoloEsatto = titoloAncheAnteCristo;
+        String tagA = "a";
+        String tagC = "C";
+
+        //--a minuscola
+        titoloEsatto = titoloEsatto.replaceAll("A", tagA);
+
+        //--c maiuscola
+        titoloEsatto = titoloEsatto.replaceAll("c", tagC);
+
+        //--manca spazio
+        if (!titoloEsatto.contains(SPAZIO)) {
+            titoloEsatto = titoloEsatto.replace(tagA, SPAZIO + tagA);
+        }
+
+        //--manca punto dopo 'a'
+        if (!titoloEsatto.contains(tagA + PUNTO)) {
+            titoloEsatto = titoloEsatto.replace(tagA, tagA + PUNTO);
+        }
+
+        //--manca punto dopo 'C'
+        if (!titoloEsatto.contains(tagC + PUNTO)) {
+            titoloEsatto = titoloEsatto.replace(tagC, tagC + PUNTO);
+        }
+
+        anno = annoService.findByKey(titoloEsatto);
 
         return anno;
     }
