@@ -126,12 +126,37 @@ public class MongoBioServiceTest extends WTest {
         assertTrue(ottenutoBooleano);
         printCollection(sorgente, " (letta dalla classe) è valida");
     }
-
     @Test
     @Order(3)
-    @DisplayName("3 - Modifica (provvisoria) e save (provvisorio) di una entity (via)")
+    @DisplayName("3 - findById di una entity (bio)")
+    void findById() {
+        System.out.println("3 - findById di una entity (bio)");
+        clazz = Bio.class;
+        sorgente = "wikiTitle";
+
+        //--leggo una entityBean
+        sorgente2 = "non esiste";
+        try {
+            entityBean = service.findByProperty(clazz,sorgente,sorgente2);
+        } catch (AMongoException unErrore) {
+        }
+        assertNull(entityBean);
+
+        //--leggo una entityBean
+        sorgente2 = "Lorenzo Bandini";
+        try {
+            entityBean = service.findByProperty(clazz,sorgente,sorgente2);
+        } catch (AMongoException unErrore) {
+            int a=87;
+        }
+        assertNotNull(entityBean);
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("4 - Modifica (provvisoria) e save (provvisorio) di una entity (via)")
     void saveVia() {
-        System.out.println("3 - Modifica (provvisoria) e save (provvisorio) di una entity (via)");
+        System.out.println("4 - Modifica (provvisoria) e save (provvisorio) di una entity (via)");
         int originario;
         int daModificare;
         int modificato;
@@ -193,10 +218,10 @@ public class MongoBioServiceTest extends WTest {
     }
 
     @Test
-    @Order(4)
-    @DisplayName("4 - Save di una entity (bio)")
+    @Order(5)
+    @DisplayName("5 - Save di una entity (bio)")
     void saveBio() {
-        System.out.println("4 - Save di una entity (bio)");
+        System.out.println("5 - Save di una entity (bio)");
         int originario;
         int daModificare;
         int modificato;

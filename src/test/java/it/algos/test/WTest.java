@@ -280,14 +280,18 @@ public abstract class WTest extends ATest {
         elaboraService.text = textService;
         elaboraService.giornoService = giornoService;
         elaboraService.annoService = annoService;
-        giornoService.annotation = annotationService;
         giornoService.text = textService;
         giornoService.mongo = mongoService;
+        giornoService.annotation = annotationService;
         annoService.text = textService;
         annoService.mongo = mongoService;
         annoService.annotation = annotationService;
+        attivitaService.text = textService;
         attivitaService.mongo = mongoService;
+        attivitaService.annotation = annotationService;
+        nazionalitaService.text = textService;
         nazionalitaService.mongo = mongoService;
+        nazionalitaService.annotation = annotationService;
 
         queryAssert.botLogin = botLogin;
 

@@ -1206,7 +1206,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the founded entity
      */
     @Override
-    public AEntity findById(Class<? extends AEntity> entityClazz, String keyId) throws AMongoException {
+    public AEntity findById(final Class<? extends AEntity> entityClazz, final String keyId) throws AMongoException {
         AEntity entityBean = null;
         MongoCollection<Document> collection;
         FindIterable<Document> iterable = null;
@@ -1287,7 +1287,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     @Override
     public AEntity findByProperty(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) throws AMongoException {
         AEntity entityBean = null;
-        MongoCollection<Document> collection = null;
+        MongoCollection<Document> collection;
         FindIterable<Document> iterable = null;
         Document doc = null;
 
@@ -1297,11 +1297,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         switch (FlowVar.typeSerializing) {
             case spring:
-                //                try {
-                //                    entityBean = mongoOp.findById(keyId, entityClazz);
-                //                } catch (Exception unErrore) {
-                //                    throw new AMongoException(unErrore);
-                //                }
+                entityBean = findBase(entityClazz, propertyName, propertyValue);
                 break;
             case gson:
                 collection = getCollection(entityClazz);
@@ -1454,6 +1450,26 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
 
         return nextEntity;
+    }
+
+    /**
+     * Cerca una singola entity di una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the founded entity
+     */
+    private AEntity findBase(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) {
+        Query query = new Query();
+
+        if (entityClazz == null || text.isEmpty(propertyName)) {
+            return null;
+        }
+
+        query.addCriteria(Criteria.where(propertyName).is(propertyValue));
+        return mongoOp.findOne(query, entityClazz);
     }
 
     /**

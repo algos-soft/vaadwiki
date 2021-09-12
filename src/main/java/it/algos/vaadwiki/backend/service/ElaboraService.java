@@ -37,9 +37,9 @@ import java.util.regex.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class ElaboraService extends WService {
 
-    public static final List<String> MASCHI = Arrays.asList("M", "m", "Maschio", "maschio", "Uomo", "uomo");
+    public static final List<String> MASCHI = Arrays.asList("m", "uomo", "maschio", "maschile", "M", "Uomo", "Maschio", "Maschile");
 
-    public static final List<String> FEMMINE = Arrays.asList("F", "f", "Femmina", "femmina", "Donna", "donna");
+    public static final List<String> FEMMINE = Arrays.asList("f", "donna", "femmina", "femminile", "F", "Donna", "Femmina", "Femminile");
 
     public static final List<String> TRANS = Arrays.asList("", "trans", "incerto", "non si sa", "dubbio", "?", "*", "ǝ");
 
@@ -215,9 +215,10 @@ public class ElaboraService extends WService {
             testoValido = "F";
         }
 
-        if (ElaboraService.TRANS.contains(testoValido)) {
-            testoValido = VUOTA;
-        }
+        //--non serve
+        //        if (ElaboraService.TRANS.contains(testoValido)) {
+        //            testoValido = VUOTA;
+        //        }
 
         return testoValido;
     }
@@ -225,9 +226,8 @@ public class ElaboraService extends WService {
     /**
      * Regola questa property <br>
      * <p>
-     * Regola il testo con le regolazioni di base <br>
-     * Regola il testo con le regolazioni specifiche per i giorni <br>
-     * Controlla che il valore esista nella collezione Giorno <br>
+     * Regola il testo con le regolazioni specifiche della property <br>
+     * Controlla che il valore esista nella collezione linkata <br>
      *
      * @param testoGrezzo in entrata da elaborare
      *
@@ -334,6 +334,30 @@ public class ElaboraService extends WService {
         return giorno;
     }
 
+
+    /**
+     * Regola questa property <br>
+     * <p>
+     * Regola il testo con le regolazioni specifiche della property <br>
+     * Controlla che il valore esista nella collezione linkata <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testo/parametro regolato in uscita
+     */
+    public String fixAnnoValido(String testoGrezzo) {
+        String testoValido = fixAnno(testoGrezzo);
+        Anno anno = null;
+
+        try {
+            anno = this.findAnnoByKey(testoValido);
+        } catch (Exception unErrore) {
+            logger.info(unErrore, this.getClass(), "fixAnnoValido");
+        }
+
+        return anno != null ? anno.getTitolo() : VUOTA;
+    }
+
     /**
      * Regola questa property <br>
      * <p>
@@ -345,7 +369,7 @@ public class ElaboraService extends WService {
      * @return testo/parametro regolato in uscita
      */
     public String fixAnno(String testoGrezzo) {
-        //        String testoValido = fixValoreGrezzo(testoGrezzo);
+        //--se contiene un punto interrogativo (in coda) è valido
         String testoValido = wikiBotService.estraeValoreInizialeGrezzoPuntoAmmesso(testoGrezzo);
 
         if (text.isEmpty(testoValido)) {
@@ -407,14 +431,11 @@ public class ElaboraService extends WService {
      */
     public Anno fixAnnoLink(final String testoGrezzo) throws Exception {
         Anno anno = null;
-        String titoloAncheAnteCristo = VUOTA;
-
-        if (text.isValid(testoGrezzo)) {
-            titoloAncheAnteCristo = fixAnno(testoGrezzo);
-        }
+        String titoloAncheAnteCristo = fixAnno(testoGrezzo);
+        ;
 
         if (text.isValid(titoloAncheAnteCristo)) {
-            anno = this.findByKey(titoloAncheAnteCristo);
+            anno = this.findAnnoByKey(titoloAncheAnteCristo);
         }
 
         return anno;
@@ -428,7 +449,7 @@ public class ElaboraService extends WService {
      *
      * @return the entity with the given id or {@literal null} if none found
      */
-    public Anno findByKey(final String titoloAncheAnteCristo) throws Exception {
+    public Anno findAnnoByKey(final String titoloAncheAnteCristo) throws Exception {
         Anno anno = null;
         String titoloEsatto = titoloAncheAnteCristo;
         String tagA = "a";
@@ -460,6 +481,53 @@ public class ElaboraService extends WService {
         return anno;
     }
 
+
+    /**
+     * Regola questa property <br>
+     * <p>
+     * Regola il testo con le regolazioni specifiche della property <br>
+     * Controlla che il valore esista nella collezione linkata <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testo/parametro regolato in uscita
+     */
+    public String fixAttivitaValida(String testoGrezzo) {
+        String testoValido = fixAttivita(testoGrezzo);
+        Attivita attivita = null;
+
+        try {
+            attivita = attivitaService.findByKey(testoValido);
+        } catch (Exception unErrore) {
+            logger.info(unErrore, this.getClass(), "fixAttivitaValida");
+        }
+
+        return attivita != null ? attivita.getSingolare() : VUOTA;
+    }
+
+    /**
+     * Regola questa property <br>
+     * <p>
+     * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testo/parametro regolato in uscita
+     */
+    public String fixAttivita(String testoGrezzo) {
+        //--se contiene un punto interrogativo (in coda) è valido
+        String testoValido = wikiBotService.estraeValoreInizialeGrezzoPuntoEscluso(testoGrezzo);
+
+        //--minuscola
+        testoValido = testoValido.toLowerCase();
+
+        //--eventuali quadre rimaste (può succedere per le attività ex-)
+        testoValido = testoValido.replaceAll(QUADRA_INI_REGEX,VUOTA);
+        testoValido = testoValido.replaceAll(QUADRA_END_REGEX,VUOTA);
+
+        return testoValido.trim();
+    }
+
     /**
      * Regola la property <br>
      * <p>
@@ -470,23 +538,63 @@ public class ElaboraService extends WService {
      *
      * @return istanza di attività valida
      */
-    public Attivita fixAttivitaLink(Bio bio, String testoGrezzo) throws AlgosException {
+    public Attivita fixAttivitaLink( String testoGrezzo) throws Exception {
         Attivita attivita = null;
-        String testoValido = VUOTA;
-
-        if (text.isValid(testoGrezzo)) {
-            testoValido = fixAttivitaValida(testoGrezzo);
-        }
+        String testoValido = fixAttivita(testoGrezzo);
 
         if (text.isValid(testoValido)) {
-            try {
-                attivita = attivitaService.findByKey(testoValido);
-            } catch (AMongoException unErrore) {
-                logger.warn(unErrore, this.getClass(), "fixAttivitaLink");
-            }
+            attivita = attivitaService.findByKey(testoValido);
         }
 
         return attivita;
+    }
+
+
+
+    /**
+     * Regola questa property <br>
+     * <p>
+     * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testo/parametro regolato in uscita
+     */
+    public String fixNazionalitaValida(String testoGrezzo) {
+        String testoValido = fixNazionalita(testoGrezzo);
+        Nazionalita nazionalita=null;
+
+        try {
+            nazionalita = nazionalitaService.findByKey(testoValido);
+        } catch (Exception unErrore) {
+            logger.info(unErrore, this.getClass(), "fixNazionalitaValida");
+        }
+
+        return nazionalita != null ? nazionalita.getSingolare() : VUOTA;
+    }
+
+
+    /**
+     * Regola questa property <br>
+     * <p>
+     * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
+     *
+     * @param testoGrezzo in entrata da elaborare
+     *
+     * @return testo/parametro regolato in uscita
+     */
+    public String fixNazionalita(String testoGrezzo) {
+        //--se contiene un punto interrogativo (in coda) è valido
+        String testoValido = wikiBotService.estraeValoreInizialeGrezzoPuntoEscluso(testoGrezzo);
+
+        //--minuscola
+        testoValido = testoValido.toLowerCase();
+
+//        //--eventuali duadre rimaste (può succedere per le attività ex-)
+//        testoValido = testoValido.replaceAll(QUADRA_INI_REGEX,VUOTA);
+//        testoValido = testoValido.replaceAll(QUADRA_END_REGEX,VUOTA);
+
+        return testoValido.trim();
     }
 
     /**
@@ -635,81 +743,41 @@ public class ElaboraService extends WService {
         return testoSeparato;
     }
 
+    //    /**
+    //     * Regola questa property <br>
+    //     * <p>
+    //     * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
+    //     *
+    //     * @param testoGrezzo in entrata da elaborare
+    //     *
+    //     * @return testo/parametro regolato in uscita
+    //     */
+    //    public String fixAttivitaValida(String testoGrezzo) throws AlgosException {
+    //        String testoValido = fixValoreGrezzo(testoGrezzo).toLowerCase();
+    //        String message;
+    //
+    //        //        String tag1 = "ex ";
+    //        //        String tag2 = "ex-";
+    //
+    //        if (text.isValid(testoValido)) {
+    //            try {
+    //                if (attivitaService.isEsisteSingolare(testoValido)) {
+    //                    return testoValido.trim();
+    //                }
+    //                else {
+    //                    message = String.format("Nella bio di %s, l'attività %s non è stata trovata", testoValido);
+    //                    throw new AlgosException(message);
+    //                }
+    //            } catch (AMongoException unErrore) {
+    //                logger.warn(unErrore, this.getClass(), "fixAttivitaValida");
+    //                return VUOTA;
+    //            }
+    //        }
+    //        else {
+    //            return VUOTA;
+    //        }
+    //    }
 
-    /**
-     * Regola questa property <br>
-     * <p>
-     * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return testo/parametro regolato in uscita
-     */
-    public String fixAttivitaValida(String testoGrezzo) throws AlgosException {
-        String testoValido = fixValoreGrezzo(testoGrezzo).toLowerCase();
-        String message;
-
-        //        String tag1 = "ex ";
-        //        String tag2 = "ex-";
-
-        if (text.isValid(testoValido)) {
-            try {
-                if (attivitaService.isEsisteSingolare(testoValido)) {
-                    return testoValido.trim();
-                }
-                else {
-                    message = String.format("Nella bio di %s, l'attività %s non è stata trovata", testoValido);
-                    throw new AlgosException(message);
-                }
-            } catch (AMongoException unErrore) {
-                logger.warn(unErrore, this.getClass(), "fixAttivitaValida");
-                return VUOTA;
-            }
-        }
-        else {
-            return VUOTA;
-        }
-    }
-
-    /**
-     * Regola questa property <br>
-     * <p>
-     * Regola il testo con le regolazioni di base (fixValoreGrezzo) <br>
-     *
-     * @param testoGrezzo in entrata da elaborare
-     *
-     * @return testo/parametro regolato in uscita
-     */
-    public String fixNazionalitaValida(String testoGrezzo) {
-        String testoValido = fixValoreGrezzo(testoGrezzo).toLowerCase();
-        String message;
-
-        if (text.isEmpty(testoValido)) {
-            return VUOTA;
-        }
-
-        if (text.isEmpty(testoValido)) {
-            return VUOTA;
-        }
-
-        if (text.isValid(testoValido)) {
-            try {
-                if (nazionalitaService.isEsiste(testoValido)) {
-                    return testoValido.trim();
-                }
-                else {
-                    message = String.format("Nella bio di ?, la nazionalità %s non è stata trovata", testoValido);
-                    return VUOTA;
-                }
-            } catch (AMongoException unErrore) {
-                logger.warn(unErrore, this.getClass(), "fixNazionalitaValida");
-                return VUOTA;
-            }
-        }
-        else {
-            return VUOTA;
-        }
-    }
 
     /**
      * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>

@@ -212,14 +212,14 @@ public class AttivitaService extends WikiService {
             }
             status = true;
         }
-        status = aggiunge();
+       status = aggiunge();
 
         super.fixDataDownload();
         return status;
     }
 
     /**
-     * Aggiunge le ex-attività NON presenti nel modulo 'Modulo:Bio/Plurale attività' <br>
+     * Aggiunge le ex-attività NON presenti nel modulo 'Modulo:Bio/Plurale attività <br>
      * Le recupera dal modulo 'Modulo:Bio/Plurale attività genere' <br>
      * Le aggiunge se trova la corrispondenza tra il nome con e senza EX <br>
      */
