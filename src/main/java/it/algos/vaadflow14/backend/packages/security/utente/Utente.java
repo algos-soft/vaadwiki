@@ -54,7 +54,7 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Utente", keyPropertyName = "username", usaCompany = true)
+@AIEntity(recordName = "Utente", keyPropertyName = "username", usaCompany = true, usaTimeStamp = true, usaNote = true)
 @AIView(menuName = "Utente", menuIcon = VaadinIcon.USERS, searchProperty = "username", sortProperty = "username")
 @AIList(fields = "username,enabled,role,accountNonExpired,accountNonLocked,credentialsNonExpired", usaRowIndex = true)
 @AIForm(fields = "username,password,enabled,role,accountNonExpired,accountNonLocked,credentialsNonExpired", usaSpostamentoTraSchede = true)

@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.backend.enumeration;
 
+import it.algos.vaadflow14.backend.interfaces.*;
+
 /**
  * Project vaadflow14
  * Created by Algos

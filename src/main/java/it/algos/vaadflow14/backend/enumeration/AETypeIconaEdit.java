@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.enumeration;
 
 
-import it.algos.vaadflow14.backend.interfaces.AIEnum;
+import it.algos.vaadflow14.backend.interfaces.AIPref;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -12,7 +12,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  * Date: mar, 07-apr-2020
  * Time: 20:49
  */
-public enum AETypeIconaEdit implements AIEnum {
+public enum AETypeIconaEdit implements AIPref {
     edit, search, play;
 
 

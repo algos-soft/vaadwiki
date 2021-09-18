@@ -3,8 +3,10 @@ package it.algos.vaadflow14.backend.service;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.apache.commons.io.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -2036,7 +2038,7 @@ public class FileService extends AbstractService {
     /**
      * Crea una lista di tutte le Entity esistenti nel modulo indicato <br>
      */
-    public List<String> getModuleSubFilesEntity(String moduleName) {
+    public List<String> getModuleSubFilesEntity(String moduleName) throws AlgosException {
         String tagIniziale = "src/main/java/it/algos/";
         String tagFinale = "/backend/packages";
 
@@ -2046,7 +2048,7 @@ public class FileService extends AbstractService {
     /**
      * Crea una lista di tutte le Entity esistenti nella directory packages <br>
      */
-    public List<String> getAllSubFilesEntity(String path) {
+    public List<String> getAllSubFilesEntity(String path) throws AlgosException {
         List<String> listaCanonicalNamesOnlyEntity = new ArrayList<>();
         List<String> listaNamesOnlyFilesJava = getAllSubFilesJava(path);
         String simpleName;
@@ -2078,7 +2080,7 @@ public class FileService extends AbstractService {
      *
      * @return canonicalName con i PUNTI di separazione e NON lo SLASH
      */
-    public List<String> getAllSubFilesJava(String path) {
+    public List<String> getAllSubFilesJava(String path) throws AlgosException {
         List<String> listaCanonicalNamesOnlyFilesJava = new ArrayList<>();
         List<String> listaPathNamesOnlyFiles = getAllSubPathFiles(path);
         String tag = ".it.";
@@ -2102,18 +2104,18 @@ public class FileService extends AbstractService {
     /**
      * Crea una lista di soli files ricorsiva nelle sub-directory <br>
      *
-     * @return path name completo
+     * @return lista
      */
-    public List<String> getAllSubPathFiles(String path) {
+    public List<String> getAllSubPathFiles(String path) throws AlgosException {
         List<String> listaPathNamesOnlyFiles = new ArrayList<>();
-        List<String> listaAllPathNames = null;
+        List<String> listaAllPathNames;
         File unaDirectory = new File(path);
         Path start = Paths.get(unaDirectory.getAbsolutePath());
 
         try {
             listaAllPathNames = recursionSubPathNames(start);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "getAllEntityClass");
+            throw AlgosException.stack(unErrore, String.format("Stack in %s.%s", this.getClass().getSimpleName(), "getAllSubPathFiles()"));
         }
 
         if (array.isAllValid(listaAllPathNames)) {
@@ -2126,6 +2128,139 @@ public class FileService extends AbstractService {
 
         return listaPathNamesOnlyFiles;
     }
+
+    /**
+     * Crea una lista (path completo) di tutti i files della directory package del modulo indicato <br>
+     *
+     * @return lista dei path completi
+     */
+    public List<String> getPathModuloPackageFiles(final String nomeModulo) throws AlgosException {
+        String pathPackage = VUOTA;
+
+        pathPackage += System.getProperty("user.dir") + SLASH;
+        pathPackage += AEWizCost.dirModulo.get();
+        pathPackage += nomeModulo + SLASH;
+        pathPackage += AEWizCost.dirPackages.get();
+
+        return getAllSubPathFiles(pathPackage);
+    }
+
+    /**
+     * Crea una lista (path completo) di tutti i files della directory package del modulo corrente <br>
+     *
+     * @return lista dei path completi
+     */
+    public List<String> getPathAllPackageFiles() throws AlgosException {
+        List<String> lista = new ArrayList<>();
+        String nomeModulo;
+
+        nomeModulo = AEWizCost.nameVaadFlow14Lower.get();
+        if (text.isEmpty(nomeModulo)) {
+            throw AlgosException.message(String.format("Manca il nome del modulo in %s.%s", this.getClass().getSimpleName(), "getPathAllPackageFiles()"));
+        }
+        lista.addAll(getPathModuloPackageFiles(nomeModulo));
+
+        nomeModulo = FlowVar.projectNameModulo;
+        if (text.isEmpty(nomeModulo)) {
+            throw AlgosException.message(String.format("Manca il nome del modulo in %s.%s", this.getClass().getSimpleName(), "getPathAllPackageFiles()"));
+        }
+        lista.addAll(getPathModuloPackageFiles(FlowVar.projectNameModulo));
+
+        return lista;
+    }
+
+
+    /**
+     * Crea una lista (path completo) di tutti i files della directory package del modulo corrente <br>
+     * Senza il suffisso JAVA_SUFFIX <br>
+     *
+     * @return lista dei path completi
+     */
+    public List<String> getPathBreveAllPackageFiles() throws AlgosException {
+        List<String> listaTroncata = new ArrayList<>();
+        List<String> listaEstesa = getPathAllPackageFiles();
+
+        for (String path : listaEstesa) {
+            listaTroncata.add(text.levaCoda(path, JAVA_SUFFIX));
+        }
+
+        return listaTroncata;
+    }
+
+    /**
+     * Path completo di un file esistente nella directory package <br>
+     *
+     * @return path completo del file
+     */
+    public String getPath(String simpleName) throws AlgosException {
+        String pathCompleto = VUOTA;
+        List<String> lista = getPathBreveAllPackageFiles();
+
+        for (String path : lista) {
+            if (path.endsWith(simpleName)) {
+                pathCompleto = path;
+                break;
+            }
+        }
+
+        return pathCompleto;
+    }
+
+
+    /**
+     * Crea una lista (canonicalName) di tutti i files della directory package del modulo indicato <br>
+     *
+     * @return lista dei canonicalName
+     */
+    public List<String> getCanonicalModuloPackageFiles(final String nomeModulo) throws AlgosException {
+        List<String> listaCanonical = new ArrayList<>();
+        List<String> listaPath = getPathModuloPackageFiles(nomeModulo);
+        String canonicalName;
+
+        for (String nome : listaPath) {
+            canonicalName = text.levaTestoPrimaDi(nome, DIR_PROGETTO_VUOTO);
+            canonicalName = canonicalName.replaceAll(SLASH, PUNTO);
+            listaCanonical.add(canonicalName);
+        }
+
+        return listaCanonical;
+    }
+
+    /**
+     * Crea una lista (canonicalName) di tutti i files della directory package del modulo corrente <br>
+     *
+     * @return lista dei canonicalName
+     */
+    public List<String> getCanonicalAllPackageFiles() throws AlgosException {
+        List<String> lista = new ArrayList<>();
+
+        lista.addAll(getCanonicalModuloPackageFiles(AEWizCost.nameVaadFlow14Lower.get()));
+        lista.addAll(getCanonicalModuloPackageFiles(FlowVar.projectNameModulo));
+
+        return lista;
+    }
+
+
+    /**
+     * Nome 'canonicalName' di un file  esistente nella directory package <br>
+     *
+     * @return canonicalName del file
+     */
+    public String getCanonicalName(String simpleName) throws AlgosException {
+        String canonicalName = VUOTA;
+        List<String> lista = getPathBreveAllPackageFiles();
+
+        for (String path : lista) {
+            if (path.endsWith(simpleName)) {
+                canonicalName = text.levaTestoPrimaDi(path, DIR_PROGETTO_VUOTO);
+                canonicalName = canonicalName.replaceAll(SLASH, PUNTO);
+                break;
+            }
+        }
+
+        return canonicalName;
+    }
+
 
     /**
      * Crea una lista di files/directory ricorsiva nelle sub-directory <br>
@@ -2172,7 +2307,7 @@ public class FileService extends AbstractService {
 
 
     /**
-     * Sposta un file da una directoy ad un'altra <br>
+     * Sposta un file da una directory ad un'altra <br>
      * Esegue solo se il path sorgente esiste <br>
      * Esegue solo se il path destinazione NON esiste <br>
      * Viene cancellato il file sorgente <br>

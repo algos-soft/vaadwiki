@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.enumeration;
 
 
-import it.algos.vaadflow14.backend.interfaces.AIEnum;
+import it.algos.vaadflow14.backend.interfaces.AIPref;
 
 import static com.vaadin.flow.server.frontend.FrontendUtils.GREEN;
 import static com.vaadin.flow.server.frontend.FrontendUtils.RED;
@@ -12,7 +12,7 @@ import static it.algos.vaadflow14.backend.service.ConsoleColorService.PURPLE;
 /**
  * Created by gac on 22 ago 2015.
  */
-public enum AELogLivello implements AIEnum {
+public enum AELogLivello implements AIPref {
 
     debug(GREEN),
     info(BLUE),

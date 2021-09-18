@@ -21,6 +21,7 @@ import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.packages.utility.versione.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wizard.*;
+import it.algos.vaadflow14.wizard.scripts.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
 import org.springframework.context.event.EventListener;
@@ -112,6 +113,14 @@ public abstract class FlowBoot implements ServletContextListener {
     public PreferenzaService preferenzaService;
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public WizService wizService;
+
+    /**
      * Constructor with @Autowired on setter. Usato quando ci sono sottoclassi. <br>
      * Per evitare di avere nel costruttore tutte le property che devono essere iniettate e per poterle aumentare <br>
      * senza dover modificare i costruttori delle sottoclassi, l'iniezione tramite @Autowired <br>
@@ -155,6 +164,7 @@ public abstract class FlowBoot implements ServletContextListener {
         this.fixDemo();
         this.fixUsers();
         this.fixVersioni();
+        wizService.fixVariabiliIniziali();
 
         logger.startupEnd();
     }

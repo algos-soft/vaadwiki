@@ -3,18 +3,17 @@ package it.algos.wiki;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadwiki.backend.packages.prenome.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadwiki.backend.packages.bio.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-
-import java.util.*;
 
 /**
  * Project vaadwiki
  * Created by Algos
  * User: gac
- * Date: mer, 08-set-2021
- * Time: 10:01
+ * Date: lun, 13-set-2021
+ * Time: 08:56
  * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
@@ -23,16 +22,18 @@ import java.util.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValidoWiki")
-@DisplayName("Prenome service")
+@DisplayName("Gson service")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PrenomeServiceTest extends WTest {
+public class GsonBioServiceTest extends WTest {
 
 
     /**
      * Classe principale di riferimento <br>
      * Gia 'costruita' nella superclasse <br>
      */
-    private PrenomeService service;
+    private GsonService service;
+
+    private Class bioClazz = Bio.class;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -44,7 +45,7 @@ public class PrenomeServiceTest extends WTest {
         super.setUpStartUp();
 
         //--reindirizzo l'istanza della superclasse
-        service = prenomeService;
+        service = gSonService;
     }
 
 
@@ -56,23 +57,33 @@ public class PrenomeServiceTest extends WTest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
+        bio = null;
     }
 
     @Test
     @Order(1)
-    @DisplayName("1 - fetch")
-    void fetch() {
-        List<Prenome> listaPrenomi = prenomeService.fetch();
-        assertNotNull(listaPrenomi);
+    @DisplayName("Primo test")
+    void getLabelHost() {
     }
 
     @Test
     @Order(2)
-    @DisplayName("2 - fetchCode")
-    void fetchCode() {
-        List<String> listaCode = prenomeService.fetchCode();
-        assertNotNull(listaCode);
+    @DisplayName("2 - crea una entityBean (Bio) da mongoDb con keyId")
+    void findById() {
+        System.out.println("2 - crea una entityBean (Bio) da mongoDb con keyId");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+
+        sorgente = "63624";
+        try {
+            bio = bioService.findById(sorgente);
+            assertNotNull(entityBean);
+            System.out.println(String.format("Creazione di un bean di classe %s dal titolo %s", bioClazz.getSimpleName(), bio.wikiTitle));
+        } catch (Exception unErrore) {
+            System.out.println(String.format("Errore %s per la bio con keyId %s", unErrore.getCause().getMessage(),unErrore.getMessage()));
+            assertNull(entityBean);
+        }
     }
+
 
     /**
      * Qui passa al termine di ogni singolo test <br>
@@ -81,12 +92,12 @@ public class PrenomeServiceTest extends WTest {
     void tearDown() {
     }
 
+
     /**
      * Qui passa una volta sola, chiamato alla fine di tutti i tests <br>
      */
-    @AfterAll
+    @AfterEach
     void tearDownAll() {
-        FlowVar.typeSerializing = AETypeSerializing.spring;
     }
 
 }

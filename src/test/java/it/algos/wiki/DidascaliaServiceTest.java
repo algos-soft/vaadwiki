@@ -1,16 +1,24 @@
 package it.algos.wiki;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadwiki.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
+import org.mockito.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.test.context.*;
+import org.springframework.data.mongodb.core.*;
+import org.springframework.test.context.junit.jupiter.*;
 
 /**
  * Project vaadwiki
@@ -24,6 +32,8 @@ import org.junit.jupiter.params.provider.*;
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
+//@ExtendWith(SpringExtension.class)
+//@SpringBootTest(classes = {WikiApplication.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValidoWiki")
 @DisplayName("DidascaliaService - Elaborazione delle didascalie.")
@@ -33,15 +43,27 @@ public class DidascaliaServiceTest extends WTest {
     private static final String DATA_BASE_NAME = "vaadwiki";
 
 
-    private String wikiTitle = "Adone Asinari";
-
-    private String wikiTitleDue = "Sonia Todd";
+//    private String wikiTitle = "Adone Asinari";
 
     /**
      * Classe principale di riferimento <br>
-     * Gia 'costruita' nella superclasse <br>
      */
-    private DidascaliaService service;
+    @Autowired
+    public DidascaliaService service;
+
+//    /**
+//     * Inietta da Spring
+//     */
+//    @Autowired
+//    protected MongoService mongoService;
+//    /**
+//     * Inietta da Spring
+//     */
+//    @Autowired
+//    public MongoTemplate mongoOp;
+
+    private String wikiTitleDue = "Sonia Todd";
+
 
     private static String[] PAGINE() {
         return new String[]{PAGINA_UNO, PAGINA_DUE, PAGINA_TRE, PAGINA_QUATTRO, PAGINA_CINQUE, PAGINA_SEI, PAGINA_SETTE, PAGINA_OTTO};
@@ -58,6 +80,10 @@ public class DidascaliaServiceTest extends WTest {
 
         //--reindirizzo l'istanza della superclasse
         service = didascaliaService;
+
+//        MockitoAnnotations.initMocks(mongoService.mongoOp);
+//        Assertions.assertNotNull(mongoService.mongoOp);
+//        mongoService.mongoOp = mongoOp;
 
         FlowVar.typeSerializing = AETypeSerializing.gson;
     }
@@ -206,6 +232,31 @@ public class DidascaliaServiceTest extends WTest {
         print(sorgente, sorgente2, sorgente3, ottenuto);
     }
 
+    //    @ParameterizedTest
+    //    @MethodSource(value = "PAGINE")
+    //    @Order(5)
+    //    @DisplayName("5 - Didascalie varie")
+    //    void testWithStringParameter(String wikiTitle) {
+    //        System.out.println("5 - Didascalie varie");
+    //        String ottenuto3;
+    //        String ottenuto4;
+    //
+    //        sorgente = wikiTitle;
+    //        wrap = queryBio.urlRequest(sorgente).getWrap();
+    //        assertNotNull(wrap);
+    //        assertTrue(wrap.isValido());
+    //        bio = bioService.newEntity(wrap);
+    //        bio = elaboraService.esegue(bio);
+    //        previsto = textService.setDoppieQuadre(bio.wikiTitle);
+    //        ottenuto = service.getNomeCognome(bio);
+    //        ottenuto2 = service.getAttivitaNazionalita(bio);
+    //        ottenuto3 = service.getNatoMorto(bio);
+    //        ottenuto4 = service.getLista(bio);
+    //        assertTrue(textService.isValid(ottenuto));
+    //        System.out.println(VUOTA);
+    //        print(bio, ottenuto, ottenuto2, ottenuto3, ottenuto4);
+    //    }
+
 
     @ParameterizedTest
     @MethodSource(value = "PAGINE")
@@ -216,13 +267,8 @@ public class DidascaliaServiceTest extends WTest {
         String ottenuto3;
         String ottenuto4;
 
-        sorgente = wikiTitle;
-        wrap = queryBio.urlRequest(sorgente).getWrap();
-        assertNotNull(wrap);
-        assertTrue(wrap.isValido());
-        bio = bioService.newEntity(wrap);
-        bio = elaboraService.esegue(bio);
-        previsto = textService.setDoppieQuadre(bio.wikiTitle);
+        bio = getBio(wikiTitle);
+        previsto = textService.setDoppieQuadre(wikiTitle);
         ottenuto = service.getNomeCognome(bio);
         ottenuto2 = service.getAttivitaNazionalita(bio);
         ottenuto3 = service.getNatoMorto(bio);
@@ -235,7 +281,7 @@ public class DidascaliaServiceTest extends WTest {
     //    @Test
     public void download() {
         System.out.println("*************");
-        System.out.println("Tipi possibili di didascalie per " + wikiTitle);
+        System.out.println("Tipi possibili di didascalie per " + "Matteo Renzi");
         System.out.println("Senza chiave");
         System.out.println("*************");
         //        for (EADidascalia dida : EADidascalia.values()) {
@@ -263,7 +309,7 @@ public class DidascaliaServiceTest extends WTest {
         System.out.println("Algos");
         System.out.println("");
         System.out.println("Tipi possibili di discalie");
-        System.out.println("Esempio '" + wikiTitle + "'");
+        System.out.println("Esempio '" + "Matteo Salvini" + "'");
         System.out.println("");
         Bio bio = creaBio();
         //        for (EADidascalia type : EADidascalia.values()) {

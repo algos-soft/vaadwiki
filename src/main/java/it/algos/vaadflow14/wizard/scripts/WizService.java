@@ -494,8 +494,14 @@ public class WizService {
         String sourceText = leggeFile(nameSourceText);
         String path = file.findPathBreve(pathFileDaModificare, FlowCost.DIR_PACKAGES);
         String fileName = file.estraeClasseFinaleSenzaJava(pathFileDaModificare);
-        Class clazz = classService.getClazzFromPath(pathFileDaModificare);
+        Class clazz = null;
         boolean preservaOldDate = false;
+
+        try {
+             clazz = classService.getClazzFromPath(pathFileDaModificare);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "fixDocFile");
+        }
 
         if (clazz != null) {
             wizDoc = annotation.getDocFile(clazz);

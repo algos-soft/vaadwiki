@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import org.bson.*;
 import org.springframework.beans.factory.annotation.*;
 
 /**

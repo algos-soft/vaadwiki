@@ -15,6 +15,7 @@ import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.wiki.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
@@ -130,6 +131,9 @@ public abstract class ATest {
     protected ApplicationContext appContext;
 
     @InjectMocks
+    protected StaticContextAccessor staticContextAccessor;
+
+    @InjectMocks
     protected TextService textService;
 
     @InjectMocks
@@ -191,6 +195,9 @@ public abstract class ATest {
 
     @InjectMocks
     protected ResourceService resourceService;
+
+    @InjectMocks
+    protected AFieldService fieldService;
 
     @InjectMocks
     protected CompanyService companyService;
@@ -384,12 +391,21 @@ public abstract class ATest {
 
     protected AETypeSerializing oldType;
 
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      */
     protected void setUpStartUp() {
         initMocks();
         fixRiferimentiIncrociati();
+
+        FlowVar.projectNameDirectoryIdea = "vaadflow14";
+        if (classService.getProjectName().equals(FlowVar.projectNameDirectoryIdea)) {
+            FlowVar.projectNameModulo = "simple";
+        }
+        else {
+            FlowVar.projectNameModulo = classService.getProjectName();
+        }
     }
 
 
@@ -399,6 +415,11 @@ public abstract class ATest {
      */
     protected void initMocks() {
         MockitoAnnotations.initMocks(this);
+
+        MockitoAnnotations.initMocks(staticContextAccessor);
+        Assertions.assertNotNull(staticContextAccessor);
+        staticContextAccessor.registerInstance();
+
         MockitoAnnotations.initMocks(appContext);
         Assertions.assertNotNull(appContext);
 
@@ -468,6 +489,9 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(resourceService);
         Assertions.assertNotNull(resourceService);
 
+        MockitoAnnotations.initMocks(fieldService);
+        Assertions.assertNotNull(fieldService);
+
         MockitoAnnotations.initMocks(companyService);
         Assertions.assertNotNull(companyService);
     }
@@ -489,6 +513,7 @@ public abstract class ATest {
         reflectionService.array = arrayService;
         reflectionService.text = textService;
         reflectionService.logger = loggerService;
+        reflectionService.annotation = annotationService;
         gSonService.text = textService;
         gSonService.array = arrayService;
         jSonService.text = textService;
@@ -500,6 +525,9 @@ public abstract class ATest {
         ((MongoService) mongoService).annotation = annotationService;
         ((MongoService) mongoService).reflection = reflectionService;
         ((MongoService) mongoService).logger = loggerService;
+        ((MongoService) mongoService).date = dateService;
+        ((MongoService) mongoService).classService = classService;
+        ((MongoService) mongoService).fieldService = fieldService;
 
         webService.text = textService;
         webService.logger = loggerService;
@@ -512,10 +540,13 @@ public abstract class ATest {
         fileService.logger = loggerService;
         fileService.math = mathService;
         sortSpring = null;
+
         classService.fileService = fileService;
         classService.text = textService;
         classService.logger = loggerService;
         classService.annotation = annotationService;
+        classService.appContext = appContext;
+
         preferenzaService.mongo = mongoService;
         utilityService.text = textService;
         htmlService.text = textService;
@@ -535,6 +566,9 @@ public abstract class ATest {
 
         ((MongoService) mongoService).fixProperties(classService.getProjectName());
         gSonService.fixProperties(classService.getProjectName());
+
+        fieldService.annotation = annotationService;
+        fieldService.array = arrayService;
 
         companyService.text = textService;
         companyService.logger = loggerService;
@@ -591,6 +625,7 @@ public abstract class ATest {
         clazz = null;
         previstoRisultato = null;
         ottenutoRisultato = null;
+        listaStr = new ArrayList<>();
     }
 
     protected String getTime() {
@@ -603,6 +638,13 @@ public abstract class ATest {
     }
 
     protected void print(List<String> lista) {
+        if (lista != null && lista.size() > 0) {
+            System.out.println(String.format("Ci sono %d elementi nella lista", lista.size()));
+        }
+        else {
+            System.out.println("La lista è vuota");
+        }
+        System.out.println(VUOTA);
         if (arrayService.isAllValid(lista)) {
             for (String stringa : lista) {
                 System.out.println(stringa);

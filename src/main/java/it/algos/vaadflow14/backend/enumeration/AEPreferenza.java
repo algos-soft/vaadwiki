@@ -155,7 +155,7 @@ public enum AEPreferenza implements AIPreferenza {
                 this.defaultValue = defaultValue;
             }
             else {
-                this.defaultValue = ((AIEnum) defaultValue).getPref();
+                this.defaultValue = ((AIPref) defaultValue).getPref();
             }
         }
         else {

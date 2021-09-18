@@ -265,7 +265,7 @@ public class UtilityService extends AbstractService {
 
         if (type == AETypeField.enumeration) {
             enumClazz = annotation.getEnumClass(reflectionJavaField);
-            items = field.getEnumerationItems(reflectionJavaField);
+            items = fieldService.getEnumerationItems(reflectionJavaField);
             if (items != null) {
                 combo.setItems(items);
             }

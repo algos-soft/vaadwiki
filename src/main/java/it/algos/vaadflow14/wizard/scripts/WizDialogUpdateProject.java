@@ -148,7 +148,7 @@ public class WizDialogUpdateProject extends WizDialog {
         mappaWizBox.get(AEWizCost.dirRootLinks.name()).getBox().setValue(true);
         mappaWizBox.get(AEWizCost.dirRootSnippets.name()).getBox().setValue(true);
         mappaWizBox.get(AEWizCost.fileRootTEST.name()).getBox().setValue(true);
-        mappaWizBox.get(AEWizCost.dirTestUnit.name()).getBox().setValue(true);
+        mappaWizBox.get(AEWizCost.dirTestUnit.name()).getBox().setValue(false);
     }
 
     //    protected void sincroAll() {

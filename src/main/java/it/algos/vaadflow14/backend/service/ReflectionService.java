@@ -1,9 +1,9 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.component.icon.*;
-import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -85,12 +85,13 @@ public class ReflectionService extends AbstractService {
     /**
      * Lista dei fields statici PUBBLICI dichiarati in una classe di tipo AEntity. <br>
      * Controlla che il parametro in ingresso non sia nullo <br>
-     * Ricorsivo. Comprende la entity e tutte le sue superclassi (fino a ACEntity e AEntity) <br>
+     * Ricorsivo. Comprende la entity e tutte le sue superClassi (fino a ACEntity e AEntity) <br>
      * Esclusi i fields: PROPERTY_SERIAL, PROPERT_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA <br>
      * Esclusi i fields PRIVATI <br>
      * Fields NON ordinati <br>
      * Class.getDeclaredFields() prende fields pubblici e privati della classe <br>
-     * Class.getFields() prende fields pubblici della classe e delle superclassi     * Nomi NON ordinati <br>
+     * Class.getFields() prende fields pubblici della classe e delle superClassi <br>
+     * Nomi NON ordinati <br>
      * ATTENZIONE - Comprende ANCHE eventuali fields statici pubblici che NON siano property per il DB <br>
      *
      * @param entityClazz da cui estrarre i fields statici
@@ -112,9 +113,19 @@ public class ReflectionService extends AbstractService {
         if (fieldsArray != null) {
             listaFields = new ArrayList<>();
             for (Field field : fieldsArray) {
-                if (!FlowCost.ESCLUSI_ALL.contains(field.getName())) {
-                    listaFields.add(field);
+                if (ESCLUSI_SEMPRE.contains(field.getName())) {
+                    continue;
                 }
+                if (field.getName().equalsIgnoreCase(PROPERTY_NOTE) && !annotation.usaNote(entityClazz)) {
+                    continue;
+                }
+                if (field.getName().equalsIgnoreCase(PROPERTY_CREAZIONE) && !annotation.usaTimeStamp(entityClazz)) {
+                    continue;
+                }
+                if (field.getName().equalsIgnoreCase(PROPERTY_MODIFICA) && !annotation.usaTimeStamp(entityClazz)) {
+                    continue;
+                }
+                listaFields.add(field);
             }
         }
 
@@ -396,28 +407,80 @@ public class ReflectionService extends AbstractService {
     //        return mappa;
     //    }// end of method
 
-    //    /**
-    //     * Valore della property di una classe
-    //     *
-    //     * @param entityBean      oggetto su cui operare la riflessione
-    //     * @param publicFieldName property statica e pubblica
-    //     * @param value           da inserire nella property
-    //     */
-    //    public boolean setPropertyValue(final AEntity entityBean, final String publicFieldName, Object value) {
-    //        boolean status = false;
-    //        Field field = getField(entityBean.getClass(), publicFieldName);
-    //
-    //        if (field != null) {
-    //            try { // prova ad eseguire il codice
-    //                field.set(entityBean, value);
-    //                status = true;
-    //            } catch (Exception unErrore) { // intercetta l'errore
-    //                log.error(unErrore.toString());
-    //            }// fine del blocco try-catch
-    //        }// end of if cycle
-    //
-    //        return status;
-    //    }// end of method
+    /**
+     * Valore della property di una classe
+     *
+     * @param entityBean      oggetto su cui operare la riflessione
+     * @param publicFieldName property statica e pubblica
+     * @param value           da inserire nella property
+     */
+    public boolean setPropertyValue(final AEntity entityBean, final String publicFieldName, final Object value) throws AlgosException {
+        boolean status = false;
+        Field field = getField(entityBean.getClass(), publicFieldName);
+
+        if (field != null) {
+            try {
+                field.set(entityBean, value);
+                status = true;
+            } catch (Exception unErrore) {
+                throw new AlgosException(unErrore, entityBean, field.getName(), "ReflectionService.setPropertyValue()");
+            }
+        }
+
+        return status;
+    }
+
+
+    /**
+     * Lista dei nomi delle variabili statiche di una classe (generica). <br>
+     *
+     * @param genericClazz da cui estrarre le variabili statiche
+     *
+     * @return la lista dei nomi delle variabili
+     */
+    public List<String> getListStaticFieldsName(final Class<?> genericClazz) {
+        List<String> lista = new ArrayList<>();
+        Field[] fields = null;
+
+        if (genericClazz != null) {
+            fields = genericClazz.getFields();
+            for (Field field : fields) {
+                lista.add(field.getName());
+            }
+        }
+
+        return lista;
+    }
+
+
+    /**
+     * Mappa dei valori delle variabili statiche di una classe (generica). <br>
+     *
+     * @param genericClazz da cui estrarre le variabili statiche
+     *
+     * @return la mappa chiave=valore delle variabili
+     */
+    public Map<String, Object> getMapStaticFieldsValue(final Class<?> genericClazz) {
+        Map<String, Object> mappa = new LinkedHashMap<>();
+        Field[] fields = null;
+        String key;
+        Object value;
+
+        if (genericClazz != null) {
+            fields = genericClazz.getFields();
+            for (Field field : fields) {
+                key = field.getName();
+                try {
+                    value = genericClazz.getField(key).get(null);
+                    mappa.put(key, value);
+                } catch (Exception unErrore) {
+                    logger.error(unErrore);
+                }
+            }
+        }
+
+        return mappa;
+    }
 
     //    /**
     //     * Fields dichiarati nella View

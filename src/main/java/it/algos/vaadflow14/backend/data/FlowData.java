@@ -191,7 +191,7 @@ public class FlowData implements AIData {
         }
         if (annotation.usaReset(entityClazz)) {
             metodo = "reset";
-            if (((MongoService) mongo).isResetVuoto(entityClazz)) {//@todo da controllare
+            if (mongo.isResetVuoto(entityClazz)) {
                 try {
                     entityService.getClass().getDeclaredMethod("reset");
                     result = entityService.reset();
@@ -288,8 +288,8 @@ public class FlowData implements AIData {
      * @since java 8
      */
     protected void resetData(final String moduleName) {
-        List<String> allModulePackagesClasses;
-        List<Object> allEntityClasses;
+        List<String> allModulePackagesClasses=null;
+        List<Object> allEntityClasses=null;
         List<Object> allUsaBootEntityClasses;
         List<Object> allEntityClassesRicreabiliResetDownload;
         String message;
@@ -297,11 +297,20 @@ public class FlowData implements AIData {
 
         //--spazzola tutta la directory package del modulo in esame e recupera
         //--tutte le classi contenute nella directory e nelle sue sottoclassi
-        allModulePackagesClasses = file.getModuleSubFilesEntity(moduleName);
+        try {
+            allModulePackagesClasses = file.getModuleSubFilesEntity(moduleName);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "resetData");
+        }
+
 
         //--seleziona le classes che estendono AEntity
         logger.log(AETypeLog.checkData, VUOTA);
-        allEntityClasses = Arrays.asList(allModulePackagesClasses.stream().filter(checkEntity).sorted().toArray());
+        try {
+            allEntityClasses = Arrays.asList(allModulePackagesClasses.stream().filter(checkEntity).sorted().toArray());
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "resetData");
+        }
         if (array.isAllValid(allEntityClasses)) {
             message = String.format("In %s sono stati trovati %d packages con classi di tipo AEntity", moduleName, allEntityClasses.size());
         }

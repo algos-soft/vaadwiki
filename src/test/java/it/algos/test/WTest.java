@@ -3,6 +3,7 @@ package it.algos.test;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
@@ -388,10 +389,25 @@ public abstract class WTest extends ATest {
      */
     protected void setUp() {
         super.setUp();
+        FlowVar.projectNameModulo = "vaadwiki";
 
         listaWrapBio = null;
     }
 
+    protected Bio getBio(String wikiTitle) {
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        Bio bio = null;
+        clazz = Bio.class;
+        String propertyName = "wikiTitle";
+
+        try {
+            bio = (Bio)mongoService.findByProperty(clazz, propertyName, wikiTitle);
+        } catch (Exception unErrore) {
+            System.out.println(String.format("Non sono riuscito a recuperare la bio %s", wikiTitle));
+        }
+
+        return bio;
+    }
 
     protected void print(final Bio bio, final String nomeCognome, final String attivitaNazionalita) {
         System.out.println(VUOTA);

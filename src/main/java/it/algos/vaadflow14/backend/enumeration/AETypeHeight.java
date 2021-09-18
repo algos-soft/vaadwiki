@@ -10,7 +10,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
  * Date: sab, 20-feb-2021
  * Time: 17:40
  */
-public enum AETypeHeight implements AIType, AIEnum {
+public enum AETypeHeight implements AIType, AIPref {
 
     normal("1"),
     number16("1.6"),

@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.backend.enumeration;
 
+import it.algos.vaadflow14.backend.interfaces.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,7 @@ import java.util.List;
  * Date: sab, 12-set-2020
  * Time: 10:19
  */
-public enum AEStatus {
+public enum AEStatus implements AIPref ,AIEnum{
     cantone("Cantone"),
 
     capitale("Capitale rumena"),
@@ -101,4 +103,20 @@ public enum AEStatus {
         return getNome();
     }
 
+    /**
+     * Stringa di valori (text) da usare per memorizzare la preferenza <br>
+     * La stringa è composta da tutti i valori separati da virgola <br>
+     * Poi, separato da punto e virgola viene il valore selezionato di default <br>
+     *
+     * @return stringa di valori e valore di default
+     */
+    @Override
+    public String getPref() {
+        return null;
+    }
+
+    @Override
+    public String get() {
+        return name();
+    }
 }

@@ -720,10 +720,10 @@ public enum AEDir {
     public static class ServiceInjector {
 
         @Autowired
-        private FileService file;
+        private TextService text;
 
         @Autowired
-        private TextService text;
+        private FileService file;
 
         @Autowired
         private ALogService logger;
@@ -732,8 +732,8 @@ public enum AEDir {
         @PostConstruct
         public void postConstruct() {
             for (AEDir aeDir : AEDir.values()) {
-                aeDir.setFile(file);
                 aeDir.setText(text);
+                aeDir.setFile(file);
                 aeDir.setLogger(logger);
             }
         }

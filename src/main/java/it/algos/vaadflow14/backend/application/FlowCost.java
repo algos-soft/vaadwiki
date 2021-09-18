@@ -445,6 +445,10 @@ public abstract class FlowCost {
     //--fields tipici
     public static final String FIELD_ID = "_id";
 
+    public static final String FIELD_CLASS = "_class";
+
+    public static final String FIELD_ID_PROPERTY = "id";
+
     public static final String FIELD_COMPANY = "company";
 
     public static final String FIELD_NOTE = "note";
@@ -475,9 +479,10 @@ public abstract class FlowCost {
 
     public static final String MONGO_FIELD_USER = "user";
 
-    public static final String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
 
-    public static final List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
+    public static final List<String> ESCLUSI_SEMPRE = Arrays.asList(PROPERTY_SERIAL);
+
+    public static final List<String> ESCLUSI_ALL = Arrays.asList(PROPERTY_SERIAL, PROPERTY_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA);
 
     //--Costanti usate per identificare alcune company
     public static final String COMPANY_ALGOS = "algos";
