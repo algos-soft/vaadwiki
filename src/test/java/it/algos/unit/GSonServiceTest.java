@@ -298,15 +298,6 @@ public class GsonServiceTest extends ATest {
     @DisplayName("9 - creazione di un testo jSon da mongoDb")
     void legge() {
         System.out.println("9 - creazione di un testo jSon da mongoDb");
-        String jsonInString;
-
-        sorgente = "campiello";
-        clazz = Via.class;
-        previsto="{\"_id\":\"campiello\",\"ordine\":20,\"nome\":\"campiello\",\"reset\":true,\"creazione\":\"Sep 6, 2021, 8:35:08 PM\",\"modifica\":\"Sep 6, 2021, 8:35:08 PM\",\"_class\":\"via\"}";
-        ottenuto = service.mongoToString(clazz, sorgente);
-        assertTrue(textService.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
-        System.out.println(ottenuto);
 
         sorgente = "8marzo";
         clazz = Giorno.class;

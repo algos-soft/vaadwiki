@@ -2,9 +2,13 @@ package it.algos.wiki;
 
 import com.mongodb.client.*;
 import it.algos.test.*;
+import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import static org.junit.Assert.*;
@@ -154,9 +158,73 @@ public class MongoBioServiceTest extends WTest {
 
     @Test
     @Order(4)
-    @DisplayName("4 - Modifica (provvisoria) e save (provvisorio) di una entity (via)")
+    @DisplayName("4 - Crea una entity (gson) da mongoDb con keyId")
+    void crea() {
+        System.out.println("4 - Crea una entity (gson) da mongoDb con keyId");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+
+        System.out.println(VUOTA);
+        clazz = Via.class;
+        sorgente = "piazza";
+        entityBean = null;
+        try {
+            entityBean = service.crea(clazz, sorgente);
+            assertNotNull(entityBean);
+            assertNotNull(entityBean.id);
+            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
+        } catch (Exception unErrore) {
+            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
+            assertNotNull(null);
+        }
+
+        System.out.println(VUOTA);
+        clazz = Giorno.class;
+        sorgente = "2agosto";
+        entityBean = null;
+        try {
+            entityBean = service.crea(clazz, sorgente);
+            assertNotNull(entityBean);
+            assertNotNull(entityBean.id);
+            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
+        } catch (Exception unErrore) {
+            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
+            assertNotNull(null);
+        }
+
+        System.out.println(VUOTA);
+        clazz = Regione.class;
+        sorgente = "calabria";
+        entityBean = null;
+        try {
+            entityBean = service.crea(clazz, sorgente);
+            assertNotNull(entityBean);
+            assertNotNull(entityBean.id);
+            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
+        } catch (Exception unErrore) {
+            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
+            assertNotNull(null);
+        }
+
+        System.out.println(VUOTA);
+        clazz = Bio.class;
+        sorgente = "47964";
+        entityBean = null;
+        try {
+            entityBean = service.crea(clazz, sorgente);
+            assertNotNull(entityBean);
+            assertNotNull(entityBean.id);
+            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
+        } catch (Exception unErrore) {
+            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
+            assertNotNull(null);
+        }
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("5 - Modifica (provvisoria) e save (provvisorio) di una entity (via)")
     void saveVia() {
-        System.out.println("4 - Modifica (provvisoria) e save (provvisorio) di una entity (via)");
+        System.out.println("5 - Modifica (provvisoria) e save (provvisorio) di una entity (via)");
         int originario;
         int daModificare;
         int modificato;
@@ -218,10 +286,10 @@ public class MongoBioServiceTest extends WTest {
     }
 
     @Test
-    @Order(5)
-    @DisplayName("5 - Save di una entity (bio)")
+    @Order(6)
+    @DisplayName("6 - Save di una entity (bio)")
     void saveBio() {
-        System.out.println("5 - Save di una entity (bio)");
+        System.out.println("6 - Save di una entity (bio)");
         int originario;
         int daModificare;
         int modificato;

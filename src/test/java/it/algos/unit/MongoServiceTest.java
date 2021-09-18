@@ -985,9 +985,9 @@ public class MongoServiceTest extends ATest {
 
     @Test
     @Order(16)
-    @DisplayName("16 - Crea una entity (spring) da mongoDb con keyId")
+    @DisplayName("16 - Crea una entity (gson) da mongoDb con keyId")
     void crea() {
-        System.out.println("16 - Crea una entity (spring) da mongoDb con keyId");
+        System.out.println("16 - Crea una entity (gson) da mongoDb con keyId");
         FlowVar.typeSerializing = AETypeSerializing.gson;
 
         System.out.println(VUOTA);
