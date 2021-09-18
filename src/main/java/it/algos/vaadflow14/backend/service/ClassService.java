@@ -368,6 +368,9 @@ public class ClassService extends AbstractService {
 
         simpleName = text.primaMaiuscola(simpleName);
         canonicalName = fileService.getCanonicalName(simpleName);
+        if (text.isEmpty(canonicalName)) {
+            throw AlgosException.stack(String.format("Manca il file %s nel progetto",simpleName),getClass().getSimpleName()+".getClazzFromSimpleName()");
+        }
 
         return getClazzFromCanonicalName(canonicalName);
     }
