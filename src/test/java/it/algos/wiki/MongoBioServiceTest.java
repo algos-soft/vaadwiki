@@ -151,7 +151,7 @@ public class MongoBioServiceTest extends WTest {
         try {
             entityBean = service.findByProperty(clazz,sorgente,sorgente2);
         } catch (AMongoException unErrore) {
-            int a=87;
+            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean()));
         }
         assertNotNull(entityBean);
     }
