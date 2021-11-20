@@ -1,9 +1,11 @@
 package it.algos.vaadflow14.backend.packages.geografica.stato;
 
+import com.mongodb.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
@@ -136,8 +138,12 @@ public class StatoLogicList extends LogicList {
         if (AEPreferenza.usaDebug.is()) {
             return lista;
         }
+        try {
+            esistonoRegioni=  mongo.count(Regione.class, propertyStato, entityBean) > 0;
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "getFormPropertyNamesList");
+        }
 
-        esistonoRegioni = ((MongoService) mongo).esistono(Regione.class, propertyStato, entityBean);//@todo da controllare
         if (!esistonoRegioni && lista.contains(tagRegioni)) {
             lista.remove(tagRegioni);
         }

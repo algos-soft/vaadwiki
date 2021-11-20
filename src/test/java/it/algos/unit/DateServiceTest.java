@@ -320,7 +320,7 @@ public class DateServiceTest extends ATest {
     @DisplayName("7 - Testo from ISO LocalDate")
     void getISO() {
         System.out.println("Print LocalDate in formato ISO");
-        System.out.println("");
+        System.out.println(VUOTA);
 
         previsto = "2014-10-21T00:00:00";
         ottenuto = service.getISO(LOCAL_DATE_UNO);
@@ -349,7 +349,7 @@ public class DateServiceTest extends ATest {
     @DisplayName("8 - Testo from ISO LocalDateTime")
     void getISO2() {
         System.out.println("Print LocalDateTime in formato ISO");
-        System.out.println("");
+        System.out.println(VUOTA);
 
         previsto = "2014-10-21T08:52:44";
         ottenuto = service.getISO(LOCAL_DATE_TIME_UNO);

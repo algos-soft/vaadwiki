@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.crono.secolo;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -63,8 +64,8 @@ public class SecoloService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final AESecolo aeSecolo) {
-        return super.creaReset(newEntity(aeSecolo.getNome(), aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine()));
+    private boolean creaReset(final AESecolo aeSecolo) throws AlgosException {
+        return super.creaReset(newEntity(aeSecolo.getOrd(), aeSecolo.getNome(), aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine()));
     }
 
 
@@ -77,7 +78,7 @@ public class SecoloService extends AService {
      */
     @Override
     public Secolo newEntity() {
-        return newEntity(VUOTA, false, 0, 0);
+        return newEntity(0, VUOTA, false, 0, 0);
     }
 
 
@@ -86,6 +87,7 @@ public class SecoloService extends AService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
+     * @param ordine     di presentazione (obbligatorio, unico)
      * @param secolo     (obbligatorio, unico)
      * @param anteCristo flag per i secoli prima di cristo (obbligatorio)
      * @param inizio     (obbligatorio, unico)
@@ -93,9 +95,9 @@ public class SecoloService extends AService {
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Secolo newEntity(final String secolo, final boolean anteCristo, final int inizio, final int fine) {
+    public Secolo newEntity(final int ordine, final String secolo, final boolean anteCristo, final int inizio, final int fine) {
         Secolo newEntityBean = Secolo.builderSecolo()
-                .ordine(getNewOrdine())
+                .ordine(ordine > 0 ? ordine : getNewOrdine())
                 .secolo(text.isValid(secolo) ? secolo : null)
                 .anteCristo(anteCristo)
                 .inizio(inizio)
@@ -129,7 +131,12 @@ public class SecoloService extends AService {
         }
 
         for (AESecolo eaSecolo : AESecolo.values()) {
-            numRec = creaReset(eaSecolo) ? numRec + 1 : numRec;
+            try {
+                creaReset(eaSecolo);
+                numRec++;
+            } catch (AlgosException unErrore) {
+                logger.warn(unErrore, this.getClass(), "reset");
+            }
         }
 
         return AResult.valido(AETypeReset.enumeration.get(), numRec);

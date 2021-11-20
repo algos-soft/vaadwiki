@@ -168,7 +168,7 @@ public class GiornoServiceTest extends ATest {
             giorno = service.findByProperty(sorgente, sorgente2);
             assertNotNull(giorno);
             printGiornoProperty(sorgente, sorgente2, giorno);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             assertNull(giorno);
             printGiornoProperty(sorgente, sorgente2, giorno);
             System.out.println(unErrore);
@@ -179,7 +179,7 @@ public class GiornoServiceTest extends ATest {
             giorno = service.findByProperty(sorgente, sorgente2);
             assertNotNull(giorno);
             printGiornoProperty(sorgente, sorgente2, giorno);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             assertNull(giorno);
             printGiornoProperty(sorgente, sorgente2, giorno);
             System.out.println(unErrore);

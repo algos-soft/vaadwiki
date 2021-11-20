@@ -55,7 +55,7 @@ public class ElaboraService extends WService {
                 esegue(bio);
                 try {
                     bioService.save(bio, null);
-                } catch (AMongoException unErrore) {
+                } catch (AlgosException unErrore) {
                 }
             }
         }
@@ -162,7 +162,7 @@ public class ElaboraService extends WService {
         if (text.isValid(testoValido)) {
             try {
                 nome = nomeService.findByKey(testoValido);
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 logger.warn(unErrore, this.getClass(), "fixNomeLink");
             }
             if (nome == null) {
@@ -173,7 +173,7 @@ public class ElaboraService extends WService {
             }
             try {
                 nomeService.save(nome, null);
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
             }
         }
 
@@ -618,7 +618,7 @@ public class ElaboraService extends WService {
         if (text.isValid(testoValido)) {
             try {
                 nazionalita = nazionalitaService.findByKey(testoValido);
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 logger.warn(unErrore, this.getClass(), "fixNazionalitaLink");
             }
         }

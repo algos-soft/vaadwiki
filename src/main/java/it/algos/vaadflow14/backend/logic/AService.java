@@ -114,19 +114,20 @@ public abstract class AService extends AbstractService implements AIService {
     /**
      * Crea e registra una entityBean col flag reset=true <br>
      * Esegue SOLO se la entity è sottoclasse di AREntity <br>
+     * Se esiste il field 'ordine', lo incrementa <br>
      *
      * @param newEntity appena creata, da regolare e da salvare
      *
      * @return true se la entity è stata creata e salvata
      */
-    protected boolean creaReset(final AREntity newEntity) {
+    protected boolean creaReset(final AREntity newEntity) throws AlgosException {
         boolean status = false;
         newEntity.reset = true;
 
         try {
             status = save(newEntity, AEOperation.addNew) != null;
-        } catch (AMongoException unErrore) {
-            logger.error(unErrore, this.getClass(), "creaReset");
+        } catch (AlgosException unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "creaReset");
         }
 
         return status;
@@ -151,7 +152,7 @@ public abstract class AService extends AbstractService implements AIService {
             if (isEsiste(newEntityBean.id)) {
                 return null;
             }
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             logger.warn(unErrore, this.getClass(), "checkAndSave");
         }
 
@@ -177,8 +178,9 @@ public abstract class AService extends AbstractService implements AIService {
      *
      * @return true if exist
      */
-    public boolean isEsiste(final String keyId) throws AMongoException {
-        return ((MongoService) mongo).isEsiste(entityClazz, keyId);//@todo da controllare
+    @Override
+    public boolean isEsiste(final Serializable keyId) throws AlgosException {
+        return mongo.find(entityClazz, keyId) != null;
     }
 
 
@@ -197,7 +199,7 @@ public abstract class AService extends AbstractService implements AIService {
      *
      * @throws
      */
-    public AEntity save(final AEntity entityBeanDaRegistrare) throws AMongoException {
+    public AEntity save(final AEntity entityBeanDaRegistrare) throws AlgosException {
         return save(entityBeanDaRegistrare, null);
     }
 
@@ -219,15 +221,20 @@ public abstract class AService extends AbstractService implements AIService {
      * @throws
      */
     @Override
-    public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AMongoException {
+    public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AlgosException {
         AEntity entityBean;
-        AEntity entityBeanOld;
+        AEntity entityBeanOld=null;
 
         //--eventuali operazioni eseguite PRIMA di registrare (new o modifica)
         entityBean = this.beforeSave(entityBeanDaRegistrare, operation);
 
         //--precedenti (eventuali) valori per evidenziare le modifiche
-        entityBeanOld = mongo.find(entityBeanDaRegistrare);//@todo da controllare QUI CE UN ERRORE
+        try {
+            entityBeanOld = mongo.find(entityBeanDaRegistrare);
+        } catch (AlgosException unErrore) {
+//            throw AlgosException.stack(unErrore, this.getClass(), "save");
+        }
+
 
         //--esegue la registrazione sul database mongoDB
         //--con un controllo finale di congruità
@@ -408,10 +415,10 @@ public abstract class AService extends AbstractService implements AIService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public AEntity findById(final String keyID) throws AMongoException {
+    public AEntity findById(final String keyID) throws AlgosException {
         AEntity entityBean = null;
 
-        entityBean = mongo.findById(entityClazz, keyID);
+        entityBean = mongo.find(entityClazz, keyID);
         //        try {
         //            entityBean = mongo.findById(entityClazz, keyID);
         //        } catch (AMongoException unErrore) {
@@ -437,7 +444,7 @@ public abstract class AService extends AbstractService implements AIService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public AEntity findByKey(final Serializable keyPropertyValue) throws AMongoException {
+    public AEntity findByKey(final Serializable keyPropertyValue) throws AlgosException {
         String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
 
         if (text.isValid(keyPropertyName)) {
@@ -461,8 +468,8 @@ public abstract class AService extends AbstractService implements AIService {
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
-        return mongo.findByProperty(entityClazz, propertyName, propertyValue);
+    public AEntity findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
+        return mongo.find(entityClazz, propertyName, propertyValue);
     }
 
 
@@ -495,14 +502,21 @@ public abstract class AService extends AbstractService implements AIService {
      */
     @Override
     public boolean deleteAll() {
+        boolean status = false;
+        boolean isExistsCollection = false;
 
-        if (entityClazz != null && mongo.isExistsCollection(annotation.getCollectionName(entityClazz))) {
+        try {
+            isExistsCollection = mongo.isExistsCollection(entityClazz);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "deleteAll");
+        }
+
+        if (entityClazz != null && isExistsCollection) {
             ((MongoService) mongo).mongoOp.remove(new Query(), entityClazz);
-            return true;
+            status = true;
         }
-        else {
-            return true;
-        }
+
+        return status;
     }
 
     //    @Deprecated
@@ -586,7 +600,7 @@ public abstract class AService extends AbstractService implements AIService {
      */
     @Override
     public int getNewOrdine() {
-        int newOrder = 0;
+        int newOrder = 1;
 
         try {
             newOrder = mongo.getNewOrder(entityClazz, FIELD_ORDINE);

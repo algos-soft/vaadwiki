@@ -4,18 +4,31 @@ import com.vaadin.flow.router.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.backend.service.AnnotationService.*;
 import org.junit.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import javax.validation.constraints.*;
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * Project vaadflow14
@@ -60,6 +73,26 @@ public class AnnotationServiceTest extends ATest {
      * Gia 'costruita' nella superclasse <br>
      */
     private AnnotationService service;
+
+    //--clazz
+    //--menuName
+    protected static Stream<Arguments> CLAZZ_MENU() {
+        return Stream.of(
+                Arguments.of(null, VUOTA),
+                Arguments.of(LogicList.class, VUOTA),
+                Arguments.of(GiornoLogicList.class, "Giorni"),
+                Arguments.of(Giorno.class, "Giorni"),
+                Arguments.of(Utente.class, "Utente"),
+                Arguments.of(Mese.class, "Mesi"),
+                Arguments.of(Via.class, "Via"),
+                Arguments.of(ViaLogicList.class, "Via"),
+                Arguments.of(AIType.class, VUOTA),
+                Arguments.of(Company.class, "Company"),
+                Arguments.of(Stato.class, "Stato"),
+                Arguments.of(Continente.class, "Continente"),
+                Arguments.of(CompanyLogicList.class, "Azienda")
+        );
+    }
 
 
     /**
@@ -284,22 +317,6 @@ public class AnnotationServiceTest extends ATest {
         assertNull(notNull);
     }// end of single test
 
-
-    @SuppressWarnings("javadoc")
-    /**
-     * Get the name of the spring-view.
-     *
-     * @param clazz the entity class
-     *
-     * @return the name of the spring-view
-     */
-    @Test
-    public void getViewName() {
-        previsto = "Via";
-        ottenuto = service.getMenuName(VIA_ENTITY_CLASS);
-        assertEquals(previsto, ottenuto);
-    }// end of single test
-
     //    @SuppressWarnings("javadoc")
     //    /**
     //     * Get the status listShowsID of the class.
@@ -328,8 +345,8 @@ public class AnnotationServiceTest extends ATest {
      * @return nomi dei fields, oppure null se non esiste l'Annotation specifica @AIList() nella Entity
      */
     @Test
-    @Order(1)
-    @DisplayName("1 - getGridColumns")
+    @Order(98)
+    @DisplayName("98 - getGridColumns")
     public void getGridColumns() {
         String[] stringArray = {"ordine", "nome"};
         previstoArray = new ArrayList(Arrays.asList(stringArray));
@@ -339,7 +356,7 @@ public class AnnotationServiceTest extends ATest {
         System.out.println("Colonne previste per la Entity " + VIA_ENTITY_CLASS.getSimpleName() + ":");
         print(ottenutoArray);
 
-        String[] stringArray2 = {"ordine","mese", "giorni","giorniBisestile","sigla"};
+        String[] stringArray2 = {"ordine", "mese", "giorni", "giorniBisestile", "sigla"};
         previstoArray = new ArrayList(Arrays.asList(stringArray2));
         ottenutoArray = service.getGridColumns(MESE_ENTITY_CLASS);
         assertEquals(previstoArray, ottenutoArray);
@@ -1034,6 +1051,28 @@ public class AnnotationServiceTest extends ATest {
         Assert.assertEquals(previsto, ottenuto);
         ottenutoDirection = utilityService.getSortDirection(sortSpring);
         Assert.assertEquals(previstoDirection, ottenutoDirection);
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_MENU")
+    @Order(4)
+    @DisplayName("4 - Menu visibile")
+    void nomeMenu(final Class clazzSorgente, final String menuName) {
+        String message;
+        clazz = clazzSorgente;
+        previsto = menuName;
+
+        try {
+            ottenuto = service.getMenuName(clazz);
+            System.out.print("Origine: ");
+            message = clazzSorgente != null ? clazzSorgente.getSimpleName() : "(null)";
+            System.out.println(message);
+            System.out.println(String.format("Menu: %s", ottenuto));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        assertEquals(previsto, ottenuto);
     }
 
 }

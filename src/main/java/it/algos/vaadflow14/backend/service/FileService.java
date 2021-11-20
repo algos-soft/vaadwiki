@@ -2115,7 +2115,7 @@ public class FileService extends AbstractService {
         try {
             listaAllPathNames = recursionSubPathNames(start);
         } catch (Exception unErrore) {
-            throw AlgosException.stack(unErrore, String.format("Stack in %s.%s", this.getClass().getSimpleName(), "getAllSubPathFiles()"));
+            throw AlgosException.stack(unErrore, getClass(), "getAllSubPathFiles");
         }
 
         if (array.isAllValid(listaAllPathNames)) {
@@ -2248,14 +2248,39 @@ public class FileService extends AbstractService {
      */
     public String getCanonicalName(String simpleName) throws AlgosException {
         String canonicalName = VUOTA;
-        List<String> lista = getPathBreveAllPackageFiles();
+        List<String> lista;
+        String classeFinalePrevista;
+        String classeFinalePath;
 
+        if (text.isEmpty(simpleName)) {
+            if (simpleName == null) {
+                throw AlgosException.stack("Il parametro in ingresso è nullo", getClass(), "getCanonicalName");
+            }
+            throw AlgosException.stack("Il parametro in ingresso è vuoto", getClass(), "getCanonicalName");
+        }
+
+        if (simpleName.endsWith(JAVA_SUFFIX)) {
+            simpleName = text.levaCoda(simpleName, JAVA_SUFFIX);
+        }
+        simpleName = text.primaMaiuscola(simpleName);
+
+        lista = getPathBreveAllPackageFiles();
+        if (lista == null || lista.size() < 1) {
+            throw AlgosException.stack("Non sono riuscito a creare la lista dei files del package", getClass(), "getCanonicalName");
+        }
+
+        classeFinalePrevista = estraeClasseFinale(simpleName);
         for (String path : lista) {
-            if (path.endsWith(simpleName)) {
+            classeFinalePath = estraeClasseFinale(path);
+            if (classeFinalePath.equals(classeFinalePrevista)) {
                 canonicalName = text.levaTestoPrimaDi(path, DIR_PROGETTO_VUOTO);
                 canonicalName = canonicalName.replaceAll(SLASH, PUNTO);
                 break;
             }
+        }
+
+        if (text.isEmpty(canonicalName)) {
+            throw AlgosException.stack(String.format("Nel package non esiste la classe %s", simpleName), getClass(), "getCanonicalName");
         }
 
         return canonicalName;

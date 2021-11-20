@@ -112,7 +112,7 @@ public class WikiBotService extends WService {
     protected Predicate<MiniWrap> checkNuovi = wrap -> {
         try {
             return ((MongoService) mongo).isNotEsiste(Bio.class, wrap.getPageid());
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             logger.warn(unErrore, this.getClass(), "checkNuovi");
         }
         return false;
@@ -124,7 +124,7 @@ public class WikiBotService extends WService {
     protected Predicate<MiniWrap> checkEsistenti = wrap -> {
         try {
             return ((MongoService) mongo).isEsiste(Bio.class, wrap.getPageid());
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             logger.warn(unErrore, this.getClass(), "checkEsistenti");
         }
         return false;
@@ -138,8 +138,8 @@ public class WikiBotService extends WService {
         String key = wrap.getPageid() + VUOTA;
         Bio bio = null;
         try {
-            bio = (Bio) mongo.findById(Bio.class, key);
-        } catch (AMongoException unErrore) {
+            bio = (Bio) mongo.find(Bio.class, key);
+        } catch (AlgosException unErrore) {
             logger.warn(unErrore, this.getClass(), "checkModificati");
         }
         LocalDateTime mongoTime = bio != null ? bio.getLastMongo() : MONGO_TIME_ORIGIN;

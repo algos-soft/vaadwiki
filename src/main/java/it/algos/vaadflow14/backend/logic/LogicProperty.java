@@ -161,6 +161,14 @@ public abstract class LogicProperty extends VerticalLayout {
     protected AWikiApiService wikiApi;
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected DataProviderService dataProviderService;
+
+    /**
      * PlaceHolder iniziale per avvisi sopra la Grid (o Form) <br><br>
      * Label o altro per informazioni specifiche; di norma per il developer <br>
      * Contenuto facoltativo, assente di default <br>
@@ -370,6 +378,7 @@ public abstract class LogicProperty extends VerticalLayout {
      * La mappa si costruisce in regolazioniIniziali() della LogicList <br>
      */
     protected Map<String, AFiltro> mappaFiltri;
+    protected WrapFiltri wrapFiltri;
 
     /**
      * Lista (eventuale) di 'component' da mostrare come header della view <br>

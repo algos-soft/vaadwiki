@@ -74,7 +74,7 @@ public class ClassService extends AbstractService {
      *
      * @return classe xxxLogicList associata alla Entity
      */
-    public boolean isLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) {
+    public boolean isLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) throws AlgosException{
         return getLogicListClassFromEntityClazz(dovrebbeEssereUnaEntityClazz) != null;
     }
 
@@ -85,7 +85,7 @@ public class ClassService extends AbstractService {
      *
      * @return classe xxxLogicList associata alla Entity
      */
-    public Class getLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) {
+    public Class getLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) throws AlgosException{
         Class listClazz = null;
         String canonicalNameEntity;
         String canonicalNameLogicList;
@@ -327,10 +327,11 @@ public class ClassService extends AbstractService {
      * @return classe individuata
      */
     public Class getClazzFromCanonicalName(String canonicalName) throws AlgosException {
-        Class clazz = null;
+        Class clazz;
+        String message;
 
         if (text.isEmpty(canonicalName)) {
-            return null;
+            throw AlgosException.stack("Manca il canonicalName in ingresso", getClass(), "getClazzFromCanonicalName");
         }
 
         if (canonicalName.endsWith(JAVA_SUFFIX)) {
@@ -340,7 +341,8 @@ public class ClassService extends AbstractService {
         try {
             clazz = Class.forName(canonicalName);
         } catch (Exception unErrore) {
-            throw new AlgosException(unErrore, null);
+            message = String.format("Non esiste la classe [%s] nella directory package", canonicalName);
+            throw AlgosException.stack(unErrore, message, getClass(), "getClazzFromCanonicalName");
         }
 
         return clazz;
@@ -348,18 +350,23 @@ public class ClassService extends AbstractService {
 
 
     /**
-     * Recupera la clazz dal nome Java <br>
+     * Recupera la clazz dal nome Java nel package <br>
      * Il simpleName termina SENZA JAVA_SUFFIX <br>
      *
      * @param simpleName della classe
      *
      * @return classe individuata
      */
-    public Class getClazzFromSimpleName(String simpleName) throws AlgosException{
+    public Class getClazzFromSimpleName(String simpleName) throws AlgosException {
         String canonicalName;
+        String message;
+
+        if (simpleName == null) {
+            throw AlgosException.stack("Il simpleName in ingresso è nullo", getClass(), "getClazzFromSimpleName");
+        }
 
         if (text.isEmpty(simpleName)) {
-            return null;
+            throw AlgosException.stack("Il simpleName in ingresso è vuoto", getClass(), "getClazzFromSimpleName");
         }
 
         if (simpleName.endsWith(JAVA_SUFFIX)) {
@@ -368,11 +375,25 @@ public class ClassService extends AbstractService {
 
         simpleName = text.primaMaiuscola(simpleName);
         canonicalName = fileService.getCanonicalName(simpleName);
+
         if (text.isEmpty(canonicalName)) {
-            throw AlgosException.stack(String.format("Manca il file %s nel progetto",simpleName),getClass().getSimpleName()+".getClazzFromSimpleName()");
+            message = String.format("Non esiste la classe [%s] nella directory package", simpleName);
+            throw AlgosException.stack(message, getClass(), "getClazzFromSimpleName");
         }
 
         return getClazzFromCanonicalName(canonicalName);
+    }
+
+    /**
+     * Esistenza della clazz dal nome Java nel package <br>
+     * Il simpleName termina SENZA JAVA_SUFFIX <br>
+     *
+     * @param simpleName della classe
+     *
+     * @return classe individuata
+     */
+    public boolean isEsiste(String simpleName) throws AlgosException {
+        return getClazzFromSimpleName(simpleName) != null;
     }
 
     /**
@@ -403,8 +424,18 @@ public class ClassService extends AbstractService {
      *
      * @return classe individuata
      */
-    public Class getClazzFromPath(final String pathCompleto) throws AlgosException{
+    public Class getClazzFromPath(final String pathCompleto) throws AlgosException {
+        String message;
+        if (text.isEmpty(pathCompleto)) {
+            throw AlgosException.stack("Manca il pathCompleto in ingresso", getClass(), "getClazzFromPath");
+        }
+
         String canonicalName = getNameFromPath(pathCompleto);
+        if (text.isEmpty(canonicalName)) {
+            message = String.format("Il path [%s] non esiste", pathCompleto);
+            throw AlgosException.stack(message, getClass(), "getClazzFromPath");
+        }
+
         canonicalName = canonicalName.replaceAll(FlowCost.SLASH, FlowCost.PUNTO);
         return getClazzFromCanonicalName(canonicalName);
     }
@@ -504,21 +535,63 @@ public class ClassService extends AbstractService {
      *
      * @return new entity
      */
-    public AEntity getEntityFromClazz(final Class entityClazz) {
-        AEntity entityBean = null;
-        Constructor constructor = null;
+    public AEntity getEntityFromClazz(final Class entityClazz) throws AlgosException {
+        AEntity entityBean;
+        Constructor constructor;
+        String message;
 
         if (entityClazz == null) {
-            return null;
+            throw AlgosException.stack("Manca la entityClazz in ingresso", getClass(), "getEntityFromClazz");
+        }
+
+        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+            message = String.format("La classe %s non è una sottoclasse di AEntity", entityClazz.getSimpleName());
+            throw AlgosException.stack(message, getClass(), "getEntityFromClazz");
         }
 
         try {
-            constructor = entityClazz.getDeclaredConstructor(null);
+            constructor = entityClazz.getDeclaredConstructor();
             entityBean = (AEntity) constructor.newInstance(null);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "getEntityFromClazz");
+            message = String.format("Non sono riuscito a costruire una entityBean di classe %s", entityClazz.getSimpleName());
+            throw AlgosException.stack(unErrore, message, getClass(), "getEntityFromClazz");
         }
         return entityBean;
+    }
+
+
+    /**
+     * Recupera la classe AEntity associata a questa classe del package <br>
+     *
+     * @param genericClazz to be checked if is of type AEntity
+     *
+     * @return new entity
+     */
+    public Class getEntityClazzFromClazz(final Class genericClazz) throws AlgosException {
+        Class entityClazz = null;
+        String message = VUOTA;
+        String clazzName;
+
+        if (genericClazz == null) {
+            throw AlgosException.stack("Manca la genericClazz in ingresso", getClass(), "getEntityClazzFromClazz");
+        }
+
+        if (annotation.isEntityClass(genericClazz)) {
+            return genericClazz;
+        }
+
+        clazzName = genericClazz.getSimpleName();
+        if (clazzName.endsWith(SUFFIX_LOGIC_LIST)||clazzName.endsWith(SUFFIX_LOGIC_FORM)||clazzName.endsWith(SUFFIX_SERVICE)) {
+            clazzName = text.levaCoda(clazzName, SUFFIX_LOGIC_LIST);
+            clazzName = text.levaCoda(clazzName, SUFFIX_LOGIC_FORM);
+            clazzName = text.levaCoda(clazzName, SUFFIX_SERVICE);
+        }
+        if (text.isValid(clazzName)) {
+            return getClazzFromSimpleName(clazzName);
+        }
+
+        message = String.format("Non esiste una AEntity associata alla classe %s", genericClazz.getSimpleName());
+        throw AlgosException.stack(message, getClass(), "getEntityClazzFromClazz");
     }
 
 }

@@ -799,21 +799,48 @@ public class DateService extends AbstractService {
      * @return elemento temporale
      */
     public LocalDateTime deserializeLocalDateTime(JsonElement json) {
+        String jsonText = json.getAsString();
         LocalDate data;
         LocalTime orario;
+        String[] parti;
+        int mese;
+        int giorno;
+        int anno;
 
-        String[] parti = json.getAsString().split(SPAZIO);
-        int mese = AEMese.getNumMese(parti[0]);
-        int giorno = Integer.parseInt(text.levaCoda(parti[1], VIRGOLA));
-        int anno = Integer.parseInt(text.levaCoda(parti[2], VIRGOLA));
+        if (jsonText.contains(SPAZIO)) {
+            parti = jsonText.split(SPAZIO);
+            mese = AEMese.getNumMese(parti[0]);
+            giorno = Integer.parseInt(text.levaCoda(parti[1], VIRGOLA));
+            anno = Integer.parseInt(text.levaCoda(parti[2], VIRGOLA));
 
-        data = LocalDate.of(anno, mese, giorno);
-        parti = parti[3].split(DUE_PUNTI);
-        orario = LocalTime.of(Integer.parseInt(parti[0]), Integer.parseInt(parti[1]), Integer.parseInt(parti[2]));
+            data = LocalDate.of(anno, mese, giorno);
+            parti = parti[3].split(DUE_PUNTI);
+            orario = LocalTime.of(Integer.parseInt(parti[0]), Integer.parseInt(parti[1]), Integer.parseInt(parti[2]));
 
-        return LocalDateTime.of(data, orario);
+            return LocalDateTime.of(data, orario);
+        }
+
+        //-- ISO-8601
+        if (jsonText.contains(TRATTINO) && jsonText.contains("T")) {
+            return localDateTimeFromISO(jsonText);
+        }
+
+        return null;
     }
 
+    /**
+     * Deserializza un elemento temporale
+     *
+     * @param json da cui estrarre l' elemento temporale
+     *
+     * @return elemento temporale
+     */
+    public Timestamp deserializeTimestamp(JsonElement json) {
+        String timestampText = json.getAsString();
+        Timestamp timeStamp = convertTxtTime(timestampText);
+
+        return timeStamp;
+    }
 
     /**
      * Deserializza un elemento temporale

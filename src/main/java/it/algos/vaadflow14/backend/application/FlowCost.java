@@ -29,6 +29,8 @@ public abstract class FlowCost {
 
     public static final int MAX = 2147483647;
 
+    public static final int LIMIT_QUERY_ENTITIES_STANDARD = 50;
+
     public static final String NAME_VAADFLOW = "vaadflow14";
 
     public static final String PATH_RISORSE = "src/main/resources/META-INF/resources/";
@@ -165,7 +167,11 @@ public abstract class FlowCost {
     /**
      * Nomi delle properties.
      */
-    public final static String FIELD_NAME_ID = "id";
+    public final static String FIELD_NAME_ID_SENZA = "id";
+
+    public final static String FIELD_NAME_ID_CON = "_id";
+
+    public final static String FIELD_NAME_ID_LINK = ".$id";
 
     public final static String FIELD_NAME_ORDINE = "ordine";
 
@@ -508,6 +514,8 @@ public abstract class FlowCost {
     public static final String PREF_USA_BUTTON_SHORTCUT = "usaButtonShortCut";
 
     public static final String PREF_USA_LOG_VIDEO = "usaLogVideo";
+
+    public static final String PREF_USA_EVIDENZIA_MENU_SELEZIONATO = "usaEvidenziaMenuSelezionato";
 
     public static final String PREF_USA_BUTTON_ONLY_ICON = "usaButtonOnlyIcon";
 

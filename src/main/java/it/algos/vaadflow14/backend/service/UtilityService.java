@@ -224,7 +224,7 @@ public class UtilityService extends AbstractService {
      * @param width        larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
      * @param initialValue eventuale valore iniziale di selezione
      */
-    public ComboBox creaComboBox(final Class<? extends AEntity> entityClazz, final String fieldName, DataProvider dataProvider, final int width, Object initialValue) {
+    public ComboBox creaComboBox(final Class<? extends AEntity> entityClazz, final String fieldName, DataProvider dataProvider, final int width, Object initialValue) throws AlgosException{
         ComboBox combo = null;
         Field reflectionJavaField = null;
         Class comboClazz = null;
@@ -243,7 +243,7 @@ public class UtilityService extends AbstractService {
         textInitialValue = annotation.getComboInitialValue(reflectionJavaField);
 
         if (type != AETypeField.combo && type != AETypeField.enumeration) {
-            return null;
+            throw AlgosException.stack(String.format("La property non è di type combo e nemmeno di type enumeration"),this.getClass(),"creaComboBox");
         }
 
         combo = new ComboBox();
@@ -274,9 +274,11 @@ public class UtilityService extends AbstractService {
         if (initialValue == null && comboClazz != null) {
             serviceClazz = classService.getServiceFromEntityClazz(comboClazz);
             try {
-                initialValue = serviceClazz.findByKey(textInitialValue);
-            } catch (AMongoException unErrore) {
-                logger.warn(unErrore, this.getClass(), "creaComboBox");
+                if (text.isValid(textInitialValue)) {
+                    initialValue = serviceClazz.findByKey(textInitialValue);
+                }
+            } catch (AlgosException unErrore) {
+                throw AlgosException.stack(String.format("Nel comboBox %s manca il valore inziale %s", fieldName, textInitialValue), this.getClass(), "creaComboBox");
             }
         }
 

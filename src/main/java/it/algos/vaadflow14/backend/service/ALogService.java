@@ -450,7 +450,7 @@ public class ALogService extends AbstractService {
      * @param methodName di provenienza della richiesta
      */
     public void info(Exception unErrore, Class clazz, String methodName) {
-        info(unErrore.toString(), clazz, methodName);
+        info(unErrore.getMessage(), clazz, methodName);
     }
 
 

@@ -121,7 +121,7 @@ public class Preferenza extends AEntity {
      * per creare una lista di preferenze nella scheda utente dell'admin oppure
      * nella scheda della company
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Visibile agli admin")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Visibile solo agli admin")
     @AIColumn(headerIcon = VaadinIcon.USER)
     public boolean visibileAdmin;
 

@@ -1,5 +1,8 @@
 package it.algos.vaadflow14.backend.service;
 
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.datatype.jdk8.*;
+import com.fasterxml.jackson.datatype.jsr310.*;
 import com.vaadin.flow.component.icon.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -52,20 +55,24 @@ public class ReflectionService extends AbstractService {
      * Esclusi i fields PRIVATI <br>
      * Fields NON ordinati <br>
      * Class.getDeclaredFields() prende fields pubblici e privati della classe <br>
-     * Class.getFields() prende fields pubblici della classe e delle superclassi     * Nomi NON ordinati <br>
+     * Class.getFields() prende fields pubblici della classe e delle superClassi <br>
+     * Nomi NON ordinati <br>
      * ATTENZIONE - Comprende ANCHE eventuali fields statici pubblici che NON siano property per il DB <br>
      *
      * @param entityClazz da cui estrarre i fields statici
      *
      * @return lista di static fields della classe generica
      */
-    public List<Field> getFields(Class<? extends AEntity> entityClazz) {
+    public List<Field> getFields(Class<? extends AEntity> entityClazz) throws AlgosException {
         List<Field> listaFields = null;
-        List<Field> listaGrezza = null;
+        List<Field> listaGrezza;
 
-        //--Controlla che il parametro in ingresso non sia nullo
         if (entityClazz == null) {
-            return null;
+            throw AlgosException.stack(String.format("Manca la entityClazz"), this.getClass(), "getFields");
+        }
+
+        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+            throw AlgosException.stack(String.format("La classe %s non è una classe di tipo AEntity", entityClazz.getSimpleName()), this.getClass(), "getFields");
         }
 
         listaGrezza = getAllFields(entityClazz);
@@ -98,14 +105,16 @@ public class ReflectionService extends AbstractService {
      *
      * @return lista di static fields della Entity e di tutte le sue superclassi
      */
-    public List<Field> getAllFields(Class<? extends AEntity> entityClazz) {
+    public List<Field> getAllFields(Class<? extends AEntity> entityClazz) throws AlgosException {
         List<Field> listaFields = null;
-        //        Class<?> clazz = entityClazz;
-        Field[] fieldsArray = null;
+        Field[] fieldsArray;
 
-        //--Controlla che il parametro in ingresso non sia nullo
         if (entityClazz == null) {
-            return null;
+            throw AlgosException.stack(String.format("Manca la entityClazz"), this.getClass(), "getAllFields");
+        }
+
+        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+            throw AlgosException.stack(String.format("La classe %s non è una classe di tipo AEntity", entityClazz.getSimpleName()), this.getClass(), "getAllFields");
         }
 
         //--recupera tutti i fields della entity e di tutte le superclassi
@@ -148,10 +157,19 @@ public class ReflectionService extends AbstractService {
      *
      * @return lista di nomi di static fields della classe generica
      */
-    public List<String> getFieldsName(Class<? extends AEntity> entityClazz) {
+    public List<String> getFieldsName(Class<? extends AEntity> entityClazz) throws AlgosException {
         List<String> listaNomi = null;
-        List<Field> listaFields = getFields(entityClazz);
+        List<Field> listaFields;
 
+        if (entityClazz == null) {
+            throw AlgosException.stack(String.format("Manca la entityClazz"), this.getClass(), "getFieldsName");
+        }
+
+        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+            throw AlgosException.stack(String.format("La classe %s non è una classe di tipo AEntity", entityClazz.getSimpleName()), this.getClass(), "getFieldsName");
+        }
+
+        listaFields = getFields(entityClazz);
         if (array.isAllValid(listaFields)) {
             listaNomi = new ArrayList<>();
             for (Field field : listaFields) {
@@ -179,10 +197,19 @@ public class ReflectionService extends AbstractService {
      *
      * @return lista di nomi dei fields della Entity e di tutte le superclassi
      */
-    public List<String> getAllFieldsName(Class<? extends AEntity> entityClazz) {
+    public List<String> getAllFieldsName(Class<? extends AEntity> entityClazz) throws AlgosException {
         List<String> listaNomi = null;
-        List<Field> listaFields = getAllFields(entityClazz);
+        List<Field> listaFields;
 
+        if (entityClazz == null) {
+            throw AlgosException.stack(String.format("Manca la entityClazz"), this.getClass(), "getAllFieldsName");
+        }
+
+        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+            throw AlgosException.stack(String.format("La classe %s non è una classe di tipo AEntity", entityClazz.getSimpleName()), this.getClass(), "getAllFieldsName");
+        }
+
+        listaFields = getAllFields(entityClazz);
         if (array.isAllValid(listaFields)) {
             listaNomi = new ArrayList<>();
             for (Field field : listaFields) {
@@ -202,30 +229,31 @@ public class ReflectionService extends AbstractService {
      *
      * @return the field
      */
-    public Field getField(final Class<?> genericClazz, final String publicFieldName) {
-        Field field = null;
+    public Field getField(final Class<?> genericClazz, final String publicFieldName) throws AlgosException {
+        Field field;
+        String propertyName = publicFieldName;
 
         try {
-            field = genericClazz.getField(publicFieldName);
+            propertyName = propertyName.replaceAll(FIELD_NAME_ID_CON, FIELD_NAME_ID_SENZA);
+            field = genericClazz.getField(propertyName);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "getField");
+            throw AlgosException.stack(unErrore, this.getClass(), "getField");
         }
 
         return field;
     }
 
-
-    /**
-     * Controlla l' esistenza di un field statico di una classe generica. <br>
-     *
-     * @param genericClazz    da cui estrarre il field statico da controllare
-     * @param publicFieldName property statica e pubblica
-     *
-     * @return true se esiste
-     */
-    public boolean hasField(final Class<?> genericClazz, final String publicFieldName) {
-        return getField(genericClazz, publicFieldName) != null;
-    }
+    //    /**
+    //     * Controlla l' esistenza di un field statico di una classe generica. <br>
+    //     *
+    //     * @param genericClazz    da cui estrarre il field statico da controllare
+    //     * @param publicFieldName property statica e pubblica
+    //     *
+    //     * @return true se esiste
+    //     */
+    //    public boolean hasField(final Class<?> genericClazz, final String publicFieldName) {
+    //        return getField(genericClazz, publicFieldName) != null;
+    //    }
 
 
     /**
@@ -244,7 +272,12 @@ public class ReflectionService extends AbstractService {
             return null;
         }
 
-        field = getField(genericClazz, publicFieldName);
+        try {
+            field = getField(genericClazz, publicFieldName);
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "getStaticPropertyValue");
+        }
+
         if (field != null) {
             try {
                 value = field.get(null);
@@ -330,7 +363,11 @@ public class ReflectionService extends AbstractService {
             return null;
         }
 
-        fieldsList = getAllFields(entityBean.getClass());
+        try {
+            fieldsList = getAllFields(entityBean.getClass());
+        } catch (AlgosException unErrore) {
+        }
+
         try {
             for (Field field : fieldsList) {
                 if (field.getName().equals(publicFieldName)) {
@@ -386,6 +423,89 @@ public class ReflectionService extends AbstractService {
         return false;
     }
 
+    /**
+     * Se esiste il field della Entity
+     *
+     * @param entityClazz     classe su cui operare la riflessione
+     * @param publicFieldName property
+     *
+     * @return true se esiste
+     */
+    public boolean isEsisteFieldOnClass(Class<? extends AEntity> entityClazz, final String publicFieldName) throws AlgosException {
+        List<String> listaNomi;
+
+        if (entityClazz == null) {
+            throw AlgosException.stack("Manca la entityClazz", getClass(), "isEsisteFieldOnClass");
+        }
+
+        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+            throw AlgosException.stack(String.format("La classe %s non è una classe di tipo AEntity", entityClazz.getSimpleName()), this.getClass(), "isEsisteFieldOnClass");
+        }
+
+        if (publicFieldName == null) {
+            throw AlgosException.stack("Il publicFieldName è nullo", getClass(), "isEsisteFieldOnClass");
+        }
+
+        if (text.isEmpty(publicFieldName)) {
+            throw AlgosException.stack("Manca il publicFieldName", getClass(), "isEsisteFieldOnClass");
+        }
+
+        listaNomi = getFieldsName(entityClazz);
+        if (listaNomi == null || listaNomi.size() == 0) {
+            throw AlgosException.stack("La entityClazz %s esiste ma non ha fields", getClass(), "isEsisteFieldOnClass");
+        }
+
+        if (listaNomi.contains(publicFieldName)) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Se esiste il field della Entity
+     *
+     * @param entityClazz     classe su cui operare la riflessione
+     * @param publicFieldName property
+     *
+     * @return true se esiste
+     */
+    public boolean isEsisteFieldOnSuperClass(Class<? extends AEntity> entityClazz, final String publicFieldName) throws AlgosException {
+        List<String> listaNomi;
+        String propertyName = publicFieldName;
+
+        if (entityClazz == null) {
+            throw AlgosException.stack("Manca la entityClazz", getClass(), "isEsisteFieldOnSuperClass");
+        }
+
+        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+            throw AlgosException.stack(String.format("La classe %s non è una classe di tipo AEntity", entityClazz.getSimpleName()), this.getClass(), "isEsisteFieldOnSuperClass");
+        }
+
+        if (publicFieldName == null) {
+            throw AlgosException.stack("Il publicFieldName è nullo", getClass(), "isEsisteFieldOnClass");
+        }
+
+        if (text.isEmpty(publicFieldName)) {
+            throw AlgosException.stack("Manca il publicFieldName", getClass(), "isEsisteFieldOnClass");
+        }
+
+        if (propertyName.equals(FIELD_NAME_ID_CON)) {
+            propertyName = FIELD_NAME_ID_SENZA;
+        }
+        listaNomi = getAllFieldsName(entityClazz);
+        if (listaNomi == null || listaNomi.size() == 0) {
+            throw AlgosException.stack("La entityClazz %s esiste ma non ha fields", getClass(), "isEsisteFieldOnSuperClass");
+        }
+
+        if (listaNomi.contains(propertyName)) {
+            return true;
+        }
+
+        return false;
+    }
+
     //    /**
     //     * Mappa di tutti i valori delle properties di una classe
     //     *
@@ -423,7 +543,7 @@ public class ReflectionService extends AbstractService {
                 field.set(entityBean, value);
                 status = true;
             } catch (Exception unErrore) {
-                throw new AlgosException(unErrore, entityBean, field.getName(), "ReflectionService.setPropertyValue()");
+                throw AlgosException.stack(unErrore, entityBean, field.getName(), getClass(), "setPropertyValue");
             }
         }
 
@@ -477,6 +597,33 @@ public class ReflectionService extends AbstractService {
                     logger.error(unErrore);
                 }
             }
+        }
+
+        return mappa;
+    }
+
+    /**
+     * Mappa delle properties di una entityBean (generica). <br>
+     *
+     * @param entityBean oggetto su cui operare la riflessione
+     *
+     * @return la mappa chiave=valore delle properties
+     */
+    public Map<String, Object> getMappaEntity(final AEntity entityBean) throws AlgosException {
+        Map<String, Object> mappa;
+        ObjectMapper mapper;
+
+        if (entityBean == null) {
+            throw AlgosException.stack("Manca la entityBean", getClass(), "getMappaEntity");
+        }
+
+        mapper = new ObjectMapper();
+        mapper.registerModule(new Jdk8Module());
+        mapper.registerModule(new JavaTimeModule());
+        try {
+            mappa = mapper.convertValue(entityBean, Map.class);
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "getMappaEntity");
         }
 
         return mappa;

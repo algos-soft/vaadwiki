@@ -161,7 +161,7 @@ public class PreferenzaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Preferenza findById(final String keyID) throws AMongoException {
+    public Preferenza findById(final String keyID) throws AlgosException {
         return (Preferenza) super.findById(keyID);
     }
 

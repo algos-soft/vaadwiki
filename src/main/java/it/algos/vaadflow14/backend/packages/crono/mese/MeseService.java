@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.crono.mese;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -62,8 +63,8 @@ public class MeseService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final AEMese aeMese) {
-        return super.creaReset(newEntity(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla()));
+    private boolean creaReset(final AEMese aeMese) throws AlgosException {
+        return super.creaReset(newEntity(aeMese.getOrd(), aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla()));
     }
 
 
@@ -76,7 +77,7 @@ public class MeseService extends AService {
      */
     @Override
     public Mese newEntity() {
-        return newEntity(VUOTA, 0, 0, VUOTA);
+        return newEntity(0, VUOTA, 0, 0, VUOTA);
     }
 
 
@@ -86,6 +87,7 @@ public class MeseService extends AService {
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
      *
+     * @param ordine          di presentazione (obbligatorio, unico)
      * @param mese            nome completo (obbligatorio, unico)
      * @param giorni          numero di giorni presenti (obbligatorio)
      * @param giorniBisestile numero di giorni presenti in un anno bisestile (obbligatorio)
@@ -93,9 +95,9 @@ public class MeseService extends AService {
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Mese newEntity(final String mese, final int giorni, final int giorniBisestile, final String sigla) {
+    public Mese newEntity(final int ordine, final String mese, final int giorni, final int giorniBisestile, final String sigla) {
         Mese newEntityBean = Mese.builderMese()
-                .ordine(getNewOrdine())
+                .ordine(ordine > 0 ? ordine : getNewOrdine())
                 .mese(text.isValid(mese) ? mese : null)
                 .giorni(giorni)
                 .giorniBisestile(giorniBisestile)
@@ -129,7 +131,12 @@ public class MeseService extends AService {
         }
 
         for (AEMese aeMese : AEMese.values()) {
-            numRec = creaReset(aeMese) ? numRec + 1 : numRec;
+            try {
+                creaReset(aeMese);
+                numRec++;
+            } catch (AlgosException unErrore) {
+                logger.warn(unErrore, this.getClass(), "reset");
+            }
         }
 
         return AResult.valido(AETypeReset.enumeration.get(), numRec);

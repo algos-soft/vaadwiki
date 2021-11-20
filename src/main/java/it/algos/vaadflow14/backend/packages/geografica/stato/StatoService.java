@@ -103,7 +103,7 @@ public class StatoService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) {
+    private boolean creaReset(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) throws AlgosException {
         return super.creaReset(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera, continente));
     }
 
@@ -176,7 +176,7 @@ public class StatoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Stato findById(final String keyID) throws AMongoException {
+    public Stato findById(final String keyID) throws AlgosException {
         return (Stato) super.findById(keyID);
     }
 
@@ -190,7 +190,7 @@ public class StatoService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Stato findByKey(final String keyValue)  throws AMongoException {
+    public Stato findByKey(final String keyValue) throws AlgosException {
         return (Stato) super.findByKey(keyValue);
     }
 
@@ -270,9 +270,11 @@ public class StatoService extends AService {
                     }
                 }
                 continente = continente != null ? continente : continenteDefault;
-
-                if (creaReset(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente)) {
+                try {
+                    creaReset(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente);
                     numRec++;
+                } catch (AlgosException unErrore) {
+                    logger.warn(unErrore, this.getClass(), "reset");
                 }
             }
         }
@@ -284,8 +286,15 @@ public class StatoService extends AService {
     private AIResult checkContinente() {
         String packageName = Stato.class.getSimpleName().toLowerCase();
         String collection = "continente";
+        boolean isValidCollection = false;
 
-        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
+        try {
+            isValidCollection = ((MongoService) mongo).isValidCollection(entityClazz);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "checkContinente");
+        }
+
+        if (isValidCollection) {
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {

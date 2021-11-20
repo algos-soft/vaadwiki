@@ -133,7 +133,7 @@ public class AttivitaService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Attivita findById(final String keyID) throws AMongoException {
+    public Attivita findById(final String keyID) throws AlgosException {
         return (Attivita) super.findById(keyID);
     }
 
@@ -147,7 +147,7 @@ public class AttivitaService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Attivita findByKey(final Serializable keyValue) throws AMongoException {
+    public Attivita findByKey(final Serializable keyValue) throws AlgosException {
         return (Attivita) super.findByKey(keyValue);
     }
 
@@ -162,7 +162,7 @@ public class AttivitaService extends WikiService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Attivita findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
+    public Attivita findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
         return (Attivita) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -175,7 +175,7 @@ public class AttivitaService extends WikiService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public boolean isEsisteSingolare(String keyValue) throws AMongoException {
+    public boolean isEsisteSingolare(String keyValue) throws AlgosException {
         return this.findByKey(keyValue) != null;
     }
 
@@ -246,7 +246,7 @@ public class AttivitaService extends WikiService {
                 if (text.isValid(attivitaSingolare)) {
                     try {
                         entity = findByKey(attivitaSingolare);
-                    } catch (AMongoException unErrore) {
+                    } catch (AlgosException unErrore) {
                         logger.warn(unErrore, this.getClass(), "aggiunge");
                     }
                 }

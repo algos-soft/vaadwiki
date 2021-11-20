@@ -63,8 +63,8 @@ public class ContinenteService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final AEContinente aeContinente) {
-        return super.creaReset(newEntity(aeContinente.getNome(), aeContinente.isAbitato()));
+    private boolean creaReset(final AEContinente aeContinente) throws AlgosException {
+        return super.creaReset(newEntity(aeContinente.getOrd(), aeContinente.getNome(), aeContinente.isAbitato()));
     }
 
 
@@ -77,7 +77,7 @@ public class ContinenteService extends AService {
      */
     @Override
     public Continente newEntity() {
-        return newEntity(VUOTA, true);
+        return newEntity(0, VUOTA, true);
     }
 
 
@@ -87,11 +87,15 @@ public class ContinenteService extends AService {
      * Eventuali regolazioni iniziali delle property <br>
      * L'ordine di presentazione (obbligatorio, unico) viene calcolato in automatico
      *
+     * @param ordine  di presentazione (obbligatorio, unico)
+     * @param nome    nome completo (obbligatorio, unico)
+     * @param abitato se esistono abitanti nel continente (facoltativo)
+     *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Continente newEntity(final String nome, final boolean abitato) {
+    public Continente newEntity(final int ordine, final String nome, final boolean abitato) {
         Continente newEntityBean = Continente.builderContinente()
-                .ordine(this.getNewOrdine())
+                .ordine(ordine > 0 ? ordine : getNewOrdine())
                 .nome(text.isValid(nome) ? nome : null)
                 .abitato(abitato)
                 .build();
@@ -110,7 +114,7 @@ public class ContinenteService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Continente findById(final String keyID) throws AMongoException {
+    public Continente findById(final String keyID) throws AlgosException {
         return (Continente) super.findById(keyID);
     }
 
@@ -124,7 +128,7 @@ public class ContinenteService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Continente findByKey(final String keyValue) throws AMongoException {
+    public Continente findByKey(final String keyValue) throws AlgosException {
         return (Continente) super.findByKey(keyValue);
     }
 
@@ -152,7 +156,12 @@ public class ContinenteService extends AService {
         }
 
         for (AEContinente aeContinente : AEContinente.values()) {
-            numRec = creaReset(aeContinente) ? numRec + 1 : numRec;
+            try {
+                creaReset(aeContinente);
+                numRec++;
+            } catch (AlgosException unErrore) {
+                logger.warn(unErrore, this.getClass(), "reset");
+            }
         }
 
         return AResult.valido(AETypeReset.hardCoded.get(), numRec);

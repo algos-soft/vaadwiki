@@ -12,20 +12,19 @@ import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
-import it.algos.vaadflow14.backend.packages.crono.mese.*;
-import it.algos.vaadflow14.backend.packages.geografica.regione.*;
-import it.algos.vaadflow14.backend.packages.security.utente.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.*;
 import org.bson.conversions.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.data.mongodb.*;
 import org.springframework.data.mongodb.core.*;
 
+import java.io.*;
 import java.text.*;
 import java.time.*;
 import java.util.*;
@@ -42,21 +41,11 @@ import java.util.*;
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
-//@ExtendWith(SpringExtension.class)
-//@SpringBootTest(classes = {SimpleApplication.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("testAllValido")
+@Tag("mongoService")
 @DisplayName("Mongo Service (senza mongoOp)")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MongoServiceTest extends ATest {
-
-    protected static final String COLLEZIONE_INESISTENTE = "pomeriggio";
-
-    protected static final String COLLEZIONE_VUOTA = "utente";
-
-    protected static final String COLLEZIONE_VALIDA = "giorno";
-
-    private static final String DATA_BASE_NAME = "vaadflow14";
+public class MongoServiceTest extends MongoTest {
 
     /**
      * Inietta da Spring
@@ -68,19 +57,13 @@ public class MongoServiceTest extends ATest {
      * Classe principale di riferimento <br>
      * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    protected MongoService service;
+    //    @InjectMocks
+    protected AIMongoService service;
 
     protected MongoCollection collection;
 
     protected Bson bSon;
 
-    protected Document doc;
-
-
-    private static String[] COLLEZIONI() {
-        return new String[]{"pomeriggio", "alfa", "via"};
-    }
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -91,12 +74,11 @@ public class MongoServiceTest extends ATest {
     void setUpIniziale() {
         super.setUpStartUp();
 
-        //        --reindirizzo l'istanza della superclasse
+        //--reindirizzo l'istanza della superclasse
         service = mongoService;
 
-        //        MockitoAnnotations.initMocks(service.mongoOp);
-        //        Assertions.assertNotNull(service.mongoOp);
-
+        //--property statica utilizzata nel test
+        FlowVar.typeSerializing = AETypeSerializing.spring;
     }
 
 
@@ -138,907 +120,604 @@ public class MongoServiceTest extends ATest {
         System.out.println(String.format("Collezioni esistenti: %s", listaStr));
     }
 
-    @Test
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ")
+    @NullSource
     @Order(2)
-    @DisplayName("2 - Collezioni")
-    void getCollection() {
-        System.out.println("2- Collezioni");
+    @DisplayName("2 - Collezioni del database")
+    /*
+      Controlla l'esistenza della collezione (dall'elenco di tutte le condizioni esistenti nel mongoDB)
+      Recupera la collezione
+      Controlla l'esistenza della collezione (dal numero di entities presenti)
+      Controlla se la collezione è vuota (dal numero di entities presenti)
+     */
+    void collectionClazz(Class clazz) {
+        System.out.println("2 - Collezioni del database");
+        String message = String.format("Clazz%s%s", FORWARD, clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        System.out.println(VUOTA);
 
-        clazz = null;
+        try {
+            ottenutoBooleano = service.isExistsCollection(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printCollection(clazz, ottenutoBooleano);
         collection = service.getCollection(clazz);
-        assertNull(collection);
-        System.out.println(String.format("La collezione %s non esiste", clazz));
+        printCollection(clazz, collection);
+        try {
+            ottenutoBooleano = service.isValidCollection(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printCollectionValida(clazz, ottenutoBooleano);
+        try {
+            ottenutoBooleano = !service.isValidCollection(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printCollectionVuota(clazz, ottenutoBooleano);
 
-        clazz = Via.class;
-        collection = service.getCollection(clazz);
-        assertNotNull(collection);
-        System.out.println(String.format("La collezione %s esiste", clazz));
-
-        collection = service.getCollection(sorgente);
-        assertNull(collection);
-        System.out.println(String.format("La collezione %s non esiste", sorgente));
-
-        sorgente = "via";
-        collection = service.getCollection(sorgente);
-        assertNotNull(collection);
-        System.out.println(String.format("La collezione %s esiste", sorgente));
-
-        sorgente = Via.class.getCanonicalName();
-        collection = service.getCollection(sorgente);
-        assertNotNull(collection);
-        System.out.println(String.format("La collezione %s esiste", sorgente));
-
-        sorgente = Via.class.getName();
-        collection = service.getCollection(sorgente);
-        assertNotNull(collection);
-        System.out.println(String.format("La collezione %s esiste", sorgente));
-
-        sorgente = Via.class.getSimpleName().toLowerCase(Locale.ROOT);
-        collection = service.getCollection(sorgente);
-        assertNotNull(collection);
-        System.out.println(String.format("La collezione %s esiste", sorgente));
+        System.out.println(VUOTA);
     }
 
-    @Test
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ")
     @Order(3)
-    @DisplayName("3 - Esistenza delle collezioni")
-    void isExistsCollection() {
-        System.out.println("3 - Esistenza delle collezioni dalla classe");
-        clazz = null;
-        ottenutoBooleano = service.isExistsCollection(clazz);
-        assertFalse(ottenutoBooleano);
-        printCollection(clazz, "non esiste");
+    @DisplayName("3 - Count totale (gson/spring) per clazz")
+    /*
+      metodo semplice per l'intera collection
+      rimanda al metodo base collection.countDocuments();
+      non usa ne gson ne spring
+     */
+    void countAllClazz(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
+        System.out.println("3 - Count totale (gson/spring) per clazz");
+        String message = String.format("Count totale di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
 
-        clazz = Utente.class;
-        ottenutoBooleano = service.isExistsCollection(clazz);
-        assertTrue(ottenutoBooleano);
-        printCollection(clazz, "esiste");
+        ottenutoIntero = 0;
+        try {
+            ottenutoIntero = service.count(clazz);
+            System.out.println(String.format("Risultato %s %d", UGUALE_SEMPLICE, ottenutoIntero));
+            System.out.println(VUOTA);
+            printCount(clazz, previstoIntero, ottenutoIntero, risultatoEsatto);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
 
-        clazz = Via.class;
-        ottenutoBooleano = service.isExistsCollection(clazz);
-        assertTrue(ottenutoBooleano);
-        printCollection(clazz, "esiste");
-
-        System.out.println(VUOTA);
-        System.out.println(VUOTA);
-        System.out.println("3 - Esistenza delle collezioni dal nome");
-        sorgente = COLLEZIONE_INESISTENTE;
-        ottenutoBooleano = service.isExistsCollection(sorgente);
-        assertFalse(ottenutoBooleano);
-        printCollection(sorgente, "non esiste");
-
-        sorgente = COLLEZIONE_VUOTA;
-        ottenutoBooleano = service.isExistsCollection(sorgente);
-        assertTrue(ottenutoBooleano);
-        printCollection(sorgente, "esiste");
-
-        sorgente = COLLEZIONE_VALIDA;
-        ottenutoBooleano = service.isExistsCollection(sorgente);
-        assertTrue(ottenutoBooleano);
-        printCollection(sorgente, "esiste");
+        if (flagRisultatiEsattiObbligatori && risultatoEsatto) {
+            assertEquals(previstoIntero, ottenutoIntero);
+        }
     }
 
-    @Test
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(4)
-    @DisplayName("4 - Validità delle collezioni")
-    void isValidCollection() {
-        System.out.println("4 - Validità delle collezioni dalla classe");
-
-        clazz = null;
-        ottenutoBooleano = service.isValidCollection(clazz);
-        assertFalse(ottenutoBooleano);
-        printCollection(clazz, "non è valida");
-
-        clazz = Utente.class;
-        ottenutoBooleano = service.isValidCollection(clazz);
-        assertFalse(ottenutoBooleano);
-        printCollection(clazz, "non è valida");
-
-        clazz = Via.class;
-        ottenutoBooleano = service.isValidCollection(clazz);
-        assertTrue(ottenutoBooleano);
-        printCollection(clazz, "è valida");
-
-        System.out.println(VUOTA);
-        System.out.println(VUOTA);
-        System.out.println("4 - Validità delle collezioni dal nome");
-
-        sorgente = COLLEZIONE_INESISTENTE;
-        ottenutoBooleano = service.isValidCollection(sorgente);
-        assertFalse(ottenutoBooleano);
-        printCollection(sorgente, "non è valida");
-
-        sorgente = COLLEZIONE_VUOTA;
-        ottenutoBooleano = service.isValidCollection(sorgente);
-        assertFalse(ottenutoBooleano);
-        printCollection(sorgente, "non è valida");
-
-        sorgente = COLLEZIONE_VALIDA;
-        ottenutoBooleano = service.isValidCollection(sorgente);
-        assertTrue(ottenutoBooleano);
-        printCollection(sorgente, "è valida");
+    @DisplayName("4 - Count filtrato (gson) (propertyName, propertyValue)")
+    void countPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("4 - Count filtrato (gson) (propertyName, propertyValue)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        countProperty(clazz, propertyName, propertyValue, previstoIntero, "filter");
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(5)
-    @DisplayName("5 - Check collezione vuota")
-    void isEmptyCollection() {
-        System.out.println("5 - Check collezione vuota dalla classe");
-
-        clazz = null;
-        ottenutoBooleano = service.isEmptyCollection(clazz);
-        assertTrue(ottenutoBooleano);
-        printCollection(clazz, "è vuota");
-
-        clazz = Utente.class;
-        ottenutoBooleano = service.isEmptyCollection(clazz);
-        assertTrue(ottenutoBooleano);
-        printCollection(clazz, "è vuota");
-
-        clazz = Via.class;
-        ottenutoBooleano = service.isEmptyCollection(clazz);
-        assertFalse(ottenutoBooleano);
-        printCollection(clazz, "non è vuota");
-
-        System.out.println(VUOTA);
-        System.out.println(VUOTA);
-        System.out.println("5 - Check collezione vuota dal nome");
-
-        sorgente = COLLEZIONE_INESISTENTE;
-        ottenutoBooleano = service.isEmptyCollection(sorgente);
-        assertTrue(ottenutoBooleano);
-        printCollection(sorgente, "è vuota");
-
-        sorgente = COLLEZIONE_VUOTA;
-        ottenutoBooleano = service.isEmptyCollection(sorgente);
-        assertTrue(ottenutoBooleano);
-        printCollection(sorgente, "non è vuota");
-
-        sorgente = COLLEZIONE_VALIDA;
-        ottenutoBooleano = service.isEmptyCollection(sorgente);
-        assertFalse(ottenutoBooleano);
-        printCollection(sorgente, "non è vuota");
+    @DisplayName("5 - Count filtrato (spring) (propertyName, propertyValue)")
+    void countPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("5 - Count filtrato (spring) (propertyName, propertyValue)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        countProperty(clazz, propertyName, propertyValue, previstoIntero, "query");
     }
 
-    @Test
+    private void countProperty(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero, final String tag) {
+        String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        message = String.format("%s%s%s=%s", textService.primaMaiuscola(tag), FORWARD, propertyName, propertyValue);
+        System.out.println(message);
+
+        ottenutoIntero = 0;
+        try {
+            ottenutoIntero = service.count(clazz, propertyName, propertyValue);
+            System.out.println(String.format("Risultato %s %d", UGUALE_SEMPLICE, ottenutoIntero));
+            System.out.println(VUOTA);
+            printCount(clazz, propertyName, propertyValue, previstoIntero, ottenutoIntero);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (flagRisultatiEsattiObbligatori) {
+            assertEquals(previstoIntero, ottenutoIntero);
+        }
+        System.out.println(VUOTA);
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
     @Order(6)
-    @DisplayName("6 - Count totale della classe (gson e spring)")
-    void count() {
-        System.out.println("6 - Count totale della collezione dalla classe");
-        System.out.println("metodo semplice per l'intera collection");
-        System.out.println("rimanda al metodo base con filtro (query) nullo");
-
-        System.out.println(VUOTA);
-        System.out.println("Test eseguito con typeSerializing=gson");
+    @DisplayName("6 - Count filtrato (gson) (WrapFiltro)")
+    void countWrapFiltroGson(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+        System.out.println("6 - Count filtrato (gson) (WrapFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
-        clazz = null;
-        ottenutoIntero = service.count(clazz);
-        assertTrue(ottenutoIntero == 0);
-        printCount(clazz, ottenutoIntero);
-
-        clazz = Utente.class;
-        ottenutoIntero = service.count(clazz);
-        assertTrue(ottenutoIntero == 0);
-        printCount(clazz, ottenutoIntero);
-
-        clazz = Giorno.class;
-        previstoIntero = 366;
-        ottenutoIntero = service.count(clazz);
-        assertEquals(previstoIntero, ottenutoIntero);
-        printCount(clazz, ottenutoIntero);
-
-        System.out.println(VUOTA);
-        System.out.println(VUOTA);
-        System.out.println("6 - Count totale della collezione dal nome");
-
-        sorgente = VUOTA;
-        ottenutoIntero = service.count(sorgente);
-        assertTrue(ottenutoIntero == 0);
-        printCount(sorgente, ottenutoIntero);
-
-        sorgente = COLLEZIONE_INESISTENTE;
-        ottenutoIntero = service.count(sorgente);
-        assertTrue(ottenutoIntero == 0);
-        printCount(sorgente, ottenutoIntero);
-
-        sorgente = COLLEZIONE_VUOTA;
-        ottenutoIntero = service.count(sorgente);
-        assertTrue(ottenutoIntero == 0);
-        printCount(sorgente, ottenutoIntero);
-
-        sorgente = COLLEZIONE_VALIDA;
-        previstoIntero = 366;
-        ottenutoIntero = service.count(sorgente);
-        assertEquals(previstoIntero, ottenutoIntero);
-        printCount(sorgente, ottenutoIntero);
-
-        System.out.println(VUOTA);
-        System.out.println(VUOTA);
-        System.out.println("Test eseguito con typeSerializing=spring");
-        FlowVar.typeSerializing = AETypeSerializing.spring;
-        clazz = null;
-        ottenutoIntero = service.count(clazz);
-        assertTrue(ottenutoIntero == 0);
-        printCount(clazz, ottenutoIntero);
-
-        clazz = Utente.class;
-        ottenutoIntero = service.count(clazz);
-        assertTrue(ottenutoIntero == 0);
-        printCount(clazz, ottenutoIntero);
-
-        clazz = Giorno.class;
-        previstoIntero = 366;
-        ottenutoIntero = service.count(clazz);
-        assertEquals(previstoIntero, ottenutoIntero);
-        printCount(clazz, ottenutoIntero);
-
-        System.out.println(VUOTA);
-        System.out.println(VUOTA);
-        System.out.println("6 - Count totale della collezione dal nome");
-
-        sorgente = VUOTA;
-        ottenutoIntero = service.count(sorgente);
-        assertTrue(ottenutoIntero == 0);
-        printCount(sorgente, ottenutoIntero);
-
-        sorgente = COLLEZIONE_INESISTENTE;
-        ottenutoIntero = service.count(sorgente);
-        assertTrue(ottenutoIntero == 0);
-        printCount(sorgente, ottenutoIntero);
-
-        sorgente = COLLEZIONE_VUOTA;
-        ottenutoIntero = service.count(sorgente);
-        assertTrue(ottenutoIntero == 0);
-        printCount(sorgente, ottenutoIntero);
-
-        sorgente = COLLEZIONE_VALIDA;
-        previstoIntero = 366;
-        ottenutoIntero = service.count(sorgente);
-        assertEquals(previstoIntero, ottenutoIntero);
-        printCount(sorgente, ottenutoIntero);
+        countWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "filter");
     }
 
-    @Test
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
     @Order(7)
-    @DisplayName("7 - Count filtrato (gson e spring) dalla classe")
-    void count2() {
-        System.out.println("7 - Count filtrato (gson e spring) dalla classe");
-        FlowVar.typeSerializing = AETypeSerializing.gson;
-
-        ottenutoIntero = service.count(clazz, bSon);
-        assertTrue(ottenutoIntero == 0);
-        System.out.println(String.format("Manca la classe"));
-
-        clazz = Utente.class;
-        ottenutoIntero = service.count(clazz, bSon);
-        assertTrue(ottenutoIntero == 0);
-        System.out.println(String.format("Manca il valore di bSon; l'intera collezione %s ha %s entities", clazz.getSimpleName(), ottenutoIntero));
-
-        clazz = Mese.class;
-        previstoIntero = 12;
-        ottenutoIntero = service.count(clazz, bSon);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("Manca il valore di bSon; l'intera collezione %s ha %s entities", clazz.getSimpleName(), ottenutoIntero));
-
-        clazz = Mese.class;
-        sorgente = "giorni";
-        sorgenteIntero = 30;
-        previstoIntero = 4;
-        bSon = new Document(sorgente, sorgenteIntero);
-        ottenutoIntero = service.count(clazz, bSon);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("La classe %s ha %s entities filtrate", clazz.getSimpleName(), ottenutoIntero));
-
-        System.out.println(VUOTA);
-        clazz = Mese.class;
-        sorgente = "giorni";
-        sorgenteIntero = 31;
-        previstoIntero = 7;
-        bSon = new Document(sorgente, sorgenteIntero);
-        ottenutoIntero = service.count(clazz, bSon);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("La classe %s ha %s entities filtrate", clazz.getSimpleName(), ottenutoIntero));
-
-        System.out.println(VUOTA);
-        clazz = Mese.class;
-        sorgente = "giorni";
-        sorgenteIntero = 28;
-        previstoIntero = 1;
-        bSon = new Document(sorgente, sorgenteIntero);
-        ottenutoIntero = service.count(clazz, bSon);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("La classe %s ha %s entities filtrate", clazz.getSimpleName(), ottenutoIntero));
-
-        System.out.println(VUOTA);
-        sorgente2 = Mese.class.getSimpleName().toLowerCase(Locale.ROOT);
-        sorgente = "giorni";
-        sorgenteIntero = 28;
-        previstoIntero = 1;
-        bSon = new Document(sorgente, sorgenteIntero);
-        ottenutoIntero = service.count(sorgente2, bSon);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("La classe %s ha %s entities filtrate", clazz.getSimpleName(), ottenutoIntero));
-
-        System.out.println(VUOTA);
-        sorgente2 = "non esiste";
-        sorgente = "giorni";
-        sorgenteIntero = 28;
-        previstoIntero = 0;
-        bSon = new Document(sorgente, sorgenteIntero);
-        ottenutoIntero = service.count(sorgente2, bSon);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("La classe %s ha %s entities filtrate", clazz.getSimpleName(), ottenutoIntero));
+    @DisplayName("7 - Count filtrato (spring) (WrapFiltro)")
+    void countWrapFiltroSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+        System.out.println("7 - Count filtrato (spring) (WrapFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        countWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "query");
     }
 
 
-    @Test
+    private void countWrapFiltro(final Class clazz, AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final String tag) {
+        String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        message = String.format("%s%s%s=%s", textService.primaMaiuscola(tag), FORWARD, propertyName, propertyValue);
+        System.out.println(message);
+
+        WrapFiltri wrapFiltri = null;
+        String propertyField;
+        ottenutoIntero = 0;
+
+        try {
+//            wrapFiltri = appContext.getBean(WrapFiltri.class, clazz, filter, propertyName, propertyValue);
+//            propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
+//            filter = wrapFiltri.getMappaFiltri() != null ? wrapFiltri.getMappaFiltri().get(propertyField).getType() : null;
+//            message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
+//            System.out.println(message);
+        } catch (Exception unErrore) {
+//            printError(unErrore);
+        int b=88;
+        }
+
+        if (wrapFiltri != null) {
+            try {
+                ottenutoIntero = service.count(clazz, wrapFiltri);
+                System.out.println(String.format("Risultato = %d", ottenutoIntero));
+                System.out.println(VUOTA);
+            } catch (AlgosException unErrore) {
+                printError(unErrore);
+            }
+            System.out.println(VUOTA);
+            printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, ottenutoIntero);
+        }
+        assertEquals(previstoIntero, ottenutoIntero);
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ")
     @Order(8)
-    @DisplayName("8 - Count gson filtrato (propertyName, propertyValue) dalla classe")
-    void count3() {
-        System.out.println("8 - Count gson filtrato (propertyName, propertyValue) dalla classe");
+    @DisplayName("8 - Fetch completo (gson) di una classe")
+    void fetchAllGson(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
+        System.out.println("8 - Fetch completo (gson) di una classe");
         FlowVar.typeSerializing = AETypeSerializing.gson;
-
-        clazz = null;
-        sorgente = VUOTA;
-        sorgente2 = VUOTA;
-        ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-        assertTrue(ottenutoIntero == 0);
-        System.out.println(String.format("Manca la classe"));
-
-        clazz = Mese.class;
-        sorgente = VUOTA;
-        sorgente2 = VUOTA;
-        previstoIntero = 12;
-        ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("Manca la propertyName e anche la propertyValue e restituisce tutta la collection"));
-
-        clazz = Mese.class;
-        sorgente = "giorni";
-        sorgente2 = VUOTA;
-        previstoIntero = 12;
-        ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("Manca la propertyValue e restituisce tutta la collection"));
-
-        clazz = Mese.class;
-        sorgente = VUOTA;
-        sorgenteIntero = 28;
-        previstoIntero = 12;
-        ottenutoIntero = service.count(clazz, sorgente, sorgenteIntero);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("Manca la propertyName e restituisce tutta la collection"));
-
-        clazz = Mese.class;
-        sorgente = "giorni";
-        sorgenteIntero = 31;
-        previstoIntero = 7;
-        ottenutoIntero = service.count(clazz, sorgente, sorgenteIntero);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("La classe %s ha %s entities filtrate con %s=%s", clazz.getSimpleName(), ottenutoIntero, sorgente, sorgenteIntero));
-
-        clazz = Mese.class;
-        sorgente = "giorni";
-        sorgenteIntero = 30;
-        previstoIntero = 4;
-        ottenutoIntero = service.count(clazz, sorgente, sorgenteIntero);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("La classe %s ha %s entities filtrate con %s=%s", clazz.getSimpleName(), ottenutoIntero, sorgente, sorgenteIntero));
-
-        clazz = Mese.class;
-        sorgente = "giorni";
-        sorgenteIntero = 28;
-        previstoIntero = 1;
-        ottenutoIntero = service.count(clazz, sorgente, sorgenteIntero);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("La classe %s ha %s entities filtrate con %s=%s", clazz.getSimpleName(), ottenutoIntero, sorgente, sorgenteIntero));
+        fetchAll(clazz, previstoIntero, risultatoEsatto);
     }
 
-
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ")
     @Order(9)
-    @DisplayName("9 - Count spring filtrato (propertyName, propertyValue) dalla classe")
-    void count4() {
-        System.out.println("9 - Count spring filtrato (propertyName, propertyValue) dalla classe");
-        System.out.println("9 - Funziona SOLO in MongoServiceIntegrationTest");
-        System.out.println(VUOTA);
+    @DisplayName("9 - Fetch completo (spring) di una classe")
+    void fetchAllSpring(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
+        System.out.println("9 - Fetch completo (spring) di una classe");
         FlowVar.typeSerializing = AETypeSerializing.spring;
+        fetchAll(clazz, previstoIntero, risultatoEsatto);
+    }
 
-        clazz = null;
-        sorgente = VUOTA;
-        sorgente2 = VUOTA;
-        ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-        assertTrue(ottenutoIntero == 0);
-        System.out.println(String.format("Manca la classe"));
+    private void fetchAll(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
+        String message;
+        message = String.format("Fetch completo di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
 
-        clazz = Mese.class;
-        sorgente = VUOTA;
-        sorgente2 = VUOTA;
-        previstoIntero = 12;
-        ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("Manca la propertyName e anche la propertyValue e restituisce tutta la collection"));
+        ottenutoIntero = 0;
+        try {
+            ottenutoIntero = service.count(clazz);
+        } catch (AlgosException unErrore) {
+        }
 
-        clazz = Mese.class;
-        sorgente = VUOTA;
-        sorgenteIntero = 28;
-        previstoIntero = 12;
-        ottenutoIntero = service.count(clazz, sorgente, sorgenteIntero);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("Manca la propertyName e restituisce tutta la collection"));
-
-        clazz = Mese.class;
-        sorgente = "giorni";
-        sorgente2 = VUOTA;
-        previstoIntero = 12;
-        ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("Manca la propertyValue e restituisce tutta la collection"));
-
-        clazz = Mese.class;
-        sorgente = "giorni";
-        sorgenteIntero = 31;
-        previstoIntero = 7;
-        ottenutoIntero = service.count(clazz, sorgente, sorgenteIntero);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("La classe %s ha %s entities filtrate con %s=%s", clazz.getSimpleName(), ottenutoIntero, sorgente, sorgenteIntero));
+        try {
+            listaBean = service.fetch(clazz);
+            System.out.println(String.format("Risultato count %s %d", UGUALE_SEMPLICE, ottenutoIntero));
+            System.out.println(String.format("Risultato fetch %s %d", UGUALE_SEMPLICE, listaBean.size()));
+            System.out.println(VUOTA);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (listaBean != null) {
+            if (ottenutoIntero == listaBean.size()) {
+                printWrapFiltro(clazz, previstoIntero, listaBean, risultatoEsatto);
+            }
+            else {
+                message = String.format("Qualcosa non quadra perché il fetch() ha recuperato %d entities mentre avrebbero dovuto essere %d secondo il count()", listaBean.size(), ottenutoIntero);
+                System.out.println(message);
+                assertEquals(previstoIntero, listaBean.size());
+            }
+        }
+        else {
+            if (previstoIntero != 0) {
+                System.out.println("Qualcosa non quadra perché erano previste entities che non sono state trovate");
+            }
+        }
     }
 
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(10)
-    @DisplayName("10 - Count gson filtrato (AFiltro) singolo")
-    void count5() {
-        System.out.println("10 - Count gson filtrato (AFiltro) singolo");
+    @DisplayName("10 - Fetch filtrato (gson) (propertyName, propertyValue)")
+    void fetchPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("10 - Fetch filtrato (gson) (propertyName, propertyValue)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
-        AFiltro filtro;
-
-        String filtroText = "co";
-        filtro = AFiltro.contains(NAME_NOME, filtroText);
-        previstoIntero = 6;
-        try {
-            ottenutoIntero = service.count(VIA_ENTITY_CLASS, filtro);
-        } catch (InvalidMongoDbApiUsageException | AQueryException unErrore) {
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        assertEquals(previstoIntero, ottenutoIntero);
-
-        String filtroStart = "v";
-        filtro = AFiltro.start(NAME_NOME, filtroStart);
-        previstoIntero = 4;
-        try {
-            ottenutoIntero = service.count(VIA_ENTITY_CLASS, filtro);
-        } catch (InvalidMongoDbApiUsageException | AQueryException unErrore) {
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        Assertions.assertEquals(previstoIntero, ottenutoIntero);
+        fetchProperty(clazz, propertyName, propertyValue, previstoIntero, "filter");
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(11)
-    @DisplayName("11 - Count gson filtrato (mappaFiltri)")
-    void count6() {
-        System.out.println("11 - Count gson filtrato (mappaFiltri)");
-        System.out.println(VUOTA);
-        FlowVar.typeSerializing = AETypeSerializing.gson;
-        AFiltro filtro;
-
-        String filtroStart = "v";
-        filtro = AFiltro.start(NAME_NOME, filtroStart);
-        mappaFiltri.put("a", filtro);
-
-        String filtroText = "co";
-        AFiltro filtro2 = AFiltro.contains(NAME_NOME, filtroText);
-        mappaFiltri.put("b", filtro2);
-        previstoIntero = 2;
-        try {
-            ottenutoIntero = service.count(VIA_ENTITY_CLASS, mappaFiltri);
-        } catch (AQueryException unErrore) {
-            System.out.println(unErrore.getCause().getMessage());
-            System.out.println(unErrore.getMessage());
-            assertNotNull(null);
-        }
-        Assertions.assertEquals(previstoIntero, ottenutoIntero);
+    @DisplayName("11 - Fetch filtrato (spring) (propertyName, propertyValue)")
+    void fetchPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("11 - Fetch filtrato (spring) (propertyName, propertyValue)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        fetchProperty(clazz, propertyName, propertyValue, previstoIntero, "query");
     }
 
 
-    @Test
+    private void fetchProperty(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero, final String tag) {
+        String message = String.format("Fetch filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        message = String.format("%s%s%s=%s", textService.primaMaiuscola(tag), FORWARD, propertyName, propertyValue);
+        System.out.println(message);
+
+        ottenutoIntero = 0;
+        try {
+            ottenutoIntero = service.count(clazz, propertyName, propertyValue);
+        } catch (AlgosException unErrore) {
+        }
+
+        try {
+            listaBean = service.fetch(clazz, propertyName, propertyValue);
+            System.out.println(String.format("Risultato count %s %d", UGUALE_SEMPLICE, ottenutoIntero));
+            System.out.println(String.format("Risultato fetch %s %d", UGUALE_SEMPLICE, listaBean.size()));
+            System.out.println(VUOTA);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (listaBean != null) {
+            if (ottenutoIntero == listaBean.size()) {
+                printWrapFiltro(clazz, previstoIntero, listaBean, true);
+            }
+            else {
+                message = String.format("Qualcosa non quadra perché il fetch() ha recuperato %d entities mentre avrebbero dovuto essere %d secondo il count()", listaBean.size(), ottenutoIntero);
+                System.out.println(message);
+                assertEquals(previstoIntero, listaBean.size());
+            }
+        }
+        else {
+            if (previstoIntero != 0) {
+                System.out.println("Qualcosa non quadra perché erano previste entities che non sono state trovate");
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
     @Order(12)
-    @DisplayName("12 - Crea un Doc (spring) da mongoDb con keyId")
-    void findDocById() {
-        System.out.println("12 - Crea un Doc (spring) da mongoDb con keyId");
-        FlowVar.typeSerializing = AETypeSerializing.spring;
-
-        System.out.println(VUOTA);
-        clazz = FlowCost.class;
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-        }
-        printDoc(doc);
-
-        System.out.println(VUOTA);
-        clazz = Via.class;
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-        }
-        printDoc(doc);
-
-        System.out.println(VUOTA);
-        clazz = Via.class;
-        sorgente = "sbagliata";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-        }
-        printDoc(doc);
-
-        System.out.println(VUOTA);
-        clazz = Via.class;
-        sorgente = "piazza";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-            System.out.println(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        printDoc(doc);
-
-        System.out.println(VUOTA);
-        clazz = Regione.class;
-        sorgente = "calabria";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-            System.out.println(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        printDoc(doc);
+    @DisplayName("12 - Fetch filtrato (gson) (WrapFiltro)")
+    void fetchWrapFiltroGson(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+        System.out.println("12 - Fetch filtrato (gson) (WrapFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        fetchWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "filter");
     }
 
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
     @Order(13)
-    @DisplayName("13 - Crea un Doc (gson) da mongoDb con keyId")
-    void findDocById2() {
-        System.out.println("13 - Crea un Doc (gson) da mongoDb con keyId");
-        FlowVar.typeSerializing = AETypeSerializing.gson;
-
-        System.out.println(VUOTA);
-        clazz = FlowCost.class;
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-        }
-        printDoc(doc);
-
-        System.out.println(VUOTA);
-        clazz = Via.class;
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-        }
-        printDoc(doc);
-
-        System.out.println(VUOTA);
-        clazz = Via.class;
-        sorgente = "sbagliata";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-        }
-        printDoc(doc);
-
-        System.out.println(VUOTA);
-        clazz = Via.class;
-        sorgente = "piazza";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-            System.out.println(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        printDoc(doc);
-
-        System.out.println(VUOTA);
-        clazz = Regione.class;
-        sorgente = "calabria";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-            System.out.println(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        printDoc(doc);
+    @DisplayName("13 - Fetch filtrato (spring) (WrapFiltro)")
+    void fetchWrapFiltroSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+        System.out.println("13 - Fetch filtrato (spring) (WrapFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        fetchWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "query");
     }
 
 
-    @Test
+    void fetchWrapFiltro(final Class clazz, AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final String tag) {
+        String message = String.format("Fetch filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        message = String.format("%s%s%s=%s", textService.primaMaiuscola(tag), FORWARD, propertyName, propertyValue);
+        System.out.println(message);
+
+        WrapFiltri wrapFiltri = null;
+        String propertyField;
+
+        try {
+//            wrapFiltri = appContext.getBean(WrapFiltri.class, clazz, filter, propertyName, propertyValue);
+//            propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
+//            filter = wrapFiltri.getMappaFiltri().get(propertyField).getType();
+//            message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
+//            System.out.println(message);
+        } catch (Exception unErrore) {
+//            printError(unErrore);
+            int c=89;
+        }
+
+
+        if (wrapFiltri != null) {
+            ottenutoIntero = 0;
+            try {
+                ottenutoIntero = service.count(clazz, wrapFiltri);
+            } catch (AlgosException unErrore) {
+            }
+
+            try {
+                listaBean = service.fetch(clazz, wrapFiltri);
+                System.out.println(String.format("Risultato count %s %d", UGUALE_SEMPLICE, ottenutoIntero));
+                System.out.println(String.format("Risultato fetch %s %d", UGUALE_SEMPLICE, listaBean.size()));
+            } catch (AlgosException unErrore) {
+                printError(unErrore);
+            }
+            System.out.println(VUOTA);
+            assertEquals(previstoIntero, listaBean.size());
+            printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, listaBean);
+        }
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ")
     @Order(14)
-    @DisplayName("14 - Crea una entity (spring) da un Doc con keyId")
-    void creaByDoc() {
-        System.out.println("14 - Crea una entity (spring) da un Doc con keyId");
+    @DisplayName("14 - Fetch offsetLimit (gson)")
+    void fetchOffsetLimitGson(final Class clazz, final int previstoIntero, final boolean risultatoEsatto, final int offset, final int limit) {
+        System.out.println("14 - Fetch offsetLimit (gson)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        fetchOffsetLimit(clazz, offset, limit);
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ")
+    @Order(15)
+    @DisplayName("15 - Fetch offsetLimit (spring)")
+    void fetchOffsetLimitSpring(final Class clazz, final int previstoIntero, final boolean risultatoEsatto, final int offset, final int limit) {
+        System.out.println("15 - Fetch offsetLimit (spring)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        fetchOffsetLimit(clazz, offset, limit);
+    }
+
+    private void fetchOffsetLimit(final Class clazz, final int offset, final int limit) {
+        String message;
+        message = String.format("Fetch con offset e limit di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        System.out.println(String.format("Offset %s %d", UGUALE_SEMPLICE, offset));
+        System.out.println(String.format("Limit %s %d", UGUALE_SEMPLICE, limit));
+        System.out.println(VUOTA);
+
+        try {
+            listaBean = service.fetch(clazz, null, offset, limit);
+            System.out.println(VUOTA);
+            printLista(listaBean);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+    }
+
+    @Test
+    @Order(20)
+    @DisplayName("20 - WrapFiltro")
+    void wrapFiltro() {
+        System.out.println("20 - WrapFiltro");
+        clazz = STATO_ENTITY_CLASS;
+        String keyField = "continente";
+        String propertyField = "continente.$id";
+        Continente propertyValue = null;
+        int offset = 4;
+        int limit = 5;
+
+        try {
+            propertyValue = (Continente) service.find(Continente.class, "Oceania");
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        wrapFiltri.entityClazz = clazz;
+        try {
+            wrapFiltri.regola(AETypeFilter.link, propertyField, propertyValue);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        try {
+            listaBean = service.fetch(clazz, wrapFiltri, offset, limit);
+            System.out.println(VUOTA);
+            printLista(listaBean);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        //        mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
+    }
+
+    //    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_KEY_ID")
+    @Order(12)
+    @DisplayName("12 - Crea un Doc (gson) da mongoDb con keyId")
+    void creaDocById(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        System.out.println("12 - Crea un Doc (gson) da mongoDb con keyId");
+
+        try {
+            doc = service.findDocById(clazz, keyPropertyValue);
+            printDoc(clazz, keyPropertyValue, doc);
+        } catch (AlgosException unErrore) {
+            System.out.println(String.format("Ricerca di %s.%s", clazz != null ? clazz.getSimpleName() : VUOTA, keyPropertyValue));
+            printError(unErrore);
+        }
+        if (valida) {
+            assertNotNull(doc);
+        }
+        else {
+            assertNull(doc);
+        }
+    }
+
+    //    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
+    @Order(13)
+    @DisplayName("13 - Crea un Doc (gson) da mongoDb con propertyName")
+    void creaDocByProperty(final Class clazz, final String propertyName, final Serializable propertyValue, final int count, final boolean valida) {
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        System.out.println("13 - Crea un Doc (gson) da mongoDb con propertyName");
+
+        try {
+            doc = service.findDocByProperty(clazz, propertyName, propertyValue);
+            printDoc(clazz, propertyName, propertyValue, doc);
+        } catch (AlgosException unErrore) {
+            System.out.println(String.format("Ricerca di %s.%s=%s", clazz != null ? clazz.getSimpleName() : VUOTA, propertyName, propertyValue));
+            printError(unErrore);
+        }
+        if (valida) {
+            assertNotNull(doc);
+        }
+        else {
+            assertNull(doc);
+        }
+    }
+
+
+    //    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_KEY_ID")
+    @Order(14)
+    @DisplayName("14 - Crea una entity (gson) da un Doc con keyId")
+    void creaEntityByDocGson(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        System.out.println("14 - Crea una entity (gson) da un Doc con keyId");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        creaEntity1415(clazz, keyPropertyValue, valida);
+    }
+
+
+    //    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_KEY_ID")
+    @Order(15)
+    @DisplayName("15 - Crea una entity (spring) da un Doc con keyId")
+    void creaEntityByDocSpring(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        System.out.println("15 - Crea una entity (spring) da un Doc con keyId");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        creaEntity1415(clazz, keyPropertyValue, valida);
+    }
+
+
+    void creaEntity1415(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        doc = null;
+        entityBean = null;
+
+        try {
+            doc = service.findDocById(clazz, keyPropertyValue);
+        } catch (AlgosException unErrore) {
+            System.out.println(String.format("Ricerca di %s.%s", clazz != null ? clazz.getSimpleName() : VUOTA, keyPropertyValue));
+            printError(unErrore);
+        }
+        if (valida) {
+            assertNotNull(doc);
+        }
+        else {
+            assertNull(doc);
+        }
+        try {
+            entityBean = service.creaByDoc(clazz, doc);
+            System.out.println(String.format("Creata la entity [%s] della classe '%s'", keyPropertyValue, clazz.getSimpleName()));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        System.out.println(VUOTA);
+    }
+
+
+    //    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_KEY_ID")
+    @Order(16)
+    @DisplayName("16 - Find (gson) entityBean by keyId")
+    void findByIdGson(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        System.out.println("16 - Find (gson) entityBean by keyId");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        findById1617(clazz, keyPropertyValue, valida);
+    }
+
+
+    //    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_KEY_ID")
+    @Order(17)
+    @DisplayName("17 - Find (spring) entityBean by keyId")
+    void findByIdSpring(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        System.out.println("17 - Find (spring) entityBean by keyId");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        findById1617(clazz, keyPropertyValue, valida);
+    }
+
+
+    void findById1617(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
         FlowVar.typeSerializing = AETypeSerializing.spring;
 
-        System.out.println(VUOTA);
         entityBean = null;
         try {
-            entityBean = service.creaByDoc(sorgente, doc);
+            entityBean = service.find(clazz, keyPropertyValue);
+            printEntityBeanFromKeyId(clazz, keyPropertyValue, entityBean, previstoIntero);
+        } catch (AlgosException unErrore) {
+            System.out.println(String.format("Ricerca di %s.%s", clazz != null ? clazz.getSimpleName() : VUOTA, keyPropertyValue));
+            printError(unErrore);
+        }
+        if (valida) {
+            assertNotNull(entityBean);
+        }
+        else {
             assertNull(entityBean);
-        } catch (AlgosException unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
-        }
-
-        System.out.println(VUOTA);
-        sorgente = "Via";
-        entityBean = null;
-        try {
-            entityBean = service.creaByDoc(sorgente, doc);
-            assertNull(entityBean);
-        } catch (AlgosException unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
-        }
-
-        System.out.println(VUOTA);
-        clazz = Via.class;
-        sorgente = "piazza";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        printDoc(doc);
-        System.out.println(VUOTA);
-        entityBean = null;
-        try {
-            entityBean = service.creaByDoc(clazz, doc);
-            assertNotNull(entityBean);
-            assertNotNull(entityBean.id);
-            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
-        } catch (AlgosException unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
-            assertNotNull(null);
-        }
-
-        System.out.println(VUOTA);
-        clazz = Mese.class;
-        sorgente = "marzo";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        printDoc(doc);
-        System.out.println(VUOTA);
-        entityBean = null;
-        try {
-            entityBean = service.creaByDoc(clazz, doc);
-            assertNotNull(entityBean);
-            assertNotNull(entityBean.id);
-            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
-        } catch (AlgosException unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
-            assertNotNull(null);
-        }
-
-        System.out.println(VUOTA);
-        clazz = Giorno.class;
-        sorgente = "2agosto";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        printDoc(doc);
-        System.out.println(VUOTA);
-        entityBean = null;
-        try {
-            entityBean = service.creaByDoc(clazz, doc);
-            assertNotNull(entityBean);
-            assertNotNull(entityBean.id);
-            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
-        } catch (AlgosException unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
-            assertNotNull(entityBean);
-            assertNotNull(null);
         }
     }
 
 
-    @Test
-    @Order(15)
-    @DisplayName("15 - Crea una entity (gson) da un Doc con keyId")
-    void creaByDoc2() {
-        System.out.println("15 - Crea una entity (gson) da un Doc con keyId");
+    //    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
+    @Order(22)
+    @DisplayName("22 - Find (gson) entityBean by property")
+    void findByPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("22 - Find (gson) entityBean by property");
         FlowVar.typeSerializing = AETypeSerializing.gson;
-
-        System.out.println(VUOTA);
-        clazz = Via.class;
-        sorgente = "piazza";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        printDoc(doc);
-        System.out.println(VUOTA);
-        entityBean = null;
-        try {
-            entityBean = service.creaByDoc(clazz, doc);
-            assertNotNull(entityBean);
-            assertNotNull(entityBean.id);
-            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
-        } catch (AlgosException unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
-            assertNotNull(null);
-        }
-
-        System.out.println(VUOTA);
-        clazz = Mese.class;
-        sorgente = "marzo";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        printDoc(doc);
-        System.out.println(VUOTA);
-        entityBean = null;
-        try {
-            entityBean = service.creaByDoc(clazz, doc);
-            assertNotNull(entityBean);
-            assertNotNull(entityBean.id);
-            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
-        } catch (AlgosException unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
-            assertNotNull(null);
-        }
-
-        System.out.println(VUOTA);
-        clazz = Giorno.class;
-        sorgente = "2agosto";
-        doc = null;
-        try {
-            doc = service.findDocById(clazz, sorgente);
-            assertNotNull(doc);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-        printDoc(doc);
-        System.out.println(VUOTA);
-        entityBean = null;
-        try {
-            entityBean = service.creaByDoc(clazz, doc);
-            assertNotNull(entityBean);
-            assertNotNull(entityBean.id);
-            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
-        } catch (AlgosException unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
-            assertNotNull(null);
-        }
+        findByProperty2223(clazz, propertyName, propertyValue, previstoIntero);
     }
 
-    @Test
-    @Order(16)
-    @DisplayName("16 - Crea una entity (gson) da mongoDb con keyId")
-    void crea() {
-        System.out.println("16 - Crea una entity (gson) da mongoDb con keyId");
-        FlowVar.typeSerializing = AETypeSerializing.gson;
 
-        System.out.println(VUOTA);
-        clazz = Via.class;
-        sorgente = "piazza";
-        entityBean = null;
-        try {
-            entityBean = service.crea(clazz, sorgente);
-            assertNotNull(entityBean);
-            assertNotNull(entityBean.id);
-            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
-        } catch (Exception unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
-            assertNotNull(null);
-        }
+    //    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
+    @Order(23)
+    @DisplayName("23 - Find (spring) entityBean by property")
+    void findByPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("23 - Find (spring) entityBean by property");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        findByProperty2223(clazz, propertyName, propertyValue, previstoIntero);
+    }
 
-        System.out.println(VUOTA);
-        clazz = Giorno.class;
-        sorgente = "2agosto";
-        entityBean = null;
-        try {
-            entityBean = service.crea(clazz, sorgente);
-            assertNotNull(entityBean);
-            assertNotNull(entityBean.id);
-            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
-        } catch (Exception unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
-            assertNotNull(null);
-        }
 
-        System.out.println(VUOTA);
-        clazz = Regione.class;
-        sorgente = "calabria";
-        entityBean = null;
+    void findByProperty2223(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
         try {
-            entityBean = service.crea(clazz, sorgente);
-            assertNotNull(entityBean);
-            assertNotNull(entityBean.id);
-            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
-        } catch (Exception unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
-            assertNotNull(null);
+            entityBean = service.find(clazz, propertyName, propertyValue);
+            printEntityBeanFromProperty(clazz, propertyName, propertyValue, entityBean, previstoIntero);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
         }
     }
 
 
-    @Test
-    @Order(18)
-    @DisplayName("18 - Save base (gson) di una entity")
+    //    @Test
+    @Order(30)
+    @DisplayName("30 - Save base (gson) di una entity")
     void save() {
-        System.out.println("18 - Save base (gson) di una entity");
+        System.out.println("30 - Save base (gson) di una entity");
         FlowVar.typeSerializing = AETypeSerializing.gson;
         Company company = null;
         Company companyReborn = null;
@@ -1068,64 +747,10 @@ public class MongoServiceTest extends ATest {
         try {
             //            ((MongoService) service).save(company);
             companyService.save(company);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             //            System.out.println(unErrore);
             loggerService.info(unErrore.getMessage());
         }
-    }
-
-    //    @Test
-    @Order(13)
-    @DisplayName("13 - Trova singola entity by id")
-    void findById() {
-        System.out.println("13 - Trova singola entity by id");
-
-        //            sorgente = "104";
-        //            clazz = Anno.class;
-        //            entityBean = service.findById(clazz, sorgente);
-        //            assertNotNull(entityBean);
-        //            System.out.println(VUOTA);
-        //            System.out.println(String.format("Recupero di un bean di classe %s", clazz.getSimpleName()));
-        //            System.out.println(entityBean);
-        //
-        //            sorgente = "via";
-        //            clazz = Via.class;
-        //            entityBean = service.findById(clazz, sorgente);
-        //            assertNotNull(entityBean);
-        //            System.out.println(VUOTA);
-        //            System.out.println(String.format("Recupero di un bean di classe %s", clazz.getSimpleName()));
-        //            System.out.println(entityBean);
-
-        sorgente = "terzo";
-        clazz = Company.class;
-        try {
-            entityBean = service.findById(clazz, sorgente);
-        } catch (Exception unErrore) {
-        }
-        assertNotNull(entityBean);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Recupero di un bean di classe %s", clazz.getSimpleName()));
-        System.out.println(entityBean);
-    }
-
-
-    //    @Test
-    @Order(6)
-    @DisplayName("6 - Trova singola entity by key")
-    void findByKey() {
-        System.out.println("6 - Trova singola entity by key");
-
-        clazz = Giorno.class;
-        sorgente = "titolo";
-        sorgente2 = "4 novembre";
-        try {
-            entityBean = service.findByProperty(clazz, sorgente, sorgente2);
-        } catch (AMongoException unErrore) {
-        }
-        assertNotNull(entityBean);
-        System.out.println(VUOTA);
-        System.out.println(String.format("EntityBean di classe %s recuperato dal valore '%s' della property '%s'", clazz.getSimpleName(), sorgente2, sorgente));
-        System.out.println(entityBean);
     }
 
 
@@ -1144,8 +769,8 @@ public class MongoServiceTest extends ATest {
         clazz = Via.class;
         sorgente = "corte";
         try {
-            entityBean = service.findByKey(clazz, sorgente);
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz, sorgente);
+        } catch (AlgosException unErrore) {
         }
         assertNotNull(entityBean);
         originario = ((Via) entityBean).getOrdine();
@@ -1161,13 +786,13 @@ public class MongoServiceTest extends ATest {
             //            jsonInString = gSonService.legge(entityBean);
             //            System.out.println(String.format("Stringa in formato json -> %s", jsonInString));
             ((MongoService) service).save(entityBean);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             System.out.println(unErrore);
         }
 
         //--ri-leggo la entityBean (dal vecchio id) controllo la property per vedere se è stata modificata e registrata
         try {
-            entityBean = service.findById(clazz, entityBean.getId());
+            entityBean = service.find(clazz, entityBean.getId());
         } catch (Exception unErrore) {
         }
         modificato = ((Via) entityBean).getOrdine();
@@ -1181,14 +806,14 @@ public class MongoServiceTest extends ATest {
         //--ri-registro la entityBean come in origine
         try {
             ((MongoService) service).save(entityBean);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             System.out.println(unErrore);
         }
 
         //--ri-leggo la entityBean e ri-controllo la property
         try {
-            entityBean = service.findByKey(clazz, sorgente);
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz, sorgente);
+        } catch (AlgosException unErrore) {
         }
         assertNotNull(entityBean);
         finale = ((Via) entityBean).getOrdine();
@@ -1203,16 +828,23 @@ public class MongoServiceTest extends ATest {
     @DisplayName("8 - Trova l'ordine successivo")
     void sss() {
         System.out.println("8 - Trova l'ordine successivo\"");
+        boolean isExistsCollection = false;
 
         clazz = Via.class;
         sorgente = "ordine";
         try {
-            entityBean = service.findByKey(clazz, sorgente);
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz, sorgente);
+        } catch (AlgosException unErrore) {
         }
 
         //--il database mongoDB potrebbe anche essere vuoto
-        if (service.isExistsCollection(clazz.getSimpleName().toLowerCase())) {
+        try {
+            isExistsCollection = service.isExistsCollection(clazz);
+        } catch (AlgosException unErrore) {
+            System.out.println(unErrore);
+        }
+
+        if (isExistsCollection) {
             try {
                 ottenutoIntero = service.getNewOrder(clazz, sorgente);
             } catch (AMongoException unErrore) {
@@ -1247,9 +879,7 @@ public class MongoServiceTest extends ATest {
         inizio = System.currentTimeMillis();
         try {
             listaBean = ((MongoService) service).fetch(sorgenteClasse);
-        } catch (AQueryException unErrore) {
-            loggerService.error(unErrore, this.getClass(), "fetch");
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             loggerService.error(unErrore, this.getClass(), "fetch");
         }
         assertNotNull(listaBean);
@@ -1261,27 +891,13 @@ public class MongoServiceTest extends ATest {
         inizio = System.currentTimeMillis();
         try {
             listaBean = ((MongoService) service).fetch(sorgenteClasse);
-        } catch (AQueryException unErrore) {
-            loggerService.error(unErrore, this.getClass(), "fetch");
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             loggerService.error(unErrore, this.getClass(), "fetch");
         }
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), textService.format(listaBean.size()), dateService.deltaTextEsatto(inizio)));
     }
-
-    //    @ParameterizedTest
-    //    @MethodSource(value = "COLLEZIONI")
-    //    @Order(2)
-    //    @DisplayName("2 - Stato delle collezioni")
-    //    void testWithStringParameterOld(String collectionName) {
-    //        System.out.println("2 - Stato delle collezioni");
-    //
-    //        sorgente = collectionName;
-    //        ottenutoBooleano = service.isExists(sorgente);
-    //        assertFalse(ottenutoBooleano);
-    //    }
 
 
     /**
@@ -1299,14 +915,19 @@ public class MongoServiceTest extends ATest {
     void tearDownAll() {
     }
 
-    void printDoc(final Document doc) {
+
+    void printDoc(final Class clazz, Serializable keyId, final Document doc) {
+        printDoc(clazz, FlowCost.FIELD_ID, keyId, doc);
+    }
+
+
+    void printDoc(final Class clazz, final String propertyName, final Serializable propertyValue, final Document doc) {
         String key;
         Object value;
-        System.out.println(VUOTA);
 
         if (doc != null) {
-            System.out.println(String.format("Il documento contiene %s parametri chiave=valore, più keyID e classe", doc.size() - 2));
-            System.out.println(VUOTA);
+            System.out.println(String.format("Ricerca di %s.%s=%s", clazz != null ? clazz.getSimpleName() : VUOTA, propertyName, propertyValue));
+            System.out.println(String.format("Trovato: il documento contiene %s parametri chiave=valore, più keyID e classe", doc.size() - 2));
             for (Map.Entry<String, Object> mappa : doc.entrySet()) {
                 key = mappa.getKey();
                 value = mappa.getValue();
@@ -1316,6 +937,7 @@ public class MongoServiceTest extends ATest {
         else {
             System.out.println(String.format("Nessun documento trovato"));
         }
+        System.out.println(VUOTA);
     }
 
 }

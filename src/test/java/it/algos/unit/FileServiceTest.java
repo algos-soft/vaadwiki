@@ -4,11 +4,14 @@ import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.backend.service.FileService.*;
 import org.apache.tomcat.util.http.fileupload.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 
 import java.io.*;
 import java.nio.file.*;
@@ -1819,51 +1822,69 @@ public class FileServiceTest extends ATest {
         print(listaStr);
     }
 
-
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "SIMPLE")
+    @EmptySource
     @Order(47)
-    @DisplayName("47 - getCanonicalName")
-    public void getCanonicalName() {
-        System.out.println("47 - getCanonicalName");
-        System.out.println("canonicalName di una singola classe esistente nella directory 'package' delle sue subdirectories");
+    @DisplayName("47 - getCanonicalName from simpleName")
+    /*
+      47 - getCanonicalName from simpleName
+      canonicalName di una singola classe esistente nella directory 'package' delle sue subdirectories
+      ricerca partendo dal simpleName
+     */
+    void getCanonicalSimpleName(String simpleName) {
+        sorgente = simpleName;
+        try {
+            ottenuto = service.getCanonicalName(sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printOttenuto(sorgente, ottenuto);
         System.out.println(VUOTA);
-
-        sorgente = "Via";
-        try {
-            ottenuto = service.getCanonicalName(sorgente);
-        } catch (Exception unErrore) {
-        }
-        System.out.print(sorgente);
-        System.out.print(FORWARD);
-        System.out.println(ottenuto);
-
-        sorgente = "Bolla";
-        try {
-            ottenuto = service.getCanonicalName(sorgente);
-        } catch (Exception unErrore) {
-        }
-        System.out.print(sorgente);
-        System.out.print(FORWARD);
-        System.out.println(ottenuto);
-
-        sorgente = "Mese";
-        try {
-            ottenuto = service.getCanonicalName(sorgente);
-        } catch (Exception unErrore) {
-        }
-        System.out.print(sorgente);
-        System.out.print(FORWARD);
-        System.out.println(ottenuto);
-
-        sorgente = "StatoLogicList";
-        try {
-            ottenuto = service.getCanonicalName(sorgente);
-        } catch (Exception unErrore) {
-        }
-        System.out.print(sorgente);
-        System.out.print(FORWARD);
-        System.out.println(ottenuto);
     }
+
+    @ParameterizedTest
+    @MethodSource(value = "PATH")
+    @EmptySource
+    @Order(48)
+    @DisplayName("48 - getCanonicalName from pathName")
+    /*
+      48 - getCanonicalName from pathname
+      canonicalName di una singola classe esistente nella directory 'package' delle sue subdirectories
+      ricerca partendo dal canonicalName
+     */
+    void getCanonicalPathName(String pathname) {
+        sorgente = pathname;
+        try {
+            ottenuto = service.getCanonicalName(sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printOttenuto(sorgente, ottenuto);
+        System.out.println(VUOTA);
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "CANONICAL")
+    @EmptySource
+    @Order(49)
+    @DisplayName("49 - getCanonicalName from canonicalName")
+    /*
+      49 - getCanonicalName from canonicalName
+      canonicalName di una singola classe esistente nella directory 'package' delle sue subdirectories
+      ricerca partendo dal canonicalName
+     */
+    void getCanonicalName(String canonicalName) {
+        sorgente = canonicalName;
+        try {
+            ottenuto = service.getCanonicalName(sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printOttenuto(sorgente, ottenuto);
+        System.out.println(VUOTA);
+    }
+
 
     private void printPath(String path, String dir, String pathOttenuto) {
         System.out.println("Path completo: " + path);

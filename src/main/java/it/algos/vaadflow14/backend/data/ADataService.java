@@ -70,32 +70,32 @@ public abstract class ADataService {
     }// end of constructor
 
 
-    /**
-     * Returns the number of entities available.
-     *
-     * @return the number of entities
-     */
-    public int count() {
-        return ((MongoService) mongo).count(entityClass);//@todo da controllare
-    }// end of method
+//    /**
+//     * Returns the number of entities available.
+//     *
+//     * @return the number of entities
+//     */
+//    public int count() {
+//        return ((MongoService) mongo).count(entityClass);//@todo da controllare
+//    }// end of method
 
 
-    /**
-     * Metodo invocato da ABoot (o da una sua sottoclasse) <br>
-     * <p>
-     * Creazione di una collezione - Solo se non ci sono records
-     */
-    public void loadData() {
-        int numRec = this.count();
-
-        if (numRec == 0) {
-            numRec = creaAll();
-            log.warn("Algos - Data. La collezione " + collectionName + " è stata creata: " + numRec + " schede");
-        }
-        else {
-            log.info("Algos - Data. La collezione " + collectionName + " è già presente: " + numRec + " schede");
-        }// end of if/else cycle
-    }// end of method
+//    /**
+//     * Metodo invocato da ABoot (o da una sua sottoclasse) <br>
+//     * <p>
+//     * Creazione di una collezione - Solo se non ci sono records
+//     */
+//    public void loadData() {
+//        int numRec = this.count();
+//
+//        if (numRec == 0) {
+//            numRec = creaAll();
+//            log.warn("Algos - Data. La collezione " + collectionName + " è stata creata: " + numRec + " schede");
+//        }
+//        else {
+//            log.info("Algos - Data. La collezione " + collectionName + " è già presente: " + numRec + " schede");
+//        }// end of if/else cycle
+//    }// end of method
 
 
     /**

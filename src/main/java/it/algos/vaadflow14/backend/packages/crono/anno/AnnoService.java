@@ -62,12 +62,12 @@ public class AnnoService extends AService {
      */
     private static final long serialVersionUID = 1L;
 
-//    /**
-//     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-//     * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
-//     * al termine del ciclo init() del costruttore di questa classe <br>
-//     */
-//    private SecoloService secoloService;
+    //    /**
+    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+    //     * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
+    //     * al termine del ciclo init() del costruttore di questa classe <br>
+    //     */
+    //    private SecoloService secoloService;
 
 
     /**
@@ -93,7 +93,7 @@ public class AnnoService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final int ordine, final String titolo, final boolean bisestile, final Secolo secolo) {
+    private boolean creaReset(final int ordine, final String titolo, final boolean bisestile, final Secolo secolo) throws AlgosException {
         return super.creaReset(newEntity(ordine, titolo, bisestile, secolo));
     }
 
@@ -147,7 +147,7 @@ public class AnnoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Anno findById(final String keyID) throws AMongoException {
+    public Anno findById(final String keyID) throws AlgosException {
         return (Anno) super.findById(keyID);
     }
 
@@ -162,7 +162,7 @@ public class AnnoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Anno findByKey(final Serializable keyValue) throws AMongoException {
+    public Anno findByKey(final Serializable keyValue) throws AlgosException {
         return (Anno) super.findByKey(keyValue);
     }
 
@@ -178,7 +178,7 @@ public class AnnoService extends AService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Anno findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
+    public Anno findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
         return (Anno) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -203,10 +203,17 @@ public class AnnoService extends AService {
 
     private AIResult checkSecolo() {
         String packageName = Anno.class.getSimpleName().toLowerCase();
-        String collection = "secolo";
+        Class clazz = Secolo.class;
+        boolean isValida = false;
 
-        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
-            return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
+        try {
+            isValida = mongo.isValidCollection(clazz);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "checkSecolo");
+        }
+
+        if (isValida) {
+            return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, clazz.getSimpleName()));
         }
         else {
             if (secoloService == null) {
@@ -267,8 +274,11 @@ public class AnnoService extends AService {
             secolo = (Secolo) ((MongoService) mongo).findByIdOld(Secolo.class, titoloSecolo);//@todo da controllare
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
-                if (creaReset(ordine, titolo, bisestile, secolo)) {
+                try {
+                    creaReset(ordine, titolo, bisestile, secolo);
                     numRec++;
+                } catch (AlgosException unErrore) {
+                    logger.warn(unErrore, this.getClass(), "reset");
                 }
             }
         }
@@ -284,8 +294,11 @@ public class AnnoService extends AService {
             secolo = (Secolo) ((MongoService) mongo).findByIdOld(Secolo.class, titoloSecolo);//@todo da controllare
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
-                if (creaReset(ordine, titolo, bisestile, secolo)) {
+                try {
+                    creaReset(ordine, titolo, bisestile, secolo);
                     numRec++;
+                } catch (AlgosException unErrore) {
+                    logger.warn(unErrore, this.getClass(), "reset");
                 }
             }
         }

@@ -5,6 +5,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.fields.*;
@@ -141,7 +142,7 @@ public class BeanService extends AbstractService {
             return false;
         }
 
-//        entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent);
+        //        entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent);
         System.out.println("Errore in BeanService.isModificata");
         return !entityBeanCurrent.equals(entityBeanRegistrataSulDatabaseMongo);
     }
@@ -171,7 +172,7 @@ public class BeanService extends AbstractService {
      */
     public Map<String, WrapDueObject> getMappaModifiche(AEntity entityBeanNew, AEntity entityBeanOld) {
         Map<String, WrapDueObject> mappaModifiche = new LinkedHashMap<>();
-        List<String> listaProperties;
+        List<String> listaProperties = null;
         Object oldValue;
         Object newValue;
         WrapDueObject wrap;
@@ -184,7 +185,11 @@ public class BeanService extends AbstractService {
             return getMappaModifichePreferenza((Preferenza) entityBeanNew, (Preferenza) entityBeanOld);
         }
 
-        listaProperties = reflection.getFieldsName(entityBeanNew.getClass());
+        try {
+            listaProperties = reflection.getFieldsName(entityBeanNew.getClass());
+        } catch (AlgosException unErrore) {
+        }
+
         for (String key : listaProperties) {
             oldValue = entityBeanOld != null ? reflection.getPropertyValue(entityBeanOld, key) : null;
             newValue = reflection.getPropertyValue(entityBeanNew, key);
@@ -219,13 +224,17 @@ public class BeanService extends AbstractService {
      */
     public Map<String, WrapDueObject> getMappaModifichePreferenza(Preferenza entityBeanNew, Preferenza entityBeanOld) {
         Map<String, WrapDueObject> mappaModifiche = new LinkedHashMap<>();
-        List<String> listaProperties;
+        List<String> listaProperties = null;
         Object oldValue;
         Object newValue;
         WrapDueObject wrap;
         AETypePref type = entityBeanOld.type;
 
-        listaProperties = reflection.getFieldsName(entityBeanNew.getClass());
+        try {
+            listaProperties = reflection.getFieldsName(entityBeanNew.getClass());
+        } catch (AlgosException unErrore) {
+        }
+
         for (String key : listaProperties) {
             oldValue = entityBeanOld != null ? reflection.getPropertyValue(entityBeanOld, key) : null;
             newValue = reflection.getPropertyValue(entityBeanNew, key);

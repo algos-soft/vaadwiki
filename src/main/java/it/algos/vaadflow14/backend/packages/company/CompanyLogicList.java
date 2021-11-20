@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 //Vaadin flow
+@PageTitle("Azienda")
 @Route(value = "company", layout = MainLayout.class)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)

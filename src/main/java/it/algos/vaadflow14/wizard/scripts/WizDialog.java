@@ -177,6 +177,9 @@ public abstract class WizDialog extends Dialog {
 
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
+
+        wizService.printInfoStart();
+        wizService.printInfoCheck();
     }
 
     /**
@@ -456,7 +459,7 @@ public abstract class WizDialog extends Dialog {
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
 
-//        wizService.printProgetto();
+        //        wizService.printProgetto();
         return true;
     }
 

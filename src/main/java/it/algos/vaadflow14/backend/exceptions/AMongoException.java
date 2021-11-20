@@ -12,6 +12,7 @@ import it.algos.vaadflow14.backend.entity.*;
 public class AMongoException extends Exception {
 
     private AEntity entityBean;
+    private String stack;
 
     public AMongoException(String message) {
         super(message);

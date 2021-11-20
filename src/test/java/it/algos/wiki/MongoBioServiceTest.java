@@ -57,7 +57,7 @@ public class MongoBioServiceTest extends WTest {
         super.setUpStartUp();
 
         //--reindirizzo l'istanza della superclasse
-        service = mongoService;
+        service = (MongoService) mongoService;
     }
 
 
@@ -101,15 +101,25 @@ public class MongoBioServiceTest extends WTest {
         System.out.println("2 - Esistenza delle collezioni");
 
         sorgente = COLLEZIONE_INESISTENTE;
-        ottenutoBooleano = service.isExistsCollection(sorgente);
+        try {
+            ottenutoBooleano = service.isExistsCollection(sorgente);
+        } catch (AlgosException unErrore) {
+        }
+
         assertFalse(ottenutoBooleano);
         printCollection(sorgente, "non esiste");
 
         sorgente = COLLEZIONE_VALIDA;
-        ottenutoBooleano = service.isExistsCollection(sorgente);
+        try {
+            ottenutoBooleano = service.isExistsCollection(sorgente);
+        } catch (AlgosException unErrore) {
+        }
         assertTrue(ottenutoBooleano);
         printCollection(sorgente, "esiste");
-        ottenutoBooleano = service.isExistsCollection(Via.class);
+        try {
+            ottenutoBooleano = service.isExistsCollection(Via.class);
+        } catch (AlgosException unErrore) {
+        }
         assertTrue(ottenutoBooleano);
         printCollection(sorgente, " (letta dalla classe) esiste");
 
@@ -118,15 +128,24 @@ public class MongoBioServiceTest extends WTest {
         System.out.println("2 - Validità delle collezioni");
 
         sorgente = COLLEZIONE_INESISTENTE;
-        ottenutoBooleano = service.isValidCollection(sorgente);
+        try {
+            ottenutoBooleano = service.isValidCollection(sorgente);
+        } catch (AlgosException unErrore) {
+        }
         assertFalse(ottenutoBooleano);
         printCollection(sorgente, "non è valida");
 
         sorgente = COLLEZIONE_VALIDA;
-        ottenutoBooleano = service.isValidCollection(sorgente);
+        try {
+            ottenutoBooleano = service.isValidCollection(sorgente);
+        } catch (AlgosException unErrore) {
+        }
         assertTrue(ottenutoBooleano);
         printCollection(sorgente, "è valida");
-        ottenutoBooleano = service.isValidCollection(Via.class);
+        try {
+            ottenutoBooleano = service.isValidCollection(Via.class);
+        } catch (AlgosException unErrore) {
+        }
         assertTrue(ottenutoBooleano);
         printCollection(sorgente, " (letta dalla classe) è valida");
     }
@@ -141,16 +160,16 @@ public class MongoBioServiceTest extends WTest {
         //--leggo una entityBean
         sorgente2 = "non esiste";
         try {
-            entityBean = service.findByProperty(clazz,sorgente,sorgente2);
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz,sorgente,sorgente2);
+        } catch (AlgosException unErrore) {
         }
         assertNull(entityBean);
 
         //--leggo una entityBean
         sorgente2 = "Lorenzo Bandini";
         try {
-            entityBean = service.findByProperty(clazz,sorgente,sorgente2);
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz,sorgente,sorgente2);
+        } catch (AlgosException unErrore) {
             System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean()));
         }
         assertNotNull(entityBean);
@@ -173,7 +192,7 @@ public class MongoBioServiceTest extends WTest {
             assertNotNull(entityBean.id);
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (Exception unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
+            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getMessage()));
             assertNotNull(null);
         }
 
@@ -187,7 +206,7 @@ public class MongoBioServiceTest extends WTest {
             assertNotNull(entityBean.id);
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (Exception unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
+            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getMessage()));
             assertNotNull(null);
         }
 
@@ -201,7 +220,7 @@ public class MongoBioServiceTest extends WTest {
             assertNotNull(entityBean.id);
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (Exception unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
+            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getMessage()));
             assertNotNull(null);
         }
 
@@ -215,7 +234,7 @@ public class MongoBioServiceTest extends WTest {
             assertNotNull(entityBean.id);
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (Exception unErrore) {
-            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
+            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getMessage()));
             assertNotNull(null);
         }
     }
@@ -234,8 +253,8 @@ public class MongoBioServiceTest extends WTest {
         clazz = Via.class;
         sorgente = "corte";
         try {
-            entityBean = service.findByKey(clazz, sorgente);
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz, sorgente);
+        } catch (AlgosException unErrore) {
         }
         assertNotNull(entityBean);
         originario = ((Via) entityBean).getOrdine();
@@ -249,14 +268,14 @@ public class MongoBioServiceTest extends WTest {
         //--registro la entityBean modificata
         try {
             service.save(entityBean);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             System.out.println(unErrore);
         }
 
         //--ri-leggo la entityBean (dal vecchio id) controllo la property per vedere se è stata modificata e registrata
         try {
-            entityBean = service.findById(clazz, entityBean.getId());
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz, entityBean.getId());
+        } catch (AlgosException unErrore) {
         }
         modificato = ((Via) entityBean).getOrdine();
         assertEquals(daModificare, modificato);
@@ -269,14 +288,14 @@ public class MongoBioServiceTest extends WTest {
         //--ri-registro la entityBean come in origine
         try {
             service.save(entityBean);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             System.out.println(unErrore);
         }
 
         //--ri-leggo la entityBean e ri-controllo la property
         try {
-            entityBean = service.findByKey(clazz, sorgente);
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz, sorgente);
+        } catch (AlgosException unErrore) {
         }
         assertNotNull(entityBean);
         finale = ((Via) entityBean).getOrdine();
@@ -307,7 +326,7 @@ public class MongoBioServiceTest extends WTest {
         //--registro la entityBean
         try {
             service.save(entityBean);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             System.out.println(unErrore);
         }
 

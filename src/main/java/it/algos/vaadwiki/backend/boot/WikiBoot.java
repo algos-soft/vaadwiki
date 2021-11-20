@@ -3,6 +3,7 @@ package it.algos.vaadwiki.backend.boot;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.wizard.*;
 import it.algos.vaadwiki.backend.packages.nome.Nome;
 import it.algos.vaadflow14.backend.boot.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
@@ -126,6 +127,7 @@ public class WikiBoot extends FlowBoot {
     @Override
     protected void fixMenuRoutes() {
         super.fixMenuRoutes();
+        FlowVar.menuRouteList.add(Wizard.class);
         FlowVar.menuRouteList.add(Prenome.class);
         FlowVar.menuRouteList.add(Genere.class);
         FlowVar.menuRouteList.add(Professione.class);

@@ -99,7 +99,7 @@ public class PrenomeService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Prenome findById(final String keyID) throws AMongoException {
+    public Prenome findById(final String keyID) throws AlgosException {
         return (Prenome) super.findById(keyID);
     }
 
@@ -115,7 +115,7 @@ public class PrenomeService extends WikiService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Prenome findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
+    public Prenome findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
         return (Prenome) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -129,7 +129,7 @@ public class PrenomeService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Prenome findByKey(final Serializable keyValue) throws AMongoException {
+    public Prenome findByKey(final Serializable keyValue) throws AlgosException {
         return (Prenome) super.findByKey(keyValue);
     }
 

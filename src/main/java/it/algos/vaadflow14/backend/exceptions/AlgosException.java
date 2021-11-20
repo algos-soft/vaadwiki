@@ -13,7 +13,9 @@ public class AlgosException extends Exception {
 
     private AEntity entityBean;
 
-    private String stack;
+    private Class clazz;
+
+    private String method;
 
     public AlgosException(final String message) {
         super(message);
@@ -21,6 +23,10 @@ public class AlgosException extends Exception {
 
     public AlgosException(final Throwable cause) {
         super(cause);
+    }
+
+    public AlgosException(final Throwable cause, final String message) {
+        super(message, cause);
     }
 
     public AlgosException(final Throwable cause, final AEntity entityBean) {
@@ -33,33 +39,56 @@ public class AlgosException extends Exception {
         this.entityBean = entityBean;
     }
 
-    public AlgosException(final Throwable cause, final AEntity entityBean, final String message, final String stack) {
+    public AlgosException(final Throwable cause, final AEntity entityBean, final String message,final Class clazz, final String method) {
         super(message, cause);
         this.entityBean = entityBean;
-        this.stack = stack;
-    }
-
-    public static AlgosException message(final String message) {
-        return new AlgosException(message);
+        this.clazz = clazz;
+        this.method = method;
     }
 
     public static AlgosException cause(final Throwable cause) {
         return new AlgosException(cause);
     }
 
+
+    public static AlgosException message(final String message) {
+        return new AlgosException(message);
+    }
+
+
     public static AlgosException crea(final Throwable cause, final String message) {
         return (AlgosException) new Exception(message, cause);
     }
 
-    public static AlgosException stack(final Throwable cause, final String stack) {
+    public static AlgosException stack(final Throwable cause, final Class clazz, final String method) {
         AlgosException algosException = new AlgosException(cause);
-        algosException.stack = stack;
+        algosException.clazz = clazz;
+        algosException.method = method;
 
         return algosException;
     }
-    public static AlgosException stack(final String message, final String stack) {
+
+    public static AlgosException stack(final String message, final Class clazz, final String method) {
         AlgosException algosException = new AlgosException(message);
-        algosException.stack = stack;
+        algosException.clazz = clazz;
+        algosException.method = method;
+
+        return algosException;
+    }
+
+    public static AlgosException stack(final Throwable cause, final String message, final Class clazz, final String method) {
+        AlgosException algosException = new AlgosException(cause, message);
+        algosException.clazz = clazz;
+        algosException.method = method;
+
+        return algosException;
+    }
+
+    public static AlgosException stack(final Throwable cause, final AEntity entityBean, final String message,final Class clazz, final String method) {
+        AlgosException algosException = new AlgosException(cause, message);
+        algosException.entityBean = entityBean;
+        algosException.clazz = clazz;
+        algosException.method = method;
 
         return algosException;
     }
@@ -68,8 +97,12 @@ public class AlgosException extends Exception {
         return entityBean;
     }
 
-    public String getStack() {
-        return stack;
+    public Class getClazz() {
+        return clazz;
+    }
+
+    public String getMethod() {
+        return method;
     }
 
 }

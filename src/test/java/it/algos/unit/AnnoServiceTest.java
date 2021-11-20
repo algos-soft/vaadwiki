@@ -178,7 +178,7 @@ public class AnnoServiceTest extends ATest {
             anno = service.findByProperty(sorgente, sorgente2);
             assertNotNull(anno);
             printAnnoProperty(sorgente, sorgente2, anno);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             assertNull(anno);
             printAnnoProperty(sorgente, sorgente2, anno);
             System.out.println(unErrore);
@@ -190,7 +190,7 @@ public class AnnoServiceTest extends ATest {
             anno = service.findByProperty(sorgente, sorgente2);
             assertNotNull(anno);
             printAnnoProperty(sorgente, sorgente2, anno);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             assertNull(anno);
             printAnnoProperty(sorgente, sorgente2, anno);
             System.out.println(unErrore);

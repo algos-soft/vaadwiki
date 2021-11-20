@@ -10,6 +10,7 @@ import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.config.*;
@@ -160,13 +161,18 @@ public class ALayoutService extends AbstractService {
     private LinkedHashMap<String, RouterLink> createMenuLink(final Class menuClazz) {
         LinkedHashMap<String, RouterLink> mappaRouter = new LinkedHashMap<>();
         RouterLink routerLink = null;
-        QueryParameters query = null;
+        QueryParameters query ;
         String packageName = VUOTA;
         Icon icon = annotation.getMenuIcon(menuClazz);
-        String menuName = annotation.getMenuName(menuClazz);
+        String menuName=VUOTA;
         String message;
         String canonicalName;
-        Class listClazz = null;
+        Class listClazz =null;
+
+        try {
+            menuName = annotation.getMenuName(menuClazz);
+        } catch (AlgosException unErrore) {
+        }
 
         //--se è una route, va direttamente
         if (annotation.isRouteView(menuClazz) && Component.class.isAssignableFrom(menuClazz)) {
@@ -177,7 +183,11 @@ public class ALayoutService extends AbstractService {
         else {
             //--se è una entity, cerca la classe specifica xxxLogicList altrimenti usa GenericLogicList
             if (annotation.isEntityClass(menuClazz)) {
-                listClazz = classService.getLogicListClassFromEntityClazz(menuClazz);
+                try {
+                    listClazz = classService.getLogicListClassFromEntityClazz(menuClazz);
+                } catch (AlgosException unErrore) {
+                   logger.info(unErrore,getClass(),"createMenuLink");
+                }
 
                 //--controllo che la classe specifica xxxLogicList esista e che contenga @Route
                 if (listClazz != null) {
@@ -228,6 +238,9 @@ public class ALayoutService extends AbstractService {
         return mappaRouter;
     }
 
+    public List<RouterLink> createLinks() {
+        return null;
+    }
 
     /**
      * Create profile button but don't add it yet; admin view might be added. <br>

@@ -139,7 +139,7 @@ public class CompanyService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Company findById(final String keyID) throws AMongoException {
+    public Company findById(final String keyID) throws AlgosException {
         return (Company) super.findById(keyID);
     }
 
@@ -153,7 +153,7 @@ public class CompanyService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Company findByKey(final String keyValue) throws AMongoException {
+    public Company findByKey(final String keyValue) throws AlgosException {
         return (Company) super.findByKey(keyValue);
     }
 
@@ -173,7 +173,7 @@ public class CompanyService extends AService {
      * @throws
      */
     @Override
-    public Company save(AEntity entityBeanDaRegistrare) throws AMongoException {
+    public Company save(AEntity entityBeanDaRegistrare) throws AlgosException {
         return (Company) super.save(entityBeanDaRegistrare);
     }
 

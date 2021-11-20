@@ -161,7 +161,7 @@ public class GenereService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Genere findById(final String keyID) throws AMongoException {
+    public Genere findById(final String keyID) throws AlgosException {
         return (Genere) super.findById(keyID);
     }
 
@@ -177,7 +177,7 @@ public class GenereService extends WikiService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Genere findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
+    public Genere findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
         return (Genere) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -191,7 +191,7 @@ public class GenereService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Genere findByKey(final Serializable keyValue) throws AMongoException {
+    public Genere findByKey(final Serializable keyValue) throws AlgosException {
         return (Genere) super.findByKey(keyValue);
     }
 

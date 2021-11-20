@@ -4,6 +4,7 @@ import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -100,18 +101,31 @@ public class RegioneLogicList extends LogicList {
      */
     protected Map<String, ComboBox> getMappaComboBox() {
         Map<String, ComboBox> mappa = super.getMappaComboBox();
-        ComboBox combo;
+        ComboBox combo=null;
 
         if (AEPreferenza.usaBandiereStati.is()) {
-            combo = getComboBox("stato", statoService.creaComboStati());
+            try {
+                combo = getComboBox("stato", statoService.creaComboStati());
+            } catch (AlgosException unErrore) {
+                logger.warn(unErrore, this.getClass(), "getMappaComboBox");
+            }
+
             mappa.put("stato", combo);
         }
         else {
-            combo = getComboBox("stato", AEStato.italia.getStato());
+            try {
+                combo = getComboBox("stato", AEStato.italia.getStato());
+            } catch (AlgosException unErrore) {
+                logger.warn(unErrore, this.getClass(), "getMappaComboBox");
+            }
             mappa.put("stato", combo);
         }
 
-        combo = getComboBox("status");
+        try {
+            combo = getComboBox("status");
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "getMappaComboBox");
+        }
         mappa.put("status", combo);
 
         return mappa;

@@ -95,7 +95,7 @@ public class RegioneService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final String divisione, final Stato stato, final String iso, final String sigla, final AEStatus status) {
+    private boolean creaReset(final String divisione, final Stato stato, final String iso, final String sigla, final AEStatus status) throws AlgosException {
         return super.creaReset(newEntity(divisione, stato, iso, sigla, status));
     }
 
@@ -200,7 +200,7 @@ public class RegioneService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Regione findById(final String keyID) throws AMongoException {
+    public Regione findById(final String keyID) throws AlgosException {
         return (Regione) super.findById(keyID);
     }
 
@@ -214,7 +214,7 @@ public class RegioneService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Regione findByKey(final String keyValue) throws AMongoException {
+    public Regione findByKey(final String keyValue) throws AlgosException {
         return (Regione) super.findByKey(keyValue);
     }
 
@@ -222,8 +222,15 @@ public class RegioneService extends AService {
     private AIResult checkStato() {
         String packageName = Regione.class.getSimpleName().toLowerCase();
         String collection = "stato";
+        boolean isValidCollection = false;
 
-        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
+        try {
+            isValidCollection = ((MongoService) mongo).isValidCollection(entityClazz);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "checkStato");
+        }
+
+        if (isValidCollection) {
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
@@ -309,8 +316,11 @@ public class RegioneService extends AService {
                 sigla = text.levaTestoPrimaDi(iso, TRATTINO);
                 aeStatus = stato.id.equals("italia") ? fixStatusItalia(nome) : aeStatus;
                 if (text.isValid(nome) && stato != null && text.isValid(iso) && text.isValid(sigla)) {
-                    if (creaReset(nome, stato, iso, sigla, aeStatus)) {
+                    try {
+                        creaReset(nome, stato, iso, sigla, aeStatus);
                         numRec++;
+                    } catch (AlgosException unErrore) {
+                        logger.warn(unErrore, this.getClass(), "creaRegioniDiUnoStato");
                     }
                 }
                 else {
@@ -381,7 +391,7 @@ public class RegioneService extends AService {
         //        creaRegioniAllStati();
         try {
             creaRegioniDiUnoStato(statoService.findByKey("Italia"));
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             logger.warn(unErrore, this.getClass(), "reset");
         }
         return AResult.valido(AETypeReset.wikipedia.get(), numRec);

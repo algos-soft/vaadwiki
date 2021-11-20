@@ -10,6 +10,7 @@ import com.vaadin.flow.shared.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.*;
@@ -390,8 +391,12 @@ public abstract class AForm extends VerticalLayout {
                     fieldsList.add(field);
                 }
                 else {
-                    AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
-                    logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
+                    try {
+                        AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
+                        logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
+                    } catch (AlgosException unErrore) {
+                        logger.warn(unErrore, this.getClass(), "creaFieldsBinder");
+                    }
                 }
 
                 //                reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);

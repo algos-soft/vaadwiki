@@ -14,6 +14,7 @@ public enum AETypeField {
     localDateTime(9, 0),
     localDate(8, 0),
     localTime(6, 0),
+    timestamp(6, 0),
     mappa(0, 14),
 
     //    meseShort(6, 0, AETypeData.meseShort),

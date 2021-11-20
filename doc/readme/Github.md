@@ -11,7 +11,7 @@ Per il merge di una branch:
 5) premere Checkout per switchare sul master
 6) posizionarsi su Remote Branches
 7) selezionare quella che si vuole 'consolidare'
-8) premere Merge into Current
+8) premere Merge Selected into Current
 9) eseguire SUBITO un UPDATE Project (selezionando merge incoming changes...)
 
 ##Gitignore

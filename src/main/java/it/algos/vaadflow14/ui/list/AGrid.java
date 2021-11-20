@@ -9,8 +9,10 @@ import com.vaadin.flow.data.provider.*;
 import com.vaadin.flow.data.renderer.*;
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.backend.application.FlowVar.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -104,6 +106,8 @@ public class AGrid {
      */
     protected Map<String, AFiltro> mappaFiltri;
 
+    protected WrapFiltri wrapFiltri;
+
     private AILogic entityLogic;
 
     private List<String> gridPropertyNamesList;
@@ -144,11 +148,31 @@ public class AGrid {
      * @param entityLogic (obbligatorio) riferimento alla istanza (prototype) di LogicList che crea questa Grid
      * @param mappaFiltri (obbligatorio)  per selezione e ordinamento
      */
+    @Deprecated
     public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic, Map<String, AFiltro> mappaFiltri) {
         super();
         this.entityClazz = entityClazz;
         this.entityLogic = entityLogic;
         this.mappaFiltri = mappaFiltri;
+    }
+
+    /**
+     * Costruttore con parametri <br>
+     * Questa istanza viene costruita partendo da LogicList nel metodo fixBodyLayout() <br>
+     * con -> grid = appContext.getBean(AGrid.class, entityClazz, this, filtri); <br>
+     * <p>
+     * La Grid viene costruita e regolata in postConstruct() <br>
+     * I filtri e la relativa dataProvider possono essere modificati in maniera dinamica <br>
+     *
+     * @param entityClazz (obbligatorio)  the class of type AEntity
+     * @param entityLogic (obbligatorio) riferimento alla istanza (prototype) di LogicList che crea questa Grid
+     * @param wrapFiltri  (obbligatorio)  per selezione e ordinamento
+     */
+    public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic, WrapFiltri wrapFiltri) {
+        super();
+        this.entityClazz = entityClazz;
+        this.entityLogic = entityLogic;
+        this.wrapFiltri = wrapFiltri;
     }
 
 
@@ -166,9 +190,20 @@ public class AGrid {
         grid = new Grid(entityClazz, false);
         grid.setHeightByRows(true);
 
-        String sortProperty = annotation.getSortProperty(entityClazz);
-        BasicDBObject sort = new BasicDBObject(sortProperty, 1);
-        dataProvider = dataProviderService.creaDataProvider(entityClazz, mappaFiltri);
+//        String sortProperty = annotation.getSortProperty(entityClazz);
+//        BasicDBObject sort = new BasicDBObject(sortProperty, 1);
+
+        switch (filtroProvider) {
+            case mappaFiltri:
+                dataProvider = dataProviderService.creaDataProvider(entityClazz, mappaFiltri);
+                break;
+            case wrapFiltri:
+                dataProvider = dataProviderService.creaDataProvider(entityClazz, wrapFiltri);
+                break;
+            default:
+                logger.error("Switch - caso non definito", this.getClass(), "postConstruct");
+                break;
+        }
         grid.setDataProvider(dataProvider);
 
         if (AEPreferenza.usaDebug.is()) {
@@ -247,13 +282,18 @@ public class AGrid {
      */
     protected String getWidth() {
         String indexWidth = VUOTA;
+        int dim = 0;
         int dim1 = 100;
         int dim2 = 1000;
         String tag1 = "3.0" + TAG_EM;
         String tag2 = "4.0" + TAG_EM;
         String tag3 = "5.0" + TAG_EM;
 
-        int dim =  ((MongoService) mongo).count(entityClazz);//@todo da controllare
+        try {
+            dim = ((MongoService) mongo).count(entityClazz);//@todo da controllare
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getWidth");
+        }
 
         if (dim < dim1) {
             indexWidth = tag1;
@@ -385,9 +425,15 @@ public class AGrid {
      * DataProvider è già filtrato (a monte) e vuole una query nulla <br>
      */
     public void fixGridHeader() {
-        int totRec =  ((MongoService) mongo).count(entityClazz);//@todo da controllare
+        int totRec = 0;
         int itemsFiltrati = grid.getDataProvider().size(null);
-        String message = VUOTA;
+        String message;
+
+        try {
+            totRec = ((MongoService) mongo).count(entityClazz);//@todo da controllare
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "fixGridHeader");
+        }
 
         if (true) {//@todo Funzionalità ancora da implementare con preferenza locale
             message = annotation.getTitleList(entityClazz).toUpperCase() + SEP;

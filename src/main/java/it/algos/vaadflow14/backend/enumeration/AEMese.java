@@ -1,16 +1,14 @@
 package it.algos.vaadflow14.backend.enumeration;
 
-import it.algos.vaadflow14.backend.service.TextService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 
-import javax.annotation.PostConstruct;
-import java.time.Year;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import javax.annotation.*;
+import java.time.*;
+import java.util.*;
+import java.util.stream.*;
 
 public enum AEMese {
 
@@ -47,7 +45,6 @@ public enum AEMese {
     @Autowired
     public TextService text;
 
-
     String nome;
 
     int giorni;
@@ -62,7 +59,7 @@ public enum AEMese {
     /**
      * Costruttore interno dell'Enumeration <br>
      */
-    AEMese(String nome, int giorni, int giorniBisestili, String sigla, String siglaEn) {
+    AEMese(final String nome, final int giorni, final int giorniBisestili, final String sigla, final String siglaEn) {
         this.nome = nome;
         this.giorni = giorni;
         this.giorniBisestili = giorniBisestili;
@@ -79,7 +76,7 @@ public enum AEMese {
      *
      * @return Numero di giorni del mese
      */
-    public static int getGiorni(int numMeseDellAnno, int anno) {
+    public static int getGiorni(final int numMeseDellAnno, final int anno) {
         int giorniDelMese = 0;
         AEMese mese = getMese(numMeseDellAnno);
 
@@ -103,13 +100,12 @@ public enum AEMese {
      *
      * @return Mese
      */
-    public static AEMese getMese(int numMeseDellAnno) {
+    public static AEMese getMese(final int numMeseDellAnno) {
         AEMese mese = null;
 
         if (numMeseDellAnno > 0 && numMeseDellAnno < 13) {
-            numMeseDellAnno = numMeseDellAnno - 1;
             for (AEMese meseTmp : AEMese.values()) {
-                if (meseTmp.ordinal() == numMeseDellAnno) {
+                if (meseTmp.ordinal() == numMeseDellAnno - 1) {
                     mese = meseTmp;
                 }
             }
@@ -122,17 +118,14 @@ public enum AEMese {
     /**
      * Mese
      *
-     * @param nomeBreveLungo Nome breve o lungo del mese
-     *
      * @return Mese
      */
-    public static AEMese getMese(String sigla) {
+    public static AEMese getMese(final String sigla) {
         AEMese mese = null;
 
-        if (sigla != null && !sigla.equals("")) {
-            sigla = sigla.toLowerCase();
+        if (sigla != null && !sigla.equals(VUOTA)) {
             for (AEMese meseTmp : AEMese.values()) {
-                if (meseTmp.sigla.equals(sigla) || meseTmp.nome.equals(sigla)) {
+                if (meseTmp.sigla.equals(sigla.toLowerCase()) || meseTmp.nome.equals(sigla.toLowerCase())) {
                     mese = meseTmp;
                 }
             }
@@ -143,9 +136,9 @@ public enum AEMese {
 
 
     // l'anno parte da gennaio che è il numero 1
-    private static String getMese(int ord, boolean flagBreve) {
-        String nome = "";
-        AEMese mese = null;
+    private static String getMese(final int ord, final boolean flagBreve) {
+        String nome = VUOTA;
+        AEMese mese ;
 
         mese = getMese(ord);
         if (mese != null) {
@@ -168,7 +161,7 @@ public enum AEMese {
      *
      * @return Numero del mese
      */
-    public static int getOrder(String nomeBreveLungo) {
+    public static int getOrder(final String nomeBreveLungo) {
         int numMeseDellAnno = 0;
         AEMese mese = getMese(nomeBreveLungo);
 
@@ -257,7 +250,7 @@ public enum AEMese {
      *
      * @since java 11
      */
-    public static int getNumMese(String siglaEn) {
+    public static int getNumMese(final String siglaEn) {
         int num;
         List<AEMese> meseList = Arrays.asList(AEMese.values());
         Stream<AEMese> meseStream = meseList.stream();
@@ -277,7 +270,7 @@ public enum AEMese {
      *
      * @return Nome breve del mese
      */
-    public static String getLong(int numMeseDellAnno) {
+    public static String getLong(final int numMeseDellAnno) {
         return getMese(numMeseDellAnno, false);
     }
 

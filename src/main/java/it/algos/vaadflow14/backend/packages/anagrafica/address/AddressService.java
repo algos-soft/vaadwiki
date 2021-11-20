@@ -113,7 +113,7 @@ public class AddressService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Address findById(final String keyID) throws AMongoException {
+    public Address findById(final String keyID) throws AlgosException {
         return (Address) super.findById(keyID);
     }
 
@@ -127,7 +127,7 @@ public class AddressService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Address findByKey(final String keyValue) throws AMongoException {
+    public Address findByKey(final String keyValue) throws AlgosException {
         return (Address) super.findByKey(keyValue);
     }
 

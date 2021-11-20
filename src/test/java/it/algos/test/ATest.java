@@ -1,33 +1,43 @@
 package it.algos.test;
 
 import com.mongodb.*;
+import com.mongodb.client.*;
 import com.vaadin.flow.data.provider.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.wiki.*;
+import org.bson.*;
+import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
+import org.springframework.context.support.*;
 import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.*;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.io.*;
 import java.lang.reflect.Field;
 import java.time.*;
 import java.util.*;
+import java.util.stream.*;
 
 
 /**
@@ -38,6 +48,8 @@ import java.util.*;
  * Time: 21:18
  * <p>
  * Classe astratta per i test <br>
+ *
+ * @see https://www.baeldung.com/parameterized-tests-junit-5
  */
 @AIScript(sovraScrivibile = false)
 public abstract class ATest {
@@ -112,6 +124,8 @@ public abstract class ATest {
 
     protected static Class<? extends AEntity> COMPANY_ENTITY_CLASS = Company.class;
 
+    protected static Class<? extends AEntity> STATO_ENTITY_CLASS = Stato.class;
+
     protected static Class ANNO_LOGIC_LIST = AnnoLogicList.class;
 
     protected static Class VIA_LIST_CLASS = ViaLogicList.class;
@@ -124,11 +138,11 @@ public abstract class ATest {
 
     protected static String PATH = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/wizard/";
 
-    /**
-     * The App context.
-     */
-    @Mock
-    protected ApplicationContext appContext;
+//    /**
+//     * The App context.
+//     */
+//    @Mock
+//    protected GenericApplicationContext appContext;
 
     @InjectMocks
     protected StaticContextAccessor staticContextAccessor;
@@ -155,7 +169,14 @@ public abstract class ATest {
     protected BeanService beanService;
 
     @InjectMocks
-    protected MongoService mongoService;
+    protected MongoService mongoServiceImpl;
+
+    protected AIMongoService mongoService;
+
+//    @Mock
+//    protected MongoTemplate mongoTemplate;
+
+    protected MongoOperations mongoOp;
 
     @InjectMocks
     protected WebService webService;
@@ -205,66 +226,33 @@ public abstract class ATest {
     @Autowired
     protected FlowVar flowVar;
 
+    @InjectMocks
+    protected WrapFiltri wrapFiltri;
+
     protected Logger adminLogger;
 
-    /**
-     * The Previsto booleano.
-     */
     protected boolean previstoBooleano;
 
-    /**
-     * The Ottenuto booleano.
-     */
     protected boolean ottenutoBooleano;
 
-    /**
-     * The Sorgente.
-     */
     protected String sorgente;
 
-    /**
-     * The Sorgente.
-     */
     protected String sorgente2;
 
-    /**
-     * The Sorgente.
-     */
     protected String sorgente3;
 
-    /**
-     * The Previsto.
-     */
     protected String previsto;
 
-    /**
-     * The Previsto.
-     */
     protected String previsto2;
 
-    /**
-     * The Previsto.
-     */
     protected String previsto3;
 
-    /**
-     * The Ottenuto.
-     */
     protected String ottenuto;
 
-    /**
-     * The Ottenuto.
-     */
     protected String ottenuto2;
 
-    /**
-     * The Sorgente classe.
-     */
     protected Class sorgenteClasse;
 
-    /**
-     * The Sorgente field.
-     */
     protected Field sorgenteField;
 
     protected Field ottenutoField;
@@ -345,6 +333,8 @@ public abstract class ATest {
 
     protected Query query;
 
+    protected Document doc;
+
     protected BasicDBObject objectQuery;
 
     protected Sort sortSpring;
@@ -392,6 +382,35 @@ public abstract class ATest {
     protected AETypeSerializing oldType;
 
 
+    protected static String[] CANONICAL() {
+        return new String[]{null, VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
+    }
+
+    //    protected static Class[] CLAZZ() {
+    //        return new Class[]{null, Via.class, Bolla.class, AIType.class, Utente.class, LogicList.class, Company.class, Mese.class, Stato.class, Continente.class};
+    //    }
+
+
+    //--clazz
+    //--esiste nel package
+    protected static Stream<Arguments> SIMPLE() {
+        return Stream.of(
+                Arguments.of((Class) null, false),
+                Arguments.of(VUOTA, false),
+                Arguments.of("NomeClasseInesistente", false),
+                Arguments.of(VIA_ENTITY_CLASS.getSimpleName(), true),
+                Arguments.of(VIA_ENTITY_CLASS.getSimpleName() + JAVA_SUFFIX, true),
+                Arguments.of("via", true),
+                Arguments.of("LogicList", false),
+                Arguments.of("ViaLogicList", true),
+                Arguments.of("AnnoLogicList", true)
+        );
+    }
+
+    protected static String[] PATH() {
+        return new String[]{null, VUOTA, "PathErrato", "/Users/gac/IdeaProjects/operativi/vaadwiki/src/main/java/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java"};
+    }
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      */
@@ -420,8 +439,8 @@ public abstract class ATest {
         Assertions.assertNotNull(staticContextAccessor);
         staticContextAccessor.registerInstance();
 
-        MockitoAnnotations.initMocks(appContext);
-        Assertions.assertNotNull(appContext);
+//        MockitoAnnotations.initMocks(appContext);
+//        Assertions.assertNotNull(appContext);
 
         MockitoAnnotations.initMocks(textService);
         Assertions.assertNotNull(textService);
@@ -447,8 +466,16 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(beanService);
         Assertions.assertNotNull(beanService);
 
-        MockitoAnnotations.initMocks(mongoService);
-        Assertions.assertNotNull(mongoService);
+        MockitoAnnotations.initMocks(mongoServiceImpl);
+        Assertions.assertNotNull(mongoServiceImpl);
+        mongoService = mongoServiceImpl;
+
+//        MockitoAnnotations.initMocks(mongoTemplate);
+//        Assertions.assertNotNull(mongoTemplate);
+//        //        MockitoAnnotations.initMocks(mongoServiceImpl.mongoOp);
+//        //        Assertions.assertNotNull(mongoServiceImpl.mongoOp);
+//        mongoOp = mongoTemplate;
+//        mongoServiceImpl.mongoOp = mongoTemplate;
 
         MockitoAnnotations.initMocks(webService);
         Assertions.assertNotNull(webService);
@@ -494,6 +521,9 @@ public abstract class ATest {
 
         MockitoAnnotations.initMocks(companyService);
         Assertions.assertNotNull(companyService);
+
+        MockitoAnnotations.initMocks(wrapFiltri);
+        Assertions.assertNotNull(wrapFiltri);
     }
 
     /**
@@ -510,10 +540,12 @@ public abstract class ATest {
         annotationService.array = arrayService;
         annotationService.logger = loggerService;
         annotationService.reflection = reflectionService;
+        annotationService.classService = classService;
         reflectionService.array = arrayService;
         reflectionService.text = textService;
         reflectionService.logger = loggerService;
         reflectionService.annotation = annotationService;
+        reflectionService.classService = classService;
         gSonService.text = textService;
         gSonService.array = arrayService;
         jSonService.text = textService;
@@ -528,6 +560,7 @@ public abstract class ATest {
         ((MongoService) mongoService).date = dateService;
         ((MongoService) mongoService).classService = classService;
         ((MongoService) mongoService).fieldService = fieldService;
+        ((MongoService) mongoService).fileService = fileService;
 
         webService.text = textService;
         webService.logger = loggerService;
@@ -545,7 +578,7 @@ public abstract class ATest {
         classService.text = textService;
         classService.logger = loggerService;
         classService.annotation = annotationService;
-        classService.appContext = appContext;
+//        classService.appContext = appContext;
 
         preferenzaService.mongo = mongoService;
         utilityService.text = textService;
@@ -576,6 +609,17 @@ public abstract class ATest {
         companyService.reflection = reflectionService;
         companyService.mongo = mongoService;
         companyService.beanService = beanService;
+
+        wrapFiltri.text = textService;
+        wrapFiltri.annotation = annotationService;
+        wrapFiltri.reflection = reflectionService;
+
+        try {
+            FIELD_ORDINE = reflectionService.getField(VIA_ENTITY_CLASS, NAME_ORDINE);
+            FIELD_NOME = reflectionService.getField(VIA_ENTITY_CLASS, NAME_NOME);
+        } catch (AlgosException unErrore) {
+            assertFalse(false);
+        }
     }
 
 
@@ -585,6 +629,7 @@ public abstract class ATest {
     protected void setUp() {
         inizio = System.currentTimeMillis();
         cicli = 1;
+        ottenutoIntero = 0;
         caratteriVisibili = 80;
         previstoBooleano = false;
         ottenutoBooleano = false;
@@ -613,24 +658,29 @@ public abstract class ATest {
         sortVaadin = null;
         filtro = null;
         listaFiltri = new ArrayList<>();
-        mappaFiltri = new HashMap<>();
         mappa = new HashMap<>();
         listaBean = null;
         listaStr = null;
         listaFields = null;
         bytes = null;
-        FIELD_ORDINE = reflectionService.getField(VIA_ENTITY_CLASS, NAME_ORDINE);
-        FIELD_NOME = reflectionService.getField(VIA_ENTITY_CLASS, NAME_NOME);
         entityBean = null;
         clazz = null;
         previstoRisultato = null;
         ottenutoRisultato = null;
         listaStr = new ArrayList<>();
+        wrapFiltri.entityClazz=null;
+        mappaFiltri = null;
+        wrapFiltri.setMappaFiltri(null);
     }
 
     protected String getTime() {
         return dateService.deltaTextEsatto(inizio);
     }
+
+    protected void printOttenuto(final String sorgente, final String ottenuto) {
+        System.out.println(String.format("%s%s%s", sorgente, FORWARD, ottenuto));
+    }
+
 
     protected void printVuota(List<String> lista) {
         System.out.println(VUOTA);
@@ -714,6 +764,55 @@ public abstract class ATest {
     //        }
     //    }
 
+    protected void printEntityBeanFromClazz(final String keyPropertyValue, final Class clazz, final AEntity entityBean) {
+        if (clazz == null) {
+            System.out.print("Non esiste la classe indicata");
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            return;
+        }
+        else {
+            System.out.print(String.format("%s: ", keyPropertyValue));
+
+            if (entityBean != null) {
+                System.out.println(String.format("creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+            }
+            else {
+                System.out.println(String.format("non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
+            }
+        }
+
+        System.out.println(VUOTA);
+    }
+
+
+    protected void printEntityBeanFromProperty(final Class clazz, final String propertyName, final Serializable propertyValue, final AEntity entityBean, final int previstoIntero) {
+        if (clazz == null) {
+            System.out.print("Non esiste la classe indicata");
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            return;
+        }
+        else {
+            System.out.print(String.format("%s%s%s: ", propertyName, UGUALE_SEMPLICE, propertyValue));
+
+            if (entityBean != null) {
+                if (entityBean.id != null && textService.isValid(entityBean.id)) {
+                    System.out.println(String.format("recuperata una entityBean di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+                    printMappa(entityBean);
+                }
+                else {
+                    System.out.println(String.format("recuperata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+                    printMappa(entityBean);
+                }
+            }
+            else {
+                System.out.println(String.format("nel mongoDB non è stata trovata nessuna entityBean di classe %s", clazz.getSimpleName()));
+            }
+        }
+
+        System.out.println(VUOTA);
+    }
 
     protected void printWrap(List<WrapDueStringhe> listaWrap) {
         System.out.println("********");
@@ -767,6 +866,82 @@ public abstract class ATest {
         System.out.println(String.format("Risultato ottenuto in %s", dateService.deltaText(inizio)));
     }
 
+    protected void printCollection(final Class clazz, final boolean esiste) {
+        printCollection(clazz != null ? clazz.getSimpleName() : VUOTA, esiste);
+    }
+
+
+    protected void printCollection(final String simpleName, final boolean esiste) {
+        if (textService.isEmpty(simpleName)) {
+            System.out.println(String.format("Esistenza: manca la classe"));
+            return;
+        }
+
+        if (esiste) {
+            System.out.println(String.format("Esistenza: la collezione '%s' %s", simpleName, "esiste"));
+        }
+        else {
+            System.out.println(String.format("Esistenza: la collezione '%s' non è valida (non ci sono entities)", simpleName));
+        }
+    }
+
+
+    protected void printCollection(final Class clazz, final MongoCollection collection) {
+        printCollection(clazz != null ? clazz.getSimpleName() : VUOTA, collection);
+    }
+
+
+    protected void printCollection(final String simpleName, final MongoCollection collection) {
+        if (textService.isEmpty(simpleName)) {
+            System.out.println(String.format("Collezione: manca la classe"));
+            return;
+        }
+
+        if (collection != null) {
+            System.out.println(String.format("Collezione: '%s'%s%s", simpleName, FORWARD, collection.toString()));
+        }
+        else {
+            System.out.println(String.format("La collezione '%s' %s", simpleName, "non esiste"));
+        }
+    }
+
+    protected void printCollectionValida(final Class clazz, final boolean valida) {
+        printCollectionValida(clazz != null ? clazz.getSimpleName() : VUOTA, valida);
+    }
+
+    protected void printCollectionValida(final String simpleName, final boolean valida) {
+        if (textService.isEmpty(simpleName)) {
+            System.out.println(String.format("Validità: manca la classe"));
+            return;
+        }
+
+        if (valida) {
+            System.out.println(String.format("Validità: la collezione '%s' ha una o più entities", simpleName));
+        }
+        else {
+            System.out.println(String.format("Validità: la collezione '%s' non è valida (non ci sono entities)", simpleName));
+        }
+    }
+
+
+    protected void printCollectionVuota(final Class clazz, final boolean vuota) {
+        printCollectionVuota(clazz != null ? clazz.getSimpleName() : VUOTA, vuota);
+    }
+
+    protected void printCollectionVuota(final String simpleName, final boolean vuota) {
+        if (textService.isEmpty(simpleName)) {
+            System.out.println(String.format("Vuota: manca la classe"));
+            return;
+        }
+
+        if (vuota) {
+            System.out.println(String.format("Vuota: la collezione '%s' è vuota", simpleName));
+        }
+        else {
+            System.out.println(String.format("Vuota: la collezione '%s' non è vuota", simpleName));
+        }
+    }
+
     protected void printCollection(final Class clazz, final String status) {
         System.out.println(String.format("La collezione '%s' %s", clazz != null ? clazz.getSimpleName() : VUOTA, status));
     }
@@ -775,12 +950,74 @@ public abstract class ATest {
         System.out.println(String.format("La collezione '%s' %s", collectionName, status));
     }
 
-    protected void printCount(final Class clazz, final int records) {
-        System.out.println(String.format("La collezione '%s' contiene %s records (entities)", clazz != null ? clazz.getSimpleName() : VUOTA, records));
+    protected void printCount(final Class clazz, final int totRecords) {
+        System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali", clazz != null ? clazz.getSimpleName() : VUOTA, totRecords));
     }
 
-    protected void printCount(final String collectionName, final int records) {
-        System.out.println(String.format("La collezione '%s' contiene %s records (entities)", collectionName, records));
+    protected void printCount(final String collectionName, final int totRecords) {
+        System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali", collectionName, totRecords));
+    }
+
+
+    protected void printError(final AlgosException unErrore) {
+        System.out.println(VUOTA);
+        System.out.println("Errore");
+        if (unErrore.getCause() != null) {
+            System.out.println(String.format("Cause %s %s", FlowCost.FORWARD, unErrore.getCause().getClass().getSimpleName()));
+        }
+        System.out.println(String.format("Message %s %s", FlowCost.FORWARD, unErrore.getMessage()));
+        if (unErrore.getEntityBean() != null) {
+            System.out.println(String.format("EntityBean %s %s", FlowCost.FORWARD, unErrore.getEntityBean().toString()));
+        }
+        if (unErrore.getClazz() != null) {
+            System.out.println(String.format("Clazz %s %s", FlowCost.FORWARD, unErrore.getClazz().getSimpleName()));
+        }
+        if (textService.isValid(unErrore.getMethod())) {
+            System.out.println(String.format("Method %s %s()", FlowCost.FORWARD, unErrore.getMethod()));
+        }
+    }
+
+    protected void printDoc(final Document doc) {
+        String key;
+        Object value;
+        System.out.println(VUOTA);
+
+        if (doc != null) {
+            System.out.println(String.format("Il documento contiene %s parametri chiave=valore, più keyID e classe", doc.size() - 2));
+            for (Map.Entry<String, Object> mappa : doc.entrySet()) {
+                key = mappa.getKey();
+                value = mappa.getValue();
+                System.out.println(String.format("%s: %s", key, value));
+            }
+        }
+        else {
+            System.out.println(String.format("Nessun documento trovato"));
+        }
+    }
+
+    protected void printMappa(final AEntity entityBean) {
+        Class clazz;
+
+        if (entityBean == null) {
+            System.out.print("La entityBean è nulla");
+            return;
+        }
+
+        clazz = entityBean.getClass();
+        System.out.println(VUOTA);
+        System.out.println(String.format("Creata una entityBean di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+        try {
+            mappa = reflectionService.getMappaEntity(entityBean);
+            for (String key : mappa.keySet()) {
+                System.out.print(key);
+                System.out.print(UGUALE_SPAZIATO);
+                System.out.println(mappa.get(key));
+            }
+
+        } catch (AlgosException unErrore) {
+        }
+
+        System.out.println(VUOTA);
     }
 
 }// end of class

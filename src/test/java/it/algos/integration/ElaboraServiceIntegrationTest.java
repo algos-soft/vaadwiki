@@ -111,8 +111,8 @@ public class ElaboraServiceIntegrationTest extends ATest {
 
         sorgente = "17 marzo";
         try {
-            previstoGiorno = giornoService.findByKey("17 marzo");
-        } catch (AMongoException unErrore) {
+            previstoGiorno = giornoService.findById("17 marzo");
+        } catch (AlgosException unErrore) {
         }
         try {
             ottenutoGiorno = service.fixGiornoLink(sorgente);
@@ -124,7 +124,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
         sorgente = "5 Agosto";
         try {
             previstoGiorno = giornoService.findByKey("5 agosto");
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
         }
         try {
             ottenutoGiorno = service.fixGiornoLink(sorgente);
@@ -136,7 +136,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
         sorgente = "3ottobre";
         try {
             previstoGiorno = giornoService.findByKey("3 ottobre");
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
         }
         try {
             ottenutoGiorno = service.fixGiornoLink(sorgente);
@@ -148,7 +148,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
         sorgente = "24  maggio";
         try {
             previstoGiorno = giornoService.findByKey("24 maggio");
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
         }
         try {
             ottenutoGiorno = service.fixGiornoLink(sorgente);
@@ -160,7 +160,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
         sorgente = " 8   gennaio ";
         try {
             previstoGiorno = giornoService.findByKey("8 gennaio");
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
         }
         try {
             ottenutoGiorno = service.fixGiornoLink(sorgente);
@@ -179,7 +179,7 @@ public class ElaboraServiceIntegrationTest extends ATest {
         sorgente = "11 luglio <ref>Marcello";
         try {
             previstoGiorno = giornoService.findByKey("11 luglio");
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
         }
         try {
             ottenutoGiorno = service.fixGiornoLink(sorgente);

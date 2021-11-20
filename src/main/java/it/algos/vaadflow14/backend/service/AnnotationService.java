@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.ui.view.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.hibernate.validator.constraints.Range;
@@ -120,6 +121,17 @@ public class AnnotationService extends AbstractService {
         return (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) ? entityClazz.getAnnotation(Document.class) : null;
     }
 
+    /**
+     * Get the annotation PageTitle. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the specific Annotation
+     */
+    public PageTitle getPageTitle(final Class<?> entityClazz) {
+        return entityClazz != null ? entityClazz.getAnnotation(PageTitle.class) : null;
+    }
+
 
     /**
      * Get the annotation NotNull. <br>
@@ -190,6 +202,19 @@ public class AnnotationService extends AbstractService {
      */
     public DBRef getDBRef(final Field reflectionJavaField) {
         return reflectionJavaField != null ? reflectionJavaField.getAnnotation(DBRef.class) : null;
+    }
+
+    /**
+     * Check if the field is DBRef type. <br>
+     *
+     * @param entityClazz     the class of type AEntity
+     * @param publicFieldName the property name
+     *
+     * @return true if field is of type DBRef
+     */
+    public boolean isDBRef(final Class<? extends AEntity> entityClazz, final String publicFieldName) throws AlgosException {
+        Field reflectionJavaField = reflection.getField(entityClazz, publicFieldName);
+        return reflectionJavaField != null && reflectionJavaField.getAnnotation(DBRef.class) != null;
     }
 
     //==========================================================================
@@ -314,7 +339,7 @@ public class AnnotationService extends AbstractService {
      *
      * @return the specific annotation
      */
-    public AIField getAIField(Class<? extends AEntity> entityClazz, String fieldName) {
+    public AIField getAIField(final Class<? extends AEntity> entityClazz, final String fieldName) {
         AIField annotation = null;
         Field reflectionJavaField;
 
@@ -409,6 +434,19 @@ public class AnnotationService extends AbstractService {
     public boolean isRouteView(final Class<?> genericClazz) {
         return getRoute(genericClazz) != null;
     }
+
+    /**
+     * Get the title of the page.
+     *
+     * @param genericClazz of all types
+     *
+     * @return the name of the vaadin-view @route
+     */
+    public String getPageMenu(final Class<?> genericClazz) {
+        PageTitle annotation = genericClazz != null ? this.getPageTitle(genericClazz) : null;
+        return annotation != null ? annotation.value() : VUOTA;
+    }
+
 
     /**
      * Get the name of the route.
@@ -774,46 +812,83 @@ public class AnnotationService extends AbstractService {
     /**
      * Restituisce il nome del menu. <br>
      * 1) Controlla che il parametro in ingresso non sia nullo <br>
-     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
-     * 3) Controlla che esista l' annotation specifica <br>
-     * 4) Cerca la property 'menuName' nell' Annotation @AIView della classe AViewList <br>
-     * 5) Se non la trova, di default usa la property 'value' di @Route <br>
-     * 6) Se non la trova, di default usa nome della classe <br>
+     * 2) Se la classe è una @Route, recupera @PageTitle e il value di @Route <br>
+     * 3) Se manca @PageTitle o se la classe non è una @Route, recupera la Entity corrispondente e il menuName di @AIView <br>
+     * 4) Nell'ordine usa: <br>
+     * * @PageTitle
+     * * @AIView -> menuName
+     * * @Route -> value
+     * * Entity.class.name
      *
      * @param entityViewClazz the class of type AEntity or AView
      *
      * @return the name of the spring-view
      */
-    public String getMenuName(final Class<?> entityViewClazz) {
+    public String getMenuName(final Class<?> entityViewClazz) throws AlgosException {
         String menuName = VUOTA;
-        String tagRouteVuotaDefault = "___NAMING_CONVENTION___";
-        AIView annotationView = this.getAIView(entityViewClazz);
-        Route annotationRoute = null;
+        String viewName = VUOTA;
+        Class entityClazz=null;
+        AIView annotationView;
+        String pageMenu = VUOTA;
+        String routeMenu = VUOTA;
 
+        // Se manca la classe non può esserci nessun menuName
+        if (entityViewClazz == null) {
+            throw AlgosException.stack("Manca la entityViewClazz in ingresso", getClass(), "getEntityClazzFromClazz");
+        }
+
+        // Se la classe è una @Route
+        // Recupero pageMenu e cerco di usarlo subito
+        // Recupero routeMenu da usare eventualmente dopo
+        if (isRouteView(entityViewClazz)) {
+            pageMenu = getPageMenu(entityViewClazz);
+            routeMenu = getRouteName(entityViewClazz);
+        }
+
+        // pageMenu è la prima opzione
+        if (text.isValid(pageMenu)) {
+            return text.primaMaiuscola(pageMenu);
+        }
+
+        // Se pageMenu non è valido, cerco la Entity corrispondente
+        if (isEntityClass(entityViewClazz)) {
+            entityClazz = entityViewClazz;
+        }
+        else {
+            try {
+                entityClazz = classService.getEntityClazzFromClazz(entityViewClazz);
+            } catch (AlgosException unErrore) {
+                if (!isRouteView(entityViewClazz)) {
+                    throw AlgosException.stack(unErrore, this.getClass(), "getMenuName");
+                }
+            }
+        }
+
+        // Se la classe è una Entity
         // Cerca in @AIView della classe la property 'menuName'
-        if (annotationView != null) {
-            menuName = annotationView.menuName();
+        if (entityClazz!=null) {
+            annotationView = this.getAIView(entityClazz);
+            if (annotationView != null) {
+                viewName = annotationView.menuName();
+            }
         }
 
-        // Se non la trova, di default usa la property 'value' di @Route
+        // menuName è la seconda opzione
+        if (text.isValid(viewName)) {
+            menuName = viewName;
+        }
+
+        // routeMenu è la terza opzione
         if (text.isEmpty(menuName)) {
-            annotationRoute = this.getRoute(entityViewClazz);
+            menuName = routeMenu;
         }
 
-        if (annotationRoute != null) {
-            menuName = annotationRoute.value();
-        }
-
-        if (menuName.equals(tagRouteVuotaDefault)) {
-            menuName = VUOTA;
-        }
-
-        // Se non la trova, di default usa nome della classe
+        // il nome della classe è la quarta (ultima) opzione
         if (text.isEmpty(menuName)) {
-            menuName = entityViewClazz != null ? entityViewClazz.getSimpleName() : VUOTA;
+            menuName = entityClazz.getSimpleName();
         }
 
-        return text.isValid(menuName) ? text.primaMaiuscola(menuName) : VUOTA;
+        return text.primaMaiuscola(menuName);
     }
 
 
@@ -1139,7 +1214,7 @@ public class AnnotationService extends AbstractService {
      * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIList() nella Entity
      */
     public List<String> getGridColumns(final Class<? extends AEntity> entityClazz) {
-        List listaNomi;
+        List listaNomi = null;
         String stringaMultipla;
         AIList annotationEntity = this.getAIList(entityClazz);
 
@@ -1149,11 +1224,18 @@ public class AnnotationService extends AbstractService {
                 listaNomi = text.getArray(stringaMultipla);
             }
             else {
-                listaNomi = reflection.getFieldsName(entityClazz);
+                try {
+                    listaNomi = reflection.getFieldsName(entityClazz);
+                } catch (AlgosException unErrore) {
+                }
+
             }
         }
         else {
-            listaNomi = reflection.getFieldsName(entityClazz);
+            try {
+                listaNomi = reflection.getFieldsName(entityClazz);
+            } catch (AlgosException unErrore) {
+            }
         }
 
         return listaNomi;
@@ -1212,11 +1294,18 @@ public class AnnotationService extends AbstractService {
                 listaNomi = text.getArray(stringaMultipla);
             }
             else {
-                listaNomi = reflection.getFieldsName(entityClazz);
+                try {
+                    listaNomi = reflection.getFieldsName(entityClazz);
+                } catch (AlgosException unErrore) {
+                }
+
             }
         }
         else {
-            listaNomi = reflection.getFieldsName(entityClazz);
+            try {
+                listaNomi = reflection.getFieldsName(entityClazz);
+            } catch (AlgosException unErrore) {
+            }
         }
 
         return listaNomi;
@@ -1253,18 +1342,17 @@ public class AnnotationService extends AbstractService {
         return type;
     }
 
-
-    /**
-     * Get the type (column) of the property.
-     *
-     * @param genericClazz    da cui estrarre il field statico
-     * @param publicFieldName property statica e pubblica
-     *
-     * @return the type for the specific column
-     */
-    public AETypeField getColumnType(final Class<?> genericClazz, final String publicFieldName) {
-        return getColumnType(reflection.getField(genericClazz, publicFieldName));
-    }
+    //    /**
+    //     * Get the type (column) of the property.
+    //     *
+    //     * @param genericClazz    da cui estrarre il field statico
+    //     * @param publicFieldName property statica e pubblica
+    //     *
+    //     * @return the type for the specific column
+    //     */
+    //    public AETypeField getColumnType(final Class<?> genericClazz, final String publicFieldName) {
+    //        return getColumnType(reflection.getField(genericClazz, publicFieldName));
+    //    }
 
     /**
      * Get the name (field) of the property <br>
@@ -1556,7 +1644,12 @@ public class AnnotationService extends AbstractService {
      * @return status of field
      */
     public boolean usaComboBox(Class<? extends AEntity> entityClazz, String fieldName) {
-        return usaComboBox(reflection.getField(entityClazz, fieldName));
+        try {
+            return usaComboBox(reflection.getField(entityClazz, fieldName));
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "usaComboBox");
+            return false;
+        }
     }
 
 
@@ -1661,7 +1754,12 @@ public class AnnotationService extends AbstractService {
      * @return status of field
      */
     public boolean usaCheckBox(Class<? extends AEntity> entityClazz, String fieldName) {
-        return usaCheckBox(reflection.getField(entityClazz, fieldName));
+        try {
+            return usaCheckBox(reflection.getField(entityClazz, fieldName));
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "usaCheckBox");
+            return false;
+        }
     }
 
 
@@ -1695,7 +1793,12 @@ public class AnnotationService extends AbstractService {
      * @return status of field
      */
     public boolean usaCheckBox3Vie(Class<? extends AEntity> entityClazz, String fieldName) {
-        return usaCheckBox3Vie(reflection.getField(entityClazz, fieldName));
+        try {
+            return usaCheckBox3Vie(reflection.getField(entityClazz, fieldName));
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "usaCheckBox3Vie");
+            return false;
+        }
     }
 
 
@@ -2637,8 +2740,11 @@ public class AnnotationService extends AbstractService {
         if (!AEntity.class.isAssignableFrom(entityClazz)) {
             return VUOTA;
         }
-
-        reflectionJavaField = reflection.getField(entityClazz, propertyName);
+        try {
+            reflectionJavaField = reflection.getField(entityClazz, propertyName);
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "getKeyFieldMongo");
+        }
 
         if (reflectionJavaField != null) {
             fieldAnnotation = reflectionJavaField.getAnnotation(org.springframework.data.mongodb.core.mapping.Field.class);
@@ -2676,7 +2782,11 @@ public class AnnotationService extends AbstractService {
             return null;
         }
 
-        listaGrezza = listaGrezza = reflection.getAllFields(entityClazz);
+        try {
+            listaGrezza = listaGrezza = reflection.getAllFields(entityClazz);
+        } catch (AlgosException unErrore) {
+        }
+
         if (array.isAllValid(listaGrezza)) {
             listaFields = new ArrayList<>();
             for (Field field : listaGrezza) {

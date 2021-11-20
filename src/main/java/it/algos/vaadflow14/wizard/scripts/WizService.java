@@ -112,28 +112,9 @@ public class WizService {
     public void fixAEWizCost() {
         //--regola tutti i valori automatici
         AEWizCost.fixValoriDerivati();
-        printInfoStart();
-        printInfoCheck();
-        //        //--directory di lavoro
-        //        String pathCurrent = System.getProperty("user.dir") + SLASH;
-        //        AEWizCost.pathCurrentProject.setValue(pathCurrent);
-        //
-        //        //--programmatore (magari serve)
-        //        String user = pathCurrent.substring(1);
-        //        user = text.levaTestoPrimaDi(user, SLASH);
-        //        user = user.substring(0, user.indexOf(SLASH));
-        //        AEWizCost.nameUser.setValue(user);
-
-        //        //--progetto in esecuzione
-        //        String projectCurrent = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
-        //        projectCurrent = text.primaMaiuscola(projectCurrent);
-        //        AEWizCost.nameCurrentProjectUpper.setValue(projectCurrent);
 
         //--differenziazione tra progetto base (vaadflow14) e progetti derivati
         AEFlag.isBaseFlow.set(AEWizCost.nameCurrentProjectDirectoryIdea.get().equals(AEWizCost.nameVaadFlow14Lower.get()));
-
-        //        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
-        //        AEWizCost.fixValoriDerivati();
     }
 
     /**

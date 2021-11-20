@@ -102,7 +102,7 @@ public class WebServiceTest extends ATest {
     @DisplayName("2 - Legge un indirizzo URL generico")
     public void leggeGac() {
         sorgente = URL_WEB_GAC;
-        previsto = "<!DOCTYPE html><html><body><h1>Telefoni</h1><p style=\"font-family:verdana;font-size:60px\">Gac: 338 9235040</p>";
+        previsto = "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">";
 
         ottenutoRisultato = service.legge(sorgente);
         assertNotNull(ottenutoRisultato);
@@ -137,8 +137,8 @@ public class WebServiceTest extends ATest {
     @DisplayName("3 - Legge un body di un URL generico")
     public void leggeBodyGac() {
         sorgente = URL_WEB_GAC;
-        previsto = "<h1>Telefoni</h1><p style=\"font-family:verdana;font-size:60px\">Gac: 338 9235040</p>";
-        previsto2 = "<p style=\"font-family:verdana;font-size:60px\">2NT-3F: No</p>";
+        previsto = "<h1 style=\"margin: 0.0px 0.0px 16.1px 0.0px; line-height: 28.0px; font: 24.0px Times; color:";
+        previsto2 = "<p class=\"p3\"><span class=\"s1\"></span><br></p>";
 
         ottenutoRisultato = service.leggeBodyWeb(sorgente);
         assertNotNull(ottenutoRisultato);

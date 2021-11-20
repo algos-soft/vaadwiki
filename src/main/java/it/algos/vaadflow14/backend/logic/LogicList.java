@@ -1,19 +1,18 @@
 package it.algos.vaadflow14.backend.logic;
 
 import ch.carnet.kasparscherrer.*;
-import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
-import com.vaadin.flow.component.grid.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.data.provider.*;
-import com.vaadin.flow.server.*;
 import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.backend.application.FlowVar.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -22,7 +21,6 @@ import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.list.*;
-import org.vaadin.haijian.*;
 
 import java.util.*;
 
@@ -106,6 +104,9 @@ public abstract class LogicList extends Logic {
 
         //--costruisce una mappa (vuota) di filtri per la Grid
         super.mappaFiltri = new HashMap<>();
+
+        //--costruisce una istanza (vuota) dei filtri per la Grid
+        //        super.wrapFiltri = WrapFiltri.crea(entityClazz);
     }
 
     /**
@@ -297,14 +298,18 @@ public abstract class LogicList extends Logic {
     @Override
     protected void creaComandiTop() {
         super.creaComandiTop();
-        ComboBox combo;
+        ComboBox combo = null;
         Checkbox check;
         IndeterminateCheckbox check3Vie;
 
         for (String fieldName : annotation.getGridColumns(entityClazz)) {
 
             if (annotation.usaComboBox(entityClazz, fieldName)) {
-                combo = this.getComboBox(fieldName);
+                try {
+                    combo = this.getComboBox(fieldName);
+                } catch (AlgosException unErrore) {
+                    logger.warn(unErrore, this.getClass(), "creaComandiTop");
+                }
                 mappaComponentiTop.put(fieldName, combo);
             }
 
@@ -342,7 +347,7 @@ public abstract class LogicList extends Logic {
      *
      * @param fieldName (obbligatorio) della property da utilizzare per il ComboBox
      */
-    protected ComboBox getComboBox(final String fieldName) {
+    protected ComboBox getComboBox(final String fieldName) throws AlgosException {
         return getComboBox(fieldName, (DataProvider) null, 0, null);
     }
 
@@ -355,7 +360,7 @@ public abstract class LogicList extends Logic {
      * @param fieldName    (obbligatorio) della property da utilizzare per il ComboBox
      * @param dataProvider fornitore degli items. Se manca lo costruisce con la collezione completa
      */
-    protected ComboBox getComboBox(final String fieldName, final DataProvider dataProvider) {
+    protected ComboBox getComboBox(final String fieldName, final DataProvider dataProvider) throws AlgosException {
         return getComboBox(fieldName, dataProvider, 0, null);
     }
 
@@ -368,7 +373,7 @@ public abstract class LogicList extends Logic {
      * @param fieldName (obbligatorio) della property da utilizzare per il ComboBox
      * @param width     larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
      */
-    protected ComboBox getComboBox(final String fieldName, final int width) {
+    protected ComboBox getComboBox(final String fieldName, final int width) throws AlgosException {
         return getComboBox(fieldName, (DataProvider) null, width, null);
     }
 
@@ -381,7 +386,7 @@ public abstract class LogicList extends Logic {
      * @param fieldName    (obbligatorio) della property da utilizzare per il ComboBox
      * @param initialValue eventuale valore iniziale di selezione
      */
-    protected ComboBox getComboBox(final String fieldName, final Object initialValue) {
+    protected ComboBox getComboBox(final String fieldName, final Object initialValue) throws AlgosException {
         return getComboBox(fieldName, (DataProvider) null, 0, initialValue);
     }
 
@@ -395,7 +400,7 @@ public abstract class LogicList extends Logic {
      * @param width        larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
      * @param initialValue eventuale valore iniziale di selezione
      */
-    protected ComboBox getComboBox(final String fieldName, final DataProvider dataProvider, final int width, final Object initialValue) {
+    protected ComboBox getComboBox(final String fieldName, final DataProvider dataProvider, final int width, final Object initialValue) throws AlgosException {
         return utility.creaComboBox(entityClazz, fieldName, dataProvider, width, initialValue);
     }
 
@@ -406,10 +411,23 @@ public abstract class LogicList extends Logic {
     protected void fixBodyLayout() {
         //--con dataProvider standard - con filtro base (vuoto=tutta la collection) e sort di default della AEntity
         //--può essere ri-filtrato successivamente
-        grid = appContext.getBean(AGrid.class, entityClazz, this, mappaFiltri);
+        switch (filtroProvider) {
+            case mappaFiltri:
+                grid = appContext.getBean(AGrid.class, entityClazz, this, mappaFiltri);
+                break;
+            case wrapFiltri:
+                wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
+                grid = appContext.getBean(AGrid.class, entityClazz, this, wrapFiltri);
+                break;
+            default:
+                logger.error("Switch - caso non definito", this.getClass(), "fixBodyLayout");
+                break;
+        }
 
         grid.fixGridHeader();
         this.addGridListeners();
+        refreshAll();
+
 
         /**
          * Regolazioni INDISPENSABILI per usare DataProvider sui DB voluminosi <br>
@@ -586,14 +604,11 @@ public abstract class LogicList extends Logic {
         }
 
         switch (azione) {
-            case searchField:
+            case searchField -> {
                 this.fixFiltroSearch(searchFieldValue);
-                this.grid.getGrid().getDataProvider().refreshAll();
-                grid.fixGridHeader();
-                break;
-            default:
-                status = false;
-                break;
+                refreshAll();
+            }
+            default -> status = false;
         }
 
         return status;
@@ -622,13 +637,11 @@ public abstract class LogicList extends Logic {
         switch (azione) {
             case valueChanged:
                 this.fixFiltroCombo(fieldName, fieldValue);
-                this.grid.getGrid().getDataProvider().refreshAll();
-                grid.fixGridHeader();
+                refreshAll();
                 break;
             case check:
                 this.fixFiltroCheck(fieldName, fieldValue);
-                this.grid.getGrid().getDataProvider().refreshAll();
-                grid.fixGridHeader();
+                refreshAll();
                 break;
             default:
                 status = false;
@@ -636,6 +649,16 @@ public abstract class LogicList extends Logic {
         }
 
         return status;
+    }
+
+
+    public void refreshAll() {
+        Map<String, AFiltro> mappaFiltri = wrapFiltri.getMappaFiltri();
+        wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
+        wrapFiltri.setMappaFiltri(mappaFiltri);
+        grid.getGrid().setDataProvider(dataProviderService.creaDataProvider(entityClazz, mappaFiltri));
+        this.grid.getGrid().getDataProvider().refreshAll();
+        grid.fixGridHeader();
     }
 
     /**
@@ -667,22 +690,44 @@ public abstract class LogicList extends Logic {
      *
      * @param searchFieldValue valore corrente del campo searchField (solo per List)
      */
-    protected AFiltro fixFiltroSearch(final String searchFieldValue) {
-        AFiltro filtro = null;
+    protected void fixFiltroSearch(final String searchFieldValue) {
         String searchFieldName = annotation.getSearchPropertyName(entityClazz);
+        AFiltro filtro = null;
 
-        if (text.isValid(searchFieldName)) {
-            filtro = AFiltro.start(searchFieldName, searchFieldValue);
+        switch (filtroProvider) {
+            case mappaFiltri:
+                if (mappaFiltri != null) {
+                    if (text.isValid(searchFieldName)) {
+                        filtro = AFiltro.start(searchFieldName, searchFieldValue);
+                    }
+                    mappaFiltri.remove(KEY_MAPPA_SEARCH);
+                    if (filtro != null) {
+                        mappaFiltri.put(KEY_MAPPA_SEARCH, filtro);
+                    }
+                }
+                break;
+            case wrapFiltri:
+                if (wrapFiltri != null) {
+                    if (text.isValid(searchFieldName)) {
+                        if (text.isValid(searchFieldValue)) {
+                            try {
+                                wrapFiltri.regola(AETypeFilter.inizia, searchFieldName, searchFieldValue);
+                            } catch (AlgosException unErrore) {
+                                logger.warn(unErrore, this.getClass(), "fixFiltroSearch");
+                            }
+                        }
+                        else {
+                            if (wrapFiltri.getMappaFiltri() != null && wrapFiltri.getMappaFiltri().size() > 0) {
+                                wrapFiltri.getMappaFiltri().remove(searchFieldName);
+                            }
+                        }
+                    }
+                }
+                break;
+            default:
+                logger.error("Switch - caso non definito", this.getClass(), "fixFiltroSearch");
+                break;
         }
-
-        if (mappaFiltri != null) {
-            mappaFiltri.remove(KEY_MAPPA_SEARCH);
-            if (filtro != null) {
-                mappaFiltri.put(KEY_MAPPA_SEARCH, filtro);
-            }
-        }
-
-        return filtro;
     }
 
 
@@ -694,21 +739,36 @@ public abstract class LogicList extends Logic {
      * @param fieldName  nome del field
      * @param fieldValue valore corrente del field
      */
-    protected AFiltro fixFiltroCombo(final String fieldName, final Object fieldValue) {
+    protected void fixFiltroCombo(final String fieldName, final Object fieldValue) {
         AFiltro filtro = null;
 
-        if (text.isValid(fieldName) && fieldValue != null) {
-            filtro = AFiltro.ugualeObj(fieldName, fieldValue);
+        switch (filtroProvider) {
+            case mappaFiltri:
+                if (mappaFiltri != null) {
+                    if (text.isValid(fieldName) && fieldValue != null) {
+                        filtro = AFiltro.ugualeObj(fieldName, fieldValue);
+                    }
+                    mappaFiltri.remove(fieldName);
+                    if (filtro != null) {
+                        mappaFiltri.put(fieldName, filtro);
+                    }
+                }
+                break;
+            case wrapFiltri:
+                if (text.isValid(fieldName) && fieldValue != null) {
+                    if (wrapFiltri != null) {
+                        try {
+                            wrapFiltri.regola(AETypeFilter.link, fieldName, fieldValue);
+                        } catch (AlgosException unErrore) {
+                            logger.warn(unErrore, this.getClass(), "fixFiltroCombo");
+                        }
+                    }
+                }
+                break;
+            default:
+                logger.error("Switch - caso non definito", this.getClass(), "fixFiltroCombo");
+                break;
         }
-
-        if (mappaFiltri != null) {
-            mappaFiltri.remove(fieldName);
-            if (filtro != null) {
-                mappaFiltri.put(fieldName, filtro);
-            }
-        }
-
-        return filtro;
     }
 
     /**
@@ -781,7 +841,15 @@ public abstract class LogicList extends Logic {
         String message = "Vuoi veramente cancellare tutto? L' operazione non è reversibile.";
         VaadinIcon icon = VaadinIcon.WARNING;
 
-        if (((MongoService) mongo).isValidCollection(entityClazz)) {//@todo da controllare
+        boolean isValidCollection = false;
+
+        try {
+            isValidCollection = ((MongoService) mongo).isValidCollection(entityClazz);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "openConfirmDeleteAll");
+        }
+
+        if (isValidCollection) {
             messageDialog = new MessageDialog().setTitle("Delete").setMessage(message);
             messageDialog.addButton().text("Cancella").icon(icon).error().onClick(e -> clickDeleteAll()).closeOnClick();
             messageDialog.addButtonToLeft().text("Annulla").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
@@ -829,7 +897,6 @@ public abstract class LogicList extends Logic {
         //            messageDialog.open();
         //        }
     }
-
 
 
     /**
@@ -902,20 +969,20 @@ public abstract class LogicList extends Logic {
     }
 
     protected void export() {
-        Grid grid = new Grid(entityClazz, false);
-        grid.setColumns("nome");
-        grid.setItems(((MongoService) mongo).findAll(entityClazz));//@todo da controllare
-
-        String message = "Export";
-        InputStreamFactory factory = Exporter.exportAsExcel(grid);
-        StreamResource streamRes = new StreamResource(message + ".xls", factory);
-
-        Anchor anchorEsporta = new Anchor(streamRes, "Download");
-        anchorEsporta.getElement().setAttribute("style", "color: red");
-        anchorEsporta.getElement().setAttribute("Export", true);
-        Button button = new Button(new Icon(VaadinIcon.DOWNLOAD_ALT));
-        button.getElement().setAttribute("style", "color: red");
-        anchorEsporta.add(button);
+        //        Grid grid = new Grid(entityClazz, false);
+        //        grid.setColumns("nome");
+        //        grid.setItems(((MongoService) mongo).findAll(entityClazz));//@todo da controllare
+        //
+        //        String message = "Export";
+        //        InputStreamFactory factory = Exporter.exportAsExcel(grid);
+        //        StreamResource streamRes = new StreamResource(message + ".xls", factory);
+        //
+        //        Anchor anchorEsporta = new Anchor(streamRes, "Download");
+        //        anchorEsporta.getElement().setAttribute("style", "color: red");
+        //        anchorEsporta.getElement().setAttribute("Export", true);
+        //        Button button = new Button(new Icon(VaadinIcon.DOWNLOAD_ALT));
+        //        button.getElement().setAttribute("style", "color: red");
+        //        anchorEsporta.add(button);
         //        exportPlaceholder.removeAll();
         //        exportPlaceholder.add(anchorEsporta);
 

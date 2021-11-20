@@ -4,16 +4,26 @@ import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * Project vaadflow14
@@ -55,6 +65,63 @@ public class ReflectionServiceTest extends ATest {
      */
     private ReflectionService service;
 
+    //--da regolare per mostrare errori previsti oppure nasconderli per velocizzare
+    //--da usare SOLO come controllo per errori previsti
+    private boolean flagRisultatiEsattiObbligatori = true;
+
+
+    //--classe
+    //--numero fields classe
+    //--numero fields superClasse
+    protected static Stream<Arguments> CLAZZ_FIELDS() {
+        return Stream.of(
+                Arguments.of((Class) null, 0, 0),
+                Arguments.of(Via.class, 2, 6),
+                Arguments.of(AIType.class, 0, 0),
+                Arguments.of(Utente.class, 7, 12),
+                Arguments.of(LogicList.class, 0, 0),
+                Arguments.of(Company.class, 4, 8),
+                Arguments.of(Mese.class, 5, 7),
+                Arguments.of(Secolo.class, 5, 7)
+        );
+    }
+
+
+    //--classe
+    //--keyPropertyValue
+    //--valida
+    protected static Stream<Arguments> CLAZZ_KEY_ID() {
+        return Stream.of(
+                Arguments.of((Class) null, VUOTA, false),
+                Arguments.of(Utente.class, VUOTA, false),
+                Arguments.of(Mese.class, null, false),
+                Arguments.of(Mese.class, VUOTA, false),
+                Arguments.of(Mese.class, "termidoro", false),
+                Arguments.of(Giorno.class, "2agosto", true),
+                Arguments.of(Giorno.class, "2 agosto", false),
+                Arguments.of(Mese.class, "marzo", true),
+                Arguments.of(Mese.class, "Marzo", true),
+                Arguments.of(Mese.class, "marzo esatto", false),
+                Arguments.of(Via.class, "piazza", true)
+        );
+    }
+
+
+    //--classe
+    //--propertyName
+    //--esiste nella classe
+    //--esiste nelle superClassi
+    protected static Stream<Arguments> CLAZZ_ESISTE_FIELD() {
+        return Stream.of(
+                Arguments.of((Class) null, VUOTA, false, false),
+                Arguments.of(Utente.class, VUOTA, false, false),
+                Arguments.of(Mese.class, null, false, false),
+                Arguments.of(Mese.class, "ordine", true, true),
+                Arguments.of(Mese.class, "mese", true, true),
+                Arguments.of(Mese.class, "reset", false, true),
+                Arguments.of(Mese.class, "marzo esatto", false, false)
+        );
+    }
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -67,6 +134,9 @@ public class ReflectionServiceTest extends ATest {
 
         //--reindirizzo l'istanza della superclasse
         service = reflectionService;
+
+        //--property statica utilizzata nel test
+        FlowVar.typeSerializing = AETypeSerializing.spring;
     }
 
 
@@ -83,160 +153,106 @@ public class ReflectionServiceTest extends ATest {
         listaFields = null;
     }
 
-    @Test
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FIELDS")
     @Order(1)
-    @DisplayName("1 - Nomi dei fields pubblici della entity")
-    void getFieldsName() {
-        System.out.println("1 - Nomi dei fields pubblici della entity");
+    @DisplayName("1 - Nomi dei fields pubblici della entity e delle superClassi")
+    void getFieldsName(final Class clazz, final int fieldClasse, final int fieldsSuperclassi) {
+        String clazzName = clazz != null ? clazz.getSimpleName() : "(vuota)";
+        System.out.println(String.format("Classe %s", clazzName));
+
         System.out.println(VUOTA);
+        System.out.println(String.format("Nomi dei fields pubblici diretti della classe %s", clazzName));
+        try {
+            listaStr = service.getFieldsName(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printName(clazz, "getFieldsName", listaStr);
+        if (flagRisultatiEsattiObbligatori) {
+            assertEquals(fieldClasse, listaStr != null ? listaStr.size() : 0);
+        }
 
-        previstoIntero = 7;
-        listaStr = service.getFieldsName(UTENTE_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(UTENTE_CLASS, "getFieldsName", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 4;
-        listaStr = service.getFieldsName(COMPANY_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(COMPANY_CLASS, "getFieldsName", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 5;
-        listaStr = service.getFieldsName(MESE_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(MESE_CLASS, "getFieldsName", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 5;
-        listaStr = service.getFieldsName(SECOLO_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(SECOLO_CLASS, "getFieldsName", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 2;
-        listaStr = service.getFieldsName(VIA_ENTITY_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(SECOLO_CLASS, "getFieldsName", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nomi dei fields pubblici della classe %s e delle sue superClassi", clazzName));
+        try {
+            listaStr = service.getAllFieldsName(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printName(clazz, "getAllFieldsName", listaStr);
+        if (flagRisultatiEsattiObbligatori) {
+            assertEquals(fieldsSuperclassi, listaStr != null ? listaStr.size() : 0);
+        }
     }
 
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FIELDS")
     @Order(2)
-    @DisplayName("2 - Nomi dei fields pubblici della entity e delle superClassi")
-    void getAllFieldsName() {
-        System.out.println("2 - Nomi dei fields pubblici della entity e delle superClassi");
+    @DisplayName("2 - Fields pubblici della entity e delle superClassi")
+    void getFields(final Class clazz, final int fieldClasse, final int fieldsSuperclassi) {
+        String clazzName = clazz != null ? clazz.getSimpleName() : "(vuota)";
+        System.out.println(String.format("Classe %s", clazzName));
+
         System.out.println(VUOTA);
+        System.out.println(String.format("Fields pubblici diretti della classe %s", clazzName));
+        try {
+            listaFields = service.getFields(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printField(clazz, "getFieldsName", listaFields);
+        if (flagRisultatiEsattiObbligatori) {
+            assertEquals(fieldClasse, listaFields != null ? listaFields.size() : 0);
+        }
 
-        previstoIntero = 12;
-        listaStr = service.getAllFieldsName(UTENTE_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(UTENTE_CLASS, "getAllFieldsName", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 8;
-        listaStr = service.getAllFieldsName(COMPANY_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(COMPANY_CLASS, "getAllFieldsName", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 7;
-        listaStr = service.getAllFieldsName(MESE_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(MESE_CLASS, "getAllFieldsName", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 7;
-        listaStr = service.getAllFieldsName(SECOLO_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(SECOLO_CLASS, "getAllFieldsName", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 6;
-        listaStr = service.getAllFieldsName(VIA_ENTITY_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(SECOLO_CLASS, "getAllFieldsName", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
+        System.out.println(VUOTA);
+        System.out.println(String.format("Fields pubblici della classe %s e delle sue superClassi", clazzName));
+        try {
+            listaFields = service.getAllFields(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printField(clazz, "getAllFieldsName", listaFields);
+        if (flagRisultatiEsattiObbligatori) {
+            assertEquals(fieldsSuperclassi, listaFields != null ? listaFields.size() : 0);
+        }
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_ESISTE_FIELD")
     @Order(3)
-    @DisplayName("3 - Fields pubblici della entity")
-    void getFields() {
-        System.out.println("3 - Fields pubblici della entity");
+    @DisplayName("3 - Esistenza di un field nella classe o nelle superClassi")
+    void isEsiste(final Class clazz, final String propertyName, final boolean esisteClasse, final boolean esisteSuperclassi) {
+        String clazzName = clazz != null ? clazz.getSimpleName() : "(vuota)";
+        System.out.println(String.format("Classe %s", clazzName));
+
         System.out.println(VUOTA);
+        System.out.println(String.format("Esistenza nella classe %s del field %s", clazzName, propertyName));
+        try {
+            ottenutoBooleano = service.isEsisteFieldOnClass(clazz, propertyName);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (flagRisultatiEsattiObbligatori) {
+            assertEquals(esisteClasse, ottenutoBooleano);
+        }
+        printEsiste(clazz, propertyName, ottenutoBooleano);
 
-        previstoIntero = 7;
-        listaFields = service.getFields(UTENTE_CLASS);
-        Assertions.assertNotNull(listaFields);
-        printField(UTENTE_CLASS, "getFields", listaFields);
-        assertEquals(previstoIntero, listaFields.size());
-
-        previstoIntero = 4;
-        listaFields = service.getFields(COMPANY_CLASS);
-        Assertions.assertNotNull(listaFields);
-        printField(COMPANY_CLASS, "getFields", listaFields);
-        assertEquals(previstoIntero, listaFields.size());
-
-        previstoIntero = 5;
-        listaFields = service.getFields(MESE_CLASS);
-        Assertions.assertNotNull(listaFields);
-        printField(MESE_CLASS, "getFields", listaFields);
-        assertEquals(previstoIntero, listaFields.size());
-
-        previstoIntero = 5;
-        listaFields = service.getFields(SECOLO_CLASS);
-        Assertions.assertNotNull(listaFields);
-        printField(SECOLO_CLASS, "getFields", listaFields);
-        assertEquals(previstoIntero, listaFields.size());
-
-        previstoIntero = 2;
-        listaFields = service.getFields(VIA_ENTITY_CLASS);
-        Assertions.assertNotNull(listaFields);
-        printField(SECOLO_CLASS, "getFields", listaFields);
-        assertEquals(previstoIntero, listaFields.size());
-    }
-
-
-    @Test
-    @Order(4)
-    @DisplayName("4 - Fields pubblici della entity e delle superClassi")
-    void getAllFields() {
-        System.out.println("4 - Fields pubblici della entity e delle superClassi");
         System.out.println(VUOTA);
-
-        previstoIntero = 12;
-        listaFields = service.getAllFields(UTENTE_CLASS);
-        Assertions.assertNotNull(listaFields);
-        printField(UTENTE_CLASS, "getAllFields", listaFields);
-        assertEquals(previstoIntero, listaFields.size());
-
-        previstoIntero = 8;
-        listaFields = service.getAllFields(COMPANY_CLASS);
-        Assertions.assertNotNull(listaFields);
-        printField(COMPANY_CLASS, "getAllFields", listaFields);
-        assertEquals(previstoIntero, listaFields.size());
-
-        previstoIntero = 7;
-        listaFields = service.getAllFields(MESE_CLASS);
-        Assertions.assertNotNull(listaFields);
-        printField(MESE_CLASS, "getAllFields", listaFields);
-        assertEquals(previstoIntero, listaFields.size());
-
-        previstoIntero = 7;
-        listaFields = service.getAllFields(SECOLO_CLASS);
-        Assertions.assertNotNull(listaFields);
-        printField(SECOLO_CLASS, "getAllFields", listaFields);
-        assertEquals(previstoIntero, listaFields.size());
-
-        previstoIntero = 6;
-        listaFields = service.getAllFields(VIA_ENTITY_CLASS);
-        Assertions.assertNotNull(listaFields);
-        printField(SECOLO_CLASS, "getAllFields", listaFields);
-        assertEquals(previstoIntero, listaFields.size());
+        System.out.println(String.format("Esistenza nella classe %s e superClassi del field %s", clazzName, propertyName));
+        try {
+            ottenutoBooleano = service.isEsisteFieldOnSuperClass(clazz, propertyName);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (flagRisultatiEsattiObbligatori) {
+            assertEquals(esisteSuperclassi, ottenutoBooleano);
+        }
+        printEsiste(clazz, propertyName, ottenutoBooleano);
     }
-
 
     @Test
     @Order(5)
@@ -246,27 +262,53 @@ public class ReflectionServiceTest extends ATest {
         System.out.println(VUOTA);
 
         sorgente = FlowCost.FIELD_CODE;
-        ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        ottenutoField = null;
+        try {
+            ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
         Assertions.assertNull(ottenutoField);
         System.out.println("Non esiste " + UTENTE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FIELD_COMPANY;
-        ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        ottenutoField = null;
+        try {
+            ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assertions.assertNotNull(ottenutoField);
         System.out.println("Trovato " + UTENTE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FIELD_NOTE;
-        ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        ottenutoField = null;
+        try {
+            ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assertions.assertNotNull(ottenutoField);
         System.out.println("Trovato " + UTENTE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = service.getField(MESE_CLASS, sorgente);
+        ottenutoField = null;
+        try {
+            ottenutoField = service.getField(MESE_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assertions.assertNotNull(ottenutoField);
         System.out.println("Trovato " + MESE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FIELD_NOTE;
-        ottenutoField = service.getField(MESE_LOGIC_CLASS, sorgente);
+        ottenutoField = null;
+        try {
+            ottenutoField = service.getField(MESE_LOGIC_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assertions.assertNull(ottenutoField);
         System.out.println("Non esiste " + MESE_LOGIC_CLASS.getSimpleName() + PUNTO + sorgente);
     }
@@ -299,8 +341,38 @@ public class ReflectionServiceTest extends ATest {
     }
 
 
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_KEY_ID")
+    @Order(8)
+    @DisplayName("8 - Mappa delle property di una entity")
+    void getMapFieldsValue(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        try {
+            entityBean = mongoService.find(clazz, keyPropertyValue);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (valida) {
+            assertNotNull(entityBean);
+            try {
+                mappa = service.getMappaEntity(entityBean);
+            } catch (AlgosException unErrore) {
+                printError(unErrore);
+            }
+            assertTrue(mappa.size() > 0);
+            printMappaEntity(entityBean, mappa);
+        }
+        else {
+            assertNull(entityBean);
+        }
+    }
+
+
     private void printField(Class<? extends AEntity> clazz, String methodName, List<Field> lista) {
         int pos = 1;
+        if (clazz == null || lista == null) {
+            return;
+        }
+
         System.out.println("Scandagliando " + clazz.getSimpleName() + " col metodo " + methodName + " trovo " + lista.size() + " fields");
         for (Field field : lista) {
             System.out.println((pos++) + SEP + field.getName());
@@ -310,11 +382,14 @@ public class ReflectionServiceTest extends ATest {
 
     private void printName(final Class<? extends AEntity> clazz, final String methodName, final List<String> lista) {
         int pos = 1;
+        if (clazz == null || lista == null) {
+            return;
+        }
+
         System.out.println(String.format("Scandagliando %s col metodo %s trovo %d fields", clazz.getSimpleName(), methodName, lista.size()));
         for (String nome : lista) {
             System.out.println((pos++) + SEP + nome);
         }
-        System.out.println(VUOTA);
     }
 
     private void printListaCostanti(final Class clazz, final List<String> lista) {
@@ -338,6 +413,35 @@ public class ReflectionServiceTest extends ATest {
         System.out.println(VUOTA);
     }
 
+    private void printMappaEntity(final AEntity entityBean, final Map<String, Object> mappa) {
+        int pos = 1;
+        if (mappa == null) {
+            System.out.println(String.format("La mappa della entityBean %s non esiste", entityBean));
+            return;
+        }
+
+        System.out.println(String.format("La entityBean %s ha %d property", entityBean, mappa.size()));
+        for (String key : mappa.keySet()) {
+            System.out.print((pos++) + PARENTESI_TONDA_END + SPAZIO);
+            System.out.print(key);
+            System.out.print(UGUALE_SPAZIATO);
+            System.out.println(mappa.get(key));
+        }
+        System.out.println(VUOTA);
+    }
+
+    private void printEsiste(final Class clazz, final String propertyName, final boolean esiste) {
+        if (clazz == null) {
+            return;
+        }
+
+        if (esiste) {
+            System.out.println(String.format("Nella classe %s esiste il field %s", clazz.getSimpleName(), propertyName));
+        }
+        else {
+            System.out.println(String.format("Nella classe %s non esiste il field %s", clazz.getSimpleName(), propertyName));
+        }
+    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>

@@ -52,9 +52,9 @@ import javax.validation.constraints.*;
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Giorno", keyPropertyName = "titolo", usaBoot = true, usaNew = false)
-@AIView(menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine")
-@AIList(fields = "ordine,titolo", usaRowIndex = false)
-@AIForm(fields = "ordine,titolo,mese", usaSpostamentoTraSchede = false)
+@AIView(menuName = "giorni", menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine")
+@AIList(usaRowIndex = false)
+@AIForm(usaSpostamentoTraSchede = false)
 public class Giorno extends AREntity {
 
     /**
@@ -92,6 +92,21 @@ public class Giorno extends AREntity {
     @AIColumn(widthEM = 8)
     public Mese mese;
 
+    /**
+     * progressivo da inizio anno (obbligatorio, unico) non bisestile <br>
+     */
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.integer, caption = "inizio", typeNum = AETypeNum.positiviOnly)
+    @AIColumn(header = "start", widthEM = 5)
+    public int inizio;
+
+    /**
+     * progressivo alla fine dell'anno (obbligatorio, unico) non bisestile <br>
+     */
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.integer, caption = "fine", typeNum = AETypeNum.positiviOnly)
+    @AIColumn(header = "end", widthEM = 5)
+    public int fine;
 
     /**
      * @return a string representation of the object.

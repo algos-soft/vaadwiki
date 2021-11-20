@@ -103,7 +103,7 @@ public class NazionalitaService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Nazionalita findById(final String keyID) throws AMongoException {
+    public Nazionalita findById(final String keyID) throws AlgosException {
         return (Nazionalita) super.findById(keyID);
     }
 
@@ -119,7 +119,7 @@ public class NazionalitaService extends WikiService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Nazionalita findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
+    public Nazionalita findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
         return (Nazionalita) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -133,7 +133,7 @@ public class NazionalitaService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Nazionalita findByKey(final Serializable keyValue) throws AMongoException {
+    public Nazionalita findByKey(final Serializable keyValue) throws AlgosException {
         return (Nazionalita) super.findByKey(keyValue);
     }
 

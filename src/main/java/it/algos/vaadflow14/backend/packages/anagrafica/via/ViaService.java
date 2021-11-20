@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -63,7 +64,7 @@ public class ViaService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final AEVia aeVia) {
+    private boolean creaReset(final AEVia aeVia) throws AlgosException  {
         return super.creaReset(newEntity(aeVia.toString()));
     }
 
@@ -125,7 +126,11 @@ public class ViaService extends AService {
         }
 
         for (AEVia aeVia : AEVia.values()) {
-            numRec = creaReset(aeVia) ? numRec + 1 : numRec;
+            try {
+                numRec = creaReset(aeVia) ? numRec + 1 : numRec;
+            } catch (AlgosException unErrore) {
+                logger.warn(unErrore, this.getClass(), "reset");
+            }
         }
 
         return AResult.valido(AETypeReset.enumeration.get(), numRec);

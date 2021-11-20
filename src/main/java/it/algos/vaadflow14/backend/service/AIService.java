@@ -59,7 +59,7 @@ public interface AIService {
      *
      * @return la entityBean appena registrata, null se non registrata
      */
-    AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AMongoException;
+    AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AlgosException;
 
 
     /**
@@ -69,7 +69,7 @@ public interface AIService {
      *
      * @return true if exist
      */
-    boolean isEsiste(final String keyId) throws AMongoException;
+    boolean isEsiste(final Serializable keyId) throws AlgosException;
 
 
     /**
@@ -129,7 +129,7 @@ public interface AIService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    AEntity findById(final String keyID) throws AMongoException;
+    AEntity findById(final String keyID) throws AlgosException;
 
 
     /**
@@ -141,7 +141,7 @@ public interface AIService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    AEntity findByKey(final Serializable keyPropertyValue) throws AMongoException;
+    AEntity findByKey(final Serializable keyPropertyValue) throws AlgosException;
 
 
     /**
@@ -156,7 +156,7 @@ public interface AIService {
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    AEntity findByProperty(String propertyName, Serializable propertyValue) throws AMongoException;
+    AEntity findByProperty(String propertyName, Serializable propertyValue) throws AlgosException;
 
     /**
      * Cancella la collection <br>

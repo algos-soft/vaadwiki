@@ -95,4 +95,5 @@ public @interface AIEntity {
      */
     boolean usaTimeStamp() default false;
 
+
 }

@@ -7,12 +7,12 @@ import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.exception.*;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.validator.*;
-import org.apache.poi.ss.formula.functions.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -57,15 +57,21 @@ public class AFieldService extends AbstractService {
      */
     public AField crea(AEntity entityBean, Binder binder, AEOperation operationForm, String fieldKey) {
         AField field = null;
-        Field reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
-        field = this.creaOnly(entityBean, reflectionJavaField, operationForm);
+        Field reflectionJavaField = null;
 
+        try {
+             reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "crea");
+        }
+
+        field = this.creaOnly(entityBean, reflectionJavaField, operationForm);
         if (field != null) {
             this.addToBinder(entityBean, binder, operationForm, reflectionJavaField, field);
         }
         else {
-            AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
-            logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
+            AETypeField type = annotation.getFormType(reflectionJavaField);
+            logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "crea");
         }
 
         return field;
@@ -416,7 +422,7 @@ public class AFieldService extends AbstractService {
      *
      */
     public ComboBox getCombo(Field reflectionJavaField) {
-        ComboBox<T> combo = new ComboBox();
+        ComboBox combo = new ComboBox();
         boolean usaComboMethod;
         Class<AEntity> comboClazz;
         Class<AService> logicClazz;
@@ -440,7 +446,7 @@ public class AFieldService extends AbstractService {
         }
         else {
             items = ((MongoService) mongo).findAll(comboClazz);//@todo da controllare
-            combo = new ComboBox<>();
+            combo = new ComboBox();
             if (array.isEmpty(items)) {
                 items = new ArrayList();
                 items.add("test");

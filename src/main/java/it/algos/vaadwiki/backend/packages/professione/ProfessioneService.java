@@ -117,7 +117,7 @@ public class ProfessioneService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Professione findById(final String keyID) throws AMongoException {
+    public Professione findById(final String keyID) throws AlgosException {
         return (Professione) super.findById(keyID);
     }
 
@@ -133,7 +133,7 @@ public class ProfessioneService extends WikiService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Professione findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
+    public Professione findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
         return (Professione) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -147,7 +147,7 @@ public class ProfessioneService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Professione findByKey(final Serializable keyValue) throws AMongoException {
+    public Professione findByKey(final Serializable keyValue) throws AlgosException {
         return (Professione) super.findByKey(keyValue);
     }
 

@@ -290,6 +290,13 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.typeSerializing = AETypeSerializing.spring;
 
         /**
+         * Type da usare come parametro nella creazione di AGrid in LogicList.fixBodyLayout() e in DataProviderService  <br>
+         * Di default AETypeFiltroProvider.wrapFiltri <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
+         */
+        FlowVar.filtroProvider = AETypeFiltroProvider.wrapFiltri;
+
+        /**
          * Classe da usare per le Company (o sottoclassi) <br>
          * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>
          * Eventuale casting a carico del chiamante <br>
@@ -401,7 +408,6 @@ public abstract class FlowBoot implements ServletContextListener {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixMenuRoutes() {
-
         if (AEPreferenza.usaSpanHeaderRossi.is()) {
             FlowVar.menuRouteList.add(Preferenza.class);
         }
@@ -474,7 +480,7 @@ public abstract class FlowBoot implements ServletContextListener {
             entityBean.id = codeVersione;
             try {
                 ((MongoService) mongo).save(entityBean);//@todo da controllare
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 logger.error(unErrore, this.getClass(), "fixVersioni");
             }
         }

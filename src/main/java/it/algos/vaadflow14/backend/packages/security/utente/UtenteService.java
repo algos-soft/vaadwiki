@@ -175,7 +175,7 @@ public class UtenteService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Utente findById(final String keyID) throws AMongoException {
+    public Utente findById(final String keyID) throws AlgosException {
         return (Utente) super.findById(keyID);
     }
 
@@ -189,7 +189,7 @@ public class UtenteService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Utente findByKey(final String keyValue) throws AMongoException {
+    public Utente findByKey(final String keyValue) throws AlgosException {
         return (Utente) super.findByKey(keyValue);
     }
 

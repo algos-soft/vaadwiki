@@ -48,6 +48,7 @@ public enum AEPreferenza implements AIPreferenza {
     usaMenuGestione(PREF_USA_MENU_GESTIONE, "Usa i menu del gruppo gestione", AETypePref.bool, false, false, true, false, "Mostra i 3 (incrementabili) packages di gestione (address, via, persona). Anche se non visibili nel menu, sono sempre disponibili col nome della @Route."),
     usaMenuGeo(PREF_USA_MENU_GEO, "Usa i menu del gruppo geografia", AETypePref.bool, false, false, true, false, "Mostra i 4 (fissi) packages geografici (stato, regione, provincia, comune). Anche se non visibili nel menu, sono sempre disponibili col nome della @Route."),
     usaMenuCrono(PREF_USA_MENU_CRONO, "Usa i menu del gruppo crono", AETypePref.bool, false, false, true, false, "Mostra i 4 (fissi) packages cronologici (secolo, anno, mese, giorno). Anche se non visibili nel menu, sono sempre disponibili col nome della @Route."),
+    usaEvidenziaMenuSelezionato(PREF_USA_EVIDENZIA_MENU_SELEZIONATO, "Evidenzia il menu selezionato", AETypePref.bool, true, true,true,true),
     ;
 
 
@@ -206,8 +207,8 @@ public enum AEPreferenza implements AIPreferenza {
         Preferenza pref = preferenzaService.findByKey(this.keyCode);
         pref.setValue(pref.type.objectToBytes(value));
         try {
-            preferenzaService.save(pref,AEOperation.newEdit);
-        } catch (AMongoException unErrore) {
+            preferenzaService.save(pref, AEOperation.newEdit);
+        } catch (AlgosException unErrore) {
         }
     }
 
@@ -243,7 +244,9 @@ public enum AEPreferenza implements AIPreferenza {
                 valore = date.get((LocalTime) getValue());
                 break;
             case enumeration:
-                valore = ((String) getValue()).substring(((String) getValue()).indexOf(PUNTO_VIRGOLA) + 1);
+                if (getValue()!=null) {
+                    valore = ((String) getValue()).substring(((String) getValue()).indexOf(PUNTO_VIRGOLA) + 1);
+                }
                 break;
             case icona:
                 break;

@@ -134,7 +134,7 @@ public class NomeService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Nome findById(final String keyID) throws AMongoException {
+    public Nome findById(final String keyID) throws AlgosException {
         return (Nome) super.findById(keyID);
     }
 
@@ -149,7 +149,7 @@ public class NomeService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Nome findByKey(final Serializable keyValue) throws AMongoException {
+    public Nome findByKey(final Serializable keyValue) throws AlgosException {
         return (Nome) super.findByKey(keyValue);
     }
 
@@ -164,7 +164,7 @@ public class NomeService extends AService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Nome findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
+    public Nome findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
         return (Nome) super.findByProperty(propertyName, propertyValue);
     }
 

@@ -8,6 +8,7 @@ import com.vaadin.flow.data.renderer.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.*;
@@ -56,7 +57,7 @@ public class AColumnService extends AbstractService {
      */
     public Grid.Column<AEntity> add(Grid grid, Class<? extends AEntity> entityClazz, String fieldName) {
         Grid.Column<AEntity> colonna = null;
-        Field field = reflection.getField(entityClazz, fieldName);
+        Field field = null;
         AETypeField type = null;
         AETypeBoolField typeBool = AETypeBoolField.checkBox;
         String header = VUOTA;
@@ -67,6 +68,12 @@ public class AColumnService extends AbstractService {
         String width = VUOTA;
         Label label = null;
         boolean sortable = false;
+
+        try {
+            field = reflection.getField(entityClazz, fieldName);
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "add");
+        }
 
         if (field != null) {
             type = annotation.getColumnType(field);
@@ -95,9 +102,15 @@ public class AColumnService extends AbstractService {
                 case textArea:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         String testo = VUOTA;
+                        Field field2 = null;
                         try {
-                            if (field.get(entity) instanceof String) {
-                                testo = (String) field.get(entity);
+                            field2 = reflection.getField(entityClazz, fieldName);
+                        } catch (AlgosException unErrore) {
+                            logger.warn(unErrore, this.getClass(), "add");
+                        }
+                        try {
+                            if (field2.get(entity) instanceof String) {
+                                testo = (String) field2.get(entity);
                             }
                         } catch (Exception unErrore) {
                             logger.error(unErrore, this.getClass(), "add.text");
@@ -125,9 +138,15 @@ public class AColumnService extends AbstractService {
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         Object obj = null;
                         String testo = VUOTA;
+                        Field field3 = null;
+                        try {
+                            field3 = reflection.getField(entityClazz, fieldName);
+                        } catch (AlgosException unErrore) {
+                            logger.warn(unErrore, this.getClass(), "add");
+                        }
 
                         try {
-                            obj = field.get(entity);
+                            obj = field3.get(entity);
                             testo = date.get(obj, data).trim();
                         } catch (Exception unErrore) {
                             logger.error(unErrore, this.getClass(), "add (data)");
@@ -139,9 +158,15 @@ public class AColumnService extends AbstractService {
                 case combo:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         String testo = VUOTA;
+                        Field field4 = null;
+                        try {
+                            field4 = reflection.getField(entityClazz, fieldName);
+                        } catch (AlgosException unErrore) {
+                            logger.warn(unErrore, this.getClass(), "add");
+                        }
 
                         try {
-                            testo = field.get(entity) != null ? field.get(entity).toString() : VUOTA;
+                            testo = field4.get(entity) != null ? field4.get(entity).toString() : VUOTA;
                         } catch (Exception unErrore) {
                             logger.error(unErrore, this.getClass(), "add.combo");
                         }

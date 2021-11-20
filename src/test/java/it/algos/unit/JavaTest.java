@@ -1,10 +1,13 @@
 package it.algos.unit;
 
 import it.algos.test.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 
+import java.text.*;
 import java.time.*;
 import java.time.format.*;
 import java.util.*;
@@ -21,12 +24,12 @@ import java.util.stream.*;
  * <p>
  * Unit test di una classe di servizio (di norma) <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
- * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
- * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
+ * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte classi di service <br>
+ * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Java - Nuove funzioni Java +8.")
+@DisplayName("Java - Nuove funzioni Java 8 -> 17")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class JavaTest extends ATest {
 
@@ -42,18 +45,18 @@ public class JavaTest extends ATest {
      */
     @BeforeAll
     void setUpAll() {
-        super.setUpStartUp();
+        //        super.setUpStartUp();
         MockitoAnnotations.initMocks(this);
     }
 
     /**
-     * Qui passa ad ogni test delle sottoclassi <br>
+     * Qui passa a ogni test delle sottoclassi <br>
      * Invocare PRIMA il metodo setUp() della superclasse <br>
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeEach
     void setUpEach() {
-        super.setUp();
+        //        super.setUp();
     }
 
     @Test
@@ -143,15 +146,15 @@ public class JavaTest extends ATest {
         System.out.println(student);
     }
 
-    //    @Test
-    //    @Order(8)
-    //    @DisplayName("8 - Supplier strings")
-    //    void supplier8() {
-    //        System.out.println("Java8 Supplier strings\n");
+    //        @Test
+    //        @Order(8)
+    //        @DisplayName("8 - Supplier strings")
+    //        void supplier8() {
+    //            System.out.println("Java8 Supplier strings\n");
     //
-    //        List<String> names = Arrays.asList("Harry", "Daniel", "Lucifer", "April O' Neil");
-    //        names.stream().forEach((item) -> { printNamesSupplier(() -> item); });
-    //    }
+    //            List<String> names = Arrays.asList("Harry", "Daniel", "Lucifer", "April O' Neil");
+    //            names.stream().forEach((item) -> { printNamesSupplier(() -> item); });
+    //        }
 
     @Test
     @Order(9)
@@ -173,17 +176,19 @@ public class JavaTest extends ATest {
         var lista = List.of("one", "two", "three");
         lista.forEach(System.out::println);
         Object obj = null;
-        //        if (obj instanceof String ) {
-        //            System.out.println(s.contains("hello"));
+
+        //        if (obj instanceof String stringa) {
+        //            System.out.println(stringa.contains("hello"));
         //        }
 
-        //        System.out.println("Java10 \n");
-        //
-        //        var str = "a test string";
-        //        var aVariable = "Marco";
-        //        System.out.println(aVariable);
-        //        var anotherVariable = 182;
-        //        System.out.println(anotherVariable);
+        System.out.println("Java10 \n");
+
+        var str = "a test string";
+        System.out.println(str);
+        var aVariable = "Marco";
+        System.out.println(aVariable);
+        var anotherVariable = 182;
+        System.out.println(anotherVariable);
     }
 
     @Test
@@ -230,6 +235,259 @@ public class JavaTest extends ATest {
         //        assertTrue(matcher.matches());
     }
 
+    @Test
+    @Order(12)
+    @DisplayName("12 - textBlocks")
+    void textBlocks() {
+        System.out.println("12 - textBlocks");
+        System.out.println(VUOTA);
+
+        System.out.println("due spazi interni");
+        ottenuto = """
+                   {
+                      "name":"John Doe",
+                      "age":45,
+                      "address":"Doe Street, 23, Java Town"
+                   }
+                """;
+        System.out.println(ottenuto);
+
+        System.out.println("zero spazi interni");
+        ottenuto = """
+                   {
+                    "name":"John Doe",
+                    "age":45,
+                    "address":"Doe Street, 23, Java Town"
+                   }
+                """;
+        System.out.println(ottenuto);
+
+        System.out.println("uno spazio interno");
+        ottenuto = """
+                   {
+                     "name":"John Doe",
+                     "age":45,
+                     "address":"Doe Street, 23, Java Town"
+                   }
+                """;
+        System.out.println(ottenuto);
+
+        System.out.println("zero spazi esterni");
+        System.out.println("notare la posizione dei 3 doppi apici finali nel sorgente java");
+        ottenuto = """
+                {
+                  "name":"John Doe",
+                  "age":45,
+                  "address":"Doe Street, 23, Java Town"
+                }
+                """;
+        System.out.println(ottenuto);
+    }
+
+
+    @Test
+    @Order(13)
+    @DisplayName("13 - Switch Expressions")
+    void switchExpressions() {
+        System.out.println("13 - Switch Expressions");
+        System.out.println(VUOTA);
+        AEContinente continente = AEContinente.europa;
+
+        System.out.println("oldStyleWithoutBreak");
+        System.out.println("Senza break stampa TUTTI i casi dello switch:");
+        switch (continente) {
+            case europa, asia:
+                System.out.println("Eurasia");
+            case nordamerica, sudamerica:
+                System.out.println("America");
+            default:
+                System.out.println("Resto del Mondo");
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("oldStyleWithBreak");
+        System.out.println("Col break stampa correttamente SOLO il caso previsto:");
+        switch (continente) {
+            case europa, asia:
+                System.out.println("Eurasia");
+                break;
+            case nordamerica, sudamerica:
+                System.out.println("America");
+                break;
+            default:
+                System.out.println("Resto del Mondo");
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("withReturnValue");
+        ottenuto = switch (continente) {
+            case europa, asia -> "Eurasia";
+            case nordamerica, sudamerica -> "America";
+            default -> "Resto del Mondo";
+        };
+        System.out.println(ottenuto);
+
+        System.out.println(VUOTA);
+        System.out.println("withReturnValueEvenShorter");
+        System.out.println(switch (continente) {
+            case europa, asia -> "Eurasia";
+            case nordamerica, sudamerica -> "America";
+            default -> "Resto del Mondo";
+        });
+
+        System.out.println(VUOTA);
+        System.out.println("withYield");
+        System.out.println("more than only 1 thing in the case. Use brackets to indicate a case block and when returning a value, you use the keyword yield");
+        String text = switch (continente) {
+            case europa, asia -> {
+                System.out.println("the given fruit was: " + continente.getNome());
+                yield "Eurasia";
+            }
+            case nordamerica, sudamerica -> "Exotic fruit";
+            default -> "Undefined fruit";
+        };
+        System.out.println(text);
+
+        System.out.println(VUOTA);
+        System.out.println("oldStyleWithYield");
+        System.out.println("Senza break:");
+        System.out.println(switch (continente) {
+            case europa, asia:
+                yield "Eurasia";
+            case nordamerica, sudamerica:
+                yield "America";
+            default:
+                yield "Resto del Mondo";
+        });
+
+    }
+
+    @Test
+    @Order(14)
+    @DisplayName("14 - instanceof")
+    void instanceofTest() {
+        System.out.println("14 - instanceof");
+        System.out.println("Creazione della variabile SOLO se instanceof=true");
+        System.out.println(VUOTA);
+
+        Object obj = new Student(671, "Mario", "m", 27);
+        if (obj instanceof Student studente) {
+            System.out.println(String.format("Questo studente si chiama %s ed ha %d anni", studente.getName(), studente.getAge()));
+        }
+
+        System.out.println(VUOTA);
+        obj = new Student(671, "Francesca", "f", 24);
+        if (obj instanceof Student studente && studente.getAge() == 27) {
+        }
+        else {
+            System.out.println(String.format("Questo oggetto è uno studente ma NON ha 27 anni"));
+        }
+    }
+
+    @Test
+    @Order(15)
+    @DisplayName("15 - numberFormat")
+    void numberFormat() {
+        System.out.println("15 - numberFormat");
+        NumberFormat fmt;
+
+        System.out.println(VUOTA);
+        System.out.println("Inglese short");
+        fmt = NumberFormat.getCompactNumberInstance(Locale.ENGLISH, NumberFormat.Style.SHORT);
+        System.out.println(fmt.format(1000));
+        System.out.println(fmt.format(100000));
+        System.out.println(fmt.format(1000000));
+
+        System.out.println(VUOTA);
+        System.out.println("Inglese long");
+        fmt = NumberFormat.getCompactNumberInstance(Locale.ENGLISH, NumberFormat.Style.LONG);
+        System.out.println(fmt.format(1000));
+        System.out.println(fmt.format(100000));
+        System.out.println(fmt.format(1000000));
+
+        System.out.println(VUOTA);
+        System.out.println("Italiano long");
+        fmt = NumberFormat.getCompactNumberInstance(Locale.ITALIAN, NumberFormat.Style.LONG);
+        System.out.println(fmt.format(1000));
+        System.out.println(fmt.format(100000));
+        System.out.println(fmt.format(1000000));
+    }
+
+
+    @Test
+    @Order(16)
+    @DisplayName("16 - patternB")
+    void patternB() {
+        System.out.println("16 - patternB");
+        DateTimeFormatter dtf;
+        String sep = FORWARD;
+
+        System.out.println(VUOTA);
+        System.out.println("English Locale");
+        dtf = DateTimeFormatter.ofPattern("B").withLocale(Locale.forLanguageTag("EN"));
+        System.out.println(String.format("%s%s%s", "8", sep, dtf.format(LocalTime.of(8, 0))));
+        System.out.println(String.format("%s%s%s", "13", sep, dtf.format(LocalTime.of(13, 0))));
+        System.out.println(String.format("%s%s%s", "20", sep, dtf.format(LocalTime.of(20, 0))));
+        System.out.println(String.format("%s%s%s", "23", sep, dtf.format(LocalTime.of(23, 0))));
+        System.out.println(String.format("%s%s%s", "24", sep, dtf.format(LocalTime.of(0, 0))));
+
+        System.out.println(VUOTA);
+        System.out.println("Dutch Locale");
+        dtf = DateTimeFormatter.ofPattern("B").withLocale(Locale.forLanguageTag("NL"));
+        System.out.println(String.format("%s%s%s", "8", sep, dtf.format(LocalTime.of(8, 0))));
+        System.out.println(String.format("%s%s%s", "13", sep, dtf.format(LocalTime.of(13, 0))));
+        System.out.println(String.format("%s%s%s", "20", sep, dtf.format(LocalTime.of(20, 0))));
+        System.out.println(String.format("%s%s%s", "23", sep, dtf.format(LocalTime.of(23, 0))));
+        System.out.println(String.format("%s%s%s", "24", sep, dtf.format(LocalTime.of(0, 0))));
+
+        System.out.println(VUOTA);
+        System.out.println("Italiano Locale");
+        dtf = DateTimeFormatter.ofPattern("B").withLocale(Locale.forLanguageTag("IT"));
+        System.out.println(String.format("%s%s%s", "8", sep, dtf.format(LocalTime.of(8, 0))));
+        System.out.println(String.format("%s%s%s", "13", sep, dtf.format(LocalTime.of(13, 0))));
+        System.out.println(String.format("%s%s%s", "20", sep, dtf.format(LocalTime.of(20, 0))));
+        System.out.println(String.format("%s%s%s", "23", sep, dtf.format(LocalTime.of(23, 0))));
+        System.out.println(String.format("%s%s%s", "24", sep, dtf.format(LocalTime.of(0, 0))));
+    }
+
+
+    @Test
+    @Order(17)
+    @DisplayName("17 - stream.toList()")
+    void streamToList() {
+        System.out.println("17 - stream.toList()");
+        Stream<String> stringStream;
+        List<String> stringList;
+
+        System.out.println(VUOTA);
+        System.out.println("oldStyle");
+        stringStream = Stream.of("a", "b", "c");
+        stringList = stringStream.collect(Collectors.toList());
+        for (String s : stringList) {
+            System.out.println(s);
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("streamToList");
+        stringStream = Stream.of("a", "b", "c");
+        stringList = stringStream.toList();
+        for (String s : stringList) {
+            System.out.println(s);
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("algosBetter");
+        stringList = Stream.of("a", "b", "c").toList();
+        for (String s : stringList) {
+            System.out.println(s);
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("algosMoreBetter");
+        for (String s : Stream.of("a", "b", "c").toList()) {
+            System.out.println(s);
+        }
+    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>
@@ -303,5 +561,6 @@ public class JavaTest extends ATest {
         }
 
     }
+
 
 }

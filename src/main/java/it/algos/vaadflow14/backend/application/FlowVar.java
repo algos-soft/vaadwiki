@@ -138,6 +138,13 @@ public class FlowVar {
      */
     public static AETypeSerializing typeSerializing;
 
+    /**
+     * Type da usare come parametro nella creazione di AGrid in LogicList.fixBodyLayout() e in DataProviderService  <br>
+     * Di default AETypeFiltroProvider.wrapFiltri <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
+     */
+    public static AETypeFiltroProvider filtroProvider;
+
 
     //    /**
     //     * Service da usare per recuperare dal mongoDB l'utenza loggata tramite 'username' che è unico <br>
@@ -146,6 +153,7 @@ public class FlowVar {
     //     * Deve essere regolata in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
     //     */
     //    public static Class loginServiceClazz = UtenteService.class;
+
 
     //    /**
     //     * Classe da usare per gestire le informazioni dell'utenza loggata <br>

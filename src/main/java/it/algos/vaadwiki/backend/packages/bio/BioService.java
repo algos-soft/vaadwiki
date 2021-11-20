@@ -232,7 +232,7 @@ public class BioService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Bio findById(final String keyID) throws AMongoException {
+    public Bio findById(final String keyID) throws AlgosException {
         return (Bio) super.findById(keyID);
     }
 
@@ -248,7 +248,7 @@ public class BioService extends AService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Bio findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
+    public Bio findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
         return (Bio) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -262,7 +262,7 @@ public class BioService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Bio findByKey(final Serializable keyValue) throws AMongoException {
+    public Bio findByKey(final Serializable keyValue) throws AlgosException {
         return (Bio) super.findByKey(keyValue);
     }
 
@@ -313,7 +313,7 @@ public class BioService extends AService {
      * @throws
      */
     @Override
-    public Bio save(AEntity entityBeanDaRegistrare, AEOperation operation) throws AMongoException {
+    public Bio save(AEntity entityBeanDaRegistrare, AEOperation operation) throws AlgosException {
         return (Bio) super.save(entityBeanDaRegistrare, operation);
     }
 
@@ -408,7 +408,7 @@ public class BioService extends AService {
 
         try {
             save(bio, AEOperation.newEditNoLog);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             logger.log(AETypeLog.mongo, text.setQuadre(unErrore.getEntityBean().toString()) + SPAZIO + unErrore.getMessage());
         }
 
@@ -439,7 +439,7 @@ public class BioService extends AService {
         if (bio != null) {
             try {
                 bio = save(bio, null);
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 logger.error(unErrore, this.getClass(), "downloadBioSave");
             }
         }
@@ -472,7 +472,7 @@ public class BioService extends AService {
         if (wrap != null && wrap.isValido()) {
             try {
                 bio = findById(Long.toString(wrap.getPageid()));
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 logger.warn(unErrore, this.getClass(), "fixBioOld");
             }
             ((MongoService)mongo).delete(bio); //@todo sistemare
@@ -522,7 +522,7 @@ public class BioService extends AService {
             bio = this.newEntity(wrap);
             try {
                 save(bio, AEOperation.newEditNoLog);
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
             }
             logger.info(AETypeLog.download, String.format("Download della pagina %s", wrap.getTitle()));
         }
@@ -549,7 +549,7 @@ public class BioService extends AService {
             bio = this.newEntity(wrap);
             try {
                 save(bio, AEOperation.newEditNoLog);
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
             }
             logger.info(AETypeLog.download, String.format("Download della pagina %s", wrap.getTitle()));
         }

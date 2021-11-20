@@ -433,7 +433,7 @@ public abstract class WikiLogicList extends LogicList {
         String message;
         LocalDateTime last = aePreferenza.getDate();
 
-        if (last.equals(ROOT_DATA_TIME)) {
+        if (last == null || last.equals(ROOT_DATA_TIME)) {
             message = "Download non ancora effettuato";
         }
         else {

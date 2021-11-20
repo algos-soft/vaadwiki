@@ -53,7 +53,7 @@ import javax.validation.constraints.*;
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Mese", keyPropertyName = "mese", usaBoot = true, usaNew = false, usaTimeStamp = false, usaNote = false)
-@AIView(menuName = "Mese", menuIcon = VaadinIcon.CALENDAR, searchProperty = "mese", sortProperty = "ordine")
+@AIView(menuName = "Mesi", menuIcon = VaadinIcon.CALENDAR, searchProperty = "mese", sortProperty = "ordine")
 @AIList(fields = "ordine,mese,giorni,giorniBisestile,sigla", usaRowIndex = false)
 @AIForm(fields = "mese,giorni,giorniBisestile,sigla", usaSpostamentoTraSchede = true)
 public class Mese extends AREntity {

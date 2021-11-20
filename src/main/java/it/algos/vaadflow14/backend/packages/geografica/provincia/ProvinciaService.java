@@ -86,7 +86,7 @@ public class ProvinciaService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) {
+    private boolean creaReset(final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) throws  AlgosException {
         return super.creaReset(newEntity(nome, sigla, regione, stato, iso, status));
     }
 
@@ -143,7 +143,7 @@ public class ProvinciaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Provincia findById(final String keyID) throws AMongoException {
+    public Provincia findById(final String keyID) throws AlgosException {
         return (Provincia) super.findById(keyID);
     }
 
@@ -157,7 +157,7 @@ public class ProvinciaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Provincia findByKey(final String keyValue) throws AMongoException {
+    public Provincia findByKey(final String keyValue) throws AlgosException {
         return (Provincia) super.findByKey(keyValue);
     }
 
@@ -165,8 +165,15 @@ public class ProvinciaService extends AService {
     private AIResult checkRegione() {
         String packageName = Provincia.class.getSimpleName().toLowerCase();
         String collection = "regione";
+        boolean isValidCollection = false;
 
-        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
+        try {
+            isValidCollection = ((MongoService) mongo).isValidCollection(entityClazz);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "checkRegione");
+        }
+
+        if (isValidCollection) {
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
@@ -204,15 +211,19 @@ public class ProvinciaService extends AService {
                     regione = regioneService.findById(regioneTxt);
                     status = AETypeProvincia.findByIso(Integer.parseInt(regione.sigla));
                     status = wrap.isValido() ? AETypeProvincia.metropolitana : status;
-                } catch (AMongoException unErrore) {
+                } catch (AlgosException unErrore) {
                     logger.warn(unErrore, this.getClass(), "creaProvinceItaliane");
                 }
 
                 if (text.isValid(nome) && stato != null && regione != null && text.isValid(iso) && text.isValid(sigla)) {
-                    if (creaReset(nome, sigla, regione, stato, iso, status)) {
-                    }
-                    else {
-                        logger.log(String.format("Provincia non registrata. Nome:%s, Sigla:%s, Regione:%s", nome, sigla, regioneTxt));
+                    try {
+                        if (creaReset(nome, sigla, regione, stato, iso, status)) {
+                        }
+                        else {
+                            logger.log(String.format("Provincia non registrata. Nome:%s, Sigla:%s, Regione:%s", nome, sigla, regioneTxt));
+                        }
+                    } catch (AlgosException unErrore) {
+                        logger.warn(unErrore, this.getClass(), "reset");
                     }
                 }
                 else {

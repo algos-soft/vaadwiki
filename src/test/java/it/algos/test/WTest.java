@@ -300,7 +300,7 @@ public abstract class WTest extends ATest {
         queryLogin.text = textService;
         queryLogin.wikiApi = wikiApiService;
         queryLogin.logger = loggerService;
-        queryLogin.appContext = appContext;
+//        queryLogin.appContext = appContext;
         queryLogin.botLogin = botLogin;
 
         queryCat.text = textService;
@@ -333,7 +333,7 @@ public abstract class WTest extends ATest {
 
         queryBio.text = textService;
         queryBio.wikiApi = wikiApiService;
-        queryBio.appContext = appContext;
+//        queryBio.appContext = appContext;
 
         elaboraService.bioUtility = bioUtilityService;
         elaboraService.logger = loggerService;
@@ -401,7 +401,7 @@ public abstract class WTest extends ATest {
         String propertyName = "wikiTitle";
 
         try {
-            bio = (Bio)mongoService.findByProperty(clazz, propertyName, wikiTitle);
+            bio = (Bio)mongoService.find(clazz, propertyName, wikiTitle);
         } catch (Exception unErrore) {
             System.out.println(String.format("Non sono riuscito a recuperare la bio %s", wikiTitle));
         }

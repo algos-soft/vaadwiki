@@ -114,7 +114,7 @@ public class VersioneService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Versione findById(final String keyID) throws AMongoException {
+    public Versione findById(final String keyID) throws AlgosException {
         return (Versione) super.findById(keyID);
     }
 
@@ -128,7 +128,7 @@ public class VersioneService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Versione findByKey(final String keyValue) throws AMongoException {
+    public Versione findByKey(final String keyValue) throws AlgosException {
         return (Versione) super.findByKey(keyValue);
     }
 

@@ -90,7 +90,7 @@ public abstract class LogicForm extends Logic {
             clazzName = text.primaMaiuscola(getClass().getSimpleName());
             try {
                 entityBean = entityService.findById(keyID);
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 message = String.format("%s.%s: %s --- %s.%s()", entityClazz.getSimpleName(), entityBean, unErrore.getMessage(), clazzName, "fixEntityBean");
                 logger.error(AETypeLog.mongo, message);
             }
@@ -347,7 +347,10 @@ public abstract class LogicForm extends Logic {
         List<String> fieldsNameList = annotation.getListaPropertiesForm(entityClazz);
 
         if (array.isEmpty(fieldsNameList)) {
-            reflection.getFieldsName(entityBean.getClass());
+            try {
+                reflection.getFieldsName(entityBean.getClass());
+            } catch (AlgosException unErrore) {
+            }
         }
 
         if (FlowVar.usaCompany && annotation.usaCompany(entityBean.getClass())) {
@@ -445,7 +448,12 @@ public abstract class LogicForm extends Logic {
                 break;
             case back:
             case annulla:
-                this.openConfirmExitForm(entityBean);
+                if (currentForm.binder.hasChanges()) {
+                    this.openConfirmExitForm(entityBean);
+                }
+                else {
+                    backToList();
+                }
                 break;
             case delete:
                 if (deleteForm()) {
@@ -495,14 +503,21 @@ public abstract class LogicForm extends Logic {
         MessageDialog messageDialog;
         String message = "La entity è stata modificata. Sei sicuro di voler perdere le modifiche? L' operazione non è reversibile.";
         VaadinIcon iconBack = VaadinIcon.ARROW_LEFT;
+        boolean isValidCollection = false;
 
         if (operationForm == AEOperation.addNew) {
             backToList();
             return;
         }
 
+        try {
+            isValidCollection = ((MongoService) mongo).isValidCollection(entityClazz);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "openConfirmExitForm");
+        }
+
         if (currentForm.isModificato()) {
-            if (((MongoService) mongo).isValidCollection(entityClazz)) {//@todo da controllare
+            if (isValidCollection) {
                 messageDialog = new MessageDialog().setTitle("Ritorno alla lista").setMessage(message);
                 messageDialog.addButton().text("Rimani").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
                 messageDialog.addButtonToLeft().text("Back").icon(iconBack).error().onClick(e -> backToList()).closeOnClick();
@@ -583,7 +598,7 @@ public abstract class LogicForm extends Logic {
             //--passa al service per la registrazione della entityBean
             try {
                 entityService.save(entityBean, operationForm);
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 message = String.format("%s.%s: %s --- %s.%s()", entityClazz.getSimpleName(), entityBean, unErrore.getMessage(), clazzName, "saveClicked");
                 logger.error(AETypeLog.mongo, message);
             }
@@ -630,12 +645,12 @@ public abstract class LogicForm extends Logic {
             }
             try {
                 oldEntityBean = ((MongoService) mongo).find(entityBean);//@todo da controllare
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 logger.warn(unErrore, this.getClass(), "save");
             }
             try {
                 ((MongoService) mongo).save(entityBean);//@todo da controllare
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 logger.warn(unErrore, this.getClass(), "save");
             }
             status = entityBean != null;
