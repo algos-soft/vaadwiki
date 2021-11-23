@@ -66,6 +66,27 @@ public class ClassServiceTest extends MongoTest {
         );
     }
 
+
+    //--collectionName
+    //--clazzPrevista
+    protected static Stream<Arguments> CLAZZ_COLLECTION() {
+        return Stream.of(
+                Arguments.of(null, null),
+                Arguments.of("LogicList.class", null),
+                Arguments.of("utente", Utente.class),
+                Arguments.of("mese", Mese.class),
+                Arguments.of("Mese", Mese.class),
+                Arguments.of("mese.class", null),
+                Arguments.of("giorno", Giorno.class),
+                Arguments.of("notte", null),
+                Arguments.of("via", Via.class),
+                Arguments.of("type", null),
+                Arguments.of("company", Company.class),
+                Arguments.of("stato", Stato.class),
+                Arguments.of("continente", Continente.class)
+        );
+    }
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      * Invocare PRIMA il metodo setUpStartUp() della superclasse <br>
@@ -225,8 +246,32 @@ public class ClassServiceTest extends MongoTest {
             printError(unErrore);
         }
         assertEquals(clazzPrevista, clazz);
-
     }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_COLLECTION")
+    @Order(9)
+    @DisplayName("9 - getEntityClazzFromCollection")
+        //--collectionName
+        //--clazzPrevista
+    void getEntityClazzFromCollection(final String collectionName, final Class clazzPrevista) {
+        String message;
+        clazz = null;
+        try {
+            clazz = service.getEntityClazzFromCollection(collectionName);
+            System.out.print("Collection: ");
+            message = textService.isValid(collectionName) ? collectionName : "(null)";
+            System.out.println(message);
+            System.out.print("AEntity: ");
+            message = clazz != null ? clazz.getSimpleName() : "(null)";
+            System.out.println(message);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        assertEquals(clazzPrevista, clazz);
+    }
+
 
     void printEntityBean(final AEntity entityBean) {
         if (entityBean != null) {

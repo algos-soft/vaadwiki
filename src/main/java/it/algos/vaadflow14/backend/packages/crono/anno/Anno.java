@@ -51,7 +51,7 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Anno", keyPropertyName = "titolo", usaBoot = true, usaNew = false)
+@AIEntity(recordName = "Anno", keyPropertyName = "titolo", usaKeyIdMinuscolaCaseInsensitive = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Anno", menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine", sortDirection = "DESC")
 @AIList(fields = "ordine,titolo,bisestile,secolo", usaRowIndex = false)
 @AIForm(fields = "titolo,bisestile,secolo", usaSpostamentoTraSchede = false)

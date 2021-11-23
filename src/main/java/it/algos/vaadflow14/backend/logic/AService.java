@@ -223,7 +223,7 @@ public abstract class AService extends AbstractService implements AIService {
     @Override
     public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AlgosException {
         AEntity entityBean;
-        AEntity entityBeanOld=null;
+        AEntity entityBeanOld = null;
 
         //--eventuali operazioni eseguite PRIMA di registrare (new o modifica)
         entityBean = this.beforeSave(entityBeanDaRegistrare, operation);
@@ -232,9 +232,8 @@ public abstract class AService extends AbstractService implements AIService {
         try {
             entityBeanOld = mongo.find(entityBeanDaRegistrare);
         } catch (AlgosException unErrore) {
-//            throw AlgosException.stack(unErrore, this.getClass(), "save");
+            //            throw AlgosException.stack(unErrore, this.getClass(), "save");
         }
-
 
         //--esegue la registrazione sul database mongoDB
         //--con un controllo finale di congruità
@@ -385,15 +384,25 @@ public abstract class AService extends AbstractService implements AIService {
         String keyPropertyValue;
         Company company;
         String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+        boolean usaIdTuttoMinuscolo = false;
 
         if (text.isEmpty(newEntityBean.id)) {
             if (text.isValid(keyPropertyName)) {
                 keyPropertyValue = reflection.getPropertyValueStr(newEntityBean, keyPropertyName);
                 if (text.isValid(keyPropertyValue)) {
-                    keyPropertyValue = text.levaSpazi(keyPropertyValue);
-                    newEntityBean.id = keyPropertyValue.toLowerCase();
+                    newEntityBean.id = text.levaSpazi(keyPropertyValue);
                 }
             }
+        }
+
+        try {
+            usaIdTuttoMinuscolo = annotation.usaKeyIdMinuscolaCaseInsensitive(newEntityBean.getClass());
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore,getClass(),"fixKey");
+        }
+
+        if (usaIdTuttoMinuscolo) {
+            newEntityBean.id = newEntityBean.id != null ? newEntityBean.id.toLowerCase() : null;
         }
 
         if (newEntityBean instanceof ACEntity) {

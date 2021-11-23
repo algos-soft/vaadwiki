@@ -64,6 +64,14 @@ public interface AIMongoService {
      */
     boolean isExistsCollection(final Class<? extends AEntity> entityClazz) throws AlgosException;
 
+    /**
+     * Check the existence of a collection. <br>
+     *
+     * @param collectionName corrispondente ad una collection sul database mongoDB
+     *
+     * @return true if the collection exist
+     */
+     boolean isExistsCollection(final String collectionName) throws AlgosException ;
 
     /**
      * Check the existence (not empty) of a collection. <br>
@@ -93,6 +101,17 @@ public interface AIMongoService {
      */
     int count(final Class<? extends AEntity> entityClazz) throws AlgosException;
 
+
+    /**
+     * Conteggio di alcune entities selezionate di una collection. <br>
+     * La selezione è keyID=keyValue <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param keyValue (serializable) per costruire la query
+     *
+     * @return numero di entities selezionate
+     */
+    int count(final Class<? extends AEntity> entityClazz, final Serializable keyValue) throws AlgosException;
 
     /**
      * Conteggio di alcune entities selezionate di una collection. <br>

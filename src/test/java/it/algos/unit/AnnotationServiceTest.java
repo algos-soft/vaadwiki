@@ -14,6 +14,7 @@ import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.packages.security.utente.*;
+import it.algos.vaadflow14.backend.packages.utility.versione.*;
 import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.backend.service.AnnotationService.*;
 import org.junit.*;
@@ -76,21 +77,24 @@ public class AnnotationServiceTest extends ATest {
 
     //--clazz
     //--menuName
+    //--usaIdTuttoMinuscolo
+    //--usaCaseInsensitive
     protected static Stream<Arguments> CLAZZ_MENU() {
         return Stream.of(
-                Arguments.of(null, VUOTA),
-                Arguments.of(LogicList.class, VUOTA),
-                Arguments.of(GiornoLogicList.class, "Giorni"),
-                Arguments.of(Giorno.class, "Giorni"),
-                Arguments.of(Utente.class, "Utente"),
-                Arguments.of(Mese.class, "Mesi"),
-                Arguments.of(Via.class, "Via"),
-                Arguments.of(ViaLogicList.class, "Via"),
-                Arguments.of(AIType.class, VUOTA),
-                Arguments.of(Company.class, "Company"),
-                Arguments.of(Stato.class, "Stato"),
-                Arguments.of(Continente.class, "Continente"),
-                Arguments.of(CompanyLogicList.class, "Azienda")
+                Arguments.of(null, VUOTA, false, false),
+                Arguments.of(LogicList.class, VUOTA, false, false),
+                Arguments.of(GiornoLogicList.class, "Giorni", false, false),
+                Arguments.of(Giorno.class, "Giorni", true, true),
+                Arguments.of(Utente.class, "Utente", false, false),
+                Arguments.of(Mese.class, "Mesi", true, true),
+                Arguments.of(Via.class, "Via", true, true),
+                Arguments.of(ViaLogicList.class, "Via", false, false),
+                Arguments.of(AIType.class, VUOTA, false, false),
+                Arguments.of(Company.class, "Company", false, false),
+                Arguments.of(Stato.class, "Stato", true, true),
+                Arguments.of(Continente.class, "Continente", true, true),
+                Arguments.of(CompanyLogicList.class, "Azienda", false, false),
+                Arguments.of(Versione.class, "Versione", false, false)
         );
     }
 
@@ -1074,5 +1078,31 @@ public class AnnotationServiceTest extends ATest {
         }
         assertEquals(previsto, ottenuto);
     }
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_MENU")
+    @Order(5)
+    @DisplayName("5 - usaKeyIdMinuscolaCaseInsensitive")
+    void usaKeyIdMinuscolaCaseInsensitive(final Class clazzSorgente, final String menuNameNonUsato, final boolean usaKeyIdMinuscolaCaseInsensitive) {
+        String message;
+        clazz = clazzSorgente;
+
+        try {
+            ottenutoBooleano = service.usaKeyIdMinuscolaCaseInsensitive(clazz);
+            System.out.print("Origine: ");
+            message = clazzSorgente != null ? clazzSorgente.getSimpleName() : "(null)";
+            System.out.println(message);
+            if (ottenutoBooleano) {
+                System.out.println(String.format("La entityClazz %s usa solo lettere minuscole nel proprio keyId e la ricerca è case-insensitive", clazz.getSimpleName()));
+            }
+            else {
+                System.out.println(String.format("La entityClazz %s usa sia lettere maiuscole che minuscole nel proprio keyId e la ricerca è case-sensitive", clazz.getSimpleName()));
+            }
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        assertEquals(usaKeyIdMinuscolaCaseInsensitive, ottenutoBooleano);
+    }
+
 
 }

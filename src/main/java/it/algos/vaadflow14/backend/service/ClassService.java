@@ -74,7 +74,7 @@ public class ClassService extends AbstractService {
      *
      * @return classe xxxLogicList associata alla Entity
      */
-    public boolean isLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) throws AlgosException{
+    public boolean isLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) throws AlgosException {
         return getLogicListClassFromEntityClazz(dovrebbeEssereUnaEntityClazz) != null;
     }
 
@@ -85,7 +85,7 @@ public class ClassService extends AbstractService {
      *
      * @return classe xxxLogicList associata alla Entity
      */
-    public Class getLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) throws AlgosException{
+    public Class getLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) throws AlgosException {
         Class listClazz = null;
         String canonicalNameEntity;
         String canonicalNameLogicList;
@@ -533,7 +533,7 @@ public class ClassService extends AbstractService {
      *
      * @param entityClazz the entity class
      *
-     * @return new entity
+     * @return new entityBean
      */
     public AEntity getEntityFromClazz(final Class entityClazz) throws AlgosException {
         AEntity entityBean;
@@ -565,7 +565,7 @@ public class ClassService extends AbstractService {
      *
      * @param genericClazz to be checked if is of type AEntity
      *
-     * @return new entity
+     * @return classe individuata
      */
     public Class getEntityClazzFromClazz(final Class genericClazz) throws AlgosException {
         Class entityClazz = null;
@@ -581,7 +581,7 @@ public class ClassService extends AbstractService {
         }
 
         clazzName = genericClazz.getSimpleName();
-        if (clazzName.endsWith(SUFFIX_LOGIC_LIST)||clazzName.endsWith(SUFFIX_LOGIC_FORM)||clazzName.endsWith(SUFFIX_SERVICE)) {
+        if (clazzName.endsWith(SUFFIX_LOGIC_LIST) || clazzName.endsWith(SUFFIX_LOGIC_FORM) || clazzName.endsWith(SUFFIX_SERVICE)) {
             clazzName = text.levaCoda(clazzName, SUFFIX_LOGIC_LIST);
             clazzName = text.levaCoda(clazzName, SUFFIX_LOGIC_FORM);
             clazzName = text.levaCoda(clazzName, SUFFIX_SERVICE);
@@ -592,6 +592,26 @@ public class ClassService extends AbstractService {
 
         message = String.format("Non esiste una AEntity associata alla classe %s", genericClazz.getSimpleName());
         throw AlgosException.stack(message, getClass(), "getEntityClazzFromClazz");
+    }
+
+
+    /**
+     * Recupera la classe AEntity associata a questa collection del database mongoDB <br>
+     *
+     * @param collectionName della collezione su mongoDB <br>
+     *
+     * @return classe individuata
+     */
+    public Class getEntityClazzFromCollection(final String collectionName) throws AlgosException {
+        if (text.isEmpty(collectionName)) {
+            throw AlgosException.stack("Manca il nome della collection in ingresso", getClass(), "getEntityClazzFromCollection");
+        }
+
+        if (!mongo.isExistsCollection(collectionName)) {
+            throw AlgosException.stack(String.format("Non esiste la collection %s nel database mongoDB", collectionName), this.getClass(), "getEntityClazzFromCollection");
+        }
+
+        return getClazzFromSimpleName(collectionName);
     }
 
 }

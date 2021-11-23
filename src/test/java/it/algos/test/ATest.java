@@ -578,6 +578,8 @@ public abstract class ATest {
         classService.text = textService;
         classService.logger = loggerService;
         classService.annotation = annotationService;
+        classService.mongo = mongoService;
+
 //        classService.appContext = appContext;
 
         preferenzaService.mongo = mongoService;

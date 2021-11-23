@@ -827,14 +827,14 @@ public class AnnotationService extends AbstractService {
     public String getMenuName(final Class<?> entityViewClazz) throws AlgosException {
         String menuName = VUOTA;
         String viewName = VUOTA;
-        Class entityClazz=null;
+        Class entityClazz = null;
         AIView annotationView;
         String pageMenu = VUOTA;
         String routeMenu = VUOTA;
 
-        // Se manca la classe non può esserci nessun menuName
+        // Se manca la classe non può esserci nessuna annotation
         if (entityViewClazz == null) {
-            throw AlgosException.stack("Manca la entityViewClazz in ingresso", getClass(), "getEntityClazzFromClazz");
+            throw AlgosException.stack("Manca la entityViewClazz in ingresso", getClass(), "getMenuName");
         }
 
         // Se la classe è una @Route
@@ -866,7 +866,7 @@ public class AnnotationService extends AbstractService {
 
         // Se la classe è una Entity
         // Cerca in @AIView della classe la property 'menuName'
-        if (entityClazz!=null) {
+        if (entityClazz != null) {
             annotationView = this.getAIView(entityClazz);
             if (annotationView != null) {
                 viewName = annotationView.menuName();
@@ -961,6 +961,39 @@ public class AnnotationService extends AbstractService {
         }
 
         return searchProperty;
+    }
+
+
+
+    /**
+     * Flag per usare solo le lettere minuscole nel campo chiave keyId. <br>
+     * Uppercase and lowercase letters are treated equivalent (case-insensitive) and NOT as distinct (case-sensitive) <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaKeyIdMinuscolaCaseInsensitive(final Class<? extends AEntity> entityClazz) throws AlgosException {
+        boolean usaKeyIdMinuscolaCaseInsensitive = false;
+        AIEntity annotation = null;
+
+        // Se manca la classe non può esserci nessuna annotation
+        if (entityClazz == null) {
+            throw AlgosException.stack("Manca la entityClazz in ingresso", getClass(), "usaCaseInsensitive");
+        }
+
+        if (AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIEntity(entityClazz);
+        }
+        else {
+            throw AlgosException.stack(String.format("La entityClazz %s in ingresso NON è una AEntity", entityClazz.getSimpleName()), getClass(), "usaCaseInsensitive");
+        }
+
+        if (annotation != null) {
+            usaKeyIdMinuscolaCaseInsensitive = annotation.usaKeyIdMinuscolaCaseInsensitive();
+        }
+
+        return usaKeyIdMinuscolaCaseInsensitive;
     }
 
     /**

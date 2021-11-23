@@ -53,6 +53,14 @@ public @interface AIEntity {
 
 
     /**
+     * (Optional) chiave keyId creata tutta minuscola e case-insensitive
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaKeyIdMinuscolaCaseInsensitive() default false;
+
+    /**
      * (Optional) Creazione automatica dei dati alla partenza se collezione vuota
      * Ha senso solo se esiste il metodo xxxService.reset()
      * Di default false
