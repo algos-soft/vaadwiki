@@ -808,7 +808,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the founded entity
      */
     public AEntity find(final Class<? extends AEntity> entityClazz, final Serializable keyId) throws AlgosException {
-        return find(entityClazz, FlowCost.FIELD_ID, keyId instanceof String ? ((String) keyId).toLowerCase() : keyId);
+        return find(entityClazz, FlowCost.FIELD_ID, keyId instanceof String ? (String) keyId : keyId);
 
         //                collection = getCollection(entityClazz);
         //                if (collection != null) {
@@ -2072,9 +2072,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    private AEntity findBase(final Class<? extends AEntity> entityClazz,
-                             final String propertyName, final Serializable propertyValue) throws
-            AlgosException {
+    private AEntity findBase(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
         Query query = new Query();
         int totRecords = 0;
         String message;
