@@ -84,7 +84,6 @@ public class BioLogicList extends WikiLogicList {
         super.fixPreferenze();
 
         super.usaBottoneDownload = true;
-        super.usaBottoneElabora = true;
         super.usaBottoneModulo = false;
         super.usaBottoneStatistiche = false;
         super.usaBottoneUploadStatistiche = false;

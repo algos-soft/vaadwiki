@@ -84,7 +84,7 @@ public class Secolo extends AREntity {
     /**
      * flag di separazione (obbligatorio)
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Ante" + FlowCost.HTLM_SPAZIO + "Cristo", usaCheckBox3Vie = true, widthEM = 6)
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Ante Cristo", usaCheckBox3Vie = true, widthEM = 6)
     @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "A.C.")
     public boolean anteCristo;
 

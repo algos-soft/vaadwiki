@@ -178,7 +178,7 @@ public class ADialog extends Dialog {
 
     /**
      * Service (@Scope = 'singleton') iniettato dal costruttore @Autowired di Spring <br>
-     * Unico per tutta l'applicazione. Usato come libreria.
+     * Unico per tutta l'applicazione. Usato come libreria. <br>
      */
     @Autowired
     protected AVaadinService vaadinService;
@@ -557,7 +557,7 @@ public class ADialog extends Dialog {
     //    public void open(AEntity item, EAOperation operation, AContext context) {
     //    }
     //
-    //
+
     //    /**
     //     * Opens the given item for editing in the dialog.
     //     *

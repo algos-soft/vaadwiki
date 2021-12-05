@@ -91,7 +91,7 @@ public class Attivita extends AEntity {
     /**
      * flag aggiunta (facoltativo, di default false) <br>
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "aggiunta", usaCheckBox3Vie = true)
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "aggiunta (ex-attività)", usaCheckBox3Vie = true)
     @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "Add", widthEM = 5)
     public boolean aggiunta;
 

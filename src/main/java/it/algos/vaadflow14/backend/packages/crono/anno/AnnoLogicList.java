@@ -62,20 +62,6 @@ public class AnnoLogicList extends LogicList {
 
 
     /**
-     * Preferenze usate da questa 'logica' <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        super.usaBottoneSearch = true;
-        super.maxNumeroBottoniPrimaRiga = 2;
-    }
-
-
-    /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
@@ -86,14 +72,5 @@ public class AnnoLogicList extends LogicList {
         addSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta' e comboBox selezione 'Secolo'");
         addSpanRosso("Manca providerData e pagination. Troppi records. Browser lentissimo. Metodo refreshGrid() provvisorio per mostrare solo una trentina di records");
     }
-
-    //    /**
-    //     * Regola una mappa di ComboBox (solo per la List e facoltativi) da usare nel wrapper getWrapButtonsTop() <br>
-    //     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-    //     */
-    //    @Override
-    //    protected void fixMappaComboBox() {
-    //        super.fixMappaComboBox();
-    //    }
 
 }// end of Route class

@@ -183,7 +183,7 @@ public abstract class WikiLogicList extends LogicList {
         this.usaBottoneStatistiche = true;
         this.usaBottoneUploadAll = true;
         this.usaBottoneUploadStatistiche = true;
-        super.maxNumeroBottoniPrimaRiga = 3;
+        super.maxNumeroBottoniPrimaRiga = 7;
 
         this.usaColonnaWiki = false;
         this.usaColonnaTest = false;
@@ -241,12 +241,11 @@ public abstract class WikiLogicList extends LogicList {
             putMappa(AEWikiButton.statisticheDue);
         }
         if (usaBottoneUploadAll) {
-            putMappa(AEWikiButton.uploadAll);
+            putMappa(AEWikiButton.uploadPagine);
         }
         if (usaBottoneUploadStatistiche) {
             putMappa(AEWikiButton.uploadStatistiche);
         }
-
     }
 
     /**

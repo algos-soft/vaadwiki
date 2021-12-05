@@ -427,14 +427,14 @@ public abstract class FlowBoot implements ServletContextListener {
             FlowVar.menuRouteList.add(Via.class);
         }
 
-        if (AEPreferenza.usaMenuGeo.is()) {
+        if (FlowVar.usaGeografiaPackages && AEPreferenza.usaMenuGeo.is()) {
             FlowVar.menuRouteList.add(Continente.class);
             FlowVar.menuRouteList.add(Stato.class);
             FlowVar.menuRouteList.add(Regione.class);
             FlowVar.menuRouteList.add(Provincia.class);
         }
 
-        if (AEPreferenza.usaMenuCrono.is()) {
+        if (FlowVar.usaCronoPackages && AEPreferenza.usaMenuCrono.is()) {
             FlowVar.menuRouteList.add(Secolo.class);
             FlowVar.menuRouteList.add(Anno.class);
             FlowVar.menuRouteList.add(Mese.class);

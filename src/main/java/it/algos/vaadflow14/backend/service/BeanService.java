@@ -135,14 +135,19 @@ public class BeanService extends AbstractService {
      *
      * @return true se esisteva ed è stata modificata oppure se non esisteva ed è stata creata
      */
-    public boolean isModificata(AEntity entityBeanCurrent) {
+    public boolean isModificata(AEntity entityBeanCurrent) throws AlgosException {
         AEntity entityBeanRegistrataSulDatabaseMongo = null;
 
         if (entityBeanCurrent == null) {
             return false;
         }
 
-        //        entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent);
+        try {
+            entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent);
+        } catch (AlgosException unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "isModificata");
+        }
+
         System.out.println("Errore in BeanService.isModificata");
         return !entityBeanCurrent.equals(entityBeanRegistrataSulDatabaseMongo);
     }
@@ -156,7 +161,7 @@ public class BeanService extends AbstractService {
      *
      * @return true se esisteva e non è stata modificata oppure se non esisteva
      */
-    public boolean isNotModificata(AEntity entityBeanCurrent) {
+    public boolean isNotModificata(AEntity entityBeanCurrent) throws AlgosException {
         return !isModificata(entityBeanCurrent);
     }
 

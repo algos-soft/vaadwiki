@@ -196,7 +196,8 @@ public class FlowData implements AIData {
             try {
                 isResetVuoto = mongo.countReset(entityClazz) == 0;
             } catch (Exception unErrore) {
-                logger.error(unErrore, this.getClass(), "bootReset");
+                logger.info(unErrore, this.getClass(), "bootReset");
+                isResetVuoto = true;
             }
             if (isResetVuoto) {
                 try {

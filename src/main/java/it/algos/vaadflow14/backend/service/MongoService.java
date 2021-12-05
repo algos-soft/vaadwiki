@@ -1182,34 +1182,30 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         Criteria criteria;
         Criteria criteriaFilter = new Criteria();
 
-        //        String propertyField ;
-        //        Class clazz = classService.getClazzFromSimpleName(collectionName);
-
-        //        if (annotation.isDBRef(clazz, propertyName)) {
-        //            propertyField += ".$id";
-        //        }
-
-        if (array.isAllValid(mappaFiltri)) {
-            for (AFiltro filtro : mappaFiltri.values()) {
-                criteria = filtro.getCriteria();
-                Object alfa = criteria.getCriteriaObject();
-                Object beta = criteria.getKey();
-                if (criteriaFilter.equals(new Criteria())) {
-                    criteriaFilter = criteria;
-                }
-                else {
-                    criteriaFilter.andOperator(criteria);
-                }
-            }
-
-            try {
-                docFilter = criteriaFilter.getCriteriaObject();
-            } catch (Exception unErrore) {
-                throw new AlgosException(unErrore, null, "MongoService.getFilter()");
-            }
+        if (wrapFiltri == null) {
+            throw AlgosException.stack("Manca il wrapFiltri", getClass(), "getFilter");
         }
 
-        return docFilter;
+        return getFilter(wrapFiltri.getMappaFiltri());
+        //        if (array.isAllValid(mappaFiltri)) {
+        //            for (AFiltro filtro : mappaFiltri.values()) {
+        //                criteria = filtro.getCriteria();
+        //                if (criteriaFilter.equals(new Criteria())) {
+        //                    criteriaFilter = criteria != null ? criteria : criteriaFilter;
+        //                }
+        //                else {
+        //                    criteriaFilter.andOperator(criteria);
+        //                }
+        //            }
+        //
+        //            try {
+        //                docFilter = criteriaFilter.getCriteriaObject();
+        //            } catch (Exception unErrore) {
+        //                throw new AlgosException(unErrore, null, "MongoService.getFilter()");
+        //            }
+        //        }
+        //
+        //        return docFilter;
     }
 
 
@@ -1321,41 +1317,36 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     public Query getQuery(final Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Query query = new Query();
-        Criteria criteriaFiltro;
-        Criteria criteriaQuery = null;
+        Criteria criteria;
+        Criteria criteriaQuery = new Criteria();
+        ;
 
         if (array.isAllValid(mappaFiltri)) {
             for (AFiltro filtro : mappaFiltri.values()) {
-                criteriaFiltro = filtro.getCriteria();
-
-                if (criteriaQuery == null) {
-                    criteriaQuery = criteriaFiltro;
-                    query.addCriteria(criteriaQuery);
+                criteria = filtro.getCriteria();
+                if (criteriaQuery.equals(new Criteria())) {
+                    criteriaQuery = criteria != null ? criteria : criteriaQuery;
+                    if (criteriaQuery != null) {
+                        query.addCriteria(criteriaQuery);
+                    }
                 }
                 else {
                     //--For multiple criteria on the same field, uses a “comma” to combine them.
                     //@todo Funzionalità ancora da implementare
-                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
-                        criteriaQuery.andOperator(criteriaFiltro);
+                    if (criteria.getKey().equals(criteriaQuery.getKey())) {
+                        criteriaQuery.andOperator(criteria);
                         //                        throw new AQueryException("Non riesco a gestire i filtri multipli");
                     }
                     else {
-                        query.addCriteria(criteriaFiltro);
+                        query.addCriteria(criteria);
                     }
                 }
             }
         }
 
-        //solo per keyID
-        //        //--regolo la query in modo che il successivo controllo effettuato dal metodo di mongo sia CASE INSENSITIVE
-        //        if (annotation.usaKeyIdMinuscolaCaseInsensitive(entityClazz)) {
-        //            query.collation(Collation.of("it").strength(Collation.ComparisonLevel.secondary()));
-        //        }
-
         return query;
     }
 
-    @Deprecated
     protected Bson getFilter(Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Document docFilter = null;
         Criteria criteria;
@@ -1365,7 +1356,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             for (AFiltro filtro : mappaFiltri.values()) {
                 criteria = filtro.getCriteria();
                 if (criteriaFilter.equals(new Criteria())) {
-                    criteriaFilter = criteria;
+                    criteriaFilter = criteria != null ? criteria : criteriaFilter;
                 }
                 else {
                     criteriaFilter.andOperator(criteria);
@@ -1920,6 +1911,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         List<Field> fields = reflection.getAllFields(entityClazz);
         String key;
         Object value;
+        Object prefValue = null;
         List<AIEnum> enumItems;
         AETypeField type;
         List lista;
@@ -1995,21 +1987,41 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
                 //--provvisorio - spostare in altro metodo
                 if (annotation.getFormType(field) == AETypeField.enumeration) {
-                    enumItems = fieldService.getEnumerationItems(field);
-
-                    for (AIEnum item : enumItems) {
-                        if (item.get().equals(value)) {
-                            value = item;
-                            break;
+                    if (entityClazz.isAssignableFrom(Preferenza.class) && field.getName().equals("type")) {
+                        lista = fieldService.getEnumerationItems(field);
+                        if (lista.size() > 0) {
+                            for (Object obj : lista) {
+                                if (obj instanceof AETypePref pref) {
+                                    if (pref.getNome().equals(value)) {
+                                        value = AETypePref.bool;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        enumItems = fieldService.getEnumerationItems(field);
+                        for (AIEnum item : enumItems) {
+                            if (item.get().equals(value)) {
+                                value = item;
+                                break;
+                            }
                         }
                     }
                 }
                 //--provvisorio - spostare in altro metodo
-
                 try {
-                    reflection.setPropertyValue(entityBean, key, value);
+                    if (entityClazz.isAssignableFrom(Preferenza.class) && field.getName().equals("value")) {
+                        if (prefValue != null) {
+                            reflection.setPropertyValue(entityBean, key, prefValue);
+                        }
+                    }
+                    else {
+                        reflection.setPropertyValue(entityBean, key, value);
+                    }
                 } catch (AlgosException unErrore) {
-                    throw AlgosException.stack(unErrore, String.format("Non funziona la reflection della property %s", key), this.getClass(), "creaByDoc");
+                    throw AlgosException.stack(unErrore, String.format("Nella entityBean %s.%s non funziona la reflection della property '%s' per il valore [%s]", entityBean.getClass().getSimpleName(), entityBean, key, value), this.getClass(), "creaByDoc");
                 }
             }
         }
@@ -2444,14 +2456,14 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @param entityClazz  corrispondente ad una collection sul database mongoDB
      * @param propertyName dell'ordinamento
      */
-    public int getNewOrder(Class<? extends AEntity> entityClazz, String
-            propertyName) throws AMongoException {
+    public int getNewOrder(Class<? extends AEntity> entityClazz, String propertyName) throws AMongoException {
         int ordine = 0;
         AEntity entityBean;
         Object value;
         Sort sort = Sort.by(Sort.Direction.DESC, propertyName);
         Field field = null;
         Query query = new Query().with(sort).limit(1);
+        List lista;
 
         try {
             field = reflection.getField(entityClazz, propertyName);
@@ -2462,11 +2474,13 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         switch (FlowVar.typeSerializing) {
             case spring:
                 try {
-                    entityBean = mongoOp.find(query, entityClazz).get(0);
-                    value = field.get(entityBean);
-                    ordine = (Integer) value;
+                    lista = mongoOp.find(query, entityClazz);
+                    if (lista != null && lista.size() > 0) {
+                        entityBean = mongoOp.find(query, entityClazz).get(0);
+                        value = field.get(entityBean);
+                        ordine = (Integer) value;
+                    }
                 } catch (Exception unErrore) {
-                    logger.error(unErrore, this.getClass(), "getNewOrder");
                     throw new AMongoException(unErrore);
                 }
                 break;

@@ -150,6 +150,24 @@ public enum AETypeFilter {
             return String.format("[(DBRef) %s %s %s]", fieldName, "(linkato a)", value);
         }
     },
+    checkBox3Vie("$eq", "CheckBox a 3 stati.") {
+        @Override
+        public Criteria getCriteria(final String fieldName, final Object value) {
+            return Criteria.where(fieldName).is(value);
+        }
+
+        @Override
+        public String getOperazione(final String fieldName, final String value) {
+            String nota = VUOTA;
+            if (value.startsWith(SPAZIO)) {
+                nota = "(spazio iniziale)";
+            }
+            if (value.endsWith(SPAZIO)) {
+                nota = "(spazio finale)";
+            }
+            return String.format("[%s %s %s] %s", fieldName, "(uguale)", value, nota);
+        }
+    },
     ;
 
     private String tag;

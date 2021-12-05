@@ -294,7 +294,6 @@ public class MainLayout extends AppLayout {
         try {
             entityClazz = classService.getEntityClazzFromClazz(clazz);
         } catch (AlgosException unErrore) {
-            logger.error(unErrore,getClass(),"createLink");
         }
         if (entityClazz != null) {
             icon = annotationService.getMenuIcon(entityClazz);

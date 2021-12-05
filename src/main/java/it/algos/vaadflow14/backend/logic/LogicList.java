@@ -268,12 +268,14 @@ public abstract class LogicList extends Logic {
         if (usaBottoneUpload) {
             putMappa(AEButton.upload);
         }
-        if (usaBottoneSearch) {
-            putMappa(AEButton.searchDialog);
-        }
         if (usaBottoneExport) {
             putMappa(AEButton.export);
         }
+        if (usaBottoneSearch) {
+            putMappa(AEButton.searchDialog);
+        }
+
+        this.creaComandiTop();
     }
 
     /**
@@ -297,10 +299,10 @@ public abstract class LogicList extends Logic {
      */
     @Override
     protected void creaComandiTop() {
-        super.creaComandiTop();
         ComboBox combo = null;
         Checkbox check;
         IndeterminateCheckbox check3Vie;
+        String caption;
 
         for (String fieldName : annotation.getGridColumns(entityClazz)) {
 
@@ -319,7 +321,8 @@ public abstract class LogicList extends Logic {
             }
 
             if (annotation.usaCheckBox3Vie(entityClazz, fieldName)) {
-                check3Vie = new IndeterminateCheckbox(text.primaMaiuscola(fieldName));
+                caption = annotation.getFormFieldName(entityClazz, fieldName);
+                check3Vie = new IndeterminateCheckbox(text.primaMaiuscola(caption));
                 mappaComponentiTop.put(fieldName, check3Vie);
             }
         }
@@ -329,16 +332,6 @@ public abstract class LogicList extends Logic {
             mappaComponentiTop.put(FIELD_NAME_RESET, check3Vie);
         }
     }
-
-    //    /**
-    //     * Aggiunge una enumeration alla mappa dei componenti <br>
-    //     *
-    //     * @param aiButton enumeration da aggiungere alla mappa componenti
-    //     */
-    //    protected void putMappa(final AIButton aiButton) {
-    //        mappaComponentiTop.put(aiButton.getTesto(), aiButton);
-    //    }
-
 
     /**
      * Crea un ComboBox e lo aggiunge alla mappa <br>
@@ -427,7 +420,6 @@ public abstract class LogicList extends Logic {
         grid.fixGridHeader();
         this.addGridListeners();
         refreshAll();
-
 
         /**
          * Regolazioni INDISPENSABILI per usare DataProvider sui DB voluminosi <br>
@@ -653,7 +645,7 @@ public abstract class LogicList extends Logic {
 
 
     public void refreshAll() {
-        Map<String, AFiltro> mappaFiltri = wrapFiltri.getMappaFiltri();
+        Map<String, AFiltro> mappaFiltri = wrapFiltri != null ? wrapFiltri.getMappaFiltri() : new HashMap<>();
         wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
         wrapFiltri.setMappaFiltri(mappaFiltri);
         grid.getGrid().setDataProvider(dataProviderService.creaDataProvider(entityClazz, mappaFiltri));
@@ -708,18 +700,16 @@ public abstract class LogicList extends Logic {
                 break;
             case wrapFiltri:
                 if (wrapFiltri != null) {
-                    if (text.isValid(searchFieldName)) {
-                        if (text.isValid(searchFieldValue)) {
-                            try {
-                                wrapFiltri.regola(AETypeFilter.inizia, searchFieldName, searchFieldValue);
-                            } catch (AlgosException unErrore) {
-                                logger.warn(unErrore, this.getClass(), "fixFiltroSearch");
-                            }
+                    if (text.isValid(searchFieldValue)) {
+                        try {
+                            wrapFiltri.regola(AETypeFilter.inizia, searchFieldName, searchFieldValue);
+                        } catch (AlgosException unErrore) {
+                            logger.warn(unErrore, this.getClass(), "fixFiltroSearch");
                         }
-                        else {
-                            if (wrapFiltri.getMappaFiltri() != null && wrapFiltri.getMappaFiltri().size() > 0) {
-                                wrapFiltri.getMappaFiltri().remove(searchFieldName);
-                            }
+                    }
+                    else {
+                        if (wrapFiltri.getMappaFiltri() != null && wrapFiltri.getMappaFiltri().size() > 0) {
+                            wrapFiltri.getMappaFiltri().remove(searchFieldName);
                         }
                     }
                 }
@@ -782,25 +772,47 @@ public abstract class LogicList extends Logic {
     protected AFiltro fixFiltroCheck(final String fieldName, final Object fieldValue) {
         AFiltro filtro = null;
 
-        if (text.isValid(fieldName)) {
-            if (fieldValue == null) {
-                filtro = null;
-            }
-            else {
-                if ((boolean) fieldValue) {
-                    filtro = AFiltro.vero(fieldName);
+        switch (filtroProvider) {
+            case mappaFiltri:
+                if (mappaFiltri != null) {
+                    if (text.isValid(fieldName)) {
+                        if (fieldValue == null) {
+                            filtro = null;
+                        }
+                        else {
+                            if ((boolean) fieldValue) {
+                                filtro = AFiltro.vero(fieldName);
+                            }
+                            else {
+                                filtro = AFiltro.falso(fieldName);
+                            }
+                        }
+                    }
+                    mappaFiltri.remove(fieldName);
+                    if (filtro != null) {
+                        mappaFiltri.put(fieldName, filtro);
+                    }
                 }
-                else {
-                    filtro = AFiltro.falso(fieldName);
+                break;
+            case wrapFiltri:
+                if (wrapFiltri != null) {
+                    if (text.isValid(fieldName)) {
+                        try {
+                            wrapFiltri.regola(AETypeFilter.checkBox3Vie, fieldName, fieldValue);
+                        } catch (AlgosException unErrore) {
+                            logger.warn(unErrore, this.getClass(), "fixFiltroCheck");
+                        }
+                    }
+                    else {
+                        if (wrapFiltri.getMappaFiltri() != null && wrapFiltri.getMappaFiltri().size() > 0) {
+                            wrapFiltri.getMappaFiltri().remove(fieldName);
+                        }
+                    }
                 }
-            }
-        }
-
-        if (mappaFiltri != null) {
-            mappaFiltri.remove(fieldName);
-            if (filtro != null) {
-                mappaFiltri.put(fieldName, filtro);
-            }
+                break;
+            default:
+                logger.error("Switch - caso non definito", this.getClass(), "fixFiltroCheck");
+                break;
         }
 
         return filtro;

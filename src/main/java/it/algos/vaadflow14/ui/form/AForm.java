@@ -632,12 +632,20 @@ public abstract class AForm extends VerticalLayout {
 
 
     public boolean isModificato() {
+        boolean modificato=false;
+
         try {
             binder.writeBean(entityBean);
         } catch (Exception unErrore) {
             int a = 87;
         }
-        return beanService.isModificata(entityBean);
+        try {
+            modificato=  beanService.isModificata(entityBean);
+        } catch (AlgosException unErrore) {
+            logger.info(unErrore, this.getClass(), "isModificato");
+        }
+
+        return modificato;
     }
 
     public HashMap<String, AField> getFieldsMap() {

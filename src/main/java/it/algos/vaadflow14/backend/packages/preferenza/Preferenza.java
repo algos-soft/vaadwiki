@@ -50,7 +50,7 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaKeyIdMinuscolaCaseInsensitive = true, usaCompany = true, usaNote = true)
+@AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaKeyIdMinuscolaCaseInsensitive = false, usaCompany = true, usaNote = true)
 @AIView(menuName = "Preferenza", menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
 @AIList(fields = "code,type,value,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione", usaRowIndex = true)
 @AIForm(fields = "code,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione,type,value", usaSpostamentoTraSchede = true)

@@ -87,20 +87,19 @@ public class AttivitaLogicList extends WikiLogicList {
         super.fixInfoDownload(AEWikiPreferenza.lastDownloadAttivita);
         addWikiLink(PATH_MODULO_ATTIVITA);
         addWikiLink(PATH_STATISTICHE_ATTIVITA);
-        addSpanVerde(String.format("Contiene la tabella di conversione delle attività passate via parametri %s", parametri));
-        addSpanVerde(String.format(" da %s maschile e femminile (usati nell'incipit) al %s maschile, per categorizzare la pagina", singolare, plurale));
-        addSpanVerde(String.format("Le attività sono elencate nel modulo con la sintassi: [\"attivita%s\"]=\"attività al plurale\", [\"attivita%s\"]=\"attività al plurale\",", uno, due));
-        addSpanRossoFix(String.format("Nella collezione locale mongoDB vengono aggiunte %s le voci delle %s-attività (non presenti nel Modulo su Wiki)", anche, ex));
+        addSpanVerde(String.format("Contiene la tabella di conversione delle attività passate via parametri %s da %s maschile e femminile (usati nell'incipit) al %s maschile, per categorizzare la pagina.", parametri,singolare, plurale));
+        addSpanVerde(String.format("Le attività sono elencate nel modulo con la sintassi: [\"attivita%s\"]=\"attività al plurale\", [\"attivita%s\"]=\"attività al plurale\".", uno, due));
+        addSpanRossoFix(String.format("Nella collezione locale mongoDB vengono aggiunte %s le voci delle %s-attività (non presenti nel Modulo su Wiki).", anche, ex));
 
         Span voci = html.getSpanRosso("Le voci aggiunte vengono recuperate dal ");
-        Span modulo = html.getSpanRosso(moduloTxt, AETypeWeight.bold);
+        Span modulo = html.getSpanRosso(moduloTxt+".", AETypeWeight.bold);
+        Span minuscole=html.getSpanRosso(String.format(" Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in %s.", minuscolo));
         Anchor anchor = new Anchor(FlowCost.PATH_WIKI + moduloTxt, modulo);
-        Span riga = new Span(voci, anchor);
+        Span riga = new Span(voci, anchor,minuscole);
         if (alertList != null) {
             alertList.add(riga);
         }
 
-        addSpanRossoFix(String.format("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in %s", minuscolo));
     }
 
 

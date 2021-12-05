@@ -964,7 +964,6 @@ public class AnnotationService extends AbstractService {
     }
 
 
-
     /**
      * Flag per usare solo le lettere minuscole nel campo chiave keyId. <br>
      * Uppercase and lowercase letters are treated equivalent (case-insensitive) and NOT as distinct (case-sensitive) <br>
@@ -1386,6 +1385,27 @@ public class AnnotationService extends AbstractService {
     //    public AETypeField getColumnType(final Class<?> genericClazz, final String publicFieldName) {
     //        return getColumnType(reflection.getField(genericClazz, publicFieldName));
     //    }
+
+
+    /**
+     * Get the name (field) of the property <br>
+     * Se manca, usa il nome della property <br>
+     *
+     * @param entityClazz the class of type AEntity
+     * @param fieldName   the property name
+     *
+     * @return the name (rows) of the field
+     */
+    public String getFormFieldName(Class<? extends AEntity> entityClazz, String fieldName) {
+        Field reflectionJavaField = null;
+        try {
+            reflectionJavaField = reflection.getField(entityClazz, fieldName);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore,getClass(),"getFormFieldName");
+        }
+
+        return getFormFieldName(reflectionJavaField);
+    }
 
     /**
      * Get the name (field) of the property <br>

@@ -232,6 +232,16 @@ public interface AIMongoService {
 
 
     /**
+     * Check the existence of a single entity. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return true if exist
+     */
+     boolean isEsiste(final Class<? extends AEntity> entityClazz, final Serializable keyId) throws AlgosException ;
+
+    /**
      * Find single entity. <br>
      * Cerca sul database (mongo) la versione registrata di una entity in memoria <br>
      *

@@ -122,7 +122,7 @@ public class ATopLayout extends AButtonLayout {
                 }
 
                 if (obj instanceof Button) {
-                    this.addComp(key, (Component)obj);
+                    this.addComp(key, (Component) obj);
                 }
 
                 if (obj instanceof ComboBox) {
@@ -130,32 +130,55 @@ public class ATopLayout extends AButtonLayout {
                     this.addComp(key, combo);
                 }
 
-                if (obj instanceof Checkbox) {
-                    check = ((Checkbox) obj);
-                    this.addComp(key, check);
+                if (obj instanceof Checkbox ) {
+                    if ( obj instanceof IndeterminateCheckbox) {
+                        check3Vie = ((IndeterminateCheckbox) obj);
+                        String fieldName = check3Vie.getLabel();
+                        IndeterminateCheckbox finalCheck3Vie = check3Vie;
+                        check3Vie.addValueChangeListener(event -> {
+                            if (finalCheck3Vie.isIndeterminate()) {
+                                // new "value" is indeterminate. (Pseudo "null")
+                                // warning: event.getValue() and event.isFromClient() both return false here!
+                                performAction(AEAction.check, key, null);
+                            }
+                            else if (event.getValue()) {
+                                // new value is true
+                                performAction(AEAction.check, key, true);
+                            }
+                            else {
+                                // new value is false
+                                performAction(AEAction.check, key, false);
+                            }
+                        });
+                        this.addComp(key, finalCheck3Vie);
+                    }
+                    else {
+                        check = ((Checkbox) obj);
+                        this.addComp(key, check);
+                    }
                 }
 
-                if (obj instanceof IndeterminateCheckbox) {
-                    check3Vie = ((IndeterminateCheckbox) obj);
-                    String fieldName = check3Vie.getLabel();
-                    IndeterminateCheckbox finalCheck3Vie = check3Vie;
-                    check3Vie.addValueChangeListener(event -> {
-                        if (finalCheck3Vie.isIndeterminate()) {
-                            // new "value" is indeterminate. (Pseudo "null")
-                            // warning: event.getValue() and event.isFromClient() both return false here!
-                            performAction(AEAction.check, fieldName, null);
-                        }
-                        else if (event.getValue()) {
-                            // new value is true
-                            performAction(AEAction.check, fieldName, true);
-                        }
-                        else {
-                            // new value is false
-                            performAction(AEAction.check, fieldName, false);
-                        }
-                    });
-                    this.addComp(key, finalCheck3Vie);
-                }
+//                if (obj instanceof IndeterminateCheckbox) {
+//                    check3Vie = ((IndeterminateCheckbox) obj);
+//                    String fieldName = check3Vie.getLabel();
+//                    IndeterminateCheckbox finalCheck3Vie = check3Vie;
+//                    check3Vie.addValueChangeListener(event -> {
+//                        if (finalCheck3Vie.isIndeterminate()) {
+//                            // new "value" is indeterminate. (Pseudo "null")
+//                            // warning: event.getValue() and event.isFromClient() both return false here!
+//                            performAction(AEAction.check, fieldName, null);
+//                        }
+//                        else if (event.getValue()) {
+//                            // new value is true
+//                            performAction(AEAction.check, fieldName, true);
+//                        }
+//                        else {
+//                            // new value is false
+//                            performAction(AEAction.check, fieldName, false);
+//                        }
+//                    });
+//                    this.addComp(key, finalCheck3Vie);
+//                }
             }
         }
     }
@@ -163,7 +186,7 @@ public class ATopLayout extends AButtonLayout {
     protected void addComp(String key, Component comp) {
         mappaCorrente.put(key, comp);
 
-        if (primaRiga.getComponentCount() < maxNumeroBottoniPrimaRiga) {
+        if (primaRiga.getComponentCount() <  maxNumeroBottoniPrimaRiga) {
             primaRiga.add(comp);
         }
         else {

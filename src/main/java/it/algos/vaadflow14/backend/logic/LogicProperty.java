@@ -566,7 +566,6 @@ public abstract class LogicProperty extends VerticalLayout {
         WrapComponenti wrapper;
 
         this.creaAEBottoniTop();
-        this.creaComandiTop();
         wrapper = new WrapComponenti((AILogic) this, mappaComponentiTop, maxNumeroBottoniPrimaRiga);
 
         topLayout = appContext.getBean(ATopLayout.class, wrapper);

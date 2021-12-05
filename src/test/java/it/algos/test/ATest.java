@@ -1017,6 +1017,12 @@ public abstract class ATest {
             }
 
         } catch (AlgosException unErrore) {
+            System.out.println(String.format("%s %s %s",unErrore.getMessage(),getClass(),"printMappa"));
+            try {
+                mappa = reflectionService.getMappaEntity(entityBean);
+            } catch (AlgosException unErrore2) {
+            }
+
         }
 
         System.out.println(VUOTA);

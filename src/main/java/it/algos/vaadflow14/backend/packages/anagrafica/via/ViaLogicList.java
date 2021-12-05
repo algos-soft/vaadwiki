@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
+import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
@@ -58,19 +59,6 @@ public class ViaLogicList extends LogicList {
 
 
     /**
-     * Preferenze usate da questa 'logica' <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        super.maxNumeroBottoniPrimaRiga = 3;
-    }
-
-
-    /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
@@ -83,5 +71,4 @@ public class ViaLogicList extends LogicList {
         addSpanVerde("Possono essere aggiunti altri valori");
     }
 
-
-}// end of Route class
+ }// end of Route class

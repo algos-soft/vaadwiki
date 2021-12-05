@@ -150,6 +150,15 @@ public class AFiltro implements Serializable {
         return filtro;
     }
 
+    public static AFiltro checkBox3Vie(String fieldName, Object value) {
+        if (value != null && value instanceof Boolean booleanValue) {
+            return AFiltro.booleano(fieldName, booleanValue);
+        }
+        else {
+            return new AFiltro();
+        }
+    }
+
     public AFiltro regola() throws AlgosException {
         String message;
         String keyField;
@@ -193,14 +202,14 @@ public class AFiltro implements Serializable {
                     criteria = AETypeFilter.uguale.getCriteria(propertyField, (String) propertyValue);
                 }
                 else {
-                    criteria = AETypeFilter.uguale.getCriteria(propertyField, propertyValue );
+                    criteria = AETypeFilter.uguale.getCriteria(propertyField, propertyValue);
                 }
                 break;
             case inizia:
-                criteria = AETypeFilter.inizia.getCriteria(propertyField, propertyValue );
+                criteria = AETypeFilter.inizia.getCriteria(propertyField, propertyValue);
                 break;
             case contiene:
-                criteria = AETypeFilter.contiene.getCriteria(propertyField, propertyValue );
+                criteria = AETypeFilter.contiene.getCriteria(propertyField, propertyValue);
                 break;
             case link:
                 if (!propertyField.endsWith(FIELD_NAME_ID_LINK)) {

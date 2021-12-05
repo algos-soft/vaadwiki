@@ -73,7 +73,7 @@ public class WrapFiltri {
     }
 
     public void regola(final Class<? extends AEntity> entityClazz, AETypeFilter filter, String propertyField, Object propertyValue) throws AlgosException {
-        this.mappaFiltri = new HashMap<>();
+        this.mappaFiltri = mappaFiltri != null ? mappaFiltri : new HashMap<>();
         String message;
         String keyField;
 
@@ -101,7 +101,7 @@ public class WrapFiltri {
             throw AlgosException.stack(message, this.getClass(), "regola");
         }
 
-        if (propertyValue == null) {
+        if (propertyValue == null && filter != AETypeFilter.checkBox3Vie) {
             throw AlgosException.stack("Manca la propertyValue del filtro", this.getClass(), "regola");
         }
 
@@ -147,6 +147,9 @@ public class WrapFiltri {
                     propertyValue = ((AEntity) propertyValue).id;
                 }
                 mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
+                break;
+            case checkBox3Vie:
+                mappaFiltri.put(keyField, AFiltro.checkBox3Vie(propertyField, propertyValue));
                 break;
             default:
                 throw AlgosException.stack(String.format("Manca il filtro %s nello switch", filter), this.getClass(), "regola");
