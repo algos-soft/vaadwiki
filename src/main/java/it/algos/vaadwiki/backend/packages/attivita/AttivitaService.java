@@ -234,7 +234,7 @@ public class AttivitaService extends WikiService {
             for (Genere genere : listaGenere) {
                 entity = null;
                 attivitaSingolare = VUOTA;
-                genereSingolare = genere.singolare;
+                genereSingolare = genere.attivita;
 
                 if (genereSingolare.startsWith(EX)) {
                     attivitaSingolare = genereSingolare.substring(EX.length());

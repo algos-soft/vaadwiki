@@ -2,10 +2,12 @@ package it.algos.vaadwiki.backend.packages.professione;
 
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.grid.*;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.renderer.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -92,15 +94,47 @@ public class ProfessioneLogicList extends WikiLogicList {
         String mantengono = html.bold("mantengono");
         String pagina = html.bold("pagina");
         String professione = html.bold("professione");
+        String wikiLink = html.bold("wikiLink");
 
         super.fixInfoDownload(AEWikiPreferenza.lastDownloadProfessione);
         addWikiLink(PATH_MODULO_PROFESSIONE);
-        addSpanVerde(String.format("Contiene la tabella di conversione delle attività passate via parametri %s", parametri));
-        addSpanVerde(String.format(" dal nome dell'attività a quello della %s corrispondente, per creare dei piped wikiLink", pagina));
-        addSpanVerde(String.format("Le attività sono elencate nel modulo con la sintassi: [\"attivita%s\"]=\"%s\", [\"attivita%s\"]=\"%s\",", uno, riferimento, due, riferimento));
-        addSpanRossoFix(String.format("In mongoDB.%s vengono aggiunte %s le voci delle %s che corrispondono alla pagina (%s presenti nel Modulo su Wiki)", professione, anche, maschili, non));
-        addSpanRossoFix(String.format("In mongoDB.%s vengono aggiunte %s le voci delle %s (%s presenti nel Modulo su Wiki) recuperate da mongoDB.%s", professione, anche, ex, non, attivita));
-        addSpanRossoFix(String.format("Le attività e le pagine %s il maiuscolo/minuscolo previsto nel modulo",mantengono));
+        addSpanVerde(String.format("Contiene la tabella di conversione delle attività passate via parametri %s dal nome dell'attività a quello della %s corrispondente, per creare dei piped %s.", parametri, pagina, wikiLink));
+
+        Span elencate = html.getSpanVerde(String.format("Le attività sono elencate nel "));
+        Span modulo = html.getSpanBlu("modulo", AETypeWeight.bold);
+        Anchor anchor = new Anchor(FlowCost.PATH_WIKI + PATH_MODULO_PROFESSIONE, modulo);
+        Span sintassi = html.getSpanVerde(String.format(" con la sintassi: [\"attivita%s\"]=\"%s\", [\"attivita%s\"]=\"%s\".", uno, riferimento, due, riferimento));
+        Span riga = new Span(elencate, anchor, sintassi);
+        if (alertList != null) {
+            alertList.add(riga);
+        }
+
+        Span collezione2 = html.getSpanRosso(String.format("In mongoDB.%s vengono aggiunte %s le voci delle %s che corrispondono alla pagina (%s presenti nel ", professione, anche, maschili, non));
+        Span modulo2 = html.getSpanBlu("modulo", AETypeWeight.bold);
+        Anchor anchor2 = new Anchor(FlowCost.PATH_WIKI + PATH_MODULO_PROFESSIONE, modulo2);
+        Span fine2 = html.getSpanRosso(").");
+        Span riga2 = new Span(collezione2, anchor2, fine2);
+        if (alertList != null) {
+            alertList.add(riga2);
+        }
+
+        Span collezione3 = html.getSpanRosso(String.format("In mongoDB.%s vengono aggiunte %s le voci delle %s (%s presenti nel ", professione, anche, ex, non));
+        Span modulo3 = html.getSpanBlu("modulo", AETypeWeight.bold);
+        Anchor anchor3 = new Anchor(FlowCost.PATH_WIKI + PATH_MODULO_PROFESSIONE, modulo3);
+        Span fine3 = html.getSpanRosso(String.format(") recuperate da mongoDB.%s.", attivita.toLowerCase()));
+        Span riga3 = new Span(collezione3, anchor3, fine3);
+        if (alertList != null) {
+            alertList.add(riga3);
+        }
+
+        Span scritte = html.getSpanRosso(String.format("Le attività e le pagine %s il maiuscolo/minuscolo previsto nel ", mantengono));
+        Span modulo4 = html.getSpanBlu("modulo", AETypeWeight.bold);
+        Anchor anchor4 = new Anchor(FlowCost.PATH_WIKI + PATH_MODULO_PROFESSIONE, modulo4);
+        Span fine4 = html.getSpanRosso(".");
+        Span riga4 = new Span(scritte, anchor4, fine4);
+        if (alertList != null) {
+            alertList.add(riga4);
+        }
     }
 
     /**

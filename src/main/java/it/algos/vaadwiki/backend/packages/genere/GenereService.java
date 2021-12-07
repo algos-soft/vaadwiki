@@ -65,14 +65,14 @@ public class GenereService extends WikiService {
     /**
      * Crea e registra una entityBean <br>
      *
-     * @param singolare        (obbligatorio NON unico)
+     * @param attivita        (obbligatorio NON unico)
      * @param pluraleMaschile  (facoltativo NON unico)
      * @param pluraleFemminile (facoltativo NON unico)
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public Genere crea(final String singolare, final String pluraleMaschile, final String pluraleFemminile) {
-        return (Genere) ((MongoService)mongo).insert(newEntity(singolare, pluraleMaschile, pluraleFemminile));
+    public Genere crea(final String attivita, final String pluraleMaschile, final String pluraleFemminile) {
+        return (Genere) ((MongoService)mongo).insert(newEntity(attivita, pluraleMaschile, pluraleFemminile));
     }
 
 
@@ -82,15 +82,15 @@ public class GenereService extends WikiService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param singolare        maschile e femminile (obbligatorio ed unico)
+     * @param attivita        maschile e femminile (obbligatorio ed unico)
      * @param pluraleMaschile  (facoltativo NON unico)
      * @param pluraleFemminile (facoltativo NON unico)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Genere newEntity(final String singolare, final String pluraleMaschile, final String pluraleFemminile) {
+    public Genere newEntity(final String attivita, final String pluraleMaschile, final String pluraleFemminile) {
         Genere newEntityBean = Genere.builderGenere()
-                .singolare(text.isValid(singolare) ? singolare : null)
+                .attivita(text.isValid(attivita) ? attivita : null)
                 .pluraleMaschile(text.isValid(pluraleMaschile) ? pluraleMaschile : null)
                 .pluraleFemminile(text.isValid(pluraleFemminile) ? pluraleFemminile : null)
                 .build();
@@ -113,7 +113,7 @@ public class GenereService extends WikiService {
     public AEntity fixKey(AEntity newEntityBean) {
         String tagM = "M";
         String tagF = "F";
-        String beginKey = ((Genere) newEntityBean).singolare.toLowerCase();
+        String beginKey = ((Genere) newEntityBean).attivita.toLowerCase();
 
         if (text.isEmpty(newEntityBean.id)) {
             if (text.isValid(((Genere) newEntityBean).pluraleMaschile)&&text.isValid(((Genere) newEntityBean).pluraleFemminile)) {
@@ -220,7 +220,7 @@ public class GenereService extends WikiService {
     public boolean downloadModulo(String wikiTitle) {
         boolean status = false;
         Map<String, String> mappa = wikiApi.leggeMappaModulo(wikiTitle);
-        String singolare = VUOTA;
+        String attivita = VUOTA;
         String pluraliGrezzi = VUOTA;
         String pluraleMaschile = VUOTA;
         String pluraleFemminile = VUOTA;
@@ -228,17 +228,17 @@ public class GenereService extends WikiService {
         if (mappa != null && mappa.size() > 0) {
             deleteAll();
             for (Map.Entry<String, String> entry : mappa.entrySet()) {
-                singolare = entry.getKey();
+                attivita = entry.getKey();
                 pluraliGrezzi = entry.getValue();
 
                 pluraleMaschile = this.estraeMaschile(pluraliGrezzi);
                 pluraleFemminile = this.estraeFemminile(pluraliGrezzi);
 
                 if (text.isValid(pluraleMaschile)) {
-                    this.crea(singolare, pluraleMaschile, VUOTA);
+                    this.crea(attivita, pluraleMaschile, VUOTA);
                 }
                 if (text.isValid(pluraleFemminile)) {
-                    this.crea(singolare, VUOTA, pluraleFemminile);
+                    this.crea(attivita, VUOTA, pluraleFemminile);
                 }
             }
             status = true;

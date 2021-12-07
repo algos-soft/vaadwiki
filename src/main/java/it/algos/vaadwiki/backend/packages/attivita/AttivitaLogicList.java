@@ -82,24 +82,42 @@ public class AttivitaLogicList extends WikiLogicList {
         super.fixAlertList();
 
         String ex = html.bold("ex");
-        String moduloTxt = "Modulo:Bio/Plurale attività genere";
+        String moduloTxt = PATH_MODULO_ATTIVITA + " genere";
 
         super.fixInfoDownload(AEWikiPreferenza.lastDownloadAttivita);
         addWikiLink(PATH_MODULO_ATTIVITA);
         addWikiLink(PATH_STATISTICHE_ATTIVITA);
-        addSpanVerde(String.format("Contiene la tabella di conversione delle attività passate via parametri %s da %s maschile e femminile (usati nell'incipit) al %s maschile, per categorizzare la pagina.", parametri,singolare, plurale));
-        addSpanVerde(String.format("Le attività sono elencate nel modulo con la sintassi: [\"attivita%s\"]=\"attività al plurale\", [\"attivita%s\"]=\"attività al plurale\".", uno, due));
-        addSpanRossoFix(String.format("Nella collezione locale mongoDB vengono aggiunte %s le voci delle %s-attività (non presenti nel Modulo su Wiki).", anche, ex));
+        addSpanVerde(String.format("Contiene la tabella di conversione delle attività passate via parametri %s da %s maschile e femminile (usati nell'incipit) al %s maschile, per categorizzare la pagina.", parametri, singolare, plurale));
 
-        Span voci = html.getSpanRosso("Le voci aggiunte vengono recuperate dal ");
-        Span modulo = html.getSpanRosso(moduloTxt+".", AETypeWeight.bold);
-        Span minuscole=html.getSpanRosso(String.format(" Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in %s.", minuscolo));
-        Anchor anchor = new Anchor(FlowCost.PATH_WIKI + moduloTxt, modulo);
-        Span riga = new Span(voci, anchor,minuscole);
+        Span elencate = html.getSpanVerde(String.format("Le attività sono elencate nel "));
+        Span modulo = html.getSpanBlu("modulo", AETypeWeight.bold);
+        Anchor anchor = new Anchor(FlowCost.PATH_WIKI + PATH_MODULO_ATTIVITA, modulo);
+        Span sintassi = html.getSpanVerde(String.format(" con la sintassi: [\"attivita%s\"]=\"attività al plurale\", [\"attivita%s\"]=\"attività al plurale\".", uno, due));
+        Span riga = new Span(elencate, anchor, sintassi);
         if (alertList != null) {
             alertList.add(riga);
         }
 
+        Span collezione = html.getSpanRosso(String.format("Nella collezione locale mongoDB vengono aggiunte %s le voci delle %s-attività (non presenti nel ", anche, ex));
+        Span modulo2 = html.getSpanBlu("modulo", AETypeWeight.bold);
+        Anchor anchor2 = new Anchor(FlowCost.PATH_WIKI + PATH_MODULO_ATTIVITA, modulo2);
+        Span fine = html.getSpanRosso(").");
+        Span voci = html.getSpanRosso(" Le voci aggiunte vengono recuperate dal ");
+        Span modulo3 = html.getSpanBlu(moduloTxt + ".", AETypeWeight.bold);
+        Anchor anchor4 = new Anchor(FlowCost.PATH_WIKI + moduloTxt, modulo3);
+        Span riga2 = new Span(collezione, anchor2, fine, voci, anchor4);
+        if (alertList != null) {
+            alertList.add(riga2);
+        }
+
+        Span scritte = html.getSpanRosso(String.format(" Indipendentemente da come sono scritte nel "));
+        Span modulo4 = html.getSpanBlu("modulo", AETypeWeight.bold);
+        Anchor anchor3 = new Anchor(FlowCost.PATH_WIKI + PATH_MODULO_ATTIVITA, modulo4);
+        Span minuscole = html.getSpanRosso(String.format(", tutte le attività singolari e plurali sono convertite in %s.", minuscolo));
+        Span riga3 = new Span(scritte, anchor3, minuscole);
+        if (alertList != null) {
+            alertList.add(riga3);
+        }
     }
 
 

@@ -53,10 +53,10 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Professione", keyPropertyName = "singolare", usaBoot = true, usaNew = false)
-@AIView(menuName = "Professione", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
-@AIList(fields = "singolare,pagina,aggiunta", usaRowIndex = true)
-@AIForm(fields = "singolare,pagina,aggiunta", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = false)
+@AIEntity(recordName = "Professione", keyPropertyName = "attivita", usaBoot = true, usaNew = false)
+@AIView(menuName = "Professione", menuIcon = VaadinIcon.ASTERISK, searchProperty = "attivita", sortProperty = "attivita")
+@AIList(fields = "attivita,pagina,aggiunta", usaRowIndex = true)
+@AIForm(fields = "attivita,pagina,aggiunta", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = false)
 public class Professione extends AEntity {
 
 
@@ -72,14 +72,14 @@ public class Professione extends AEntity {
 
 
     /**
-     * singolare di riferimento (obbligatorio, unico) <br>
+     * attivita di riferimento (obbligatorio, unico) <br>
      */
-    @NotBlank(message = "Il singolare è obbligatorio")
+    @NotBlank(message = "L'attività è obbligatoria")
     @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 2, max = 50)
-    @AIField(type = AETypeField.text, firstCapital = true, focus = true, caption = "singolare", widthEM = WIDTHEM)
-    @AIColumn(header = "singolare", widthEM = WIDTHEM)
-    public String singolare;
+    @AIField(type = AETypeField.text, firstCapital = true, focus = true, caption = "attivita", widthEM = WIDTHEM)
+    @AIColumn(header = "attivita", widthEM = WIDTHEM)
+    public String attivita;
 
 
     /**
@@ -104,7 +104,7 @@ public class Professione extends AEntity {
      */
     @Override
     public String toString() {
-        return singolare;
+        return attivita;
     }
 
 

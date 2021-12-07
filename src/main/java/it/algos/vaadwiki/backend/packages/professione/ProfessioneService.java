@@ -62,27 +62,27 @@ public class ProfessioneService extends WikiService {
     /**
      * Crea e registra una entityBean <br>
      *
-     * @param singolare di riferimento (obbligatorio, unico)
+     * @param attivita di riferimento (obbligatorio, unico)
      * @param plurale   (facoltativo, non unico)
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public Professione creaOriginale(final String singolare, final String plurale) {
+    public Professione creaOriginale(final String attivita, final String plurale) {
         Professione professione=null;
-        professione= (Professione) ((MongoService)mongo).insert(newEntity(singolare, plurale,false));
+        professione= (Professione) ((MongoService)mongo).insert(newEntity(attivita, plurale,false));
         return professione;
     }
 
     /**
      * Crea e registra una entityBean <br>
      *
-     * @param singolare di riferimento (obbligatorio, unico)
+     * @param attivita di riferimento (obbligatorio, unico)
      * @param plurale   (facoltativo, non unico)
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public Professione creaAggiunta(final String singolare, final String plurale) {
-        return (Professione) ((MongoService)mongo).insert(newEntity(singolare, plurale,true));
+    public Professione creaAggiunta(final String attivita, final String plurale) {
+        return (Professione) ((MongoService)mongo).insert(newEntity(attivita, plurale,true));
     }
 
 
@@ -91,15 +91,15 @@ public class ProfessioneService extends WikiService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param singolare di riferimento (obbligatorio, unico)
+     * @param attivita di riferimento (obbligatorio, unico)
 	 * @param pagina (facoltativo, non unico)
 	 * @param aggiunta flag (facoltativo, di default false)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Professione newEntity(final String singolare, final String pagina, final boolean aggiunta) {
+    public Professione newEntity(final String attivita, final String pagina, final boolean aggiunta) {
         Professione newEntityBean = Professione.builderProfessione()
-                .singolare(text.isValid(singolare) ? singolare : null)
+                .attivita(text.isValid(attivita) ? attivita : null)
 				.pagina(text.isValid(pagina) ? pagina : null)
 				.aggiunta(aggiunta)
                 .build();
@@ -185,7 +185,6 @@ public class ProfessioneService extends WikiService {
             }
             status = true;
         }
-//        status = aggiunge();
 
         super.fixDataDownload();
         return status;

@@ -1,7 +1,9 @@
 package it.algos.vaadwiki.backend.packages.nazionalita;
 
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -82,12 +84,27 @@ public class NazionalitaLogicList extends WikiLogicList {
         String parametri = html.bold("Nazionalità/Cittadinanza/NazionalitàNaturalizzato");
 
         super.fixInfoDownload(AEWikiPreferenza.lastDownloadNazionalita);
-        addSpanBlu(html.bold(PATH_MODULO_NAZIONALITA));
-        addSpanBlu(html.bold(PATH_STATISTICHE_NAZIONALITA));
-        addSpanVerde(String.format("Contiene la tabella di conversione delle nazionalità passate via parametri %s", parametri));
-        addSpanVerde(String.format(" da singolare maschile e femminile (usati nell'incipit) al %s, per categorizzare la pagina",plurale));
-        addSpanVerde(String.format("Le nazionalità sono elencate nel modulo con la sintassi: [\"nazionalita%s\"]=\"nazionalità al plurale\", [\"nazionalita%s\"]=\"nazionalità al plurale\",", uno, due));
-        addSpanRossoFix(String.format("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in %s", minuscolo));
+        addWikiLink(PATH_MODULO_NAZIONALITA);
+        addWikiLink(PATH_STATISTICHE_NAZIONALITA);
+        addSpanVerde(String.format("Contiene la tabella di conversione delle nazionalità passate via parametri %s da singolare maschile e femminile (usati nell'incipit) al %s, per categorizzare la pagina.", parametri,plurale));
+
+        Span elencate = html.getSpanVerde(String.format("Le nazionalità sono elencate nel "));
+        Span modulo = html.getSpanBlu("modulo", AETypeWeight.bold);
+        Anchor anchor = new Anchor(FlowCost.PATH_WIKI + PATH_MODULO_NAZIONALITA, modulo);
+        Span sintassi = html.getSpanVerde(String.format(" con la sintassi: [\"nazionalita%s\"]=\"nazionalità al plurale\", [\"nazionalita%s\"]=\"nazionalità al plurale\".", uno, due));
+        Span riga = new Span(elencate, anchor, sintassi);
+        if (alertList != null) {
+            alertList.add(riga);
+        }
+
+        Span scritte = html.getSpanRosso(String.format(" Indipendentemente da come sono scritte nel "));
+        Span modulo2 = html.getSpanBlu("modulo", AETypeWeight.bold);
+        Anchor anchor2 = new Anchor(FlowCost.PATH_WIKI + PATH_MODULO_NAZIONALITA, modulo2);
+        Span minuscole = html.getSpanRosso(String.format(", tutte le nazionalità singolari e plurali sono convertite in %s.", minuscolo));
+        Span riga2 = new Span(scritte, anchor2, minuscole);
+        if (alertList != null) {
+            alertList.add(riga2);
+        }
     }
 
 

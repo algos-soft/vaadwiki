@@ -89,35 +89,42 @@ public class GenereLogicList extends WikiLogicList {
         String nomeTxt = "nome, e ";
         String cognomeTxt = "cognome ";
         String listaNazionalita = "Categoria:Bio nazionalità";
-        String listaNomi = "Progetto:Antroponimi/Liste nomi";
-        String listaCognomi = "Progetto:Antroponimi/Liste cognomi";
-        String progettoTxt = "progetto:Antroponimi";
+        String antroponimi = "Progetto:Antroponimi";
+        String listaNomi = "/Liste nomi";
+        String listaCognomi = "/Liste cognomi";
 
         super.fixInfoDownload(AEWikiPreferenza.lastDownloadGenere);
         addWikiLink(PATH_MODULO_GENERE);
-        addSpanVerde(String.format("Contiene la tabella di conversione delle attività passate via parametri %s", parametri));
-        addSpanVerde(String.format(" da %s %s e %s (usati nell'incipit) al %s %s e %s, per le intestazioni dei paragrafi", singolare, maschile, femminile, plurale, maschile, femminile));
-        //        addSpanVerde(String.format("nelle liste di nazionalità, nomi e cognomi previste nel Progetto:Antroponimi"));
+        addSpanVerde(String.format("Contiene la tabella di conversione delle attività passate via parametri %s da %s %s e %s (usati nell'incipit) al %s %s e %s, per le intestazioni dei paragrafi.", parametri, singolare, maschile, femminile, plurale, maschile, femminile));
 
-        Span liste = html.getSpanVerde("nelle liste di ");
-        Span nazionalità = html.getSpanVerde(nazionalitaTxt, AETypeWeight.bold);
-        Span nomi = html.getSpanVerde(nomeTxt, AETypeWeight.bold);
-        Span cognomi = html.getSpanVerde(cognomeTxt, AETypeWeight.bold);
+        Span liste = html.getSpanVerde("Usata nelle liste di ");
+        Span naz = html.getSpanBlu(nazionalitaTxt, AETypeWeight.bold);
+        Anchor anchor = new Anchor(FlowCost.PATH_WIKI + listaNazionalita, naz);
+        Span nome = html.getSpanBlu(nomeTxt, AETypeWeight.bold);
+        Anchor anchor2 = new Anchor(FlowCost.PATH_WIKI + antroponimi + listaNomi, nome);
+        Span cognome = html.getSpanBlu(cognomeTxt, AETypeWeight.bold);
+        Anchor anchor3 = new Anchor(FlowCost.PATH_WIKI + antroponimi + listaCognomi, cognome);
         Span previste = html.getSpanVerde("previste nel ");
-        Span progetto = html.getSpanVerde(progettoTxt, AETypeWeight.bold);
-        Anchor anchorNaz = new Anchor(FlowCost.PATH_WIKI + listaNazionalita, nazionalità);
-        Anchor anchorNomi = new Anchor(FlowCost.PATH_WIKI + listaNomi, nomi);
-        Anchor anchorCog = new Anchor(FlowCost.PATH_WIKI + listaCognomi, cognomi);
-        Anchor anchorAntr = new Anchor(FlowCost.PATH_WIKI + progettoTxt, progetto);
-        Span riga = new Span(liste, anchorNaz, anchorNomi, anchorCog, previste, anchorAntr);
+        Span progetto = html.getSpanBlu(antroponimi + ".", AETypeWeight.bold);
+        Anchor anchor4 = new Anchor(FlowCost.PATH_WIKI + antroponimi, progetto);
+        Span riga = new Span(liste, anchor, anchor2, anchor3, previste, anchor4);
         if (alertList != null) {
             alertList.add(riga);
         }
 
-        addSpanVerde(String.format("Le attività sono elencate nel modulo con la sintassi: [\"attivita %s %s\"]=\"attività %s %s\"", singolare, maschile, plurale, maschile));
-        addSpanVerde(String.format("Le attività sono elencate nel modulo con la sintassi: [\"attivita %s %s\"]=\"attività %s %s\"", singolare, femminile, plurale, femminile));
+        addSpanVerde(String.format("Le attività sono elencate nel modulo con la sintassi: [\"attivita %s %s\"]=\"attività %s %s\".", singolare, maschile, plurale, maschile));
+        addSpanVerde(String.format("Le attività sono elencate nel modulo con la sintassi: [\"attivita %s %s\"]=\"attività %s %s\".", singolare, femminile, plurale, femminile));
 
-        addSpanRossoFix(String.format("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in %s", minuscolo));
+        Span scritte = html.getSpanRosso(String.format(" Indipendentemente da come sono scritte nel "));
+        Span modulo = html.getSpanBlu("modulo", AETypeWeight.bold);
+        Anchor ancho5 = new Anchor(FlowCost.PATH_WIKI + PATH_MODULO_GENERE, modulo);
+        Span minuscole = html.getSpanRosso(String.format(", tutte le attività singolari ed i generi plurali sono convertiti in %s.", minuscolo));
+        Span riga5 = new Span(scritte, ancho5, minuscole);
+        if (alertList != null) {
+            alertList.add(riga5);
+        }
+
+//        addSpanRossoFix(String.format("Indipendentemente da come sono scritte nel modulo wiki, tutte le attività singolari e plurali sono convertite in %s.", minuscolo));
     }
 
 

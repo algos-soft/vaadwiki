@@ -87,21 +87,23 @@ public class PrenomeLogicList extends WikiLogicList {
         String nome = html.bold("nome");
         String solo = html.bold("solo");
         String lista = html.bold("persone per nome");
-        String categoria = "Categoria:Prenomi composti";
+        String categoriaLink = "Categoria:Prenomi composti";
 
         super.fixInfoDownload(AEWikiPreferenza.lastDownloadPrenome);
         addWikiLink(PATH_MODULO_PRENOME);
-        addSpanVerde(String.format("Sono elencati i %s + (ad esempio 'Maria Teresa')", doppi, biografie));
-        addSpanVerde(String.format("BioBot crea una lista di %s quando le biografie superano %s (tra nomi e nomi doppi)", lista, biografie));
+        addSpanVerde(String.format("Sono elencati i %s (ad esempio 'Maria Teresa'). BioBot crea una lista di %s quando le biografie superano i %s (tra nomi e %s)", doppi,lista, biografie,doppi));
 
-        Span vedi = html.getSpanVerde("Vedi anche ");
-        Span verde = html.getSpanVerde(categoria, AETypeWeight.bold);
+        Span vedi = html.getSpanVerde(String.format("Vedi anche "));
+        Span categoria = html.getSpanBlu(categoriaLink, AETypeWeight.bold);
+        Anchor anchor = new Anchor(FlowCost.PATH_WIKI + categoriaLink, categoria);
+        Span fine = html.getSpanVerde(".");
+        Span riga = new Span(vedi, anchor, fine);
         if (alertList != null) {
-            alertList.add(new Anchor(FlowCost.PATH_WIKI + categoria, vedi, verde));
+            alertList.add(riga);
         }
 
-        addSpanRossoFix(String.format("La lista %s prevede %s nomi singoli a cui vengono aggiunti questi %s accettabili", nome, solo, doppi));
-        addSpanRossoFix(String.format("Quando si crea la lista  %s, i nomi doppi vengono scaricati ed aggiunti alla lista stessa", nome));
+        addSpanRossoFix(String.format("La lista %s prevede %s nomi singoli a cui vengono aggiunti questi %s accettabili. Quando si crea la lista  %s, i nomi doppi vengono scaricati ed aggiunti alla lista stessa", nome, solo, doppi,nome));
+//        addSpanRossoFix(String.format("Quando si crea la lista  %s, i nomi doppi vengono scaricati ed aggiunti alla lista stessa", nome));
     }
 
     /**

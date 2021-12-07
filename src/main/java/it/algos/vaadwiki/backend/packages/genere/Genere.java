@@ -52,10 +52,10 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Genere", keyPropertyName = "singolare", usaBoot = true, usaNew = false)
-@AIView(menuName = "Genere", menuIcon = VaadinIcon.ASTERISK, searchProperty = "singolare", sortProperty = "singolare")
-@AIList(fields = "singolare,pluraleMaschile,pluraleFemminile", usaRowIndex = true)
-@AIForm(fields = "singolare,pluraleMaschile,pluraleFemminile", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
+@AIEntity(recordName = "Genere", keyPropertyName = "attivita", usaBoot = true, usaNew = false)
+@AIView(menuName = "Genere", menuIcon = VaadinIcon.ASTERISK, searchProperty = "attivita", sortProperty = "attivita")
+@AIList(fields = "attivita,pluraleMaschile,pluraleFemminile", usaRowIndex = true)
+@AIForm(fields = "attivita,pluraleMaschile,pluraleFemminile", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
 public class Genere extends AEntity {
 
 
@@ -76,9 +76,9 @@ public class Genere extends AEntity {
     @NotBlank(message = "Il singolare è obbligatorio")
     @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 2, max = 50)
-    @AIField(type = AETypeField.text, firstCapital = true, focus = true, caption = "singolare", widthEM = WIDTHEM)
-    @AIColumn(header = "singolare", widthEM = WIDTHEM)
-    public String singolare;
+    @AIField(type = AETypeField.text, firstCapital = true, focus = true, caption = "attivita", widthEM = WIDTHEM)
+    @AIColumn(header = "attivita", widthEM = WIDTHEM)
+    public String attivita;
 
     /**
      * pluraleMaschile (facoltativo, non unico) <br>
@@ -105,7 +105,7 @@ public class Genere extends AEntity {
      */
     @Override
     public String toString() {
-        return singolare;
+        return attivita;
     }
 
 
