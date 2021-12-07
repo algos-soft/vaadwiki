@@ -13,7 +13,7 @@ import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.genere.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
-import it.algos.vaadwiki.backend.packages.prenome.*;
+import it.algos.vaadwiki.backend.packages.nomeDoppio.*;
 import it.algos.vaadwiki.backend.packages.professione.*;
 import it.algos.vaadwiki.backend.packages.giornoNato.*;
 import it.algos.vaadwiki.wiki.query.*;
@@ -133,7 +133,7 @@ public class WikiBoot extends FlowBoot {
         FlowVar.menuRouteList.add(Nazionalita.class);
         FlowVar.menuRouteList.add(Professione.class);
         FlowVar.menuRouteList.add(Genere.class);
-        FlowVar.menuRouteList.add(Prenome.class);
+        FlowVar.menuRouteList.add(NomeDoppio.class);
         FlowVar.menuRouteList.add(Nome.class);
         FlowVar.menuRouteList.add(Bio.class);
         FlowVar.menuRouteList.add(GiornoNatoLogicList.class);

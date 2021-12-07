@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.backend.packages.prenome;
+package it.algos.vaadwiki.backend.packages.nomeDoppio;
 
 import com.querydsl.core.annotations.*;
 import com.vaadin.flow.component.icon.*;
@@ -50,11 +50,11 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Nome doppio", keyPropertyName = "code", usaBoot = true, usaNew = false)
-@AIView(menuName = "Prenome", menuIcon = VaadinIcon.ASTERISK, searchProperty = "code", sortProperty = "code")
-@AIList(fields = "code", usaRowIndex = true)
-@AIForm(fields = "code", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
-public class Prenome extends AEntity {
+@AIEntity(recordName = "Nome doppio", keyPropertyName = "nome", usaBoot = true, usaNew = false)
+@AIView(menuName = "NomeDoppio", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "nome")
+@AIList(fields = "nome", usaRowIndex = true)
+@AIForm(fields = "nome", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
+public class NomeDoppio extends AEntity {
 
 
     /**
@@ -74,9 +74,9 @@ public class Prenome extends AEntity {
     @NotBlank(message = "Il code è obbligatorio")
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 2, max = 50)
-    @AIField(type = AETypeField.text, required = true, focus = true, caption = "code", widthEM = WIDTHEM)
-    @AIColumn(header = "code", widthEM = WIDTHEM)
-    public String code;
+    @AIField(type = AETypeField.text, required = true, focus = true, caption = "nome", widthEM = WIDTHEM)
+    @AIColumn(header = "nome", widthEM = WIDTHEM)
+    public String nome;
 
 
     /**
@@ -84,7 +84,7 @@ public class Prenome extends AEntity {
      */
     @Override
     public String toString() {
-        return code;
+        return nome;
     }
 
 

@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.backend.packages.prenome;
+package it.algos.vaadwiki.backend.packages.nomeDoppio;
 
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
@@ -31,10 +31,10 @@ import org.springframework.beans.factory.annotation.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 //Vaadin flow
-@Route(value = "prenome", layout = MainLayout.class)
+@Route(value = "nomeDoppio", layout = MainLayout.class)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.list, doc = AEWizDoc.inizioRevisione)
-public class PrenomeLogicList extends WikiLogicList {
+public class NomeDoppioLogicList extends WikiLogicList {
 
 
     /**
@@ -53,8 +53,8 @@ public class PrenomeLogicList extends WikiLogicList {
      *
      * @param entityService (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicList
      */
-    public PrenomeLogicList(@Autowired @Qualifier("prenomeService") final AIService entityService) {
-        super(entityService, Prenome.class);
+    public NomeDoppioLogicList(@Autowired @Qualifier("nomeDoppioService") final AIService entityService) {
+        super(entityService, NomeDoppio.class);
     }// end of Vaadin/@Route constructor
 
 

@@ -3,7 +3,7 @@ package it.algos.vaadwiki.backend.task;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.genere.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
-import it.algos.vaadwiki.backend.packages.prenome.*;
+import it.algos.vaadwiki.backend.packages.nomeDoppio.*;
 import it.algos.vaadwiki.backend.packages.professione.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
@@ -39,7 +39,7 @@ public class Scheduler {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public PrenomeService prenome;
+    public NomeDoppioService prenome;
 
 
     /**

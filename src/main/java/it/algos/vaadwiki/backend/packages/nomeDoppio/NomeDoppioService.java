@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.backend.packages.prenome;
+package it.algos.vaadwiki.backend.packages.nomeDoppio;
 
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -42,7 +42,7 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.inizioRevisione)
-public class PrenomeService extends WikiService {
+public class NomeDoppioService extends WikiService {
 
 
     /**
@@ -55,20 +55,20 @@ public class PrenomeService extends WikiService {
      * Costruttore senza parametri <br>
      * Regola la entityClazz (final) associata a questo service <br>
      */
-    public PrenomeService() {
-        super(Prenome.class);
+    public NomeDoppioService() {
+        super(NomeDoppio.class);
         super.prefDownload = AEWikiPreferenza.lastDownloadPrenome;
     }
 
     /**
      * Crea e registra una entityBean <br>
      *
-     * @param code di riferimento (obbligatorio, unico)
+     * @param nome di riferimento (obbligatorio, unico)
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public Prenome crea(final String code) {
-        return (Prenome) ((MongoService) mongo).insert(newEntity(code));
+    public NomeDoppio crea(final String nome) {
+        return (NomeDoppio) ((MongoService) mongo).insert(newEntity(nome));
     }
 
 
@@ -77,16 +77,16 @@ public class PrenomeService extends WikiService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param code di riferimento (obbligatorio, unico)
+     * @param nome di riferimento (obbligatorio, unico)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Prenome newEntity(final String code) {
-        Prenome newEntityBean = Prenome.builderPrenome()
-                .code(text.isValid(code) ? code : null)
+    public NomeDoppio newEntity(final String nome) {
+        NomeDoppio newEntityBean = NomeDoppio.builderPrenome()
+                .nome(text.isValid(nome) ? nome : null)
                 .build();
 
-        return (Prenome) fixKey(newEntityBean);
+        return (NomeDoppio) fixKey(newEntityBean);
     }
 
     /**
@@ -99,8 +99,8 @@ public class PrenomeService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Prenome findById(final String keyID) throws AlgosException {
-        return (Prenome) super.findById(keyID);
+    public NomeDoppio findById(final String keyID) throws AlgosException {
+        return (NomeDoppio) super.findById(keyID);
     }
 
 
@@ -115,8 +115,8 @@ public class PrenomeService extends WikiService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Prenome findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
-        return (Prenome) super.findByProperty(propertyName, propertyValue);
+    public NomeDoppio findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
+        return (NomeDoppio) super.findByProperty(propertyName, propertyValue);
     }
 
     /**
@@ -129,8 +129,8 @@ public class PrenomeService extends WikiService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Prenome findByKey(final Serializable keyValue) throws AlgosException {
-        return (Prenome) super.findByKey(keyValue);
+    public NomeDoppio findByKey(final Serializable keyValue) throws AlgosException {
+        return (NomeDoppio) super.findByKey(keyValue);
     }
 
     /**
@@ -146,8 +146,8 @@ public class PrenomeService extends WikiService {
      * @return all ordered entities
      */
     @Override
-    public List<Prenome> fetch() {
-        return (List<Prenome>) super.fetch();
+    public List<NomeDoppio> fetch() {
+        return (List<NomeDoppio>) super.fetch();
     }
 
     /**
@@ -157,10 +157,10 @@ public class PrenomeService extends WikiService {
      */
     public List<String> fetchCode() {
         List<String> lista = new ArrayList<>();
-        List<Prenome> listaEntities = fetch();
+        List<NomeDoppio> listaEntities = fetch();
 
-        for (Prenome prenome : listaEntities) {
-            lista.add(prenome.code);
+        for (NomeDoppio nomeDoppio : listaEntities) {
+            lista.add(nomeDoppio.nome);
         }
 
         return lista;

@@ -1,13 +1,11 @@
 package it.algos.vaadwiki.backend.service;
 
-import it.algos.vaadflow14.backend.packages.crono.anno.*;
-import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
 import it.algos.vaadwiki.backend.packages.nome.*;
-import it.algos.vaadwiki.backend.packages.prenome.*;
+import it.algos.vaadwiki.backend.packages.nomeDoppio.*;
 import org.springframework.beans.factory.annotation.*;
 
 /**
@@ -60,7 +58,7 @@ public abstract class WService extends AbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public PrenomeService prenomeService;
+    public NomeDoppioService prenomeService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>

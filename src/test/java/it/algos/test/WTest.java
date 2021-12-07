@@ -3,7 +3,6 @@ package it.algos.test;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
@@ -11,7 +10,7 @@ import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
-import it.algos.vaadwiki.backend.packages.prenome.*;
+import it.algos.vaadwiki.backend.packages.nomeDoppio.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
 import it.algos.vaadwiki.wiki.query.*;
@@ -154,7 +153,7 @@ public abstract class WTest extends ATest {
     protected NazionalitaService nazionalitaService;
 
     @InjectMocks
-    protected PrenomeService prenomeService;
+    protected NomeDoppioService prenomeService;
 
     @InjectMocks
     protected DidascaliaService didascaliaService;

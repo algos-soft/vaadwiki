@@ -3,7 +3,7 @@ package it.algos.wiki;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadwiki.backend.packages.prenome.*;
+import it.algos.vaadwiki.backend.packages.nomeDoppio.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 
@@ -32,7 +32,7 @@ public class PrenomeServiceTest extends WTest {
      * Classe principale di riferimento <br>
      * Gia 'costruita' nella superclasse <br>
      */
-    private PrenomeService service;
+    private NomeDoppioService service;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -62,7 +62,7 @@ public class PrenomeServiceTest extends WTest {
     @Order(1)
     @DisplayName("1 - fetch")
     void fetch() {
-        List<Prenome> listaPrenomi = prenomeService.fetch();
+        List<NomeDoppio> listaPrenomi = prenomeService.fetch();
         assertNotNull(listaPrenomi);
     }
 
