@@ -885,7 +885,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 }
             case gson:
                 doc = findDocByProperty(collectionName, FIELD_ID, keyValueLower);
-                return creaByDoc(entityClazz, doc);
+                return doc != null ? creaByDoc(entityClazz, doc) : null;
             case jackson:
                 return null;
             default:
@@ -1804,8 +1804,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         Bson condition;
         int recordsTrovati = count(collectionName, propertyName, propertyValue);
         if (recordsTrovati == 0) {
-            message = String.format("Nella collection %s non ci sono entity con %s=%s", collectionName, propertyName, propertyValue);
-            throw AlgosException.stack(message, getClass(), "findDocByProperty");
+            return null;
         }
         if (recordsTrovati > 1) {
             message = String.format("Nella collection %s ci sono diverse entities con %s=%s", collectionName, propertyName, propertyValue);
@@ -2182,8 +2181,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         totRecords = (int) mongoOp.count(query, entityClazz);
         switch (totRecords) {
             case 0:
-                message = String.format("Nella entityClazz %s non esiste nessuna entity con %s=%s", entityClazz.getSimpleName(), propertyName, propertyValue);
-                throw AlgosException.stack(message, getClass(), "findBase");
+                return null;
             case 1:
                 return mongoOp.findOne(query, entityClazz);
             default:

@@ -114,8 +114,8 @@ public class WikiBotService extends WService {
             return ((MongoService) mongo).isNotEsiste(Bio.class, wrap.getPageid());
         } catch (AlgosException unErrore) {
             logger.warn(unErrore, this.getClass(), "checkNuovi");
+            return false;
         }
-        return false;
     };
 
     /**

@@ -2,14 +2,17 @@ package it.algos.vaadwiki.backend.packages.bio;
 
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.dialog.*;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.application.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadwiki.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
@@ -92,6 +95,29 @@ public class BioLogicList extends WikiLogicList {
         super.maxNumeroBottoniPrimaRiga = 5;
     }
 
+
+    /**
+     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixAlertList() {
+        super.fixAlertList();
+        String catTitle = WikiVar.categoriaBio;
+        int bioTot = wikiBot.getTotaleCategoria(catTitle);
+        String bioText = html.bold(text.format(bioTot));
+        String categoriaLink = "Categoria:" + catTitle;
+
+        Span biografie = html.getSpanVerde(String.format("Contiene le biografie delle %s voci della ", bioText));
+        Span categoria = html.getSpanBlu(categoriaLink, AETypeWeight.bold);
+        Anchor anchor = new Anchor(FlowCost.PATH_WIKI + categoriaLink, categoria);
+        Span riga = new Span(biografie, anchor);
+        if (alertList != null) {
+            alertList.add(riga);
+        }
+
+    }
+
     /**
      * Costruisce una nuova @route in modalità new <br>
      * Seleziona (eventualmente) il Form da usare <br>
@@ -141,7 +167,8 @@ public class BioLogicList extends WikiLogicList {
     @Override
     public boolean download() {
         ((BioService) entityService).ciclo();
-        super.reload();
+//        super.reload();
+        this.refreshGrid();
 
         return true;
     }

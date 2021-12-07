@@ -10,6 +10,7 @@ import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.application.*;
 import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
@@ -326,15 +327,14 @@ public class BioService extends AService {
      * @return true se l'azione è stata eseguita
      */
     public void ciclo() {
-        //@todo Categoria provvisorio
-        String catTitle = CATEGORIA_TEST_TRE;
-        //@todo Categoria provvisorio
+        String catTitle = WikiVar.categoriaBio;;
 
         List<Long> listaPageIds = null;
         List<MiniWrap> listaMiniWrap = null;
         List<Long> listaPageIdsDaLeggere = null;
         List<WrapPage> listaWrapPage = null;
         List<WrapBio> listaWrapBio = null;
+        String bio="bio";
 
         //--Controlla quante pagine ci sono nella categoria
         //--Si collega come anonymous; non serve essere loggati <br>
@@ -347,13 +347,13 @@ public class BioService extends AService {
         }
 
         //--Parte dalla lista di tutti i (long) pageIds della categoria
-        //--Deve riuscire a gestire una lista di circa 430.000 long per la category BioBot
+        //--Deve riuscire a gestire una lista di circa 435.000 long per la category BioBot
         //--Tempo medio previsto = circa 1 minuto (come bot la categoria legge 5.000 pagine per volta)
         listaPageIds = appContext.getBean(QueryCat.class).urlRequest(catTitle).getLista();
         //--Nella listaPageIds possono esserci anche voci SENZA il tmpl BIO, che verranno scartate dopo
 
         //--Usa la lista di pageIds e recupera una lista (stessa lunghezza) di miniWrap
-        //--Deve riuscire a gestire una lista di circa 430.000 miniWrap per la category BioBot
+        //--Deve riuscire a gestire una lista di circa 435.000 long per la category BioBot
         //--Tempo medio previsto = circa 20 minuti  (come bot la query legge 500 pagine per volta
         listaMiniWrap = appContext.getBean(QueryTimestamp.class).urlRequest(listaPageIds).getLista();
         //--Nella listaMiniWrap possono esserci anche voci SENZA il tmpl BIO, che verranno scartate dopo
@@ -363,7 +363,11 @@ public class BioService extends AService {
         //--Vengono usati quelli che hanno miniWrap.lastModifica maggiore di bio.lastModifica
         //--A regime deve probabilmente gestire una lista di circa 10.000 miniWrap
         //--si tratta delle voci nuove e di quelle modificate nelle ultime 24 ore
-        listaPageIdsDaLeggere = wikiBot.elaboraMiniWrap(listaMiniWrap);
+        try {
+            listaPageIdsDaLeggere = mongo.isExistsCollection(bio)?wikiBot.elaboraMiniWrap(listaMiniWrap):listaPageIds;
+        } catch (AlgosException unErrore) {
+            logger.info(String.format("Manca la collection %s nel database MongoDB",bio));
+        }
         //--Nella listaPageIdsDaLeggere possono esserci anche voci SENZA il tmpl BIO, che verranno scartate dopo
 
         //--Legge tutte le pagine
