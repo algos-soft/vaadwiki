@@ -89,7 +89,7 @@ public class NomeDoppioLogicList extends WikiLogicList {
         String lista = html.bold("persone per nome");
         String categoriaLink = "Categoria:Prenomi composti";
 
-        super.fixInfoDownload(AEWikiPreferenza.lastDownloadPrenome);
+        super.fixInfoDownload(AEWikiPreferenza.lastDownloadNomeDoppio);
         addWikiLink(PATH_MODULO_PRENOME);
         addSpanVerde(String.format("Sono elencati i %s (ad esempio 'Maria Teresa'). BioBot crea una lista di %s quando le biografie superano i %s (tra nomi e %s)", doppi,lista, biografie,doppi));
 

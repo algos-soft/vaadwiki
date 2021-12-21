@@ -57,7 +57,7 @@ public class NomeDoppioService extends WikiService {
      */
     public NomeDoppioService() {
         super(NomeDoppio.class);
-        super.prefDownload = AEWikiPreferenza.lastDownloadPrenome;
+        super.prefDownload = AEWikiPreferenza.lastDownloadNomeDoppio;
     }
 
     /**

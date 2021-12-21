@@ -28,11 +28,12 @@ import java.time.*;
 @AIScript(sovraScrivibile = false)
 public enum AEWikiPreferenza implements AIPreferenza {
 
-    lastDownloadGenere(PREF_DATA_LAST_DOWLOAD_GENERE, "Ultimo download di Genere", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Genere dal Modulo:Bio/Plurale attività genere."),
     lastDownloadAttivita(PREF_DATA_LAST_DOWLOAD_ATTIVITA, "Ultimo download di Attività", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Attività dal Modulo:Bio/Plurale attività."),
     lastDownloadNazionalita(PREF_DATA_LAST_DOWLOAD_NAZIONALITA, "Ultimo download di Nazionalità", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Nazionalità dal Modulo:Bio/Plurale nazionalità."),
     lastDownloadProfessione(PREF_DATA_LAST_DOWLOAD_PROFESSIONE, "Ultimo download di Professione", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Professione dal Modulo:Bio/Link attività."),
-    lastDownloadPrenome(PREF_DATA_LAST_DOWLOAD_PRENOME, "Ultimo download dei Nomi Doppi", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di nomi doppi dal Progetto:Antroponimi/Nomi doppi."),
+    lastDownloadGenere(PREF_DATA_LAST_DOWLOAD_GENERE, "Ultimo download di Genere", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Genere dal Modulo:Bio/Plurale attività genere."),
+    lastDownloadNomeDoppio(PREF_DATA_LAST_DOWLOAD_NOME_DOPPIO, "Ultimo download dei Nomi Doppi", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di nomi doppi dal Progetto:Antroponimi/Nomi doppi."),
+    lastDownloadBiografie(PREF_DATA_LAST_DOWLOAD_BIOGRAFIE, "Ultimo download delle Biografie", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di biografie della Categoria:BioBot."),
 
     ;
 

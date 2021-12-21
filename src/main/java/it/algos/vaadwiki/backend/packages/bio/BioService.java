@@ -11,7 +11,9 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.application.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.login.*;
+import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
 import it.algos.vaadwiki.wiki.query.*;
@@ -50,7 +52,7 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.servicePackage, doc = AEWizDoc.inizioRevisione)
-public class BioService extends AService {
+public class BioService extends WikiService {
 
     public static final String CATEGORIA_TEST = "Nati nel 1167";
 
@@ -97,6 +99,7 @@ public class BioService extends AService {
      */
     public BioService() {
         super(Bio.class);
+        super.prefDownload = AEWikiPreferenza.lastDownloadBiografie;
     }
 
     //    /**
@@ -380,6 +383,8 @@ public class BioService extends AService {
         //--Salva le entities Bio su mongoDB
         //--Elabora (e salva) le entities Bio
         creaElaboraListaBio(listaWrapBio);
+
+        super.fixDataDownload();
     }
 
 

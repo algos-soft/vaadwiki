@@ -13,6 +13,7 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.application.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadwiki.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
@@ -108,6 +109,7 @@ public class BioLogicList extends WikiLogicList {
         String bioText = html.bold(text.format(bioTot));
         String categoriaLink = "Categoria:" + catTitle;
 
+        super.fixInfoDownload(AEWikiPreferenza.lastDownloadBiografie);
         Span biografie = html.getSpanVerde(String.format("Contiene le biografie delle %s voci della ", bioText));
         Span categoria = html.getSpanBlu(categoriaLink, AETypeWeight.bold);
         Anchor anchor = new Anchor(FlowCost.PATH_WIKI + categoriaLink, categoria);
