@@ -1,11 +1,11 @@
 package it.algos.vaadflow14.ui.service;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.spring.annotation.VaadinSessionScope;
-import it.algos.vaadflow14.backend.service.AbstractService;
-import org.springframework.stereotype.Service;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.stereotype.*;
 
 /**
  * Project vaadflow

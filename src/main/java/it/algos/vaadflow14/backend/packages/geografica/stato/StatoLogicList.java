@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.backend.packages.geografica.stato;
 
-import com.mongodb.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -11,13 +10,10 @@ import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
-import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
-import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 /**
  * Project: vaadflow14 <br>

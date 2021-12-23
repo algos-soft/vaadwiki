@@ -1,6 +1,6 @@
 package it.algos.vaadflow14.backend.functional;
 
-import java.util.function.Consumer;
+import java.util.function.*;
 
 /**
  * Project vaadflow14

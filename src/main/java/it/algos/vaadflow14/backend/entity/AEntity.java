@@ -3,7 +3,6 @@ package it.algos.vaadflow14.backend.entity;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import lombok.*;
-import org.springframework.data.mongodb.core.index.*;
 
 import java.io.*;
 import java.time.*;

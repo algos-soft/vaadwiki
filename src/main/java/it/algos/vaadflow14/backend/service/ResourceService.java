@@ -1,18 +1,16 @@
 package it.algos.vaadflow14.backend.service;
 
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.server.StreamResource;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.util.*;
-
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.server.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * Project vaadflow14

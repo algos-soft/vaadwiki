@@ -1,6 +1,6 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
-import static it.algos.vaadflow14.wizard.scripts.WizCost.FLAG_DEBUG_WIZ;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
 /**
  * Project vaadflow14

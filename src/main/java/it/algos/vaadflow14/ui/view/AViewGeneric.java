@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.ui.view;
 
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.spring.annotation.*;
 
 /**
  * Project vaadflow14

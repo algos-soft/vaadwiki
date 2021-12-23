@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.ui.header;
 
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;

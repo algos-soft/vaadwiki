@@ -1,12 +1,10 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.checkbox.*;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project it.algos.vaadflow

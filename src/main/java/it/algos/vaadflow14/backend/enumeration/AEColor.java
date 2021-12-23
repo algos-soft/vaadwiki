@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.backend.enumeration;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow

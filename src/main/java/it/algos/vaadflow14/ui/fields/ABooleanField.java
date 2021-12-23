@@ -1,22 +1,18 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
-import com.vaadin.flow.data.renderer.TextRenderer;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.service.TextService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.checkbox.*;
+import com.vaadin.flow.component.radiobutton.*;
+import com.vaadin.flow.data.renderer.*;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VIRGOLA;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * Project vaadflow15

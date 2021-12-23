@@ -1,19 +1,15 @@
 package it.algos.vaadflow14.ui.security;
 
-import com.vaadin.flow.shared.ApplicationConstants;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.vaadin.flow.shared.*;
+import org.springframework.core.annotation.*;
+import org.springframework.security.access.annotation.*;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.*;
+import org.springframework.security.core.context.*;
+import org.springframework.security.core.userdetails.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
+import javax.servlet.http.*;
+import java.util.*;
 
 /**
  * SecurityUtils takes care of all such static operations that have to do with

@@ -1,13 +1,12 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import com.vaadin.flow.component.textfield.TextField;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow14

@@ -1,8 +1,8 @@
 package it.algos.vaadflow14.backend.functional;
 
-import org.jsoup.internal.StringUtil;
+import org.jsoup.internal.*;
 
-import java.util.function.Predicate;
+import java.util.function.*;
 
 /**
  * Project vaadflow14

@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.backend.enumeration;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.TAG_EM;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Project vaadflow

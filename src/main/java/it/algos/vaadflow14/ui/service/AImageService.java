@@ -1,13 +1,11 @@
 package it.algos.vaadflow14.ui.service;
 
-import com.vaadin.flow.component.html.Image;
-import it.algos.vaadflow14.backend.service.AbstractService;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.html.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import org.springframework.stereotype.*;
 
 /**
  * Project vaadflow14

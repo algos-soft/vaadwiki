@@ -8,9 +8,6 @@ import com.vaadin.flow.component.upload.*;
 import com.vaadin.flow.component.upload.receivers.*;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.shared.util.*;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import java.io.*;
 import java.util.*;

@@ -1,13 +1,10 @@
 package it.algos.vaadflow14.ui.validator;
 
-import com.vaadin.flow.data.binder.ValidationResult;
-import com.vaadin.flow.data.binder.Validator;
-import com.vaadin.flow.data.binder.ValueContext;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.data.binder.*;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project it.algos.vaadflow

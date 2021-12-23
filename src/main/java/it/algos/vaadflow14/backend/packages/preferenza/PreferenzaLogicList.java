@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;

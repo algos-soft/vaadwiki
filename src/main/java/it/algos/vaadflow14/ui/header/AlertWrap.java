@@ -1,8 +1,6 @@
 package it.algos.vaadflow14.ui.header;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow15

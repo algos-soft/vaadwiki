@@ -2,8 +2,7 @@ package it.algos.vaadflow14.backend.enumeration;
 
 import it.algos.vaadflow14.backend.interfaces.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow14

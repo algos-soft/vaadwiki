@@ -1,8 +1,8 @@
 package it.algos.vaadflow14.backend.wrapper;
 
-import com.vaadin.flow.component.AbstractField;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.ui.enumeration.AEAction;
+import com.vaadin.flow.component.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.ui.enumeration.*;
 
 /**
  * Project vaadflow15

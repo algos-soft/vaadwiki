@@ -1,12 +1,9 @@
 package it.algos.vaadflow14.backend.annotation;
 
-import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.icon.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * /**

@@ -1,9 +1,8 @@
 package it.algos.vaadflow14.backend.enumeration;
 
 
-import it.algos.vaadflow14.backend.interfaces.AIPref;
-
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.interfaces.*;
 
 /**
  * Project vaadflow

@@ -1,9 +1,8 @@
 package it.algos.vaadflow14.backend.wrapper;
 
 
-import it.algos.vaadflow14.backend.enumeration.AESearch;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 
 /**
  * Project vaadflow15

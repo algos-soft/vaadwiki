@@ -1,14 +1,10 @@
 package it.algos.vaadflow14.ui.form;
 
-import com.vaadin.flow.component.customfield.CustomField;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.ui.fields.AField;
-import it.algos.vaadflow14.ui.fields.AIField;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.ui.fields.*;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow15

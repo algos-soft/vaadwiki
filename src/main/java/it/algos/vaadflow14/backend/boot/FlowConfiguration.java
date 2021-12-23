@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.backend.boot;
 
 import org.springframework.context.annotation.*;
-import org.springframework.data.mongodb.core.mapping.event.*;
 import org.springframework.validation.*;
 import org.springframework.validation.beanvalidation.*;
 

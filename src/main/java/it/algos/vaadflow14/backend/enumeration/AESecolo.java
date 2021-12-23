@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.enumeration;
 
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Created by gac on 15/10/14.

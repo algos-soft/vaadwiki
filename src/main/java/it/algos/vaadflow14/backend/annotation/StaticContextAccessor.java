@@ -1,12 +1,11 @@
 package it.algos.vaadflow14.backend.annotation;
 
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import com.vaadin.flow.spring.annotation.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 
-import javax.annotation.PostConstruct;
+import javax.annotation.*;
 
 /**
  * Created by gac on 01/07/17

@@ -1,10 +1,10 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.stereotype.*;
 
 import javax.annotation.*;

@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.ui.list;
 
-import com.mongodb.*;
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.grid.*;
 import com.vaadin.flow.component.html.*;

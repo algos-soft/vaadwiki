@@ -1,21 +1,14 @@
 package it.algos.vaadflow14.backend.login;
 
-import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.component.login.LoginI18n;
-import com.vaadin.flow.component.login.LoginOverlay;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
-import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.application.FlowVar;
-
-import javax.annotation.PostConstruct;
-import java.util.Collections;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_LOGIN;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.login.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.router.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static it.algos.vaadflow14.backend.application.FlowVar.*;
+
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * The Login view

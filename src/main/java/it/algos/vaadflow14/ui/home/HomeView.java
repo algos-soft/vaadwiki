@@ -1,13 +1,12 @@
 package it.algos.vaadflow14.ui.home;
 
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.Route;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.ui.MainLayout;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.router.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.ui.*;
 
-import javax.annotation.PostConstruct;
+import javax.annotation.*;
 
 /**
  * Project vaadflow14
@@ -35,8 +34,8 @@ public class HomeView extends VerticalLayout {
         add(new Span("Usa @Route e usa MainLayout.class"));
 
         setSizeFull();
-        setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-        setAlignItems(FlexComponent.Alignment.CENTER);
+        setJustifyContentMode(JustifyContentMode.CENTER);
+        setAlignItems(Alignment.CENTER);
     }
 
 

@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.functional;
 
-import java.util.List;
-import java.util.function.Function;
+import java.util.*;
+import java.util.function.*;
 
 /**
  * Project vaadflow14
