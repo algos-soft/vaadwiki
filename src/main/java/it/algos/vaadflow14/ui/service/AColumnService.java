@@ -5,6 +5,7 @@ import com.vaadin.flow.component.grid.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.renderer.*;
+import com.vaadin.flow.function.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.*;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.*;
 
 
 /**
@@ -156,6 +158,53 @@ public class AColumnService extends AbstractService {
                     }));//end of lambda expressions and anonymous inner class
                     break;
                 case combo:
+
+                    ValueProvider.identity();
+                    new ValueProvider<>() {
+
+                        @Override
+                        public Object apply(Object o) {
+                            return null;
+                        }
+
+                        /**
+                         * Returns a composed function that first applies the {@code before}
+                         * function to its input, and then applies this function to the result.
+                         * If evaluation of either function throws an exception, it is relayed to
+                         * the caller of the composed function.
+                         *
+                         * @param before the function to apply before this function is applied
+                         *
+                         * @return a composed function that first applies the {@code before}
+                         * function and then applies this function
+                         *
+                         * @throws NullPointerException if before is null
+                         * @see #andThen(Function)
+                         */
+                        @Override
+                        public <V> Function<V, Object> compose(Function<? super V, ?> before) {
+                            return ValueProvider.super.compose(before);
+                        }
+
+                        /**
+                         * Returns a composed function that first applies this function to
+                         * its input, and then applies the {@code after} function to the result.
+                         * If evaluation of either function throws an exception, it is relayed to
+                         * the caller of the composed function.
+                         *
+                         * @param after the function to apply after this function is applied
+                         *
+                         * @return a composed function that first applies this function and then
+                         * applies the {@code after} function
+                         *
+                         * @throws NullPointerException if after is null
+                         * @see #compose(Function)
+                         */
+                        @Override
+                        public <V> Function<Object, V> andThen(Function<? super Object, ? extends V> after) {
+                            return ValueProvider.super.andThen(after);
+                        }
+                    };
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         String testo = VUOTA;
                         Field field4 = null;
@@ -173,6 +222,10 @@ public class AColumnService extends AbstractService {
 
                         return new Label(testo);
                     }));//end of lambda expressions and anonymous inner class
+                    break;
+                case stringLinkClassCombo:
+                    colonna = grid.addColumn(fieldName);
+                    sortable = true;
                     break;
                 case enumeration:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {

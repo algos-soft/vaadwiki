@@ -3,6 +3,7 @@ package it.algos.vaadflow14.ui.fields;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.shared.*;
 import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -137,6 +138,10 @@ public class AComboField<T> extends AField<Object> {
     @Override
     public void setErrorMessage(String errorMessage) {
         comboBox.setErrorMessage(errorMessage);
+    }
+
+    public List getItems() {
+        return items;
     }
 
 }

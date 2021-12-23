@@ -554,7 +554,7 @@ public enum AEWizCost {
         public void fixValue() {
             nameTargetPackagePunto.fixValue();
             if (nameTargetPackagePunto.valida) {
-                this.value = text.fixPuntoToSlash(nameTargetPackagePunto.get()).toLowerCase();
+                this.value = text.fixPuntoToSlash(text.primaMinuscola(nameTargetPackagePunto.get()));
                 this.setValida(true);
             }
         }

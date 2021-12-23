@@ -160,15 +160,12 @@ public class AFieldService extends AbstractService {
                     field = appContext.getBean(ATimeField.class);
                     break;
                 case combo:
-                    field = creaComboField(reflectionJavaField);
-                    //                    isRequired = annotation.isRequired(reflectionJavaField);
-                    //                    isAllowCustomValue = annotation.isAllowCustomValue(reflectionJavaField);
-                    //                    items = getComboItems(reflectionJavaField);
-                    //                    if (items != null) {
-                    //                        field = appContext.getBean(AComboField.class, items, isRequired, isAllowCustomValue);
-                    //                    } else {
-                    //                        logger.warn("Mancano gli items per il combobox di " + fieldKey, this.getClass(), "creaOnly.combo");
-                    //                    }
+                    ComboBox combo = getCombo(reflectionJavaField);
+                    field = appContext.getBean(AComboField.class, combo);
+                    break;
+                case stringLinkClassCombo:
+                    ComboBox linkCombo = getLinkCombo(reflectionJavaField);
+                    field = appContext.getBean(AStringLinkClassComboField.class,  reflectionJavaField,linkCombo);
                     break;
                 case enumeration:
                     items = getEnumerationItems(reflectionJavaField);
@@ -365,6 +362,14 @@ public class AFieldService extends AbstractService {
                         //                        builder.withValidator(notNullValidator);
                     }
                     break;
+                case stringLinkClassCombo:
+                    if (notNullValidator != null) {
+                        builder.withValidator(notNullValidator);
+                    }
+                    if (isRequired) {
+                        builder.asRequired();
+                    }
+                    break;
                 case enumeration:
                     if (notNullValidator != null) {
                         builder.withValidator(notNullValidator);
@@ -392,29 +397,6 @@ public class AFieldService extends AbstractService {
                 builder.bind(fieldName);
             }
         }
-    }
-
-
-    public AField creaComboField(Field reflectionJavaField) {
-        AField field = null;
-        String fieldKey;
-        boolean isRequired = false;
-        boolean isAllowCustomValue = false;
-        List items = null;
-
-        fieldKey = reflectionJavaField.getName();
-        ComboBox combo = getCombo(reflectionJavaField);
-        field = appContext.getBean(AComboField.class, combo);
-        //        isRequired = annotation.isRequired(reflectionJavaField);
-        //        isAllowCustomValue = annotation.isAllowCustomValue(reflectionJavaField);
-        //        items = getComboItems(reflectionJavaField);
-        //        if (items != null) {
-        //            field = appContext.getBean(AComboField.class, items, isRequired, isAllowCustomValue);
-        //        } else {
-        //            logger.warn("Mancano gli items per il combobox di " + fieldKey, this.getClass(), "creaOnly.combo");
-        //        }
-
-        return field;
     }
 
 
@@ -457,6 +439,44 @@ public class AFieldService extends AbstractService {
         return combo;
     }
 
+    /**
+     *
+     */
+    public ComboBox getLinkCombo(Field reflectionJavaField) {
+        ComboBox combo = new ComboBox();
+        boolean usaComboMethod;
+        Class<AEntity> comboClazz;
+        Class<AService> logicClazz;
+        String methodName;
+        Method metodo;
+        AService logicInstance;
+        List items = null;
+
+        usaComboMethod = annotation.usaComboMethod(reflectionJavaField);
+        comboClazz = annotation.getComboClass(reflectionJavaField);
+        if (usaComboMethod) {
+            logicClazz = annotation.getLogicClass(reflectionJavaField);
+            logicInstance = (AService) StaticContextAccessor.getBean(logicClazz);
+            methodName = annotation.getMethodName(reflectionJavaField);
+            try {
+                metodo = logicClazz.getDeclaredMethod(methodName);
+                combo = (ComboBox) metodo.invoke(logicInstance);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "getCombo");
+            }
+        }
+        else {
+            items = ((MongoService) mongo).findAll(comboClazz);//@todo da controllare
+            combo = new ComboBox();
+            if (array.isEmpty(items)) {
+                items = new ArrayList();
+                items.add("test");
+            }
+            combo.setItems(items);
+        }
+
+        return combo;
+    }
 
     /**
      * Prima cerca i valori nella @Annotation items=... dell' interfaccia AIField <br>

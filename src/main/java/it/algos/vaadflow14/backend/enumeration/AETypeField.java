@@ -38,6 +38,7 @@ public enum AETypeField {
     //    onedecimal,
 
     combo(8, 10),
+    stringLinkClassCombo(10, 14),
 
     //    multicombo,
     //    combolinkato,

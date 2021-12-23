@@ -1,16 +1,13 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.AbstractSinglePropertyField;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.customfield.CustomField;
-import com.vaadin.flow.shared.Registration;
-import it.algos.vaadflow14.backend.service.ArrayService;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.service.TextService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.customfield.*;
+import com.vaadin.flow.shared.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Project vaadflow15
@@ -45,6 +42,20 @@ public abstract class AField<T> extends CustomField<T> implements AIField {
     @Autowired
     public ArrayService array;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AnnotationService annotation;
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ReflectionService reflection;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -58,18 +69,17 @@ public abstract class AField<T> extends CustomField<T> implements AIField {
 
     protected String caption;
 
-
-//    /**
-//     * Costruttore con parametri <br>
-//     * L' istanza viene costruita nella sottoclasse concreta <br>
-//     *
-//     * @param fieldKey nome interno del field
-//     * @param caption  label visibile del field
-//     */
-//    public AField(String fieldKey, String caption) {
-//        this.fieldKey = fieldKey;
-//        this.caption = caption;
-//    } // end of SpringBoot constructor
+    //    /**
+    //     * Costruttore con parametri <br>
+    //     * L' istanza viene costruita nella sottoclasse concreta <br>
+    //     *
+    //     * @param fieldKey nome interno del field
+    //     * @param caption  label visibile del field
+    //     */
+    //    public AField(String fieldKey, String caption) {
+    //        this.fieldKey = fieldKey;
+    //        this.caption = caption;
+    //    } // end of SpringBoot constructor
 
 
     @Override
@@ -86,7 +96,6 @@ public abstract class AField<T> extends CustomField<T> implements AIField {
     @Override
     protected void setPresentationValue(T o) {
     }
-
 
     //    @Override
     //    public void setValue(T o) {
@@ -109,7 +118,6 @@ public abstract class AField<T> extends CustomField<T> implements AIField {
     public void setText(String caption) {
 
     }
-
 
     //    @Override
     //    public void setValue(Object o) {

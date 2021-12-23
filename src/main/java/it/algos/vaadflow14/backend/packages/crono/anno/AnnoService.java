@@ -108,7 +108,7 @@ public class AnnoService extends AService {
      */
     @Override
     public Anno newEntity() {
-        return newEntity(0, VUOTA, false, (Secolo) null);
+        return newEntity(0, VUOTA, false,  null);
     }
 
 

@@ -6,7 +6,11 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadwiki.backend.packages.attivita.*;
+import it.algos.vaadwiki.backend.packages.nazionalita.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.*;
@@ -88,7 +92,7 @@ public class Bio extends AEntity {
      */
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.lungo, required = true, caption = "PageId interno della pagina wiki", typeNum = AETypeNum.positiviOnly, widthEM = WIDTHEM_ID, enabled = false)
-    @AIColumn(header = "#", widthEM = WIDTHEM_ID)
+    @AIColumn( widthEM = WIDTHEM_ID)
     public long pageId;
 
 
@@ -159,6 +163,7 @@ public class Bio extends AEntity {
      * giorno di nascita (facoltativo, non unico)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Giorno.class, usaComboBox = false, widthEM = 12)
     @AIColumn(header = "Nascita", widthEM = WIDTH_GIORNO)
     public String giornoNato;
 
@@ -166,6 +171,7 @@ public class Bio extends AEntity {
      * anno di nascita (facoltativo, non unico)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Anno.class, usaComboBox = false, widthEM = 12)
     @AIColumn(header = "Anno", widthEM = WIDTH_ANNO)
     public String annoNato;
 
@@ -181,6 +187,7 @@ public class Bio extends AEntity {
      * giorno di morte (facoltativo, non unico)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Giorno.class, usaComboBox = false, widthEM = 12)
     @AIColumn(header = "Morte", widthEM = WIDTH_GIORNO)
     public String giornoMorto;
 
@@ -188,6 +195,7 @@ public class Bio extends AEntity {
      * anno di norte (facoltativo, non unico)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Anno.class, usaComboBox = false, widthEM = 12)
     @AIColumn(header = "Anno", widthEM = WIDTH_ANNO)
     public String annoMorto;
 
@@ -203,6 +211,7 @@ public class Bio extends AEntity {
      * attività principale (facoltativa, non unica)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Attivita.class, usaComboBox = true, widthEM = 12)
     @AIColumn(widthEM = WIDTH_ATTNAZ)
     public String attivita;
 
@@ -210,6 +219,7 @@ public class Bio extends AEntity {
      * seconda attività (facoltativa, non unica)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Attivita.class, usaComboBox = false, widthEM = 12)
     @AIColumn(widthEM = WIDTH_ATTNAZ)
     public String attivita2;
 
@@ -217,6 +227,7 @@ public class Bio extends AEntity {
      * terza attività (facoltativa, non unica)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Attivita.class, usaComboBox = false, widthEM = 12)
     @AIColumn(widthEM = WIDTH_ATTNAZ)
     public String attivita3;
 
@@ -225,6 +236,7 @@ public class Bio extends AEntity {
      * nazionalità (facoltativa, non unica)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Nazionalita.class, usaComboBox = true, widthEM = 12)
     @AIColumn(widthEM = WIDTH_ATTNAZ)
     public String nazionalita;
 

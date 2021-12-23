@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.*;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.query.*;
 
 import java.io.*;
@@ -71,7 +72,7 @@ public interface AIMongoService {
      *
      * @return true if the collection exist
      */
-     boolean isExistsCollection(final String collectionName) throws AlgosException ;
+    boolean isExistsCollection(final String collectionName) throws AlgosException;
 
     /**
      * Check the existence (not empty) of a collection. <br>
@@ -106,8 +107,8 @@ public interface AIMongoService {
      * Conteggio di alcune entities selezionate di una collection. <br>
      * La selezione è keyID=keyValue <br>
      *
-     * @param entityClazz   corrispondente ad una collection sul database mongoDB
-     * @param keyValue (serializable) per costruire la query
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyValue    (serializable) per costruire la query
      *
      * @return numero di entities selezionate
      */
@@ -187,6 +188,8 @@ public interface AIMongoService {
      */
     List<? extends AEntity> fetch(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException;
 
+    List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sortSpring, int offset, int limit) throws AlgosException;
+
     /**
      * Cerca un Document da una collection con una determinata chiave. <br>
      *
@@ -239,7 +242,7 @@ public interface AIMongoService {
      *
      * @return true if exist
      */
-     boolean isEsiste(final Class<? extends AEntity> entityClazz, final Serializable keyId) throws AlgosException ;
+    boolean isEsiste(final Class<? extends AEntity> entityClazz, final Serializable keyId) throws AlgosException;
 
     /**
      * Find single entity. <br>
@@ -315,7 +318,7 @@ public interface AIMongoService {
      *
      * @return lista di entityBeans
      */
-     List<AEntity> fetch(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException ;
+    List<AEntity> fetch(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException;
 
     /**
      * Recupera dal DB il valore massimo pre-esistente della property <br>

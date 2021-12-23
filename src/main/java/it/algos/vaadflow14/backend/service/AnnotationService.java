@@ -800,9 +800,9 @@ public class AnnotationService extends AbstractService {
      * @return the name of the mongo collection
      */
     public String getCollectionName(final Class<? extends AEntity> entityClazz) {
-        String entityName = (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) ? entityClazz.getSimpleName().toLowerCase() : VUOTA;
+        String entityName = (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) ? text.primaMinuscola(entityClazz.getSimpleName()) : VUOTA;
         Document annotation = (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) ? this.getDocument(entityClazz) : null;
-        return annotation != null ? annotation.collection().toLowerCase() : text.isValid(entityName) ? entityName : VUOTA;
+        return annotation != null ? text.primaMinuscola(annotation.collection()) : text.isValid(entityName) ? entityName : VUOTA;
     }
 
     //==========================================================================
@@ -1401,7 +1401,7 @@ public class AnnotationService extends AbstractService {
         try {
             reflectionJavaField = reflection.getField(entityClazz, fieldName);
         } catch (AlgosException unErrore) {
-            logger.error(unErrore,getClass(),"getFormFieldName");
+            logger.error(unErrore, getClass(), "getFormFieldName");
         }
 
         return getFormFieldName(reflectionJavaField);
@@ -1654,6 +1654,8 @@ public class AnnotationService extends AbstractService {
     public String getLinkProperty(final Field reflectionJavaField) {
         String linkProperty = VUOTA;
         AIField annotation = null;
+        Class declaringClazz;
+        Class comboClazz;
 
         if (reflectionJavaField == null) {
             return null;
@@ -1662,6 +1664,14 @@ public class AnnotationService extends AbstractService {
         annotation = this.getAIField(reflectionJavaField);
         if (annotation != null) {
             linkProperty = annotation.linkProperty();
+        }
+
+        if (text.isEmpty(linkProperty)) {
+            declaringClazz = reflectionJavaField.getDeclaringClass();
+            linkProperty = getKeyPropertyName(declaringClazz);
+
+            comboClazz = getComboClass(reflectionJavaField);
+            linkProperty = getKeyPropertyName(comboClazz);
         }
 
         return linkProperty;
@@ -1719,7 +1729,7 @@ public class AnnotationService extends AbstractService {
         AIField annotation = this.getAIField(reflectionJavaField);
         AETypeField type = this.getFormType(reflectionJavaField);
 
-        if (annotation != null && (type == AETypeField.combo || type == AETypeField.enumeration)) {
+        if (annotation != null && (type == AETypeField.combo || type == AETypeField.stringLinkClassCombo || type == AETypeField.enumeration)) {
             usaComboBoxGrid = annotation.usaComboBox();
         }
 

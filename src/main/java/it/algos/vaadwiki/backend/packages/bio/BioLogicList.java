@@ -1,6 +1,7 @@
 package it.algos.vaadwiki.backend.packages.bio;
 
 import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.dialog.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.*;
@@ -9,6 +10,7 @@ import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -17,6 +19,8 @@ import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import it.algos.vaadwiki.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
+
+import java.util.*;
 
 /**
  * Project: vaadwiki <br>
@@ -93,7 +97,7 @@ public class BioLogicList extends WikiLogicList {
         super.usaBottoneUploadStatistiche = false;
         super.usaBottoneUploadAll = false;
         super.usaBottoneElabora = true;
-        super.maxNumeroBottoniPrimaRiga = 5;
+        super.maxNumeroBottoniPrimaRiga = 10;
     }
 
 
@@ -104,6 +108,7 @@ public class BioLogicList extends WikiLogicList {
     @Override
     protected void fixAlertList() {
         super.fixAlertList();
+
         String catTitle = WikiVar.categoriaBio;
         int bioTot = wikiBot.getTotaleCategoria(catTitle);
         String bioText = html.bold(text.format(bioTot));
@@ -117,8 +122,27 @@ public class BioLogicList extends WikiLogicList {
         if (alertList != null) {
             alertList.add(riga);
         }
-
     }
+
+
+    /**
+     * Costruisce una mappa di ComboBox da usare nel wrapper WrapTop <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected Map<String, ComboBox> getMappaComboBox() {
+        Map<String, ComboBox> mappa = super.getMappaComboBox();
+        ComboBox combo = null;
+
+        try {
+            combo = getComboBox("status");
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "getMappaComboBox");
+        }
+        mappa.put("status", combo);
+
+        return mappa;
+    }
+
 
     /**
      * Costruisce una nuova @route in modalità new <br>
@@ -169,7 +193,7 @@ public class BioLogicList extends WikiLogicList {
     @Override
     public boolean download() {
         ((BioService) entityService).ciclo();
-//        super.reload();
+        //        super.reload();
         this.refreshGrid();
 
         return true;

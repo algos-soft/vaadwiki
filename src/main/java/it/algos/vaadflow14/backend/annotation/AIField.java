@@ -71,6 +71,7 @@ public @interface AIField {
     /**
      * (Optional) property
      * Utilizzato nei Link.
+     * Defaults to keyPropertyName.
      * Defaults to vuota.
      *
      * @return the string

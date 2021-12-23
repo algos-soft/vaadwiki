@@ -5,9 +5,9 @@ import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 
-import java.io.*;
 import java.util.*;
 
 /**
@@ -17,7 +17,7 @@ import java.util.*;
  * Date: lun, 01-mar-2021
  * Time: 21:29
  */
-public abstract class Logic extends LogicProperty implements AILogic, HasUrlParameter<String>, BeforeEnterObserver {
+public abstract class Logic extends LogicProperty implements AILogic, HasUrlParameter<String>, BeforeEnterObserver, AfterNavigationObserver {
 
 
     /**
@@ -125,6 +125,10 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+    }
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent beforeEnterEvent) {
         this.fixEntityClazz();
         this.fixEntityService();
         //        this.fixLogicForm();

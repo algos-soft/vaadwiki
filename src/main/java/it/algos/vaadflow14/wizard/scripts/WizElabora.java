@@ -276,7 +276,7 @@ public abstract class WizElabora implements WizRecipient {
         String tagOld = "import it.algos.vaadflow14.backend.application.*;";
         String pack = AEWizCost.nameTargetPackagePunto.get();
         String clazz = AEWizCost.nameTargetFileUpper.get();
-        String packageName = AEWizCost.nameTargetPackagePunto.get().toLowerCase();
+        String packageName = text.primaMinuscola(AEWizCost.nameTargetPackagePunto.get());
         String pathFileBoot = AEWizCost.pathTargetProjectBoot.get();
         pathFileBoot += AEWizCost.nameTargetProjectUpper.get() + nomeFileTextSorgente + JAVA_SUFFIX;
         String tagNew = "import it.algos." + AEWizCost.nameTargetProjectModulo.get() + ".backend.packages." + packageName + "." + clazz + ";";

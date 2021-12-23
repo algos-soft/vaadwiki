@@ -142,6 +142,7 @@ public class BeanService extends AbstractService {
             return false;
         }
 
+
         try {
             entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent);
         } catch (AlgosException unErrore) {

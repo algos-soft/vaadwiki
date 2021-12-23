@@ -4,7 +4,6 @@ import com.querydsl.core.annotations.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;

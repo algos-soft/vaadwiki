@@ -94,7 +94,7 @@ public class WikiBoot extends FlowBoot {
         FlowVar.usaCronoPackages = false;
         FlowVar.usaGeografiaPackages = false;
 
-        WikiVar.categoriaBio = "Nati nel 948";
+        WikiVar.categoriaBio = "Nati nel 1948";
     }
 
 

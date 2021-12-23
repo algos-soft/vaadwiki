@@ -53,7 +53,7 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaKeyIdMinuscolaCaseInsensitive = true, usaBoot = true, usaNew = false)
+@AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaKeyIdMinuscolaCaseInsensitive = true, usaBoot = true, usaNew = true)
 @AIView(menuName = "Regione", menuIcon = VaadinIcon.GLOBE, searchProperty = "divisione", sortProperty = "ordine")
 @AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "regione", usaRowIndex = false)
 @AIForm(fields = "stato,divisione,iso,sigla,province,status", usaSpostamentoTraSchede = true)

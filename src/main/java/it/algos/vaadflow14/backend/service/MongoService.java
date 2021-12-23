@@ -174,7 +174,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             return null;
         }
 
-        String shortName = fileService.estraeClasseFinale(collectionName).toLowerCase();
+        String shortName = fileService.estraeClasseFinale(collectionName);
+        shortName = text.primaMinuscola(shortName);
 
         if (text.isValid(shortName)) {
             if (collezioni != null && collezioni.contains(shortName)) {
