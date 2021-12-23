@@ -85,14 +85,16 @@ public class Bio extends AEntity {
 
     private static final transient int WIDTH_ANNO = 6;
 
-    private static final transient int WIDTH_ATTNAZ = 9;
+    private static final transient int WIDTH_ATTNAZ_LIST = 9;
+
+    private static final transient int WIDTH_ATTNAZ_FORM = 20;
 
     /**
      * pageId (obbligatorio, unico) <br>
      */
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.lungo, required = true, caption = "PageId interno della pagina wiki", typeNum = AETypeNum.positiviOnly, widthEM = WIDTHEM_ID, enabled = false)
-    @AIColumn( widthEM = WIDTHEM_ID)
+    @AIColumn(widthEM = WIDTHEM_ID)
     public long pageId;
 
 
@@ -211,24 +213,24 @@ public class Bio extends AEntity {
      * attività principale (facoltativa, non unica)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Attivita.class, usaComboBox = true, widthEM = 12)
-    @AIColumn(widthEM = WIDTH_ATTNAZ)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Attivita.class, usaComboBox = true, widthEM = WIDTH_ATTNAZ_FORM)
+    @AIColumn(widthEM = 18)
     public String attivita;
 
     /**
      * seconda attività (facoltativa, non unica)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Attivita.class, usaComboBox = false, widthEM = 12)
-    @AIColumn(widthEM = WIDTH_ATTNAZ)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Attivita.class, usaComboBox = false, widthEM = WIDTH_ATTNAZ_FORM)
+    @AIColumn(widthEM = WIDTH_ATTNAZ_LIST)
     public String attivita2;
 
     /**
      * terza attività (facoltativa, non unica)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Attivita.class, usaComboBox = false, widthEM = 12)
-    @AIColumn(widthEM = WIDTH_ATTNAZ)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Attivita.class, usaComboBox = false, widthEM = WIDTH_ATTNAZ_FORM)
+    @AIColumn(widthEM = WIDTH_ATTNAZ_LIST)
     public String attivita3;
 
 
@@ -236,8 +238,8 @@ public class Bio extends AEntity {
      * nazionalità (facoltativa, non unica)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Nazionalita.class, usaComboBox = true, widthEM = 12)
-    @AIColumn(widthEM = WIDTH_ATTNAZ)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Nazionalita.class, usaComboBox = true, widthEM = WIDTH_ATTNAZ_FORM)
+    @AIColumn(widthEM = WIDTH_ATTNAZ_LIST)
     public String nazionalita;
 
     /**

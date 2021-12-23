@@ -239,7 +239,7 @@ public class UtilityService extends AbstractService {
 
         reflectionJavaField = reflection.getField(entityClazz, fieldName);
         type = annotation.getColumnType(reflectionJavaField);
-        widthEM = width > 0 ? width + TAG_EM : annotation.getComboBoxGridWidth(reflectionJavaField);
+        widthEM = width > 0 ? width + TAG_EM : annotation.getFormWith(reflectionJavaField);
         textInitialValue = annotation.getComboInitialValue(reflectionJavaField);
 
         if (type != AETypeField.combo && type != AETypeField.stringLinkClassCombo && type != AETypeField.enumeration) {
@@ -257,6 +257,14 @@ public class UtilityService extends AbstractService {
         if (type == AETypeField.combo) {
             comboClazz = annotation.getComboClass(reflectionJavaField);
             //            sortSpring = annotation.getSortSpring(comboClazz);
+            dataProvider = dataProvider != null ? dataProvider : provider.creaDataProvider(comboClazz);
+            if (dataProvider != null) {
+                combo.setDataProvider(dataProvider);
+            }
+        }
+
+        if (type == AETypeField.stringLinkClassCombo) {
+            comboClazz = annotation.getComboClass(reflectionJavaField);
             dataProvider = dataProvider != null ? dataProvider : provider.creaDataProvider(comboClazz);
             if (dataProvider != null) {
                 combo.setDataProvider(dataProvider);
