@@ -90,7 +90,7 @@ public class Regione extends AREntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Stato.class, logicClazz = StatoService.class, usaComboBox = true, usaComboMethod = true, methodName = "creaComboStati", comboInitialValue = "Italia")
+    @AIField(type = AETypeField.combo, comboClazz = Stato.class, logicClazz = StatoService.class, usaComboBox = true, usaComboMethod = true, methodName = "creaComboStati", comboInitialValue = "Italia", widthEM = 17)
     @AIColumn(widthEM = 8)
     public Stato stato;
 
@@ -125,7 +125,7 @@ public class Regione extends AREntity {
     /**
      * statuto normativo (facoltativo) <br>
      */
-    @AIField(type = AETypeField.enumeration, enumClazz = AEStatus.class, usaComboBox = true, widthEM = 14)
+    @AIField(type = AETypeField.enumeration, enumClazz = AEStatus.class, usaComboBox = true, widthEM = 20)
     @AIColumn(widthEM = 18, flexGrow = true)
     public AEStatus status;
 

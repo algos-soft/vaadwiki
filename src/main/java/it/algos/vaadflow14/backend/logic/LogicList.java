@@ -745,7 +745,7 @@ public abstract class LogicList extends Logic {
                 }
                 break;
             case wrapFiltri:
-                if (text.isValid(fieldName) && fieldValue != null) {
+                if (text.isValid(fieldName) ) {
                     if (wrapFiltri != null) {
                         try {
                             wrapFiltri.regola(AETypeFilter.link, fieldName, fieldValue);

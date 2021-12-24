@@ -1350,14 +1350,33 @@ public class AnnotationService extends AbstractService {
     /**
      * Get the type (field) of the property.
      *
+     * @param entityClazz the class of type AEntity
+     * @param fieldName   the property name
+     *
+     * @return the type for the specific field
+     */
+    public AETypeField getFormType(Class<? extends AEntity> entityClazz, String fieldName) {
+        Field reflectionJavaField = null;
+        try {
+            reflectionJavaField = reflection.getField(entityClazz, fieldName);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, getClass(), "getFormType");
+        }
+
+        return getFormType(reflectionJavaField);
+    }
+
+    /**
+     * Get the type (field) of the property.
+     *
      * @param reflectionJavaField di riferimento
      *
      * @return the type for the specific field
      */
     public AETypeField getFormType(final Field reflectionJavaField) {
-        AETypeField type = null;
+        AETypeField type;
         AETypeField standard = AETypeField.text;
-        AIField annotation = null;
+        AIField annotation;
 
         if (reflectionJavaField == null) {
             return null;

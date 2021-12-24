@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
 import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
@@ -12,6 +13,7 @@ import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
+import javax.management.*;
 import java.util.*;
 
 /**
@@ -101,7 +103,7 @@ public class RegioneLogicList extends LogicList {
      */
     protected Map<String, ComboBox> getMappaComboBox() {
         Map<String, ComboBox> mappa = super.getMappaComboBox();
-        ComboBox combo=null;
+        ComboBox combo = null;
 
         if (AEPreferenza.usaBandiereStati.is()) {
             try {

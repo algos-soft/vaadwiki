@@ -101,8 +101,15 @@ public class WrapFiltri {
             throw AlgosException.stack(message, this.getClass(), "regola");
         }
 
-        if (propertyValue == null && filter != AETypeFilter.checkBox3Vie) {
-            throw AlgosException.stack("Manca la propertyValue del filtro", this.getClass(), "regola");
+        //        if (propertyValue == null && filter != AETypeFilter.checkBox3Vie) {
+        //            throw AlgosException.stack("Manca la propertyValue del filtro", this.getClass(), "regola");
+        //        }
+
+        //--arriva da un combobox ma è una enumeration e non un dbref
+        if (filter == AETypeFilter.link) {
+            if (annotation.getFormType(entityClazz, propertyField) == AETypeField.enumeration) {
+                filter = AETypeFilter.uguale;
+            }
         }
 
         if (annotation.isDBRef(entityClazz, propertyField)) {
@@ -126,7 +133,9 @@ public class WrapFiltri {
                     mappaFiltri.put(keyField, AFiltro.ugualeStr(propertyField, (String) propertyValue));
                 }
                 else {
-                    mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
+                    if (propertyValue!=null) {
+                        mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
+                    }
                 }
                 break;
             case inizia:
@@ -145,8 +154,8 @@ public class WrapFiltri {
                 }
                 if (propertyValue != null && propertyValue instanceof AEntity) {
                     propertyValue = ((AEntity) propertyValue).id;
+                    mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
                 }
-                mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
                 break;
             case checkBox3Vie:
                 mappaFiltri.put(keyField, AFiltro.checkBox3Vie(propertyField, propertyValue));

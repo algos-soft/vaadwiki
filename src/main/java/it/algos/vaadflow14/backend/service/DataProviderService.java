@@ -161,6 +161,7 @@ public class DataProviderService extends AbstractService {
                     sortSpring = utility.sortVaadinToSpring(sortVaadinList, entityClazz);
 
                     try {
+                        Object beta= ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit);
                         return ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();
                     } catch (AlgosException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
@@ -172,6 +173,7 @@ public class DataProviderService extends AbstractService {
                 // The grid can then use it to properly adjust the scrollbars.
                 query -> {
                     try {
+                        int alfa= mongo.count(entityClazz, mappaFiltri);
                         return mongo.count(entityClazz, mappaFiltri);
                     } catch (AlgosException unErrore) {
                         logger.error(unErrore, this.getClass(), "creaDataProvider");
