@@ -73,7 +73,9 @@ public class Bio extends AEntity {
      */
     private static final transient int WIDTHEM_ID = 7;
 
-    private static final transient int WIDTHEM_TITLE = 18;
+    private static final transient int WIDTHEM_TITLE_LIST = 16;
+
+    private static final transient int WIDTHEM_TITLE_FORM = 20;
 
     private static final transient int WIDTHEM_NOME = 11;
 
@@ -104,8 +106,8 @@ public class Bio extends AEntity {
     @NotBlank(message = "Il wikiTitle è obbligatorio")
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 2, max = 50)
-    @AIField(type = AETypeField.text, required = true, focus = true, caption = "Titolo esatto della pagina wiki", widthEM = WIDTHEM_TITLE, enabled = false)
-    @AIColumn(widthEM = WIDTHEM_TITLE)
+    @AIField(type = AETypeField.text, required = true, focus = true, caption = "Titolo esatto della pagina wiki", widthEM = WIDTHEM_TITLE_FORM, enabled = false)
+    @AIColumn(widthEM = WIDTHEM_TITLE_LIST)
     public String wikiTitle;
 
 
@@ -165,7 +167,7 @@ public class Bio extends AEntity {
      * giorno di nascita (facoltativo, non unico)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Giorno.class, usaComboBox = false, widthEM = 12)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Giorno.class, usaComboBox = true, widthEM = 12)
     @AIColumn(header = "Nascita", widthEM = WIDTH_GIORNO)
     public String giornoNato;
 
@@ -173,7 +175,7 @@ public class Bio extends AEntity {
      * anno di nascita (facoltativo, non unico)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Anno.class, usaComboBox = false, widthEM = 12)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Anno.class, usaComboBox = true, widthEM = 12)
     @AIColumn(header = "Anno", widthEM = WIDTH_ANNO)
     public String annoNato;
 
@@ -189,7 +191,7 @@ public class Bio extends AEntity {
      * giorno di morte (facoltativo, non unico)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Giorno.class, usaComboBox = false, widthEM = 12)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Giorno.class, usaComboBox = true, widthEM = 12)
     @AIColumn(header = "Morte", widthEM = WIDTH_GIORNO)
     public String giornoMorto;
 
@@ -197,7 +199,7 @@ public class Bio extends AEntity {
      * anno di norte (facoltativo, non unico)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Anno.class, usaComboBox = false, widthEM = 12)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Anno.class, usaComboBox = true, widthEM = 12)
     @AIColumn(header = "Anno", widthEM = WIDTH_ANNO)
     public String annoMorto;
 

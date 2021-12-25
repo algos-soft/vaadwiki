@@ -112,6 +112,16 @@ public class WrapFiltri {
             }
         }
 
+        //--arriva da un combobox ma è una stringLinkClassCombo e non un dbref
+        if (filter == AETypeFilter.link) {
+            if (annotation.getFormType(entityClazz, propertyField) == AETypeField.stringLinkClassCombo) {
+                filter = AETypeFilter.uguale;
+                if (propertyValue != null && AEntity.class.isAssignableFrom(propertyValue.getClass())) {
+                    propertyValue = ((AEntity) propertyValue).id;
+                }
+            }
+        }
+
         if (annotation.isDBRef(entityClazz, propertyField)) {
             propertyField += FIELD_NAME_ID_LINK;
             filter = AETypeFilter.link;
@@ -133,7 +143,7 @@ public class WrapFiltri {
                     mappaFiltri.put(keyField, AFiltro.ugualeStr(propertyField, (String) propertyValue));
                 }
                 else {
-                    if (propertyValue!=null) {
+                    if (propertyValue != null) {
                         mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
                     }
                 }

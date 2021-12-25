@@ -233,7 +233,7 @@ public class UtilityService extends AbstractService {
         String widthEM;
         //        String widthEM = width > 0 ? width + TAG_EM : COMBO_WIDTH + TAG_EM;
         Sort sortSpring;
-        List items;
+        List items=null;
         AIService serviceClazz;
         String textInitialValue;
 
@@ -256,27 +256,20 @@ public class UtilityService extends AbstractService {
 
         if (type == AETypeField.combo) {
             comboClazz = annotation.getComboClass(reflectionJavaField);
-            //            sortSpring = annotation.getSortSpring(comboClazz);
-            dataProvider = dataProvider != null ? dataProvider : provider.creaDataProvider(comboClazz);
-            if (dataProvider != null) {
-                combo.setDataProvider(dataProvider);
-            }
+            items = mongo.fetch(comboClazz);
         }
 
         if (type == AETypeField.stringLinkClassCombo) {
             comboClazz = annotation.getComboClass(reflectionJavaField);
-            dataProvider = dataProvider != null ? dataProvider : provider.creaDataProvider(comboClazz);
-            if (dataProvider != null) {
-                combo.setDataProvider(dataProvider);
-            }
+            items = mongo.fetch(comboClazz);
         }
 
         if (type == AETypeField.enumeration) {
-            enumClazz = annotation.getEnumClass(reflectionJavaField);
             items = fieldService.getEnumerationItems(reflectionJavaField);
-            if (items != null) {
-                combo.setItems(items);
-            }
+        }
+
+        if (items != null) {
+            combo.setItems(items);
         }
 
         if (initialValue == null && comboClazz != null) {
