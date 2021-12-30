@@ -8,7 +8,6 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
-
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
@@ -69,6 +68,11 @@ public class NazionalitaLogicList extends WikiLogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        this.usaColonnaWiki = true;
+        this.usaColonnaCat = true;
+        this.usaColonnaTest = true;
+        this.usaColonnaUpload = true;
+
         super.wikiModuloTitle = PATH_MODULO_NAZIONALITA;
         super.wikiStatisticheTitle = PATH_STATISTICHE_NAZIONALITA;
     }
@@ -86,7 +90,7 @@ public class NazionalitaLogicList extends WikiLogicList {
         super.fixInfoDownload(AEWikiPreferenza.lastDownloadNazionalita);
         addWikiLink(PATH_MODULO_NAZIONALITA);
         addWikiLink(PATH_STATISTICHE_NAZIONALITA);
-        addSpanVerde(String.format("Contiene la tabella di conversione delle nazionalità passate via parametri %s da singolare maschile e femminile (usati nell'incipit) al %s, per categorizzare la pagina.", parametri,plurale));
+        addSpanVerde(String.format("Contiene la tabella di conversione delle nazionalità passate via parametri %s da singolare maschile e femminile (usati nell'incipit) al %s, per categorizzare la pagina.", parametri, plurale));
 
         Span elencate = html.getSpanVerde(String.format("Le nazionalità sono elencate nel "));
         Span modulo = html.getSpanBlu("modulo", AETypeWeight.bold);
@@ -110,7 +114,17 @@ public class NazionalitaLogicList extends WikiLogicList {
 
     @Override
     protected void wikiPage(AEntity entityBean) {
-        wikiApi.openWikiPage("Progetto:Biografie/Nazionalità/" + text.primaMaiuscola(((Nazionalita)entityBean).plurale));
+        wikiApi.openWikiPage("Progetto:Biografie/Nazionalità/" + text.primaMaiuscola(((Nazionalita) entityBean).plurale));
+    }
+
+    @Override
+    protected void wikiCat(AEntity entityBean) {
+        wikiApi.openWikiPage("Categoria:" + text.primaMaiuscola(((Nazionalita) entityBean).plurale));
+    }
+
+    @Override
+    protected void testWiki(AEntity entityBean) {
+        super.testWiki(entityBean);
     }
 
 }// end of Route class

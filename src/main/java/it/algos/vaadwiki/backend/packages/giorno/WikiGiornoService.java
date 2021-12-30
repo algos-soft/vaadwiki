@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.backend.packages.giornoNato;
+package it.algos.vaadwiki.backend.packages.giorno;
 
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.logic.AService;
@@ -30,12 +30,12 @@ import org.springframework.stereotype.Service;
 //Spring
 @Service
 //Spring
-@Qualifier("wikigiornoService")
+@Qualifier("wikiGiornoService")
 //Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-public class GiornoNatoService extends AService {
+public class WikiGiornoService extends AService {
 
 
     /**
@@ -48,7 +48,7 @@ public class GiornoNatoService extends AService {
      * Costruttore senza parametri <br>
      * Regola la entityClazz (final) associata a questo service <br>
      */
-    public GiornoNatoService() {
+    public WikiGiornoService() {
         super(Giorno.class);
     }
 

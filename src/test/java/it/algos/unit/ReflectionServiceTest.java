@@ -98,7 +98,7 @@ public class ReflectionServiceTest extends ATest {
                 Arguments.of(Mese.class, VUOTA, false),
                 Arguments.of(Mese.class, "termidoro", false),
                 Arguments.of(Giorno.class, "2agosto", true),
-                Arguments.of(Giorno.class, "2 agosto", false),
+                Arguments.of(Giorno.class, "2 agosto", true),
                 Arguments.of(Mese.class, "marzo", true),
                 Arguments.of(Mese.class, "Marzo", true),
                 Arguments.of(Mese.class, "marzo esatto", false),

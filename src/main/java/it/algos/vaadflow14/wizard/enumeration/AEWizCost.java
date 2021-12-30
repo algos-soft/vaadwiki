@@ -294,16 +294,30 @@ public enum AEWizCost {
     sourceRootREAD(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.source, String.format("File root README con note di testo (da %s)", dirSources.value), "README.txt", AECopyWiz.sourceCheckFlagSeEsiste),
 
     /**
-     * File di test. <br>
+     * File di test base. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
     fileRootTEST(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.file, String.format("File root/test/ATEST (da %s)", nameVaadFlow14Upper.value), "src/test/java/it/algos/test/ATest.java", AECopyWiz.fileSovrascriveSempreAncheSeEsiste),
 
     /**
-     * Cartella. <br>
+     * Cartella di unit test. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
     dirTestUnit(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.dir, String.format("Directory root/test/UNIT (da %s)", nameVaadFlow14Upper.value), "src/test/java/it/algos/unit", AECopyWiz.dirAddingOnly, VUOTA, "test"),
+
+    /**
+     * File di test base mongo. <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    fileMongoTest(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.file, String.format("File root/test/MongoTEST (da %s)", nameVaadFlow14Upper.value), "src/test/java/it/algos/test/MongoTest.java", AECopyWiz.fileSovrascriveSempreAncheSeEsiste),
+
+    /**
+     * File di integration test mongo. <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    fileMongoIntegrationTest(AEWizValue.costante, AEWizUso.flagProject, AEWizCopy.file, String.format("File root/integration/MongoIntegration (da %s)", nameVaadFlow14Upper.value), "src/test/java/it/algos/integration/MongoServiceIntegrationTest.java", AECopyWiz.fileSovrascriveSempreAncheSeEsiste),
+
+
 
     //==========================================================================
     // Valori calcolati automaticamente dal programma alla partenza del Wizard.

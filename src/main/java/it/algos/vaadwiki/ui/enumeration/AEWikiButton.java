@@ -31,7 +31,7 @@ public enum AEWikiButton implements AIButton {
     test("Test", VaadinIcon.GLOBE_WIRE, "secondary", AEWikiAction.test, true, "Test di una funzionalità", "cross"),
     statistiche("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statistiche, true, "Elaborazione statistiche", "cross"),
     statisticheDue("Statistiche", VaadinIcon.TABLE, "secondary", AEWikiAction.statisticheDue, true, "Elaborazione statistiche", "cross"),
-    uploadPagine("Upload pagine", VaadinIcon.UPLOAD, "error", AEWikiAction.uploadAll, true, "Upload di tutte le pagine", "cross"),
+    uploadPagine("Upload all pagine", VaadinIcon.UPLOAD, "error", AEWikiAction.uploadAll, true, "Upload di tutte le pagine", "cross"),
     uploadStatistiche("Upload statistiche", VaadinIcon.UPLOAD, "error", AEWikiAction.uploadStatistiche, true, "Upload pagina delle statistiche", "cross"),
 
     ;

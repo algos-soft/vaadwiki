@@ -16,7 +16,7 @@ import it.algos.vaadwiki.backend.packages.genere.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
 import it.algos.vaadwiki.backend.packages.nomeDoppio.*;
 import it.algos.vaadwiki.backend.packages.professione.*;
-import it.algos.vaadwiki.backend.packages.giornoNato.*;
+import it.algos.vaadwiki.backend.packages.giorno.*;
 import it.algos.vaadwiki.wiki.query.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -139,7 +139,7 @@ public class WikiBoot extends FlowBoot {
         FlowVar.menuRouteList.add(NomeDoppio.class);
         FlowVar.menuRouteList.add(Nome.class);
         FlowVar.menuRouteList.add(Bio.class);
-        FlowVar.menuRouteList.add(GiornoNatoLogicList.class);
+        FlowVar.menuRouteList.add(WikiGiornoLogicList.class);
     }
 
     /**

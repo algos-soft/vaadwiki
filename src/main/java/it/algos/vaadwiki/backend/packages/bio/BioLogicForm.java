@@ -159,28 +159,34 @@ public class BioLogicForm extends WikiLogicForm {
         FormLayout layoutTmpl = new FormLayout();
         layoutTmpl.setResponsiveSteps(new FormLayout.ResponsiveStep(minWidthForm, 1));
 
-        Tab tab1 = new Tab("src");
+        Tab tab1 = new Tab("sources");
         Div page1 = new Div();
         page1.add(currentForm);
         page1.setVisible(true);
 
-        Tab tab2 = new Tab("maps");
+        Tab tab2 = new Tab("properties");
         Div page2 = new Div();
         page2.add(appContext.getBean(BioFormMaps.class, entityBean));
         page2.setVisible(false);
 
-        Tab tab3 = new Tab("tmpl");
+        Tab tab3 = new Tab("templates");
         Div page3 = new Div();
         page3.add(appContext.getBean(BioFormTmpl.class, entityBean));
         page3.setVisible(false);
+
+        Tab tab4 = new Tab("didascalie");
+        Div page4 = new Div();
+        page4.add(appContext.getBean(BioFormDidascalie.class, entityBean));
+        page4.setVisible(false);
 
         Map<Tab, Component> tabsToPages = new HashMap<>();
         tabsToPages.put(tab1, page1);
         tabsToPages.put(tab2, page2);
         tabsToPages.put(tab3, page3);
-        Tabs tabs = new Tabs(tab1, tab2, tab3);
+        tabsToPages.put(tab4, page4);
+        Tabs tabs = new Tabs(tab1, tab2, tab3,tab4);
         tabs.setFlexGrowForEnclosedTabs(1);
-        Div pages = new Div(page1, page2, page3);
+        Div pages = new Div(page1, page2, page3,page4);
 
         tabs.addSelectedChangeListener(event -> {
             tabsToPages.values().forEach(pagina -> pagina.setVisible(false));

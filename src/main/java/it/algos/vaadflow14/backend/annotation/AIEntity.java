@@ -60,6 +60,15 @@ public @interface AIEntity {
      */
     boolean usaKeyIdMinuscolaCaseInsensitive() default false;
 
+
+    /**
+     * (Optional) chiave keyId creata senza spazi vuoti
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaKeyIdSenzaSpazi() default false;
+
     /**
      * (Optional) Creazione automatica dei dati alla partenza se collezione vuota
      * Ha senso solo se esiste il metodo xxxService.reset()

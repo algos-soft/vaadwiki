@@ -50,13 +50,6 @@ public class BioLogicList extends WikiLogicList {
      */
     private final static long serialVersionUID = 1L;
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public WikiBotService wikiBot;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -97,7 +90,7 @@ public class BioLogicList extends WikiLogicList {
         super.usaBottoneUploadStatistiche = false;
         super.usaBottoneUploadAll = false;
         super.usaBottoneElabora = true;
-        super.maxNumeroBottoniPrimaRiga = 10;
+        super.maxNumeroBottoniPrimaRiga = 4;
     }
 
 

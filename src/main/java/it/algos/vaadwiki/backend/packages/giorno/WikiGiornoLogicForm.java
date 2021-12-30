@@ -1,4 +1,4 @@
-package it.algos.vaadwiki.backend.packages.giornoNato;
+package it.algos.vaadwiki.backend.packages.giorno;
 
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.logic.*;
@@ -32,10 +32,10 @@ import java.util.*;
  */
 
 //Vaadin flow
-@Route(value = "WikiGiornoForm", layout = MainLayout.class)
+@Route(value = "wikiGiornoForm", layout = MainLayout.class)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-public class GiornoNatoLogicForm extends LogicForm{
+public class WikiGiornoLogicForm extends LogicForm{
 
 
     /**
@@ -48,7 +48,7 @@ public class GiornoNatoLogicForm extends LogicForm{
      *
      * @param wikigiornoService (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicForm
      */
-    public GiornoNatoLogicForm(@Autowired @Qualifier("wikigiornoService") AIService wikigiornoService) {
+    public WikiGiornoLogicForm(@Autowired @Qualifier("wikiGiornoService") AIService wikigiornoService) {
         super.entityClazz = Giorno.class;
         super.entityService = wikigiornoService;
     }// end of Vaadin/@Route constructor

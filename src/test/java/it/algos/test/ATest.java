@@ -27,8 +27,6 @@ import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.context.*;
-import org.springframework.context.support.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.*;
 import org.springframework.data.mongodb.core.query.Query;
@@ -385,10 +383,6 @@ public abstract class ATest {
     protected static String[] CANONICAL() {
         return new String[]{null, VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
     }
-
-    //    protected static Class[] CLAZZ() {
-    //        return new Class[]{null, Via.class, Bolla.class, AIType.class, Utente.class, LogicList.class, Company.class, Mese.class, Stato.class, Continente.class};
-    //    }
 
 
     //--clazz

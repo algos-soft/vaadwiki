@@ -77,7 +77,7 @@ public class GiornoServiceTest extends ATest {
         sorgente = "43 novembre";
         try {
             giorno = service.findById(sorgente);
-            assertNotNull(giorno);
+            assertNull(giorno);
             printGiornoID(sorgente, giorno);
         } catch (Exception unErrore) {
             assertNull(giorno);

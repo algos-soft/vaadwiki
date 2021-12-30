@@ -1,22 +1,14 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.context.ApplicationContext;
-
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import com.vaadin.flow.component.textfield.TextField;
+import org.mockito.*;
 
 import java.io.*;
 
@@ -82,7 +74,7 @@ public class AnnoServiceTest extends ATest {
         System.out.println("1 - findById (gson)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
 
-        sorgente = "1946dc";
+        sorgente = "946" + AESecolo.TAG_AC;
         try {
             anno = service.findById(sorgente);
             assertNotNull(anno);
@@ -93,7 +85,7 @@ public class AnnoServiceTest extends ATest {
             System.out.println(unErrore);
         }
 
-        sorgente = "1946";
+        sorgente = "946";
         anno = null;
         try {
             anno = service.findById(sorgente);
@@ -105,11 +97,11 @@ public class AnnoServiceTest extends ATest {
             System.out.println(unErrore);
         }
 
-        sorgente = "13946";
+        sorgente = "3946";
         anno = null;
         try {
             anno = service.findById(sorgente);
-            assertNotNull(anno);
+            assertNull(anno);
             printAnnoID(sorgente, anno);
         } catch (Exception unErrore) {
             assertNull(anno);
@@ -161,8 +153,6 @@ public class AnnoServiceTest extends ATest {
             System.out.println(unErrore);
         }
     }
-
-
 
 
     @Test

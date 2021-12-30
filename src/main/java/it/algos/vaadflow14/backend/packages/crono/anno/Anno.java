@@ -51,8 +51,8 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Anno", keyPropertyName = "titolo", usaKeyIdMinuscolaCaseInsensitive = true, usaBoot = true, usaNew = true)
-@AIView(menuName = "Anno", menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine", sortDirection = "DESC")
+@AIEntity(recordName = "Anno", keyPropertyName = "titolo", usaKeyIdMinuscolaCaseInsensitive = true, usaKeyIdSenzaSpazi = true, usaBoot = true, usaNew = true)
+@AIView(menuName = "Anni", menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine", sortDirection = "DESC")
 @AIList(fields = "ordine,titolo,bisestile,secolo", usaRowIndex = false)
 @AIForm(fields = "titolo,bisestile,secolo", usaSpostamentoTraSchede = false)
 public class Anno extends AREntity {

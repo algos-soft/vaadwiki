@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadwiki.*;
@@ -298,7 +299,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
         System.out.println(message);
         boolean usaKeyIdMinuscolaCaseInsensitive = false;
         try {
-            usaKeyIdMinuscolaCaseInsensitive = clazz != null ? annotationService.usaKeyIdMinuscolaCaseInsensitive(clazz) : false;
+            usaKeyIdMinuscolaCaseInsensitive = clazz != null && annotationService.usaKeyIdMinuscolaCaseInsensitive(clazz);
         } catch (AlgosException unErrore) {
             //--non serve
         }
@@ -511,20 +512,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
 
     private void countMappaFiltro(final String tag) {
-        String message;
         Class clazz = CLASSE_ESEMPIO_INCROCIATO;
-        mappaFiltri = getEsempioMappaFiltro();
-
-        if (mappaFiltri != null && mappaFiltri.size() > 0) {
-            countMappaFiltro(clazz, mappaFiltri, tag);
-        }
-        else {
-            message = String.format("Nella entityClass %s non ho trovato nessuna entities col filtro indicato", clazz.getSimpleName());
-            System.out.println(message);
-        }
-    }
-
-    private void countMappaFiltro(final Class clazz, final Map<String, AFiltro> mappaFiltri, final String tag) {
         String message = String.format("Count filtrato di %s", getSimpleName(clazz));
         System.out.println(message);
         AETypeFilter filter;
@@ -533,6 +521,13 @@ public class MongoServiceIntegrationTest extends MongoTest {
         String propertyValueVideo;
         String filterText = VUOTA;
         String sep = " + ";
+        mappaFiltri = getEsempioMappaFiltro();
+
+        if (mappaFiltri == null || mappaFiltri.size() == 0) {
+            message = String.format("Nella entityClass %s non ho trovato nessuna entities col filtro indicato", clazz.getSimpleName());
+            System.out.println(message);
+            return;
+        }
 
         for (String key : mappaFiltri.keySet()) {
             filter = mappaFiltri.get(key).getType();
@@ -594,14 +589,14 @@ public class MongoServiceIntegrationTest extends MongoTest {
     }
 
     private void fetchAll(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
-        String message;
-        message = String.format("Fetch completo di %s", getSimpleName(clazz));
+        String message = String.format("Fetch completo di %s", getSimpleName(clazz));
         System.out.println(message);
 
         ottenutoIntero = 0;
         try {
             ottenutoIntero = service.count(clazz);
         } catch (AlgosException unErrore) {
+            printError(unErrore);
         }
 
         try {
@@ -662,6 +657,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
         try {
             ottenutoIntero = service.count(clazz, propertyName, propertyValue);
         } catch (AlgosException unErrore) {
+            printError(unErrore);
         }
 
         try {
@@ -821,6 +817,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
     void fetchMappaFiltroGson() {
         System.out.println("48 - Fetch filtrato (gson) (Map<String, AFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
+        fetchMappaFiltroIncrociato();
     }
 
     @Test
@@ -829,9 +826,10 @@ public class MongoServiceIntegrationTest extends MongoTest {
     void fetchMappaFiltroSpring() {
         System.out.println("49 - Fetch filtrato (spring) (Map<String, AFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
+        fetchMappaFiltroIncrociato();
     }
 
-    private void fetchMappaFiltro() {
+    private void fetchMappaFiltroIncrociato() {
         String message;
         Class clazz = CLASSE_ESEMPIO_INCROCIATO;
         mappaFiltri = getEsempioMappaFiltro();
@@ -987,13 +985,19 @@ public class MongoServiceIntegrationTest extends MongoTest {
             printError(unErrore);
         }
 
+        System.out.println(VUOTA);
         if (entityValida) {
             Assertions.assertNotNull(entityBean);
-        }
-
-        if (entityBean != null) {
-            System.out.println(VUOTA);
+            if (clazz.isAssignableFrom(Preferenza.class)) {
+                ((Preferenza) entityBean).value = new byte[0];
+            }
             printEntityBeanFromKeyId(clazz, propertyValue, entityBean, 0);
+        }
+        else {
+            Assertions.assertNull(entityBean);
+            if (clazz != null) {
+                System.out.println(String.format("Nella classe %s non esiste una entity con keyID=%s", clazz.getSimpleName(), propertyValue));
+            }
         }
     }
 

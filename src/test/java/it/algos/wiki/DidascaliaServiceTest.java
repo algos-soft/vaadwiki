@@ -4,21 +4,16 @@ import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
-import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadwiki.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
-import org.mockito.*;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.boot.test.context.*;
-import org.springframework.data.mongodb.core.*;
-import org.springframework.test.context.junit.jupiter.*;
 
 /**
  * Project vaadwiki
@@ -42,8 +37,7 @@ public class DidascaliaServiceTest extends WTest {
 
     private static final String DATA_BASE_NAME = "vaadwiki";
 
-
-//    private String wikiTitle = "Adone Asinari";
+    //    private String wikiTitle = "Adone Asinari";
 
     /**
      * Classe principale di riferimento <br>
@@ -51,16 +45,16 @@ public class DidascaliaServiceTest extends WTest {
     @Autowired
     public DidascaliaService service;
 
-//    /**
-//     * Inietta da Spring
-//     */
-//    @Autowired
-//    protected MongoService mongoService;
-//    /**
-//     * Inietta da Spring
-//     */
-//    @Autowired
-//    public MongoTemplate mongoOp;
+    //    /**
+    //     * Inietta da Spring
+    //     */
+    //    @Autowired
+    //    protected MongoService mongoService;
+    //    /**
+    //     * Inietta da Spring
+    //     */
+    //    @Autowired
+    //    public MongoTemplate mongoOp;
 
     private String wikiTitleDue = "Sonia Todd";
 
@@ -81,9 +75,9 @@ public class DidascaliaServiceTest extends WTest {
         //--reindirizzo l'istanza della superclasse
         service = didascaliaService;
 
-//        MockitoAnnotations.initMocks(mongoService.mongoOp);
-//        Assertions.assertNotNull(mongoService.mongoOp);
-//        mongoService.mongoOp = mongoOp;
+        //        MockitoAnnotations.initMocks(mongoService.mongoOp);
+        //        Assertions.assertNotNull(mongoService.mongoOp);
+        //        mongoService.mongoOp = mongoOp;
 
         FlowVar.typeSerializing = AETypeSerializing.gson;
     }
@@ -268,14 +262,25 @@ public class DidascaliaServiceTest extends WTest {
         String ottenuto4;
 
         bio = getBio(wikiTitle);
-        previsto = textService.setDoppieQuadre(wikiTitle);
-        ottenuto = service.getNomeCognome(bio);
-        ottenuto2 = service.getAttivitaNazionalita(bio);
-        ottenuto3 = service.getNatoMorto(bio);
-        ottenuto4 = service.getLista(bio);
-        assertTrue(textService.isValid(ottenuto));
-        System.out.println(VUOTA);
-        print(bio, ottenuto, ottenuto2, ottenuto3, ottenuto4);
+
+        if (bio == null) {
+            try {
+                bio = (Bio) mongoService.fetch(clazz, null, 0, 1);
+            } catch (AlgosException unErrore) {
+                printError(unErrore);
+            }
+        }
+
+        if (bio != null) {
+            previsto = textService.setDoppieQuadre(wikiTitle);
+            ottenuto = service.getNomeCognome(bio);
+            ottenuto2 = service.getAttivitaNazionalita(bio);
+            ottenuto3 = service.getNatoMorto(bio);
+            ottenuto4 = service.getLista(bio);
+            assertTrue(textService.isValid(ottenuto));
+            System.out.println(VUOTA);
+            print(bio, ottenuto, ottenuto2, ottenuto3, ottenuto4);
+        }
     }
 
     //    @Test

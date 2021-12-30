@@ -128,15 +128,4 @@ public class GenereLogicList extends WikiLogicList {
     }
 
 
-    /**
-     * Regolazioni finali della Grid <br>
-     * <p>
-     * Eventuali colonna 'ad-hoc' <br>
-     * Eventuali 'listener' specifici <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixGrid() {
-    }
-
 }// end of Route class

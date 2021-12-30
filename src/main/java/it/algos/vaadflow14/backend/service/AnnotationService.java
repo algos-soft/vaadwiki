@@ -995,6 +995,39 @@ public class AnnotationService extends AbstractService {
         return usaKeyIdMinuscolaCaseInsensitive;
     }
 
+
+    /**
+     * Flag per non usare lo spazio nel campo chiave keyId. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaKeyIdSenzaSpazi(final Class<? extends AEntity> entityClazz) throws AlgosException {
+        boolean usaKeyIdSenzaSpazi = false;
+        AIEntity annotation = null;
+
+        // Se manca la classe non può esserci nessuna annotation
+        if (entityClazz == null) {
+            throw AlgosException.stack("Manca la entityClazz in ingresso", getClass(), "usaKeyIdSenzaSpazi");
+        }
+
+        if (AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIEntity(entityClazz);
+        }
+        else {
+            throw AlgosException.stack(String.format("La entityClazz %s in ingresso NON è una AEntity", entityClazz.getSimpleName()), getClass(), "usaCaseInsensitive");
+        }
+
+        if (annotation != null) {
+            usaKeyIdSenzaSpazi = annotation.usaKeyIdSenzaSpazi();
+        }
+
+        return usaKeyIdSenzaSpazi;
+    }
+
+
+
     /**
      * Flag per l'utilizzo delle ricerche con searchField. <br>
      *

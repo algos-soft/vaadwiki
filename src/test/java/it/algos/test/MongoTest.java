@@ -11,10 +11,13 @@ import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.packages.security.utente.*;
+import it.algos.vaadflow14.backend.packages.utility.versione.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.params.provider.*;
@@ -48,10 +51,8 @@ public abstract class MongoTest extends ATest {
         return Stream.of(
                 Arguments.of(null, 0, false),
                 Arguments.of(LogicList.class, 0, false),
-                Arguments.of(Utente.class, 0, false),
                 Arguments.of(Mese.class, 12, true),
                 Arguments.of(AIType.class, 0, true),
-                Arguments.of(Company.class, 3, false),
                 Arguments.of(Stato.class, 249, true)
         );
     }
@@ -82,6 +83,9 @@ public abstract class MongoTest extends ATest {
         );
     }
 
+    //--clazz
+    //--keyValue
+    //--doc e/o entityBean valida
     protected static Stream<Arguments> CLAZZ_KEY_ID() {
         return Stream.of(
                 Arguments.of((Class) null, VUOTA, false),
@@ -90,13 +94,17 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Mese.class, VUOTA, false),
                 Arguments.of(Mese.class, "termidoro", false),
                 Arguments.of(Giorno.class, "2agosto", true),
-                Arguments.of(Giorno.class, "2 agosto", false),
+                Arguments.of(Giorno.class, "2 agosto", true),
                 Arguments.of(Anno.class, "104", true),
                 Arguments.of(Mese.class, "marzo", true),
                 Arguments.of(Mese.class, "Marzo", true),
                 Arguments.of(Mese.class, "marzo esatto", false),
                 Arguments.of(Regione.class, "calabria", true),
-                Arguments.of(Regione.class, "Calabria", true)
+                Arguments.of(Regione.class, "Calabria", true),
+                Arguments.of(Versione.class, "Setup", true),
+                Arguments.of(Versione.class, "setup", false),
+                Arguments.of(Preferenza.class, "usaDebug", true),
+                Arguments.of(Preferenza.class, "usadebug", false)
         );
     }
 
@@ -118,16 +126,18 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Mese.class, "mese", null, 0, false),
                 Arguments.of(Mese.class, "mese", VUOTA, 0, false),
                 Arguments.of(Giorno.class, "_id", "2agosto", 1, true),
-                Arguments.of(Giorno.class, "_id", "2 agosto", 0, false),
+                Arguments.of(Giorno.class, "_id", "2 agosto", 0, true),
                 Arguments.of(Giorno.class, "mese", "ottobre", 31, true),
                 Arguments.of(Mese.class, "mese", "ottobre", 1, true),
+                Arguments.of(Mese.class, "mese", "Ottobre", 0, false),
                 Arguments.of(Mese.class, "giorni", 31, 7, false),
                 Arguments.of(Mese.class, "giorni", 30, 4, false),
                 Arguments.of(Mese.class, "giorni", 28, 1, true),
                 Arguments.of(Mese.class, "giorni", 32, 0, false),
                 Arguments.of(Via.class, "belzebù", "piazza", 0, false),
                 Arguments.of(Via.class, "nome", "belzebù", 0, false),
-                Arguments.of(Via.class, "nome", "piazza", 1, true)
+                Arguments.of(Via.class, "nome", "piazza", 1, true),
+                Arguments.of(Via.class, "nome", "Piazza", 0, false)
         );
     }
 
@@ -158,7 +168,10 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Via.class, AETypeFilter.uguale, NAME_NOME, "belzebù", 0),
                 Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "co", 6),
                 Arguments.of(Via.class, AETypeFilter.inizia, NAME_NOME, "v", 4),
-                Arguments.of(Mese.class, AETypeFilter.inizia, "mese", "m", 2)
+                Arguments.of(Mese.class, AETypeFilter.inizia, "mese", "m", 2),
+                Arguments.of(Secolo.class, AETypeFilter.checkBox3Vie, "anteCristo", true, 20),
+                Arguments.of(Secolo.class, AETypeFilter.checkBox3Vie, "anteCristo", false, 21),
+                Arguments.of(Secolo.class, AETypeFilter.checkBox3Vie, "anteCristo", null, 41)
         );
     }
 

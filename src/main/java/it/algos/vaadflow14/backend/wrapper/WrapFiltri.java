@@ -162,9 +162,14 @@ public class WrapFiltri {
                 if (!propertyField.endsWith(FIELD_NAME_ID_LINK)) {
                     propertyField += FIELD_NAME_ID_LINK;
                 }
-                if (propertyValue != null && propertyValue instanceof AEntity) {
-                    propertyValue = ((AEntity) propertyValue).id;
-                    mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
+                if (propertyValue != null) {
+                    if ( propertyValue instanceof AEntity) {
+                        propertyValue = ((AEntity) propertyValue).id;
+                        mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
+                    }
+                    else if (propertyValue instanceof String stringValue) {
+                        mappaFiltri.put(keyField, AFiltro.ugualeStr(propertyField, stringValue));
+                    }
                 }
                 break;
             case checkBox3Vie:

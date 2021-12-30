@@ -68,6 +68,11 @@ public class AttivitaLogicList extends WikiLogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        this.usaColonnaWiki = true;
+        this.usaColonnaCat = true;
+        this.usaColonnaTest = true;
+        this.usaColonnaUpload = true;
+
         super.wikiModuloTitle = PATH_MODULO_ATTIVITA;
         super.wikiStatisticheTitle = PATH_STATISTICHE_ATTIVITA;
     }
@@ -126,5 +131,14 @@ public class AttivitaLogicList extends WikiLogicList {
         wikiApi.openWikiPage("Progetto:Biografie/Attività/" + text.primaMaiuscola(((Attivita) entityBean).plurale));
     }
 
+    @Override
+    protected void wikiCat(AEntity entityBean) {
+        wikiApi.openWikiPage("Categoria:" + text.primaMaiuscola(((Attivita) entityBean).plurale));
+    }
+
+    @Override
+    protected void testWiki(AEntity entityBean) {
+        super.testWiki(entityBean);
+    }
 
 }// end of Route class

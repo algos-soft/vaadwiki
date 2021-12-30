@@ -35,6 +35,7 @@ public abstract class WikiCost {
     public static final String PREF_DATA_LAST_DOWLOAD_NOME_DOPPIO = "lastDownloadNomeDoppio";
 
     public static final String PREF_DATA_LAST_DOWLOAD_BIOGRAFIE = "lastDownloadBiografie";
+    public static final String PREF_DATA_LAST_UPLOAD_BIOGRAFIE = "lastDownloadBiografie";
 
     public static final LocalDateTime DATA_TIME = LocalDateTime.of(2021, 4, 15, 12, 30);
 

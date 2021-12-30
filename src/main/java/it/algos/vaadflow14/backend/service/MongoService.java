@@ -329,6 +329,10 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         checkEntityClazz(entityClazz, "count");
         wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
 
+        if (propertyValue == null) {
+            throw AlgosException.message("La propertyValue è nulla");
+        }
+
         try {
             wrapFiltri.regola(AETypeFilter.uguale, propertyName, propertyValue);
         } catch (Exception unErrore) {
@@ -637,6 +641,10 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         checkEntityClazz(entityClazz, "fetch");
         wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
 
+        if (propertyValue == null) {
+            throw AlgosException.message("La propertyValue è nulla");
+        }
+
         try {
             wrapFiltri.regola(AETypeFilter.uguale, propertyName, propertyValue);
         } catch (Exception unErrore) {
@@ -857,13 +865,13 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    public AEntity find(final Class<? extends AEntity> entityClazz, final Serializable keyValue) throws AlgosException {
+    public AEntity find(final Class<? extends AEntity> entityClazz, final Serializable keyValueGrezzo) throws AlgosException {
         checkEntityClazz(entityClazz, "find");
-        checkKeyValue(keyValue);
+        checkKeyValue(keyValueGrezzo);
         Document doc;
         MongoCollection<Document> collection;
         String collectionName;
-        String keyValueLower = (String) keyValue;
+        String keyValue = (String) keyValueGrezzo;
 
         collectionName = annotation.getCollectionName(entityClazz);
         collection = getCollection(collectionName);
@@ -872,20 +880,24 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
 
         if (annotation.usaKeyIdMinuscolaCaseInsensitive(entityClazz)) {
-            keyValueLower = keyValueLower.toLowerCase();
+            keyValue = keyValue.toLowerCase();
+        }
+
+        if (annotation.usaKeyIdSenzaSpazi(entityClazz)) {
+            keyValue = keyValue.replaceAll(SPAZIO, VUOTA);
         }
 
         switch (FlowVar.typeSerializing) {
             case spring:
                 if (isMongoOpValido()) {
-                    return findBase(entityClazz, FIELD_ID, keyValueLower);
+                    return findBase(entityClazz, FIELD_ID, keyValue);
                 }
                 else {
-                    doc = findDocByProperty(collectionName, FIELD_ID, keyValueLower);
+                    doc = findDocByProperty(collectionName, FIELD_ID, keyValue);
                     return creaByDoc(entityClazz, doc);
                 }
             case gson:
-                doc = findDocByProperty(collectionName, FIELD_ID, keyValueLower);
+                doc = findDocByProperty(collectionName, FIELD_ID, keyValue);
                 return doc != null ? creaByDoc(entityClazz, doc) : null;
             case jackson:
                 return null;
@@ -1392,6 +1404,10 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         if (annotation.usaKeyIdMinuscolaCaseInsensitive(entityClazz)) {
             keyValue = keyValue.toLowerCase();
+        }
+
+        if (annotation.usaKeyIdSenzaSpazi(entityClazz)) {
+            keyValue = keyValue.replaceAll(SPAZIO, VUOTA);
         }
 
         return new Document(FIELD_ID, keyValue);
@@ -2931,14 +2947,30 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return query
      */
-    public Query getKeyQuery(final Class<? extends AEntity> entityClazz, final Serializable keyValue) {
+    public Query getKeyQuery(final Class<? extends AEntity> entityClazz, final Serializable serializableKeyValue) throws AlgosException {
+        String keyValue;
         Query query = new Query();
 
-        if (text.isEmpty((String) keyValue)) {
+        if (serializableKeyValue == null) {
             return query;
         }
 
-        query.addCriteria(Criteria.where(FIELD_ID).is(keyValue));
+        if (serializableKeyValue instanceof String && text.isEmpty((String) serializableKeyValue)) {
+            return query;
+        }
+
+        if (serializableKeyValue instanceof String ) {
+            if (annotation.usaKeyIdSenzaSpazi(entityClazz)&&serializableKeyValue instanceof String) {
+                keyValue = ((String) serializableKeyValue).replaceAll(SPAZIO, VUOTA);
+                query.addCriteria(Criteria.where(FIELD_ID).is(keyValue));
+            }
+            else {
+                query.addCriteria(Criteria.where(FIELD_ID).is(serializableKeyValue));
+            }
+        }
+        else {
+            query.addCriteria(Criteria.where(FIELD_ID).is(serializableKeyValue));
+        }
 
         //--regolo la query in modo che il successivo controllo effettuato dal metodo di mongo sia CASE INSENSITIVE
         try {
@@ -2946,7 +2978,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 query.collation(Collation.of("it").strength(Collation.ComparisonLevel.secondary()));
             }
         } catch (AlgosException unErrore) {
-            logger.error(unErrore, this.getClass(), "getKeyQuery");
+            throw AlgosException.stack(unErrore, this.getClass(), "getKeyQuery");
         }
 
         return query;

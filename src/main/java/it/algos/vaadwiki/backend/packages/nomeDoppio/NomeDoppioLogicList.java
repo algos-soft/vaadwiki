@@ -106,16 +106,6 @@ public class NomeDoppioLogicList extends WikiLogicList {
 //        addSpanRossoFix(String.format("Quando si crea la lista  %s, i nomi doppi vengono scaricati ed aggiunti alla lista stessa", nome));
     }
 
-    /**
-     * Regolazioni finali della Grid <br>
-     * <p>
-     * Eventuali colonna 'ad-hoc' <br>
-     * Eventuali 'listener' specifici <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixGrid() {
-    }
 
 
 }// end of Route class

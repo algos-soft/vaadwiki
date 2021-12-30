@@ -40,29 +40,33 @@ public abstract class WikiService extends AService {
 
     public final static String GENERE = "genere";
 
+    public final static String GIORNI = "Giorni";
+
+    public final static String ANNI = "ANNI";
+
     public final static String ATT = "Attività";
 
     public final static String ATT_LOWER = ATT.toLowerCase();
-
-    public final static String NAZ = "Nazionalità";
-
-    public final static String NAZ_LOWER = NAZ.toLowerCase();
 
     public final static String PATH_MODULO_GENERE = PATH_MODULO_PLURALE + ATT_LOWER + SPAZIO + GENERE;
 
     public final static String PATH_MODULO_ATTIVITA = PATH_MODULO_PLURALE + ATT_LOWER;
 
-    public final static String PATH_STATISTICHE_ATTIVITA = PATH_PROGETTO + ATT;
+    public final static String PATH_MODULO_PROFESSIONE = PATH_MODULO_LINK + ATT_LOWER;
+
+    public final static String NAZ = "Nazionalità";
+
+    public final static String NAZ_LOWER = NAZ.toLowerCase();
 
     public final static String PATH_MODULO_NAZIONALITA = PATH_MODULO_PLURALE + NAZ_LOWER;
 
-    public final static String PATH_STATISTICHE_NAZIONALITA = PATH_PROGETTO + NAZ;
+    public final static String PATH_STATISTICHE_ATTIVITA = PATH_PROGETTO + ATT;
 
-    public final static String PATH_MODULO_PROFESSIONE = PATH_MODULO_LINK + ATT_LOWER;
+    public final static String PATH_STATISTICHE_NAZIONALITA = PATH_PROGETTO + NAZ;
 
     public final static String PATH_MODULO_PRENOME = "Progetto:Antroponimi/Nomi doppi";
 
-    protected AEWikiPreferenza prefDownload;
+    public final static String PATH_STATISTICHE_GIORNI = PATH_PROGETTO + GIORNI;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -71,6 +75,8 @@ public abstract class WikiService extends AService {
      */
     @Autowired
     public WikiBotService wikiBot;
+
+    protected AEWikiPreferenza prefDownload;
 
     /**
      * Costruttore senza parametri <br>

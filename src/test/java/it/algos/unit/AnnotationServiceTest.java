@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
@@ -77,8 +78,8 @@ public class AnnotationServiceTest extends ATest {
 
     //--clazz
     //--menuName
-    //--usaIdTuttoMinuscolo
-    //--usaCaseInsensitive
+    //--usaKeyIdMinuscolaCaseInsensitive
+    //--usaKeyIdSenzaSpazi
     protected static Stream<Arguments> CLAZZ_MENU() {
         return Stream.of(
                 Arguments.of(null, VUOTA, false, false),
@@ -86,13 +87,14 @@ public class AnnotationServiceTest extends ATest {
                 Arguments.of(GiornoLogicList.class, "Giorni", false, false),
                 Arguments.of(Giorno.class, "Giorni", true, true),
                 Arguments.of(Utente.class, "Utente", false, false),
-                Arguments.of(Mese.class, "Mesi", true, true),
-                Arguments.of(Via.class, "Via", true, true),
+                Arguments.of(Mese.class, "Mesi", true, false),
+                Arguments.of(Anno.class, "Anni", true, true),
+                Arguments.of(Via.class, "Via", true, false),
                 Arguments.of(ViaLogicList.class, "Via", false, false),
                 Arguments.of(AIType.class, VUOTA, false, false),
                 Arguments.of(Company.class, "Company", false, false),
-                Arguments.of(Stato.class, "Stato", true, true),
-                Arguments.of(Continente.class, "Continente", true, true),
+                Arguments.of(Stato.class, "Stato", true, false),
+                Arguments.of(Continente.class, "Continente", true, false),
                 Arguments.of(CompanyLogicList.class, "Azienda", false, false),
                 Arguments.of(Versione.class, "Versione", false, false)
         );
@@ -1083,7 +1085,11 @@ public class AnnotationServiceTest extends ATest {
     @MethodSource(value = "CLAZZ_MENU")
     @Order(5)
     @DisplayName("5 - usaKeyIdMinuscolaCaseInsensitive")
-    void usaKeyIdMinuscolaCaseInsensitive(final Class clazzSorgente, final String menuNameNonUsato, final boolean usaKeyIdMinuscolaCaseInsensitive) {
+        //--clazz
+        //--menuName
+        //--usaKeyIdMinuscolaCaseInsensitive
+        //--usaKeyIdSenzaSpazi
+    void usaKeyIdMinuscolaCaseInsensitive(final Class clazzSorgente, final String menuNameNonUsato, final boolean usaKeyIdMinuscolaCaseInsensitive, final boolean usaKeyIdSenzaSpaziNonUsato) {
         String message;
         clazz = clazzSorgente;
 
@@ -1104,5 +1110,33 @@ public class AnnotationServiceTest extends ATest {
         assertEquals(usaKeyIdMinuscolaCaseInsensitive, ottenutoBooleano);
     }
 
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_MENU")
+    @Order(6)
+    @DisplayName("6 - usaKeyIdSenzaSpazi")
+        //--clazz
+        //--menuName
+        //--usaKeyIdMinuscolaCaseInsensitive
+        //--usaKeyIdSenzaSpazi
+    void usaKeyIdSenzaSpazi(final Class clazzSorgente, final String menuNameNonUsato, final boolean usaKeyIdMinuscolaCaseInsensitiveNonUsato, final boolean usaKeyIdSenzaSpazi) {
+        String message;
+        clazz = clazzSorgente;
+
+        try {
+            ottenutoBooleano = service.usaKeyIdSenzaSpazi(clazz);
+            System.out.print("Origine: ");
+            message = clazzSorgente != null ? clazzSorgente.getSimpleName() : "(null)";
+            System.out.println(message);
+            if (ottenutoBooleano) {
+                System.out.println(String.format("La entityClazz %s non usa spazi nel proprio keyId", clazz.getSimpleName()));
+            }
+            else {
+                System.out.println(String.format("La entityClazz %s usa gli spazi nel proprio keyId", clazz.getSimpleName()));
+            }
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        assertEquals(usaKeyIdSenzaSpazi, ottenutoBooleano);
+    }
 
 }

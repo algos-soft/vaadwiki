@@ -44,6 +44,14 @@ public abstract class WikiLogicList extends LogicList {
     @Autowired
     public BioService bioService;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public WikiBotService wikiBot;
+
     protected Button buttonUploadOneNato;
 
     protected Button buttonUploadOneMorto;
@@ -148,9 +156,12 @@ public abstract class WikiLogicList extends LogicList {
 
     protected boolean usaColonnaWiki;
 
+    protected boolean usaColonnaCat;
+
     protected boolean usaColonnaTest;
 
     protected boolean usaColonnaUpload;
+
 
     /**
      * Costruttore con parametri <br>
@@ -186,6 +197,7 @@ public abstract class WikiLogicList extends LogicList {
         super.maxNumeroBottoniPrimaRiga = 7;
 
         this.usaColonnaWiki = false;
+        this.usaColonnaCat = false;
         this.usaColonnaTest = false;
         this.usaColonnaUpload = false;
     }
@@ -306,6 +318,13 @@ public abstract class WikiLogicList extends LogicList {
                 colonna.setWidth(lar);
                 colonna.setFlexGrow(0);
             }
+            if (usaColonnaCat) {
+                renderer = new ComponentRenderer<>(this::createCatButton);
+                colonna = realGrid.addColumn(renderer);
+                colonna.setHeader("Cat");
+                colonna.setWidth(lar);
+                colonna.setFlexGrow(0);
+            }
             if (usaColonnaTest) {
                 renderer = new ComponentRenderer<>(this::createTestButton);
                 colonna = realGrid.addColumn(renderer);
@@ -331,6 +350,14 @@ public abstract class WikiLogicList extends LogicList {
         return wikiButton;
     }
 
+    protected Button createCatButton(AEntity entityBean) {
+        Button wikiButton = new Button(new Icon(VaadinIcon.LIST));
+        wikiButton.getElement().setAttribute("theme", "secondary");
+        wikiButton.addClickListener(e -> wikiCat(entityBean));
+
+        return wikiButton;
+    }
+
     protected Button createTestButton(AEntity entityBean) {
         Button viewButton = new Button(new Icon(VaadinIcon.SERVER));
         viewButton.getElement().setAttribute("theme", "secondary");
@@ -338,6 +365,7 @@ public abstract class WikiLogicList extends LogicList {
 
         return viewButton;
     }
+
 
     protected Button createUploadButton(AEntity entityBean) {
         Button uploadButton = new Button(new Icon(VaadinIcon.UPLOAD));
@@ -351,8 +379,13 @@ public abstract class WikiLogicList extends LogicList {
     protected void wikiPage(AEntity entityBean) {
     }
 
+    protected void wikiCat(AEntity entityBean) {
+    }
+
+
     protected void testWiki(AEntity entityBean) {
     }
+
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
