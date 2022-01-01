@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
@@ -15,9 +16,11 @@ import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
 import it.algos.vaadwiki.wiki.query.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * Project vaadwiki
@@ -27,6 +30,28 @@ import java.util.*;
  * Time: 14:45
  */
 public abstract class WTest extends ATest {
+
+    public static final String CATEGORIA = "Categoria:";
+
+    public static final String CAT_INESISTENTE = "Nati nel 3435";
+
+    public static final String CAT_1167 = "Nati nel 1167";
+
+    public static final String CAT_1435 = "Nati nel 1435";
+
+    public static final String CAT_1591 = "Nati nel 1591";
+
+    public static final String CAT_1935 = "Nati nel 1935";
+
+    public static final int TOT_1935 = 1996;
+
+    public static final String CAT_1713 = "Nati nel 1713";
+
+    public static final String CAT_2020 = "Morti nel 2020";
+
+    public static final int TOT_2020 = 2405;
+
+    public static final String CAT_ROMANI = "Personaggi della storia romana";
 
     protected static final String PAGINA_UNO = "Roman Protasevič";
 
@@ -191,6 +216,78 @@ public abstract class WTest extends ATest {
     @InjectMocks
     protected QueryBio queryBio;
 
+    //--titolo
+    //--pagina valida
+    protected static Stream<Arguments> PAGINE() {
+        return Stream.of(
+                Arguments.of(null, false),
+                Arguments.of(VUOTA, false),
+                Arguments.of(PAGINA_UNO, false),
+                Arguments.of(PAGINA_DUE, true),
+                Arguments.of(PAGINA_TRE, true),
+                Arguments.of(PAGINA_QUATTRO, true),
+                Arguments.of(PAGINA_CINQUE, true),
+                Arguments.of(PAGINA_SEI, true),
+                Arguments.of(PAGINA_SETTE, true),
+                Arguments.of(PAGINA_OTTO, true)
+        );
+    }
+
+
+    //--titolo
+    //--pagina o categoria esistente
+    protected static Stream<Arguments> PAGINE_DUE() {
+        return Stream.of(
+                Arguments.of(null, false),
+                Arguments.of(VUOTA, false),
+                Arguments.of(PAGINA_INESISTENTE, false),
+                Arguments.of(PAGINA_PIOZZANO, true),
+                Arguments.of(CAT_INESISTENTE, false),
+                Arguments.of(CAT_1167, true),
+                Arguments.of(CATEGORIA + CAT_INESISTENTE, false),
+                Arguments.of(CATEGORIA + CAT_1167, true)
+        );
+    }
+
+
+    //--titolo categoria
+    //--categoria esistente
+    //--numero di pagine
+    //--risultatoEsatto
+    //--offset
+    protected static Stream<Arguments> CATEGORIE() {
+        return Stream.of(
+                Arguments.of(null, false, 0, false, 0),
+                Arguments.of(VUOTA, false, 0, false, 0),
+                Arguments.of(CAT_INESISTENTE, false, 0, false, 0),
+                Arguments.of(CAT_1167, true, 6, true, 1),
+                Arguments.of(CAT_1435, true, 33, true, 1),
+                Arguments.of(CAT_1935, true, TOT_1935, true, 1),
+                Arguments.of(CAT_ROMANI, true, 78, true, 1)
+        );
+    }
+
+
+    //--titolo categoria
+    //--categoria esistente (per l'userType specificato)
+    //--AETypeUser userType
+    //--numero di pagine
+    protected static Stream<Arguments> CATEGORIE_TYPE() {
+        return Stream.of(
+                Arguments.of(null, false, null, 0),
+                Arguments.of(VUOTA, false, null, 0),
+                Arguments.of(CAT_INESISTENTE, false, null, 0),
+                Arguments.of(CAT_1167, true, null, 0),
+                Arguments.of(CAT_1167, true, AETypeUser.anonymous, 0),
+                Arguments.of(CAT_1167, false, AETypeUser.user, 0),
+                Arguments.of(CAT_1167, false, AETypeUser.bot, 0),
+                Arguments.of(CAT_1435, true, null, 0),
+                Arguments.of(CAT_1435, true, AETypeUser.anonymous, 0),
+                Arguments.of(CAT_1435, false, AETypeUser.user, 0),
+                Arguments.of(CAT_1435, false, AETypeUser.bot, 0)
+        );
+    }
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      * Invocare PRIMA il metodo setUpStartUp() della superclasse <br>
@@ -299,7 +396,7 @@ public abstract class WTest extends ATest {
         queryLogin.text = textService;
         queryLogin.wikiApi = wikiApiService;
         queryLogin.logger = loggerService;
-//        queryLogin.appContext = appContext;
+        //        queryLogin.appContext = appContext;
         queryLogin.botLogin = botLogin;
 
         queryCat.text = textService;
@@ -332,7 +429,7 @@ public abstract class WTest extends ATest {
 
         queryBio.text = textService;
         queryBio.wikiApi = wikiApiService;
-//        queryBio.appContext = appContext;
+        //        queryBio.appContext = appContext;
 
         elaboraService.bioUtility = bioUtilityService;
         elaboraService.logger = loggerService;
@@ -400,7 +497,7 @@ public abstract class WTest extends ATest {
         String propertyName = "wikiTitle";
 
         try {
-            bio = (Bio)mongoService.find(clazz, propertyName, wikiTitle);
+            bio = (Bio) mongoService.find(clazz, propertyName, wikiTitle);
         } catch (Exception unErrore) {
             System.out.println(String.format("Non sono riuscito a recuperare la bio %s", wikiTitle));
         }

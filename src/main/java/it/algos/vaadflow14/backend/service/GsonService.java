@@ -300,45 +300,6 @@ public class GsonService extends AbstractService {
     }
 
 
-    /**
-     * Costruzione della entity partendo dal valore della keyID <br>
-     *
-     * @param entityClazz della AEntity
-     * @param keyId       chiave identificativa della entityBean
-     *
-     * @return new entity
-     */
-    @Deprecated
-    public AEntity creaOld(final Class entityClazz, final String keyId) {
-        AEntity entityBean = null;
-        String keyPropertyName;
-        collection = dataBase.getCollection(entityClazz.getSimpleName().toLowerCase());
-
-        query = new BasicDBObject();
-        query.put("_id", keyId);
-
-        doc = collection.find(query).first();
-
-        if (doc != null) {
-            entityBean = this.creaOld(doc, entityClazz);
-            try {
-                String pippoz = mongoToString(entityClazz, keyId);
-            } catch (AlgosException unErrore) {
-                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
-            }
-        }
-        else {
-            keyPropertyName = annotation.getKeyPropertyName(entityClazz);
-            if (text.isValid(keyPropertyName)) {
-                query = new BasicDBObject();
-                query.put(keyPropertyName, keyId);
-                doc = collection.find(query).first();
-                entityBean = this.creaOld(doc, entityClazz);
-            }
-        }
-
-        return entityBean;
-    }
 
     /**
      * Costruzione di un testo JSON partendo dal valore della keyID <br>
@@ -519,6 +480,47 @@ public class GsonService extends AbstractService {
 
         return entityBean;
     }
+
+    /**
+     * Costruzione della entity partendo dal valore della keyID <br>
+     *
+     * @param entityClazz della AEntity
+     * @param keyId       chiave identificativa della entityBean
+     *
+     * @return new entity
+     */
+    @Deprecated
+    public AEntity creaOld(final Class entityClazz, final String keyId) {
+        AEntity entityBean = null;
+        String keyPropertyName;
+        collection = dataBase.getCollection(entityClazz.getSimpleName().toLowerCase());
+
+        query = new BasicDBObject();
+        query.put("_id", keyId);
+
+        doc = collection.find(query).first();
+
+        if (doc != null) {
+            entityBean = this.creaOld(doc, entityClazz);
+            try {
+                String pippoz = mongoToString(entityClazz, keyId);
+            } catch (AlgosException unErrore) {
+                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            }
+        }
+        else {
+            keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+            if (text.isValid(keyPropertyName)) {
+                query = new BasicDBObject();
+                query.put(keyPropertyName, keyId);
+                doc = collection.find(query).first();
+                entityBean = this.creaOld(doc, entityClazz);
+            }
+        }
+
+        return entityBean;
+    }
+
 
     /**
      * Costruzione della entity partendo da un documento JSON <br>

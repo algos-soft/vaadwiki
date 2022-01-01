@@ -44,7 +44,7 @@ public class QueryCatTest extends WTest {
 
     public static final int TOT_1935 = 1990;
 
-    public static final String CAT_1713 = "Nati nel 1713";
+    public static final String CAT_1948 = "Nati nel 1948";
 
     public static final int TOT_2020 = 2392;
 

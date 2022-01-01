@@ -426,6 +426,8 @@ public abstract class FlowCost {
 
     public static final String JSON_INFO = "info";
 
+    public static final String NULL_WIKI_TITLE = "Il titolo wiki è nullo";
+
     public static final String ERROR_WIKI_TITLE = "Manca il titolo wiki";
 
     public static final String ERROR_WIKI_PAGINA = "Manca la pagina wiki";

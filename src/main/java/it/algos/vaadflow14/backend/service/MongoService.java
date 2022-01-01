@@ -766,7 +766,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         String message;
         FindIterable<Document> iterable;
         AEntity entityBean;
-        Bson filter;
+        Bson filter = null;
         Bson sort = null;
 
         collection = getCollection(entityClazz);
@@ -778,15 +778,24 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         try {
             filter = getFilter(wrapFiltri);
         } catch (Exception unErrore) {
-            throw AlgosException.stack(unErrore, this.getClass(), "fetchGson");
         }
 
         try {
             if (limit > 0) {
-                iterable = collection.find().filter(filter).sort(sort).skip(skip).limit(limit);
+                if (filter == null) {
+                    iterable = collection.find().sort(sort).skip(skip).limit(limit);
+                }
+                else {
+                    iterable = collection.find().filter(filter).sort(sort).skip(skip).limit(limit);
+                }
             }
             else {
-                iterable = collection.find().filter(filter).sort(sort).skip(skip);
+                if (filter == null) {
+                    iterable = collection.find().sort(sort).skip(skip);
+                }
+                else {
+                    iterable = collection.find().filter(filter).sort(sort).skip(skip);
+                }
             }
         } catch (Exception unErrore) {
             throw AlgosException.stack(unErrore, this.getClass(), "fetchGson");
@@ -2959,8 +2968,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             return query;
         }
 
-        if (serializableKeyValue instanceof String ) {
-            if (annotation.usaKeyIdSenzaSpazi(entityClazz)&&serializableKeyValue instanceof String) {
+        if (serializableKeyValue instanceof String) {
+            if (annotation.usaKeyIdSenzaSpazi(entityClazz) && serializableKeyValue instanceof String) {
                 keyValue = ((String) serializableKeyValue).replaceAll(SPAZIO, VUOTA);
                 query.addCriteria(Criteria.where(FIELD_ID).is(keyValue));
             }

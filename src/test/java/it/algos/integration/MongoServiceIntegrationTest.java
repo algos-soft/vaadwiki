@@ -1063,6 +1063,85 @@ public class MongoServiceIntegrationTest extends MongoTest {
         }
     }
 
+    @Test
+    @Order(70)
+    @DisplayName("70 - Fetch one (gson)")
+    void fetchOneGson() {
+        System.out.println("70 - Fetch one (gson)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        fetchOne();
+    }
+
+    @Test
+    @Order(71)
+    @DisplayName("71 - Fetch one (spring)")
+    void fetchOneSpring() {
+        System.out.println("71 - Fetch one (spring)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        fetchOne();
+    }
+
+    void fetchOne() {
+        clazz = Mese.class;
+        previstoIntero = 12;
+        int offset = 0;
+        int limit = 0;
+        System.out.println(VUOTA);
+
+        try {
+            listaBean = service.fetch(clazz);
+            assertNotNull(listaBean);
+            ottenutoIntero = listaBean.size();
+            System.out.println(String.format("Nella collezione %s ho trovato %d entities", clazz.getSimpleName(), ottenutoIntero));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        previstoIntero = 12;
+        try {
+            listaBean = service.fetch(clazz, null, offset, limit);
+            assertNotNull(listaBean);
+            ottenutoIntero = listaBean.size();
+            System.out.println(String.format("Nella collezione %s ho trovato %d entities con offset=%d e limit=%d", clazz.getSimpleName(), ottenutoIntero, offset, limit));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        limit = 1;
+        previstoIntero = 1;
+        try {
+            listaBean = service.fetch(clazz, null, offset, limit);
+            assertNotNull(listaBean);
+            ottenutoIntero = listaBean.size();
+            System.out.println(String.format("Nella collezione %s ho trovato %d entities con offset=%d e limit=%d", clazz.getSimpleName(), ottenutoIntero, offset, limit));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        limit = 2;
+        previstoIntero = 2;
+        try {
+            listaBean = service.fetch(clazz, null, offset, limit);
+            assertNotNull(listaBean);
+            ottenutoIntero = listaBean.size();
+            System.out.println(String.format("Nella collezione %s ho trovato %d entities con offset=%d e limit=%d", clazz.getSimpleName(), ottenutoIntero, offset, limit));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        offset = 4;
+        limit = 2;
+        previstoIntero = 2;
+        try {
+            listaBean = service.fetch(clazz, null, offset, limit);
+            assertNotNull(listaBean);
+            ottenutoIntero = listaBean.size();
+            System.out.println(String.format("Nella collezione %s ho trovato %d entities con offset=%d e limit=%d", clazz.getSimpleName(), ottenutoIntero, offset, limit));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+    }
+
     //    @Test
     //    @Order(13)
     //    @DisplayName("13 - Save base di una entity")

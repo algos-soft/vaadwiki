@@ -54,6 +54,10 @@ public interface AIResult {
 
     void print(final ALogService logger, final AETypeLog typeLog);
 
+    String getWebTitle();
+
+    void setWebTitle(String webTitle);
+
     String getWikiTitle();
 
     void setWikiTitle(String wikiTitle);
@@ -73,6 +77,14 @@ public interface AIResult {
     String getQueryType();
 
     void setQueryType(String queryType);
+
+    String getWikiText();
+
+    void setWikiText(String wikiText);
+
+    String getWikiBio();
+
+    void setWikiBio(String wikiBio);
 
     List getLista();
 

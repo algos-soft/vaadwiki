@@ -44,9 +44,6 @@ public class BioServiceTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         assertNotNull(service);
-//        service.text = text;
-//        service.array = array;
-//        service.wikiApi = wikiApi;
     }
 
 
@@ -60,13 +57,13 @@ public class BioServiceTest extends ATest {
         super.setUp();
     }
 
-//    @Test
-//    @Order(1)
-//    @DisplayName("1 - leggeTmpl")
-//    void leggeTmpl() {
-//
-//        sorgente = "Guido Rossi";
-//        ottenuto = service.leggeTmpl(sorgente);
+    @Test
+    @Order(1)
+    @DisplayName("1 - leggeTmpl")
+    void leggeTmpl() {
+
+        sorgente = "Guido Rossi";
+//        ottenuto = service.(sorgente);
 //        assertTrue(text.isValid(ottenuto));
 //        assertTrue(ottenuto.startsWith(previsto));
 //        System.out.println(VUOTA);
@@ -74,7 +71,7 @@ public class BioServiceTest extends ATest {
 //        System.out.println("1 - Legge un template bio");
 //        System.out.println(VUOTA);
 //        System.out.println(ottenuto);
-//    }
+    }
 //
 //    @Test
 //    @Order(2)

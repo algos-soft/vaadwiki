@@ -22,6 +22,8 @@ public class AResult implements AIResult {
 
     private boolean valido;
 
+    private String webTitle = VUOTA;
+
     private String wikiTitle = VUOTA;
 
     private String urlPreliminary = VUOTA;
@@ -39,6 +41,11 @@ public class AResult implements AIResult {
     private String preliminaryResponse = VUOTA;
 
     private String response = VUOTA;
+
+    private String wikiText = VUOTA;
+
+
+    private String wikiBio = VUOTA;
 
     private String token = VUOTA;
 
@@ -186,6 +193,16 @@ public class AResult implements AIResult {
     }
 
     @Override
+    public String getWebTitle() {
+        return webTitle;
+    }
+
+    @Override
+    public void setWebTitle(String webTitle) {
+        this.webTitle = webTitle;
+    }
+
+    @Override
     public String getWikiTitle() {
         return wikiTitle;
     }
@@ -284,6 +301,26 @@ public class AResult implements AIResult {
     @Override
     public void setQueryType(String queryType) {
         this.queryType = queryType;
+    }
+
+    @Override
+    public String getWikiText() {
+        return wikiText;
+    }
+
+    @Override
+    public void setWikiText(String wikiText) {
+        this.wikiText = wikiText;
+    }
+
+    @Override
+    public String getWikiBio() {
+        return wikiBio;
+    }
+
+    @Override
+    public void setWikiBio(String wikiBio) {
+        this.wikiBio = wikiBio;
     }
 
     @Override

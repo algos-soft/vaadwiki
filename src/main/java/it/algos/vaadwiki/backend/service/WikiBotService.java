@@ -553,61 +553,61 @@ public class WikiBotService extends WService {
         return mappa;
     }
 
-//    /**
-//     * Mappa chiave-valore con i valori 'troncati' <br>
-//     * Valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) e senza la 'coda' risultante <br>
-//     *
-//     * @param mappaDownload coi valori originali provenienti dalla property tmplBioServer della entity Bio
-//     *
-//     * @return mappa con i valori 'troncati'
-//     */
-//    public LinkedHashMap<String, String> getMappaTroncata(LinkedHashMap<String, String> mappaDownload) {
-//        LinkedHashMap<String, String> mappa = null;
-//        ParBio par;
-//        String key;
-//        String value;
-//
-//        if (mappaDownload != null) {
-//            mappa = new LinkedHashMap<>();
-//            for (Map.Entry<String, String> entry : mappaDownload.entrySet()) {
-//                key = entry.getKey();
-//                value = entry.getValue();
-//                par = ParBio.getType(key);
-//                value = par.estraeValoreInizialeGrezzo(value);
-//                mappa.put(entry.getKey(), value);
-//            }
-//        }
-//
-//        return mappa;
-//    }
+    //    /**
+    //     * Mappa chiave-valore con i valori 'troncati' <br>
+    //     * Valore grezzo troncato dopo alcuni tag chiave (<ref>, {{, ecc.) e senza la 'coda' risultante <br>
+    //     *
+    //     * @param mappaDownload coi valori originali provenienti dalla property tmplBioServer della entity Bio
+    //     *
+    //     * @return mappa con i valori 'troncati'
+    //     */
+    //    public LinkedHashMap<String, String> getMappaTroncata(LinkedHashMap<String, String> mappaDownload) {
+    //        LinkedHashMap<String, String> mappa = null;
+    //        ParBio par;
+    //        String key;
+    //        String value;
+    //
+    //        if (mappaDownload != null) {
+    //            mappa = new LinkedHashMap<>();
+    //            for (Map.Entry<String, String> entry : mappaDownload.entrySet()) {
+    //                key = entry.getKey();
+    //                value = entry.getValue();
+    //                par = ParBio.getType(key);
+    //                value = par.estraeValoreInizialeGrezzo(value);
+    //                mappa.put(entry.getKey(), value);
+    //            }
+    //        }
+    //
+    //        return mappa;
+    //    }
 
-//    /**
-//     * Mappa chiave-valore con i valori 'elaborati' <br>
-//     * Valore elaborato valido (minuscole, quadre, ecc.) <br>
-//     *
-//     * @param mappaTroncata dopo alcuni tag chiave (<ref>, {{, ecc.) e senza la 'coda' risultante
-//     *
-//     * @return mappa con i valori 'elaborati'
-//     */
-//    public LinkedHashMap<String, String> getMappaElaborata(LinkedHashMap<String, String> mappaTroncata) throws AlgosException {
-//        LinkedHashMap<String, String> mappa = null;
-//        ParBio par;
-//        String key;
-//        String value;
-//
-//        if (mappaTroncata != null) {
-//            mappa = new LinkedHashMap<>();
-//            for (Map.Entry<String, String> entry : mappaTroncata.entrySet()) {
-//                key = entry.getKey();
-//                value = entry.getValue();
-//                par = ParBio.getType(key);
-//                value = par.regolaValoreInizialeValido(value);
-//                mappa.put(entry.getKey(), value);
-//            }
-//        }
-//
-//        return mappa;
-//    }
+    //    /**
+    //     * Mappa chiave-valore con i valori 'elaborati' <br>
+    //     * Valore elaborato valido (minuscole, quadre, ecc.) <br>
+    //     *
+    //     * @param mappaTroncata dopo alcuni tag chiave (<ref>, {{, ecc.) e senza la 'coda' risultante
+    //     *
+    //     * @return mappa con i valori 'elaborati'
+    //     */
+    //    public LinkedHashMap<String, String> getMappaElaborata(LinkedHashMap<String, String> mappaTroncata) throws AlgosException {
+    //        LinkedHashMap<String, String> mappa = null;
+    //        ParBio par;
+    //        String key;
+    //        String value;
+    //
+    //        if (mappaTroncata != null) {
+    //            mappa = new LinkedHashMap<>();
+    //            for (Map.Entry<String, String> entry : mappaTroncata.entrySet()) {
+    //                key = entry.getKey();
+    //                value = entry.getValue();
+    //                par = ParBio.getType(key);
+    //                value = par.regolaValoreInizialeValido(value);
+    //                mappa.put(entry.getKey(), value);
+    //            }
+    //        }
+    //
+    //        return mappa;
+    //    }
 
 
     /**
@@ -733,24 +733,24 @@ public class WikiBotService extends WService {
         return valoreValido.trim();
     }
 
-//    /**
-//     * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
-//     *
-//     * @param valoreGrezzo in entrata da elaborare
-//     *
-//     * @return valore finale valido del parametro
-//     */
-//    public String fixMaiuscola(String valoreGrezzo) {
-//        String valoreValido = fixValoreGrezzo(valoreGrezzo);
-//
-//        if (text.isEmpty(valoreGrezzo)) {
-//            return VUOTA;
-//        }
-//
-//        valoreValido = text.primaMaiuscola(valoreValido);
-//
-//        return valoreValido.trim();
-//    }
+    //    /**
+    //     * Elabora un valore GREZZO e restituisce un valore VALIDO <br>
+    //     *
+    //     * @param valoreGrezzo in entrata da elaborare
+    //     *
+    //     * @return valore finale valido del parametro
+    //     */
+    //    public String fixMaiuscola(String valoreGrezzo) {
+    //        String valoreValido = fixValoreGrezzo(valoreGrezzo);
+    //
+    //        if (text.isEmpty(valoreGrezzo)) {
+    //            return VUOTA;
+    //        }
+    //
+    //        valoreValido = text.primaMaiuscola(valoreValido);
+    //
+    //        return valoreValido.trim();
+    //    }
 
 
     /**
@@ -850,7 +850,7 @@ public class WikiBotService extends WService {
         valoreGrezzo = text.levaDopoGraffe(valoreGrezzo);
         valoreGrezzo = text.levaDopoWiki(valoreGrezzo);
         valoreGrezzo = text.levaDopoUguale(valoreGrezzo);
-//        valoreGrezzo = text.levaDopoCirca(valoreGrezzo);
+        //        valoreGrezzo = text.levaDopoCirca(valoreGrezzo);
         valoreGrezzo = text.levaDopoEccetera(valoreGrezzo);
         valoreGrezzo = text.levaDopoInterrogativo(valoreGrezzo);
 
@@ -1386,13 +1386,24 @@ public class WikiBotService extends WService {
         String wikiTitleElaborato;
         String rispostaDellaQuery;
         JSONObject objectJson;
+        String wikiText;
+        String wikiBio;
 
+        if (wikiSimplePageCategoryTitle == null) {
+            resultWiki = AResult.errato(NULL_WIKI_TITLE);
+            resultWiki.setWebTitle(null);
+            return resultWiki;
+        }
         if (text.isEmpty(wikiSimplePageCategoryTitle)) {
-            return AResult.errato(ERROR_WIKI_TITLE);
+            resultWiki = AResult.errato(ERROR_WIKI_TITLE);
+            resultWiki.setWebTitle(VUOTA);
+            return resultWiki;
         }
         wikiTitleElaborato = wikiSimplePageCategoryTitle.replaceAll(SPAZIO, UNDERSCORE);
 
         resultWeb = web.legge(WIKI_PARSE + wikiTitleElaborato);
+        resultWeb.setWebTitle(wikiSimplePageCategoryTitle);
+        resultWeb.setWikiTitle(wikiTitleElaborato);
         rispostaDellaQuery = resultWeb.isValido() ? resultWeb.getResponse() : VUOTA;
         if (text.isValid(rispostaDellaQuery)) {
             objectJson = jSonService.getObjectJSON(rispostaDellaQuery);
@@ -1402,13 +1413,16 @@ public class WikiBotService extends WService {
             else {
                 if (objectJson.get(JSON_ERROR) != null) {
                     resultWiki = AResult.errato(ERROR_WIKI_PAGINA);
-                    resultWiki.setWikiTitle(wikiSimplePageCategoryTitle);
                     resultWiki.setUrlRequest(resultWeb.getUrlRequest());
                     resultWiki.setResponse(rispostaDellaQuery);
                     return resultWiki;
                 }
                 else {
-                    resultWeb.setWikiTitle(wikiSimplePageCategoryTitle);
+                    JSONObject parse = (JSONObject) objectJson.get("parse");
+                    wikiText = (String) parse.get("wikitext");
+                    resultWeb.setWikiText(wikiText);
+                    wikiBio= wikiApi.estraeTmpl(wikiText,"Bio");
+                    resultWeb.setWikiBio(wikiBio);
                     return resultWeb;
                 }
             }
@@ -1507,6 +1521,13 @@ public class WikiBotService extends WService {
         long inizio = System.currentTimeMillis();
         int cicli = 0;
 
+        if (catTitle == null) {
+            return null;
+        }
+        if (text.isEmpty(catTitle)) {
+            return null;
+        }
+
         do {
             urlDomain = fixUrlCat(catTitle, catType, propType, loggedUserType, continueParam);
             //devo fare una POST e non una GET
@@ -1590,6 +1611,13 @@ public class WikiBotService extends WService {
         String propType = AECatProp.title.getTag();
         AIResult result;
         String continueParam = VUOTA;
+
+        if (catTitle == null) {
+            return null;
+        }
+        if (text.isEmpty(catTitle)) {
+            return null;
+        }
 
         do {
             urlDomain = fixUrlCat(catTitle, catType, propType, userType, continueParam);
@@ -1710,6 +1738,17 @@ public class WikiBotService extends WService {
         String rispostaDellaQuery;
         String webUrl;
 
+        if (categoryTitle == null) {
+            result = AResult.errato(NULL_WIKI_TITLE);
+            result.setWebTitle(null);
+            return result;
+        }
+        if (text.isEmpty(categoryTitle)) {
+            result = AResult.errato(ERROR_WIKI_TITLE);
+            result.setWebTitle(VUOTA);
+            return result;
+        }
+
         catTitleUnderscored = categoryTitle.replaceAll(SPAZIO, UNDERSCORE);
         catTitle = catTitleUnderscored.startsWith(CATEGORIA) ? catTitleUnderscored : CATEGORIA + catTitleUnderscored;
         result = isEsisteResult(catTitle);
@@ -1717,30 +1756,15 @@ public class WikiBotService extends WService {
         if (result.isValido()) {
             webUrl = WIKI_QUERY_CAT_TOTALE + catTitleUnderscored;
             result = web.legge(webUrl);
-            result.setWikiTitle(categoryTitle);
+            result.setWebTitle(categoryTitle);
+            result.setWikiTitle(catTitleUnderscored);
         }
         else {
-            result.setWikiTitle(categoryTitle);
+            result.setWebTitle(categoryTitle);
             result.setErrorCode(ERROR_WIKI_CATEGORIA);
             result.setErrorMessage(ERROR_WIKI_CATEGORIA);
             return result;
         }
-
-        //        if (isEsisteCat(catTitle)) {
-        //        }
-        //        else {
-        //            result = web.legge(WIKI_PARSE + catTitle);
-        //            //            result= AResult.errato();
-        //            result.setWikiTitle(categoryTitle);
-        //            result.setUrl(catTitle);
-        //            result.setErrorMessage(String.format("Non esiste la categoria %s", categoryTitle));
-        //            return result;
-        //        }
-        //
-        //        result = web.legge(catTitle);
-        //        if (result == null || result.isErrato()) {
-        //            return AResult.errato();
-        //        }
 
         rispostaDellaQuery = result.getResponse();
         JSONObject jsonPageZero = jSonService.getObjectPage(rispostaDellaQuery);

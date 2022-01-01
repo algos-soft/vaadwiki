@@ -5,10 +5,11 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.service.*;
-import static it.algos.vaadwiki.backend.service.WikiBotService.*;
 import it.algos.vaadwiki.wiki.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 
 import java.util.*;
 
@@ -29,25 +30,8 @@ import java.util.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WikiBotServiceTest extends WTest {
 
-    public static final String CAT_INESISTENTE = "Nati nel 3435";
+    private static int max = 100;
 
-    public static final String CAT_1167 = "Nati nel 1167";
-
-    public static final String CAT_1435 = "Nati nel 1435";
-
-    public static final String CAT_1591 = "Nati nel 1591";
-
-    public static final String CAT_1935 = "Nati nel 1935";
-
-    public static final int TOT_1935 = 1996;
-
-    public static final String CAT_1713 = "Nati nel 1713";
-
-    public static final String CAT_2020 = "Morti nel 2020";
-
-    public static final int TOT_2020 = 2405;
-
-    public static final String CAT_ROMANI = "Personaggi della storia romana";
 
     /**
      * Classe principale di riferimento <br>
@@ -80,273 +64,84 @@ public class WikiBotServiceTest extends WTest {
         super.setUp();
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "PAGINE")
     @Order(1)
     @DisplayName("1 - Controllo e risultato per una pagina")
-    public void isEsisteResult() {
+    //--titolo
+    //--pagina valida
+    public void isEsisteResult(final String wikiSimplePageCategoryTitle, final boolean paginaValida) {
         System.out.println("1 - Controllo e risultato per una pagina e/o categoria.");
-        System.out.println("Si collega come (come anonymous)");
+        System.out.println("Si collega come (anonymous)");
 
-        ottenutoRisultato = service.isEsisteResult(null);
+        ottenutoRisultato = service.isEsisteResult(wikiSimplePageCategoryTitle);
         assertNotNull(ottenutoRisultato);
-        assertFalse(ottenutoRisultato.isValido());
-        assertTrue(ottenutoRisultato.isErrato());
-        assertTrue(textService.isEmpty(ottenutoRisultato.getWikiTitle()));
-        assertTrue(textService.isEmpty(ottenutoRisultato.getUrlRequest()));
-        assertEquals(ERROR_WIKI_TITLE, ottenutoRisultato.getErrorCode());
-        assertEquals(ERROR_WIKI_TITLE, ottenutoRisultato.getErrorMessage());
-        assertTrue(textService.isEmpty(ottenutoRisultato.getValidMessage()));
-        assertTrue(textService.isEmpty(ottenutoRisultato.getResponse()));
-        assertTrue(ottenutoRisultato.getValue() == 0);
+
+        assertEquals(paginaValida, ottenutoRisultato.isValido());
+        assertNotEquals(paginaValida, ottenutoRisultato.isErrato());
+        assertEquals(paginaValida, textService.isValid(ottenutoRisultato.getValidMessage()));
+        assertEquals(paginaValida, textService.isValid(ottenutoRisultato.getResponse()));
         printResult(ottenutoRisultato);
 
-        sorgente = PAGINA_INESISTENTE;
-        ottenutoRisultato = service.isEsisteResult(sorgente);
-        assertNotNull(ottenutoRisultato);
-        assertFalse(ottenutoRisultato.isValido());
-        assertTrue(ottenutoRisultato.isErrato());
-        assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertEquals(WIKI_PARSE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertEquals(ERROR_WIKI_PAGINA, ottenutoRisultato.getErrorCode());
-        assertEquals(ERROR_WIKI_PAGINA, ottenutoRisultato.getErrorMessage());
-        assertTrue(textService.isEmpty(ottenutoRisultato.getValidMessage()));
-        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
-        assertTrue(ottenutoRisultato.getValue() == 0);
-        printResult(ottenutoRisultato);
-
-        sorgente = CATEGORIA + CAT_INESISTENTE;
-        ottenutoRisultato = service.isEsisteResult(sorgente);
-        assertNotNull(ottenutoRisultato);
-        assertFalse(ottenutoRisultato.isValido());
-        assertTrue(ottenutoRisultato.isErrato());
-        assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertEquals(WIKI_PARSE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertEquals(ERROR_WIKI_PAGINA, ottenutoRisultato.getErrorCode());
-        assertEquals(ERROR_WIKI_PAGINA, ottenutoRisultato.getErrorMessage());
-        assertTrue(textService.isEmpty(ottenutoRisultato.getValidMessage()));
-        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
-        assertTrue(ottenutoRisultato.getValue() == 0);
-        printResult(ottenutoRisultato);
-
-        sorgente = PAGINA_TEST;
-        ottenutoRisultato = service.isEsisteResult(sorgente);
-        assertNotNull(ottenutoRisultato);
-        assertTrue(ottenutoRisultato.isValido());
-        assertFalse(ottenutoRisultato.isErrato());
-        assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertEquals(WIKI_PARSE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
-        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
-        assertTrue(ottenutoRisultato.getValue() == 0);
-        printResult(ottenutoRisultato);
-
-        sorgente = CATEGORIA + CAT_1167;
-        ottenutoRisultato = service.isEsisteResult(sorgente);
-        assertNotNull(ottenutoRisultato);
-        assertTrue(ottenutoRisultato.isValido());
-        assertFalse(ottenutoRisultato.isErrato());
-        assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertEquals(WIKI_PARSE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
-        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
-        assertTrue(ottenutoRisultato.getValue() == 0);
-        printResult(ottenutoRisultato);
     }
 
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "PAGINE_DUE")
     @Order(2)
     @DisplayName("2 - Esistenza di una pagina")
-    public void isEsiste() {
+    //--titolo
+    //--pagina o categoria esistente
+    public void isEsiste(final String wikiSimplePageCategoryTitle, final boolean paginaCategoriaValida) {
         System.out.println("2 - Esistenza di una pagina e/o categoria.");
-        System.out.println("Si collega come (come anonymous)");
+        System.out.println("Si collega come (anonymous)");
 
-        sorgente = PAGINA_INESISTENTE;
-        ottenutoBooleano = service.isEsiste(sorgente);
-        assertFalse(ottenutoBooleano);
-        printEsiste(sorgente, ottenutoBooleano);
-
-        sorgente = PAGINA_PIOZZANO;
-        ottenutoBooleano = service.isEsiste(sorgente);
-        assertTrue(ottenutoBooleano);
-        printEsiste(sorgente, ottenutoBooleano);
-
-        sorgente = CAT_INESISTENTE;
-        ottenutoBooleano = service.isEsisteCat(sorgente);
-        assertFalse(ottenutoBooleano);
-        printEsiste(sorgente, ottenutoBooleano);
-
-        sorgente = CAT_1167;
-        ottenutoBooleano = service.isEsisteCat(sorgente);
-        assertTrue(ottenutoBooleano);
-        printEsiste(sorgente, ottenutoBooleano);
-
-        sorgente = CATEGORIA + CAT_INESISTENTE;
-        ottenutoBooleano = service.isEsiste(sorgente);
-        assertFalse(ottenutoBooleano);
-        printEsiste(sorgente, ottenutoBooleano);
-
-        sorgente = CATEGORIA + CAT_1167;
-        ottenutoBooleano = service.isEsiste(sorgente);
-        assertTrue(ottenutoBooleano);
-        printEsiste(sorgente, ottenutoBooleano);
-
-        sorgente = CATEGORIA + CAT_INESISTENTE;
-        ottenutoBooleano = service.isEsisteCat(sorgente);
-        assertFalse(ottenutoBooleano);
-        printEsiste(sorgente, ottenutoBooleano);
-
-        sorgente = CATEGORIA + CAT_1167;
-        ottenutoBooleano = service.isEsisteCat(sorgente);
-        assertTrue(ottenutoBooleano);
-        printEsiste(sorgente, ottenutoBooleano);
+        ottenutoBooleano = service.isEsiste(wikiSimplePageCategoryTitle);
+        assertEquals(paginaCategoriaValida, ottenutoBooleano);
+        printEsiste(wikiSimplePageCategoryTitle, ottenutoBooleano);
     }
 
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "CATEGORIE")
     @Order(3)
-    @DisplayName("3 - Informazioni della categoria")
-    public void getInfoCategoria() {
-        System.out.println("3 - Informazioni della categoria.");
+    @DisplayName("3 - Informazioni generali della categoria")
+    //--titolo categoria
+    //--categoria esistente
+    //--numero di pagine
+    //--risultatoEsatto
+    public void getInfoCategoria(final String wikiSimpleCategoryTitle, final boolean categoriaEsistente, final int numPagine, final boolean risultatoEsatto) {
+        System.out.println("3 - Informazioni generali della categoria.");
         System.out.println("Legge (come anonymous) le info della categoria");
-
-        sorgente = CAT_INESISTENTE;
-        previstoIntero = 0;
         inizio = System.currentTimeMillis();
-        ottenutoRisultato = service.getInfoCategoria(sorgente);
-        assertNotNull(ottenutoRisultato);
-        assertFalse(ottenutoRisultato.isValido());
-        assertTrue(ottenutoRisultato.isErrato());
-        assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertEquals(WIKI_PARSE + CATEGORIA + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertEquals(ERROR_WIKI_CATEGORIA, ottenutoRisultato.getErrorCode());
-        assertEquals(ERROR_WIKI_CATEGORIA, ottenutoRisultato.getErrorMessage());
-        assertTrue(textService.isEmpty(ottenutoRisultato.getValidMessage()));
-        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
-        assertTrue(ottenutoRisultato.getValue() == 0);
-        printResult(ottenutoRisultato);
 
-        sorgente = CAT_1167;
-        previstoIntero = 6;
-        inizio = System.currentTimeMillis();
-        ottenutoRisultato = service.getInfoCategoria(sorgente);
+        ottenutoRisultato = service.getInfoCategoria(wikiSimpleCategoryTitle);
         assertNotNull(ottenutoRisultato);
-        assertTrue(ottenutoRisultato.isValido());
-        assertFalse(ottenutoRisultato.isErrato());
-        assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertEquals(WIKI_QUERY_CAT_TOTALE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
-        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
-        assertEquals(previstoIntero, ottenutoRisultato.getValue());
-        printResult(ottenutoRisultato);
+        assertEquals(categoriaEsistente, ottenutoRisultato.isValido());
+        assertNotEquals(categoriaEsistente, ottenutoRisultato.isErrato());
+        assertEquals(categoriaEsistente, textService.isValid(ottenutoRisultato.getValidMessage()));
 
-        sorgente = CAT_1435;
-        previstoIntero = 33;
-        inizio = System.currentTimeMillis();
-        ottenutoRisultato = service.getInfoCategoria(sorgente);
-        assertNotNull(ottenutoRisultato);
-        assertTrue(ottenutoRisultato.isValido());
-        assertFalse(ottenutoRisultato.isErrato());
-        assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertEquals(WIKI_QUERY_CAT_TOTALE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
-        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
-        assertEquals(previstoIntero, ottenutoRisultato.getValue());
-        printResult(ottenutoRisultato);
-
-        sorgente = CAT_1935;
-        previstoIntero = TOT_1935;
-        inizio = System.currentTimeMillis();
-        ottenutoRisultato = service.getInfoCategoria(sorgente);
-        assertNotNull(ottenutoRisultato);
-        assertTrue(ottenutoRisultato.isValido());
-        assertFalse(ottenutoRisultato.isErrato());
-        assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertEquals(WIKI_QUERY_CAT_TOTALE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
-        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
-        assertEquals(previstoIntero, ottenutoRisultato.getValue());
-        printResult(ottenutoRisultato);
-
-        sorgente = CAT_ROMANI;
-        previstoIntero = 78;
-        inizio = System.currentTimeMillis();
-        ottenutoRisultato = service.getInfoCategoria(sorgente);
-        assertNotNull(ottenutoRisultato);
-        assertTrue(ottenutoRisultato.isValido());
-        assertFalse(ottenutoRisultato.isErrato());
-        assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertEquals(WIKI_QUERY_CAT_TOTALE + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getUrlRequest());
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorCode()));
-        assertTrue(textService.isEmpty(ottenutoRisultato.getErrorMessage()));
-        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertTrue(textService.isValid(ottenutoRisultato.getResponse()));
-        assertEquals(previstoIntero, ottenutoRisultato.getValue());
-        printResult(ottenutoRisultato);
+        printResult(ottenutoRisultato, numPagine, risultatoEsatto);
     }
 
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "CATEGORIE")
     @Order(4)
     @DisplayName("4 - Numero di pagine della categoria")
-    public void getTotaleCategoria() {
+    //--titolo categoria
+    //--categoria esistente
+    //--numero di pagine
+    //--risultatoEsatto
+    public void getTotaleCategoria(final String wikiSimpleCategoryTitle, final boolean categoriaEsistente, final int numPagine, final boolean risultatoEsatto) {
         System.out.println("4 - numero di pagine della categoria.");
         System.out.println("Legge (come anonymous) il numero di pagina della categoria");
-
-        sorgente = CAT_INESISTENTE;
-        previstoIntero = 0;
         inizio = System.currentTimeMillis();
-        ottenutoIntero = service.getTotaleCategoria(sorgente);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoIntero));
-        System.out.println(String.format("Tempo impiegato per leggere le info della categoria '%s': %s", sorgente, getTime()));
 
-        sorgente = CAT_1167;
-        previstoIntero = 6;
-        inizio = System.currentTimeMillis();
-        ottenutoIntero = service.getTotaleCategoria(sorgente);
-        assertEquals(previstoIntero, ottenutoIntero);
+        ottenutoIntero = service.getTotaleCategoria(wikiSimpleCategoryTitle);
         System.out.println(VUOTA);
-        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoIntero));
-        System.out.println(String.format("Tempo impiegato per leggere le info della categoria '%s': %s", sorgente, getTime()));
-
-        sorgente = CAT_1435;
-        previstoIntero = 33;
-        inizio = System.currentTimeMillis();
-        ottenutoIntero = service.getTotaleCategoria(sorgente);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoIntero));
-        System.out.println(String.format("Tempo impiegato per leggere le info della categoria '%s': %s", sorgente, getTime()));
-
-        sorgente = CAT_1935;
-        previstoIntero = TOT_1935;
-        inizio = System.currentTimeMillis();
-        ottenutoIntero = service.getTotaleCategoria(sorgente);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoIntero));
-        System.out.println(String.format("Tempo impiegato per leggere le info della categoria '%s': %s", sorgente, getTime()));
-
-        sorgente = CAT_ROMANI;
-        previstoIntero = 78;
-        inizio = System.currentTimeMillis();
-        ottenutoIntero = service.getTotaleCategoria(sorgente);
-        assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Nella categoria '%s' ci sono %d pagine", sorgente, ottenutoIntero));
-        System.out.println(String.format("Tempo impiegato per leggere le info della categoria '%s': %s", sorgente, getTime()));
+        System.out.println(String.format("%s", getEsatto(true, wikiSimpleCategoryTitle, numPagine, ottenutoIntero, risultatoEsatto)));
+        System.out.println(String.format("Tempo impiegato per leggere le info della categoria '%s': %s", wikiSimpleCategoryTitle, getTime()));
     }
 
     @Test
@@ -369,94 +164,81 @@ public class WikiBotServiceTest extends WTest {
         printResult(ottenutoRisultato);
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "CATEGORIE_TYPE")
     @Order(6)
     @DisplayName("6 - Legge una lista di pageid di una categoria wiki")
-    public void getLongCat() {
+    //--senza specificare il type di user, in automatico mette anonymous
+    //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+    //--
+    //--type di user=anonymous
+    //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+    //--
+    //--type di user=user
+    //--non essendo collegato va in errore
+    //--
+    //--type di user=bot
+    //--non essendo collegato va in errore
+    //--
+    //--senza specificare il type di user, in automatico mette anonymous
+    //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
+    //--
+    //--
+    //--titolo categoria
+    //--categoria esistente (per l'userType specificato)
+    //--AETypeUser userType
+    //--numero di pagine
+    public void getLongCat(final String wikiSimpleCategoryTitle, final boolean categoriaEsistente, final AETypeUser userType, final int numPagine) {
         System.out.println("6 - Legge una lista di pageid di una categoria wiki");
-        AETypeUser userType = null;
-        sorgente = CAT_INESISTENTE;
-        previstoIntero = 0;
-        ottenutoArrayLong = service.getLongCat(sorgente);
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
-
-        //--senza specificare il type di user, in automatico mette anonymous
-        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
-        sorgente = CAT_1167;
-        userType = null;
-        previstoIntero = 6;
-        ottenutoArrayLong = service.getLongCat(sorgente, userType);
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
         System.out.println(VUOTA);
-        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+        int size;
+        inizio = System.currentTimeMillis();
+        String type = userType != null ? userType.toString() : "(null)";
 
-        //--type di user=anonymous
-        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
-        sorgente = CAT_1167;
-        userType = AETypeUser.anonymous;
-        previstoIntero = 6;
-        ottenutoArrayLong = service.getLongCat(sorgente, userType);
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
+        ottenutoArrayLong = service.getLongCat(wikiSimpleCategoryTitle, userType);
+        size = ottenutoArrayLong != null ? ottenutoArrayLong.size() : 0;
+        assertEquals(categoriaEsistente, size != 0);
+        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", wikiSimpleCategoryTitle, size, type, getTime()));
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CATEGORIE")
+    @Order(7)
+    @DisplayName("7 - Legge una pagina da una categoria wiki")
+    //--titolo categoria
+    //--categoria esistente
+    //--numero di pagine
+    //--risultatoEsatto
+    //--offset
+    public void leggeSingolaPaginaDaCategoria(final String wikiSimpleCategoryTitle, final boolean categoriaEsistente, final int numPagine, final boolean risultatoEsatto, final int offset) {
+        System.out.println("7 - Legge una pagina da una categoria wiki");
         System.out.println(VUOTA);
-        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+        int size;
+        String wikiTitle;
+        String wikiText;
+        String wikiBio;
 
-        //--type di user=user
-        //--non essendo collegato va in errore
-        sorgente = CAT_1167;
-        userType = AETypeUser.user;
-        previstoIntero = 0;
-        ottenutoArrayLong = service.getLongCat(sorgente, userType);
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+        ottenutoArray = service.getTitleCat(wikiSimpleCategoryTitle);
+        size = ottenutoArray != null ? ottenutoArray.size() : 0;
+        assertEquals(categoriaEsistente, size != 0);
 
-        //--type di user=bot
-        //--non essendo collegato va in errore
-        sorgente = CAT_1167;
-        userType = AETypeUser.bot;
-        previstoIntero = 0;
-        ottenutoArrayLong = service.getLongCat(sorgente, userType);
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+        if (ottenutoArray == null) {
+            System.out.println("Nessun risultato");
+            return;
+        }
+        if (ottenutoArray.size() < 1) {
+            System.out.println("Nessun risultato");
+            return;
+        }
 
-        //--senza specificare il type di user, in automatico mette anonymous
-        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
-        sorgente = CAT_1713;
-        userType = AETypeUser.anonymous;
-        previstoIntero = 104;
-        ottenutoArrayLong = service.getLongCat(sorgente, userType);
-        assertNotNull(ottenutoArrayLong);
-        assertEquals(previstoIntero, ottenutoArrayLong.size());
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
-
-        //        //--senza specificare il type di user, in automatico mette anonymous
-        //        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
-        //        sorgente = CAT_1935;
-        //        userType = AETypeUser.anonymous;
-        //        previstoIntero = TOT_1935;
-        //        ottenutoArrayLong = service.getLongCat(sorgente, userType);
-        //        assertNotNull(ottenutoArrayLong);
-        //        assertEquals(previstoIntero, ottenutoArrayLong.size());
-        //        System.out.println(VUOTA);
-        //        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
-
-        //        //--senza specificare il type di user, in automatico mette anonymous
-        //        //--esegue internamente tutti i cicli necessari, ognuno di 500 pagine
-        //        sorgente = CAT_2020;
-        //        userType = AETypeUser.anonymous;
-        //        previstoIntero = TOT_2020;
-        //        ottenutoArrayLong = service.getLongCat(sorgente, userType);
-        //        assertNotNull(ottenutoArrayLong);
-        //        assertEquals(previstoIntero, ottenutoArrayLong.size());
-        //        System.out.println(VUOTA);
-        //        System.out.println(String.format("La categoria '%s' contiene %d pageIds recuperati (come %s) in %s", sorgente, ottenutoArrayLong.size(), userType, getTime()));
+        wikiTitle = ottenutoArray.get(offset);
+        ottenutoRisultato = service.isEsisteResult(wikiTitle);
+        assertNotNull(ottenutoRisultato);
+        System.out.println(String.format("WikiCat: %s", wikiSimpleCategoryTitle));
+        System.out.println(String.format("WikiPage: %s", wikiTitle));
+        System.out.println(String.format("WikiText: %s", getMax(ottenutoRisultato.getWikiText())));
+        System.out.println(String.format("WikiBio: %s", getMax(ottenutoRisultato.getWikiBio())));
     }
 
     //    @Test
@@ -702,25 +484,94 @@ public class WikiBotServiceTest extends WTest {
     private void printEsiste(String wikiTitle, boolean esiste) {
         String status = esiste ? "esiste" : "non esiste";
         System.out.println(VUOTA);
-        System.out.println(String.format("La pagina/categoria '%s'%s%s", sorgente, FORWARD, status));
+        System.out.println(String.format("La pagina/categoria '%s'%s%s", wikiTitle, FORWARD, status));
     }
 
 
-    private void printResult(AIResult result) {
-        int max = 150;
-        String risposta = result.getResponse();
-        risposta = risposta.length() < max ? risposta : risposta.substring(0, Math.min(max, risposta.length()));
+    private void printResultBase(final AIResult result) {
+        String message;
+
+        if (result == null) {
+            return;
+        }
+
+        if (result.getWebTitle() == null) {
+            message = "(null)";
+        }
+        else {
+            if (result.getWebTitle().equals(VUOTA)) {
+                message = "(vuota)";
+            }
+            else {
+                message = result.getWebTitle();
+            }
+        }
+
         System.out.println(VUOTA);
-        System.out.println(String.format("Result di: %s", result.getWikiTitle()));
+        System.out.println(String.format("Result di: %s", message));
         System.out.println(String.format("Risultato: %s", result.isValido() ? "valido" : "errato"));
         System.out.println(String.format("WikiTitle: %s", result.getWikiTitle()));
         System.out.println(String.format("Url: %s", result.getUrlRequest()));
         System.out.println(String.format("ErrorCode: %s", result.getErrorCode()));
         System.out.println(String.format("ErrorMessage: %s", result.getErrorMessage()));
         System.out.println(String.format("ValidMessage: %s", result.getValidMessage()));
-        System.out.println(String.format("Response: %s", risposta));
+        System.out.println(String.format("Response: %s", getMax(result.getResponse())));
+        System.out.println(String.format("WikiText: %s", getMax(result.getWikiText())));
+        System.out.println(String.format("WikiBio: %s", getMax(result.getWikiBio())));
+    }
+
+
+    private void printResult(final AIResult result) {
+        printResultBase(result);
         System.out.println(String.format("Value: %d", result.getValue()));
-        System.out.println(String.format("Tempo impiegato per leggere le info della categoria: %s", getTime()));
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
+    }
+
+
+    private void printResult(final AIResult result, final int numPagine, final boolean risultatoEsatto) {
+        printResultBase(result);
+        String message = getEsatto(result.isValido(), result.getWebTitle(), numPagine, result.getValue(), risultatoEsatto);
+        System.out.println(String.format("Value: %s", message));
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
+    }
+
+
+    private String getEsatto(final boolean risultatoValido, final String catTitle, final int numPaginePreviste, final int numPagineOttenute, final boolean risultatoEsatto) {
+        String message;
+
+        if (risultatoValido) {
+            if (risultatoEsatto) {
+                if (numPagineOttenute == numPaginePreviste) {
+                    message = String.format("Nella categoria '%s' ci sono esattamente le %d pagine previste", catTitle, numPagineOttenute);
+                }
+                else {
+                    message = String.format("Nella categoria '%s' ci sono %d pagine che NON sono le %d previste", catTitle, numPagineOttenute, numPaginePreviste);
+                }
+            }
+            else {
+                if (numPagineOttenute == numPaginePreviste) {
+                    message = String.format("Nella categoria '%s' ci sono le %d pagine previste", catTitle, numPagineOttenute);
+                }
+                else {
+                    message = String.format("Nella categoria '%s' ci sono %d pagine che sono circa le %d previste", catTitle, numPagineOttenute, numPaginePreviste);
+                }
+            }
+        }
+        else {
+            message = String.format("La categoria '%s' non esiste", catTitle);
+        }
+
+        return message;
+    }
+
+
+    private String getMax(String message) {
+        message = message.length() < max ? message : message.substring(0, Math.min(max, message.length()));
+        if (message.contains(A_CAPO)) {
+            message = message.replaceAll(A_CAPO, SPAZIO);
+        }
+
+        return message;
     }
 
 

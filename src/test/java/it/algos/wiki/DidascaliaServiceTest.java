@@ -6,14 +6,16 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
-import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.*;
+
+import java.util.*;
 
 /**
  * Project vaadwiki
@@ -37,31 +39,15 @@ public class DidascaliaServiceTest extends WTest {
 
     private static final String DATA_BASE_NAME = "vaadwiki";
 
-    //    private String wikiTitle = "Adone Asinari";
-
     /**
      * Classe principale di riferimento <br>
      */
     @Autowired
     public DidascaliaService service;
 
-    //    /**
-    //     * Inietta da Spring
-    //     */
-    //    @Autowired
-    //    protected MongoService mongoService;
-    //    /**
-    //     * Inietta da Spring
-    //     */
-    //    @Autowired
-    //    public MongoTemplate mongoOp;
-
     private String wikiTitleDue = "Sonia Todd";
 
 
-    private static String[] PAGINE() {
-        return new String[]{PAGINA_UNO, PAGINA_DUE, PAGINA_TRE, PAGINA_QUATTRO, PAGINA_CINQUE, PAGINA_SEI, PAGINA_SETTE, PAGINA_OTTO};
-    }
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -75,9 +61,8 @@ public class DidascaliaServiceTest extends WTest {
         //--reindirizzo l'istanza della superclasse
         service = didascaliaService;
 
-        //        MockitoAnnotations.initMocks(mongoService.mongoOp);
-        //        Assertions.assertNotNull(mongoService.mongoOp);
-        //        mongoService.mongoOp = mongoOp;
+        MockitoAnnotations.initMocks(queryCat);
+        Assertions.assertNotNull(queryCat);
 
         FlowVar.typeSerializing = AETypeSerializing.gson;
     }
@@ -194,6 +179,7 @@ public class DidascaliaServiceTest extends WTest {
         print(sorgente, sorgente2, sorgente3, ottenuto);
     }
 
+
     @Test
     @Order(3)
     @DisplayName("3 - Nome doppio e cognome semplice")
@@ -209,6 +195,7 @@ public class DidascaliaServiceTest extends WTest {
         assertEquals(previsto, ottenuto);
         print(sorgente, sorgente2, sorgente3, ottenuto);
     }
+
 
     @Test
     @Order(4)
@@ -256,31 +243,25 @@ public class DidascaliaServiceTest extends WTest {
     @MethodSource(value = "PAGINE")
     @Order(5)
     @DisplayName("5 - Didascalie varie")
-    void testWithStringParameter(String wikiTitle) {
+    void didascalie(String wikiTitle) {
         System.out.println("5 - Didascalie varie");
-        String ottenuto3;
-        String ottenuto4;
-
-        bio = getBio(wikiTitle);
-
-        if (bio == null) {
-            try {
-                bio = (Bio) mongoService.fetch(clazz, null, 0, 1);
-            } catch (AlgosException unErrore) {
-                printError(unErrore);
-            }
-        }
-
-        if (bio != null) {
-            previsto = textService.setDoppieQuadre(wikiTitle);
-            ottenuto = service.getNomeCognome(bio);
-            ottenuto2 = service.getAttivitaNazionalita(bio);
-            ottenuto3 = service.getNatoMorto(bio);
-            ottenuto4 = service.getLista(bio);
-            assertTrue(textService.isValid(ottenuto));
-            System.out.println(VUOTA);
-            print(bio, ottenuto, ottenuto2, ottenuto3, ottenuto4);
-        }
+//        List<Long> listaPageID;
+//        int ini = 24;
+//        int cicli = 5;
+//        sorgente = QueryCatTest.CAT_1948;
+//        ottenutoRisultato = queryCat.urlRequest(sorgente);
+//        assertTrue(ottenutoRisultato.isValido());
+//        listaPageID = ottenutoRisultato.getLista();
+//        assertNotNull(listaPageID);
+//
+//        try {
+//            for (int k = ini; k < ini + cicli; k++) {
+//                bio = (Bio) mongoService.find(Bio.class, listaPageID.get(k) + "");
+//                Object beta = bio;
+//            }
+//        } catch (AlgosException unErrore) {
+//            System.out.println("Error");
+//        }
     }
 
     //    @Test
