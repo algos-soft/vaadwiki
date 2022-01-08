@@ -51,7 +51,9 @@ public class AResult implements AIResult {
 
     private String queryType = VUOTA;
 
-    private int value = 0;
+    private int intValue = 0;
+
+    private long longValue = 0;
 
     private List lista = null;
 
@@ -65,7 +67,7 @@ public class AResult implements AIResult {
         this(valido, message, 0);
     }
 
-    protected AResult(final boolean valido, final String message, final int value) {
+    protected AResult(final boolean valido, final String message, final int intValue) {
         this.valido = valido;
         if (valido) {
             this.validMessage = message;
@@ -73,7 +75,7 @@ public class AResult implements AIResult {
         else {
             this.errorMessage = message;
         }
-        this.value = value;
+        this.intValue = intValue;
     }
 
     public static AIResult valido() {
@@ -224,13 +226,23 @@ public class AResult implements AIResult {
     }
 
     @Override
-    public int getValue() {
-        return value;
+    public int getIntValue() {
+        return intValue;
     }
 
     @Override
-    public void setValue(int value) {
-        this.value = value;
+    public void setIntValue(int intValue) {
+        this.intValue = intValue;
+    }
+
+    @Override
+    public long getLongValue() {
+        return longValue;
+    }
+
+    @Override
+    public void setLongValue(long longValue) {
+        this.longValue = longValue;
     }
 
     @Override

@@ -449,6 +449,13 @@ public class GsonService extends AbstractService {
         if (entityClazz == null) {
             throw AlgosException.stack("Non esiste la classe indicata", getClass(), "creaId");
         }
+        if (keyId == null) {
+            throw AlgosException.stack("La keyId è nulla", getClass(), "creaId");
+        }
+
+        if (text.isEmpty((String)keyId)) {
+            throw AlgosException.stack("La keyId è vuota", getClass(), "creaId");
+        }
 
         String jsonString = this.mongoToString(entityClazz, keyId);
         jsonString = fixStringa(jsonString);

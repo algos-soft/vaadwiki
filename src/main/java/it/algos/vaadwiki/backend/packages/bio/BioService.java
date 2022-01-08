@@ -6,7 +6,6 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
-import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -175,28 +174,29 @@ public class BioService extends WikiService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param pageId       di riferimento (obbligatorio, unico)
-     * @param wikiTitle    di riferimento (obbligatorio, unico)
-     * @param tmplBio      (obbligatorio, unico)
+     * @param pageId    di riferimento (obbligatorio, unico)
+     * @param wikiTitle di riferimento (obbligatorio, unico)
+     * @param tmplBio   (obbligatorio, unico)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
     public Bio newEntity(final long pageId, final String wikiTitle, final String tmplBio) {
-        return newEntity(pageId,wikiTitle,tmplBio,(LocalDateTime)null);
+        return newEntity(pageId, wikiTitle, tmplBio, (LocalDateTime) null);
     }
 
-        /**
-         * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
-         * Usa il @Builder di Lombok <br>
-         * Eventuali regolazioni iniziali delle property <br>
-         *
-         * @param pageId       di riferimento (obbligatorio, unico)
-         * @param wikiTitle    di riferimento (obbligatorio, unico)
-         * @param tmplBio      (obbligatorio, unico)
-         * @param lastMongo sul server wiki (obbligatorio)
-         *
-         * @return la nuova entityBean appena creata (non salvata)
-         */
+
+    /**
+     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
+     * Usa il @Builder di Lombok <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     *
+     * @param pageId    di riferimento (obbligatorio, unico)
+     * @param wikiTitle di riferimento (obbligatorio, unico)
+     * @param tmplBio   (obbligatorio, unico)
+     * @param lastMongo sul server wiki (obbligatorio)
+     *
+     * @return la nuova entityBean appena creata (non salvata)
+     */
     public Bio newEntity(final long pageId, final String wikiTitle, final String tmplBio, final LocalDateTime lastMongo) {
         Bio newEntityBean = Bio.builderBio()
                 .pageId(pageId)
@@ -224,6 +224,29 @@ public class BioService extends WikiService {
     @Override
     public List<Bio> fetch() {
         return (List<Bio>) super.fetch();
+    }
+
+    /**
+     * Cerca tutte le entities di una collection filtrate con una property. <br>
+     * Selects documents in a collection or view and returns a list of the selected documents. <br>
+     *
+     * @param propertyName  per costruire la query
+     * @param propertyValue (serializable) per costruire la query
+     *
+     * @return lista di entityBeans
+     *
+     * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
+     */
+    public List<Bio> fetch(String propertyName, Serializable propertyValue) {
+        if (text.isEmpty(propertyName) || propertyValue == null) {
+            return fetch();
+        }
+
+        try {
+            return (List<Bio>)mongo.fetch(entityClazz, propertyName, propertyValue);
+        } catch (AlgosException unErrore) {
+            return fetch();
+        }
     }
 
     /**
@@ -330,14 +353,15 @@ public class BioService extends WikiService {
      * @return true se l'azione è stata eseguita
      */
     public void ciclo() {
-        String catTitle = WikiVar.categoriaBio;;
+        String catTitle = WikiVar.categoriaBio;
+        ;
 
         List<Long> listaPageIds = null;
         List<MiniWrap> listaMiniWrap = null;
         List<Long> listaPageIdsDaLeggere = null;
         List<WrapPage> listaWrapPage = null;
         List<WrapBio> listaWrapBio = null;
-        String bio="bio";
+        String bio = "bio";
 
         //--Controlla quante pagine ci sono nella categoria
         //--Si collega come anonymous; non serve essere loggati <br>
@@ -367,9 +391,9 @@ public class BioService extends WikiService {
         //--A regime deve probabilmente gestire una lista di circa 10.000 miniWrap
         //--si tratta delle voci nuove e di quelle modificate nelle ultime 24 ore
         try {
-            listaPageIdsDaLeggere = mongo.isExistsCollection(bio)?wikiBot.elaboraMiniWrap(listaMiniWrap):listaPageIds;
+            listaPageIdsDaLeggere = mongo.isExistsCollection(bio) ? wikiBot.elaboraMiniWrap(listaMiniWrap) : listaPageIds;
         } catch (AlgosException unErrore) {
-            logger.info(String.format("Manca la collection %s nel database MongoDB",bio));
+            logger.info(String.format("Manca la collection %s nel database MongoDB", bio));
         }
         //--Nella listaPageIdsDaLeggere possono esserci anche voci SENZA il tmpl BIO, che verranno scartate dopo
 
@@ -431,6 +455,13 @@ public class BioService extends WikiService {
     public Bio downloadBio(String wikiTitle) {
         WrapBio wrap = null;
 
+        if (wikiTitle == null) {
+            return null;
+        }
+        if (text.isEmpty(wikiTitle)) {
+            return null;
+        }
+
         if (text.isValid(wikiTitle)) {
             wrap = appContext.getBean(QueryBio.class).urlRequest(wikiTitle).getWrap();
         }
@@ -484,7 +515,7 @@ public class BioService extends WikiService {
             } catch (AlgosException unErrore) {
                 logger.warn(unErrore, this.getClass(), "fixBioOld");
             }
-            ((MongoService)mongo).delete(bio); //@todo sistemare
+            ((MongoService) mongo).delete(bio); //@todo sistemare
             bio = this.newEntity(wrap);
             elaboraService.esegue(bio);
             try {

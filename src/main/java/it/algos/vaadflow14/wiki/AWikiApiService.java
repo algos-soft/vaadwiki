@@ -644,9 +644,9 @@ public class AWikiApiService extends AbstractService {
     public String estraeTmpl(final String testoPagina, String tag) {
         String templateTxt = VUOTA;
         boolean continua = false;
-        String patternTxt ;
-        Pattern patttern ;
-        Matcher matcher ;
+        String patternTxt = "";
+        Pattern patttern = null;
+        Matcher matcher = null;
         int posIni;
         int posEnd;
         String tagIniTemplate = VUOTA;

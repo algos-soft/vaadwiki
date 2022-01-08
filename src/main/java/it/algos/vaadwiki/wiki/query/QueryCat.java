@@ -12,6 +12,7 @@ import org.json.simple.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
+import javax.annotation.*;
 import java.net.*;
 import java.util.*;
 
@@ -85,7 +86,7 @@ public class QueryCat extends AQuery {
             logger.info(unErrore.toString());
         }
 
-        pageIdsRecuperati = result.getValue();
+        pageIdsRecuperati = result.getIntValue();
         result.setMessage(String.format("Recuperati %s pageIds dalla categoria '%s'", text.format(pageIdsRecuperati), catTitle));
 
         return result;
@@ -161,7 +162,7 @@ public class QueryCat extends AQuery {
                     listaOld = listaNew;
                 }
                 result.setLista(listaOld);
-                result.setValue(listaOld.size());
+                result.setIntValue(listaOld.size());
                 return result;
             }
             else {

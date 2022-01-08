@@ -109,6 +109,9 @@ public abstract class WikiLogicForm extends LogicForm {
             case wikiPaginaHistory:
                 openWikiPage(AWikiApiService.API_HISTORY);
                 break;
+            case didascalie:
+                super.openWeb("https://it.wikipedia.org/wiki/Progetto:Antroponimi/Didascalie");
+                break;
             default:
                 status = false;
                 break;

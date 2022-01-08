@@ -1,8 +1,8 @@
 package it.algos.vaadwiki.backend.application;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * Project vaadwiki
@@ -30,5 +30,21 @@ public class WikiVar {
      * Deve essere regolata in backend.boot.WikiBoot.fixVariabili() del progetto corrente <br>
      */
     public static String categoriaBio;
+
+    /**
+     * Regola il simbolo grafico da preporre alle date di nascita o, in alternativa, alle località di nascita <br>
+     * Mantenuto nelle preferenze con la caratteristica di necessitare del riavvio <br>
+     * Viene letto ogni volta dalle preferenze all'avvio del programma e rimane poi immutabile <br>
+     * Deve essere regolata in backend.boot.WikiBoot.fixVariabili() del progetto corrente <br>
+     */
+    public static String simboloNato;
+
+    /**
+     * Regola il simbolo grafico da preporre alle date di nascita o, in alternativa, alle località di nascita <br>
+     * Mantenuto nelle preferenze con la caratteristica di necessitare del riavvio <br>
+     * Viene letto ogni volta dalle preferenze all'avvio del programma e rimane poi immutabile <br>
+     * Deve essere regolata in backend.boot.WikiBoot.fixVariabili() del progetto corrente <br>
+     */
+    public static String simboloMorto;
 
 }

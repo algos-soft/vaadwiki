@@ -2,6 +2,7 @@ package it.algos.vaadwiki.backend.service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadwiki.backend.application.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -126,8 +127,18 @@ public class DidascaliaService extends AbstractService {
         }
 
         if (text.isValid(attivita2)) {
-            attivitaNazionalita += SPAZIO + "e" + SPAZIO;
+            if (text.isValid(attivita3)) {
+                attivitaNazionalita += VIRGOLA_SPAZIO;
+            }
+            else {
+                attivitaNazionalita += SPAZIO + "e" + SPAZIO;
+            }
             attivitaNazionalita += attivita2;
+        }
+
+        if (text.isValid(attivita3)) {
+            attivitaNazionalita += SPAZIO + "e" + SPAZIO;
+            attivitaNazionalita += attivita3;
         }
 
         if (text.isValid(nazionalita)) {
@@ -146,10 +157,9 @@ public class DidascaliaService extends AbstractService {
      * @return luogo-anno-nascita-morte
      */
     public String getNatoMorto(final Bio bio) {
-        String natoMorto = VUOTA;
-        String tagNato = "n.";
-        String tagMorto = "†";
-        String wikiTitle;
+        String crono = VUOTA;
+        String tagNato = WikiVar.simboloNato;
+        String tagMorto = WikiVar.simboloMorto;
         String luogoNato = text.isValid(bio.luogoNato) ? bio.luogoNato : VUOTA;
         String luogoNatoLink = bio.luogoNatoLink;
         String annoNato = text.isValid(bio.annoNato) ? tagNato + bio.annoNato : VUOTA;
@@ -157,16 +167,25 @@ public class DidascaliaService extends AbstractService {
         String luogoMortoLink = bio.luogoMortoLink;
         String annoMorto = text.isValid(bio.annoMorto) ? tagMorto + bio.annoMorto : VUOTA;
 
-        natoMorto += luogoNato;
-        natoMorto += VIRGOLA_SPAZIO;
-        natoMorto += annoNato;
-        natoMorto += SEP;
-        natoMorto += luogoMorto;
-        natoMorto += VIRGOLA_SPAZIO;
-        natoMorto += annoMorto;
+        if (text.isValid(luogoNatoLink)) {
+            luogoNato += PIPE + luogoNatoLink;
+        }
+        luogoNato = text.setDoppieQuadre(luogoNato);
+        if (text.isValid(luogoMortoLink)) {
+            luogoMorto += PIPE + luogoMortoLink;
+        }
+        luogoMorto = text.setDoppieQuadre(luogoMorto);
 
-        natoMorto = text.levaCoda(natoMorto, SEP);
-        return text.setTonde(natoMorto);
+        crono += text.isValid(luogoNato) ? luogoNato : VUOTA;
+        crono += text.isValid(luogoNato) && text.isValid(annoNato) ? VIRGOLA_SPAZIO : VUOTA;
+        crono += annoNato;
+        crono += text.isValid(luogoNato) || text.isValid(annoNato) ? SEP : VUOTA;
+        crono += text.isValid(luogoMorto) ? luogoMorto : VUOTA;
+        crono += text.isValid(luogoMorto) && text.isValid(annoMorto) ? VIRGOLA_SPAZIO : VUOTA;
+        crono += annoMorto;
+
+//        crono = text.levaCoda(crono, SEP);
+        return text.isValid(crono) ? text.setTonde(crono) : VUOTA;
     }
 
     //    /**

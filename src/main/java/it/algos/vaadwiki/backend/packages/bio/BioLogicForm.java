@@ -142,6 +142,10 @@ public class BioLogicForm extends WikiLogicForm {
         button.addClickListener(event -> performAction(AEWikiAction.wikiPaginaHistory));
         putMappa(button);
 
+        button = AEButton.wiki.get("Didascalia");
+        button.addClickListener(event -> performAction(AEWikiAction.didascalie));
+        putMappa(button);
+
         //        putMappa(((Button) AEButton.wiki.get("Edit").addClickListener(event -> performAction(AEWikiAction.wikiPaginaEdit))));
         //        putMappa((Button) AEButton.wiki.get("Crono").addClickListener(event -> performAction(AEWikiAction.wikiPaginaCrono)));
     }

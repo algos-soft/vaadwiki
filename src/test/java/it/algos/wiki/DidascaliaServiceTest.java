@@ -4,8 +4,9 @@ import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadwiki.backend.application.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
 import static org.junit.Assert.*;
@@ -14,8 +15,6 @@ import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.*;
-
-import java.util.*;
 
 /**
  * Project vaadwiki
@@ -46,7 +45,6 @@ public class DidascaliaServiceTest extends WTest {
     public DidascaliaService service;
 
     private String wikiTitleDue = "Sonia Todd";
-
 
 
     /**
@@ -213,55 +211,94 @@ public class DidascaliaServiceTest extends WTest {
         print(sorgente, sorgente2, sorgente3, ottenuto);
     }
 
-    //    @ParameterizedTest
-    //    @MethodSource(value = "PAGINE")
-    //    @Order(5)
-    //    @DisplayName("5 - Didascalie varie")
-    //    void testWithStringParameter(String wikiTitle) {
-    //        System.out.println("5 - Didascalie varie");
-    //        String ottenuto3;
-    //        String ottenuto4;
-    //
-    //        sorgente = wikiTitle;
-    //        wrap = queryBio.urlRequest(sorgente).getWrap();
-    //        assertNotNull(wrap);
-    //        assertTrue(wrap.isValido());
-    //        bio = bioService.newEntity(wrap);
-    //        bio = elaboraService.esegue(bio);
-    //        previsto = textService.setDoppieQuadre(bio.wikiTitle);
-    //        ottenuto = service.getNomeCognome(bio);
-    //        ottenuto2 = service.getAttivitaNazionalita(bio);
-    //        ottenuto3 = service.getNatoMorto(bio);
-    //        ottenuto4 = service.getLista(bio);
-    //        assertTrue(textService.isValid(ottenuto));
-    //        System.out.println(VUOTA);
-    //        print(bio, ottenuto, ottenuto2, ottenuto3, ottenuto4);
-    //    }
-
 
     @ParameterizedTest
     @MethodSource(value = "PAGINE")
     @Order(5)
-    @DisplayName("5 - Didascalie varie")
-    void didascalie(String wikiTitle) {
-        System.out.println("5 - Didascalie varie");
-//        List<Long> listaPageID;
-//        int ini = 24;
-//        int cicli = 5;
-//        sorgente = QueryCatTest.CAT_1948;
-//        ottenutoRisultato = queryCat.urlRequest(sorgente);
-//        assertTrue(ottenutoRisultato.isValido());
-//        listaPageID = ottenutoRisultato.getLista();
-//        assertNotNull(listaPageID);
-//
-//        try {
-//            for (int k = ini; k < ini + cicli; k++) {
-//                bio = (Bio) mongoService.find(Bio.class, listaPageID.get(k) + "");
-//                Object beta = bio;
-//            }
-//        } catch (AlgosException unErrore) {
-//            System.out.println("Error");
-//        }
+    @DisplayName("5 - Didascalie varie con simboli specifici nato e morto")
+        //--titolo
+        //--pagina valida
+    void didascalieA(final String wikiTitle, final boolean paginaValida) {
+        String oldNato = WikiVar.simboloNato;
+        String oldMorto = WikiVar.simboloMorto;
+        WikiVar.simboloNato = "x";
+        WikiVar.simboloMorto = "y";
+        System.out.println(String.format("5 - Didascalie varie con simboli specifici: nato=%s e morto=%s", WikiVar.simboloNato, WikiVar.simboloMorto));
+
+        didascalie(wikiTitle, paginaValida);
+        WikiVar.simboloNato = oldNato;
+        WikiVar.simboloMorto = oldMorto;
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "PAGINE")
+    @Order(6)
+    @DisplayName("6 - Didascalie varie con simboli standard nato e morto")
+        //--titolo
+        //--pagina valida
+    void didascalieB(final String wikiTitle, final boolean paginaValida) {
+        WikiVar.simboloNato = (String)AEWikiPreferenza.simboloNato.getDefaultValue();
+        WikiVar.simboloMorto = (String)AEWikiPreferenza.simboloMorto.getDefaultValue();
+        System.out.println(String.format("6 - Didascalie varie con simboli standard: nato=%s e morto=%s", WikiVar.simboloNato, WikiVar.simboloMorto));
+
+        didascalie(wikiTitle, paginaValida);
+    }
+
+
+    void didascalie(final String wikiTitle, final boolean paginaValida) {
+        System.out.println(VUOTA);
+        String nomeCognome;
+        String attivitaNazionalita;
+        String lista;
+        String natoMorto;
+        long pageId;
+        String wikiBio;
+
+        ottenutoRisultato = wikiBotService.isEsisteResult(wikiTitle);
+        assertEquals(paginaValida, ottenutoRisultato.isValido());
+
+        System.out.println(String.format("Biografia: %s", wikiTitle));
+
+        if (ottenutoRisultato.isValido()) {
+            pageId = ottenutoRisultato.getLongValue();
+            wikiBio = ottenutoRisultato.getWikiBio();
+            bio = bioService.newEntity(pageId, wikiTitle, wikiBio);
+            bio = elaboraService.esegue(bio);
+            assertNotNull(bio.pageId);
+
+            nomeCognome = service.getNomeCognome(bio);
+            attivitaNazionalita = service.getAttivitaNazionalita(bio);
+            lista = service.getLista(bio);
+            natoMorto = service.getNatoMorto(bio);
+
+            System.out.println(VUOTA);
+            System.out.println(String.format("PageId: %s", pageId));
+            System.out.println(String.format("WikiBio: %s", getMax(wikiBio)));
+            System.out.println(VUOTA);
+            System.out.println(String.format("Nome = %s", bio.nome));
+            System.out.println(String.format("Cognome = %s", bio.cognome));
+            System.out.println(String.format("GiornoNato = %s", bio.giornoNato));
+            System.out.println(String.format("AnnoNato = %s", bio.annoNato));
+            System.out.println(String.format("LuogoNato = %s", bio.luogoNato));
+            System.out.println(String.format("LuogoNatoLink = %s", bio.luogoNatoLink));
+            System.out.println(String.format("GiornoMorto = %s", bio.giornoMorto));
+            System.out.println(String.format("AnnoMorto = %s", bio.annoMorto));
+            System.out.println(String.format("LuogoMorto = %s", bio.luogoMorto));
+            System.out.println(String.format("LuogoMortoLink = %s", bio.luogoMortoLink));
+            System.out.println(String.format("Attività = %s", bio.attivita));
+            System.out.println(String.format("Attività2 = %s", bio.attivita2));
+            System.out.println(String.format("Attività3 = %s", bio.attivita3));
+            System.out.println(String.format("Nazionalità = %s", bio.nazionalita));
+            System.out.println(VUOTA);
+            System.out.println(String.format("NomeCognome (recuperato dal titolo della voce): %s%s%s", A_CAPO, nomeCognome, A_CAPO));
+            System.out.println(String.format("AttivitaNazionalita (attività, attività2, attività3, nazionalità): %s%s%s", A_CAPO, attivitaNazionalita, A_CAPO));
+            System.out.println(String.format("NatoMorto (usando anche luogoNatoLink e luogoMortoLink): %s%s%s", A_CAPO, natoMorto, A_CAPO));
+            System.out.println(String.format("Lista (NomeCognome + AttivitaNazionalita + NatoMorto): %s%s%s", A_CAPO, lista, A_CAPO));
+        }
+        else {
+            System.out.println(String.format("Errore: %s", ottenutoRisultato.getErrorCode()));
+        }
     }
 
     //    @Test

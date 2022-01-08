@@ -136,11 +136,11 @@ public abstract class ATest {
 
     protected static String PATH = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/wizard/";
 
-//    /**
-//     * The App context.
-//     */
-//    @Mock
-//    protected GenericApplicationContext appContext;
+    //    /**
+    //     * The App context.
+    //     */
+    //    @Mock
+    //    protected GenericApplicationContext appContext;
 
     @InjectMocks
     protected StaticContextAccessor staticContextAccessor;
@@ -171,8 +171,8 @@ public abstract class ATest {
 
     protected AIMongoService mongoService;
 
-//    @Mock
-//    protected MongoTemplate mongoTemplate;
+    //    @Mock
+    //    protected MongoTemplate mongoTemplate;
 
     protected MongoOperations mongoOp;
 
@@ -433,8 +433,8 @@ public abstract class ATest {
         Assertions.assertNotNull(staticContextAccessor);
         staticContextAccessor.registerInstance();
 
-//        MockitoAnnotations.initMocks(appContext);
-//        Assertions.assertNotNull(appContext);
+        //        MockitoAnnotations.initMocks(appContext);
+        //        Assertions.assertNotNull(appContext);
 
         MockitoAnnotations.initMocks(textService);
         Assertions.assertNotNull(textService);
@@ -464,12 +464,12 @@ public abstract class ATest {
         Assertions.assertNotNull(mongoServiceImpl);
         mongoService = mongoServiceImpl;
 
-//        MockitoAnnotations.initMocks(mongoTemplate);
-//        Assertions.assertNotNull(mongoTemplate);
-//        //        MockitoAnnotations.initMocks(mongoServiceImpl.mongoOp);
-//        //        Assertions.assertNotNull(mongoServiceImpl.mongoOp);
-//        mongoOp = mongoTemplate;
-//        mongoServiceImpl.mongoOp = mongoTemplate;
+        //        MockitoAnnotations.initMocks(mongoTemplate);
+        //        Assertions.assertNotNull(mongoTemplate);
+        //        //        MockitoAnnotations.initMocks(mongoServiceImpl.mongoOp);
+        //        //        Assertions.assertNotNull(mongoServiceImpl.mongoOp);
+        //        mongoOp = mongoTemplate;
+        //        mongoServiceImpl.mongoOp = mongoTemplate;
 
         MockitoAnnotations.initMocks(webService);
         Assertions.assertNotNull(webService);
@@ -574,7 +574,7 @@ public abstract class ATest {
         classService.annotation = annotationService;
         classService.mongo = mongoService;
 
-//        classService.appContext = appContext;
+        //        classService.appContext = appContext;
 
         preferenzaService.mongo = mongoService;
         utilityService.text = textService;
@@ -664,7 +664,7 @@ public abstract class ATest {
         previstoRisultato = null;
         ottenutoRisultato = null;
         listaStr = new ArrayList<>();
-        wrapFiltri.entityClazz=null;
+        wrapFiltri.entityClazz = null;
         mappaFiltri = null;
         wrapFiltri.setMappaFiltri(null);
     }
@@ -768,13 +768,11 @@ public abstract class ATest {
             return;
         }
         else {
-            System.out.print(String.format("%s: ", keyPropertyValue));
-
             if (entityBean != null) {
-                System.out.println(String.format("creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+                System.out.println(String.format("KeyId=%s: creata una entityBean (vuota) di classe %s%s%s", keyPropertyValue,clazz.getSimpleName(), FORWARD, entityBean));
             }
             else {
-                System.out.println(String.format("non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
+                System.out.println(String.format("KeyId=%s: non è stata creata nessuna entityBean di classe %s", keyPropertyValue, clazz.getSimpleName()));
             }
         }
 
@@ -856,7 +854,7 @@ public abstract class ATest {
         System.out.println(String.format("Error code: %s", result.getErrorCode()));
         System.out.println(String.format("Error message: %s", result.getErrorMessage()));
         System.out.println(String.format("Valid message: %s", result.getValidMessage()));
-        System.out.println(String.format("Numeric value: %s", textService.format(result.getValue())));
+        System.out.println(String.format("Numeric value: %s", textService.format(result.getIntValue())));
         System.out.println(String.format("List value: %s", lista));
         System.out.println(String.format("Map value: %s", result.getMappa()));
         System.out.println(String.format("Risultato ottenuto in %s", dateService.deltaText(inizio)));
@@ -1011,7 +1009,7 @@ public abstract class ATest {
             }
 
         } catch (AlgosException unErrore) {
-            System.out.println(String.format("%s %s %s",unErrore.getMessage(),getClass(),"printMappa"));
+            System.out.println(String.format("%s %s %s", unErrore.getMessage(), getClass(), "printMappa"));
             try {
                 mappa = reflectionService.getMappaEntity(entityBean);
             } catch (AlgosException unErrore2) {

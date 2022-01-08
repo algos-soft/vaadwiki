@@ -433,6 +433,13 @@ public abstract class AService extends AbstractService implements AIService {
     public AEntity findById(final String keyID) throws AlgosException {
         AEntity entityBean = null;
 
+        if (keyID == null) {
+            throw AlgosException.stack("La keyID è nulla", getClass(), "findById");
+        }
+        if (text.isEmpty(keyID)) {
+            throw AlgosException.stack("La keyID è vuota", getClass(), "findById");
+        }
+
         entityBean = mongo.find(entityClazz, keyID);
         //        try {
         //            entityBean = mongo.findById(entityClazz, keyID);
@@ -462,12 +469,15 @@ public abstract class AService extends AbstractService implements AIService {
     public AEntity findByKey(final Serializable keyPropertyValue) throws AlgosException {
         String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
 
-        if (text.isValid(keyPropertyName)) {
-            return findByProperty(keyPropertyName, keyPropertyValue);
+        if (keyPropertyValue == null) {
+            throw AlgosException.stack("La keyPropertyValue è nulla", getClass(), "findByKey");
         }
-        else {
-            return null;
+
+        if (text.isEmpty((String) keyPropertyValue)) {
+            throw AlgosException.stack("La keyPropertyValue è vuota", getClass(), "findByKey");
         }
+
+        return findByProperty(keyPropertyName, keyPropertyValue);
     }
 
 

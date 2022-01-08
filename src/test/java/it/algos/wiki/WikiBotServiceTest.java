@@ -30,8 +30,6 @@ import java.util.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WikiBotServiceTest extends WTest {
 
-    private static int max = 100;
-
 
     /**
      * Classe principale di riferimento <br>
@@ -216,8 +214,6 @@ public class WikiBotServiceTest extends WTest {
         System.out.println(VUOTA);
         int size;
         String wikiTitle;
-        String wikiText;
-        String wikiBio;
 
         ottenutoArray = service.getTitleCat(wikiSimpleCategoryTitle);
         size = ottenutoArray != null ? ottenutoArray.size() : 0;
@@ -236,6 +232,7 @@ public class WikiBotServiceTest extends WTest {
         ottenutoRisultato = service.isEsisteResult(wikiTitle);
         assertNotNull(ottenutoRisultato);
         System.out.println(String.format("WikiCat: %s", wikiSimpleCategoryTitle));
+        System.out.println(String.format("PageId: %s", ottenutoRisultato.getLongValue()));
         System.out.println(String.format("WikiPage: %s", wikiTitle));
         System.out.println(String.format("WikiText: %s", getMax(ottenutoRisultato.getWikiText())));
         System.out.println(String.format("WikiBio: %s", getMax(ottenutoRisultato.getWikiBio())));
@@ -509,7 +506,9 @@ public class WikiBotServiceTest extends WTest {
 
         System.out.println(VUOTA);
         System.out.println(String.format("Result di: %s", message));
+        System.out.println(VUOTA);
         System.out.println(String.format("Risultato: %s", result.isValido() ? "valido" : "errato"));
+        System.out.println(String.format("PageId: %s", result.getLongValue()));
         System.out.println(String.format("WikiTitle: %s", result.getWikiTitle()));
         System.out.println(String.format("Url: %s", result.getUrlRequest()));
         System.out.println(String.format("ErrorCode: %s", result.getErrorCode()));
@@ -523,14 +522,14 @@ public class WikiBotServiceTest extends WTest {
 
     private void printResult(final AIResult result) {
         printResultBase(result);
-        System.out.println(String.format("Value: %d", result.getValue()));
+        System.out.println(String.format("Value: %d", result.getIntValue()));
         System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
     }
 
 
     private void printResult(final AIResult result, final int numPagine, final boolean risultatoEsatto) {
         printResultBase(result);
-        String message = getEsatto(result.isValido(), result.getWebTitle(), numPagine, result.getValue(), risultatoEsatto);
+        String message = getEsatto(result.isValido(), result.getWebTitle(), numPagine, result.getIntValue(), risultatoEsatto);
         System.out.println(String.format("Value: %s", message));
         System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
     }
@@ -565,14 +564,6 @@ public class WikiBotServiceTest extends WTest {
     }
 
 
-    private String getMax(String message) {
-        message = message.length() < max ? message : message.substring(0, Math.min(max, message.length()));
-        if (message.contains(A_CAPO)) {
-            message = message.replaceAll(A_CAPO, SPAZIO);
-        }
-
-        return message;
-    }
 
 
     private void printWrapCat(List<WrapCat> wrapLista) {

@@ -1388,6 +1388,7 @@ public class WikiBotService extends WService {
         JSONObject objectJson;
         String wikiText;
         String wikiBio;
+        long pageId = 0;
 
         if (wikiSimplePageCategoryTitle == null) {
             resultWiki = AResult.errato(NULL_WIKI_TITLE);
@@ -1419,9 +1420,11 @@ public class WikiBotService extends WService {
                 }
                 else {
                     JSONObject parse = (JSONObject) objectJson.get("parse");
+                    pageId = (Long) parse.get("pageid");
+                    resultWeb.setLongValue(pageId);
                     wikiText = (String) parse.get("wikitext");
                     resultWeb.setWikiText(wikiText);
-                    wikiBio= wikiApi.estraeTmpl(wikiText,"Bio");
+                    wikiBio = wikiApi.estraeTmpl(wikiText, "Bio");
                     resultWeb.setWikiBio(wikiBio);
                     return resultWeb;
                 }
@@ -1566,7 +1569,7 @@ public class WikiBotService extends WService {
             jsonPagine = jSonService.getJsonPagine(result.getResponse());
             totalePagine = jsonPagine != null ? jsonPagine.size() : 0;
             valido = totalePagine > 0;
-            result.setValue(totalePagine);
+            result.setIntValue(totalePagine);
             result.setValido(valido);
             result.setMessage(valido ? VUOTA : String.format("%s", NO_PAGES_CAT, catTitle));
         }
@@ -1775,7 +1778,7 @@ public class WikiBotService extends WService {
         JSONObject categoryInfo = (JSONObject) jsonPageZero.get(CATEGORY_INFO);
         if (categoryInfo != null && categoryInfo.get(CATEGORY_PAGES) != null) {
             totale = ((Long) categoryInfo.get(CATEGORY_PAGES)).intValue();
-            result.setValue(totale);
+            result.setIntValue(totale);
         }
 
         return result;
@@ -1792,8 +1795,8 @@ public class WikiBotService extends WService {
         AIResult result = getInfoCategoria(categoryTitle);
 
         if (result != null && result.isValido()) {
-            logger.info(AETypeLog.bio, String.format("La categoria [%s] esiste e ci sono %s voci", categoryTitle, text.format(result.getValue())));
-            return result.getValue();
+            logger.info(AETypeLog.bio, String.format("La categoria [%s] esiste e ci sono %s voci", categoryTitle, text.format(result.getIntValue())));
+            return result.getIntValue();
         }
         else {
             logger.info(AETypeLog.bio, String.format("La categoria [%s] non esiste oppure è vuota", categoryTitle));

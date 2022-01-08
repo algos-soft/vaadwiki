@@ -234,7 +234,7 @@ public class ElaboraServiceTest extends WTest {
                 ANNO_11, ANNO_12, ANNO_13, ANNO_14, ANNO_15, ANNO_16, ANNO_17, ANNO_18, ANNO_19, ANNO_20};
     }
 
-    public static String[] ATTIVITA() {
+    public static String[] ATTIVITA_ELABORA() {
         return new String[]{ATT_1, ATT_2, ATT_3, ATT_4, ATT_5, ATT_6, ATT_7, ATT_8, ATT_9, ATT_10, ATT_11, ATT_12, ATT_13};
     }
 
@@ -417,7 +417,7 @@ public class ElaboraServiceTest extends WTest {
     }
 
     @ParameterizedTest
-    @MethodSource(value = "ATTIVITA")
+    @MethodSource(value = "ATTIVITA_ELABORA")
     @Order(10)
     @DisplayName("10 - fixAttivita (come stringa)")
     void testWithStringParameterAttivita(String attivita) {
@@ -430,7 +430,7 @@ public class ElaboraServiceTest extends WTest {
 
 
     @ParameterizedTest
-    @MethodSource(value = "ATTIVITA")
+    @MethodSource(value = "ATTIVITA_ELABORA")
     @Order(11)
     @DisplayName("11 - fixAttivitaLink (come Attivita esistente)")
     void testWithStringParameterAttivitaLink(String attivita) {
@@ -448,7 +448,7 @@ public class ElaboraServiceTest extends WTest {
 
 
     @ParameterizedTest
-    @MethodSource(value = "ATTIVITA")
+    @MethodSource(value = "ATTIVITA_ELABORA")
     @Order(12)
     @DisplayName("12 - fixAttivitaValida (come stringa)")
     void testWithStringParameterAttivitaValida(String attivita) {

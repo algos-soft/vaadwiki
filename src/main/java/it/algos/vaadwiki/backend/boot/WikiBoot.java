@@ -95,6 +95,8 @@ public class WikiBoot extends FlowBoot {
         FlowVar.usaGeografiaPackages = false;
 
         WikiVar.categoriaBio = "Nati nel 1948";
+        WikiVar.simboloNato = "x";
+        WikiVar.simboloMorto = "z";
     }
 
 

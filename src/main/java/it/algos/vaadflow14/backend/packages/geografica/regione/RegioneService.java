@@ -261,7 +261,7 @@ public class RegioneService extends AService {
                     logger.log(AETypeLog.checkData, "Non sono riuscito a creare le regioni di " + stato.stato);
                 }
                 else {
-                    numRec = numRec + result.getValue();
+                    numRec = numRec + result.getIntValue();
                 }
             }
             return AResult.valido("Sono state create " + numRec + " regioni di " + listaStati.size() + " stati " + AETypeReset.wikipedia.get());

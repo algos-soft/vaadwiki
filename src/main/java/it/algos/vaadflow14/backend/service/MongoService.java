@@ -760,7 +760,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return listaEntities;
     }
 
-    private List<AEntity> fetchGson(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int skip, final int limit) throws AlgosException {
+    public List<AEntity> fetchGson(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int skip, final int limit) throws AlgosException {
         List<AEntity> listaGson;
         MongoCollection<Document> collection;
         String message;
@@ -955,11 +955,17 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 }
                 else {
                     doc = findDocByProperty(collectionName, propertyName, propertyValue);
+                    if (doc == null) {
+                        throw AlgosException.stack(String.format("Non c'è una entity con [%s=%s] nella classe %s", propertyName, propertyValue, entityClazz.getSimpleName()), getClass(), "find");
+                    }
                     entityBean = creaByDoc(entityClazz, doc);
                 }
                 break;
             case gson:
                 doc = findDocByProperty(collectionName, propertyName, propertyValue);
+                if (doc == null) {
+                    throw AlgosException.stack(String.format("Non c'è una entity con [%s=%s] nella classe %s", propertyName, propertyValue, entityClazz.getSimpleName()), getClass(), "find");
+                }
                 entityBean = creaByDoc(entityClazz, doc);
                 break;
             case jackson:

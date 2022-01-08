@@ -70,7 +70,7 @@ public class QueryTimestamp extends AQuery {
             result = request(result, strisciaIds);
         }
 
-        miniWrapRecuperati = result.getValue();
+        miniWrapRecuperati = result.getIntValue();
         result.setMessage(String.format("Recuperati %s MiniWrap (pageid e lastModifica) da una lista di %s pageIds", text.format(miniWrapRecuperati), totPageIds));
 
         return result;
@@ -160,7 +160,7 @@ public class QueryTimestamp extends AQuery {
                     listaOld = listaNew;
                 }
                 result.setLista(listaOld);
-                result.setValue(listaOld.size());
+                result.setIntValue(listaOld.size());
                 return result;
             }
             else {

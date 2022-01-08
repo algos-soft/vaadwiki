@@ -28,12 +28,14 @@ import java.time.*;
 @AIScript(sovraScrivibile = false)
 public enum AEWikiPreferenza implements AIPreferenza {
 
-    lastDownloadAttivita(PREF_DATA_LAST_DOWLOAD_ATTIVITA, "Ultimo download di Attività", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Attività dal Modulo:Bio/Plurale attività."),
-    lastDownloadNazionalita(PREF_DATA_LAST_DOWLOAD_NAZIONALITA, "Ultimo download di Nazionalità", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Nazionalità dal Modulo:Bio/Plurale nazionalità."),
-    lastDownloadProfessione(PREF_DATA_LAST_DOWLOAD_PROFESSIONE, "Ultimo download di Professione", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Professione dal Modulo:Bio/Link attività."),
-    lastDownloadGenere(PREF_DATA_LAST_DOWLOAD_GENERE, "Ultimo download di Genere", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di Genere dal Modulo:Bio/Plurale attività genere."),
-    lastDownloadNomeDoppio(PREF_DATA_LAST_DOWLOAD_NOME_DOPPIO, "Ultimo download dei Nomi Doppi", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di nomi doppi dal Progetto:Antroponimi/Nomi doppi."),
-    lastDownloadBiografie(PREF_DATA_LAST_DOWLOAD_BIOGRAFIE, "Ultimo download delle Biografie", AETypePref.localdatetime, ROOT_DATA_TIME, false, "Data dell'ultimo download di biografie della Categoria:BioBot."),
+    lastDownloadAttivita(PREF_DATA_LAST_DOWLOAD_ATTIVITA, "Ultimo download di Attività", AETypePref.localdatetime, ROOT_DATA_TIME, "Data dell'ultimo download di Attività dal Modulo:Bio/Plurale attività."),
+    lastDownloadNazionalita(PREF_DATA_LAST_DOWLOAD_NAZIONALITA, "Ultimo download di Nazionalità", AETypePref.localdatetime, ROOT_DATA_TIME, "Data dell'ultimo download di Nazionalità dal Modulo:Bio/Plurale nazionalità."),
+    lastDownloadProfessione(PREF_DATA_LAST_DOWLOAD_PROFESSIONE, "Ultimo download di Professione", AETypePref.localdatetime, ROOT_DATA_TIME, "Data dell'ultimo download di Professione dal Modulo:Bio/Link attività."),
+    lastDownloadGenere(PREF_DATA_LAST_DOWLOAD_GENERE, "Ultimo download di Genere", AETypePref.localdatetime, ROOT_DATA_TIME, "Data dell'ultimo download di Genere dal Modulo:Bio/Plurale attività genere."),
+    lastDownloadNomeDoppio(PREF_DATA_LAST_DOWLOAD_NOME_DOPPIO, "Ultimo download dei Nomi Doppi", AETypePref.localdatetime, ROOT_DATA_TIME, "Data dell'ultimo download di nomi doppi dal Progetto:Antroponimi/Nomi doppi."),
+    lastDownloadBiografie(PREF_DATA_LAST_DOWLOAD_BIOGRAFIE, "Ultimo download delle Biografie", AETypePref.localdatetime, ROOT_DATA_TIME, "Data dell'ultimo download di biografie della Categoria:BioBot."),
+    simboloNato(PREF_SIMBOLO_NATO, "Simbolo della nascita", AETypePref.string, "n.", true),
+    simboloMorto(PREF_SIMBOLO_MORTO, "Simbolo della morte", AETypePref.string, "†", true),
 
     ;
 
@@ -78,24 +80,29 @@ public enum AEWikiPreferenza implements AIPreferenza {
     private EnumerationService enumService;
 
 
-    AEWikiPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany) {
-        this(keyCode, descrizione, type, defaultValue, usaCompany, false, false, VUOTA);
-    }// fine del costruttore
-
-    AEWikiPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, String note) {
-        this(keyCode, descrizione, type, defaultValue, usaCompany, false, false, note);
+    AEWikiPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue) {
+        this(keyCode, descrizione, type, defaultValue, false, VUOTA);
     }// fine del costruttore
 
 
-    AEWikiPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
+    AEWikiPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean needRiavvio) {
+        this(keyCode, descrizione, type, defaultValue, needRiavvio, VUOTA);
+    }// fine del costruttore
+
+    AEWikiPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, String note) {
+        this(keyCode, descrizione, type, defaultValue, false, note);
+    }// fine del costruttore
+
+
+    AEWikiPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean needRiavvio, String note) {
         this.keyCode = keyCode;
         this.descrizione = descrizione;
         this.type = type;
         this.setNote(note);
-        this.usaCompany = usaCompany;
+        this.usaCompany = false;
         this.vaadFlow = false;
         this.needRiavvio = needRiavvio;
-        this.visibileAdmin = visibileAdmin;
+        this.visibileAdmin = true;
         this.setDefaultValue(defaultValue);
     }// fine del costruttore
 
@@ -106,10 +113,6 @@ public enum AEWikiPreferenza implements AIPreferenza {
 
     public void setLogger(ALogService logger) {
         this.logger = logger;
-    }
-
-    public void setDate(DateService date) {
-        this.date = date;
     }
 
     public void setEnumService(EnumerationService enumService) {
@@ -188,7 +191,7 @@ public enum AEWikiPreferenza implements AIPreferenza {
         Preferenza pref = preferenzaService.findByKey(this.keyCode);
         pref.setValue(pref.type.objectToBytes(value));
         try {
-            preferenzaService.save(pref,AEOperation.newEdit);
+            preferenzaService.save(pref, AEOperation.newEdit);
         } catch (AlgosException unErrore) {
         }
     }
@@ -280,6 +283,9 @@ public enum AEWikiPreferenza implements AIPreferenza {
         }
     }
 
+    public void setDate(DateService date) {
+        this.date = date;
+    }
 
     public String getNote() {
         return note;

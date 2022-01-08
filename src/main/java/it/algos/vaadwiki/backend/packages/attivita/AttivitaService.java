@@ -148,7 +148,11 @@ public class AttivitaService extends WikiService {
      */
     @Override
     public Attivita findByKey(final Serializable keyValue) throws AlgosException {
-        return (Attivita) super.findByKey(keyValue);
+        try {
+            return (Attivita) super.findByKey(((String)keyValue).toLowerCase());
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "findByKey");
+        }
     }
 
     /**

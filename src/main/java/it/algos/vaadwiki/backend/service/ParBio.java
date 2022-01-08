@@ -78,14 +78,6 @@ public enum ParBio {
             bio.sesso = value.equals("") ? null : elabora.fixSesso(value);
         }
 
-        //        public String fixValoreGrezzo(String valoreGrezzo) {
-        //            return libBio.fixSessoValido(valoreGrezzo, false);
-        //        }
-
-        //        public String fixParametro(String valoreGrezzo) {
-        //            return libBio.fixSessoValido(valoreGrezzo, true);
-        //        }
-
         @Override
         public String getValue(Bio bio) {
             return bio.sesso != null ? bio.sesso : VUOTA;
@@ -98,14 +90,6 @@ public enum ParBio {
             bio.luogoNato = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
         }
 
-        //                public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
-        //                    return elabora.estraeValoreInizialeGrezzoPuntoAmmesso(valorePropertyTmplBioServer);
-        //                }
-        //
-        //                public String fixValoreGrezzo(String valoreGrezzo) {
-        //                    return elabora.fixMaiuscola(valoreGrezzo);
-        //                }
-
         @Override
         public String getValue(Bio bio) {
             return bio != null ? bio.luogoNato : VUOTA;
@@ -113,15 +97,15 @@ public enum ParBio {
     },// end of single enumeration
 
     luogoNascitaLink("LuogoNascitaLink", "luogoNatoLink", true, false, true, true, false) {
-        //        @Override
-        //        public void setValue(Bio bio, String value, LibBio libBio) {
-        //            bio.luogoNatoLink = value.equals("") ? null : libBio.fixLuogoValido(value);
-        //        }
+        @Override
+        public void setValue(Bio bio, String value) throws AlgosException {
+            bio.luogoNatoLink = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
+        }
 
-        //        @Override
-        //        public String getValue(Bio bio) {
-        //            return bio.luogoNatoLink != null ? bio.luogoNatoLink : "";
-        //        }
+        @Override
+        public String getValue(Bio bio) {
+            return bio != null ? bio.luogoNatoLink : VUOTA;
+        }
     },// end of single enumeration
 
     luogoNascitaAlt("LuogoNascitaAlt", "luogoNatoAlt", false, false, true, false, false) {
@@ -132,18 +116,6 @@ public enum ParBio {
         public void setValue(Bio bio, String value) throws Exception {
             bio.giornoNato = value.equals(VUOTA) ? null : elabora.fixGiornoValido(value);
         }
-
-        //        public String estraeValoreInizialeGrezzo(String testoOriginario) {
-        //            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-        //        }
-        //
-        //        public String fixValoreGrezzo(String valoreGrezzo) {
-        //            return elabora.fixGiornoValido(valoreGrezzo);
-        //        }
-        //
-        //        public String fixParametro(String valoreGrezzo) {
-        //            return elabora.fixGiornoValido(valoreGrezzo);
-        //        }
 
         @Override
         public String getValue(Bio bio) {
@@ -156,18 +128,6 @@ public enum ParBio {
         public void setValue(Bio bio, String value) throws AlgosException {
             bio.annoNato = value.equals(VUOTA) ? null : elabora.fixAnno(value);
         }
-
-//        public String estraeValoreInizialeGrezzo(String testoOriginario) {
-//            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-//        }
-//
-//        public String fixValoreGrezzo(String valoreGrezzo) throws AlgosException {
-//            return elabora.fixAnnoValido(valoreGrezzo);
-//        }
-//
-//        public String fixParametro(String valoreGrezzo) throws AlgosException {
-//            return elabora.fixAnnoValido(valoreGrezzo);
-//        }
 
         @Override
         public String getValue(Bio bio) {
@@ -184,19 +144,6 @@ public enum ParBio {
             bio.luogoMorto = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
         }
 
-        //                public String estraeValoreInizialeGrezzo(String valorePropertyTmplBioServer) {
-        //                    return libBio.estraeValoreInizialeGrezzoPuntoAmmesso(valorePropertyTmplBioServer);
-        //                }
-        //
-        //                public String fixValoreGrezzo(String valoreGrezzo) {
-        //                    return libBio.fixMaiuscola(valoreGrezzo);
-        //                }
-        //
-        //                @Override
-        //                public String fix(String value, LibBio libBio) {
-        //                    return libBio.fixLuogoValido(value);
-        //                }
-
         @Override
         public String getValue(Bio bio) {
             return bio != null ? bio.luogoMorto : VUOTA;
@@ -204,24 +151,15 @@ public enum ParBio {
     },// end of single enumeration
 
     luogoMorteLink("LuogoMorteLink", "luogoMortoLink", true, false, true, true, false) {
-        //                @Override
-        //                public void setValue(Bio bio, String value, LibBio libBio) {
-        //                    bio.luogoNatoLink = value.equals("") ? null : libBio.fixLuogoValido(value);
-        //                }
-        //
-        //                public String fixValore(String valoreGrezzo) {
-        //                    return valoreGrezzo;
-        //                }
-        //
-        //                @Override
-        //                public String fix(String value, LibBio libBio) {
-        //                    return libBio.fixLuogoValido(value);
-        //                }
-        //
-        //                @Override
-        //                public String getValue(Bio bio) {
-        //                    return bio.luogoMortoLink != null ? bio.luogoMortoLink : "";
-        //                }
+        @Override
+        public void setValue(Bio bio, String value) throws AlgosException {
+            bio.luogoMortoLink = value.equals(VUOTA) ? null : elabora.fixLuogoValido(value);
+        }
+
+        @Override
+        public String getValue(Bio bio) {
+            return bio != null ? bio.luogoMortoLink : VUOTA;
+        }
     },// end of single enumeration
 
     luogoMorteAlt("LuogoMorteAlt", "luogoMortoAlt", false, false, true, false, false) {
@@ -232,18 +170,6 @@ public enum ParBio {
         public void setValue(Bio bio, String value) throws AlgosException {
             bio.giornoMorto = value.equals(VUOTA) ? null : elabora.fixGiorno(value);
         }
-
-        //        public String estraeValoreInizialeGrezzo(String testoOriginario) {
-        //            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-        //        }
-        //
-        //        public String fixValoreGrezzo(String valoreGrezzo) {
-        //            return elabora.fixGiornoValido(valoreGrezzo);
-        //        }
-        //
-        //        public String fixParametro(String valoreGrezzo) {
-        //            return elabora.fixGiornoValido(valoreGrezzo);
-        //        }
 
         @Override
         public String getValue(Bio bio) {
@@ -258,18 +184,6 @@ public enum ParBio {
                 bio.annoMorto = elabora.fixAnno(value);
             }
         }
-
-        //        public String estraeValoreInizialeGrezzo(String testoOriginario) {
-        //            return elabora.troncaParteFinaleGiornoAnno(testoOriginario);
-        //        }
-        //
-        //        public String fixValoreGrezzo(String valoreGrezzo) throws AlgosException {
-        //            return elabora.fixAnnoValido(valoreGrezzo);
-        //        }
-        //
-        //        public String fixParametro(String valoreGrezzo) throws AlgosException {
-        //            return elabora.fixAnnoValido(valoreGrezzo);
-        //        }
 
         @Override
         public String getValue(Bio bio) {

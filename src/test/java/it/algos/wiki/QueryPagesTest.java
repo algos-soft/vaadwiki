@@ -127,7 +127,7 @@ public class QueryPagesTest extends WTest {
         ottenutoRisultato = istanza.urlRequest(sorgenteArrayLong);
         assertTrue(ottenutoRisultato.isValido());
         assertEquals(previsto, ottenutoRisultato.getCodeMessage());
-        assertEquals(previstoIntero, ottenutoRisultato.getValue());
+        assertEquals(previstoIntero, ottenutoRisultato.getIntValue());
         printRisultato(ottenutoRisultato, queryType);
     }
 

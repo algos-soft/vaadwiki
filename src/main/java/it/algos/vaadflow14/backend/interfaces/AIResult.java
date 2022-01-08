@@ -48,9 +48,13 @@ public interface AIResult {
 
     void setValidMessage(String validMessage);
 
-    int getValue();
+    int getIntValue();
 
-    void setValue(int value);
+    void setIntValue(int intValue);
+
+    long getLongValue();
+
+    void setLongValue(long longValue);
 
     void print(final ALogService logger, final AETypeLog typeLog);
 

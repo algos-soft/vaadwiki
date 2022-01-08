@@ -66,7 +66,7 @@ public class QueryPages extends AQuery {
         }
 
         result.setMessage("Recupera WrapBio");
-        valide = result.getValue();
+        valide = result.getIntValue();
         errate = totPageIds - valide;
         result.setErrorMessage(String.format("%s pageIds non erano voci biografiche valide", errate));
         result.setErrorCode(errate+"");
@@ -156,7 +156,7 @@ public class QueryPages extends AQuery {
                         }
                     }
                 }
-                result.setValue(result.getValue() + pagesNonValide);
+                result.setIntValue(result.getIntValue() + pagesNonValide);
                 result.setCodeMessage(JSON_SUCCESS);
                 listaOld = (List<WrapBio>) result.getLista();
                 if (listaOld != null) {
@@ -166,7 +166,7 @@ public class QueryPages extends AQuery {
                     listaOld = listaNew;
                 }
                 result.setLista(listaOld);
-                result.setValue(listaOld.size());
+                result.setIntValue(listaOld.size());
                 return result;
             }
             else {

@@ -55,19 +55,23 @@ public abstract class WTest extends ATest {
 
     protected static final String PAGINA_UNO = "Roman Protasevič";
 
-    protected static final String PAGINA_DUE = "Gaetano Anzalone";
+    protected static final String PAGINA_DUE = "Aldelmo di Malmesbury";
 
-    protected static final String PAGINA_TRE = "Bernart Arnaut d'Armagnac";
+    protected static final String PAGINA_TRE = "Aelfric il grammatico";
 
-    protected static final String PAGINA_QUATTRO = "Francesco Maria Pignatelli";
+    protected static final String PAGINA_QUATTRO = "Elfleda di Whitby";
 
-    protected static final String PAGINA_CINQUE = "Colin Campbell (generale)";
+    protected static final String PAGINA_CINQUE = "Werburga";
 
-    protected static final String PAGINA_SEI = "Edwin Hall";
+    protected static final String PAGINA_SEI = "Bernart Arnaut d'Armagnac";
 
-    protected static final String PAGINA_SETTE = "Louis Winslow Austin";
+    protected static final String PAGINA_SETTE = "Gaetano Anzalone";
 
-    protected static final String PAGINA_OTTO = "Sergio Ferrero";
+    protected static final String PAGINA_OTTO = "Colin Campbell (generale)";
+
+    protected static final String PAGINA_NOVE = "Louis Winslow Austin";
+
+    protected static final String PAGINA_DIECI = "Maximilian Stadler";
 
     protected static final String PAGINA_DISAMBIGUA = "Rossi";
 
@@ -95,7 +99,6 @@ public abstract class WTest extends ATest {
             "|Immagine = 2018-us-nationalbookfestival-annie-proulx.jpg\n" +
             "|Didascalia = Annie Proulx al National Book Festival 2018\n" +
             "}}";
-
 
     protected static final String TMPL_DUE = "{{Bio\n" +
             "|Nome = Alain Fabien Maurice Marcel\n" +
@@ -142,6 +145,8 @@ public abstract class WTest extends ATest {
             "|Immagine = 10-08ViterbiBIG.jpg\n" +
             "|Didascalia = Andrew Viterbi nel [[2005]].\n" +
             "}}";
+
+    private static int max = 175;
 
     protected String didascalia;
 
@@ -216,6 +221,7 @@ public abstract class WTest extends ATest {
     @InjectMocks
     protected QueryBio queryBio;
 
+
     //--titolo
     //--pagina valida
     protected static Stream<Arguments> PAGINE() {
@@ -229,7 +235,9 @@ public abstract class WTest extends ATest {
                 Arguments.of(PAGINA_CINQUE, true),
                 Arguments.of(PAGINA_SEI, true),
                 Arguments.of(PAGINA_SETTE, true),
-                Arguments.of(PAGINA_OTTO, true)
+                Arguments.of(PAGINA_OTTO, true),
+                Arguments.of(PAGINA_NOVE, true),
+                Arguments.of(PAGINA_DIECI, true)
         );
     }
 
@@ -287,6 +295,23 @@ public abstract class WTest extends ATest {
                 Arguments.of(CAT_1435, false, AETypeUser.bot, 0)
         );
     }
+
+
+    //--nome attivita
+    //--esiste nel mongoDB
+    protected static Stream<Arguments> ATTIVITA() {
+        return Stream.of(
+                Arguments.of(null, false),
+                Arguments.of(VUOTA, false),
+                Arguments.of("abate", true),
+                Arguments.of("abati", false),
+                Arguments.of("badessa", true),
+                Arguments.of("Abate", true),
+                Arguments.of("accademico", true),
+                Arguments.of("accademica", true)
+        );
+    }
+
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -373,6 +398,7 @@ public abstract class WTest extends ATest {
         wikiBotService.wikiApi = wikiApiService;
         wikiBotService.date = dateService;
         wikiBotService.login = botLogin;
+        wikiBotService.bioService = bioService;
 
         elaboraService.text = textService;
         elaboraService.giornoService = giornoService;
@@ -591,7 +617,7 @@ public abstract class WTest extends ATest {
         System.out.println(String.format("Error code: %s", result.getErrorCode()));
         System.out.println(String.format("Error message: %s", result.getErrorMessage()));
         System.out.println(String.format("Valid message: %s", result.getValidMessage()));
-        System.out.println(String.format("Numeric value: %s", textService.format(result.getValue())));
+        System.out.println(String.format("Numeric value: %s", textService.format(result.getIntValue())));
         if (miniWrap || wrapBio) {
             if (miniWrap) {
                 System.out.println(String.format("List value: %s ...", listaPagesIds));
@@ -651,6 +677,15 @@ public abstract class WTest extends ATest {
             System.out.print(VIRGOLA_SPAZIO);
         }
         System.out.println(VUOTA);
+    }
+
+    protected String getMax(String message) {
+        message = message.length() < max ? message : message.substring(0, Math.min(max, message.length()));
+        if (message.contains(A_CAPO)) {
+            message = message.replaceAll(A_CAPO, SPAZIO);
+        }
+
+        return message;
     }
 
 }
