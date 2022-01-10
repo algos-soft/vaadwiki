@@ -169,6 +169,7 @@ public abstract class WTest extends ATest {
     protected Bio bioTre;
 
     protected String queryType = VUOTA;
+    protected Attivita attivita = null;
 
     @InjectMocks
     protected GiornoService giornoService;
@@ -297,9 +298,9 @@ public abstract class WTest extends ATest {
     }
 
 
-    //--nome attivita
+    //--nome attivita singolare
     //--esiste nel mongoDB
-    protected static Stream<Arguments> ATTIVITA() {
+    protected static Stream<Arguments> ATTIVITA_SINGOLARE() {
         return Stream.of(
                 Arguments.of(null, false),
                 Arguments.of(VUOTA, false),
@@ -308,7 +309,28 @@ public abstract class WTest extends ATest {
                 Arguments.of("badessa", true),
                 Arguments.of("Abate", true),
                 Arguments.of("accademico", true),
-                Arguments.of("accademica", true)
+                Arguments.of("accademica", true),
+                Arguments.of("agronomo", true),
+                Arguments.of("agronomi", false)
+        );
+    }
+
+    //--nome attivita plurale
+    //--esiste nel mongoDB
+    protected static Stream<Arguments> ATTIVITA_PLURALE() {
+        return Stream.of(
+                Arguments.of(null, false),
+                Arguments.of(VUOTA, false),
+                Arguments.of("abati e badesse", true),
+                Arguments.of("Abati e Badesse", false),
+                Arguments.of("Abati e badesse", true),
+                Arguments.of("badessa", false),
+                Arguments.of("abate", false),
+                Arguments.of("accademici", true),
+                Arguments.of("Accademici", true),
+                Arguments.of("AccaDemici", false),
+                Arguments.of("aforisti", true),
+                Arguments.of("agronomi", true)
         );
     }
 

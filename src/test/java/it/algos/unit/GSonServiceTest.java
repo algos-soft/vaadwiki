@@ -311,6 +311,7 @@ public class GsonServiceTest extends MongoTest {
             entityBean = service.creaId(clazz, keyPropertyValue);
         } catch (AlgosException unErrore) {
             printError(unErrore);
+            return;
         }
         printEntityBeanFromClazz((String) keyPropertyValue, clazz, entityBean);
     }

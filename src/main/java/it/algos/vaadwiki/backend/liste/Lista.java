@@ -1,6 +1,8 @@
 package it.algos.vaadwiki.backend.liste;
 
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
+import org.springframework.beans.factory.annotation.*;
 
 import javax.annotation.*;
 import java.util.*;
@@ -24,6 +26,33 @@ import java.util.*;
 public abstract class Lista {
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public TextService text;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ArrayService array;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected ALogService logger;
+
+    //--property
+    protected List<Bio> listaBio;
+
+    /**
      * Mappa delle didascalie che hanno una valore valido per la pagina specifica <br>
      * La mappa è composta da una chiaveUno (ordinata) che corrisponde al titolo del paragrafo <br>
      * La visualizzazione dei paragrafi può anche essere esclusa, ma questi sono comunque presenti <br>
@@ -35,9 +64,8 @@ public abstract class Lista {
      * La chiaveDue è una lettera alfabetica <br>
      * La chiaveTre è una doppia lettera alfabetica <br>
      */
-    public Map<String, List> mappa;
+    protected Map<String, List> mappa;
 
-    protected List<Bio> listaBiografie;
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -53,47 +81,59 @@ public abstract class Lista {
     @PostConstruct
     public void inizia() {
         this.fixPreferenze();
-        this.creaListaBiografie();
+        this.regolazioniIniziali();
+        this.fixListaBio();
+        this.fixListaDidascalie();
+        this.fixMappaDidascalie();
     }
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
-     * Può essere sovrascritto, per aggiungere informazioni <br>
-     * Invocare PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
+    }
+
+
+    /**
+     * Regolazioni iniziali per gestire i due costruttori:attività plurali o attività singola <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void regolazioniIniziali() {
     }
 
     /**
      * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void creaListaBiografie() {
-        this.listaBiografie = getListaBio();
-    }
-
-
-    /**
-     * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
      * @return lista delle istanze di Bio che usano questo istanza nella property appropriata <br>
      */
-    protected List<Bio> getListaBio() {
-        return new ArrayList<>();
+    public void fixListaBio() {
+        listaBio = new ArrayList<>();
     }
+
 
     /**
      * Costruisce una lista di didascalie che hanno una valore valido per la pagina specifica <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected void creaMappaDidascalie() {
+    protected void fixListaDidascalie() {
+    }
+
+    /**
+     * Costruisce una mappa di didascalie che hanno una valore valido per la pagina specifica <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixMappaDidascalie() {
         //--Crea la lista grezza delle voci biografiche
         this.mappa = new LinkedHashMap<>();
+    }
 
-        //--Crea una lista di didascalie specifiche
-        //        listaDidascalie = listaService.creaListaDidascalie(listaGrezzaBio, typeDidascalia);
-
+    public List<Bio> getListaBio() {
+        return listaBio;
+    }
+    public Map<String, List> getMappa() {
+        return mappa;
     }
 
 }

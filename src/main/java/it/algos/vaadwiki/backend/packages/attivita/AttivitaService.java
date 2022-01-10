@@ -55,6 +55,8 @@ public class AttivitaService extends WikiService {
 
     public static String EX2 = "ex-";
 
+    public static String PLURALE = "plurale";
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -149,10 +151,23 @@ public class AttivitaService extends WikiService {
     @Override
     public Attivita findByKey(final Serializable keyValue) throws AlgosException {
         try {
-            return (Attivita) super.findByKey(((String)keyValue).toLowerCase());
+            return (Attivita) super.findByKey(((String) keyValue).toLowerCase());
         } catch (Exception unErrore) {
             throw AlgosException.stack(unErrore, this.getClass(), "findByKey");
         }
+    }
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param attivitaSingolare must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    public Attivita findSingolare(final String attivitaSingolare) throws AlgosException {
+        return findByKey(attivitaSingolare);
     }
 
     /**
@@ -171,16 +186,75 @@ public class AttivitaService extends WikiService {
     }
 
     /**
-     * Retrieves an entity by its keyProperty.
+     * Controlla l'esistenza di una entity by its keyValue.
      *
-     * @param keyValue must not be {@literal null}.
+     * @param attivitaSingolare must not be {@literal null}.
      *
-     * @return the entity with the given id or {@literal null} if none found
+     * @return true se esiste la entity indicata
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public boolean isEsisteSingolare(String keyValue) throws AlgosException {
-        return this.findByKey(keyValue) != null;
+    public boolean isEsisteSingolare(String attivitaSingolare) throws AlgosException {
+        return this.findByKey(attivitaSingolare) != null;
+    }
+
+    /**
+     * Crea una lista di attività che hanno lo stesso plurale. <br>
+     *
+     * @param attivitaPlurale da selezionare
+     *
+     * @return lista di entities filtrate
+     */
+    public List<Attivita> fetchAttivitaDaPlurale(String attivitaPlurale) throws AlgosException {
+        boolean usaKeyIdMinuscolaCaseInsensitive = annotation.usaKeyIdMinuscolaCaseInsensitive(Attivita.class);
+        attivitaPlurale = usaKeyIdMinuscolaCaseInsensitive ? text.primaMinuscola(attivitaPlurale) : attivitaPlurale;
+        return (List<Attivita>) mongo.fetch(Attivita.class, PLURALE, attivitaPlurale);
+    }
+
+
+    /**
+     * Crea una lista di singolari che hanno lo stesso plurale. <br>
+     *
+     * @param attivitaPlurale da selezionare
+     *
+     * @return lista di singolari filtrati
+     */
+    public List<String> fetchSingolariDaPlurale(String attivitaPlurale) throws AlgosException {
+        List<String> listaSingolari;
+        List<Attivita> listaAttivita = fetchAttivitaDaPlurale(attivitaPlurale);
+
+        if (array.isAllValid(listaAttivita)) {
+            listaSingolari = new ArrayList<>();
+            for (Attivita attivita : listaAttivita) {
+                listaSingolari.add(attivita.singolare);
+            }
+            return listaSingolari;
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Controlla l'esistenza di una entity by its keyValue.
+     *
+     * @param attivitaPlurale must not be {@literal null}.
+     *
+     * @return true se esiste la entity indicata
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    public boolean isEsistePlurale(String attivitaPlurale) throws AlgosException {
+        if (attivitaPlurale == null) {
+            throw AlgosException.stack("L'attivitaPlurale è nulla", getClass(), "isEsistePlurale");
+        }
+        if (text.isEmpty(attivitaPlurale)) {
+            throw AlgosException.stack("L'attivitaPlurale è vuota", getClass(), "isEsistePlurale");
+        }
+
+        boolean usaKeyIdMinuscolaCaseInsensitive = annotation.usaKeyIdMinuscolaCaseInsensitive(Attivita.class);
+        attivitaPlurale = usaKeyIdMinuscolaCaseInsensitive ? text.primaMinuscola(attivitaPlurale) : attivitaPlurale;
+        return mongo.count(Attivita.class, PLURALE, attivitaPlurale) > 0;
     }
 
     /**
@@ -216,7 +290,7 @@ public class AttivitaService extends WikiService {
             }
             status = true;
         }
-       status = aggiunge();
+        status = aggiunge();
 
         super.fixDataDownload();
         return status;

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
+import java.util.*;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -29,6 +31,30 @@ import org.springframework.stereotype.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class DidascaliaService extends AbstractService {
 
+
+    /**
+     * Restituisce una lista semplice di didascalie complete <br>
+     *
+     * @param listaBio di biografie in ingresso
+     *
+     * @return lista di didascalie completa
+     */
+    public List<String> getLista(final List<Bio> listaBio) {
+        List<String> listaDidascalie = null;
+        String didascalia;
+
+        if (listaBio != null) {
+            listaDidascalie = new ArrayList<>();
+            for (Bio bio : listaBio) {
+                didascalia = getLista(bio);
+                if (text.isValid(didascalia)) {
+                    listaDidascalie.add(didascalia);
+                }
+            }
+        }
+
+        return listaDidascalie;
+    }
 
     /**
      * Costruisce la didascalia completa per una lista (persone di nome, persone di cognome) <br>
@@ -168,23 +194,23 @@ public class DidascaliaService extends AbstractService {
         String annoMorto = text.isValid(bio.annoMorto) ? tagMorto + bio.annoMorto : VUOTA;
 
         if (text.isValid(luogoNatoLink)) {
-            luogoNato += PIPE + luogoNatoLink;
+            luogoNato = luogoNatoLink + PIPE + luogoNato;
         }
         luogoNato = text.setDoppieQuadre(luogoNato);
         if (text.isValid(luogoMortoLink)) {
-            luogoMorto += PIPE + luogoMortoLink;
+            luogoMorto = luogoMortoLink + PIPE + luogoMorto;
         }
         luogoMorto = text.setDoppieQuadre(luogoMorto);
 
         crono += text.isValid(luogoNato) ? luogoNato : VUOTA;
         crono += text.isValid(luogoNato) && text.isValid(annoNato) ? VIRGOLA_SPAZIO : VUOTA;
         crono += annoNato;
-        crono += text.isValid(luogoNato) || text.isValid(annoNato) ? SEP : VUOTA;
+        crono += text.isValid(crono) && (text.isValid(luogoMorto) || text.isValid(annoMorto)) ? SEP : VUOTA;
         crono += text.isValid(luogoMorto) ? luogoMorto : VUOTA;
         crono += text.isValid(luogoMorto) && text.isValid(annoMorto) ? VIRGOLA_SPAZIO : VUOTA;
         crono += annoMorto;
 
-//        crono = text.levaCoda(crono, SEP);
+        //        crono = text.levaCoda(crono, SEP);
         return text.isValid(crono) ? text.setTonde(crono) : VUOTA;
     }
 

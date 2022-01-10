@@ -3,20 +3,20 @@ package it.algos.vaadwiki.backend.boot;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
-import it.algos.vaadflow14.wizard.*;
-import it.algos.vaadwiki.backend.application.*;
-import it.algos.vaadwiki.backend.packages.nome.Nome;
 import it.algos.vaadflow14.backend.boot.*;
+import it.algos.vaadflow14.wizard.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
+import it.algos.vaadwiki.backend.application.*;
 import it.algos.vaadwiki.backend.data.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.genere.*;
+import it.algos.vaadwiki.backend.packages.giorno.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
+import it.algos.vaadwiki.backend.packages.nome.*;
 import it.algos.vaadwiki.backend.packages.nomeDoppio.*;
 import it.algos.vaadwiki.backend.packages.professione.*;
-import it.algos.vaadwiki.backend.packages.giorno.*;
 import it.algos.vaadwiki.wiki.query.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -94,9 +94,9 @@ public class WikiBoot extends FlowBoot {
         FlowVar.usaCronoPackages = false;
         FlowVar.usaGeografiaPackages = false;
 
-        WikiVar.categoriaBio = "Nati nel 1948";
-        WikiVar.simboloNato = "x";
-        WikiVar.simboloMorto = "z";
+        WikiVar.categoriaBio = "Morti nel 735";
+        WikiVar.simboloNato = (String) preferenzaService.getValue(AEWikiPreferenza.simboloNato.getKeyCode());
+        WikiVar.simboloMorto = (String) preferenzaService.getValue(AEWikiPreferenza.simboloMorto.getKeyCode());
     }
 
 
