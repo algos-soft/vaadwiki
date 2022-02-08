@@ -21,6 +21,7 @@ import it.algos.vaadflow14.backend.packages.utility.versione.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.params.provider.*;
+import org.springframework.data.domain.*;
 
 import java.io.*;
 import java.util.*;
@@ -172,6 +173,24 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Secolo.class, AETypeFilter.checkBox3Vie, "anteCristo", true, 20),
                 Arguments.of(Secolo.class, AETypeFilter.checkBox3Vie, "anteCristo", false, 21),
                 Arguments.of(Secolo.class, AETypeFilter.checkBox3Vie, "anteCristo", null, 41)
+        );
+    }
+
+    //--clazz
+    //--propertyName
+    //--propertyValue
+    //--previstoIntero
+    //--sortSpring
+    protected static Stream<Arguments> CLAZZ_SORT() {
+        return Stream.of(
+                Arguments.of((Class) null, null, VUOTA, 0, null),
+                Arguments.of(Utente.class, null, null, 0, null),
+                Arguments.of(Giorno.class, "mese", "ottobre", 31, Sort.by(Sort.Direction.ASC, "ordine")),
+                Arguments.of(Giorno.class, "mese", "ottobre", 31, Sort.by(Sort.Direction.DESC, "ordine")),
+                Arguments.of(Mese.class, "giorni", 31, 7, Sort.by(Sort.Direction.ASC, "ordine")),
+                Arguments.of(Mese.class, "giorni", 31, 7, Sort.by(Sort.Direction.DESC, "ordine")),
+                Arguments.of(Mese.class, "giorni", 31, 7, Sort.by(Sort.Direction.ASC, "mese")),
+                Arguments.of(Mese.class, "giorni", 31, 7, Sort.by(Sort.Direction.DESC, "mese"))
         );
     }
 

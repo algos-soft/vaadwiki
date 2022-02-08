@@ -192,4 +192,12 @@ public class WrapFiltri {
         this.mappaFiltri = mappaFiltri;
     }
 
+    public Sort getSortSpring() {
+        return sortSpring;
+    }
+
+    public void setSortSpring(Sort sortSpring) {
+        this.sortSpring = sortSpring;
+    }
+
 }

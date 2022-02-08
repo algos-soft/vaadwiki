@@ -188,6 +188,8 @@ public interface AIMongoService {
      */
     List<? extends AEntity> fetch(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException;
 
+    List<? extends AEntity> fetch(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue, final Sort sort) throws AlgosException;
+
     List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sortSpring, int offset, int limit) throws AlgosException;
 
     /**

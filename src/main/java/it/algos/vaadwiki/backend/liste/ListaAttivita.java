@@ -32,7 +32,6 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ListaAttivita extends Lista {
 
-    protected static String BIO_PROPERTY = "attivita";
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -150,9 +149,7 @@ public class ListaAttivita extends Lista {
     public void fixListaBio() {
         super.fixListaBio();
 
-        for (String attivitaSingola : listaNomiAttivitaSingole) {
-            listaBio.addAll(bioService.fetch(BIO_PROPERTY, attivitaSingola));
-        }
+        listaBio = bioService.fetchAttivita(listaNomiAttivitaSingole);
     }
 
     /**
@@ -179,9 +176,11 @@ public class ListaAttivita extends Lista {
 
     private Map<String, List> getMappaNazionalita(final List<Bio> listaBio) {
         Map<String, List> mappa = new LinkedHashMap<String, List>();
+        String altre = "Titolo provvisorio";
         listaDidascalie = null;
         Set<String> setNazionalita;
         String titoloParagrafoNazionalita = VUOTA;
+        Nazionalita nazionalita;
 
         if (listaBio == null) {
             return null;
@@ -189,6 +188,9 @@ public class ListaAttivita extends Lista {
 
         setNazionalita = new LinkedHashSet<>();
         for (Bio bio : listaBio) {
+            if (text.isEmpty(bio.nazionalita)) {
+                bio.nazionalita = altre;
+            }
             titoloParagrafoNazionalita = bio.nazionalita;
             setNazionalita.add(titoloParagrafoNazionalita);
         }
@@ -201,7 +203,8 @@ public class ListaAttivita extends Lista {
                 }
             }
             try {
-                titoloParagrafo = nazionalitaService.findById(titoloParagrafo).plurale;
+                nazionalita = nazionalitaService.findById(titoloParagrafo);
+                titoloParagrafo = nazionalita != null ? nazionalita.plurale : titoloParagrafo;
             } catch (AlgosException unErrore) {
             }
             titoloParagrafo = text.primaMaiuscola(titoloParagrafo);

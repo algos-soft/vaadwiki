@@ -19,6 +19,7 @@ import it.algos.vaadwiki.wiki.query.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 
 import java.io.*;
@@ -67,6 +68,10 @@ public class BioService extends WikiService {
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
+
+    public static Sort SORT_COGNOME = Sort.by(Sort.Direction.ASC, "cognome");
+
+    protected static String ATTIVITA_PROPERTY = "attivita";
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -237,16 +242,60 @@ public class BioService extends WikiService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
      */
+    @Deprecated
     public List<Bio> fetch(String propertyName, Serializable propertyValue) {
+
         if (text.isEmpty(propertyName) || propertyValue == null) {
             return fetch();
         }
 
         try {
-            return (List<Bio>)mongo.fetch(entityClazz, propertyName, propertyValue);
+            List<Bio> lista = (List<Bio>) mongo.fetch(entityClazz, propertyName, propertyValue, SORT_COGNOME);
+            return (List<Bio>) mongo.fetch(entityClazz, propertyName, propertyValue, SORT_COGNOME);
         } catch (AlgosException unErrore) {
             return fetch();
         }
+    }
+
+
+    /**
+     * Cerca tutte le entities di una collection filtrate con una serie di attività. <br>
+     * Selects documents in a collection or view and returns a list of the selected documents. <br>
+     *
+     * @param listaNomiAttivitaSingole per costruire la query
+     *
+     * @return lista di entityBeans
+     *
+     * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
+     */
+    public List<Bio> fetchAttivita(List<String> listaNomiAttivitaSingole) {
+        List<Bio> lista = new ArrayList<>();
+
+        for (String attivitaSingola : listaNomiAttivitaSingole) {
+            lista.addAll(fetch(ATTIVITA_PROPERTY, attivitaSingola));
+        }
+
+        WrapFiltri filtro = appContext.getBean(WrapFiltri.class, Bio.class);
+        filtro.setSortSpring(SORT_COGNOME);
+        Map<String, AFiltro> mappa=new LinkedHashMap<>();
+        for (String attivitaSingola : listaNomiAttivitaSingole) {
+            mappa.put(attivitaSingola,AFiltro.ugualeStr(ATTIVITA_PROPERTY,attivitaSingola));
+        }
+
+        filtro.setMappaFiltri(mappa);
+        try {
+            lista = (List<Bio>) mongo.fetch(entityClazz, filtro);
+        } catch (AlgosException unErrore) {
+            logger.info(unErrore, getClass(), "fetchAttivita");
+        }
+
+        return lista;
+        //        try {
+        //            List<Bio> lista=     (List<Bio>) mongo.fetch(entityClazz, propertyName, propertyValue, sort);
+        //            return (List<Bio>) mongo.fetch(entityClazz, propertyName, propertyValue, sort);
+        //        } catch (AlgosException unErrore) {
+        //            return fetch();
+        //        }
     }
 
     /**

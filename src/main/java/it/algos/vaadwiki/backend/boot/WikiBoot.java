@@ -94,7 +94,7 @@ public class WikiBoot extends FlowBoot {
         FlowVar.usaCronoPackages = false;
         FlowVar.usaGeografiaPackages = false;
 
-        WikiVar.categoriaBio = "Morti nel 735";
+        WikiVar.categoriaBio = "Nati nel 1826";
         WikiVar.simboloNato = (String) preferenzaService.getValue(AEWikiPreferenza.simboloNato.getKeyCode());
         WikiVar.simboloMorto = (String) preferenzaService.getValue(AEWikiPreferenza.simboloMorto.getKeyCode());
     }
