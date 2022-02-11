@@ -129,6 +129,10 @@ public class AColumnService extends AbstractService {
                     colonna = grid.addColumn(fieldName);
                     sortable = true;
                     break;
+                case doppio:
+                    colonna = grid.addColumn(fieldName);
+                    sortable = false;
+                    break;
                 case booleano:
                     colonna = addBoolean(grid, field);
                     break;

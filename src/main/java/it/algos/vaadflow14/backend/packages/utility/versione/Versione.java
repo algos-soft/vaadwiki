@@ -52,10 +52,10 @@ import java.time.*;
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Versione", keyPropertyName = "code", usaCompany = false)
-@AIView(menuName = "Versione", menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
-@AIList(fields = "code,giorno,descrizione", usaRowIndex = true)
-@AIForm(fields = "code,giorno,descrizione", usaSpostamentoTraSchede = false)
-public class Versione extends AEntity {
+@AIView(menuName = "Versione", menuIcon = VaadinIcon.COG, searchProperty = "titolo", sortProperty = "giorno")
+@AIList(fields = "type,release,giorno,titolo,company,descrizione,vaadFlow,usaCompany", usaRowIndex = true)
+@AIForm(fields = "type,release,giorno,titolo,company,descrizione,vaadFlow,usaCompany", usaSpostamentoTraSchede = false)
+public class Versione extends ACEntity {
 
     /**
      * versione della classe per la serializzazione
@@ -64,14 +64,27 @@ public class Versione extends AEntity {
 
 
     /**
+     * tipologia
+     */
+    @AIField(type = AETypeField.enumeration, enumClazz = AETypeVers.class, usaComboBox = true)
+    public AETypeVers type;
+
+
+    /**
+     * release progetto
+     */
+    @AIField(type = AETypeField.doppio, widthEM = 5)
+    @AIColumn(header = "#", widthEM = 4)
+    public double release;
+
+    /**
      * codice di riferimento (obbligatorio, unico)
      */
     @NotBlank()
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, required = true, focus = true, caption = "Codice")
-    @AIColumn(header = "Code")
-    public String code;
+    @AIField(type = AETypeField.text, required = true, focus = true, widthEM = 20)
+    public String titolo;
 
 
     /**
@@ -85,16 +98,32 @@ public class Versione extends AEntity {
     /**
      * descrizione (obbligatoria)
      */
-    @AIField(type = AETypeField.text, caption = "Descrizione completa")
+    @AIField(type = AETypeField.text, caption = "Descrizione completa", widthEM = 50)
     @AIColumn(header = "Descrizione", flexGrow = true)
     public String descrizione;
+
+    /**
+     * generale (facoltativo, default true) se usata da vaadflow
+     * specifica se usata da progetto derivato (vaadwam, vaadwiki)
+     */
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Versione standard")
+    @AIColumn(headerIcon = VaadinIcon.HOME)
+    public boolean vaadFlow;
+
+
+    /**
+     * usaCompany (facoltativo, default false) usa un prefisso col codice della company
+     */
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Specifica di una company")
+    @AIColumn(headerIcon = VaadinIcon.FACTORY)
+    public boolean usaCompany;
 
     /**
      * @return a string representation of the object.
      */
     @Override
     public String toString() {
-        return getCode();
+        return getTitolo();
     }
 
 }

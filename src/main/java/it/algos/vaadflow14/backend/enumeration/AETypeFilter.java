@@ -28,7 +28,7 @@ public enum AETypeFilter {
             if (value.endsWith(SPAZIO)) {
                 nota = "(spazio finale)";
             }
-            return String.format("[%s %s %s] %s", fieldName, "(uguale)", value, nota);
+            return String.format("%s%s[%s %s %s] %s", this, FORWARD, fieldName, "(uguale)", value, nota);
         }
     },
     maggiore("$gt", "Matches values that are greater than a specified value.") {
@@ -39,7 +39,7 @@ public enum AETypeFilter {
 
         @Override
         public String getOperazione(final String fieldName, final String value) {
-            return String.format("[%s %s %s]", fieldName, "(maggiore di)", value);
+            return String.format("%s%s[%s %s %s]", this, FORWARD, fieldName, "(maggiore di)", value);
         }
     },
     maggioreUguale("$gte", "Matches values that are greater than or equal to a specified value.") {
@@ -50,7 +50,7 @@ public enum AETypeFilter {
 
         @Override
         public String getOperazione(final String fieldName, final String value) {
-            return String.format("[%s %s %s]", fieldName, "(maggiore o uguale a)", value);
+            return String.format("%s%s[%s %s %s]", this, FORWARD, fieldName, "(maggiore o uguale a)", value);
         }
     },
     minore("$lt", "Matches values that are less than a specified value.") {
@@ -61,7 +61,7 @@ public enum AETypeFilter {
 
         @Override
         public String getOperazione(final String fieldName, final String value) {
-            return String.format("[%s %s %s]", fieldName, "(minore di)", value);
+            return String.format("%s%s[%s %s %s]", this, FORWARD, fieldName, "(minore di)", value);
         }
     },
     minoreUguale("$lte", "Matches values that are less than or equal to a specified value.") {
@@ -72,7 +72,7 @@ public enum AETypeFilter {
 
         @Override
         public String getOperazione(final String fieldName, final String value) {
-            return String.format("[%s %s %s]", fieldName, "(minore o uguale a)", value);
+            return String.format("%s%s[%s %s %s]", this, FORWARD, fieldName, "(minore o uguale a)", value);
         }
     },
     regex("$regex", "Selects documents where values match a specified regular expression.") {
@@ -94,7 +94,7 @@ public enum AETypeFilter {
 
         @Override
         public String getOperazione(final String fieldName, final String value) {
-            return String.format("[%s %s %s]", fieldName, "(diverso da)", value);
+            return String.format("%s%s[%s %s %s]", this, FORWARD, fieldName, "(diverso da)", value);
         }
     },
     lista("$in", "Matches any of the values specified in an array.") {
@@ -105,7 +105,7 @@ public enum AETypeFilter {
 
         @Override
         public String getOperazione(final String fieldName, final String value) {
-            return String.format("[%s %s %s]", fieldName, "(nella lista)", value);
+            return String.format("%s%s[%s %s %s]", this, FORWARD, fieldName, "(nella lista)", value);
         }
     },
     contiene("$regex", "Seleziona i documenti che contengono il valore indicato.") {
@@ -124,7 +124,7 @@ public enum AETypeFilter {
             if (value.endsWith(SPAZIO)) {
                 nota = "(spazio finale)";
             }
-            return String.format("[%s %s %s] %s", fieldName, "(contiene)", value, nota);
+            return String.format("%s%s[%s %s %s] %s", this, FORWARD, fieldName, "(contiene)", value, nota);
         }
     },
     inizia("$regex", "Seleziona i documenti che iniziano col valore indicato.") {
@@ -136,7 +136,7 @@ public enum AETypeFilter {
 
         @Override
         public String getOperazione(final String fieldName, final String value) {
-            return String.format("[%s %s %s]", fieldName, "(inizia con)", value);
+            return String.format("%s%s[%s %s %s]", this, FORWARD, fieldName, "(inizia con)", value);
         }
     },
     link("$eq", "Seleziona i documenti che hanno un link (DBRef) alla collezione indicata.") {
@@ -147,7 +147,7 @@ public enum AETypeFilter {
 
         @Override
         public String getOperazione(final String fieldName, final String value) {
-            return String.format("[(DBRef) %s %s %s]", fieldName, "(linkato a)", value);
+            return String.format("%s%s[(DBRef) %s %s %s]", this, FORWARD, fieldName, "(linkato a)", value);
         }
     },
     checkBox3Vie("$eq", "CheckBox a 3 stati.") {
@@ -165,7 +165,7 @@ public enum AETypeFilter {
             if (value.endsWith(SPAZIO)) {
                 nota = "(spazio finale)";
             }
-            return String.format("[%s %s %s] %s", fieldName, "(uguale)", value, nota);
+            return String.format("%s%s[%s %s %s] %s", this, FORWARD, fieldName, "(uguale)", value, nota);
         }
     },
     ;

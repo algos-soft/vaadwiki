@@ -61,7 +61,7 @@ public class GsonService extends AbstractService {
 
     public MongoDatabase dataBase = null;
 
-    private MongoClient mongoClient = null;
+    private com.mongodb.client.MongoClient mongoClient = null;
 
     private MongoCollection<Document> collection;
 

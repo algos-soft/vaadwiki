@@ -11,6 +11,7 @@ import java.sql.*;
 import java.text.*;
 import java.time.*;
 import java.time.format.*;
+import java.time.temporal.*;
 import java.util.Date;
 import java.util.*;
 
@@ -283,6 +284,17 @@ public class DateService extends AbstractService {
         return LocalTime.of(localDateTime.getHour(), localDateTime.getMinute(), localDateTime.getSecond());
     }
 
+    public LocalDateTime add(LocalDate localDate, LocalTime localTime) {
+        LocalDateTime localDateTime = localDateToLocalDateTime(localDate);
+        long seconds = 0;
+
+        if (localTime != null) {
+            seconds = localTime.getLong(ChronoField.SECOND_OF_DAY);
+            localDateTime = localDateTime.plusSeconds(seconds);
+        }
+
+        return localDateTime;
+    }
 
     /**
      * Restituisce la data corrente nella forma del pattern standard. <br>

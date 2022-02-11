@@ -24,6 +24,8 @@ public abstract class WikiCost {
 
     public static final String TAG_WIKI_DATA = "wikiData";
 
+    public static final String TAG_WIKI_VERSION = "wikiVersion";
+
     public static final String PREF_DATA_LAST_DOWLOAD_GENERE = "lastDownloadGenere";
 
     public static final String PREF_DATA_LAST_DOWLOAD_ATTIVITA = "lastDownloadAttivita";

@@ -4,7 +4,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.data.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
@@ -20,6 +19,7 @@ import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.packages.utility.versione.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.vers.*;
 import it.algos.vaadflow14.wizard.*;
 import it.algos.vaadflow14.wizard.scripts.*;
 import org.springframework.beans.factory.annotation.*;
@@ -97,12 +97,6 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     public ALogService logger;
 
-    /**
-     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    public FlowData dataInstance;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -120,6 +114,21 @@ public abstract class FlowBoot implements ServletContextListener {
     @Autowired
     public WizService wizService;
 
+
+    /**
+     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    public AIData dataInstance;
+
+    /**
+     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    public AIVers versInstance;
+
     /**
      * Constructor with @Autowired on setter. Usato quando ci sono sottoclassi. <br>
      * Per evitare di avere nel costruttore tutte le property che devono essere iniettate e per poterle aumentare <br>
@@ -132,6 +141,7 @@ public abstract class FlowBoot implements ServletContextListener {
         this.setMongo(mongo);
         this.setLogger(logger);
         this.setDataInstance(dataInstance);
+        this.setVersInstance(versInstance);
     }// end of constructor with @Autowired on setter
 
 
@@ -281,6 +291,13 @@ public abstract class FlowBoot implements ServletContextListener {
          * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.dataClazz = FlowData.class;
+
+        /**
+         * Classe da usare per gestire le versioni <br>
+         * Di default FlowVers oppure possibile sottoclasse del progetto <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
+         */
+        FlowVar.versionClazz = FlowVers.class;
 
         /**
          * Type da usare per la serializzazione dei dati in mongoDB  <br>
@@ -464,26 +481,26 @@ public abstract class FlowBoot implements ServletContextListener {
     /**
      * Inizializzazione delle versioni standard di vaadinFlow <br>
      * Inizializzazione delle versioni del programma specifico <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixVersioni() {
-        String codeVersione = VUOTA;
-        String descVersione = VUOTA;
-        Versione entityBean;
-
-        //--inizio
-        codeVersione = "Setup";
-        descVersione = "Creazione ed installazione iniziale dell'applicazione";
-        entityBean = (Versione) ((MongoService) mongo).findByKeyOld(Versione.class, codeVersione);//@todo da controllare
-        if (entityBean == null) {
-            entityBean = new Versione(codeVersione, LocalDate.now(), descVersione);
-            entityBean.id = codeVersione;
-            try {
-                ((MongoService) mongo).save(entityBean);//@todo da controllare
-            } catch (AlgosException unErrore) {
-                logger.error(unErrore, this.getClass(), "fixVersioni");
-            }
-        }
+        this.versInstance.inizia();
+//        String codeVersione = VUOTA;
+//        String descVersione = VUOTA;
+//        Versione entityBean;
+//
+//        //--inizio
+//        codeVersione = "Setup";
+//        descVersione = "Creazione ed installazione iniziale dell'applicazione";
+//        entityBean = (Versione) ((MongoService) mongo).findByKeyOld(Versione.class, codeVersione);//@todo da controllare
+//        if (entityBean == null) {
+//            //            entityBean = new Versione(codeVersione, LocalDate.now(), descVersione);
+//            //            entityBean.id = codeVersione;
+//            //            try {
+//            //                ((MongoService) mongo).save(entityBean);//@todo da controllare
+//            //            } catch (AlgosException unErrore) {
+//            //                logger.error(unErrore, this.getClass(), "fixVersioni");
+//            //            }
+//        }
     }
 
 
@@ -529,8 +546,21 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     @Autowired
     @Qualifier(TAG_FLOW_DATA)
-    public void setDataInstance(final FlowData dataInstance) {
+    public void setDataInstance(final AIData dataInstance) {
         this.dataInstance = dataInstance;
     }
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    @Qualifier(TAG_FLOW_VERSION)
+    public void setVersInstance(final AIVers versInstance) {
+        this.versInstance = versInstance;
+    }
+
 
 }

@@ -182,7 +182,7 @@ public class MongoServiceTest extends MongoTest {
             ottenutoIntero = service.count(clazz);
             System.out.println(String.format("Risultato %s %d", UGUALE_SEMPLICE, ottenutoIntero));
             System.out.println(VUOTA);
-            printCount(clazz, previstoIntero, ottenutoIntero, risultatoEsatto);
+//            printCount(clazz, previstoIntero, ottenutoIntero, risultatoEsatto);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
@@ -224,7 +224,7 @@ public class MongoServiceTest extends MongoTest {
             ottenutoIntero = service.count(clazz, propertyName, propertyValue);
             System.out.println(String.format("Risultato %s %d", UGUALE_SEMPLICE, ottenutoIntero));
             System.out.println(VUOTA);
-            printCount(clazz, propertyName, propertyValue, previstoIntero, ottenutoIntero);
+//            printCount(clazz, propertyName, propertyValue, previstoIntero, ottenutoIntero);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }

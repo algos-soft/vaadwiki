@@ -404,17 +404,23 @@ public abstract class LogicList extends Logic {
     protected void fixBodyLayout() {
         //--con dataProvider standard - con filtro base (vuoto=tutta la collection) e sort di default della AEntity
         //--può essere ri-filtrato successivamente
-        switch (filtroProvider) {
-            case mappaFiltri:
-                grid = appContext.getBean(AGrid.class, entityClazz, this, mappaFiltri);
-                break;
-            case wrapFiltri:
-                wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
-                grid = appContext.getBean(AGrid.class, entityClazz, this, wrapFiltri);
-                break;
-            default:
-                logger.error("Switch - caso non definito", this.getClass(), "fixBodyLayout");
-                break;
+
+        if (filtroProvider != null) {
+            switch (filtroProvider) {
+                case mappaFiltri -> grid = appContext.getBean(AGrid.class, entityClazz, this, mappaFiltri);
+                case wrapFiltri -> {
+                    wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
+                    grid = appContext.getBean(AGrid.class, entityClazz, this, wrapFiltri);
+                }
+                default -> {
+                    logger.error("Switch - caso non definito", this.getClass(), "fixBodyLayout");
+                    return;
+                }
+            }
+        }
+        else {
+            logger.error("filtroProvider è nullo", this.getClass(), "fixBodyLayout");
+            return;
         }
 
         grid.fixGridHeader();
@@ -745,7 +751,7 @@ public abstract class LogicList extends Logic {
                 }
                 break;
             case wrapFiltri:
-                if (text.isValid(fieldName) ) {
+                if (text.isValid(fieldName)) {
                     if (wrapFiltri != null) {
                         try {
                             wrapFiltri.regola(AETypeFilter.link, fieldName, fieldValue);

@@ -48,13 +48,16 @@ public abstract class MongoTest extends ATest {
     //--clazz
     //--previstoIntero
     //--risultatoEsatto
+    //--tipologia della query
     protected static Stream<Arguments> CLAZZ() {
         return Stream.of(
-                Arguments.of(null, 0, false),
-                Arguments.of(LogicList.class, 0, false),
-                Arguments.of(Mese.class, 12, true),
-                Arguments.of(AIType.class, 0, true),
-                Arguments.of(Stato.class, 249, true)
+                Arguments.of(null, 0, false, WrapQuery.Type.nulla),
+                Arguments.of(LogicList.class, 0, false, WrapQuery.Type.errata),
+                Arguments.of(AIType.class, 0, true, WrapQuery.Type.errata),
+                Arguments.of(Mese.class, 12, true, WrapQuery.Type.validaSenzaFiltri),
+                Arguments.of(Stato.class, 249, true, WrapQuery.Type.validaSenzaFiltri),
+                Arguments.of(Giorno.class, 366, true, WrapQuery.Type.validaSenzaFiltri),
+                Arguments.of(Via.class, 25, false, WrapQuery.Type.validaSenzaFiltri)
         );
     }
 
@@ -110,35 +113,38 @@ public abstract class MongoTest extends ATest {
     }
 
     //--clazz
-    //--propertyName
+    //--propertyField
     //--propertyValue
     //--previstoIntero
     //--doc e/o entityBean valida
+    //--tipologia della query
     protected static Stream<Arguments> CLAZZ_PROPERTY() {
         return Stream.of(
-                Arguments.of((Class) null, VUOTA, null, 0, false),
-                Arguments.of(Utente.class, VUOTA, null, 0, false),
-                Arguments.of(LogicList.class, null, null, 0, false),
-                Arguments.of(AIType.class, null, null, 0, false),
-                Arguments.of(Mese.class, VUOTA, null, 0, false),
-                Arguments.of(Mese.class, "manca", null, 0, false),
-                Arguments.of(Mese.class, "manca", 31, 0, false),
-                Arguments.of(Mese.class, "mese", "pippoz", 0, false),
-                Arguments.of(Mese.class, "mese", null, 0, false),
-                Arguments.of(Mese.class, "mese", VUOTA, 0, false),
-                Arguments.of(Giorno.class, "_id", "2agosto", 1, true),
-                Arguments.of(Giorno.class, "_id", "2 agosto", 0, true),
-                Arguments.of(Giorno.class, "mese", "ottobre", 31, true),
-                Arguments.of(Mese.class, "mese", "ottobre", 1, true),
-                Arguments.of(Mese.class, "mese", "Ottobre", 0, false),
-                Arguments.of(Mese.class, "giorni", 31, 7, false),
-                Arguments.of(Mese.class, "giorni", 30, 4, false),
-                Arguments.of(Mese.class, "giorni", 28, 1, true),
-                Arguments.of(Mese.class, "giorni", 32, 0, false),
-                Arguments.of(Via.class, "belzebù", "piazza", 0, false),
-                Arguments.of(Via.class, "nome", "belzebù", 0, false),
-                Arguments.of(Via.class, "nome", "piazza", 1, true),
-                Arguments.of(Via.class, "nome", "Piazza", 0, false)
+                Arguments.of((Class) null, VUOTA, null, 0, false, WrapQuery.Type.nulla),
+                Arguments.of(LogicList.class, null, null, 0, false, WrapQuery.Type.errata),
+                Arguments.of(AIType.class, null, null, 0, false, WrapQuery.Type.errata),
+                Arguments.of(Utente.class, VUOTA, null, 0, false, WrapQuery.Type.incompleta),
+                Arguments.of(Utente.class, "username", null, 0, false, WrapQuery.Type.validaSenzaFiltri),
+                Arguments.of(Mese.class, null, null, 12, false, WrapQuery.Type.incompleta),
+                Arguments.of(Mese.class, VUOTA, null, 12, false, WrapQuery.Type.incompleta),
+                Arguments.of(Mese.class, "mese", null, 0, false, WrapQuery.Type.validaSenzaFiltri),
+                Arguments.of(Mese.class, "mese", VUOTA, 0, false, WrapQuery.Type.validaSenzaFiltri),
+                Arguments.of(Mese.class, "mese", "pippoz", 0, false, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Mese.class, "mese", "ottobre", 1, true, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Mese.class, "mese", "Ottobre", 0, false, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Mese.class, "propertyErrata", null, 0, false, WrapQuery.Type.incompleta),
+                Arguments.of(Mese.class, "propertyMancante", 31, 0, false, WrapQuery.Type.incompleta),
+                Arguments.of(Giorno.class, "_id", "2agosto", 1, true, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Giorno.class, "_id", "2 agosto", 0, true, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Giorno.class, "mese", "ottobre", 31, true, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Mese.class, "giorni", 31, 7, false, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Mese.class, "giorni", 30, 4, false, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Mese.class, "giorni", 28, 1, true, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Mese.class, "giorni", 32, 0, false, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Via.class, "belzebù", "piazza", 0, false, WrapQuery.Type.incompleta),
+                Arguments.of(Via.class, "nome", "belzebù", 0, false, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Via.class, "nome", "piazza", 1, true, WrapQuery.Type.validaConFiltri),
+                Arguments.of(Via.class, "nome", "Piazza", 0, false, WrapQuery.Type.validaConFiltri)
         );
     }
 
@@ -194,57 +200,84 @@ public abstract class MongoTest extends ATest {
         );
     }
 
+
+    //--clazz
+    //--typeFilter
+    //--propertyName
+    //--propertyValue
+    protected static Stream<Arguments> CLAZZ_TYPE_FILTER() {
+        return Stream.of(
+                Arguments.of((Class) null, (AETypeFilter) null, VUOTA, VUOTA),
+                Arguments.of(Mese.class, AETypeFilter.uguale, "mese", "marzo"),
+                Arguments.of(Mese.class, AETypeFilter.contiene, "mese", "emb"),
+                Arguments.of(Mese.class, AETypeFilter.uguale, "giorni", 30),
+                Arguments.of(Mese.class, AETypeFilter.maggiore, "giorni", 30),
+                Arguments.of(Mese.class, AETypeFilter.maggioreUguale, "giorni", 30),
+                Arguments.of(Mese.class, AETypeFilter.minore, "giorni", 30),
+                Arguments.of(Mese.class, AETypeFilter.minoreUguale, "giorni", 30),
+                Arguments.of(Mese.class, AETypeFilter.diverso, "giorni", 30),
+                Arguments.of(Mese.class, AETypeFilter.inizia, "mese", "m")
+        );
+    }
+
+    //--clazz
+    //--typeFilterUno
+    //--propertyNameUno
+    //--propertyValueUno
+    //--typeFilterDue
+    //--propertyNameDue
+    //--propertyValueDue
+    protected static Stream<Arguments> CLAZZ_TYPE_FILTER_DOPPI() {
+        return Stream.of(
+                Arguments.of((Class) null, null, VUOTA, VUOTA, null, VUOTA, VUOTA),
+                Arguments.of(Mese.class, AETypeFilter.uguale, "mese", "settembre", AETypeFilter.minoreUguale, "giorni", 30),
+                Arguments.of(Mese.class, AETypeFilter.uguale, "mese", "marzo", AETypeFilter.maggiore, "giorni", 25),
+                Arguments.of(Mese.class, AETypeFilter.contiene, "mese", "emb", AETypeFilter.uguale, "giorni", 30),
+                Arguments.of(Mese.class, AETypeFilter.inizia, "mese", "m", AETypeFilter.minoreUguale, "giorni", 30)
+        );
+    }
+
+
     protected void printCount(final String simpleName, final int size, final String property, final Object value) {
         System.out.println(String.format(String.format("La classe %s ha %s entities filtrate con %s=%s", simpleName, size, property, value)));
         System.out.println(VUOTA);
     }
 
-    protected void printCount(final Class clazz, final int previstoIntero, final int ottenutoIntero, final boolean risultatoEsatto) {
-        if (clazz == null) {
+
+    protected void printCount(final WrapQuery wrapQuery, final String propertyName, final Serializable propertyValue, final int previstoIntero, final int ottenutoIntero, final WrapQuery.Type typePrevisto) {
+        System.out.println(String.format("Risultato %s %d", UGUALE_SEMPLICE, ottenutoIntero));
+        System.out.println(VUOTA);
+        WrapQuery.Type type;
+        String message;
+        String clazzName;
+
+        //--non dovrebbe arrivare qui, ma non si sa mai
+        if (wrapQuery == null) {
+            System.out.println("Manca la wrapQuery");
+            return;
+        }
+
+        //--non dovrebbe arrivare qui, ma non si sa mai
+        if (wrapQuery.getEntityClazz() == null) {
             System.out.println("Manca la entityClazz");
             return;
         }
-        if (ottenutoIntero == previstoIntero) {
-            if (risultatoEsatto) {
-                System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono esattamente quelli previsti (obbligatori)", clazz.getSimpleName(), ottenutoIntero));
-            }
-            else {
-                System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono uguali a quelli indicativamente previsti (facoltativi)", clazz.getSimpleName(), ottenutoIntero));
-            }
-        }
-        else {
-            if (ottenutoIntero > previstoIntero) {
-                if (risultatoEsatto) {
-                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono più dei %s previsti e non va bene", clazz.getSimpleName(), ottenutoIntero, previstoIntero));
-                }
-                else {
-                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono più dei %s indicativamente previsti", clazz.getSimpleName(), ottenutoIntero, previstoIntero));
-                }
-            }
-            else {
-                if (risultatoEsatto) {
-                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono meno dei %s previsti e non va bene", clazz.getSimpleName(), ottenutoIntero, previstoIntero));
-                }
-                else {
-                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono meno dei %s indicativamente previsti", clazz.getSimpleName(), ottenutoIntero, previstoIntero));
-                }
-            }
-        }
 
-        if (risultatoEsatto) {
-            assertEquals(previstoIntero, ottenutoIntero);
-        }
-    }
+        type = wrapQuery.type;
+        clazzName = wrapQuery.getEntityClazz().getSimpleName();
 
-    protected void printCount(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero, final int ottenutoIntero) {
-        String clazzName;
-        if (clazz == null) {
-            System.out.println(String.format("Manca la entityClazz"));
+        if (typePrevisto != type) {
+            System.out.println(String.format("La query era prevista di typo %s mentre è di tipo %s", typePrevisto, type));
             return;
         }
-        else {
-            clazzName = clazz.getSimpleName();
-        }
+
+        message = switch (type) {
+            case indefinita, nulla -> VUOTA;
+            case errata -> "errata e restituisce il valore uguale a zero";
+            case validaSenzaFiltri -> "valida con filtro=null o vuoto e restituisce i valori filtrati";
+            case validaConFiltri -> "valida con filtro=esplicito e restituisce i valori filtrati";
+            default -> VUOTA;
+        };
 
         if (ottenutoIntero == previstoIntero) {
             System.out.println(String.format("La collezione '%s' contiene %s records (entities) filtrati con %s=%s che sono quelli previsti", clazzName, ottenutoIntero, propertyName, propertyValue));
@@ -252,8 +285,90 @@ public abstract class MongoTest extends ATest {
         else {
             System.out.println(String.format("La collezione '%s' contiene %s records (entities) filtrati con %s=%s che non sono i %s previsti", clazzName, ottenutoIntero, propertyName, propertyValue, previstoIntero));
         }
+
+        System.out.println(String.format("La query è %s", message));
+
+        if (flagRisultatiEsattiObbligatori) {
+            assertEquals(previstoIntero, ottenutoIntero);
+        }
+        System.out.println(VUOTA);
     }
 
+
+    protected void printCount(final WrapQuery wrapQuery, final int previstoIntero, final int ottenutoIntero, final boolean risultatoEsatto, final WrapQuery.Type typePrevisto) {
+        System.out.println(String.format("Risultato %s %d", UGUALE_SEMPLICE, ottenutoIntero));
+        System.out.println(VUOTA);
+        WrapQuery.Type type;
+        String message;
+        String clazzName;
+
+        //--non dovrebbe arrivare qui, ma non si sa mai
+        if (wrapQuery == null) {
+            System.out.println("Manca la wrapQuery");
+            return;
+        }
+
+        //--non dovrebbe arrivare qui, ma non si sa mai
+        if (wrapQuery.getEntityClazz() == null) {
+            System.out.println("Manca la entityClazz");
+            return;
+        }
+
+        type = wrapQuery.type;
+        clazzName = wrapQuery.getEntityClazz().getSimpleName();
+
+        if (typePrevisto != type) {
+            System.out.println(String.format("La query della entityClazz %s era prevista di typo %s mentre è di tipo %s", clazzName, typePrevisto, type));
+            return;
+        }
+        assertEquals(typePrevisto, type);
+        message = switch (type) {
+            case indefinita, nulla -> VUOTA;
+            case errata -> {
+                System.out.println(String.format("La entityClazz '%s' non contiene nessun records (entities) perché non è del tipo adatto", clazzName));
+                yield VUOTA;
+            }
+            case validaSenzaFiltri -> "valida con filtro=null o vuoto e restituisce i valori filtrati";
+            case validaConFiltri -> "valida con filtro=esplicito e restituisce i valori filtrati";
+            default -> VUOTA;
+        };
+
+        if (textService.isEmpty(message)) {
+            return;
+        }
+
+        if (ottenutoIntero == previstoIntero) {
+            if (risultatoEsatto) {
+                System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono esattamente quelli previsti (obbligatori)", clazzName, ottenutoIntero));
+            }
+            else {
+                System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono uguali a quelli indicativamente previsti (facoltativi)", clazzName, ottenutoIntero));
+            }
+        }
+        else {
+            if (ottenutoIntero > previstoIntero) {
+                if (risultatoEsatto) {
+                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono più dei %s previsti e non va bene", clazzName, ottenutoIntero, previstoIntero));
+                }
+                else {
+                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono più dei %s indicativamente previsti", clazzName, ottenutoIntero, previstoIntero));
+                }
+            }
+            else {
+                if (risultatoEsatto) {
+                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono meno dei %s previsti e non va bene", clazzName, ottenutoIntero, previstoIntero));
+                }
+                else {
+                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono meno dei %s indicativamente previsti", clazzName, ottenutoIntero, previstoIntero));
+                }
+            }
+        }
+        System.out.println(String.format("La query è %s", message));
+
+        if (flagRisultatiEsattiObbligatori && risultatoEsatto) {
+            assertEquals(previstoIntero, ottenutoIntero);
+        }
+    }
 
     protected void printCount(final Class clazz, AFiltro filtro, final int previstoIntero, final int ottenutoIntero) {
         String clazzName;
@@ -427,6 +542,10 @@ public abstract class MongoTest extends ATest {
         }
 
         return propertyValueVideo;
+    }
+
+    protected String getSimpleName(final Class clazz) {
+        return clazz != null ? clazz.getSimpleName() : "(manca la classe)";
     }
 
 }

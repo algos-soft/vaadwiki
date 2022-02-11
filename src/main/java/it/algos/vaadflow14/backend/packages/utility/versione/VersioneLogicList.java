@@ -1,7 +1,10 @@
 package it.algos.vaadflow14.backend.packages.utility.versione;
 
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
@@ -70,7 +73,42 @@ public class VersioneLogicList extends LogicList {
      */
     @Override
     protected void fixAlertList() {
-        addSpanBlu("Test");
+        String base = html.bold(FlowCost.NAME_VAADFLOW);
+        String progetto = html.bold(FlowVar.projectNameUpper);
+        String type = html.bold("Type");
+        String filtro = html.bold("filtro");
+        String numero = html.bold("#");
+        String release = html.bold("release");
+        String company = html.bold("company");
+        Span casetta;
+        Icon casettaIcon;
+        Span casettaSpan;
+        Span casettaText;
+        Span fabbrica;
+        Icon fabbricaIcon;
+        Span fabbricaSpan;
+        Span fabbricaText;
+
+        addSpanVerde("Cronologia delle modifiche/cambiamenti/versioni/patch/aggiunte al programma");
+        addSpanVerde(String.format("%s è una categorizzazione semplice di riferimento (enumeration). Con %s selezionabile da menu.", type, filtro));
+        addSpanVerde(String.format("%s è il numero della %s del JAR eseguibile (FlowVar.projectVersion).", numero, release));
+
+        casettaIcon = new Icon(VaadinIcon.HOME);
+        casettaIcon.setColor("green");
+        casettaSpan = new Span(casettaIcon);
+        casettaText = html.getSpanVerde(String.format(" è il flag booleano per separare le versioni di %s da quelle del progetto specifico %s", base, progetto));
+        casetta = new Span(casettaSpan, casettaText);
+
+        fabbricaIcon = new Icon((VaadinIcon.FACTORY));
+        fabbricaIcon.setColor("green");
+        fabbricaSpan = new Span(fabbricaIcon);
+        fabbricaText = html.getSpanVerde(String.format(" è il flag booleano per identificare le versioni specifiche di una sola %s", company));
+        fabbrica = new Span(fabbricaSpan, fabbricaText);
+
+        if (alertList != null) {
+            alertList.add(casetta);
+            alertList.add(fabbrica);
+        }
     }
 
 

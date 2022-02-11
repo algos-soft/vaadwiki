@@ -132,6 +132,14 @@ public class FlowVar {
 
 
     /**
+     * Classe da usare per gestire le versioni <br>
+     * Di default FlowVers oppure possibile sottoclasse del progetto <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
+     */
+    public static Class versionClazz;
+
+
+    /**
      * Type da usare per la serializzazione dei dati in mongoDB  <br>
      * Di default AETypeSerializing.spring <br>
      * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>

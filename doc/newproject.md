@@ -4,39 +4,43 @@ IDEA, creazione di un nuovo progetto di base con VaadinFlow e SpringBoot<br>
 Usa Vaadin 14.0.1 e IntelliJ Idea 2019.3
    	
 
-###Creazione struttura base project Idea
+###Crea struttura base project Idea
 
 1. File -> New -> Project...
 
-2. Selezionare **Maven** a sinistra (la seconda opzione del secondo gruppo)
+2. Seleziona **Maven** a sinistra (la seconda opzione del secondo gruppo)
 
-3. Controllare che Project SDK sia selezionato. Se manca, crearlo -> _New_
+3. Controlla che Project SDK sia selezionato. Se manca, crealo -> _New_
 
 4. Non selezionare 'Create from archetype'.
    <br>Confermare -> _Next_
 
-5. Controllare 'Name' del progetto (minuscolo) e 'Location' d'installazione.
+5. Controlla 'Name' del progetto (minuscolo) e 'Location' d'installazione.
 
-6. Aprire 'Artifact Coordinates' e regolare: 
+6. Apri 'Artifact Coordinates' e regola: 
    <br>GroupId: it.algos
    <br>ArtifactId: nomeNuovoProgetto
    <br>Version: 1.0-SNAPSHOT
    <br> Confermare -> _Finish_
    
-   In realtà inutile, perché il wizard costruisce comunque le directory coi nomi necessari.
+7. Chiudi il progetto appena creato
+
+8. Il progetto base è stato creato in /Users/gac/Documents/IdeaProjects/...
+
+9. Se vuoi cambiare directory di creazione di Idea vai a: Preferences->System Settings a destra Project->Default project directory
+
+10. Se lo crei in una directory diversa devi spostarlo in /Users/gac/Documents/IdeaProjects/ prima di usare Wizard
 
 
+###Crea nuovo progetto
 
-
-###Creazione nuovo progetto
-
-1. Aprire 'vaadflow' e lanciarlo
+1. Apri 'vaadflow14' e lancialo
 
 2. Clicca sul meu **Wizard** e sul bottone 'New project'
 
 3. Seleziona il project appena creato nel popup di progetti vuoti esistenti nella directory IdeaProjects
-   <br>Se il progetto non esiste/non appare, tornare alla sezione precedente
-   <br>Cliccare il bottone _Conferma_
+   <br>Se il progetto non esiste/non appare, torna alla sezione precedente
+   <br>Clicca il bottone _Conferma_
 
 
 

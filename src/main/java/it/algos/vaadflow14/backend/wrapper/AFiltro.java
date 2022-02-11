@@ -176,7 +176,7 @@ public class AFiltro implements Serializable {
         }
 
         if (text.isEmpty(propertyField)) {
-            throw AlgosException.stack("Manca la propertyName del filtro", this.getClass(), "regola");
+            throw AlgosException.stack("Manca la propertyField del filtro", this.getClass(), "regola");
         }
 
         propertyField = text.levaCoda(propertyField, FIELD_NAME_ID_LINK);

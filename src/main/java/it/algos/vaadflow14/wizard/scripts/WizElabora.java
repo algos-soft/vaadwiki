@@ -12,6 +12,8 @@ import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.annotation.*;
 
+import java.util.*;
+
 
 /**
  * Project vaadflow
@@ -388,7 +390,7 @@ public abstract class WizElabora implements WizRecipient {
 
     public void creaModuloProgetto() {
         AIResult result;
-        String message = VUOTA;
+        String message;
         String path = VUOTA;
         String projectUpper = AEWizCost.nameTargetProjectUpper.get();
         String projectModulo = AEWizCost.nameTargetProjectModulo.get();
@@ -396,12 +398,13 @@ public abstract class WizElabora implements WizRecipient {
 
         //--crea directory principale del modulo target (empty)
         //--crea subDirectory backend (empty)
-        //--crea subDirectory application (empty) in backend
-        //--crea subDirectory boot (empty) in backend
-        //--crea subDirectory data (empty) in backend
-        //--crea subDirectory enumeration (empty) in backend
-        //--crea subDirectory packages (empty) in backend
+        //--crea subSubDirectory application (empty) in backend
+        //--crea subSubDirectory boot (empty) in backend
+        //--crea subSubDirectory data (empty) in backend
+        //--crea subSubDirectory enumeration (empty) in backend
+        //--crea subSubDirectory packages (empty) in backend
         //--crea subDirectory ui (empty)
+        //--crea subSubDirectory enumeration (empty) in ui
         for (AEModulo mod : AEModulo.getDirectories()) {
             path = mod.getAbsolutePath();
             pathBreve = getPathBreve(mod);
@@ -424,6 +427,7 @@ public abstract class WizElabora implements WizRecipient {
         }
 
         //--crea files del modulo target
+        //--crea file xxxMain
         //--crea file xxxCost
         //--crea file xxxBoot
         //--crea file xxxData

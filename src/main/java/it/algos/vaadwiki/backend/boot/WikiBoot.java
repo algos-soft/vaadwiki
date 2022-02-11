@@ -4,6 +4,9 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.boot.*;
+import it.algos.vaadflow14.backend.data.*;
+import it.algos.vaadflow14.backend.packages.utility.versione.*;
+import it.algos.vaadflow14.backend.vers.*;
 import it.algos.vaadflow14.wizard.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.application.*;
@@ -82,6 +85,7 @@ public class WikiBoot extends FlowBoot {
         FlowVar.usaDebug = false;
         FlowVar.usaCompany = false;
         FlowVar.dataClazz = WikiData.class;
+        FlowVar.versionClazz = WikiVers.class;
         FlowVar.usaSecurity = false;
         FlowVar.projectNameDirectoryIdea = "vaadwiki";
         FlowVar.projectNameModulo = "vaadwiki";
@@ -134,6 +138,7 @@ public class WikiBoot extends FlowBoot {
         super.fixMenuRoutes();
 
         FlowVar.menuRouteList.add(Wizard.class);
+        FlowVar.menuRouteList.add(Versione.class);
         FlowVar.menuRouteList.add(Attivita.class);
         FlowVar.menuRouteList.add(Nazionalita.class);
         FlowVar.menuRouteList.add(Professione.class);
@@ -174,8 +179,22 @@ public class WikiBoot extends FlowBoot {
      */
     @Autowired
     @Qualifier(TAG_WIKI_DATA)
-    public void setDataInstance(WikiData dataInstance) {
+    public void setDataInstance(AIData dataInstance) {
         this.dataInstance = dataInstance;
+    }
+
+
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    @Qualifier(TAG_WIKI_VERSION)
+    public void setVersInstance(final AIVers versInstance) {
+        this.versInstance = versInstance;
     }
 
 }

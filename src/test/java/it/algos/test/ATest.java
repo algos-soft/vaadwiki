@@ -13,6 +13,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
@@ -120,6 +121,8 @@ public abstract class ATest {
 
     protected static Class<? extends AEntity> MESE_ENTITY_CLASS = Mese.class;
 
+    protected static Class<? extends AEntity> GIORNO_ENTITY_CLASS = Giorno.class;
+
     protected static Class<? extends AEntity> COMPANY_ENTITY_CLASS = Company.class;
 
     protected static Class<? extends AEntity> STATO_ENTITY_CLASS = Stato.class;
@@ -141,6 +144,7 @@ public abstract class ATest {
     //     */
     //    @Mock
     //    protected GenericApplicationContext appContext;
+
 
     @InjectMocks
     protected StaticContextAccessor staticContextAccessor;
@@ -166,13 +170,13 @@ public abstract class ATest {
     @InjectMocks
     protected BeanService beanService;
 
+    //    @Mock
+    //    protected MongoTemplate mongoTemplate;
+
     @InjectMocks
     protected MongoService mongoServiceImpl;
 
     protected AIMongoService mongoService;
-
-    //    @Mock
-    //    protected MongoTemplate mongoTemplate;
 
     protected MongoOperations mongoOp;
 
@@ -327,6 +331,8 @@ public abstract class ATest {
 
     protected int divisore;
 
+    protected Class<? extends AEntity> entityClazz;
+
     protected AEntity entityBean;
 
     protected Query query;
@@ -378,7 +384,6 @@ public abstract class ATest {
     protected WrapTreStringhe treStringhe;
 
     protected AETypeSerializing oldType;
-
 
     protected static String[] CANONICAL() {
         return new String[]{null, VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
@@ -667,6 +672,7 @@ public abstract class ATest {
         wrapFiltri.entityClazz = null;
         mappaFiltri = null;
         wrapFiltri.setMappaFiltri(null);
+        entityClazz = null;
     }
 
     protected String getTime() {
@@ -769,7 +775,7 @@ public abstract class ATest {
         }
         else {
             if (entityBean != null) {
-                System.out.println(String.format("KeyId=%s: creata una entityBean (vuota) di classe %s%s%s", keyPropertyValue,clazz.getSimpleName(), FORWARD, entityBean));
+                System.out.println(String.format("KeyId=%s: creata una entityBean (vuota) di classe %s%s%s", keyPropertyValue, clazz.getSimpleName(), FORWARD, entityBean));
             }
             else {
                 System.out.println(String.format("KeyId=%s: non è stata creata nessuna entityBean di classe %s", keyPropertyValue, clazz.getSimpleName()));
@@ -968,6 +974,25 @@ public abstract class ATest {
         }
         if (textService.isValid(unErrore.getMethod())) {
             System.out.println(String.format("Method %s %s()", FlowCost.FORWARD, unErrore.getMethod()));
+        }
+    }
+
+    protected void printError(final Exception unErrore) {
+        System.out.println(VUOTA);
+        System.out.println("Errore");
+        if (unErrore == null) {
+            return;
+        }
+
+        if (unErrore instanceof AlgosException erroreAlgos) {
+            System.out.println(String.format("Class %s %s", FlowCost.FORWARD, erroreAlgos.getClazz().getSimpleName()));
+            System.out.println(String.format("Method %s %s", FlowCost.FORWARD, erroreAlgos.getMethod()));
+            System.out.println(String.format("Message %s %s", FlowCost.FORWARD, erroreAlgos.getMessage()));
+        }
+        else {
+            System.out.println(String.format("Class %s %s", FlowCost.FORWARD, unErrore.getCause()!=null?unErrore.getCause().getClass().getSimpleName():VUOTA));
+            System.out.println(String.format("Message %s %s", FlowCost.FORWARD, unErrore.getMessage()));
+            System.out.println(String.format("Cause %s %s", FlowCost.FORWARD, unErrore.getCause()));
         }
     }
 

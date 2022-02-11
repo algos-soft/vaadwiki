@@ -223,7 +223,7 @@ public class Wizard extends VerticalLayout {
 
         layout.add(new Label("Crea un nuovo project IntelliJIdea, nella directory 'IdeaProjects'"));
         layout.add(new Label("Seleziona un progetto vuoto tra quelli esistenti. Regola alcuni flags iniziali"));
-        layout.add(new Label("Il progetto va poi spostato nella directory 'operativi' e agiunto alla enumeration AEProgetto"));
+        layout.add(new Label("Il progetto va poi spostato nella directory 'operativi' e aggiunto alla enumeration AEProgetto"));
 
         Button bottone = new Button("Crea project");
         bottone.getElement().setAttribute("theme", "primary");

@@ -3,9 +3,11 @@ package it.algos.vaadflow14.backend.packages.utility.versione;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
-import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -61,14 +63,17 @@ public class VersioneService extends AService {
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param code        di riferimento
-     * @param giorno      di ricompilazione del programma
-     * @param descrizione completa
+     * @param type        categorizzazione dell'intervento
+     * @param titolo      breve
+     * @param company     interessata alla versione (algos per tutte)
+     * @param descrizione testuale completa
+     * @param vaadFlow    versione del progetto base vs progetto specifico
+     * @param usaCompany  versione specifica per una sola company vs tutte le companies
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Versione creaIfNotExist(final String code, final LocalDate giorno, final String descrizione) {
-        return (Versione) checkAndSave(newEntity(code, giorno, descrizione));
+    public Versione creaIfNotExist(final AETypeVers type, final String titolo, final Company company, final String descrizione, final boolean vaadFlow, final boolean usaCompany) {
+        return (Versione) checkAndSave(newEntity(type, titolo, company, descrizione, vaadFlow, usaCompany));
     }
 
     /**
@@ -79,7 +84,7 @@ public class VersioneService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Versione newEntity() {
-        return newEntity(VUOTA, null, VUOTA);
+        return newEntity(null, VUOTA, null, VUOTA, true, false);
     }
 
 
@@ -88,20 +93,54 @@ public class VersioneService extends AService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param code        di riferimento
-     * @param giorno      di ricompilazione del programma
-     * @param descrizione completa
+     * @param type        categorizzazione dell'intervento
+     * @param titolo      breve
+     * @param company     interessata alla versione (algos per tutte)
+     * @param descrizione testuale completa
+     * @param vaadFlow    versione del progetto base vs progetto specifico
+     * @param usaCompany  versione specifica per una sola company vs tutte le companies
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Versione newEntity(final String code, final LocalDate giorno, final String descrizione) {
-        Versione newEntityBean = Versione.builderVersione()
-                .code(text.isValid(code) ? code : null)
-                .giorno(giorno != giorno ? giorno : LocalDate.now())
-                .descrizione(text.isValid(descrizione) ? descrizione : null)
-                .build();
+    public Versione newEntity(final AETypeVers type, final String titolo, final Company company, final String descrizione, final boolean vaadFlow, final boolean usaCompany) {
+        Versione newEntityBean =
+                Versione.builderVersione()
+                        .type(type)
+                        .release(FlowVar.projectVersion)
+                        .giorno(LocalDate.now())
+                        .titolo(text.isValid(titolo) ? titolo : null)
+                        .descrizione(text.isValid(descrizione) ? descrizione : null)
+                        .vaadFlow(vaadFlow)
+                        .usaCompany(usaCompany)
+                        .build();
+        newEntityBean.company = company != null ? company : getCompanyBase();
 
         return (Versione) fixKey(newEntityBean);
+    }
+
+    public Company getCompanyBase() {
+        return null;
+    }
+
+    /**
+     * Regola la chiave se esiste il campo keyPropertyName. <br>
+     * Se la company è nulla, la recupera dal login <br>
+     * Se la company è ancora nulla, la entity viene creata comunque
+     * ma verrà controllata ancora nel metodo beforeSave() <br>
+     *
+     * @param newEntityBean to be checked
+     *
+     * @return the checked entity
+     */
+    @Override
+    public AEntity fixKey(AEntity newEntityBean) {
+        Versione versione = (Versione) newEntityBean;
+
+        if (text.isEmpty(newEntityBean.id)) {
+            newEntityBean.id = versione.titolo + versione.descrizione;
+        }
+
+        return newEntityBean;
     }
 
     /**
@@ -132,37 +171,37 @@ public class VersioneService extends AService {
         return (Versione) super.findByKey(keyValue);
     }
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    //    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = null;
-        //        AIResult result = super.resetEmptyOnly();
-        int numRec = 0;
-
-        if (result.isErrato()) {
-            return result;
-        }
-
-        numRec = creaIfNotExist("Setup", LocalDate.now(), "Installazione iniziale di " + FlowVar.projectNameUpper) != null ? numRec + 1 : numRec;
-
-        return result;
-    }
+    //    /**
+    //     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+    //     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+    //     * <p>
+    //     * 1) deve esistere lo specifico metodo sovrascritto
+    //     * 2) deve essere valida la entityClazz
+    //     * 3) deve esistere la collezione su mongoDB
+    //     * 4) la collezione non deve essere vuota
+    //     * <p>
+    //     * I dati possono essere: <br>
+    //     * 1) recuperati da una Enumeration interna <br>
+    //     * 2) letti da un file CSV esterno <br>
+    //     * 3) letti da Wikipedia <br>
+    //     * 4) creati direttamente <br>
+    //     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     *
+    //     * @return wrapper col risultato ed eventuale messaggio di errore
+    //     */
+    //    //    @Override
+    //    public AIResult resetEmptyOnly() {
+    //        AIResult result = null;
+    //        //        AIResult result = super.resetEmptyOnly();
+    //        int numRec = 0;
+    //
+    //        if (result.isErrato()) {
+    //            return result;
+    //        }
+    //
+    //        numRec = creaIfNotExist("Setup", LocalDate.now(), "Installazione iniziale di " + FlowVar.projectNameUpper) != null ? numRec + 1 : numRec;
+    //
+    //        return result;
+    //    }
 
 }

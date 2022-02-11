@@ -43,6 +43,8 @@ public abstract class FlowCost {
 
     public static final String TAG_FLOW_DATA = "flowdata";
 
+    public static final String TAG_FLOW_VERSION = "flowversion";
+
     public static final String VUOTA = "";
 
     public static final String ERRORE = "Errore";

@@ -585,9 +585,16 @@ public class DateServiceTest extends ATest {
             System.out.println(unErrore);
             System.out.println(VUOTA);
         }
-
     }
 
+    @Test
+    @Order(17)
+    @DisplayName("17 - Costruisce LocalDateTime da LocalDate e LocalTime")
+    void giornoOrario() {
+        localDateTimePrevista = LocalDateTime.of(2014,10,21,8,52,44);
+        localDateTimeOttenuta = service.add(LOCAL_DATE_UNO, LOCAL_TIME_UNO);
+        assertEquals(localDateTimePrevista, localDateTimeOttenuta);
+    }
 
     @Test
     @Order(90)

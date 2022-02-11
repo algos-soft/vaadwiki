@@ -232,6 +232,18 @@ public class WizDialogNewProject extends WizDialog {
             }
         }
 
+        //--regola il flag per far costruire il modulo base
+        AEWizCost.pathTargetProjectModulo.setAcceso(true);
+
+        //--regola i flags per far costruire il modulo specifico
+        AEModulo.fileMain.setAcceso(true);
+        AEModulo.fileCost.setAcceso(true);
+        AEModulo.fileBoot.setAcceso(true);
+        AEModulo.fileData.setAcceso(true);
+
+        //--inserisce un valore fondamentale di nameTargetProjectModulo che DI NORMA è uguale a nameTargetProjectUpper
+        AEWizCost.nameTargetProjectModulo.setValue(text.primaMinuscola(projectNameUpper));
+
         //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
         return super.fixValoriInseriti(pathProject, projectNameUpper, VUOTA);
     }

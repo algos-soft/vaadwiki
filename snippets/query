@@ -3,3 +3,9 @@ db.getCollection('funzione').find({'croce.$id':'crf'})
 
 ==Query normale==
 db.getCollection('bio').find({'page':20275})
+
+==Query normale==
+db.getCollection('mese').find({'giorni':31})
+
+==Query multipla==
+db.getCollection('mese').find({'giorni':31})

@@ -243,6 +243,61 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return isExistsCollection(collectionName.toLowerCase()) && count(collectionName.toLowerCase()) > 0;
     }
 
+    /**
+     * Conteggio delle entities di una collection selezionate secondo la query di filtro  <br>
+     *
+     * @param wrapQuery con le info per costruire la query
+     *
+     * @return numero di entities selezionate
+     */
+    public int count(final WrapQuery wrapQuery) throws AlgosException {
+        int entities;
+        Class<? extends AEntity> entityClazz;
+        Query query = new Query();
+        List<WrapCriteria> listaCriteria;
+        WrapQuery.Type type;
+
+        if (wrapQuery == null) {
+            throw AlgosException.stack("Manca il wrapper wrapQuery", getClass(), "count");
+        }
+
+        if (wrapQuery.getEntityClazz() == null) {
+            throw AlgosException.stack("Manca la entityClazz", getClass(), "count");
+        }
+
+        entityClazz = wrapQuery.getEntityClazz();
+        type = wrapQuery.type;
+        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+            throw AlgosException.stack(String.format("La classe %s non è della tipologia adeguata", entityClazz.getSimpleName()), getClass(), "count");
+        }
+
+        listaCriteria = wrapQuery.getListaCriteria();
+        for (WrapCriteria wrapCriteria : listaCriteria) {
+            query.addCriteria(wrapCriteria.getCriteria());
+        }
+
+        entities = switch (type) {
+            case indefinita, nulla -> 0;
+            case errata -> (int) mongoOp.count(new Query(), entityClazz);
+            case validaSenzaFiltri -> (int) mongoOp.count(query, entityClazz);
+            case validaConFiltri -> (int) mongoOp.count(query, entityClazz);
+            default -> 15;
+        };
+
+        return entities;
+    }
+
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     *
+     * @param wrapQuery con le info per costruire la query
+     *
+     * @return lista di entityBeans
+     */
+    public List<? extends AEntity> fetch(final WrapQuery wrapQuery) throws AlgosException {
+        return mongoOp.find(wrapQuery.getQuery(), wrapQuery.getEntityClazz());
+    }
 
     /**
      * Conteggio di TUTTE le entities di una collection NON filtrate. <br>
@@ -252,6 +307,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return numero totale di entities
      */
     @Override
+    @Deprecated
     public int count(final Class<? extends AEntity> entityClazz) throws AlgosException {
         checkEntityClazz(entityClazz, "count");
 
@@ -282,6 +338,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return numero di entities selezionate
      */
     @Override
+    @Deprecated
     public int count(final Class<? extends AEntity> entityClazz, final Serializable keyValue) throws AlgosException {
         checkEntityClazz(entityClazz, "count");
         checkKeyValue(keyValue);
@@ -325,6 +382,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return numero di entities eventualmente filtrate (se esiste la propertyName)
      */
     @Override
+    @Deprecated
     public int count(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
         checkEntityClazz(entityClazz, "count");
         wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
@@ -450,6 +508,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     }
 
     @Override
+    @Deprecated
     public int count(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException {
         Map<String, AFiltro> mappaFiltri;
         MongoCollection<Document> collection;
@@ -494,6 +553,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return numero di entities totali
      */
+    @Deprecated
     private int count(final String collectionName) throws AlgosException {
         MongoCollection<Document> collection = getCollection(collectionName);
 
@@ -508,6 +568,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return numero di entities totali
      */
+    @Deprecated
     private int count(final MongoCollection<Document> collection) throws AlgosException {
         Long risultato;
 
@@ -527,6 +588,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return numero di entities filtrate
      */
+    @Deprecated
     private int count(final MongoCollection<Document> collection, Bson filter) throws AlgosException {
         Long risultato;
 
@@ -1383,11 +1445,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         Criteria criteria;
         Criteria criteriaQuery = new Criteria();
 
-        if (mappaFiltri != null && mappaFiltri.size() > 1) {
-            int a = 87;
-            String test = "db.getCollection('bio').find( { '$or':[{'attivita' : 'accademica'},  {'attivita' : 'accademico'}, {'attivita' : 'professore universitario'} ] })";
-        }
-
         if (array.isAllValid(mappaFiltri)) {
             for (AFiltro filtro : mappaFiltri.values()) {
                 criteria = filtro.getCriteria();
@@ -1400,6 +1457,10 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 else {
                     //--For multiple criteria on the same field, uses a “comma” to combine them.
                     //@todo Funzionalità ancora da implementare
+                    if (criteria == null) {
+                        throw AlgosException.stack("Criteria is null", getClass(), "getQuery");
+                    }
+
                     if (criteria.getKey().equals(criteriaQuery.getKey())) {
                         criteriaQuery.andOperator(criteria);
                         //                        throw new AQueryException("Non riesco a gestire i filtri multipli");
