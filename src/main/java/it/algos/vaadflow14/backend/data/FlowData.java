@@ -291,7 +291,7 @@ public class FlowData implements AIData {
      * @since java 8
      */
     public void resetData() {
-        this.resetData("vaadflow14");
+        //        this.resetData("vaadflow14");
     }
 
 
@@ -311,8 +311,8 @@ public class FlowData implements AIData {
     protected void resetData(final String moduleName) {
         List<String> allModulePackagesClasses = null;
         List<Object> allEntityClasses = null;
-        List<Object> allUsaBootEntityClasses;
-        List<Object> allEntityClassesRicreabiliResetDownload;
+        List<Object> allUsaBootEntityClasses = null;
+        List<Object> allEntityClassesRicreabiliResetDownload = null;
         String message;
         Object[] matrice = null;
 
@@ -345,7 +345,9 @@ public class FlowData implements AIData {
         //        logger.log(AETypeLog.checkData, message);
 
         //--seleziona le Entity classes che hanno @AIEntity usaBoot=true
-        allUsaBootEntityClasses = Arrays.asList(allEntityClasses.stream().filter(checkUsaBoot).sorted().toArray());
+        if (allEntityClasses != null) {
+            allUsaBootEntityClasses = Arrays.asList(allEntityClasses.stream().filter(checkUsaBoot).sorted().toArray());
+        }
         if (array.isAllValid(allUsaBootEntityClasses)) {
             message = String.format("In %s sono stati trovati %d packages con classi di tipo AEntity che hanno usaBoot=true", moduleName, allUsaBootEntityClasses.size());
         }
@@ -355,7 +357,9 @@ public class FlowData implements AIData {
         logger.log(AETypeLog.checkData, message);
 
         //--seleziona le xxxService classes che hanno il metodo reset() oppure download()
-        allEntityClassesRicreabiliResetDownload = Arrays.asList(allUsaBootEntityClasses.stream().filter(esisteMetodoService).sorted().toArray());
+        if (allUsaBootEntityClasses != null) {
+            allEntityClassesRicreabiliResetDownload = Arrays.asList(allUsaBootEntityClasses.stream().filter(esisteMetodoService).sorted().toArray());
+        }
         if (array.isAllValid(allEntityClassesRicreabiliResetDownload)) {
             message = String.format("In %s sono stati trovati %d packages con classi di tipo xxxService che hanno reset() oppure download()", moduleName, allEntityClassesRicreabiliResetDownload.size());
         }
@@ -366,9 +370,12 @@ public class FlowData implements AIData {
 
         //--elabora le entity classes che hanno il metodo reset() oppure download() e quindi sono ricreabili
         //--eseguendo xxxService.bootReset (forEach=elaborazione)
-        allEntityClassesRicreabiliResetDownload.stream().forEach(bootReset);
-        message = String.format("Controllati i dati iniziali di %s", moduleName);
-        logger.log(AETypeLog.checkData, message);
+        if (allEntityClassesRicreabiliResetDownload != null) {
+            allEntityClassesRicreabiliResetDownload.stream().forEach(bootReset);
+            message = String.format("Controllati i dati iniziali di %s", moduleName);
+            logger.log(AETypeLog.checkData, message);
+        }
+
     }
 
     /**
