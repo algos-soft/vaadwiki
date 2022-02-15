@@ -1,6 +1,9 @@
 package it.algos.vaadwiki.backend.service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import org.springframework.beans.factory.config.*;
@@ -82,9 +85,9 @@ public class BioUtility extends AbstractService {
      *
      * @return mappa chiave-valore
      */
-    public LinkedHashMap<String,String> estraeMappa(final String tmplBioServer) {
+    public LinkedHashMap<String, String> estraeMappa(final String tmplBioServer) {
         String tmplBio = tmplBioServer;
-        LinkedHashMap<String,String> mappa = null;
+        LinkedHashMap<String, String> mappa = null;
         LinkedHashMap mappaGraffe = null;
         boolean continua = false;
         String sepRE = "\n\\|";
@@ -402,6 +405,39 @@ public class BioUtility extends AbstractService {
         mappa.put(KEY_MAP_GRAFFE_TESTO_PRECEDENTE, testoElaborato);
 
         return testoElaborato;
+    }
+
+    /**
+     * Gestisce l'eccezione per i giorni 7 e 11 di ogni mese <br>
+     */
+    public String wikiTitleNati(final AEntity entityBean) {
+        return wikiTitle(entityBean,true);
+    }
+
+    /**
+     * Gestisce l'eccezione per i giorni 7 e 11 di ogni mese <br>
+     */
+    public String wikiTitleMorti(final AEntity entityBean) {
+        return wikiTitle(entityBean,false);
+    }
+
+    private String wikiTitle(final AEntity entityBean, final boolean natiVsMorti) {
+        String wikiTitle = natiVsMorti ? "Nati" : "Morti";
+        String titolo = VUOTA;
+
+        if (entityBean instanceof Giorno giorno) {
+            titolo = giorno.titolo;
+        }
+        if (entityBean instanceof Anno anno) {
+            titolo = anno.titolo;
+        }
+
+        if (text.isValid(titolo)) {
+            wikiTitle += (titolo.startsWith("8") || titolo.startsWith("11")) ? " l'" : " il ";
+            wikiTitle += titolo;
+        }
+
+        return wikiTitle;
     }
 
 }

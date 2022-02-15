@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import it.algos.vaadwiki.backend.enumeration.*;
+import it.algos.vaadwiki.backend.wrapper.*;
 import org.json.simple.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -110,6 +111,7 @@ public class QueryLogin extends AQuery {
      */
     private String lgusername;
 
+
     /**
      * Request al software mediawiki composta di due request <br>
      * <p>
@@ -128,8 +130,8 @@ public class QueryLogin extends AQuery {
      *
      * @return wrapper di informazioni
      */
-    public AIResult urlRequest() {
-        AIResult result;
+    public WResult urlRequest() {
+        WResult result;
         this.reset();
 
         //--La prima request è di tipo GET
@@ -147,7 +149,7 @@ public class QueryLogin extends AQuery {
      * La request preliminare è di tipo GET, per recuperare token e session <br>
      * <p>
      * Request 1
-     * URL: https://en.wikipedia.org/w/api.php?action=query&format=json&meta=tokens&type=login
+     * URL: https://it.wikipedia.org/w/api.php?action=query&format=json&meta=tokens&type=login
      * This will return a "logintoken" parameter in JSON form, as documented at API:Login.
      * Other output formats are available. It will also return HTTP cookies as described below.
      * <p>
@@ -156,13 +158,13 @@ public class QueryLogin extends AQuery {
      * Recupera i cookies della connessione (in particolare 'itwikisession') <br>
      * Recupera il logintoken dalla urlResponse <br>
      */
-    public AIResult preliminaryRequestGet() {
-        AIResult result = AResult.valido();
-        String urlDomain = TAG_PRELIMINARY_REQUEST_GET;
+    public WResult preliminaryRequestGet() {
+        WResult result = WResult.valido();
+        String urlDomain = TAG_LOGIN_PRELIMINARY_REQUEST_GET;
         String urlResponse = VUOTA;
         URLConnection urlConn;
 
-        result.setUrlPreliminary(TAG_PRELIMINARY_REQUEST_GET);
+        result.setUrlPreliminary(TAG_LOGIN_PRELIMINARY_REQUEST_GET);
         try {
             urlConn = this.creaGetConnection(urlDomain);
             urlResponse = sendRequest(urlConn);
@@ -181,7 +183,7 @@ public class QueryLogin extends AQuery {
      * Recupera il token 'logintoken' dalla preliminaryRequestGet <br>
      * Viene convertito in lgtoken necessario per la successiva secondaryRequestPost <br>
      */
-    protected AIResult elaboraPreliminaryResponse(final AIResult result, final String rispostaDellaQuery) {
+    protected WResult elaboraPreliminaryResponse(final WResult result, final String rispostaDellaQuery) {
         JSONObject jsonAll;
         JSONObject jsonQuery = null;
         JSONObject jsonTokens = null;
@@ -216,7 +218,7 @@ public class QueryLogin extends AQuery {
      * Request principale. Crea la connessione base di tipo POST <br>
      * <p>
      * Request 2
-     * URL: https://en.wikipedia.org/w/api.php?action=login&format=json
+     * URL: https://it.wikipedia.org/w/api.php?action=login&format=json
      * COOKIES parameters:
      * itwikiSession
      * POST parameters:
@@ -238,8 +240,8 @@ public class QueryLogin extends AQuery {
      *
      * @return true se il collegamento come bot è confermato
      */
-    public AIResult secondaryRequestPost(final AIResult result) {
-        String urlDomain = TAG_SECONDARY_REQUEST_POST;
+    public WResult secondaryRequestPost(final WResult result) {
+        String urlDomain = TAG_LOGIN_SECONDARY_REQUEST_POST;
         String urlResponse = VUOTA;
         URLConnection urlConn;
         result.setUrlRequest(urlDomain);
@@ -286,8 +288,8 @@ public class QueryLogin extends AQuery {
      *
      * @return true se il collegamento come bot è confermato
      */
-    protected AIResult elaboraSecondaryResponse(AIResult result, final String rispostaDellaQuery) {
-        AIResult assertResult;
+    protected WResult elaboraSecondaryResponse(WResult result, final String rispostaDellaQuery) {
+        WResult assertResult;
         JSONObject jsonLogin = null;
         boolean loginValido = false;
         String jsonResult = VUOTA;

@@ -39,7 +39,7 @@ public class FlowVers extends AVers {
     public void inizia() {
         //--prima installazione del progetto base VaadFlow14
         //--non fa nulla, solo informativo
-        super.flow(AETypeVers.setup, "Setup", "Installazione iniziale di VaadFlow versione 14");
+        super.flow(AETypeVers.setup, "Setup", "Installazione iniziale di VaadFlow");
     }
 
 }

@@ -44,14 +44,19 @@ public abstract class AQuery {
     protected static final String TAG_QUERY = TAG_FORMAT + "&action=query";
 
     /**
-     * Tag per la costruzione costruzione del primo 'urlDomain' completo per la preliminaryRequestGet di login <br>
+     * Tag per la costruzione del primo 'urlDomain' completo per una queryWrite <br>
      */
-    protected static final String TAG_PRELIMINARY_REQUEST_GET = TAG_QUERY + "&meta=tokens&type=login";
+    protected static final String TAG_PRELIMINARY_REQUEST_GET = TAG_QUERY + "&meta=tokens&type=csrf";
 
     /**
-     * Tag per la costruzione del secondo 'urlDomain' completo per la secondaryRequestPost di login <br>
+     * Tag per la costruzione del primo 'urlDomain' completo per la preliminaryRequestGet di login <br>
      */
-    protected static final String TAG_SECONDARY_REQUEST_POST = TAG_FORMAT + "&action=login";
+    protected static final String TAG_LOGIN_PRELIMINARY_REQUEST_GET = TAG_PRELIMINARY_REQUEST_GET + "&type=login";
+
+    /**
+     * Tag per la costruzione del secondo 'urlDomain' completo per una queryWrite <br>
+     */
+    protected static final String TAG_SECONDARY_REQUEST_POST = TAG_QUERY + "&action=edit&title=";
 
     /**
      * Tag per la costruzione del 'urlDomain' completo per la request di login <br>
@@ -62,6 +67,16 @@ public abstract class AQuery {
      * Tag per la costruzione del 'urlDomain' completo per la ricerca dei pageIds di una categoria <br>
      */
     protected static final String TAG_REQUEST_CAT = TAG_QUERY + "&list=categorymembers&cmtitle=Categoria:";
+
+    /**
+     * Tag per la costruzione del secondo 'urlDomain' completo per la secondaryRequestPost di login <br>
+     */
+    protected static final String TAG_LOGIN_SECONDARY_REQUEST_POST = TAG_FORMAT + "&action=login";
+
+
+    protected static final String CSRF_TOKEN = "csrftoken";
+
+    protected static final String TOKENS = "tokens";
 
     /**
      * Istanza di una interfaccia <br>
@@ -129,6 +144,8 @@ public abstract class AQuery {
 
     public QueryAssert queryAssert;
 
+    // ci metto tutti i cookies restituiti da URLConnection.responses
+    protected Map<String, Object> cookies;
 
     /**
      * Controlla l'esistenza e la validità del collegamento come bot <br>
@@ -137,16 +154,16 @@ public abstract class AQuery {
      *
      * @return true se la connessione è valida
      */
-    protected AIResult checkBot(AIResult result)  {
+    protected AIResult checkBot(AIResult result) {
         AIResult assertResult;
 
-//        queryAssert = queryAssert != null ? queryAssert : appContext.getBean(QueryAssert.class);
-//        assertResult = queryAssert.urlRequest();
-//        if (assertResult.isErrato()) {
-//            result.setValido(false);
-//            result.setErrorCode(assertResult.getErrorCode());
-//            result.setErrorMessage(assertResult.getErrorMessage());
-//        }
+        //        queryAssert = queryAssert != null ? queryAssert : appContext.getBean(QueryAssert.class);
+        //        assertResult = queryAssert.urlRequest();
+        //        if (assertResult.isErrato()) {
+        //            result.setValido(false);
+        //            result.setErrorCode(assertResult.getErrorCode());
+        //            result.setErrorMessage(assertResult.getErrorMessage());
+        //        }
 
         return result;
     }

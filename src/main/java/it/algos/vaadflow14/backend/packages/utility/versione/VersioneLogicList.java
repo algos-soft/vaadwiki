@@ -11,6 +11,8 @@ import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
+import java.util.*;
+
 /**
  * Project: vaadflow14 <br>
  * Created by Algos <br>
@@ -84,14 +86,14 @@ public class VersioneLogicList extends LogicList {
         Icon casettaIcon;
         Span casettaSpan;
         Span casettaText;
-        Span fabbrica;
+        Span fabbrica=null;
         Icon fabbricaIcon;
         Span fabbricaSpan;
         Span fabbricaText;
 
         addSpanVerde("Cronologia delle modifiche/cambiamenti/versioni/patch/aggiunte al programma");
         addSpanVerde(String.format("%s è una categorizzazione semplice di riferimento (enumeration). Con %s selezionabile da menu.", type, filtro));
-        addSpanVerde(String.format("%s è il numero della %s del JAR eseguibile (FlowVar.projectVersion).", numero, release));
+        addSpanVerde(String.format("%s è il numero della %s del programma (FlowVar.flowVersion o FlowVar.projectVersion).", numero, release));
 
         casettaIcon = new Icon(VaadinIcon.HOME);
         casettaIcon.setColor("green");
@@ -99,17 +101,40 @@ public class VersioneLogicList extends LogicList {
         casettaText = html.getSpanVerde(String.format(" è il flag booleano per separare le versioni di %s da quelle del progetto specifico %s", base, progetto));
         casetta = new Span(casettaSpan, casettaText);
 
-        fabbricaIcon = new Icon((VaadinIcon.FACTORY));
-        fabbricaIcon.setColor("green");
-        fabbricaSpan = new Span(fabbricaIcon);
-        fabbricaText = html.getSpanVerde(String.format(" è il flag booleano per identificare le versioni specifiche di una sola %s", company));
-        fabbrica = new Span(fabbricaSpan, fabbricaText);
+        if (FlowVar.usaCompany) {
+            fabbricaIcon = new Icon((VaadinIcon.FACTORY));
+            fabbricaIcon.setColor("green");
+            fabbricaSpan = new Span(fabbricaIcon);
+            fabbricaText = html.getSpanVerde(String.format(" è il flag booleano per identificare le versioni specifiche di una sola %s", company));
+            fabbrica = new Span(fabbricaSpan, fabbricaText);
+        }
 
         if (alertList != null) {
             alertList.add(casetta);
-            alertList.add(fabbrica);
+            if (FlowVar.usaCompany) {
+                alertList.add(fabbrica);
+            }
         }
     }
 
+    /**
+     * Costruisce una lista ordinata di nomi delle properties della Grid. <br>
+     * Nell' ordine: <br>
+     * 1) Cerca nell' annotation @AIList della Entity e usa quella lista (con o senza ID) <br>
+     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
+     * 3) Sovrascrive la lista nella sottoclasse specifica xxxLogicList <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     *
+     * @return lista di nomi di properties
+     */
+    @Override
+    public List<String> getGridColumns() {
+        if (FlowVar.usaCompany) {
+            return array.fromStringa("type,release,giorno,titolo,company,descrizione,vaadFlow,usaCompany");
+        }
+        else {
+            return array.fromStringa("type,release,giorno,titolo,company,descrizione,vaadFlow");
+        }
+    }
 
 }// end of Route class

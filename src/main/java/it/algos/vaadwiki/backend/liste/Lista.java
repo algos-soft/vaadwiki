@@ -132,8 +132,29 @@ public abstract class Lista {
     public List<Bio> getListaBio() {
         return listaBio;
     }
+
     public Map<String, List> getMappa() {
         return mappa;
+    }
+
+    public String getTestoPagina() {
+        StringBuffer testoPagina = new StringBuffer();
+        List lista;
+
+        if (mappa != null && mappa.size() > 0) {
+            for (String keyParagrafo : mappa.keySet()) {
+                lista = mappa.get(keyParagrafo);
+
+                if (lista != null && lista.size() > 0) {
+                    testoPagina.append(keyParagrafo);
+                    for (Object didascalia : lista) {
+                        testoPagina.append(didascalia);
+                    }
+                }
+            }
+        }
+
+        return testoPagina.toString();
     }
 
 }

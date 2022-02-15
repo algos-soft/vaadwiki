@@ -91,6 +91,7 @@ public class WikiBoot extends FlowBoot {
         FlowVar.projectNameModulo = "vaadwiki";
         FlowVar.projectNameUpper = "Wiki";
         FlowVar.projectDescrizione = "Gestione di BioBot";
+        FlowVar.flowVersion = environment.getProperty("algos.vaadflow.version") != null ? Double.parseDouble(environment.getProperty("algos.vaadflow.version")) : 0.0;
         FlowVar.projectVersion = environment.getProperty("algos.wiki.version") != null ? Double.parseDouble(environment.getProperty("algos.wiki.version")) : 0.0;
         FlowVar.preferenzeSpecificheList = Arrays.asList(AEWikiPreferenza.values());
         FlowVar.versionDate = LocalDate.of(2021, 8, 7);

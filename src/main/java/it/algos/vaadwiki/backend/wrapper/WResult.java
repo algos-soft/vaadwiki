@@ -44,5 +44,8 @@ public class WResult extends AResult {
     public void setWrap(WrapBio wrap) {
         this.wrap = wrap;
     }
+    public static WResult valido() {
+        return new WResult();
+    }
 
 }

@@ -103,15 +103,16 @@ public class VersioneService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Versione newEntity(final AETypeVers type, final String titolo, final Company company, final String descrizione, final boolean vaadFlow, final boolean usaCompany) {
+
         Versione newEntityBean =
                 Versione.builderVersione()
                         .type(type)
-                        .release(FlowVar.projectVersion)
+                        .release(vaadFlow ? FlowVar.flowVersion : FlowVar.projectVersion)
                         .giorno(LocalDate.now())
                         .titolo(text.isValid(titolo) ? titolo : null)
                         .descrizione(text.isValid(descrizione) ? descrizione : null)
                         .vaadFlow(vaadFlow)
-                        .usaCompany(usaCompany)
+                        .usaCompany(FlowVar.usaCompany ? usaCompany : false)
                         .build();
         newEntityBean.company = company != null ? company : getCompanyBase();
 

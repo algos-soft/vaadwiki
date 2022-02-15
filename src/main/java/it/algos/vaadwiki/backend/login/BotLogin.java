@@ -36,6 +36,9 @@ public class BotLogin {
 
     private AETypeUser userType;
 
+    public BotLogin() {
+    }
+
     public boolean isBot() {
         return bot;
     }
@@ -52,7 +55,7 @@ public class BotLogin {
         return isBot() ? AETypeUser.bot : AETypeUser.anonymous;
     }
 
-    public Map getCookies() {
+    public Map<String, Object> getCookies() {
         return result != null ? result.getMappa() : null;
     }
 
@@ -64,7 +67,7 @@ public class BotLogin {
         this.result = result;
     }
 
-    public long getLguserid() {
+    public long getUserid() {
         return lguserid;
     }
 
@@ -72,13 +75,14 @@ public class BotLogin {
         this.lguserid = lguserid;
     }
 
-    public String getLgusername() {
+    public String getUsername() {
         return lgusername;
     }
 
     public void setLgusername(String lgusername) {
         this.lgusername = lgusername;
     }
+
 
     public void reset() {
         this.bot = false;

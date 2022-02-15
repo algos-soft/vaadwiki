@@ -485,39 +485,6 @@ public class WikiBotServiceTest extends WTest {
     }
 
 
-    private void printResultBase(final AIResult result) {
-        String message;
-
-        if (result == null) {
-            return;
-        }
-
-        if (result.getWebTitle() == null) {
-            message = "(null)";
-        }
-        else {
-            if (result.getWebTitle().equals(VUOTA)) {
-                message = "(vuota)";
-            }
-            else {
-                message = result.getWebTitle();
-            }
-        }
-
-        System.out.println(VUOTA);
-        System.out.println(String.format("Result di: %s", message));
-        System.out.println(VUOTA);
-        System.out.println(String.format("Risultato: %s", result.isValido() ? "valido" : "errato"));
-        System.out.println(String.format("PageId: %s", result.getLongValue()));
-        System.out.println(String.format("WikiTitle: %s", result.getWikiTitle()));
-        System.out.println(String.format("Url: %s", result.getUrlRequest()));
-        System.out.println(String.format("ErrorCode: %s", result.getErrorCode()));
-        System.out.println(String.format("ErrorMessage: %s", result.getErrorMessage()));
-        System.out.println(String.format("ValidMessage: %s", result.getValidMessage()));
-        System.out.println(String.format("Response: %s", getMax(result.getResponse())));
-        System.out.println(String.format("WikiText: %s", getMax(result.getWikiText())));
-        System.out.println(String.format("WikiBio: %s", getMax(result.getWikiBio())));
-    }
 
 
     private void printResult(final AIResult result) {

@@ -12,6 +12,7 @@ import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
 import static it.algos.vaadwiki.backend.packages.wiki.WikiService.*;
+import it.algos.vaadwiki.backend.upload.*;
 import org.springframework.beans.factory.annotation.*;
 
 /**
@@ -138,7 +139,8 @@ public class AttivitaLogicList extends WikiLogicList {
 
     @Override
     protected void testWiki(AEntity entityBean) {
-        super.testWiki(entityBean);
+        appContext.getBean(UploadAttivita.class, entityBean, true);
+        wikiApi.openWikiPage("Utente:Gac/A");
     }
 
 }// end of Route class

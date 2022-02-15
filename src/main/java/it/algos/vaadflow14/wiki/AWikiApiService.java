@@ -602,9 +602,7 @@ public class AWikiApiService extends AbstractService {
         String wikiTitle = wikiTitleGrezzo.replaceAll(SPAZIO, UNDERSCORE);
         try {
             wikiTitle = URLEncoder.encode(wikiTitle, ENCODE);
-
         } catch (Exception unErrore) {
-
         }
 
         return wikiTitle;

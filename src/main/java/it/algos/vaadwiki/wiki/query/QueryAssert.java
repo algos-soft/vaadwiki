@@ -5,6 +5,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadwiki.backend.enumeration.*;
+import it.algos.vaadwiki.backend.wrapper.*;
 import org.json.simple.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -40,8 +41,8 @@ public class QueryAssert extends AQuery {
      *
      * @return wrapper di informazioni
      */
-    public AIResult urlRequest() {
-        AIResult result = AResult.valido();
+    public WResult urlRequest() {
+        WResult result = WResult.valido();
         Map<String, Object> cookies;
         String urlDomain = TAG_REQUEST_ASSERT;
         String urlResponse = VUOTA;
@@ -92,7 +93,7 @@ public class QueryAssert extends AQuery {
      * Recupera il token 'logintoken' dalla preliminaryRequestGet <br>
      * Viene convertito in lgtoken necessario per la successiva secondaryRequestPost <br>
      */
-    protected AIResult elaboraResponse(final AIResult result, final String rispostaDellaQuery) {
+    protected WResult elaboraResponse(final WResult result, final String rispostaDellaQuery) {
         valida = false;
         JSONObject jsonAll;
         JSONObject jsonError;

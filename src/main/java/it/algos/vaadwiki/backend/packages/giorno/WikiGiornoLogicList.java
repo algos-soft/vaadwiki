@@ -1,8 +1,6 @@
 package it.algos.vaadwiki.backend.packages.giorno;
 
-import com.vaadin.flow.component.grid.*;
 import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.data.renderer.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
@@ -130,70 +128,18 @@ public class WikiGiornoLogicList extends WikiGiornoAnnoLogicList {
      */
     @Override
     public List<String> getGridColumns() {
-        return new ArrayList<>(Arrays.asList("ordine", "titolo", "mese"));
+        return array.fromStringa("ordine,titolo,mese");
     }
 
-//    /**
-//     * Regolazioni finali della Grid <br>
-//     * <p>
-//     * Eventuali colonna 'ad-hoc' <br>
-//     * Eventuali 'listener' specifici <br>
-//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     */
-//    protected void fixGrid() {
-//        Grid realGrid;
-//        ComponentRenderer renderer;
-//        Grid.Column colonna;
-//        String lar = "5em";
-//
-//        if (bodyPlaceHolder != null && grid != null) {
-//            realGrid = grid.getGrid();
-//
-//            if (usaColonnaWiki) {
-//                renderer = new ComponentRenderer<>(this::createWikiNatiButton);
-//                colonna = realGrid.addColumn(renderer);
-//                colonna.setHeader("WikiNati");
-//                colonna.setWidth(lar);
-//                colonna.setFlexGrow(0);
-//            }
-//            if (usaColonnaTest) {
-//                renderer = new ComponentRenderer<>(this::createTestNatiButton);
-//                colonna = realGrid.addColumn(renderer);
-//                colonna.setHeader("TestNati");
-//                colonna.setWidth(lar);
-//                colonna.setFlexGrow(0);
-//            }
-//            if (usaColonnaUpload) {
-//                renderer = new ComponentRenderer<>(this::createUploadNatiButton);
-//                colonna = realGrid.addColumn(renderer);
-//                colonna.setHeader("UploadNati");
-//                colonna.setWidth(lar);
-//                colonna.setFlexGrow(0);
-//            }
-//
-//            if (usaColonnaWiki) {
-//                renderer = new ComponentRenderer<>(this::createWikiMortiButton);
-//                colonna = realGrid.addColumn(renderer);
-//                colonna.setHeader("WikiMorti");
-//                colonna.setWidth(lar);
-//                colonna.setFlexGrow(0);
-//            }
-//            if (usaColonnaTest) {
-//                renderer = new ComponentRenderer<>(this::createTestMortiButton);
-//                colonna = realGrid.addColumn(renderer);
-//                colonna.setHeader("TestMorti");
-//                colonna.setWidth(lar);
-//                colonna.setFlexGrow(0);
-//            }
-//            if (usaColonnaUpload) {
-//                renderer = new ComponentRenderer<>(this::createUploadMortiButton);
-//                colonna = realGrid.addColumn(renderer);
-//                colonna.setHeader("UploadMorti");
-//                colonna.setWidth(lar);
-//                colonna.setFlexGrow(0);
-//            }
-//        }
-//    }
+
+    protected void wikiNatiPage(AEntity entityBean) {
+        openWikiPage(bioUtility.wikiTitleNati(entityBean));
+    }
+
+    protected void wikiMortiPage(AEntity entityBean) {
+        openWikiPage(bioUtility.wikiTitleMorti(entityBean));
+    }
+
 
     @Override
     protected void wikiPage(AEntity entityBean) {

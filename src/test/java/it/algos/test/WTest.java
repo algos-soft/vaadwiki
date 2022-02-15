@@ -18,6 +18,8 @@ import it.algos.vaadwiki.wiki.query.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 
 import java.util.*;
 import java.util.stream.*;
@@ -169,7 +171,11 @@ public abstract class WTest extends ATest {
     protected Bio bioTre;
 
     protected String queryType = VUOTA;
+
     protected Attivita attivita = null;
+
+    @Autowired
+    protected ApplicationContext appContext;
 
     @InjectMocks
     protected GiornoService giornoService;
@@ -221,6 +227,9 @@ public abstract class WTest extends ATest {
 
     @InjectMocks
     protected QueryBio queryBio;
+
+    @InjectMocks
+    protected QueryWrite queryWrite;
 
 
     //--titolo
@@ -404,6 +413,9 @@ public abstract class WTest extends ATest {
 
         MockitoAnnotations.initMocks(queryBio);
         Assertions.assertNotNull(queryBio);
+
+        MockitoAnnotations.initMocks(queryWrite);
+        Assertions.assertNotNull(queryWrite);
     }
 
 
@@ -464,6 +476,13 @@ public abstract class WTest extends ATest {
         queryTimestamp.botLogin = botLogin;
         queryTimestamp.queryAssert = queryAssert;
         queryTimestamp.array = arrayService;
+
+        queryWrite.text = textService;
+        queryWrite.wikiApi = wikiApiService;
+        queryWrite.botLogin = botLogin;
+        queryWrite.queryAssert = queryAssert;
+        queryWrite.array = arrayService;
+        queryWrite.logger = loggerService;
 
         didascaliaService.text = textService;
 
@@ -708,6 +727,40 @@ public abstract class WTest extends ATest {
         }
 
         return message;
+    }
+
+    protected void printResultBase(final AIResult result) {
+        String message;
+
+        if (result == null) {
+            return;
+        }
+
+        if (result.getWebTitle() == null) {
+            message = "(null)";
+        }
+        else {
+            if (result.getWebTitle().equals(VUOTA)) {
+                message = "(vuota)";
+            }
+            else {
+                message = result.getWebTitle();
+            }
+        }
+
+        System.out.println(VUOTA);
+        System.out.println(String.format("Result di: %s", message));
+        System.out.println(VUOTA);
+        System.out.println(String.format("Risultato: %s", result.isValido() ? "valido" : "errato"));
+        System.out.println(String.format("PageId: %s", result.getLongValue()));
+        System.out.println(String.format("WikiTitle: %s", result.getWikiTitle()));
+        System.out.println(String.format("Url: %s", result.getUrlRequest()));
+        System.out.println(String.format("ErrorCode: %s", result.getErrorCode()));
+        System.out.println(String.format("ErrorMessage: %s", result.getErrorMessage()));
+        System.out.println(String.format("ValidMessage: %s", result.getValidMessage()));
+        System.out.println(String.format("Response: %s", getMax(result.getResponse())));
+        System.out.println(String.format("WikiText: %s", getMax(result.getWikiText())));
+        System.out.println(String.format("WikiBio: %s", getMax(result.getWikiBio())));
     }
 
 }
