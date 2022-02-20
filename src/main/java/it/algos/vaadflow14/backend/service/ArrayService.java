@@ -370,6 +370,35 @@ public class ArrayService extends AbstractService {
         return objList;
     }
 
+    /**
+     * Ordina la mappa secondo la chiave
+     *
+     * @param mappaDisordinata in ingresso
+     *
+     * @return mappa ordinata, null se mappaDisordinata è null
+     */
+    public Map sort(final Map mappaDisordinata) {
+        LinkedHashMap mappaOrdinata = new LinkedHashMap();
+        Object[] listaChiavi ;
+
+        if (!isAllValid(mappaDisordinata)) {
+            return mappaDisordinata;
+        }
+
+        listaChiavi = mappaDisordinata.keySet().toArray();
+
+        try {
+            Arrays.sort(listaChiavi);
+        } catch (Exception unErrore) {
+            int a=87;
+        }
+
+        for (Object chiave : listaChiavi) {
+            mappaOrdinata.put(chiave, mappaDisordinata.get(chiave));
+        }
+
+        return mappaOrdinata;
+    }
 
     /**
      * Costruisce una matrice di colonne della grid <br>

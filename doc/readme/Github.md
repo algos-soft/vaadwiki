@@ -1,13 +1,6 @@
 Github
 ======================
 
-
-##Clonare progetto
-1) GIT CLONE HTTPS....
-2) Directory
-3) MVN pack
-
-
 ##Merge
 Per il merge di una branch:
 

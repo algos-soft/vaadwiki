@@ -203,7 +203,7 @@ public abstract class Lista {
         tag += keyMaiuscola;
         tag = text.setDoppieQuadre(tag);
 
-        titolo += UGUALE_DOPPIO;
+        titolo += PARAGRAFO;
         titolo += tag;
         if (true) { //@todo mettere eventualmente un flag in preferenze
             titolo += SPAZIO;
@@ -211,7 +211,7 @@ public abstract class Lista {
             titolo += numero;
             titolo += ")</span>";
         }
-        titolo += UGUALE_DOPPIO;
+        titolo += PARAGRAFO;
         titolo += A_CAPO;
 
         return titolo;

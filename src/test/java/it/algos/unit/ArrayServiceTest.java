@@ -637,4 +637,22 @@ public class ArrayServiceTest extends ATest {
         assertFalse(ottenutoBooleano);
     }
 
+    @Test
+    @Order(21)
+    @DisplayName("21 - sort map")
+    void sortMap() {
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("delta", "irrilevante3");
+        mappaSorgente.put(null, "irrilevante2");
+        mappaSorgente.put("beta", "irrilevante");
+
+        mappaOttenuta = arrayService.sort(mappaSorgente);
+
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("delta", "irrilevante3");
+        mappaSorgente.put("beta", "irrilevante");
+
+        mappaOttenuta = arrayService.sort(mappaSorgente);
+    }
+
 }

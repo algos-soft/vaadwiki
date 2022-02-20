@@ -848,15 +848,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             query.with(wrapFiltri.getSortSpring());
         }
 
-        //patch - funziona
-//        query=new Query();
-//        query.addCriteria(
-//                new Criteria().orOperator(
-//                        Criteria.where("attivita").is("abate"),
-//                        Criteria.where("attivita").is("badessa")
-//                ));
-        //patch - funziona
-
         try {
             listaEntities = (List<AEntity>) mongoOp.find(query, entityClazz);
         } catch (Exception unErrore) {

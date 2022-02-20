@@ -88,6 +88,10 @@ public abstract class Upload {
 
     protected boolean usaHeadIncipit; // dopo il template di avviso
 
+    protected boolean usaNote;
+
+    protected boolean usaVociCorrelate;
+
     protected String tagHeadTemplateAvviso;
 
     protected String tagHeadTemplateProgetto;
@@ -103,6 +107,20 @@ public abstract class Upload {
     protected Lista lista;
 
     protected int numVoci;
+
+    public int taglioSottoPagina;
+
+    protected String notaDidascalie;
+
+    protected String notaOrdinamento;
+
+    protected String notaEsaustiva;
+
+    protected String notaAttivita;
+
+    protected String notaNazionalita;
+
+    protected String notaSottoPagina;
 
     /**
      * Performing the initialization in a constructor is not suggested <br>
@@ -140,6 +158,20 @@ public abstract class Upload {
         tagHeadTemplateAvviso = "ListaBio"; //--Sovrascrivibile da preferenze
         tagHeadTemplateProgetto = "biografie"; //--Sovrascrivibile da preferenze
         usaHeadIncipit = false; //--normalmente false. Sovrascrivibile da preferenze
+
+        // body
+
+        // footer
+        usaNote = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
+        usaVociCorrelate = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
+
+        // note <ref>
+        notaDidascalie = "Le didascalie delle voci sono quelle previste nel [[Progetto:Biografie/Didascalie|progetto biografie]]";
+        notaOrdinamento = "Le voci, all'interno di ogni paragrafo, sono in ordine alfabetico per " + "cognome" + "; se questo manca si utilizza il " + "titolo" + " della pagina.";
+        notaEsaustiva = "La lista non è esaustiva e contiene solo le persone che sono citate nell'enciclopedia e per le quali è stato implementato correttamente il [[template:Bio|template Bio]]";
+        notaSottoPagina = "Questa sottoPagina specifica viene creata se il numero di voci biografiche nel paragrafo della pagina principale supera le " + taglioSottoPagina + " unità.";
+        notaAttivita = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+        notaNazionalita = "Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
     }
 
 
@@ -260,18 +292,18 @@ public abstract class Upload {
         //        boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
         String cat;
 
-        //        if (usaNote) {
-        //            testo += usaNote();
-        //        }// end of if cycle
+                if (usaNote) {
+                    testo += usaNote();
+                }// end of if cycle
 
-        //        if (usaVociCorrelate) {
-        //            testo += usaVociCorrelate();
-        //        }// end of if cycle
+                if (usaVociCorrelate) {
+//                    testo += usaVociCorrelate();
+                }// end of if cycle
 
-        //        testo += LibWiki.setPortale(tagHeadTemplateProgetto);
-        //        cat = tagCategoria;
-        //        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
-        //        testo += cat;
+//        testo += LibWiki.setPortale(tagHeadTemplateProgetto);
+//        cat = tagCategoria;
+//        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
+//        testo += cat;
 
         return testo;
     }
@@ -411,6 +443,25 @@ public abstract class Upload {
      */
     protected String elaboraIncipitSpecifico() {
         return VUOTA;
+    }
+
+
+    /**
+     * Paragrafo delle note (eventuale)
+     * Sovrascritto
+     */
+    protected String usaNote() {
+        String testo = VUOTA;
+        String tag = "Note";
+        String ref = "<references/>";
+
+//        testo += text.s(tag);
+        testo += A_CAPO;
+        testo += ref;
+        testo += A_CAPO;
+        testo += A_CAPO;
+
+        return testo;
     }
 
     /**

@@ -276,7 +276,7 @@ public class AResult implements AIResult {
     }
 
     @Override
-    public Map<String, Object> getMappa() {
+    public Map getMappa() {
         return mappa;
     }
 

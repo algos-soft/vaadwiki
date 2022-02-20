@@ -1,7 +1,6 @@
 package it.algos.vaadwiki.backend.liste;
 
 import com.vaadin.flow.spring.annotation.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
@@ -30,7 +29,6 @@ import java.util.*;
  * Creata con appContext.getBean(ListaAttivita.class, nomeAttivitaPlurale, AETypeAttivita.plurale) per usare tutte le singole attività <br>
  * Creata con appContext.getBean(ListaAttivita.class, nomeAttivitaSingolare, AETypeAttivita.singolare) per usare solo una singola attività <br>
  * Punto d'inizio @PostConstruct inizia() nella superclasse <br>
- *
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -211,12 +209,12 @@ public class ListaAttivita extends Lista {
 
 
     private Map<String, List> getMappaNazionalita(final List<Bio> listaBio) {
-        Map<String, List> mappa = new LinkedHashMap<String, List>();
+        Map<String, List> mappa = new LinkedHashMap<>();
         String altre = "Titolo provvisorio";
-        List<String> listaDidascalie ;
+        List<String> listaDidascalie;
         Set<String> setNazionalita;
         List<String> listaNazionalita;
-        String titoloParagrafoNazionalita ;
+        String titoloParagrafoNazionalita;
         Nazionalita nazionalita;
 
         if (listaBio == null) {
@@ -231,35 +229,31 @@ public class ListaAttivita extends Lista {
             titoloParagrafoNazionalita = bio.nazionalita;
             setNazionalita.add(titoloParagrafoNazionalita);
         }
-
         listaNazionalita = new ArrayList<>(setNazionalita);
-        Collections.sort(listaNazionalita);
 
-        for (String nazionalitaSingolare : listaNazionalita) {
-            listaDidascalie = new ArrayList<>();
-            for (Bio bio : listaBio) {
+        for (Bio bio : listaBio) {
+            for (String nazionalitaSingolare : listaNazionalita) {
                 if (bio.nazionalita.equals(nazionalitaSingolare)) {
-                    listaDidascalie.add(didascaliaService.getLista(bio));
+                    try {
+                        nazionalita = nazionalitaService.findById(nazionalitaSingolare);
+                        titoloParagrafoNazionalita = nazionalita != null ? nazionalita.plurale : "errore";
+                        titoloParagrafoNazionalita = text.primaMaiuscola(titoloParagrafoNazionalita);
+                        if (mappa.containsKey(titoloParagrafoNazionalita)) {
+                            listaDidascalie = mappa.get(titoloParagrafoNazionalita);
+                        }
+                        else {
+                            listaDidascalie = new ArrayList<>();
+                        }
+                        listaDidascalie.add(didascaliaService.getLista(bio));
+                        mappa.put(titoloParagrafoNazionalita, listaDidascalie);
+                    } catch (AlgosException unErrore) {
+                        int a = 87;
+                    }
                 }
-            }
-            try {
-                nazionalita = nazionalitaService.findById(nazionalitaSingolare);
-                titoloParagrafoNazionalita = nazionalita != null ? nazionalita.plurale : "errore";
-                titoloParagrafoNazionalita = text.primaMaiuscola(titoloParagrafoNazionalita);
-                if (mappa.containsKey(titoloParagrafoNazionalita)) {
-                    List listaEsistente=mappa.get(titoloParagrafoNazionalita);
-                    listaEsistente.addAll(listaDidascalie);
-                    mappa.put(titoloParagrafoNazionalita, listaEsistente);
-                }
-                else {
-                    mappa.put(titoloParagrafoNazionalita, listaDidascalie);
-                }
-            } catch (AlgosException unErrore) {
-                int a = 87;
             }
         }
 
-        return mappa;
+        return array.sort(mappa);
     }
 
 
@@ -275,6 +269,7 @@ public class ListaAttivita extends Lista {
     public int getBioSize() {
         return listaBio != null ? listaBio.size() : 0;
     }
+
     public int getNumDidascalie() {
         return listaDidascalie != null ? listaDidascalie.size() : 0;
     }
