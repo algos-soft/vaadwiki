@@ -3,10 +3,12 @@ package it.algos.test;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadwiki.backend.enumeration.*;
+import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
@@ -15,7 +17,7 @@ import it.algos.vaadwiki.backend.packages.nomeDoppio.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.*;
 import it.algos.vaadwiki.wiki.query.*;
-import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.*;
@@ -231,6 +233,19 @@ public abstract class WTest extends ATest {
     @InjectMocks
     protected QueryWrite queryWrite;
 
+    private Attivita attivitaAbate;
+
+    private Attivita attivitaBadessa;
+
+    private Attivita attivitaAccademico;
+
+    private Attivita attivitaAccademica;
+
+    private Attivita attivitaAgronomo;
+
+    private Attivita attivitaAforista;
+
+    private Attivita attivitaConduttriceTelevisiva;
 
     //--titolo
     //--pagina valida
@@ -251,7 +266,6 @@ public abstract class WTest extends ATest {
         );
     }
 
-
     //--titolo
     //--pagina o categoria esistente
     protected static Stream<Arguments> PAGINE_DUE() {
@@ -266,7 +280,6 @@ public abstract class WTest extends ATest {
                 Arguments.of(CATEGORIA + CAT_1167, true)
         );
     }
-
 
     //--titolo categoria
     //--categoria esistente
@@ -284,7 +297,6 @@ public abstract class WTest extends ATest {
                 Arguments.of(CAT_ROMANI, true, 78, true, 1)
         );
     }
-
 
     //--titolo categoria
     //--categoria esistente (per l'userType specificato)
@@ -306,43 +318,25 @@ public abstract class WTest extends ATest {
         );
     }
 
-
-    //--nome attivita singolare
-    //--esiste nel mongoDB
-    protected static Stream<Arguments> ATTIVITA_SINGOLARE() {
+    //--attivita
+    //--AETypeAttivita
+    private Stream<Arguments> ATTIVITA() {
         return Stream.of(
-                Arguments.of(null, false),
-                Arguments.of(VUOTA, false),
-                Arguments.of("abate", true),
-                Arguments.of("abati", false),
-                Arguments.of("badessa", true),
-                Arguments.of("Abate", true),
-                Arguments.of("accademico", true),
-                Arguments.of("accademica", true),
-                Arguments.of("agronomo", true),
-                Arguments.of("agronomi", false)
+                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.singolare),
+                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.plurale),
+                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.singolare),
+                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.plurale),
+                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.singolare),
+                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.plurale),
+                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.singolare),
+                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.plurale),
+                Arguments.of(attivitaAgronomo, ListaAttivita.AETypeAttivita.singolare),
+                Arguments.of(attivitaAgronomo, ListaAttivita.AETypeAttivita.plurale),
+                Arguments.of(attivitaAforista, ListaAttivita.AETypeAttivita.singolare),
+                Arguments.of(attivitaAforista, ListaAttivita.AETypeAttivita.plurale),
+                Arguments.of(attivitaConduttriceTelevisiva, ListaAttivita.AETypeAttivita.plurale)
         );
     }
-
-    //--nome attivita plurale
-    //--esiste nel mongoDB
-    protected static Stream<Arguments> ATTIVITA_PLURALE() {
-        return Stream.of(
-                Arguments.of(null, false),
-                Arguments.of(VUOTA, false),
-                Arguments.of("abati e badesse", true),
-                Arguments.of("Abati e Badesse", false),
-                Arguments.of("Abati e badesse", true),
-                Arguments.of("badessa", false),
-                Arguments.of("abate", false),
-                Arguments.of("accademici", true),
-                Arguments.of("Accademici", true),
-                Arguments.of("AccaDemici", false),
-                Arguments.of("aforisti", true),
-                Arguments.of("agronomi", true)
-        );
-    }
-
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -355,6 +349,7 @@ public abstract class WTest extends ATest {
         wInitMocks();
         wFixRiferimentiIncrociati();
         wCreaBio();
+        wCreaEntity();
     }
 
 
@@ -364,58 +359,58 @@ public abstract class WTest extends ATest {
      */
     protected void wInitMocks() {
         MockitoAnnotations.initMocks(giornoService);
-        Assertions.assertNotNull(giornoService);
+        assertNotNull(giornoService);
 
         MockitoAnnotations.initMocks(annoService);
-        Assertions.assertNotNull(annoService);
+        assertNotNull(annoService);
 
         MockitoAnnotations.initMocks(attivitaService);
-        Assertions.assertNotNull(attivitaService);
+        assertNotNull(attivitaService);
 
         MockitoAnnotations.initMocks(nazionalitaService);
-        Assertions.assertNotNull(nazionalitaService);
+        assertNotNull(nazionalitaService);
 
         MockitoAnnotations.initMocks(prenomeService);
-        Assertions.assertNotNull(prenomeService);
+        assertNotNull(prenomeService);
 
         MockitoAnnotations.initMocks(didascaliaService);
-        Assertions.assertNotNull(didascaliaService);
+        assertNotNull(didascaliaService);
 
         MockitoAnnotations.initMocks(wikiBotService);
-        Assertions.assertNotNull(wikiBotService);
+        assertNotNull(wikiBotService);
 
         MockitoAnnotations.initMocks(bioUtilityService);
-        Assertions.assertNotNull(bioUtilityService);
+        assertNotNull(bioUtilityService);
 
         MockitoAnnotations.initMocks(bioService);
-        Assertions.assertNotNull(bioService);
+        assertNotNull(bioService);
 
         MockitoAnnotations.initMocks(elaboraService);
-        Assertions.assertNotNull(elaboraService);
+        assertNotNull(elaboraService);
 
         MockitoAnnotations.initMocks(botLogin);
-        Assertions.assertNotNull(botLogin);
+        assertNotNull(botLogin);
 
         MockitoAnnotations.initMocks(queryLogin);
-        Assertions.assertNotNull(queryLogin);
+        assertNotNull(queryLogin);
 
         MockitoAnnotations.initMocks(queryAssert);
-        Assertions.assertNotNull(queryAssert);
+        assertNotNull(queryAssert);
 
         MockitoAnnotations.initMocks(queryCat);
-        Assertions.assertNotNull(queryCat);
+        assertNotNull(queryCat);
 
         MockitoAnnotations.initMocks(queryPages);
-        Assertions.assertNotNull(queryPages);
+        assertNotNull(queryPages);
 
         MockitoAnnotations.initMocks(queryTimestamp);
-        Assertions.assertNotNull(queryTimestamp);
+        assertNotNull(queryTimestamp);
 
         MockitoAnnotations.initMocks(queryBio);
-        Assertions.assertNotNull(queryBio);
+        assertNotNull(queryBio);
 
         MockitoAnnotations.initMocks(queryWrite);
-        Assertions.assertNotNull(queryWrite);
+        assertNotNull(queryWrite);
     }
 
 
@@ -543,6 +538,38 @@ public abstract class WTest extends ATest {
         sorgente2 = TMPL_TRE;
         bioTmplTre = bioService.newEntity(pageId, sorgente, sorgente2);
         bioTre = elaboraService.esegue(bioTmplTre);
+    }
+
+
+    /**
+     * Crea alcune istanze specifiche di ogni test <br>
+     */
+    protected void wCreaEntity() {
+        try {
+            attivitaAbate = attivitaService.findByKey("abate");
+            assertNotNull(attivitaAbate);
+
+            attivitaBadessa = attivitaService.findByKey("badessa");
+            assertNotNull(attivitaBadessa);
+
+            attivitaAccademico = attivitaService.findByKey("accademico");
+            assertNotNull(attivitaAccademico);
+
+            attivitaAccademica = attivitaService.findByKey("accademica");
+            assertNotNull(attivitaAccademica);
+
+            attivitaAgronomo = attivitaService.findByKey("agronomo");
+            assertNotNull(attivitaAgronomo);
+
+            attivitaAforista = attivitaService.findByKey("aforista");
+            assertNotNull(attivitaAforista);
+
+            attivitaConduttriceTelevisiva = attivitaService.findByKey("conduttrice televisiva");
+            assertNotNull(attivitaConduttriceTelevisiva);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+            System.out.println(VUOTA);
+        }
     }
 
     /**

@@ -66,4 +66,5 @@ public abstract class WikiCost {
 
     public static final String NO_PAGES_CAT = "Non esiste la categoria";
 
+
 }// end of static class

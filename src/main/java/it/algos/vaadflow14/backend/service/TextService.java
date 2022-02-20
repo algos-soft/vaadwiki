@@ -671,7 +671,7 @@ public class TextService extends AbstractService {
         String stringaOut = stringaIn;
 
         if (this.isValid(stringaOut)) {
-            stringaOut = this.setNoQuadre(stringaIn);
+            stringaOut = this.setNoGraffe(stringaIn);
             if (this.isValid(stringaOut)) {
                 if (!stringaOut.startsWith(GRAFFA_INI)) {
                     stringaOut = GRAFFA_INI + stringaOut;
@@ -679,6 +679,32 @@ public class TextService extends AbstractService {
                 if (!stringaOut.endsWith(GRAFFA_END)) {
                     stringaOut = stringaOut + GRAFFA_END;
                 }
+            }
+        }
+
+        return stringaOut.trim();
+    }
+
+
+    /**
+     * Aggiunge parentesi graffe doppie in testa e coda alla stringa. <br>
+     * Aggiunge SOLO se gia non esistono <br>
+     * Se arriva una stringa vuota, restituisce una stringa vuota <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     * Elimina eventuali graffe già presenti, per evitare di metterle doppie <br>
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con doppie parentesi graffe aggiunte
+     */
+    public String setDoppieGraffe(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (this.isValid(stringaOut)) {
+            stringaOut = this.setNoGraffe(stringaIn);
+            if (this.isValid(stringaOut)) {
+                stringaOut = DOPPIE_GRAFFE_INI + stringaOut;
+                stringaOut = stringaOut + DOPPIE_GRAFFE_END;
             }
         }
 
@@ -768,11 +794,11 @@ public class TextService extends AbstractService {
                 if (!stringaOut.endsWith(DOPPIE_QUADRE_END)) {
                     stringaOut = stringaOut + DOPPIE_QUADRE_END;
                 }
-                if (stringaOut.startsWith(QUADRA_INI+DOPPIE_QUADRE_INI)) {
+                if (stringaOut.startsWith(QUADRA_INI + DOPPIE_QUADRE_INI)) {
                     stringaOut = stringaOut.substring(1);
                 }
-                if (stringaOut.endsWith(QUADRA_END+DOPPIE_QUADRE_END)) {
-                    stringaOut = stringaOut.substring(0,stringaOut.length()-1);
+                if (stringaOut.endsWith(QUADRA_END + DOPPIE_QUADRE_END)) {
+                    stringaOut = stringaOut.substring(0, stringaOut.length() - 1);
                 }
             }
         }

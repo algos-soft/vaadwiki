@@ -1,5 +1,6 @@
 package it.algos.vaadwiki.backend.liste;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import org.springframework.beans.factory.annotation.*;
@@ -15,13 +16,19 @@ import java.util.*;
  * Time: 18:43
  * <p>
  * Classe specializzata nella creazione di liste. <br>
+ * La lista è un semplice testo (formattato secondo i possibili tipi di raggruppamento) <br>
  * <p>
  * Liste cronologiche (in namespace principale) di nati e morti nel giorno o nell'anno <br>
- * Liste di nomi e cognomi (in namespace principale). <br>
- * Liste di attività e nazionalità (in Progetto:Biografie). <br>
+ * Liste di nomi e cognomi (in namespace principale) <br>
+ * Liste di attività e nazionalità (in Progetto:Biografie) <br>
  * <p>
  * Sovrascritta nelle sottoclassi concrete <br>
  * Not annotated with @SpringComponent (sbagliato) perché è una classe astratta <br>
+ * Punto d'inizio @PostConstruct inizia() nella superclasse <br>
+ * <p>
+ * La (List<Bio>) listaBio, la (List<String>) listaDidascalie, la (Map<String, List>) mappa e (String) testoConParagrafi
+ * vengono tutte regolate alla creazione dell'istanza in @PostConstruct e sono disponibili da subito <br>
+ * Si può quindi usare la chiamata appContext.getBean(ListaXxx.class, yyy).getTestoConParagrafi() senza esplicitare l'istanza <br>
  */
 public abstract class Lista {
 
@@ -49,23 +56,36 @@ public abstract class Lista {
     @Autowired
     protected ALogService logger;
 
-    //--property
+    /**
+     * Lista delle biografie che hanno una valore valido per la pagina specifica <br>
+     * La lista viene creata nel @PostConstruct dell'istanza <br>
+     * La lista è ordinata per cognome <br>
+     */
     protected List<Bio> listaBio;
 
     /**
+     * Lista delle listaDidascalie che hanno una valore valido per la pagina specifica <br>
+     * La lista viene creata nel @PostConstruct dell'istanza <br>
+     * La lista è ordinata per cognome <br>
+     */
+    protected List<String> listaDidascalie;
+
+    /**
      * Mappa delle didascalie che hanno una valore valido per la pagina specifica <br>
-     * La mappa è composta da una chiaveUno (ordinata) che corrisponde al titolo del paragrafo <br>
+     * La mappa è composta da una chiave (ordinata) che corrisponde al titolo del paragrafo <br>
      * La visualizzazione dei paragrafi può anche essere esclusa, ma questi sono comunque presenti <br>
-     * Ogni valore della mappa è costituito da una ulteriore LinkedHashMap <br>
-     * Questa mappa è composta da una chiaveDue e da una ulteriore LinkedHashMap <br>
-     * Questa mappa è composta da una chiaveTre e da un ArrayList di didascalie (testo) <br>
-     * La chiaveUno è un secolo, un mese, un'attività (a seconda del tipo di didascalia) <br>
-     * La chiaveUno è un link a pagina di wikipedia (escluso titoloParagrafoVuoto) con doppie quadre <br>
-     * La chiaveDue è una lettera alfabetica <br>
-     * La chiaveTre è una doppia lettera alfabetica <br>
+     * Ogni valore della mappa è costituito da una List <br>
+     * La mappa viene creata nel @PostConstruct dell'istanza <br>
+     * La mappa è ordinata per titoli dei paragrafi <br>
      */
     protected Map<String, List> mappa;
 
+    /**
+     * Lista delle listaDidascalie che hanno una valore valido per la pagina specifica <br>
+     * La lista viene creata nel @PostConstruct dell'istanza <br>
+     * Il testo è ordinato per titoli dei paragrafi <br>
+     */
+    protected String testoConParagrafi;
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -85,6 +105,7 @@ public abstract class Lista {
         this.fixListaBio();
         this.fixListaDidascalie();
         this.fixMappaDidascalie();
+        this.fixTestoParagrafi();
     }
 
     /**
@@ -105,10 +126,9 @@ public abstract class Lista {
     /**
      * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return lista delle istanze di Bio che usano questo istanza nella property appropriata <br>
      */
     public void fixListaBio() {
+        //--Crea la lista vuota delle voci biografiche
         listaBio = new ArrayList<>();
     }
 
@@ -121,12 +141,40 @@ public abstract class Lista {
     }
 
     /**
-     * Costruisce una mappa di didascalie che hanno una valore valido per la pagina specifica <br>
+     * Costruisce una mappa di didascalie con titoli dei paragrafi che hanno una valore valido per la pagina specifica <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixMappaDidascalie() {
-        //--Crea la lista grezza delle voci biografiche
+        //--Crea la mappa vuota delle didascalie
         this.mappa = new LinkedHashMap<>();
+    }
+
+    /**
+     * Costruisce un testo con titoli dei paragrafi <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixTestoParagrafi() {
+        StringBuilder buffer = new StringBuilder();
+        List<String> lista;
+
+        if (mappa != null && mappa.size() > 0) {
+            for (String key : mappa.keySet()) {
+                lista = mappa.get(key);
+
+                if (lista != null && lista.size() > 0) {
+                    buffer.append(fixTitoloParagrafo(key, lista.size()));
+
+                    for (Object stringa : lista) {
+                        buffer.append(ASTERISCO);
+                        buffer.append(SPAZIO);
+                        buffer.append(stringa);
+                        buffer.append(A_CAPO);
+                    }
+                    buffer.append(A_CAPO);
+                }
+            }
+        }
+        this.testoConParagrafi = buffer.toString();
     }
 
     public List<Bio> getListaBio() {
@@ -137,24 +185,36 @@ public abstract class Lista {
         return mappa;
     }
 
-    public String getTestoPagina() {
-        StringBuffer testoPagina = new StringBuffer();
-        List lista;
+    public int getNumDidascalie() {
+        return listaDidascalie != null ? listaDidascalie.size() : 0;
+    }
 
-        if (mappa != null && mappa.size() > 0) {
-            for (String keyParagrafo : mappa.keySet()) {
-                lista = mappa.get(keyParagrafo);
+    public String getTestoConParagrafi() {
+        return testoConParagrafi;
+    }
 
-                if (lista != null && lista.size() > 0) {
-                    testoPagina.append(keyParagrafo);
-                    for (Object didascalia : lista) {
-                        testoPagina.append(didascalia);
-                    }
-                }
-            }
+    public String fixTitoloParagrafo(final String keyParagrafo, int numero) {
+        String titolo = VUOTA;
+        String keyMaiuscola = text.primaMaiuscola(keyParagrafo);
+        String tag = "Progetto:Biografie/Nazionalità/";
+
+        tag += keyMaiuscola;
+        tag += PIPE;
+        tag += keyMaiuscola;
+        tag = text.setDoppieQuadre(tag);
+
+        titolo += UGUALE_DOPPIO;
+        titolo += tag;
+        if (true) { //@todo mettere eventualmente un flag in preferenze
+            titolo += SPAZIO;
+            titolo += "<span style=\"font-size:70%\">(";
+            titolo += numero;
+            titolo += ")</span>";
         }
+        titolo += UGUALE_DOPPIO;
+        titolo += A_CAPO;
 
-        return testoPagina.toString();
+        return titolo;
     }
 
 }

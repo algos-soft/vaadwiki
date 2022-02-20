@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.query.*;
 import org.springframework.stereotype.*;
 
 import java.io.*;
@@ -72,6 +73,10 @@ public class BioService extends WikiService {
     public static Sort SORT_COGNOME = Sort.by(Sort.Direction.ASC, "cognome");
 
     protected static String ATTIVITA_PROPERTY = "attivita";
+
+    protected static String ATTIVITA_PROPERTY_2 = "attivita2";
+
+    protected static String ATTIVITA_PROPERTY_3 = "attivita3";
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -270,19 +275,47 @@ public class BioService extends WikiService {
      */
     public List<Bio> fetchAttivita(List<String> listaNomiAttivitaSingole) {
         List<Bio> lista = new ArrayList<>();
+        List<Criteria> criteri = new ArrayList<>();
+        Criteria criteria;
+        List<String> properties = new ArrayList<>();
 
-        for (String attivitaSingola : listaNomiAttivitaSingole) {
-            lista.addAll(fetch(ATTIVITA_PROPERTY, attivitaSingola));
+        //--volendo si potrebbe metter un flag di preferenze (false) per 'cercare' solo l'attività principale
+        //@todo mettere eventualmente un flag in preferenze
+        properties.add(ATTIVITA_PROPERTY);
+        if (true) {
+            properties.add(ATTIVITA_PROPERTY_2);
+            properties.add(ATTIVITA_PROPERTY_3);
         }
+
+
+        //        for (String attivitaSingola : listaNomiAttivitaSingole) {
+        //            lista.addAll(fetch(ATTIVITA_PROPERTY, attivitaSingola));
+        //        }
 
         WrapFiltri filtro = appContext.getBean(WrapFiltri.class, Bio.class);
         filtro.setSortSpring(SORT_COGNOME);
-        Map<String, AFiltro> mappa=new LinkedHashMap<>();
+        Map<String, AFiltro> mappa = new LinkedHashMap<>();
         for (String attivitaSingola : listaNomiAttivitaSingole) {
-            mappa.put(attivitaSingola,AFiltro.ugualeStr(ATTIVITA_PROPERTY,attivitaSingola));
+            mappa.put(attivitaSingola, AFiltro.ugualeStr(ATTIVITA_PROPERTY, attivitaSingola));
         }
 
         filtro.setMappaFiltri(mappa);
+
+        //patch - funziona
+        for (String attivitaSingola : listaNomiAttivitaSingole) {
+            for (String property : properties) {
+                criteria = new Criteria(property);
+                criteria.is(attivitaSingola);
+                criteri.add(criteria);
+            }
+        }
+        criteria = new Criteria().orOperator(criteri);
+        AFiltro filtroMultiplo = new AFiltro(criteria);
+        mappa = new LinkedHashMap<>();
+        mappa.put("pippoz", filtroMultiplo);
+        filtro.setMappaFiltri(mappa);
+        //patch - funziona
+
         try {
             lista = (List<Bio>) mongo.fetch(entityClazz, filtro);
         } catch (AlgosException unErrore) {

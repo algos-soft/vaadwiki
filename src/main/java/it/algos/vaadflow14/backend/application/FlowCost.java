@@ -97,6 +97,8 @@ public abstract class FlowCost {
 
     public static final String UGUALE_SPAZIATO = SPAZIO + UGUALE_SEMPLICE + SPAZIO;
 
+    public static final String UGUALE_DOPPIO = UGUALE_SEMPLICE + UGUALE_SEMPLICE;
+
     public static final String FORWARD = " -> ";
 
     public static final String PUNTO = ".";
@@ -110,6 +112,8 @@ public abstract class FlowCost {
     public static final String DUE_PUNTI_SPAZIO = DUE_PUNTI + SPAZIO;
 
     public static final String TRE_PUNTI = "...";
+
+    public static final String ASTERISCO = "*";
 
     public static final String SORT_VAADIN_ASC = "ASCENDING";
 
