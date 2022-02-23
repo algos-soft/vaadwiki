@@ -106,7 +106,6 @@ public class UploadAttivitaIntegrationTest extends WTest {
             istanza = appContext.getBean(UploadAttivita.class, attivita);
             assertNotNull(istanza);
             ottenuto = istanza.getTestoConParagrafi();
-            assertTrue(textService.isValid(ottenuto));
             System.out.println(String.format("Testo con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
             System.out.println(String.format("Ci sono %d didascalie nella pagina", istanza.getNumVoci()));
             System.out.println(VUOTA);

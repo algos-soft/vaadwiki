@@ -12,7 +12,6 @@ import org.json.simple.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.*;
 import java.net.*;
 import java.util.*;
 
@@ -51,7 +50,7 @@ public class QueryCat extends AQuery {
         int pageIdsRecuperati = 0;
 
         result.setWikiTitle(catTitle);
-        result.setQueryType(TypeQuery.getCookies.get());
+        result.setQueryType(AETypeQuery.getCookies.get());
         result.setUrlRequest(fixUrlCat(catTitle, VUOTA));
 
         //--controlla l'esistenza della categoria

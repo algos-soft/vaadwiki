@@ -2,11 +2,10 @@ package it.algos.vaadwiki.backend.liste;
 
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.exceptions.*;
-import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
-import it.algos.vaadwiki.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -59,19 +58,6 @@ public class ListaAttivita extends Lista {
     @Autowired
     public BioService bioService;
 
-    /**
-     * The Service.
-     */
-    @Autowired
-    public MongoService mongoService;
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    protected DidascaliaService didascaliaService;
 
     //--property
     private String nomeAttivita;
@@ -186,74 +172,11 @@ public class ListaAttivita extends Lista {
     public void fixListaBio() {
         super.fixListaBio();
         listaBio = bioService.fetchAttivita(listaNomiAttivitaSingole);
-    }
-
-    /**
-     * Costruisce una lista di didascalie che hanno una valore valido per la pagina specifica <br>
-     * DEVE essere sovrascritto, senza invocare PRIMA il metodo della superclasse <br>
-     */
-    protected void fixListaDidascalie() {
-        super.fixListaDidascalie();
-        listaDidascalie = didascaliaService.getLista(listaBio);
-    }
-
-
-    /**
-     * Costruisce una mappa di didascalie che hanno una valore valido per la pagina specifica <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void fixMappaDidascalie() {
-        super.fixListaDidascalie();
-        mappa = getMappaNazionalita(listaBio);
-    }
-
-
-    private Map<String, List> getMappaNazionalita(final List<Bio> listaBio) {
-        Map<String, List> mappa = new LinkedHashMap<>();
-        String altre = "Titolo provvisorio";
-        List<String> listaDidascalie;
-        Set<String> setNazionalita;
-        List<String> listaNazionalita;
-        String titoloParagrafoNazionalita;
-        Nazionalita nazionalita;
-
-        if (listaBio == null) {
-            return null;
+        try {
+            wrapLista = appContext.getBean(WrapLista.class, AETypeLista.attivita, listaBio);
+        } catch (Exception unErrore) {
+            int a = 87;
         }
-
-        setNazionalita = new LinkedHashSet<>();
-        for (Bio bio : listaBio) {
-            if (text.isEmpty(bio.nazionalita)) {
-                bio.nazionalita = altre;
-            }
-            titoloParagrafoNazionalita = bio.nazionalita;
-            setNazionalita.add(titoloParagrafoNazionalita);
-        }
-        listaNazionalita = new ArrayList<>(setNazionalita);
-
-        for (Bio bio : listaBio) {
-            for (String nazionalitaSingolare : listaNazionalita) {
-                if (bio.nazionalita.equals(nazionalitaSingolare)) {
-                    try {
-                        nazionalita = nazionalitaService.findById(nazionalitaSingolare);
-                        titoloParagrafoNazionalita = nazionalita != null ? nazionalita.plurale : "errore";
-                        titoloParagrafoNazionalita = text.primaMaiuscola(titoloParagrafoNazionalita);
-                        if (mappa.containsKey(titoloParagrafoNazionalita)) {
-                            listaDidascalie = mappa.get(titoloParagrafoNazionalita);
-                        }
-                        else {
-                            listaDidascalie = new ArrayList<>();
-                        }
-                        listaDidascalie.add(didascaliaService.getLista(bio));
-                        mappa.put(titoloParagrafoNazionalita, listaDidascalie);
-                    } catch (AlgosException unErrore) {
-                        int a = 87;
-                    }
-                }
-            }
-        }
-
-        return array.sort(mappa);
     }
 
 
@@ -261,18 +184,6 @@ public class ListaAttivita extends Lista {
         return listaNomiAttivitaSingole;
     }
 
-
-    public List<String> getListaDidascalie() {
-        return listaDidascalie;
-    }
-
-    public int getBioSize() {
-        return listaBio != null ? listaBio.size() : 0;
-    }
-
-    public int getNumDidascalie() {
-        return listaDidascalie != null ? listaDidascalie.size() : 0;
-    }
 
     public int getNumeroAttivitaSingoleConLoStessoPlurale() {
         return switch (typeAttivita) {

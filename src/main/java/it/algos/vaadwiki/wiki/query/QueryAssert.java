@@ -2,8 +2,6 @@ package it.algos.vaadwiki.wiki.query;
 
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.interfaces.*;
-import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.wrapper.*;
 import org.json.simple.*;
@@ -49,7 +47,7 @@ public class QueryAssert extends AQuery {
         URLConnection urlConn;
 
         result.setUrlRequest(TAG_REQUEST_ASSERT);
-        result.setQueryType(TypeQuery.getCookies.get());
+        result.setQueryType(AETypeQuery.getCookies.get());
 
         //--se manca il botLogin
         if (botLogin == null) {

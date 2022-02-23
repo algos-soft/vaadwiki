@@ -37,6 +37,8 @@ public enum AEWikiPreferenza implements AIPreferenza {
     simboloNato(PREF_SIMBOLO_NATO, "Simbolo della nascita", AETypePref.string, "n.", true),
     simboloMorto(PREF_SIMBOLO_MORTO, "Simbolo della morte", AETypePref.string, "†", true),
 
+    usaTreAttivita(USA_TRE_ATTIVITA, "Considera tutte le attività (tre) nelle liste di attività", AETypePref.bool, false),
+
     ;
 
     //--codice di riferimento. Se è usaCompany=true, DEVE contenere anche il code della company come prefisso.

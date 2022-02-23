@@ -51,7 +51,7 @@ public class QueryTimestamp extends AQuery {
         int miniWrapRecuperati = 0;
 
         result.setWikiTitle("lista di pageIds");
-        result.setQueryType(TypeQuery.getCookies.get());
+        result.setQueryType(AETypeQuery.getCookies.get());
         result.setUrlRequest(urlDomain);
 
         //--controlla l'esistenza e la validità del collegamento come bot

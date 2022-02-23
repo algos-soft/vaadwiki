@@ -46,7 +46,7 @@ public class QueryPages extends AQuery {
         int cicli = (totPageIds / limit) + 1;
 
         result.setWikiTitle("lista di pageIds");
-        result.setQueryType(TypeQuery.getCookies.get());
+        result.setQueryType(AETypeQuery.getCookies.get());
         result.setUrlRequest(urlDomain);
 
         //--controlla l'esistenza e la validità del collegamento come bot

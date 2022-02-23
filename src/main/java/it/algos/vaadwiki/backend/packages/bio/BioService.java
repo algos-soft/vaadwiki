@@ -10,6 +10,7 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.application.*;
+import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
@@ -282,7 +283,7 @@ public class BioService extends WikiService {
         //--volendo si potrebbe metter un flag di preferenze (false) per 'cercare' solo l'attività principale
         //@todo mettere eventualmente un flag in preferenze
         properties.add(ATTIVITA_PROPERTY);
-        if (true) {
+        if (pref.isBool(USA_TRE_ATTIVITA)) {
             properties.add(ATTIVITA_PROPERTY_2);
             properties.add(ATTIVITA_PROPERTY_3);
         }

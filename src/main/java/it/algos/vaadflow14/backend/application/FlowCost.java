@@ -67,6 +67,8 @@ public abstract class FlowCost {
 
     public static final String REF_OPEN = "<ref";
 
+    public static final String REF_END = "</ref>";
+
     public static final String ECC = "ecc.";
 
     public static final String NOTE = "<!--";

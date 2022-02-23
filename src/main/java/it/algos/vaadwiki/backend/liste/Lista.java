@@ -3,7 +3,9 @@ package it.algos.vaadwiki.backend.liste;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
+import it.algos.vaadwiki.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.support.*;
 
 import javax.annotation.*;
 import java.util.*;
@@ -49,12 +51,40 @@ public abstract class Lista {
     public ArrayService array;
 
     /**
+     * The App context.
+     */
+    @Autowired
+    protected GenericApplicationContext appContext;
+
+    /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
     protected ALogService logger;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected WikiUtility wikiUtility;
+
+    /**
+     * The Service.
+     */
+    @Autowired
+    public MongoService mongoService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected DidascaliaService didascaliaService;
 
     /**
      * Lista delle biografie che hanno una valore valido per la pagina specifica <br>
@@ -78,7 +108,13 @@ public abstract class Lista {
      * La mappa viene creata nel @PostConstruct dell'istanza <br>
      * La mappa è ordinata per titoli dei paragrafi <br>
      */
-    protected Map<String, List> mappa;
+    //    @Deprecated
+    //    protected Map<String, List> mappa;
+
+    /**
+     * Wrapper per i titoli (pagina paragrafi) e lista delle didascalie <br>
+     */
+    protected WrapLista wrapLista;
 
     /**
      * Lista delle listaDidascalie che hanno una valore valido per la pagina specifica <br>
@@ -104,8 +140,6 @@ public abstract class Lista {
         this.regolazioniIniziali();
         this.fixListaBio();
         this.fixListaDidascalie();
-        this.fixMappaDidascalie();
-        this.fixTestoParagrafi();
     }
 
     /**
@@ -133,56 +167,24 @@ public abstract class Lista {
     }
 
 
-    /**
-     * Costruisce una lista di didascalie che hanno una valore valido per la pagina specifica <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void fixListaDidascalie() {
-    }
-
-    /**
-     * Costruisce una mappa di didascalie con titoli dei paragrafi che hanno una valore valido per la pagina specifica <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void fixMappaDidascalie() {
-        //--Crea la mappa vuota delle didascalie
-        this.mappa = new LinkedHashMap<>();
-    }
-
-    /**
-     * Costruisce un testo con titoli dei paragrafi <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void fixTestoParagrafi() {
-        StringBuilder buffer = new StringBuilder();
-        List<String> lista;
-
-        if (mappa != null && mappa.size() > 0) {
-            for (String key : mappa.keySet()) {
-                lista = mappa.get(key);
-
-                if (lista != null && lista.size() > 0) {
-                    buffer.append(fixTitoloParagrafo(key, lista.size()));
-
-                    for (Object stringa : lista) {
-                        buffer.append(ASTERISCO);
-                        buffer.append(SPAZIO);
-                        buffer.append(stringa);
-                        buffer.append(A_CAPO);
-                    }
-                    buffer.append(A_CAPO);
-                }
-            }
+        /**
+         * Costruisce una lista di didascalie che hanno una valore valido per la pagina specifica <br>
+         */
+        protected void fixListaDidascalie() {
+            listaDidascalie = didascaliaService.getLista(listaBio);
         }
-        this.testoConParagrafi = buffer.toString();
-    }
+
 
     public List<Bio> getListaBio() {
-        return listaBio;
+        return wrapLista != null ? wrapLista.getListaBio() : null;
+    }
+
+    public List<String> getListaDidascalie() {
+        return wrapLista != null ? wrapLista.getListaDidascalie() : listaDidascalie;
     }
 
     public Map<String, List> getMappa() {
-        return mappa;
+        return wrapLista != null ? wrapLista.getMappa() : null;
     }
 
     public int getNumDidascalie() {
@@ -190,31 +192,11 @@ public abstract class Lista {
     }
 
     public String getTestoConParagrafi() {
-        return testoConParagrafi;
+        return wrapLista != null ? wrapLista.getTestoConParagrafi() : VUOTA;
     }
 
-    public String fixTitoloParagrafo(final String keyParagrafo, int numero) {
-        String titolo = VUOTA;
-        String keyMaiuscola = text.primaMaiuscola(keyParagrafo);
-        String tag = "Progetto:Biografie/Nazionalità/";
-
-        tag += keyMaiuscola;
-        tag += PIPE;
-        tag += keyMaiuscola;
-        tag = text.setDoppieQuadre(tag);
-
-        titolo += PARAGRAFO;
-        titolo += tag;
-        if (true) { //@todo mettere eventualmente un flag in preferenze
-            titolo += SPAZIO;
-            titolo += "<span style=\"font-size:70%\">(";
-            titolo += numero;
-            titolo += ")</span>";
-        }
-        titolo += PARAGRAFO;
-        titolo += A_CAPO;
-
-        return titolo;
+    public int getBioSize() {
+        return wrapLista != null ? wrapLista.getListaBio().size() : listaBio != null ? listaBio.size() : 0;
     }
 
 }

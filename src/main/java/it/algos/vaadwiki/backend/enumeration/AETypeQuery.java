@@ -1,9 +1,5 @@
 package it.algos.vaadwiki.backend.enumeration;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-
 /**
  * Project vaadwiki
  * Created by Algos
@@ -11,7 +7,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
  * Date: mar, 27-lug-2021
  * Time: 09:25
  */
-public enum TypeQuery {
+public enum AETypeQuery {
     get("GET senza loginCookies"),
     getCookies("GET con loginCookies"),
     post("POST"),
@@ -21,7 +17,7 @@ public enum TypeQuery {
     private  String tag;
 
 
-     TypeQuery(String tag) {
+     AETypeQuery(String tag) {
         this.tag = tag;
     }
 

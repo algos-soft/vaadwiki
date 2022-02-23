@@ -9,6 +9,7 @@ import it.algos.vaadwiki.*;
 import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
+import it.algos.vaadwiki.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -54,6 +55,8 @@ public class ListaAttivitaIntegrationTest extends WTest {
     @Autowired
     public MongoTemplate mongoOp;
 
+    @Autowired
+    public WikiUtility wikiUtility;
 
     /**
      * The App context.
@@ -226,7 +229,6 @@ public class ListaAttivitaIntegrationTest extends WTest {
             System.out.println(String.format("3 - Crea una lista di biografie per l'attività (singolare) '%s'", attivita.singolare));
             listaBio = appContext.getBean(ListaAttivita.class, attivita, type).getListaBio();
             assertNotNull(listaBio);
-            assertTrue(listaBio != null && listaBio.size() > 0);
             System.out.println(VUOTA);
             System.out.println(String.format("Lista costruita con una sola attività (singolare) '%s'", attivita.singolare));
             printListaBio(listaBio);
@@ -237,7 +239,6 @@ public class ListaAttivitaIntegrationTest extends WTest {
             // si può omettere il type perché il costruttore di ListaAttivita inserisce di default ListaAttivita.AETypeAttivita.plurale
             listaBio = appContext.getBean(ListaAttivita.class, attivita).getListaBio();
             assertNotNull(listaBio);
-            assertTrue(listaBio != null && listaBio.size() > 0);
             System.out.println(VUOTA);
             System.out.println(String.format("Lista costruita con tutte le attività associate a '%s'", attivita.plurale));
             printListaBio(listaBio);
@@ -261,7 +262,6 @@ public class ListaAttivitaIntegrationTest extends WTest {
             System.out.println(String.format("4 - Crea una lista di didascalie complete per l'attività (singolare) '%s'", attivita.singolare));
             listaDidascalie = appContext.getBean(ListaAttivita.class, attivita, type).getListaDidascalie();
             assertNotNull(listaDidascalie);
-            assertTrue(listaDidascalie != null && listaDidascalie.size() > 0);
             System.out.println(VUOTA);
             System.out.println(String.format("Lista di didascalie complete per una sola attività (singolare) '%s'", attivita.singolare));
             printListaDidascalie(listaDidascalie);
@@ -271,7 +271,6 @@ public class ListaAttivitaIntegrationTest extends WTest {
             // si può omettere il type perché il costruttore di ListaAttivita inserisce di default ListaAttivita.AETypeAttivita.plurale
             listaDidascalie = appContext.getBean(ListaAttivita.class, attivita).getListaDidascalie();
             assertNotNull(listaDidascalie);
-            assertTrue(listaDidascalie != null && listaDidascalie.size() > 0);
             System.out.println(VUOTA);
             System.out.println(String.format("Lista costruita con tutte le attività associate a '%s'", attivita.plurale));
             printListaDidascalie(listaDidascalie);
@@ -327,7 +326,6 @@ public class ListaAttivitaIntegrationTest extends WTest {
         if (type == ListaAttivita.AETypeAttivita.singolare) {
             System.out.println(String.format("4 - Crea un testo con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
             ottenuto = appContext.getBean(ListaAttivita.class, attivita, type).getTestoConParagrafi();
-            assertTrue(textService.isValid(ottenuto));
             System.out.println(VUOTA);
             System.out.println(String.format("Testo con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
             System.out.println(VUOTA);
@@ -338,7 +336,6 @@ public class ListaAttivitaIntegrationTest extends WTest {
             System.out.println(String.format("4 - Crea un testo con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
             // si può omettere il type perché il costruttore di ListaAttivita inserisce di default ListaAttivita.AETypeAttivita.plurale
             ottenuto = appContext.getBean(ListaAttivita.class, attivita).getTestoConParagrafi();
-            assertTrue(textService.isValid(ottenuto));
             System.out.println(VUOTA);
             System.out.println(String.format("Testo con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
             System.out.println(VUOTA);
@@ -397,11 +394,7 @@ public class ListaAttivitaIntegrationTest extends WTest {
                 lista = mappa.get(key);
 
                 if (arrayService.isAllValid(lista)) {
-                    System.out.print("==");
-                    System.out.print(key);
-                    System.out.print("==");
-                    System.out.print(A_CAPO);
-
+                    System.out.print( wikiUtility.setParagrafo(key));
                     for (Object stringa : lista) {
                         System.out.print(asterisco);
                         System.out.print(SPAZIO);

@@ -3,8 +3,6 @@ package it.algos.vaadwiki.wiki.query;
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.interfaces.*;
-import it.algos.vaadflow14.backend.wrapper.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.wrapper.*;
@@ -188,7 +186,7 @@ public class QueryLogin extends AQuery {
         JSONObject jsonQuery = null;
         JSONObject jsonTokens = null;
 
-        result.setQueryType(TypeQuery.login.get());
+        result.setQueryType(AETypeQuery.login.get());
         result.setPreliminaryResponse(rispostaDellaQuery);
         jsonAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
 

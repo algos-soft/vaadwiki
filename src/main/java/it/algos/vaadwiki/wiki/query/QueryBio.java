@@ -50,7 +50,7 @@ public class QueryBio extends AQuery {
         URLConnection urlConn;
 
         result.setWikiTitle(wikiTitleGrezzo);
-        result.setQueryType(TypeQuery.get.get());
+        result.setQueryType(AETypeQuery.get.get());
         result.setUrlRequest(urlDomain);
 
         try {

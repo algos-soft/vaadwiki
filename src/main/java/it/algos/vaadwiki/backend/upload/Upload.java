@@ -2,9 +2,11 @@ package it.algos.vaadwiki.backend.upload;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.login.*;
+import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.query.*;
 import static it.algos.vaadwiki.wiki.query.QueryWrite.*;
 import org.springframework.beans.factory.annotation.*;
@@ -75,7 +77,26 @@ public abstract class Upload {
     @Autowired
     public BotLogin botLogin;
 
+    public int taglioSottoPagina;
+
     //    protected boolean usaWikiPaginaTest = true;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected PreferenzaService pref;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected WikiUtility wikiUtility;
 
     //    protected AEntity entityBean;
     protected boolean usaHeadNonScrivere;
@@ -107,8 +128,6 @@ public abstract class Upload {
     protected Lista lista;
 
     protected int numVoci;
-
-    public int taglioSottoPagina;
 
     protected String notaDidascalie;
 
@@ -157,12 +176,12 @@ public abstract class Upload {
         usaHeadTemplateAvviso = true;
         tagHeadTemplateAvviso = "ListaBio"; //--Sovrascrivibile da preferenze
         tagHeadTemplateProgetto = "biografie"; //--Sovrascrivibile da preferenze
-        usaHeadIncipit = false; //--normalmente false. Sovrascrivibile da preferenze
+        usaHeadIncipit = true; //--normalmente true. Sovrascrivibile da preferenze
 
         // body
 
         // footer
-        usaNote = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
+        usaNote = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
         usaVociCorrelate = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
 
         // note <ref>
@@ -172,6 +191,16 @@ public abstract class Upload {
         notaSottoPagina = "Questa sottoPagina specifica viene creata se il numero di voci biografiche nel paragrafo della pagina principale supera le " + taglioSottoPagina + " unità.";
         notaAttivita = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
         notaNazionalita = "Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+
+
+        String didascalia = text.setRef(notaDidascalie);
+        String ordinamento = text.setRef(notaOrdinamento);
+        String esaustiva = text.setRef(notaEsaustiva);
+//        String creazione = text.setRef(notaCreazione);
+        String attivita = text.setRef(notaAttivita);
+//        String suddivisione = text.setRef(notaSuddivisione);
+        String nazionalita = text.setRef(notaNazionalita);
+//        String paragrafo = text.setRef(notaParagrafoVuoto);
     }
 
 
@@ -292,18 +321,18 @@ public abstract class Upload {
         //        boolean nascosta = pref.isBool(FlowCost.USA_DEBUG);
         String cat;
 
-                if (usaNote) {
-                    testo += usaNote();
-                }// end of if cycle
+        if (usaNote) {
+            testo += usaNote();
+        }
 
-                if (usaVociCorrelate) {
-//                    testo += usaVociCorrelate();
-                }// end of if cycle
+        if (usaVociCorrelate) {
+            //                    testo += usaVociCorrelate();
+        }
 
-//        testo += LibWiki.setPortale(tagHeadTemplateProgetto);
-//        cat = tagCategoria;
-//        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
-//        testo += cat;
+        //        testo += LibWiki.setPortale(tagHeadTemplateProgetto);
+        //        cat = tagCategoria;
+        //        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
+        //        testo += cat;
 
         return testo;
     }
@@ -455,13 +484,11 @@ public abstract class Upload {
         String tag = "Note";
         String ref = "<references/>";
 
-//        testo += text.s(tag);
-        testo += A_CAPO;
+        testo += wikiUtility.setParagrafo(tag);
         testo += ref;
         testo += A_CAPO;
-        testo += A_CAPO;
 
-        return testo;
+        return newTextPagina.contains(REF_OPEN) ? testo : VUOTA;
     }
 
     /**
@@ -513,5 +540,6 @@ public abstract class Upload {
     public enum AETypeHeadToc {
         nessuno, conIndice, senzaIndice
     }
+
 
 }
