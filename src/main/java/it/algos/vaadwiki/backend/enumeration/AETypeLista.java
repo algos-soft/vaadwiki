@@ -8,5 +8,19 @@ package it.algos.vaadwiki.backend.enumeration;
  * Time: 17:24
  */
 public enum AETypeLista {
-    attivita, nazionalita, nati, morti
+    attivita("Progetto:Biografie/Attività/"),
+    nazionalita(""),
+    nati(""),
+    morti("");
+
+    private String prefix;
+
+
+    AETypeLista(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
 }

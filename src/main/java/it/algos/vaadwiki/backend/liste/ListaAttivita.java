@@ -173,9 +173,9 @@ public class ListaAttivita extends Lista {
         super.fixListaBio();
         listaBio = bioService.fetchAttivita(listaNomiAttivitaSingole);
         try {
-            wrapLista = appContext.getBean(WrapLista.class, AETypeLista.attivita, listaBio);
+            wrapLista = appContext.getBean(WrapLista.class,  AETypeLista.attivita,attivita.plurale, listaBio);
         } catch (Exception unErrore) {
-            int a = 87;
+            logger.warn(unErrore, getClass(), "fixListaBio");
         }
     }
 

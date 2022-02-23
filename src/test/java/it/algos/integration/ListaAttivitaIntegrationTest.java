@@ -394,7 +394,7 @@ public class ListaAttivitaIntegrationTest extends WTest {
                 lista = mappa.get(key);
 
                 if (arrayService.isAllValid(lista)) {
-                    System.out.print( wikiUtility.setParagrafo(key));
+                    System.out.print(wikiUtility.setParagrafo(key));
                     for (Object stringa : lista) {
                         System.out.print(asterisco);
                         System.out.print(SPAZIO);

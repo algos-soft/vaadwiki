@@ -86,6 +86,10 @@ public class WrapLista {
      */
     private List<String> listaDidascalie;
 
+    private String wikiTitle;
+
+    private String paginaMadre;
+
     private AETypeLista typeLista;
 
     private AETypeMappa typeMappa;
@@ -94,8 +98,11 @@ public class WrapLista {
      * Costruttore base senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      */
-    public WrapLista(final AETypeLista typeLista, final List listaBio) {
-        this(typeLista, listaBio, AETypeMappa.paginaPrincipale);
+    public WrapLista(
+            final AETypeLista typeLista,
+            final String title,
+            final List listaBio) {
+        this(typeLista, title, listaBio, AETypeMappa.paginaPrincipale, VUOTA);
     }// end of constructor
 
     /**
@@ -104,10 +111,17 @@ public class WrapLista {
      *
      * @param typeMappa
      */
-    public WrapLista(final AETypeLista typeLista, final List<Bio> listaBio, final AETypeMappa typeMappa) {
+    public WrapLista(
+            final AETypeLista typeLista,
+            final String title,
+            final List listaBio,
+            final AETypeMappa typeMappa,
+            final String paginaMadre) {
         this.typeLista = typeLista;
+        this.wikiTitle = typeLista.getPrefix() + title;
         this.listaBio = listaBio;
         this.typeMappa = typeMappa;
+        this.paginaMadre = paginaMadre;
     }// end of constructor
 
 
