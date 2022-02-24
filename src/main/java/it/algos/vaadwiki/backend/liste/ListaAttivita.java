@@ -71,6 +71,8 @@ public class ListaAttivita extends Lista {
     //--property
     private AETypeAttivita typeAttivita;
 
+    private String titoloGrezzo;
+
     /**
      * Costruttore base con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
@@ -134,9 +136,13 @@ public class ListaAttivita extends Lista {
     protected void regolazioniIniziali() {
         if (attivita != null) {
             switch (typeAttivita) {
-                case singolare -> listaNomiAttivitaSingole = array.creaArraySingolo(attivita.singolare);
+                case singolare -> {
+                    this.titoloGrezzo = attivita.singolare;
+                    listaNomiAttivitaSingole = array.creaArraySingolo(attivita.singolare);
+                }
                 case plurale -> {
                     try {
+                        this.titoloGrezzo = attivita.plurale;
                         listaNomiAttivitaSingole = attivitaService.fetchSingolariDaPlurale(attivita.plurale);
                     } catch (AlgosException unErrore) {
                         logger.warn(unErrore, getClass(), "regolazioniIniziali");
@@ -148,9 +154,19 @@ public class ListaAttivita extends Lista {
         }
         else {
             switch (typeAttivita) {
-                case singolare -> listaNomiAttivitaSingole = array.creaArraySingolo(nomeAttivita);
+                case singolare -> {
+                    try {
+                        attivita = attivitaService.findByProperty("singolare", nomeAttivita);
+                        this.titoloGrezzo = attivita.singolare;
+                    } catch (AlgosException unErrore) {
+                        logger.warn(unErrore, this.getClass(), "regolazioniIniziali");
+                    }
+                    listaNomiAttivitaSingole = array.creaArraySingolo(nomeAttivita);
+                }
                 case plurale -> {
                     try {
+                        attivita = attivitaService.findFirstByPlurale("plurale", nomeAttivita);
+                        this.titoloGrezzo = attivita.plurale;
                         listaNomiAttivitaSingole = attivitaService.fetchSingolariDaPlurale(nomeAttivita);
                     } catch (AlgosException unErrore) {
                         logger.warn(unErrore, getClass(), "regolazioniIniziali");
@@ -171,9 +187,10 @@ public class ListaAttivita extends Lista {
      */
     public void fixListaBio() {
         super.fixListaBio();
-        listaBio = bioService.fetchAttivita(listaNomiAttivitaSingole);
+
         try {
-            wrapLista = appContext.getBean(WrapLista.class,  AETypeLista.attivita,attivita.plurale, listaBio);
+            List<Bio> listaBio = bioService.fetchAttivita(listaNomiAttivitaSingole);
+            wrapLista = appContext.getBean(WrapLista.class, AETypeLista.attivita, titoloGrezzo, listaBio);
         } catch (Exception unErrore) {
             logger.warn(unErrore, getClass(), "fixListaBio");
         }

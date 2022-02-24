@@ -1,20 +1,18 @@
 package it.algos.vaadwiki.backend.packages.nazionalita;
 
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.wiki.*;
-import it.algos.vaadflow14.wizard.enumeration.*;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
 
 import java.io.*;
-import java.time.*;
 import java.util.*;
 
 /**
@@ -65,12 +63,12 @@ public class NazionalitaService extends WikiService {
      * Crea e registra una entityBean <br>
      *
      * @param singolare di riferimento (obbligatorio, unico)
-     * @param plurale (facoltativo, non unico)
+     * @param plurale   (facoltativo, non unico)
      *
      * @return la nuova entityBean appena creata e salvata
      */
     public Nazionalita crea(final String singolare, final String plurale) {
-        return (Nazionalita) ((MongoService)mongo).insert(newEntity(singolare, plurale));
+        return (Nazionalita) ((MongoService) mongo).insert(newEntity(singolare, plurale));
     }
 
 
@@ -80,14 +78,14 @@ public class NazionalitaService extends WikiService {
      * Eventuali regolazioni iniziali delle property <br>
      *
      * @param singolare di riferimento (obbligatorio, unico)
-	 * @param plurale (facoltativo, non unico)
+     * @param plurale   (facoltativo, non unico)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
     public Nazionalita newEntity(final String singolare, final String plurale) {
         Nazionalita newEntityBean = Nazionalita.builderNazionalita()
                 .singolare(text.isValid(singolare) ? singolare : null)
-				.plurale(text.isValid(plurale) ? plurale : null)
+                .plurale(text.isValid(plurale) ? plurale : null)
                 .build();
 
         return (Nazionalita) fixKey(newEntityBean);
@@ -137,6 +135,24 @@ public class NazionalitaService extends WikiService {
         return (Nazionalita) super.findByKey(keyValue);
     }
 
+
+    /**
+     * Cre4a una mappa di corrispondenza singolare->plurale per tutto il database <br>
+     *
+     * @return mappa singolare->plurale
+     */
+    public LinkedHashMap<String, String> getMappa() {
+        LinkedHashMap<String, String> mappa = new LinkedHashMap<>();
+        List<Nazionalita> lista = (List<Nazionalita>) fetch();
+
+        if (lista != null && lista.size() > 0) {
+            for (Nazionalita nazionalita : lista) {
+                mappa.put(nazionalita.singolare, nazionalita.plurale);
+            }
+        }
+
+        return mappa;
+    }
 
     /**
      * Esegue un azione di download, specifica del programma/package in corso <br>

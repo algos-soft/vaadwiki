@@ -2,7 +2,6 @@ package it.algos.vaadwiki.backend.liste;
 
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
@@ -34,6 +33,14 @@ public class WrapLista {
      */
     @Autowired
     protected WikiUtility wikiUtility;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected ALogService logger;
 
     /**
      * The App context.
@@ -86,6 +93,8 @@ public class WrapLista {
      */
     private List<String> listaDidascalie;
 
+    private String titoloGrezzo;
+
     private String wikiTitle;
 
     private String paginaMadre;
@@ -100,9 +109,9 @@ public class WrapLista {
      */
     public WrapLista(
             final AETypeLista typeLista,
-            final String title,
+            final String titoloGrezzo,
             final List listaBio) {
-        this(typeLista, title, listaBio, AETypeMappa.paginaPrincipale, VUOTA);
+        this(typeLista, titoloGrezzo, listaBio, AETypeMappa.paginaPrincipale, VUOTA);
     }// end of constructor
 
     /**
@@ -113,33 +122,41 @@ public class WrapLista {
      */
     public WrapLista(
             final AETypeLista typeLista,
-            final String title,
+            final String titoloGrezzo,
             final List listaBio,
             final AETypeMappa typeMappa,
             final String paginaMadre) {
         this.typeLista = typeLista;
-        this.wikiTitle = typeLista.getPrefix() + title;
+        this.titoloGrezzo = titoloGrezzo;
         this.listaBio = listaBio;
         this.typeMappa = typeMappa;
         this.paginaMadre = paginaMadre;
     }// end of constructor
 
 
-    /**
-     * Metodo invocato subito DOPO il costruttore
-     * <p>
-     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
-     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
-     */
+    //    /**
+    //     * Metodo invocato subito DOPO il costruttore
+    //     * <p>
+    //     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+    //     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+    //     */
     @PostConstruct
     public void inizia() {
+        this.regolazioniIniziali();
         this.fixMappaDidascalie();
+    }
+
+    /**
+     * Regolazioni iniziali <br>
+     */
+    private void regolazioniIniziali() {
+        this.wikiTitle = typeLista.getPrefix() + text.primaMaiuscola(titoloGrezzo);
     }
 
     /**
      * Costruisce una mappa di didascalie che hanno una valore valido per la pagina specifica <br>
      */
-    protected void fixMappaDidascalie() {
+    private void fixMappaDidascalie() {
         switch (typeLista) {
             case attivita -> fixMappaNazionalita();
         }
@@ -147,14 +164,17 @@ public class WrapLista {
 
 
     private void fixMappaNazionalita() {
-        Map<String, List> mappa = new LinkedHashMap<>();
-        String altre = "Titolo provvisorio";
-        List<String> lista;
+        mappa = new LinkedHashMap<>();
+        LinkedHashMap<String, List> mappaBio = new LinkedHashMap<>();
+        String altre = "altre";
+        String message = VUOTA;
+        List<Bio> lista;
         Set<String> setNazionalita;
         List<String> listaNazionalita;
-        String titoloParagrafoNazionalita;
-        Nazionalita nazionalita;
+        List<String> didascalie;
+        String nazionalitaPlurale;
         String didascalia;
+        LinkedHashMap<String, String> mappaNazionalita = nazionalitaService.getMappa();
 
         if (listaBio == null) {
             return;
@@ -163,39 +183,67 @@ public class WrapLista {
         setNazionalita = new LinkedHashSet<>();
         listaDidascalie = new ArrayList<>();
         for (Bio bio : listaBio) {
-            if (text.isEmpty(bio.nazionalita)) {
-                bio.nazionalita = altre;
+            if (text.isValid(bio.nazionalita)) {
+                nazionalitaPlurale = mappaNazionalita.get(bio.nazionalita);
+                setNazionalita.add(nazionalitaPlurale);
             }
-            titoloParagrafoNazionalita = bio.nazionalita;
-            setNazionalita.add(titoloParagrafoNazionalita);
         }
         listaNazionalita = new ArrayList<>(setNazionalita);
         Collections.sort(listaNazionalita);
 
-        for (String nazionalitaSingolare : listaNazionalita) {
-            for (Bio bio : listaBio) {
-                if (bio.nazionalita.equals(nazionalitaSingolare)) {
-                    try {
-                        nazionalita = nazionalitaService.findById(nazionalitaSingolare);
-                        titoloParagrafoNazionalita = nazionalita != null ? nazionalita.plurale : "errore";
-                        titoloParagrafoNazionalita = text.primaMaiuscola(titoloParagrafoNazionalita);
-                        if (mappa.containsKey(titoloParagrafoNazionalita)) {
-                            lista = mappa.get(titoloParagrafoNazionalita);
-                        }
-                        else {
-                            lista = new ArrayList<>();
-                        }
+        for (String nazPlurale : listaNazionalita) {
+            mappaBio.put(nazPlurale, new ArrayList());
+        }
+        mappaBio.put(altre, new ArrayList());
+
+        for (Bio bio : listaBio) {
+            if (text.isValid(bio.nazionalita)) {
+                nazionalitaPlurale = mappaNazionalita.get(bio.nazionalita);
+                if (mappaBio.containsKey(nazionalitaPlurale)) {
+                    mappaBio.get(nazionalitaPlurale).add(bio);
+                }
+                else {
+                    message = String.format("La mappa non prevede la nazionalità %s", nazionalitaPlurale);
+                    logger.warn(message, this.getClass(), "fixMappaNazionalita");
+                }
+            }
+            else {
+
+                mappaBio.get(altre).add(bio);
+            }
+        }
+
+        if (mappaBio != null && mappaBio.size() > 0) {
+            for (String paragrafo : mappaBio.keySet()) {
+                lista = mappaBio.get(paragrafo);
+                if (lista.size() < 150) { //@todo prefrenza
+                    didascalie = new ArrayList<>();
+                    for (Bio bio : lista) {
                         didascalia = didascaliaService.getLista(bio);
+                        didascalie.add(didascalia);
                         listaDidascalie.add(didascalia);
-                        lista.add(didascalia);
-                        mappa.put(titoloParagrafoNazionalita, lista);
-                    } catch (AlgosException unErrore) {
-                        int a = 87;
                     }
+                    paragrafo = text.primaMaiuscola(paragrafo);
+
+                    //                    WrapLista wrapLista = appContext.getBean(WrapLista.class, AETypeLista.attivita, paragrafo, lista, AETypeMappa.sottoPagina, wikiTitle);
+                    //                    List sotto = new ArrayList();
+                    //                    sotto.add(paragrafo);
+                    //                    sotto.add(wrapLista);
+                    //                    mappa.put(paragrafo, sotto);
+                    mappa.put(paragrafo, didascalie);
+                }
+                else {
+                    didascalie = new ArrayList<>();
+                    for (Bio bio : lista) {
+                        didascalia = didascaliaService.getLista(bio);
+                        didascalie.add(didascalia);
+                        listaDidascalie.add(didascalia);
+                    }
+                    paragrafo = text.primaMaiuscola(paragrafo);
+                    mappa.put(paragrafo, didascalie);
                 }
             }
         }
-        this.mappa = mappa;
     }
 
     public List<String> getListaDidascalie() {

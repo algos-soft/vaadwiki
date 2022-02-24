@@ -186,6 +186,21 @@ public class AttivitaService extends WikiService {
     }
 
     /**
+     * Retrieves the first entity by a 'plural' property.
+     * Cerca una singola entity con una query. <br>
+     * Restituisce un valore valido ANCHE se esistono diverse entities <br>
+     *
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the FIRST founded entity
+     */
+    public Attivita findFirstByPlurale(String propertyName, Serializable propertyValue) throws AlgosException {
+        List<Attivita> lista = (List<Attivita>) mongo.fetch(Attivita.class, propertyName, propertyValue);
+        return lista != null ? lista.get(0) : null;
+    }
+
+    /**
      * Controlla l'esistenza di una entity by its keyValue.
      *
      * @param attivitaSingolare must not be {@literal null}.

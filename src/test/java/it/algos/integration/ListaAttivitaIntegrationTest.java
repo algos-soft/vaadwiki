@@ -291,7 +291,7 @@ public class ListaAttivitaIntegrationTest extends WTest {
         }
 
         if (type == ListaAttivita.AETypeAttivita.singolare) {
-            System.out.println(String.format("4 - Crea una mappa con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
+            System.out.println(String.format("5 - Crea una mappa con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
             mappaAttivita = appContext.getBean(ListaAttivita.class, attivita, type).getMappa();
             assertNotNull(mappaAttivita);
             System.out.println(VUOTA);
@@ -300,7 +300,7 @@ public class ListaAttivitaIntegrationTest extends WTest {
         }
 
         if (type == ListaAttivita.AETypeAttivita.plurale) {
-            System.out.println(String.format("4 - Crea una mappa con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
+            System.out.println(String.format("5 - Crea una mappa con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
             // si può omettere il type perché il costruttore di ListaAttivita inserisce di default ListaAttivita.AETypeAttivita.plurale
             mappaAttivita = appContext.getBean(ListaAttivita.class, attivita).getMappa();
             assertNotNull(mappaAttivita);

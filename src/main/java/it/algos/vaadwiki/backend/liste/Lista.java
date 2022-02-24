@@ -51,6 +51,12 @@ public abstract class Lista {
     public ArrayService array;
 
     /**
+     * The Service.
+     */
+    @Autowired
+    public MongoService mongoService;
+
+    /**
      * The App context.
      */
     @Autowired
@@ -73,12 +79,6 @@ public abstract class Lista {
     protected WikiUtility wikiUtility;
 
     /**
-     * The Service.
-     */
-    @Autowired
-    public MongoService mongoService;
-
-    /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
@@ -86,12 +86,12 @@ public abstract class Lista {
     @Autowired
     protected DidascaliaService didascaliaService;
 
-    /**
-     * Lista delle biografie che hanno una valore valido per la pagina specifica <br>
-     * La lista viene creata nel @PostConstruct dell'istanza <br>
-     * La lista è ordinata per cognome <br>
-     */
-    protected List<Bio> listaBio;
+    //    /**
+    //     * Lista delle biografie che hanno una valore valido per la pagina specifica <br>
+    //     * La lista viene creata nel @PostConstruct dell'istanza <br>
+    //     * La lista è ordinata per cognome <br>
+    //     */
+    //    protected List<Bio> listaBio;
 
     /**
      * Lista delle listaDidascalie che hanno una valore valido per la pagina specifica <br>
@@ -163,16 +163,16 @@ public abstract class Lista {
      */
     public void fixListaBio() {
         //--Crea la lista vuota delle voci biografiche
-        listaBio = new ArrayList<>();
+        //        listaBio = new ArrayList<>();
     }
 
 
-        /**
-         * Costruisce una lista di didascalie che hanno una valore valido per la pagina specifica <br>
-         */
-        protected void fixListaDidascalie() {
-            listaDidascalie = didascaliaService.getLista(listaBio);
-        }
+    /**
+     * Costruisce una lista di didascalie che hanno una valore valido per la pagina specifica <br>
+     */
+    protected void fixListaDidascalie() {
+        //            listaDidascalie = didascaliaService.getLista(listaBio);
+    }
 
 
     public List<Bio> getListaBio() {
@@ -188,7 +188,7 @@ public abstract class Lista {
     }
 
     public int getNumDidascalie() {
-        return listaDidascalie != null ? listaDidascalie.size() : 0;
+        return wrapLista != null ? wrapLista.getListaDidascalie().size() : 0;
     }
 
     public String getTestoConParagrafi() {
@@ -196,7 +196,7 @@ public abstract class Lista {
     }
 
     public int getBioSize() {
-        return wrapLista != null ? wrapLista.getListaBio().size() : listaBio != null ? listaBio.size() : 0;
+        return wrapLista != null ? wrapLista.getListaBio().size() : 0;
     }
 
 }
