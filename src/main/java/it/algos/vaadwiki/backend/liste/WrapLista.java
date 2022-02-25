@@ -12,7 +12,6 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.*;
 
-import javax.annotation.*;
 import java.util.*;
 
 /**
@@ -25,6 +24,10 @@ import java.util.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WrapLista {
+
+    public static final String ALTRE = "Altre...";
+
+    public static final String VEDI = "{{Vedi anche|";
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -134,16 +137,16 @@ public class WrapLista {
     }// end of constructor
 
 
-    //    /**
-    //     * Metodo invocato subito DOPO il costruttore
-    //     * <p>
-    //     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
-    //     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
-    //     */
-    @PostConstruct
-    public void inizia() {
+    /**
+     * Metodo invocato subito DOPO il costruttore
+     * <p>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     */
+    public WrapLista inizia() {
         this.regolazioniIniziali();
         this.fixMappaDidascalie();
+
+        return this;
     }
 
     /**
@@ -166,7 +169,6 @@ public class WrapLista {
     private void fixMappaNazionalita() {
         mappa = new LinkedHashMap<>();
         LinkedHashMap<String, List> mappaBio = new LinkedHashMap<>();
-        String altre = "altre";
         String message = VUOTA;
         List<Bio> lista;
         Set<String> setNazionalita;
@@ -194,7 +196,7 @@ public class WrapLista {
         for (String nazPlurale : listaNazionalita) {
             mappaBio.put(nazPlurale, new ArrayList());
         }
-        mappaBio.put(altre, new ArrayList());
+        mappaBio.put(ALTRE, new ArrayList());
 
         for (Bio bio : listaBio) {
             if (text.isValid(bio.nazionalita)) {
@@ -209,39 +211,35 @@ public class WrapLista {
             }
             else {
 
-                mappaBio.get(altre).add(bio);
+                mappaBio.get(ALTRE).add(bio);
             }
         }
 
         if (mappaBio != null && mappaBio.size() > 0) {
             for (String paragrafo : mappaBio.keySet()) {
                 lista = mappaBio.get(paragrafo);
-                if (lista.size() < 150) { //@todo prefrenza
-                    didascalie = new ArrayList<>();
-                    for (Bio bio : lista) {
-                        didascalia = didascaliaService.getLista(bio);
-                        didascalie.add(didascalia);
-                        listaDidascalie.add(didascalia);
-                    }
-                    paragrafo = text.primaMaiuscola(paragrafo);
 
-                    //                    WrapLista wrapLista = appContext.getBean(WrapLista.class, AETypeLista.attivita, paragrafo, lista, AETypeMappa.sottoPagina, wikiTitle);
-                    //                    List sotto = new ArrayList();
-                    //                    sotto.add(paragrafo);
-                    //                    sotto.add(wrapLista);
-                    //                    mappa.put(paragrafo, sotto);
-                    mappa.put(paragrafo, didascalie);
+                didascalie = new ArrayList<>();
+                for (Bio bio : lista) {
+                    didascalia = didascaliaService.getLista(bio);
+                    didascalie.add(didascalia);
+                    listaDidascalie.add(didascalia);
                 }
-                else {
-                    didascalie = new ArrayList<>();
-                    for (Bio bio : lista) {
-                        didascalia = didascaliaService.getLista(bio);
-                        didascalie.add(didascalia);
-                        listaDidascalie.add(didascalia);
-                    }
-                    paragrafo = text.primaMaiuscola(paragrafo);
-                    mappa.put(paragrafo, didascalie);
-                }
+                paragrafo = text.primaMaiuscola(paragrafo);
+                mappa.put(paragrafo, didascalie);
+
+                //                    didascalie = new ArrayList<>();
+                //                    for (Bio bio : lista) {
+                //                        didascalia = didascaliaService.getLista(bio);
+                //                        didascalie.add(didascalia);
+                //                        listaDidascalie.add(didascalia);
+                //                    }
+                //                    paragrafo = text.primaMaiuscola(paragrafo);
+                //
+                //                    mappa.put(paragrafo, Arrays.asList(String.format("%s%s%s%s%s",VEDI,wikiTitle,SLASH,paragrafo,DOPPIE_GRAFFE_END)));
+                //                }
+                //                else {
+                //                }
             }
         }
     }
@@ -273,10 +271,15 @@ public class WrapLista {
                 if (lista != null && lista.size() > 0) {
                     buffer.append(getTitoloParagrafo(key, lista.size()));
 
-                    for (Object stringa : lista) {
-                        buffer.append(ASTERISCO);
-                        buffer.append(SPAZIO);
-                        buffer.append(stringa);
+                    for (String stringa : lista) {
+                        if (stringa.startsWith(DOPPIE_GRAFFE_INI)) {
+                            buffer.append(stringa);
+                        }
+                        else {
+                            buffer.append(ASTERISCO);
+                            buffer.append(SPAZIO);
+                            buffer.append(stringa);
+                        }
                         buffer.append(A_CAPO);
                     }
                     buffer.append(A_CAPO);
@@ -299,13 +302,15 @@ public class WrapLista {
     public String getTitoloParagrafoAttivita(final String keyParagrafo, int numero) {
         String keyMaiuscola = text.primaMaiuscola(keyParagrafo);
         String tag = "Progetto:Biografie/Nazionalità/";
+        String titolo;
 
         tag += keyMaiuscola;
         tag += PIPE;
         tag += keyMaiuscola;
         tag = text.setDoppieQuadre(tag);
 
-        return wikiUtility.setParagrafo(tag, numero);
+        titolo = keyMaiuscola.equals(ALTRE) ? ALTRE : tag;
+        return wikiUtility.setParagrafo(titolo, numero);
     }
 
     public enum AETypeMappa {

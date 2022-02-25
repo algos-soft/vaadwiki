@@ -385,7 +385,7 @@ public class ListaAttivitaIntegrationTest extends WTest {
 
 
     private void printParagrafi(final Map<String, List> mappa) {
-        List lista;
+        List<String> lista;
         String asterisco = "*";
 
         System.out.println(VUOTA);
@@ -395,10 +395,15 @@ public class ListaAttivitaIntegrationTest extends WTest {
 
                 if (arrayService.isAllValid(lista)) {
                     System.out.print(wikiUtility.setParagrafo(key));
-                    for (Object stringa : lista) {
-                        System.out.print(asterisco);
-                        System.out.print(SPAZIO);
-                        System.out.println(stringa);
+                    for (String stringa : lista) {
+                        if (stringa.startsWith(DOPPIE_GRAFFE_INI)) {
+                            System.out.println(stringa);
+                        }
+                        else {
+                            System.out.print(asterisco);
+                            System.out.print(SPAZIO);
+                            System.out.println(stringa);
+                        }
                     }
                     System.out.print(A_CAPO);
                 }

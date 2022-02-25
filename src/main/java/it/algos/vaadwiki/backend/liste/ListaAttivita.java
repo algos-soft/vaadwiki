@@ -190,7 +190,7 @@ public class ListaAttivita extends Lista {
 
         try {
             List<Bio> listaBio = bioService.fetchAttivita(listaNomiAttivitaSingole);
-            wrapLista = appContext.getBean(WrapLista.class, AETypeLista.attivita, titoloGrezzo, listaBio);
+            wrapLista = appContext.getBean(WrapLista.class, AETypeLista.attivita, titoloGrezzo, listaBio).inizia();
         } catch (Exception unErrore) {
             logger.warn(unErrore, getClass(), "fixListaBio");
         }
