@@ -152,8 +152,8 @@ public abstract class Upload {
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
      * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
      */
-    @PostConstruct
-    protected void inizia() {
+//    @PostConstruct
+    public Upload inizia() {
         summary = text.setDoppieQuadre("Utente:" + botLogin.getUsername() + "|" + botLogin.getUsername());
         this.fixPreferenze();
         this.regolazioniIniziali();
@@ -161,6 +161,7 @@ public abstract class Upload {
         this.fixVoci();
         this.fixPagina();
 
+        return this;
     }
 
     /**
@@ -192,15 +193,14 @@ public abstract class Upload {
         notaAttivita = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
         notaNazionalita = "Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
 
-
         String didascalia = text.setRef(notaDidascalie);
         String ordinamento = text.setRef(notaOrdinamento);
         String esaustiva = text.setRef(notaEsaustiva);
-//        String creazione = text.setRef(notaCreazione);
+        //        String creazione = text.setRef(notaCreazione);
         String attivita = text.setRef(notaAttivita);
-//        String suddivisione = text.setRef(notaSuddivisione);
+        //        String suddivisione = text.setRef(notaSuddivisione);
         String nazionalita = text.setRef(notaNazionalita);
-//        String paragrafo = text.setRef(notaParagrafoVuoto);
+        //        String paragrafo = text.setRef(notaParagrafoVuoto);
     }
 
 
@@ -221,7 +221,7 @@ public abstract class Upload {
     /**
      * Calcola il numero di voci della pagina <br>
      */
-    private void fixVoci() {
+    protected void fixVoci() {
         numVoci = lista != null ? lista.getNumDidascalie() : 0;
     }
 
@@ -297,6 +297,10 @@ public abstract class Upload {
         String testoLista = VUOTA;
         testoLista = lista.getTestoConParagrafi();
 
+        if (true) { //todo necessita preferenza
+            testoLista = fixSottopagine(testoLista);
+        }
+
         //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
         //        if (usaBodyDoppiaColonna && (numVoci > pref.getInt(MAX_RIGHE_COLONNE))) {
         //            testoLista = LibWiki.setColonne(testoLista);
@@ -335,6 +339,17 @@ public abstract class Upload {
         //        testo += cat;
 
         return testo;
+    }
+
+
+    /**
+     * Inserisce nel testo i rinvii alle sottoPagine <br>
+     * Elabora gli upload delle sottoPagine <br>
+     * <p>
+     * Sovrascritto <br>
+     */
+    protected String fixSottopagine(final String testoIn) {
+        return testoIn;
     }
 
 

@@ -103,7 +103,7 @@ public class UploadAttivitaIntegrationTest extends WTest {
         if (type == ListaAttivita.AETypeAttivita.plurale) {
             System.out.println(String.format("1 - Crea una istanza uploadAttivita per l'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
             System.out.println("Per costruire una istanza uploadAttivita, uso una entity Attivita senza altri parametri");
-            istanza = appContext.getBean(UploadAttivita.class, attivita);
+            istanza = appContext.getBean(UploadAttivita.class, attivita).inizia();
             assertNotNull(istanza);
             ottenuto = istanza.getTestoConParagrafi();
             System.out.println(String.format("Testo con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
@@ -134,7 +134,7 @@ public class UploadAttivitaIntegrationTest extends WTest {
 
         if (type == ListaAttivita.AETypeAttivita.plurale) {
             System.out.println(String.format("2 - Preview testo pagina completo di upload per l'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
-            istanza = appContext.getBean(UploadAttivita.class, attivita);
+            istanza = appContext.getBean(UploadAttivita.class, attivita).inizia();
             assertNotNull(istanza);
             ottenuto = istanza.getTestoPagina();
             assertTrue(textService.isValid(ottenuto));

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.*;
 
+import javax.annotation.*;
 import java.util.*;
 
 /**
@@ -141,12 +142,17 @@ public class WrapLista {
      * Metodo invocato subito DOPO il costruttore
      * <p>
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
      */
-    public WrapLista inizia() {
+    @PostConstruct
+    public void inizia() {
         this.regolazioniIniziali();
         this.fixMappaDidascalie();
-
-        return this;
     }
 
     /**
