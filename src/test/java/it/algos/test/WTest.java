@@ -329,8 +329,9 @@ public abstract class WTest extends ATest {
     //--flag booleano upload
     private Stream<Arguments> ATTIVITA() {
         return Stream.of(
-                Arguments.of(attivitaCarpentieri, ListaAttivita.AETypeAttivita.plurale, true),
-                //                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.singolare, false),
+//                Arguments.of(attivitaCarpentieri, ListaAttivita.AETypeAttivita.plurale, true),
+                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.singolare, false),
+                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.plurale, true),
                 //                Arguments.of(attivitaPedagogista, ListaAttivita.AETypeAttivita.plurale, false),
                 //                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.singolare, false),
                 //                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.plurale, false),
@@ -669,7 +670,7 @@ public abstract class WTest extends ATest {
         List<Long> listaPagesIds = null;
         List<String> listaTitles = null;
         String newText = VUOTA;
-        int maxChar = 50;
+        int maxChar = 100;
 
         if (resultTeorico instanceof AResult) {
             result = (WResult) resultTeorico;
@@ -696,7 +697,7 @@ public abstract class WTest extends ATest {
 
         newText = result.getNewtext();
         if (newText.length() > maxChar) {
-            newText.substring(0, Math.min(newText.length(), maxChar));
+            newText=  newText.substring(0, Math.min(newText.length(), maxChar));
         }
 
         System.out.println(VUOTA);

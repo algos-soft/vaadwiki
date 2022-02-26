@@ -247,7 +247,7 @@ public class UploadAttivitaIntegrationTest extends WTest {
                 ottenutoRisultato = appContext.getBean(UploadAttivita.class, attivita).upload();
                 assertNotNull(ottenutoRisultato);
                 System.out.println(String.format("Upload effettuato per l'attività (plurale) '%s'", attivita.plurale));
-                printRisultato(ottenutoRisultato);
+                printRisultato(ottenutoRisultato,"UploadAttivita");
             }
             else {
                 System.out.println(String.format("5 - Upload su pagina di servizio dell'attività (singolare) '%s'", attivita.plurale));
