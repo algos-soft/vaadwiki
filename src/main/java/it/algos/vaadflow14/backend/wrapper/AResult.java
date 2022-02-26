@@ -44,9 +44,6 @@ public class AResult implements AIResult {
 
     private String wikiText = VUOTA;
 
-
-    private String wikiBio = VUOTA;
-
     private String token = VUOTA;
 
     private String queryType = VUOTA;
@@ -325,15 +322,15 @@ public class AResult implements AIResult {
         this.wikiText = wikiText;
     }
 
-    @Override
-    public String getWikiBio() {
-        return wikiBio;
-    }
-
-    @Override
-    public void setWikiBio(String wikiBio) {
-        this.wikiBio = wikiBio;
-    }
+//    @Override
+//    public String getWikiBio() {
+//        return wikiBio;
+//    }
+//
+//    @Override
+//    public void setWikiBio(String wikiBio) {
+//        this.wikiBio = wikiBio;
+//    }
 
     @Override
     public void print(final ALogService logger, final AETypeLog typeLog) {

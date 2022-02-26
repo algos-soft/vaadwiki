@@ -1,33 +1,12 @@
     /**
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto. Deve invocare PRIMA il metodo della superclasse <br>
      */
     protected void nomeMetodo() {
-    }
+    }// end of method
 
     /**
-     * Può essere sovrascritto, invocando DOPO il metodo della superclasse <br>
+     * Può essere sovrascritto. Ma DOPO deve invocare il metodo della superclasse <br>
      */
     protected void nomeMetodo() {
-    }
-
-
-    /**
-     * Può essere sovrascritto, senza invocare il metodo della superclasse <br>
-     */
-    protected void nomeMetodo() {
-    }
-
-
-    /**
-     * DEVE essere sovrascritto, SENZA invocare il metodo della superclasse <br>
-     */
-    protected void nomeMetodo() {
-    }
-
-
-    /**
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void nomeMetodo() {
-    }
+    }// end of method
 
