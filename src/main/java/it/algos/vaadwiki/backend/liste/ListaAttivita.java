@@ -287,20 +287,6 @@ public class ListaAttivita extends Lista {
         };
     }
 
-    @Override
-    public String getTitoloParagrafo(final String keyParagrafo, int numero) {
-        String keyMaiuscola = text.primaMaiuscola(keyParagrafo);
-        String tag = "Progetto:Biografie/Nazionalità/";
-        String titolo;
-
-        tag += keyMaiuscola;
-        tag += PIPE;
-        tag += keyMaiuscola;
-        tag = text.setDoppieQuadre(tag);
-
-        titolo = keyMaiuscola.equals(ALTRE) ? ALTRE : tag;
-        return wikiUtility.setParagrafo(titolo, numero);
-    }
 
     public enum AETypeAttivita {
         singolare, plurale

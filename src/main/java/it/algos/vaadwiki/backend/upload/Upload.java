@@ -5,8 +5,6 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
-import it.algos.vaadwiki.backend.enumeration.*;
-import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.service.*;
@@ -117,6 +115,23 @@ public abstract class Upload {
     @Autowired
     protected WikiUtility wikiUtility;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected ArrayService arrayService;
+
+
+    /**
+     * Mappa delle didascalie che hanno una valore valido per la pagina specifica <br>
+     * La mappa è composta da una chiave (ordinata) che corrisponde al titolo del paragrafo <br>
+     * Ogni valore della mappa è costituito da una lista di didascalie per ogni paragrafo <br>
+     * La visualizzazione dei paragrafi può anche essere esclusa, ma questi sono comunque presenti <br>
+     * La mappa viene creata nel @PostConstruct dell'istanza <br>
+     */
+    protected LinkedHashMap<String, List<String>> mappa;
 
     //    protected AEntity entityBean;
     protected boolean usaHeadNonScrivere;
@@ -144,8 +159,6 @@ public abstract class Upload {
     protected String newTextPagina;
 
     protected String summary;
-
-    protected Lista lista;
 
     protected int numVoci;
 
@@ -191,10 +204,10 @@ public abstract class Upload {
     @PostConstruct
     public void inizia() {
         summary = text.setDoppieQuadre("Utente:" + botLogin.getUsername() + "|" + botLogin.getUsername());
-        this.fixPreferenze();
         this.regolazioniIniziali();
-        this.fixLista();
-        this.fixVoci();
+        this.fixPreferenze();
+        this.fixMappa();
+        //        this.fixVoci();
         this.fixPagina();
     }
 
@@ -210,6 +223,13 @@ public abstract class Upload {
         }
 
         return result;
+    }
+
+    /**
+     * Regolazioni iniziali per gestire i due costruttori:attività plurali o attività singola <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void regolazioniIniziali() {
     }
 
     /**
@@ -259,25 +279,19 @@ public abstract class Upload {
 
 
     /**
-     * Regolazioni iniziali per gestire i due costruttori:attività plurali o attività singola <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void regolazioniIniziali() {
-    }
-
-    /**
      * Costruisce l'istanza associata di ListaXxx <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    public void fixLista() {
+    public void fixMappa() {
+        this.mappa = this.mappa != null ? mappa : new LinkedHashMap<>();
     }
 
-    /**
-     * Calcola il numero di voci della pagina <br>
-     */
-    protected void fixVoci() {
-        numVoci = lista != null ? lista.getNumDidascalie() : 0;
-    }
+    //    /**
+    //     * Calcola il numero di voci della pagina <br>
+    //     */
+    //    protected void fixVoci() {
+    //        numVoci = lista != null ? lista.getNumDidascalie() : 0;
+    //    }
 
     /**
      * Elaborazione principale della pagina
@@ -376,23 +390,22 @@ public abstract class Upload {
      */
     public String getTestoConParagrafi() {
         StringBuilder buffer = new StringBuilder();
-        Map<String, List<String>> mappa;
         List<String> didascalie;
         int numSottoPagina = 2;//@todo preferenza
 
-        mappa = this.lista.getMappa();
         if (mappa != null && mappa.size() > 0) {
             for (String key : mappa.keySet()) {
                 didascalie = mappa.get(key);
 
                 if (didascalie != null && didascalie.size() > numSottoPagina) {
-                    buffer.append(this.lista.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
+                    buffer.append(this.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
                     buffer.append(String.format("%s%s%s%s%s", VEDI, wikiPaginaTitle, SLASH, key, DOPPIE_GRAFFE_END));
                     buffer.append(A_CAPO);
-                    appContext.getBean(UploadAttivita.class, attivita, AETypePagina.sottoPagina).upload();
+                    //                    appContext.getBean(UploadAttivita.class, attivita, AETypePagina.sottoPagina).upload();
+                    buffer.append(A_CAPO);
                 }
                 else {
-                    buffer.append(this.lista.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
+                    buffer.append(this.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
 
                     for (String stringa : didascalie) {
                         buffer.append(ASTERISCO);
@@ -519,7 +532,7 @@ public abstract class Upload {
     protected String elaboraTemplateAvviso() {
         String testo = VUOTA;
         String dataCorrente = date.get();
-        String personeTxt = text.format(numVoci);
+        String personeTxt = text.format(getNumVoci());
 
         if (usaHeadTemplateAvviso) {
             testo += tagHeadTemplateAvviso;
@@ -630,6 +643,20 @@ public abstract class Upload {
         return null;
     }
 
+    public String getTitoloParagrafo(final String keyParagrafo, int numero) {
+        String keyMaiuscola = text.primaMaiuscola(keyParagrafo);
+        String tag = "Progetto:Biografie/Nazionalità/";
+        String titolo;
+
+        tag += keyMaiuscola;
+        tag += PIPE;
+        tag += keyMaiuscola;
+        tag = text.setDoppieQuadre(tag);
+
+        titolo = keyMaiuscola.equals(ALTRE) ? ALTRE : tag;
+        return wikiUtility.setParagrafo(titolo, numero);
+    }
+
     /**
      * Elaborazione la pagina <br>
      * Registra la pagina <br>
@@ -666,6 +693,10 @@ public abstract class Upload {
 
     public int getNumVoci() {
         return numVoci;
+    }
+
+    public LinkedHashMap<String, List<String>> getMappa() {
+        return mappa;
     }
 
     public String getTestoPagina() {

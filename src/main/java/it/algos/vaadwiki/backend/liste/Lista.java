@@ -184,8 +184,7 @@ public abstract class Lista {
                 lista = mappa.get(key);
 
                 if (lista != null && lista.size() > 0) {
-                    buffer.append(getTitoloParagrafo(key, lista.size()));//@todo creare preferenza per il numero
-
+                    buffer.append(wikiUtility.setParagrafo(key));
                     for (String stringa : lista) {
                         buffer.append(ASTERISCO);
                         buffer.append(SPAZIO);
@@ -212,7 +211,7 @@ public abstract class Lista {
         return listaDidascalie;
     }
 
-    public Map<String, List<String>> getMappa() {
+    public LinkedHashMap<String, List<String>> getMappa() {
         return mappa;
     }
 

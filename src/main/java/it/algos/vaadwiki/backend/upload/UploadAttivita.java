@@ -2,7 +2,6 @@ package it.algos.vaadwiki.backend.upload;
 
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.enumeration.*;
@@ -45,15 +44,17 @@ public class UploadAttivita extends Upload {
     @Autowired
     public ProfessioneService professioneService;
 
-
     protected String notaCreazione;
 
     protected String notaAttivitaMultiple;
 
     protected AETypePagina typePagina;
 
+    protected List<String> lista;
+
+
     /**
-     * Costruttore base con parametri <br>
+     * Costruttore base senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * Uso: appContext.getBean(UploadAttivita.class, attivita) <br>
      * Non rimanda al costruttore della superclasse. Regola qui solo alcune property. <br>
@@ -61,8 +62,9 @@ public class UploadAttivita extends Upload {
      *
      * @param entityBean di cui costruire la pagina sul server wiki
      */
-    public UploadAttivita(final AEntity entityBean) {
-        this(entityBean, AETypePagina.paginaPrincipale, true);
+    public UploadAttivita(final Attivita attivita) {
+        this.typePagina = AETypePagina.paginaPrincipale;
+        this.attivita = attivita;
     }// end of constructor
 
     /**
@@ -74,26 +76,25 @@ public class UploadAttivita extends Upload {
      *
      * @param entityBean di cui costruire la pagina sul server wiki
      */
-    public UploadAttivita(final AEntity entityBean, final AETypePagina typePagina) {
-        this(entityBean, typePagina, true);
-    }// end of constructor
-
-
-    /**
-     * Costruttore base con parametri <br>
-     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Uso: appContext.getBean(UploadAttivita.class, attivita) <br>
-     * Non rimanda al costruttore della superclasse. Regola qui solo alcune property. <br>
-     * La superclasse usa poi il metodo @PostConstruct inizia() per proseguire dopo l'init del costruttore <br>
-     *
-     * @param entityBean        di cui costruire la pagina sul server wiki
-     * @param usaWikiPaginaTest una sottoPagina di Utente:Gac/
-     */
-    public UploadAttivita(final AEntity entityBean, final AETypePagina typePagina, final boolean usaWikiPaginaTest) {
-        //        super.entityBean = entityBean;
-        //        super.usaWikiPaginaTest = usaWikiPaginaTest;
+    public UploadAttivita(final Attivita attivita, final AETypePagina typePagina) {
         this.typePagina = typePagina;
-        this.attivita = (Attivita) entityBean;
+        this.attivita = attivita;
+    }// end of constructor
+
+
+    /**
+     * Costruttore alternativo con parametri per le sottopagine <br>
+     * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Uso: appContext.getBean(UploadAttivita.class, attivita) <br>
+     * Non rimanda al costruttore della superclasse. Regola qui solo alcune property. <br>
+     * La superclasse usa poi il metodo @PostConstruct inizia() per proseguire dopo l'init del costruttore <br>
+     *
+     * @param entityBean di cui costruire la pagina sul server wiki
+     */
+    public UploadAttivita(final Attivita attivita, final LinkedHashMap<String, List<String>> mappa) {
+        this.typePagina = AETypePagina.sottoPagina;
+        this.attivita = attivita;
+        this.mappa = mappa;
     }// end of constructor
 
 
@@ -140,7 +141,7 @@ public class UploadAttivita extends Upload {
         notaSottoPagina = "Questa sottopagina specifica viene creata se il numero di voci biografiche nel paragrafo della pagina principale supera le " + taglioSottoPagina + " unità.";
         notaSuddivisione = String.format("La lista è suddivisa in %s per ogni nazionalità individuata. Se il numero di voci biografiche nel paragrafo supera le %s viene creata una sottopagina", paragrafi, unitaParagrafo);
 
-        super.tagCategoria = String.format("[[Categoria:Bio attività%s%s%s", PIPE, text.primaMaiuscola(attivita.plurale),DOPPIE_QUADRE_END);
+        super.tagCategoria = String.format("[[Categoria:Bio attività%s%s%s", PIPE, text.primaMaiuscola(attivita.plurale), DOPPIE_QUADRE_END);
     }
 
     /**
@@ -148,47 +149,24 @@ public class UploadAttivita extends Upload {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    public void fixLista() {
-        super.fixLista();
-        lista = appContext.getBean(ListaAttivita.class, attivita);
+    public void fixMappa() {
+        super.fixMappa();
+        Lista lista;
+
+        if (attivita != null) {
+            switch (typePagina) {
+                case paginaPrincipale -> {
+                    lista = appContext.getBean(ListaAttivita.class, attivita);
+                    if (lista != null) {
+                        mappa = lista.getMappa();
+                        numVoci = lista.getNumDidascalie();
+                    }
+                }
+                case sottoPagina -> numVoci = arrayService.dimLista(mappa);
+                default -> {}
+            }
+        }
     }
-
-    //    protected String getTestoParagrafi() {
-    //        String nomeAttivitaPlurale = VUOTA;
-    //
-    //        try {
-    //            nomeAttivitaPlurale = attivita.getPlurale();
-    //        } catch (Exception unErrore) {
-    //            AlgosException.stack(unErrore, this.getClass(), "getTestoParagrafi");
-    //        }
-    //        return appContext.getBean(ListaAttivita.class, nomeAttivitaPlurale).getTestoParagrafi();
-    //    }
-
-    //    /**
-    //     * Upload basato su attivitàPlurale <br>
-    //     */
-    //    protected void uploadPaginaTest() {
-    //        ListaAttivita lista = null;
-    //        String newText = VUOTA;
-    //        String summary = "attività di prova";
-    //        String nomeAttivitaPlurale = VUOTA;
-    //
-    //        try {
-    //            nomeAttivitaPlurale = attivita.getPlurale();
-    //            lista = appContext.getBean(ListaAttivita.class, nomeAttivitaPlurale);
-    //        } catch (Exception unErrore) {
-    //            AlgosException.stack(unErrore, this.getClass(), "uploadPaginaTest");
-    //        }
-    //
-    //        if (lista != null) {
-    //            newText = lista.getTestoParagrafi();
-    //        }
-    //
-    //        if (text.isValid(newText)) {
-    //            appContext.getBean(QueryWrite.class).urlRequest(WIKI_TITLE_DEBUG, newText, summary);
-    //        }
-    //
-    //    }
 
 
     /**
