@@ -133,14 +133,24 @@ public class QueryWriteIntegrationTest extends WTest {
 
     @Test
     @Order(5)
-    @DisplayName("5 - Scrittura con bot")
+    @DisplayName("5 - Scrittura con bot eseguita due volte")
     void urlRequestConBot() {
+        System.out.println(String.format("Scrittura con bot eseguita due volte"));
+        System.out.println(VUOTA);
+
         sorgente = QueryWrite.WIKI_TITLE_DEBUG;
         sorgente2 = "Prova di scrittura delle " + LocalDateTime.now();
 
         ottenutoRisultato = istanza.urlRequest(sorgente, sorgente2);
         Assertions.assertNotNull(ottenutoRisultato);
         Assertions.assertTrue(ottenutoRisultato.isValido());
+        System.out.println(String.format("La prima volta esegue correttamente"));
+        printResultBase(ottenutoRisultato);
+
+        ottenutoRisultato = istanza.urlRequest(sorgente, sorgente2);
+        Assertions.assertNotNull(ottenutoRisultato);
+        Assertions.assertTrue(ottenutoRisultato.isValido());
+        System.out.println(String.format("La seconda volta trova lo stesso contenuto e NON modifica"));
         printResultBase(ottenutoRisultato);
     }
 
