@@ -86,6 +86,10 @@ public interface AIResult {
 
     void setWikiText(String wikiText);
 
+    String getWikiBio();
+
+    void setWikiBio(String wikiBio);
+
     List getLista();
 
     void setLista(List lista);

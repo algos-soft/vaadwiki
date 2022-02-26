@@ -58,6 +58,14 @@ public class AWikiApiService extends AbstractService {
 
     public static final String QUERY = "query";
 
+    public static final String EDIT = "edit";
+
+    public static final String NEW_REV_ID = "newrevid";
+
+    public static final String NEW_TIME_STAMP = "newtimestamp";
+
+    public static final String NO_CHANGE = "nochange";
+
     public static final String LOGIN = "login";
 
     public static final String TOKENS = "tokens";

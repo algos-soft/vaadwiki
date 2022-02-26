@@ -21,6 +21,7 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.wiki.*;
+import it.algos.vaadwiki.backend.wrapper.*;
 import org.bson.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;

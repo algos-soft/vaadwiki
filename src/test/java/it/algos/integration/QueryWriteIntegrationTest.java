@@ -76,7 +76,7 @@ public class QueryWriteIntegrationTest extends WTest {
         ottenutoRisultato = istanza.urlRequest(sorgente, sorgente2);
         Assertions.assertNotNull(ottenutoRisultato);
         Assertions.assertFalse(ottenutoRisultato.isValido());
-        printResultBase(ottenutoRisultato);
+        printRisultato(ottenutoRisultato,queryType);
     }
 
     @Test
@@ -115,7 +115,7 @@ public class QueryWriteIntegrationTest extends WTest {
         ottenutoRisultato = istanza.urlRequest(sorgente, sorgente2);
         Assertions.assertNotNull(ottenutoRisultato);
         Assertions.assertFalse(ottenutoRisultato.isValido());
-        printResultBase(ottenutoRisultato);
+        printRisultato(ottenutoRisultato,queryType);
     }
 
     @Test
@@ -128,7 +128,7 @@ public class QueryWriteIntegrationTest extends WTest {
         ottenutoRisultato = istanza.urlRequest(sorgente, sorgente2);
         Assertions.assertNotNull(ottenutoRisultato);
         Assertions.assertFalse(ottenutoRisultato.isValido());
-        printResultBase(ottenutoRisultato);
+        printRisultato(ottenutoRisultato,queryType);
     }
 
     @Test
@@ -145,13 +145,15 @@ public class QueryWriteIntegrationTest extends WTest {
         Assertions.assertNotNull(ottenutoRisultato);
         Assertions.assertTrue(ottenutoRisultato.isValido());
         System.out.println(String.format("La prima volta esegue correttamente"));
-        printResultBase(ottenutoRisultato);
+        printRisultato(ottenutoRisultato,queryType);
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
 
         ottenutoRisultato = istanza.urlRequest(sorgente, sorgente2);
         Assertions.assertNotNull(ottenutoRisultato);
         Assertions.assertTrue(ottenutoRisultato.isValido());
         System.out.println(String.format("La seconda volta trova lo stesso contenuto e NON modifica"));
-        printResultBase(ottenutoRisultato);
+        printRisultato(ottenutoRisultato,queryType);
     }
 
     @Test
@@ -165,7 +167,7 @@ public class QueryWriteIntegrationTest extends WTest {
         ottenutoRisultato = istanza.urlRequest(sorgente, sorgente2, sorgente3);
         Assertions.assertNotNull(ottenutoRisultato);
         Assertions.assertTrue(ottenutoRisultato.isValido());
-        printResultBase(ottenutoRisultato);
+        printRisultato(ottenutoRisultato,queryType);
     }
 
     /**

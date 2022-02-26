@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.login.*;
@@ -15,6 +16,7 @@ import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
 import it.algos.vaadwiki.backend.packages.nomeDoppio.*;
 import it.algos.vaadwiki.backend.service.*;
+import it.algos.vaadwiki.backend.wrapper.*;
 import it.algos.vaadwiki.wiki.*;
 import it.algos.vaadwiki.wiki.query.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -234,6 +236,7 @@ public abstract class WTest extends ATest {
     protected QueryWrite queryWrite;
 
     private Attivita attivitaCarpentieri;
+
     private Attivita attivitaPedagogista;
 
     private Attivita attivitaAbate;
@@ -327,18 +330,18 @@ public abstract class WTest extends ATest {
     private Stream<Arguments> ATTIVITA() {
         return Stream.of(
                 Arguments.of(attivitaCarpentieri, ListaAttivita.AETypeAttivita.plurale, true),
-//                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.singolare, false),
-//                Arguments.of(attivitaPedagogista, ListaAttivita.AETypeAttivita.plurale, false),
-//                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.singolare, false),
-//                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.plurale, false),
-//                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.singolare, false),
-//                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.plurale, false),
-//                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.singolare, false),
-//                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.plurale, false),
-//                Arguments.of(attivitaAgronomo, ListaAttivita.AETypeAttivita.singolare, false),
-//                Arguments.of(attivitaAgronomo, ListaAttivita.AETypeAttivita.plurale, false),
-//                Arguments.of(attivitaAforista, ListaAttivita.AETypeAttivita.singolare, false),
-//                Arguments.of(attivitaAforista, ListaAttivita.AETypeAttivita.plurale, false),
+                //                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.singolare, false),
+                //                Arguments.of(attivitaPedagogista, ListaAttivita.AETypeAttivita.plurale, false),
+                //                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.singolare, false),
+                //                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.plurale, false),
+                //                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.singolare, false),
+                //                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.plurale, false),
+                //                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.singolare, false),
+                //                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.plurale, false),
+                //                Arguments.of(attivitaAgronomo, ListaAttivita.AETypeAttivita.singolare, false),
+                //                Arguments.of(attivitaAgronomo, ListaAttivita.AETypeAttivita.plurale, false),
+                //                Arguments.of(attivitaAforista, ListaAttivita.AETypeAttivita.singolare, false),
+                //                Arguments.of(attivitaAforista, ListaAttivita.AETypeAttivita.plurale, false),
                 Arguments.of(attivitaConduttriceTelevisiva, ListaAttivita.AETypeAttivita.plurale, false)
 
         );
@@ -658,12 +661,21 @@ public abstract class WTest extends ATest {
         System.out.println("Template:" + SPAZIO + wrap.getTemplBio());
     }
 
-    protected void printRisultato(AIResult result, String titolo) {
+    protected void printRisultato(AIResult resultTeorico, String titolo) {
+        WResult result = null;
         boolean miniWrap = false;
         boolean wrapBio = false;
-        List lista = result.getLista();
+        List lista = null;
         List<Long> listaPagesIds = null;
         List<String> listaTitles = null;
+        String newText = VUOTA;
+        int maxChar = 50;
+
+        if (resultTeorico instanceof AResult) {
+            result = (WResult) resultTeorico;
+        }
+
+        lista = result.getLista();
         lista = lista != null && lista.size() > 20 ? lista.subList(0, 5) : lista;
 
         if (lista != null && lista.get(0) instanceof MiniWrap) {
@@ -682,22 +694,39 @@ public abstract class WTest extends ATest {
             }
         }
 
+        newText = result.getNewtext();
+        if (newText.length() > maxChar) {
+            newText.substring(0, Math.min(newText.length(), maxChar));
+        }
+
         System.out.println(VUOTA);
         System.out.println(String.format("Risultato %s", titolo));
-        System.out.println(String.format("Status: %s", result.isValido() ? "true" : "false"));
+        System.out.println(String.format("Valida: %s", result.isValido() ? "true" : "false"));
         System.out.println(String.format("Query: %s", result.getQueryType()));
         System.out.println(String.format("Title: %s", result.getWikiTitle()));
+        System.out.println(String.format("Pageid: %s", result.getLongValue()));
+        System.out.println(String.format("Summary: %s", result.getSummary()));
+        System.out.println(String.format("New text: %s", newText));
         System.out.println(String.format("Preliminary url: %s", result.getUrlPreliminary()));
         System.out.println(String.format("Secondary url: %s", result.getUrlRequest()));
         System.out.println(String.format("Preliminary response: %s", result.getPreliminaryResponse()));
         System.out.println(String.format("Token: %s", result.getToken()));
         System.out.println(String.format("Secondary response: %s", result.getResponse()));
+        System.out.println(VUOTA);
+
+        System.out.println(String.format("Modificato: %s", result.isModificata() ? "true" : "false"));
+        System.out.println(String.format("Newrevid: %s", result.getNewrevid()));
+        System.out.println(String.format("Newtimestamp: %s", result.getNewtimestamp()));
+        System.out.println(VUOTA);
+
         System.out.println(String.format("Message code: %s", result.getCodeMessage()));
         System.out.println(String.format("Message: %s", result.getMessage()));
         System.out.println(String.format("Error code: %s", result.getErrorCode()));
         System.out.println(String.format("Error message: %s", result.getErrorMessage()));
         System.out.println(String.format("Valid message: %s", result.getValidMessage()));
         System.out.println(String.format("Numeric value: %s", textService.format(result.getIntValue())));
+        System.out.println(VUOTA);
+
         if (miniWrap || wrapBio) {
             if (miniWrap) {
                 System.out.println(String.format("List value: %s ...", listaPagesIds));
@@ -713,7 +742,7 @@ public abstract class WTest extends ATest {
         System.out.println(String.format("Risultato ottenuto in %s", dateService.deltaText(inizio)));
     }
 
-    protected void printRisultato(AIResult result) {
+    protected void printRisultato(WResult result) {
         printRisultato(result, VUOTA);
     }
 

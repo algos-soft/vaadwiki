@@ -5,6 +5,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.wrapper.*;
 import org.json.simple.*;
 import org.springframework.beans.factory.config.*;
@@ -24,16 +25,18 @@ import java.net.*;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class QueryWrite extends AQuery {
 
+    public static final AETypeQuery QUERY_TYPE = AETypeQuery.postCookies;
+
     public static final String WIKI_TITLE_DEBUG = "Utente:Biobot/2";
+
+    // oggetto della modifica in scrittura
+    protected String summary;
 
     // titolo della pagina
     private String wikiTitle;
 
     // nuovo testo da inserire nella pagina
     private String newText;
-
-    // oggetto della modifica in scrittura
-    protected String summary;
 
     // token di controllo recuperato dalla urlResponse della primaryRequestGet
     private String csrftoken;
@@ -74,7 +77,7 @@ public class QueryWrite extends AQuery {
      * @see https://www.mediawiki.org/wiki/API:Edit#Example
      */
     public AIResult urlRequest(final String wikiTitleGrezzo, final String newText, final String summary) {
-        AIResult result = WResult.errato();
+        WResult result = WResult.errato();
         this.newText = newText;
         this.summary = summary;
 
@@ -84,6 +87,11 @@ public class QueryWrite extends AQuery {
             result.setErrorMessage("Login non valido come bot");
             return result;
         }
+
+        result.setQueryType(QUERY_TYPE.get());
+        result.setWikiTitle(wikiTitleGrezzo);
+        result.setSummary(summary);
+        result.setNewtext(newText);
 
         if (text.isEmpty(wikiTitleGrezzo)) {
             result.setErrorMessage("Manca il titolo della pagina wiki");
@@ -100,7 +108,7 @@ public class QueryWrite extends AQuery {
 
         //--La prima request è di tipo GET
         //--Indispensabile aggiungere i cookies del botLogin
-        result = this.primaryRequestGet();
+        result = this.primaryRequestGet(result);
 
         //--La seconda request è di tipo POST
         //--Indispensabile aggiungere i cookies
@@ -125,11 +133,12 @@ public class QueryWrite extends AQuery {
      *
      * @return wrapper di informazioni
      */
-    public WResult primaryRequestGet() {
+    public WResult primaryRequestGet(WResult result) {
         String urlDomain = TAG_PRELIMINARY_REQUEST_GET;
         String urlResponse = VUOTA;
         URLConnection urlConn;
 
+        result.setUrlPreliminary(urlDomain);
         try {
             urlConn = this.creaGetConnection(urlDomain);
             uploadCookies(urlConn, botLogin.getCookies());
@@ -139,7 +148,7 @@ public class QueryWrite extends AQuery {
             logger.error(AETypeLog.login, unErrore.getMessage());
         }
 
-        return elaboraPreliminaryResponse(urlResponse);
+        return elaboraPreliminaryResponse(result, urlResponse);
     }
 
     /**
@@ -148,19 +157,23 @@ public class QueryWrite extends AQuery {
      * Informazioni, contenuto e validità della risposta
      * Controllo del contenuto (testo) ricevuto
      */
-    protected WResult elaboraPreliminaryResponse(final String rispostaDellaQuery) {
+    protected WResult elaboraPreliminaryResponse(WResult result, final String rispostaDellaQuery) {
+        result.setPreliminaryResponse(rispostaDellaQuery);
         csrftoken = getCsrfToken(rispostaDellaQuery);
+        result.setToken(csrftoken);
 
         if (text.isValid(csrftoken)) {
             try {
                 csrftoken = URLEncoder.encode(csrftoken, ENCODE);
             } catch (Exception unErrore) {
             }
-            return WResult.valido();
+            result.setValido(true);
         }
         else {
-            return WResult.errato();
+            result.setValido(true);
         }
+
+        return result;
     }
 
 
@@ -194,8 +207,8 @@ public class QueryWrite extends AQuery {
         String urlDomain = TAG_SECONDARY_REQUEST_POST + wikiTitle;
         String urlResponse = VUOTA;
         URLConnection urlConn;
-        result.setUrlRequest(urlDomain);
 
+        result.setUrlRequest(urlDomain);
         try {
             urlConn = this.creaGetConnection(urlDomain);
             uploadCookies(urlConn, botLogin.getCookies());
@@ -205,7 +218,7 @@ public class QueryWrite extends AQuery {
         } catch (Exception unErrore) {
         }
 
-        return elaboraSecondaryResponse(result, urlResponse);
+        return elaboraSecondaryResponse((WResult) result, urlResponse);
     }
 
     /**
@@ -279,7 +292,17 @@ public class QueryWrite extends AQuery {
      *
      * @return true se il collegamento come bot è confermato
      */
-    protected AIResult elaboraSecondaryResponse(AIResult result, final String rispostaDellaQuery) {
+    protected AIResult elaboraSecondaryResponse(WResult result, final String rispostaDellaQuery) {
+        result.setResponse(rispostaDellaQuery);
+        long pageid = getPageid(rispostaDellaQuery);
+        long revid = getNewRevid(rispostaDellaQuery);
+        String newtimestamp = getNewTimestamp(rispostaDellaQuery);
+        boolean modificata = getModificata(rispostaDellaQuery);
+
+        result.setLongValue(pageid);
+        result.setNewrevid(revid);
+        result.setNewtimestamp(newtimestamp);
+        result.setModificata(modificata);
         return result;
     }
 
@@ -309,6 +332,91 @@ public class QueryWrite extends AQuery {
         }
 
         return csrfToken;
+    }
+
+    /**
+     * Restituisce il token dal testo JSON di una pagina di GET preliminary
+     *
+     * @param textJSON in ingresso
+     *
+     * @return logintoken
+     */
+    public long getPageid(String contenutoCompletoPaginaWebInFormatoJSON) {
+        long pageid = 0;
+        JSONObject objectAll = (JSONObject) JSONValue.parse(contenutoCompletoPaginaWebInFormatoJSON);
+        JSONObject objectEdit = null;
+
+        if (objectAll != null && objectAll.get(EDIT) != null && objectAll.get(EDIT) instanceof JSONObject) {
+            objectEdit = (JSONObject) objectAll.get(EDIT);
+        }
+        if (objectEdit.get(PAGE_ID) != null && objectEdit.get(PAGE_ID) instanceof Long) {
+            pageid = (Long) objectEdit.get(PAGE_ID);
+        }
+
+        return pageid;
+    }
+
+    /**
+     * Restituisce il token dal testo JSON di una pagina di GET preliminary
+     *
+     * @param textJSON in ingresso
+     *
+     * @return logintoken
+     */
+    public long getNewRevid(String contenutoCompletoPaginaWebInFormatoJSON) {
+        long newrevid = 0;
+        JSONObject objectAll = (JSONObject) JSONValue.parse(contenutoCompletoPaginaWebInFormatoJSON);
+        JSONObject objectEdit = null;
+
+        if (objectAll != null && objectAll.get(EDIT) != null && objectAll.get(EDIT) instanceof JSONObject) {
+            objectEdit = (JSONObject) objectAll.get(EDIT);
+        }
+        if (objectEdit.get(NEW_REV_ID) != null && objectEdit.get(NEW_REV_ID) instanceof Long) {
+            newrevid = (Long) objectEdit.get(NEW_REV_ID);
+        }
+
+        return newrevid;
+    }
+
+    /**
+     * Restituisce il timestamp della modifica <br>
+     *
+     * @param contenutoCompletoPaginaWebInFormatoJSON in ingresso
+     *
+     * @return timestamp della modifica
+     */
+    public String getNewTimestamp(String contenutoCompletoPaginaWebInFormatoJSON) {
+        String newtimestamp = VUOTA;
+        JSONObject objectAll = (JSONObject) JSONValue.parse(contenutoCompletoPaginaWebInFormatoJSON);
+        JSONObject objectEdit = null;
+
+        if (objectAll != null && objectAll.get(EDIT) != null && objectAll.get(EDIT) instanceof JSONObject) {
+            objectEdit = (JSONObject) objectAll.get(EDIT);
+        }
+
+        if (objectEdit.get(NEW_TIME_STAMP) != null && objectEdit.get(NEW_TIME_STAMP) instanceof String) {
+            newtimestamp = (String) objectEdit.get(NEW_TIME_STAMP);
+        }
+
+        return newtimestamp;
+    }
+
+    /**
+     * Restituisce lo stato del flag 'nochange' <br>
+     *
+     * @param contenutoCompletoPaginaWebInFormatoJSON in ingresso
+     *
+     * @return flag 'nochange'
+     */
+    public boolean getModificata(String contenutoCompletoPaginaWebInFormatoJSON) {
+        JSONObject objectAll = (JSONObject) JSONValue.parse(contenutoCompletoPaginaWebInFormatoJSON);
+        JSONObject objectEdit = null;
+
+        if (objectAll != null && objectAll.get(EDIT) != null && objectAll.get(EDIT) instanceof JSONObject) {
+            objectEdit = (JSONObject) objectAll.get(EDIT);
+        }
+
+        return objectEdit.get(NO_CHANGE)==null;
     }
 
 }

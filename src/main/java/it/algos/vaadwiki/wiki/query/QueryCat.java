@@ -34,6 +34,7 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class QueryCat extends AQuery {
 
+    public static final AETypeQuery QUERY_TYPE = AETypeQuery.get;
 
     /**
      * Request principale <br>
@@ -50,7 +51,7 @@ public class QueryCat extends AQuery {
         int pageIdsRecuperati = 0;
 
         result.setWikiTitle(catTitle);
-        result.setQueryType(AETypeQuery.getCookies.get());
+        result.setQueryType(QUERY_TYPE.get());
         result.setUrlRequest(fixUrlCat(catTitle, VUOTA));
 
         //--controlla l'esistenza della categoria
