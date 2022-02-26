@@ -88,6 +88,7 @@ public class UploadAttivitaIntegrationTest extends WTest {
     @DisplayName("1 - Crea una istanza uploadAttivita da Attivita")
         //--attivita
         //--AETypeAttivita
+        //--flag booleano upload (non usato)
     void creaIstanzaAttivita(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
         if (attivita == null) {
             System.out.println("Nessun attività indicata");
@@ -103,7 +104,7 @@ public class UploadAttivitaIntegrationTest extends WTest {
         if (type == ListaAttivita.AETypeAttivita.plurale) {
             System.out.println(String.format("1 - Crea una istanza uploadAttivita per l'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
             System.out.println("Per costruire una istanza uploadAttivita, uso una entity Attivita senza altri parametri");
-            istanza = appContext.getBean(UploadAttivita.class, attivita).inizia();
+            istanza = appContext.getBean(UploadAttivita.class, attivita);
             assertNotNull(istanza);
             ottenuto = istanza.getTestoConParagrafi();
             System.out.println(String.format("Testo con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
@@ -120,6 +121,7 @@ public class UploadAttivitaIntegrationTest extends WTest {
     @DisplayName("2 - Preview testo pagina completo")
         //--attivita
         //--AETypeAttivita
+        //--flag booleano upload (non usato)
     void preview(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
         if (attivita == null) {
             System.out.println("Nessun attività indicata");
@@ -134,7 +136,7 @@ public class UploadAttivitaIntegrationTest extends WTest {
 
         if (type == ListaAttivita.AETypeAttivita.plurale) {
             System.out.println(String.format("2 - Preview testo pagina completo di upload per l'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
-            istanza = appContext.getBean(UploadAttivita.class, attivita).inizia();
+            istanza = appContext.getBean(UploadAttivita.class, attivita);
             assertNotNull(istanza);
             ottenuto = istanza.getTestoPagina();
             assertTrue(textService.isValid(ottenuto));
@@ -145,14 +147,47 @@ public class UploadAttivitaIntegrationTest extends WTest {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource(value = "ATTIVITA")
+    @Order(3)
+    @DisplayName("3 - Upload su pagina di servizio")
+        //--attivita
+        //--AETypeAttivita
+        //--flag booleano upload
+    void upload(final Attivita attivita, final ListaAttivita.AETypeAttivita type, final boolean upload) {
+        if (attivita == null) {
+            System.out.println("Nessun attività indicata");
+            return;
+        }
+
+        if (type == ListaAttivita.AETypeAttivita.singolare) {
+            System.out.println(String.format("3 - Upload su pagina di servizio dell'attività (singolare) '%s'", attivita.singolare));
+            System.out.println("Un upload con type=AETypeAttivita.singolare non ha senso.");
+            return;
+        }
+
+        if ( type == ListaAttivita.AETypeAttivita.plurale) {
+            if (upload) {
+                System.out.println(String.format("3 - Upload su pagina di servizio dell'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
+                ottenutoRisultato = appContext.getBean(UploadAttivita.class, attivita).upload();
+                assertNotNull(ottenutoRisultato);
+                System.out.println(String.format("Upload effettuato per l'attività (plurale) '%s'", attivita.plurale));
+                printRisultato(ottenutoRisultato);
+            }
+            else {
+                System.out.println(String.format("3 - Upload su pagina di servizio dell'attività (singolare) '%s'", attivita.plurale));
+                System.out.println(String.format("Flag di upload falso per un'attività troppo lunga"));
+            }
+        }
+    }
 
 
-//    @ParameterizedTest
+    //    @ParameterizedTest
     @MethodSource(value = "ATTIVITA")
     @Order(3)
     @DisplayName("3 - Upload pagina (di test) completa")
-        //--attivita
-        //--AETypeAttivita
+    //--attivita
+    //--AETypeAttivita
     void uploadTest(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
         if (attivita == null) {
             System.out.println("Nessun attività indicata");

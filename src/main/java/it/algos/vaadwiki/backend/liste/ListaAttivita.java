@@ -1,8 +1,9 @@
 package it.algos.vaadwiki.backend.liste;
 
 import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.exceptions.*;
-import it.algos.vaadwiki.backend.enumeration.*;
+import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
@@ -19,10 +20,11 @@ import java.util.*;
  * Date: mar, 04-gen-2022
  * Time: 18:44
  * <p>
- * Lista delle persone per attività <br>
+ * Lista delle biografie per attività <br>
  * <p>
  * La lista è un semplice testo (formattato secondo i possibili tipi di raggruppamento) <br>
  * Usata fondamentalmente da UploadAttivita con appContext.getBean(ListaAttivita.class, attivita) <br>
+ * <p>
  * Creata con appContext.getBean(ListaAttivita.class, attivita) per usare tutte le attività che hanno la stessa attivita.plurale <br>
  * Creata con appContext.getBean(ListaAttivita.class, attivita, AETypeAttivita.singolare) per usare solo la singola attività <br>
  * Creata con appContext.getBean(ListaAttivita.class, nomeAttivitaPlurale, AETypeAttivita.plurale) per usare tutte le singole attività <br>
@@ -95,7 +97,7 @@ public class ListaAttivita extends Lista {
      * La superclasse usa poi il metodo @PostConstruct inizia() per proseguire dopo l'init del costruttore <br>
      *
      * @param attivita     di cui recuperare la lista di biografie
-     * @param typeAttivita singola o plurale
+     * @param typeAttivita singolare o plurale
      */
     public ListaAttivita(final Attivita attivita, final AETypeAttivita typeAttivita) {
         this.attivita = attivita;
@@ -122,18 +124,21 @@ public class ListaAttivita extends Lista {
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
-     * Può essere sovrascritto, per aggiungere informazioni <br>
-     * Invocare PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
+    @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
     }
 
     /**
-     * Regolazioni iniziali per gestire i diversi costruttori <br>
-     * DEVE essere sovrascritto, senza invocare PRIMA il metodo della superclasse <br>
+     * Regolazioni iniziali per gestire (nella sottoclasse Attivita) i due costruttori:attività plurali o attività singola <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
+    @Override
     protected void regolazioniIniziali() {
+        super.regolazioniIniziali();
+
         if (attivita != null) {
             switch (typeAttivita) {
                 case singolare -> {
@@ -180,17 +185,15 @@ public class ListaAttivita extends Lista {
 
 
     /**
-     * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return lista delle istanze di Bio che usano questo istanza nella property appropriata <br>
+     * Costruisce una lista di biografie (Bio) che hanno una valore valido per la pagina specifica <br>
+     * DEVE essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
-    public void fixListaBio() {
+    @Override
+    protected void fixListaBio() {
         super.fixListaBio();
 
         try {
-            List<Bio> listaBio = bioService.fetchAttivita(listaNomiAttivitaSingole);
-            wrapLista = appContext.getBean(WrapLista.class, AETypeLista.attivita, titoloGrezzo, listaBio);
+            listaBio = bioService.fetchAttivita(listaNomiAttivitaSingole);
         } catch (Exception unErrore) {
             logger.warn(unErrore, getClass(), "fixListaBio");
         }
@@ -202,6 +205,79 @@ public class ListaAttivita extends Lista {
     }
 
 
+    /**
+     * Costruisce una mappa ordinata di didascalie suddivise per paragrafi <br>
+     * DEVE essere sovrascritto, SENZA invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixMappaParagrafi() {
+        mappa = new LinkedHashMap<>();
+        LinkedHashMap<String, List> mappaBio = new LinkedHashMap<>();
+        String message;
+        List<Bio> lista;
+        Set<String> setNazionalita;
+        List<String> listaNazionalita;
+        List<String> didascalie;
+        String nazionalitaPlurale;
+        String didascalia;
+        LinkedHashMap<String, String> mappaNazionalita = nazionalitaService.getMappa();
+
+        if (listaBio == null) {
+            return;
+        }
+
+        setNazionalita = new LinkedHashSet<>();
+        listaDidascalie = new ArrayList<>();
+        for (Bio bio : listaBio) {
+            if (text.isValid(bio.nazionalita)) {
+                nazionalitaPlurale = mappaNazionalita.get(bio.nazionalita);
+                setNazionalita.add(nazionalitaPlurale);
+            }
+        }
+        listaNazionalita = new ArrayList<>(setNazionalita);
+        Collections.sort(listaNazionalita);
+
+        for (String nazPlurale : listaNazionalita) {
+            mappaBio.put(nazPlurale, new ArrayList());
+        }
+        mappaBio.put(ALTRE, new ArrayList());
+
+        for (Bio bio : listaBio) {
+            if (text.isValid(bio.nazionalita)) {
+                nazionalitaPlurale = mappaNazionalita.get(bio.nazionalita);
+                if (mappaBio.containsKey(nazionalitaPlurale)) {
+                    mappaBio.get(nazionalitaPlurale).add(bio);
+                }
+                else {
+                    message = String.format("La mappa non prevede la nazionalità %s", nazionalitaPlurale);
+                    logger.warn(message, this.getClass(), "fixMappaNazionalita");
+                }
+            }
+            else {
+                mappaBio.get(ALTRE).add(bio);
+            }
+        }
+
+        if (mappaBio.get(ALTRE) != null && mappaBio.get(ALTRE).size() == 0) {
+            mappaBio.remove(ALTRE);
+        }
+
+        if (mappaBio != null && mappaBio.size() > 0) {
+            for (String paragrafo : mappaBio.keySet()) {
+                lista = mappaBio.get(paragrafo);
+
+                didascalie = new ArrayList<>();
+                for (Bio bio : lista) {
+                    didascalia = didascaliaService.getLista(bio);
+                    didascalie.add(didascalia);
+                    listaDidascalie.add(didascalia);
+                }
+                paragrafo = text.primaMaiuscola(paragrafo);
+                mappa.put(paragrafo, didascalie);
+            }
+        }
+    }
+
     public int getNumeroAttivitaSingoleConLoStessoPlurale() {
         return switch (typeAttivita) {
             case singolare:
@@ -211,9 +287,23 @@ public class ListaAttivita extends Lista {
         };
     }
 
+    @Override
+    public String getTitoloParagrafo(final String keyParagrafo, int numero) {
+        String keyMaiuscola = text.primaMaiuscola(keyParagrafo);
+        String tag = "Progetto:Biografie/Nazionalità/";
+        String titolo;
+
+        tag += keyMaiuscola;
+        tag += PIPE;
+        tag += keyMaiuscola;
+        tag = text.setDoppieQuadre(tag);
+
+        titolo = keyMaiuscola.equals(ALTRE) ? ALTRE : tag;
+        return wikiUtility.setParagrafo(titolo, numero);
+    }
+
     public enum AETypeAttivita {
         singolare, plurale
     }
-
 
 }

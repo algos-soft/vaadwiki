@@ -28,7 +28,7 @@ import java.util.*;
  * Not annotated with @SpringComponent (sbagliato) perché è una classe astratta <br>
  * Punto d'inizio @PostConstruct inizia() nella superclasse <br>
  * <p>
- * La (List<Bio>) listaBio, la (List<String>) listaDidascalie, la (Map<String, List>) mappa e (String) testoConParagrafi
+ * La (List<Bio>) listaBio, la (List<String>) listaDidascalie, la (Map<String, List<String>>) mappa e (String) testoConParagrafi
  * vengono tutte regolate alla creazione dell'istanza in @PostConstruct e sono disponibili da subito <br>
  * Si può quindi usare la chiamata appContext.getBean(ListaXxx.class, yyy).getTestoConParagrafi() senza esplicitare l'istanza <br>
  */
@@ -86,12 +86,13 @@ public abstract class Lista {
     @Autowired
     protected DidascaliaService didascaliaService;
 
-    //    /**
-    //     * Lista delle biografie che hanno una valore valido per la pagina specifica <br>
-    //     * La lista viene creata nel @PostConstruct dell'istanza <br>
-    //     * La lista è ordinata per cognome <br>
-    //     */
-    //    protected List<Bio> listaBio;
+    /**
+     * Lista delle biografie che hanno una valore valido per la pagina specifica <br>
+     * La lista viene creata nel @PostConstruct dell'istanza <br>
+     * La lista è ordinata per cognome <br>
+     */
+    protected List<Bio> listaBio;
+
 
     /**
      * Lista delle listaDidascalie che hanno una valore valido per la pagina specifica <br>
@@ -103,25 +104,12 @@ public abstract class Lista {
     /**
      * Mappa delle didascalie che hanno una valore valido per la pagina specifica <br>
      * La mappa è composta da una chiave (ordinata) che corrisponde al titolo del paragrafo <br>
+     * Ogni valore della mappa è costituito da una lista di didascalie per ogni paragrafo <br>
      * La visualizzazione dei paragrafi può anche essere esclusa, ma questi sono comunque presenti <br>
-     * Ogni valore della mappa è costituito da una List <br>
      * La mappa viene creata nel @PostConstruct dell'istanza <br>
-     * La mappa è ordinata per titoli dei paragrafi <br>
      */
-    //    @Deprecated
-    //    protected Map<String, List> mappa;
+    protected LinkedHashMap<String, List<String>> mappa;
 
-    /**
-     * Wrapper per i titoli (pagina paragrafi) e lista delle didascalie <br>
-     */
-    protected WrapLista wrapLista;
-
-    /**
-     * Lista delle listaDidascalie che hanno una valore valido per la pagina specifica <br>
-     * La lista viene creata nel @PostConstruct dell'istanza <br>
-     * Il testo è ordinato per titoli dei paragrafi <br>
-     */
-    protected String testoConParagrafi;
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -140,6 +128,7 @@ public abstract class Lista {
         this.regolazioniIniziali();
         this.fixListaBio();
         this.fixListaDidascalie();
+        this.fixMappaParagrafi();
     }
 
     /**
@@ -151,52 +140,89 @@ public abstract class Lista {
 
 
     /**
-     * Regolazioni iniziali per gestire i due costruttori:attività plurali o attività singola <br>
+     * Regolazioni iniziali per gestire (nella sottoclasse Attivita) i due costruttori:attività plurali o attività singola <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void regolazioniIniziali() {
     }
 
     /**
-     * Costruisce una lista di biografie che hanno una valore valido per la pagina specifica <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Costruisce una lista di biografie (Bio) che hanno una valore valido per la pagina specifica <br>
+     * DEVE essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
-    public void fixListaBio() {
-        //--Crea la lista vuota delle voci biografiche
-        //        listaBio = new ArrayList<>();
+    protected void fixListaBio() {
     }
 
 
     /**
-     * Costruisce una lista di didascalie che hanno una valore valido per la pagina specifica <br>
+     * Costruisce una lista di didascalie (testo) che hanno una valore valido per la pagina specifica <br>
+     * DEVE essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
     protected void fixListaDidascalie() {
-        //            listaDidascalie = didascaliaService.getLista(listaBio);
     }
 
 
+    /**
+     * Costruisce una mappa ordinata di didascalie suddivise per paragrafi <br>
+     * DEVE essere sovrascritto, SENZA invocare il metodo della superclasse <br>
+     */
+    protected void fixMappaParagrafi() {
+    }
+
+
+    /**
+     * Estrae dalla mappa un testo completo <br>
+     * Comprende titoli dei paragrafi e la lista delle didascalie <br>
+     * Può essere sovrascritto, senza invocare il metodo della superclasse <br>
+     */
+    public String getTestoConParagrafi() {
+        StringBuilder buffer = new StringBuilder();
+        List<String> lista;
+
+        if (mappa != null && mappa.size() > 0) {
+            for (String key : mappa.keySet()) {
+                lista = mappa.get(key);
+
+                if (lista != null && lista.size() > 0) {
+                    buffer.append(getTitoloParagrafo(key, lista.size()));//@todo creare preferenza per il numero
+
+                    for (String stringa : lista) {
+                        buffer.append(ASTERISCO);
+                        buffer.append(SPAZIO);
+                        buffer.append(stringa);
+                        buffer.append(A_CAPO);
+                    }
+                    buffer.append(A_CAPO);
+                }
+            }
+        }
+
+        return buffer.toString().trim();
+    }
+
+    public String getTitoloParagrafo(final String keyParagrafo, int numero) {
+        return VUOTA;
+    }
+
     public List<Bio> getListaBio() {
-        return wrapLista != null ? wrapLista.getListaBio() : null;
+        return listaBio;
     }
 
     public List<String> getListaDidascalie() {
-        return wrapLista != null ? wrapLista.getListaDidascalie() : listaDidascalie;
+        return listaDidascalie;
     }
 
-    public Map<String, List> getMappa() {
-        return wrapLista != null ? wrapLista.getMappa() : null;
+    public Map<String, List<String>> getMappa() {
+        return mappa;
     }
 
     public int getNumDidascalie() {
-        return wrapLista != null ? wrapLista.getListaDidascalie().size() : 0;
+        return listaDidascalie.size();
     }
 
-    public String getTestoConParagrafi() {
-        return wrapLista != null ? wrapLista.getTestoConParagrafi() : VUOTA;
-    }
 
     public int getBioSize() {
-        return wrapLista != null ? wrapLista.getListaBio().size() : 0;
+        return listaBio.size();
     }
 
 }

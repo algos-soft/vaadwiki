@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.boot.*;
 import it.algos.vaadflow14.backend.data.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.packages.utility.versione.*;
 import it.algos.vaadflow14.backend.vers.*;
 import it.algos.vaadflow14.wizard.*;
@@ -138,6 +139,7 @@ public class WikiBoot extends FlowBoot {
     protected void fixMenuRoutes() {
         super.fixMenuRoutes();
 
+        FlowVar.menuRouteList.add(Preferenza.class);
         FlowVar.menuRouteList.add(Wizard.class);
         FlowVar.menuRouteList.add(Versione.class);
         FlowVar.menuRouteList.add(Attivita.class);

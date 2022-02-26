@@ -68,4 +68,10 @@ public abstract class WikiCost {
 
     public static final String USA_TRE_ATTIVITA = "usaTreAttivita";
 
+    public static final String ALTRE = "Altre...";
+
+    public static final String VEDI = "{{Vedi anche|";
+
+    public static final String PORTALE = "Portale|";
+
 }// end of static class

@@ -5,12 +5,16 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
+import it.algos.vaadwiki.backend.packages.professione.*;
 import it.algos.vaadwiki.wiki.query.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
+
+import java.util.*;
 
 /**
  * Project vaadwiki
@@ -33,15 +37,20 @@ public class UploadAttivita extends Upload {
     @Autowired
     public AttivitaService attivitaService;
 
-    protected Attivita attivita;
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ProfessioneService professioneService;
+
 
     protected String notaCreazione;
 
-    protected String notaAttivitaSingola;
-
     protected String notaAttivitaMultiple;
 
-    protected WrapLista.AETypeMappa typeMappa;
+    protected AETypePagina typePagina;
 
     /**
      * Costruttore base con parametri <br>
@@ -53,7 +62,7 @@ public class UploadAttivita extends Upload {
      * @param entityBean di cui costruire la pagina sul server wiki
      */
     public UploadAttivita(final AEntity entityBean) {
-        this(entityBean, WrapLista.AETypeMappa.paginaPrincipale, true);
+        this(entityBean, AETypePagina.paginaPrincipale, true);
     }// end of constructor
 
     /**
@@ -65,8 +74,8 @@ public class UploadAttivita extends Upload {
      *
      * @param entityBean di cui costruire la pagina sul server wiki
      */
-    public UploadAttivita(final AEntity entityBean, final WrapLista.AETypeMappa typeMappa) {
-        this(entityBean, typeMappa, true);
+    public UploadAttivita(final AEntity entityBean, final AETypePagina typePagina) {
+        this(entityBean, typePagina, true);
     }// end of constructor
 
 
@@ -80,23 +89,13 @@ public class UploadAttivita extends Upload {
      * @param entityBean        di cui costruire la pagina sul server wiki
      * @param usaWikiPaginaTest una sottoPagina di Utente:Gac/
      */
-    public UploadAttivita(final AEntity entityBean, final WrapLista.AETypeMappa typeMappa, final boolean usaWikiPaginaTest) {
+    public UploadAttivita(final AEntity entityBean, final AETypePagina typePagina, final boolean usaWikiPaginaTest) {
         //        super.entityBean = entityBean;
         //        super.usaWikiPaginaTest = usaWikiPaginaTest;
-        this.typeMappa = typeMappa;
+        this.typePagina = typePagina;
         this.attivita = (Attivita) entityBean;
     }// end of constructor
 
-    public UploadAttivita inizia() {
-//        summary = text.setDoppieQuadre("Utente:" + botLogin.getUsername() + "|" + botLogin.getUsername());
-//        this.fixPreferenze();
-//        this.regolazioniIniziali();
-//        this.fixLista();
-//        this.fixVoci();
-//        this.fixPagina();
-
-        return (UploadAttivita)super.inizia();
-    }
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
@@ -104,25 +103,51 @@ public class UploadAttivita extends Upload {
      */
     @Override
     protected void fixPreferenze() {
-        int maxNum = 50;
+        int maxNumBio = 50; //@todo preferenze
+        int maxNumParagrafo = 50; //@todo preferenze
         super.fixPreferenze();
+        Professione professione = null;
 
-        notaCreazione = String.format("La pagina di una singola attività viene creata se le relative voci biografiche superano le %d unità.", maxNum);
-        notaAttivitaSingola = "Ogni persona è presente in una sola [[Progetto:Biografie/Attività|lista]], in base a quanto riportato nel parametro ''attività'' del [[template:Bio|template Bio]] presente nella voce biografica specifica della persona";
-        notaAttivitaMultiple = "Ogni persona è presente in diverse [[Progetto:Biografie/Attività|liste]], in base a quanto riportato nei parametri ''attività'', ''attività2''  e ''attività3'' del [[template:Bio|template Bio]] presente nella voce biografica specifica della persona. Le ''attivitàAltre'' non vengono considerate";
+        String attivitaTxt = html.bold("attività");
+        String unitaBio = html.bold(maxNumBio + " unità");
+        String unitaParagrafo = html.bold(maxNumParagrafo + " unità");
+        String lista = html.bold("[[Progetto:Biografie/Attività|lista]]");
+        String liste = html.bold("[[Progetto:Biografie/Attività|liste]]");
+        String paragrafi = html.bold("paragrafi");
+        String singola = html.bold("''attività''");
+        String multipla = html.bold("''attività'', ''attività2'' e ''attività3''");
+        String linkAttivita = html.bold(attivita.plurale);
 
-        notaDidascalie = "Le didascalie delle voci sono quelle previste nel [[Progetto:Biografie/Didascalie|progetto biografie]]";
-        //        notaOrdinamento = "Le voci, all'interno di ogni paragrafo, sono in ordine alfabetico per " + LibWiki.setBold("cognome") + "; se questo manca si utilizza il " + LibWiki.setBold("titolo") + " della pagina.";
-        notaEsaustiva = "La lista non è esaustiva e contiene solo le persone che sono citate nell'enciclopedia e per le quali è stato implementato correttamente il [[template:Bio|template Bio]]";
+        try {
+            professione = professioneService.findByProperty("attivita", attivita.singolare);
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "fixPreferenze");
+        }
+        if (professione != null) {
+            notaLinkAttivita = html.bold(String.format("%s%s%s%s%s", DOPPIE_QUADRE_INI, professione.getPagina(), PIPE, attivita.plurale, DOPPIE_QUADRE_END));
+        }
+        else {
+            notaLinkAttivita = String.format("%s", linkAttivita);
+        }
+
+        notaCreazione = String.format("La pagina di una singola %s viene creata se le relative voci biografiche superano le %s.", attivitaTxt, unitaBio);
+        if (pref.isBool(USA_TRE_ATTIVITA)) {
+            notaAttivitaMultiple = String.format("Ogni persona è presente in diverse %s, in base a quanto riportato nei parametri %s del %s presente nella voce biografica specifica della persona. Le ''attivitàAltre'' non vengono considerate", liste, multipla, notaTemplate);
+        }
+        else {
+            notaAttivitaMultiple = String.format("Ogni persona è presente in una sola %s, in base a quanto riportato nel parametro %s del %s presente nella voce biografica specifica della persona", lista, singola, notaTemplate);
+        }
         notaSottoPagina = "Questa sottopagina specifica viene creata se il numero di voci biografiche nel paragrafo della pagina principale supera le " + taglioSottoPagina + " unità.";
-        notaAttivita = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
-        notaNazionalita = "Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+        notaSuddivisione = String.format("La lista è suddivisa in %s per ogni nazionalità individuata. Se il numero di voci biografiche nel paragrafo supera le %s viene creata una sottopagina", paragrafi, unitaParagrafo);
+
+        super.tagCategoria = String.format("[[Categoria:Bio attività%s%s%s", PIPE, text.primaMaiuscola(attivita.plurale),DOPPIE_QUADRE_END);
     }
 
     /**
      * Costruisce l'istanza associata di ListaXxx <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
+    @Override
     public void fixLista() {
         super.fixLista();
         lista = appContext.getBean(ListaAttivita.class, attivita);
@@ -172,6 +197,7 @@ public class UploadAttivita extends Upload {
      * Sovrascrivibile <br>
      * Parametrizzato (nelle sottoclassi) l'utilizzo e la formulazione <br>
      */
+    @Override
     protected String elaboraIncipitSpecifico() {
         StringBuilder buffer = new StringBuilder();
 
@@ -184,16 +210,17 @@ public class UploadAttivita extends Upload {
         buffer.append(text.setRef(notaCreazione));
         buffer.append(" nell'enciclopedia che hanno come attività");
         buffer.append(text.setRef(notaAttivita));
-        buffer.append(" principale");
-        buffer.append(text.setRef(pref.isBool(USA_TRE_ATTIVITA) ? notaAttivitaSingola : notaAttivitaMultiple));
+        if (!pref.isBool(USA_TRE_ATTIVITA)) {
+            buffer.append(" principale");
+        }
+        buffer.append(text.setRef(notaAttivitaMultiple));
         buffer.append(" quella di ");
-        //        testo += text.setBold(soggetto);
-        buffer.append(attivita.plurale);
+        buffer.append(notaLinkAttivita);
         buffer.append(". Le persone sono suddivise");
-        //        testo += text.setRef(notaSuddivisione);
+        buffer.append(text.setRef(notaSuddivisione));
         buffer.append(" per nazionalità.");
         buffer.append(text.setRef(notaNazionalita));
-        //        testo += text.setRef(notaParagrafoVuoto);
+        buffer.append(text.setRef(notaVuotoAttivita));
 
         return buffer.toString();
     }
@@ -204,7 +231,7 @@ public class UploadAttivita extends Upload {
      * <p>
      * Sovrascritto <br>
      */
-    protected String fixSottopagine(final String testoIn) {
+    protected String fixSottoPagine(final String testoIn) {
         String testoOut = testoIn;
 
         try {
@@ -212,11 +239,24 @@ public class UploadAttivita extends Upload {
         } catch (AlgosException unErrore) {
             int a = 87;
         }
-        if (typeMappa == WrapLista.AETypeMappa.paginaPrincipale) {
-            appContext.getBean(UploadAttivita.class, attivita, WrapLista.AETypeMappa.sottoPagina).inizia();
+        if (typePagina == AETypePagina.paginaPrincipale) {
+            //            appContext.getBean(UploadAttivita.class, attivita, AETypePagina.sottoPagina);
         }
 
         return testoOut;
+    }
+
+    /**
+     * Lista delle voci correlate (eventuale) <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected List<String> listaVociCorrelate() {
+        List<String> lista = new ArrayList<>();
+
+        lista.add(":Categoria:" + text.primaMaiuscola(attivita.plurale));
+        lista.add("Progetto:Biografie/Attività");
+        return lista;
     }
 
     /**
@@ -224,10 +264,12 @@ public class UploadAttivita extends Upload {
      * <p>
      * DEVE essere sovrascritto, SENZA invocare prima il metodo della superclasse <br>
      */
+    @Override
     protected String getTitoloPaginaMadre() {
         return "Pippox";
     }
 
+    @Override
     protected String getSummary() {
         return VUOTA;
     }

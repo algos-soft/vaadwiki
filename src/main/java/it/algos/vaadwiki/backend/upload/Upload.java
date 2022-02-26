@@ -4,8 +4,11 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
+import static it.algos.vaadwiki.backend.application.WikiCost.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.login.*;
+import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.query.*;
 import static it.algos.vaadwiki.wiki.query.QueryWrite.*;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
 
 import javax.annotation.*;
+import java.util.*;
 
 /**
  * Project vaadwiki
@@ -70,6 +74,14 @@ public abstract class Upload {
     public DateService date;
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public HtmlService html;
+
+    /**
      * Istanza di una interfaccia SpringBoot <br>
      * Iniettata automaticamente dal framework SpringBoot con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
@@ -87,8 +99,15 @@ public abstract class Upload {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    protected PreferenzaService pref;
+    public ALogService logger;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected PreferenzaService pref;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -97,6 +116,7 @@ public abstract class Upload {
      */
     @Autowired
     protected WikiUtility wikiUtility;
+
 
     //    protected AEntity entityBean;
     protected boolean usaHeadNonScrivere;
@@ -137,31 +157,59 @@ public abstract class Upload {
 
     protected String notaAttivita;
 
+    protected String notaLinkAttivita;
+
+    protected String notaAttivitaMultiple;
+
     protected String notaNazionalita;
 
     protected String notaSottoPagina;
 
+    protected String notaSuddivisione;
+
+    protected String notaVuotoAttivita;
+
+    protected String notaVuotoNazionalita;
+
+    protected String notaTemplate;
+
+    protected String tagCategoria;
+
+    protected Attivita attivita;
+
     /**
-     * Performing the initialization in a constructor is not suggested <br>
-     * as the state of the UI is not properly set up when the constructor is invoked. <br>
+     * Metodo invocato subito DOPO il costruttore
      * <p>
-     * La injection viene fatta da SpringBoot solo alla fine del metodo init() del costruttore <br>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
      * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
      * <p>
-     * L'istanza può essere creata con  appContext.getBean(xxxClass.class);  oppure con @Autowired <br>
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
      * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se hanno la stessa firma, chiama prima @PostConstruct della sottoclasse <br>
+     * Se hanno firme diverse, chiama prima @PostConstruct della superclasse <br>
      */
-//    @PostConstruct
-    public Upload inizia() {
+    @PostConstruct
+    public void inizia() {
         summary = text.setDoppieQuadre("Utente:" + botLogin.getUsername() + "|" + botLogin.getUsername());
         this.fixPreferenze();
         this.regolazioniIniziali();
         this.fixLista();
         this.fixVoci();
         this.fixPagina();
+    }
 
-        return this;
+
+    /**
+     * Registra la pagina che è già stata elaborata in @PostConstruct.inizia() <br>
+     */
+    public AIResult upload() {
+        AIResult result = null;
+
+        if (text.isValid(newTextPagina)) {
+            result = appContext.getBean(QueryWrite.class).urlRequest(wikiPaginaTitle, newTextPagina, summary);
+        }
+
+        return result;
     }
 
     /**
@@ -171,7 +219,7 @@ public abstract class Upload {
     protected void fixPreferenze() {
         // head
         usaHeadNonScrivere = true;
-        usaHeadRitorno = true;
+        usaHeadRitorno = false;
         usaHeadInclude = true;
         typeHeadToc = AETypeHeadToc.conIndice;
         usaHeadTemplateAvviso = true;
@@ -183,24 +231,30 @@ public abstract class Upload {
 
         // footer
         usaNote = true; //--normalmente true. Sovrascrivibile nelle sottoclassi
-        usaVociCorrelate = false; //--normalmente false. Sovrascrivibile nelle sottoclassi
+        usaVociCorrelate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
 
         // note <ref>
-        notaDidascalie = "Le didascalie delle voci sono quelle previste nel [[Progetto:Biografie/Didascalie|progetto biografie]]";
-        notaOrdinamento = "Le voci, all'interno di ogni paragrafo, sono in ordine alfabetico per " + "cognome" + "; se questo manca si utilizza il " + "titolo" + " della pagina.";
-        notaEsaustiva = "La lista non è esaustiva e contiene solo le persone che sono citate nell'enciclopedia e per le quali è stato implementato correttamente il [[template:Bio|template Bio]]";
-        notaSottoPagina = "Questa sottoPagina specifica viene creata se il numero di voci biografiche nel paragrafo della pagina principale supera le " + taglioSottoPagina + " unità.";
-        notaAttivita = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
-        notaNazionalita = "Le nazionalità sono quelle [[Discussioni progetto:Biografie/Nazionalità|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale nazionalità|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+        String progetto = html.bold("[[Progetto:Biografie/Didascalie|progetto biografie]]");
+        String cognome = html.bold("cognome");
+        String titolo = html.bold("titolo");
+        String previsteAtt = html.bold("[[Discussioni progetto:Biografie/Attività|convenzionalmente previste]]");
+        String elencoAtt = html.bold("[[Modulo:Bio/Plurale attività|inserite nell'elenco]]");
+        String previsteNaz = html.bold("[[Discussioni progetto:Biografie/Nazionalità|convenzionalmente previste]]");
+        String elencoNaz = html.bold("[[Modulo:Bio/Plurale nazionalità|inserite nell'elenco]]");
+        String non = html.bold("non");
+        String nazionalita = html.bold("''nazionalità''");
+        String bot = html.verde("'''bot'''");
+        String altre = html.bold(ALTRE);
 
-        String didascalia = text.setRef(notaDidascalie);
-        String ordinamento = text.setRef(notaOrdinamento);
-        String esaustiva = text.setRef(notaEsaustiva);
-        //        String creazione = text.setRef(notaCreazione);
-        String attivita = text.setRef(notaAttivita);
-        //        String suddivisione = text.setRef(notaSuddivisione);
-        String nazionalita = text.setRef(notaNazionalita);
-        //        String paragrafo = text.setRef(notaParagrafoVuoto);
+        notaTemplate = html.bold("[[template:Bio|template Bio]]");
+        notaDidascalie = String.format("Le didascalie delle voci sono quelle previste nel %s", progetto);
+        notaOrdinamento = String.format("Le voci, all'interno di ogni paragrafo, sono in ordine alfabetico per %s; se questo manca si utilizza il %s della pagina.", cognome, titolo);
+        notaEsaustiva = String.format("La lista non è esaustiva e contiene solo le persone che sono citate nell'enciclopedia e per le quali è stato implementato correttamente il %s", notaTemplate);
+        notaSottoPagina = "Questa sottoPagina specifica viene creata se il numero di voci biografiche nel paragrafo della pagina principale supera le " + taglioSottoPagina + " unità.";
+        //        notaAttivita = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
+        notaAttivita = String.format("Le attività sono quelle %s dalla comunità ed %s utilizzato dal %s", previsteAtt, elencoAtt, notaTemplate);
+        notaNazionalita = String.format("Le nazionalità sono quelle %s dalla comunità ed %s utilizzato dal %s", previsteNaz, elencoNaz, notaTemplate);
+        notaVuotoAttivita = String.format("Nel paragrafo %s (eventuale) vengono raggruppate quelle voci biografiche che %s usano il parametro %s oppure che usano una nazionalità di difficile elaborazione da parte del %s", altre, non, nazionalita, bot);
     }
 
 
@@ -295,10 +349,10 @@ public abstract class Upload {
      */
     protected String elaboraBody() {
         String testoLista = VUOTA;
-        testoLista = lista.getTestoConParagrafi();
+        testoLista = this.getTestoConParagrafi();
 
-        if (true) { //todo necessita preferenza
-            testoLista = fixSottopagine(testoLista);
+        if (false) { //todo necessita preferenza
+            testoLista = fixSottoPagine(testoLista);
         }
 
         //aggiunge i tag per l'incolonnamento automatico del testo (proprietà mediawiki)
@@ -313,6 +367,45 @@ public abstract class Upload {
         //        }
 
         return testoLista;
+    }
+
+    /**
+     * Estrae dalla mappa un testo completo <br>
+     * Comprende titoli dei paragrafi e la lista delle didascalie <br>
+     * Può essere sovrascritto, senza invocare il metodo della superclasse <br>
+     */
+    public String getTestoConParagrafi() {
+        StringBuilder buffer = new StringBuilder();
+        Map<String, List<String>> mappa;
+        List<String> didascalie;
+        int numSottoPagina = 2;//@todo preferenza
+
+        mappa = this.lista.getMappa();
+        if (mappa != null && mappa.size() > 0) {
+            for (String key : mappa.keySet()) {
+                didascalie = mappa.get(key);
+
+                if (didascalie != null && didascalie.size() > numSottoPagina) {
+                    buffer.append(this.lista.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
+                    buffer.append(String.format("%s%s%s%s%s", VEDI, wikiPaginaTitle, SLASH, key, DOPPIE_GRAFFE_END));
+                    buffer.append(A_CAPO);
+                    appContext.getBean(UploadAttivita.class, attivita, AETypePagina.sottoPagina).upload();
+                }
+                else {
+                    buffer.append(this.lista.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
+
+                    for (String stringa : didascalie) {
+                        buffer.append(ASTERISCO);
+                        buffer.append(SPAZIO);
+                        buffer.append(stringa);
+                        buffer.append(A_CAPO);
+                    }
+                    buffer.append(A_CAPO);
+                }
+            }
+        }
+
+        return buffer.toString().trim();
     }
 
 
@@ -330,11 +423,12 @@ public abstract class Upload {
         }
 
         if (usaVociCorrelate) {
-            //                    testo += usaVociCorrelate();
+            testo += usaVociCorrelate();
         }
 
-        //        testo += LibWiki.setPortale(tagHeadTemplateProgetto);
-        //        cat = tagCategoria;
+        testo += text.setDoppieGraffe(String.format("%s%s", PORTALE, "biografie"));
+        testo += A_CAPO;
+        testo += tagCategoria;
         //        cat = nascosta ? LibWiki.setNowiki(cat) : cat;
         //        testo += cat;
 
@@ -348,7 +442,7 @@ public abstract class Upload {
      * <p>
      * Sovrascritto <br>
      */
-    protected String fixSottopagine(final String testoIn) {
+    protected String fixSottoPagine(final String testoIn) {
         return testoIn;
     }
 
@@ -425,8 +519,7 @@ public abstract class Upload {
     protected String elaboraTemplateAvviso() {
         String testo = VUOTA;
         String dataCorrente = date.get();
-        String personeTxt = VUOTA;
-        personeTxt = text.format(numVoci);
+        String personeTxt = text.format(numVoci);
 
         if (usaHeadTemplateAvviso) {
             testo += tagHeadTemplateAvviso;
@@ -507,6 +600,37 @@ public abstract class Upload {
     }
 
     /**
+     * Paragrafo delle voci correlate (eventuale)
+     */
+    protected String usaVociCorrelate() {
+        StringBuilder testo = new StringBuilder(VUOTA);
+        String titolo = "Voci correlate";
+        List<String> lista = listaVociCorrelate();
+
+        if (lista != null && lista.size() > 0) {
+            testo.append(wikiUtility.setParagrafo(titolo));
+            testo.append(A_CAPO);
+            for (String riga : lista) {
+                testo.append(ASTERISCO);
+                testo.append(text.setDoppieQuadre(riga));
+                testo.append(A_CAPO);
+            }
+            testo.append(A_CAPO);
+        }
+
+        return testo.toString();
+    }
+
+
+    /**
+     * Lista delle voci correlate (eventuale) <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected List<String> listaVociCorrelate() {
+        return null;
+    }
+
+    /**
      * Elaborazione la pagina <br>
      * Registra la pagina <br>
      */
@@ -542,10 +666,6 @@ public abstract class Upload {
 
     public int getNumVoci() {
         return numVoci;
-    }
-
-    public String getTestoConParagrafi() {
-        return lista != null ? lista.getTestoConParagrafi() : VUOTA;
     }
 
     public String getTestoPagina() {
