@@ -184,7 +184,7 @@ public class ListaAttivitaIntegrationTest extends WTest {
         //--AETypeAttivita
     void creaIstanzaNomeAttivita(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
         System.out.println(String.format("2 - Crea una istanza listaAttivita da nomeAttivitaSingolare o nomeAttivitaPlurale di '%s'", attivita.toString()));
-        String nomeAttivita = VUOTA;
+        String nomeAttivita;
 
         if (attivita == null) {
             System.out.println("Nessun attività indicata");

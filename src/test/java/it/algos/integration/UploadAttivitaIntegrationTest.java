@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.context.*;
 import org.springframework.context.support.*;
 
+import java.util.*;
+
 /**
  * Project vaadwiki
  * Created by Algos
@@ -118,7 +120,80 @@ public class UploadAttivitaIntegrationTest extends WTest {
     @ParameterizedTest
     @MethodSource(value = "ATTIVITA")
     @Order(2)
-    @DisplayName("2 - Preview testo pagina completo")
+    @DisplayName("2 - Crea i paragrafi di una sottoPagina")
+        //--attivita
+        //--AETypeAttivita
+        //--flag booleano upload (non usato)
+    void creaIstanzaPerSottopagina(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
+        if (attivita == null) {
+            System.out.println("Nessun attività indicata");
+            return;
+        }
+
+        if (type == ListaAttivita.AETypeAttivita.singolare) {
+            System.out.println(String.format("2 - Crea i paragrafi di una sottoPagina di attività (singolare) '%s'", attivita.singolare));
+            System.out.println("Un upload con type=AETypeAttivita.singolare non ha senso.");
+            return;
+        }
+
+        if (type == ListaAttivita.AETypeAttivita.plurale) {
+            System.out.println(String.format("2 - Crea i paragrafi di una sottoPagina di attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
+            istanza = appContext.getBean(UploadAttivita.class, attivita);
+            assertNotNull(istanza);
+
+            LinkedHashMap<String, List<String>> mappaSub = arrayService.riduceAllaPrima(istanza.getMappa());
+            istanza = appContext.getBean(UploadAttivita.class, attivita, mappaSub);
+
+            ottenuto = istanza.getTestoConParagrafi();
+            assertTrue(textService.isValid(ottenuto));
+            System.out.println(String.format("Paragrafi di upload della sottoPagina di attività (plurale) '%s'", attivita.plurale));
+            System.out.println(String.format("Ci sono %d didascalie nella sottoPagina", istanza.getNumVoci()));
+            System.out.println(VUOTA);
+            System.out.println(ottenuto);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "ATTIVITA")
+    @Order(3)
+    @DisplayName("3 - Crea il testo completo di una sottoPagina")
+        //--attivita
+        //--AETypeAttivita
+        //--flag booleano upload (non usato)
+    void creaIstanzaPerSottopagina3(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
+        if (attivita == null) {
+            System.out.println("Nessun attività indicata");
+            return;
+        }
+
+        if (type == ListaAttivita.AETypeAttivita.singolare) {
+            System.out.println(String.format("3 - Crea il testo completo di una sottoPagina di attività (singolare) '%s'", attivita.singolare));
+            System.out.println("Un upload con type=AETypeAttivita.singolare non ha senso.");
+            return;
+        }
+
+        if (type == ListaAttivita.AETypeAttivita.plurale) {
+            System.out.println(String.format("3 - Crea il testo completo di una sottoPagina di attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
+            istanza = appContext.getBean(UploadAttivita.class, attivita);
+            assertNotNull(istanza);
+
+            LinkedHashMap<String, List<String>> mappaSub = arrayService.riduceAllaPrima(istanza.getMappa());
+            istanza = appContext.getBean(UploadAttivita.class, attivita, mappaSub);
+
+            ottenuto = istanza.getTestoPagina();
+            assertTrue(textService.isValid(ottenuto));
+            System.out.println(String.format("Testo completo di upload della sottoPagina di attività (plurale) '%s'", attivita.plurale));
+            System.out.println(String.format("Ci sono %d didascalie nella sottoPagina", istanza.getNumVoci()));
+            System.out.println(VUOTA);
+            System.out.println(ottenuto);
+        }
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "ATTIVITA")
+    @Order(4)
+    @DisplayName("4 - Preview testo pagina completo")
         //--attivita
         //--AETypeAttivita
         //--flag booleano upload (non usato)
@@ -129,13 +204,13 @@ public class UploadAttivitaIntegrationTest extends WTest {
         }
 
         if (type == ListaAttivita.AETypeAttivita.singolare) {
-            System.out.println(String.format("2 - Preview testo pagina completo di upload per l'attività (singolare) '%s'", attivita.singolare));
+            System.out.println(String.format("4 - Preview testo pagina completo di upload per l'attività (singolare) '%s'", attivita.singolare));
             System.out.println("Un upload con type=AETypeAttivita.singolare non ha senso.");
             return;
         }
 
         if (type == ListaAttivita.AETypeAttivita.plurale) {
-            System.out.println(String.format("2 - Preview testo pagina completo di upload per l'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
+            System.out.println(String.format("4 - Preview testo pagina completo di upload per l'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
             istanza = appContext.getBean(UploadAttivita.class, attivita);
             assertNotNull(istanza);
             ottenuto = istanza.getTestoPagina();
@@ -149,8 +224,8 @@ public class UploadAttivitaIntegrationTest extends WTest {
 
     @ParameterizedTest
     @MethodSource(value = "ATTIVITA")
-    @Order(3)
-    @DisplayName("3 - Upload su pagina di servizio")
+    @Order(5)
+    @DisplayName("5 - Upload su pagina di servizio")
         //--attivita
         //--AETypeAttivita
         //--flag booleano upload
@@ -161,21 +236,21 @@ public class UploadAttivitaIntegrationTest extends WTest {
         }
 
         if (type == ListaAttivita.AETypeAttivita.singolare) {
-            System.out.println(String.format("3 - Upload su pagina di servizio dell'attività (singolare) '%s'", attivita.singolare));
+            System.out.println(String.format("5 - Upload su pagina di servizio dell'attività (singolare) '%s'", attivita.singolare));
             System.out.println("Un upload con type=AETypeAttivita.singolare non ha senso.");
             return;
         }
 
-        if ( type == ListaAttivita.AETypeAttivita.plurale) {
+        if (type == ListaAttivita.AETypeAttivita.plurale) {
             if (upload) {
-                System.out.println(String.format("3 - Upload su pagina di servizio dell'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
+                System.out.println(String.format("5 - Upload su pagina di servizio dell'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
                 ottenutoRisultato = appContext.getBean(UploadAttivita.class, attivita).upload();
                 assertNotNull(ottenutoRisultato);
                 System.out.println(String.format("Upload effettuato per l'attività (plurale) '%s'", attivita.plurale));
                 printRisultato(ottenutoRisultato);
             }
             else {
-                System.out.println(String.format("3 - Upload su pagina di servizio dell'attività (singolare) '%s'", attivita.plurale));
+                System.out.println(String.format("5 - Upload su pagina di servizio dell'attività (singolare) '%s'", attivita.plurale));
                 System.out.println(String.format("Flag di upload falso per un'attività troppo lunga"));
             }
         }
@@ -184,8 +259,8 @@ public class UploadAttivitaIntegrationTest extends WTest {
 
     //    @ParameterizedTest
     @MethodSource(value = "ATTIVITA")
-    @Order(3)
-    @DisplayName("3 - Upload pagina (di test) completa")
+    @Order(5)
+    @DisplayName("5 - Upload pagina (di test) completa")
     //--attivita
     //--AETypeAttivita
     void uploadTest(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
@@ -195,13 +270,13 @@ public class UploadAttivitaIntegrationTest extends WTest {
         }
 
         if (type == ListaAttivita.AETypeAttivita.singolare) {
-            System.out.println(String.format("3 - Upload pagina (di test) completa per l'attività (singolare) '%s'", attivita.singolare));
+            System.out.println(String.format("5 - Upload pagina (di test) completa per l'attività (singolare) '%s'", attivita.singolare));
             System.out.println("Un upload con type=AETypeAttivita.singolare non ha senso.");
             return;
         }
 
         if (type == ListaAttivita.AETypeAttivita.plurale) {
-            System.out.println(String.format("3 - Upload pagina (di test) completa per l'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
+            System.out.println(String.format("5 - Upload pagina (di test) completa per l'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
             appContext.getBean(UploadAttivita.class, attivita).uploadTest();
 
             System.out.println(String.format("Vai sul browser a controllare la pagina '%s'", attivita.plurale));

@@ -421,4 +421,48 @@ public class ArrayService extends AbstractService {
         return matrice;
     }
 
+    /**
+     * Estrae il primo valore della mappa <br>
+     *
+     * @param mappaCompleta da esaminare
+     *
+     * @return mappa ridotta solo al primo valore
+     */
+    public LinkedHashMap<String, List<String>> riduceAllaPrima( LinkedHashMap<String, List<String>> mappaCompleta) {
+        LinkedHashMap<String, List<String>> mappaPrimoValore = new LinkedHashMap<>();
+        List<String> lista = null;
+        String titolo = VUOTA;
+
+        if (mappaCompleta != null && mappaCompleta.size() > 0) {
+            for (String key : mappaCompleta.keySet()) {
+                titolo = key;
+                lista = mappaCompleta.get(key);
+                break;
+            }
+        }
+        mappaPrimoValore.put(titolo, lista);
+
+        return mappaPrimoValore;
+    }
+
+    /**
+     * Dimensioni della prima lista <br>
+     *
+     * @param mappaCompleta da esaminare
+     *
+     * @return dimensioni della lista
+     */
+    public int dimLista( LinkedHashMap<String, List<String>> mappaCompleta) {
+        List<String> lista = null;
+
+        if (mappaCompleta != null && mappaCompleta.size() > 0) {
+            for (String key : mappaCompleta.keySet()) {
+                lista = mappaCompleta.get(key);
+                break;
+            }
+        }
+
+        return lista!=null?lista.size():0;
+    }
+
 }

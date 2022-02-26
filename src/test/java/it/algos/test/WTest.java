@@ -327,19 +327,19 @@ public abstract class WTest extends ATest {
     private Stream<Arguments> ATTIVITA() {
         return Stream.of(
                 Arguments.of(attivitaCarpentieri, ListaAttivita.AETypeAttivita.plurale, true),
-                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.singolare, false),
-                Arguments.of(attivitaPedagogista, ListaAttivita.AETypeAttivita.plurale, false),
-                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.singolare, false),
-                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.plurale, false),
-                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.singolare, false),
-                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.plurale, false),
-                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.singolare, false),
-                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.plurale, false),
-                Arguments.of(attivitaAgronomo, ListaAttivita.AETypeAttivita.singolare, false),
-                Arguments.of(attivitaAgronomo, ListaAttivita.AETypeAttivita.plurale, false),
-                Arguments.of(attivitaAforista, ListaAttivita.AETypeAttivita.singolare, false),
-                Arguments.of(attivitaAforista, ListaAttivita.AETypeAttivita.plurale, false),
-                Arguments.of(attivitaConduttriceTelevisiva, ListaAttivita.AETypeAttivita.singolare, false)
+//                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.singolare, false),
+//                Arguments.of(attivitaPedagogista, ListaAttivita.AETypeAttivita.plurale, false),
+//                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.singolare, false),
+//                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.plurale, false),
+//                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.singolare, false),
+//                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.plurale, false),
+//                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.singolare, false),
+//                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.plurale, false),
+//                Arguments.of(attivitaAgronomo, ListaAttivita.AETypeAttivita.singolare, false),
+//                Arguments.of(attivitaAgronomo, ListaAttivita.AETypeAttivita.plurale, false),
+//                Arguments.of(attivitaAforista, ListaAttivita.AETypeAttivita.singolare, false),
+//                Arguments.of(attivitaAforista, ListaAttivita.AETypeAttivita.plurale, false),
+                Arguments.of(attivitaConduttriceTelevisiva, ListaAttivita.AETypeAttivita.plurale, false)
 
         );
     }
