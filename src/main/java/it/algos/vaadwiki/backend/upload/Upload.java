@@ -207,7 +207,6 @@ public abstract class Upload {
         this.regolazioniIniziali();
         this.fixPreferenze();
         this.fixMappa();
-        //        this.fixVoci();
         this.fixPagina();
     }
 

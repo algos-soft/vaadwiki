@@ -319,7 +319,7 @@ public class ArrayService extends AbstractService {
                     buffer.append(obj);
                 }
             });
-            buffer.delete(0,sep.length());
+            buffer.delete(0, sep.length());
         }
 
         return buffer.toString();
@@ -379,7 +379,7 @@ public class ArrayService extends AbstractService {
      */
     public Map sort(final Map mappaDisordinata) {
         LinkedHashMap mappaOrdinata = new LinkedHashMap();
-        Object[] listaChiavi ;
+        Object[] listaChiavi;
 
         if (!isAllValid(mappaDisordinata)) {
             return mappaDisordinata;
@@ -390,7 +390,7 @@ public class ArrayService extends AbstractService {
         try {
             Arrays.sort(listaChiavi);
         } catch (Exception unErrore) {
-            int a=87;
+            int a = 87;
         }
 
         for (Object chiave : listaChiavi) {
@@ -428,7 +428,7 @@ public class ArrayService extends AbstractService {
      *
      * @return mappa ridotta solo al primo valore
      */
-    public LinkedHashMap<String, List<String>> riduceAllaPrima( LinkedHashMap<String, List<String>> mappaCompleta) {
+    public LinkedHashMap<String, List<String>> riduceAllaPrima(LinkedHashMap<String, List<String>> mappaCompleta) {
         LinkedHashMap<String, List<String>> mappaPrimoValore = new LinkedHashMap<>();
         List<String> lista = null;
         String titolo = VUOTA;
@@ -446,13 +446,35 @@ public class ArrayService extends AbstractService {
     }
 
     /**
+     * Estrae la chiave del primo valore della mappa <br>
+     *
+     * @param mappaCompleta da esaminare
+     *
+     * @return chiave del primo valore
+     */
+    public String titoloPrima(LinkedHashMap<String, List<String>> mappaCompleta) {
+        LinkedHashMap<String, List<String>> mappaPrimoValore = new LinkedHashMap<>();
+        List<String> lista = null;
+        String titolo = VUOTA;
+
+        if (mappaCompleta != null && mappaCompleta.size() > 0) {
+            for (String key : mappaCompleta.keySet()) {
+                titolo = key;
+                break;
+            }
+        }
+
+        return titolo;
+    }
+
+    /**
      * Dimensioni della prima lista <br>
      *
      * @param mappaCompleta da esaminare
      *
      * @return dimensioni della lista
      */
-    public int dimLista( LinkedHashMap<String, List<String>> mappaCompleta) {
+    public int dimLista(LinkedHashMap<String, List<String>> mappaCompleta) {
         List<String> lista = null;
 
         if (mappaCompleta != null && mappaCompleta.size() > 0) {
@@ -462,7 +484,7 @@ public class ArrayService extends AbstractService {
             }
         }
 
-        return lista!=null?lista.size():0;
+        return lista != null ? lista.size() : 0;
     }
 
 }

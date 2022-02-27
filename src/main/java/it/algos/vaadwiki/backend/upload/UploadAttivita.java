@@ -97,6 +97,18 @@ public class UploadAttivita extends Upload {
         this.mappa = mappa;
     }// end of constructor
 
+    /**
+     * Regolazioni iniziali per gestire i due costruttori:attività plurali o attività singola <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void regolazioniIniziali() {
+        super.regolazioniIniziali();
+
+        switch (typePagina) {
+            case sottoPagina -> super.wikiPaginaTitle += SLASH + arrayService.titoloPrima(mappa);
+        }
+    }
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
@@ -178,6 +190,8 @@ public class UploadAttivita extends Upload {
     @Override
     protected String elaboraIncipitSpecifico() {
         StringBuilder buffer = new StringBuilder();
+        String nazionalita;
+        String nazionalitaLower;
 
         buffer.append("Questa è una lista");
         buffer.append(text.setRef(notaDidascalie));
@@ -194,11 +208,25 @@ public class UploadAttivita extends Upload {
         buffer.append(text.setRef(notaAttivitaMultiple));
         buffer.append(" quella di ");
         buffer.append(notaLinkAttivita);
-        buffer.append(". Le persone sono suddivise");
-        buffer.append(text.setRef(notaSuddivisione));
-        buffer.append(" per nazionalità.");
-        buffer.append(text.setRef(notaNazionalita));
-        buffer.append(text.setRef(notaVuotoAttivita));
+
+        switch (typePagina) {
+            case paginaPrincipale -> {
+                buffer.append(". Le persone sono suddivise");
+                buffer.append(text.setRef(notaSuddivisione));
+                buffer.append(" per nazionalità.");
+                buffer.append(text.setRef(notaNazionalita));
+                buffer.append(text.setRef(notaVuotoAttivita));
+            }
+            case sottoPagina -> {
+                buffer.append(" e sono ");
+                nazionalita = arrayService.titoloPrima(mappa);
+                nazionalita = text.primaMinuscola(nazionalita);
+                nazionalita = AETypeLista.attivita.getPrefix() + nazionalita + PIPE + text.primaMinuscola(nazionalita);
+                nazionalita = text.setDoppieQuadre(nazionalita);
+                buffer.append(nazionalita);
+                buffer.append(nazionalita);
+            }
+        }
 
         return buffer.toString();
     }

@@ -235,23 +235,23 @@ public abstract class WTest extends ATest {
     @InjectMocks
     protected QueryWrite queryWrite;
 
-    private Attivita attivitaCarpentieri;
+    protected Attivita attivitaCarpentieri;
 
-    private Attivita attivitaPedagogista;
+    protected Attivita attivitaPedagogista;
 
-    private Attivita attivitaAbate;
+    protected Attivita attivitaAbate;
 
-    private Attivita attivitaBadessa;
+    protected Attivita attivitaBadessa;
 
-    private Attivita attivitaAccademico;
+    protected Attivita attivitaAccademico;
 
-    private Attivita attivitaAccademica;
+    protected Attivita attivitaAccademica;
 
-    private Attivita attivitaAgronomo;
+    protected Attivita attivitaAgronomo;
 
-    private Attivita attivitaAforista;
+    protected Attivita attivitaAforista;
 
-    private Attivita attivitaConduttriceTelevisiva;
+    protected Attivita attivitaConduttriceTelevisiva;
 
     //--titolo
     //--pagina valida
@@ -329,14 +329,14 @@ public abstract class WTest extends ATest {
     //--flag booleano upload
     private Stream<Arguments> ATTIVITA() {
         return Stream.of(
-//                Arguments.of(attivitaCarpentieri, ListaAttivita.AETypeAttivita.plurale, true),
-                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.singolare, false),
-                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.plurale, true),
+                //                Arguments.of(attivitaCarpentieri, ListaAttivita.AETypeAttivita.plurale, true),
+                //                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.singolare, false),
+                //                Arguments.of(attivitaBadessa, ListaAttivita.AETypeAttivita.plurale, true),
                 //                Arguments.of(attivitaPedagogista, ListaAttivita.AETypeAttivita.plurale, false),
                 //                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.singolare, false),
                 //                Arguments.of(attivitaAbate, ListaAttivita.AETypeAttivita.plurale, false),
                 //                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.singolare, false),
-                //                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.plurale, false),
+                Arguments.of(attivitaAccademico, ListaAttivita.AETypeAttivita.plurale, true),
                 //                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.singolare, false),
                 //                Arguments.of(attivitaAccademica, ListaAttivita.AETypeAttivita.plurale, false),
                 //                Arguments.of(attivitaAgronomo, ListaAttivita.AETypeAttivita.singolare, false),
@@ -697,7 +697,7 @@ public abstract class WTest extends ATest {
 
         newText = result.getNewtext();
         if (newText.length() > maxChar) {
-            newText=  newText.substring(0, Math.min(newText.length(), maxChar));
+            newText = newText.substring(0, Math.min(newText.length(), maxChar));
         }
 
         System.out.println(VUOTA);
