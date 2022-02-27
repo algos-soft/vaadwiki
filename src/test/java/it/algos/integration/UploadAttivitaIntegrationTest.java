@@ -157,17 +157,33 @@ public class UploadAttivitaIntegrationTest extends WTest {
     @MethodSource(value = "ATTIVITA")
     @Order(3)
     @DisplayName("3 - Crea il testo completo di una sottoPagina")
-        //--attivita
-        //--AETypeAttivita
-        //--flag booleano upload (non usato)
     void creaIstanzaPerSottopagina3() {
         attivita = attivitaAccademico;
+        LinkedHashMap<String, List<String>> mappaSub;
+        String key = "Britannici";
 
+
+        //Accademici argentini
         System.out.println(String.format("3 - Crea il testo completo di una sottoPagina di attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
         istanza = appContext.getBean(UploadAttivita.class, attivita);
         assertNotNull(istanza);
+        mappaSub = arrayService.riduceAllaPrima(istanza.getMappa());
+        istanza = appContext.getBean(UploadAttivita.class, attivita, mappaSub);
+        ottenuto = istanza.getTestoPagina();
+        assertTrue(textService.isValid(ottenuto));
+        System.out.println(String.format("Testo completo di upload della sottoPagina di attività (plurale) '%s'", attivita.plurale));
+        System.out.println(String.format("Ci sono %d didascalie nella sottoPagina", istanza.getNumVoci()));
+        System.out.println(VUOTA);
+        System.out.println(ottenuto);
 
-        LinkedHashMap<String, List<String>> mappaSub = arrayService.riduceAllaPrima(istanza.getMappa());
+        //Accademici britannici
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
+        System.out.println(String.format("3 - Crea il testo completo di una sottoPagina di attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
+        istanza = appContext.getBean(UploadAttivita.class, attivita);
+        assertNotNull(istanza);
+        mappaSub = new LinkedHashMap<>();
+        mappaSub.put(key,istanza.getMappa().get(key));
         istanza = appContext.getBean(UploadAttivita.class, attivita, mappaSub);
         ottenuto = istanza.getTestoPagina();
         assertTrue(textService.isValid(ottenuto));
@@ -215,13 +231,13 @@ public class UploadAttivitaIntegrationTest extends WTest {
         }
     }
 
-        @ParameterizedTest
+    @ParameterizedTest
     @MethodSource(value = "ATTIVITA")
     @Order(5)
     @DisplayName("5 - Upload su pagina di servizio")
-    //--attivita
-    //--AETypeAttivita
-    //--flag booleano upload
+        //--attivita
+        //--AETypeAttivita
+        //--flag booleano upload
     void upload(final Attivita attivita, final ListaAttivita.AETypeAttivita type, final boolean upload) {
         if (attivita == null) {
             System.out.println("Nessun attività indicata");

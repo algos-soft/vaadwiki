@@ -48,8 +48,6 @@ public class UploadAttivita extends Upload {
 
     protected String notaAttivitaMultiple;
 
-    protected AETypePagina typePagina;
-
     protected List<String> lista;
 
 
@@ -150,10 +148,16 @@ public class UploadAttivita extends Upload {
         else {
             notaAttivitaMultiple = String.format("Ogni persona è presente in una sola %s, in base a quanto riportato nel parametro %s del %s presente nella voce biografica specifica della persona", lista, singola, notaTemplate);
         }
-        notaSottoPagina = "Questa sottopagina specifica viene creata se il numero di voci biografiche nel paragrafo della pagina principale supera le " + taglioSottoPagina + " unità.";
         notaSuddivisione = String.format("La lista è suddivisa in %s per ogni nazionalità individuata. Se il numero di voci biografiche nel paragrafo supera le %s viene creata una sottopagina", paragrafi, unitaParagrafo);
 
         super.tagCategoria = String.format("[[Categoria:Bio attività%s%s%s", PIPE, text.primaMaiuscola(attivita.plurale), DOPPIE_QUADRE_END);
+
+        notaCreazioneSottoPagina = switch (typePagina) {
+            case paginaPrincipale -> notaCreazione;
+            case sottoPagina -> notaSottoPagina;
+            default -> VUOTA;
+        };
+
     }
 
     /**
@@ -199,7 +203,7 @@ public class UploadAttivita extends Upload {
         buffer.append(" di persone");
         buffer.append(text.setRef(notaEsaustiva));
         buffer.append(" presenti");
-        buffer.append(text.setRef(notaCreazione));
+        buffer.append(text.setRef(notaCreazioneSottoPagina));
         buffer.append(" nell'enciclopedia che hanno come attività");
         buffer.append(text.setRef(notaAttivita));
         if (!pref.isBool(USA_TRE_ATTIVITA)) {
@@ -221,10 +225,11 @@ public class UploadAttivita extends Upload {
                 buffer.append(" e sono ");
                 nazionalita = arrayService.titoloPrima(mappa);
                 nazionalita = text.primaMinuscola(nazionalita);
-                nazionalita = AETypeLista.attivita.getPrefix() + nazionalita + PIPE + text.primaMinuscola(nazionalita);
+                nazionalita = AETypeLista.nazionalita.getPrefix() + text.primaMaiuscola(nazionalita) + PIPE + text.primaMinuscola(nazionalita);
                 nazionalita = text.setDoppieQuadre(nazionalita);
+                nazionalita = html.bold(nazionalita);
                 buffer.append(nazionalita);
-                buffer.append(nazionalita);
+                buffer.append(text.setRef(notaNazionalita));
             }
         }
 

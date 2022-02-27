@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.service.*;
@@ -178,6 +179,8 @@ public abstract class Upload {
 
     protected String notaSottoPagina;
 
+    protected String notaCreazioneSottoPagina;
+
     protected String notaSuddivisione;
 
     protected String notaVuotoAttivita;
@@ -189,6 +192,7 @@ public abstract class Upload {
     protected String tagCategoria;
 
     protected Attivita attivita;
+    protected AETypePagina typePagina;
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -236,9 +240,16 @@ public abstract class Upload {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
+        taglioSottoPagina = 50; //@todo preferenze
+        String unitaBio = html.bold(taglioSottoPagina + " unità");
+
         // head
         usaHeadNonScrivere = true;
-        usaHeadRitorno = false;
+        usaHeadRitorno = switch (typePagina) {
+            case paginaPrincipale -> false;
+            case sottoPagina -> true;
+            default ->false;
+        };
         usaHeadInclude = true;
         typeHeadToc = AETypeHeadToc.conIndice;
         usaHeadTemplateAvviso = true;
@@ -269,7 +280,7 @@ public abstract class Upload {
         notaDidascalie = String.format("Le didascalie delle voci sono quelle previste nel %s", progetto);
         notaOrdinamento = String.format("Le voci, all'interno di ogni paragrafo, sono in ordine alfabetico per %s; se questo manca si utilizza il %s della pagina.", cognome, titolo);
         notaEsaustiva = String.format("La lista non è esaustiva e contiene solo le persone che sono citate nell'enciclopedia e per le quali è stato implementato correttamente il %s", notaTemplate);
-        notaSottoPagina = "Questa sottoPagina specifica viene creata se il numero di voci biografiche nel paragrafo della pagina principale supera le " + taglioSottoPagina + " unità.";
+        notaSottoPagina = String.format("Questa sottopagina specifica viene creata se il numero di voci biografiche nel paragrafo della pagina principale supera le %s.", unitaBio);
         //        notaAttivita = "Le attività sono quelle [[Discussioni progetto:Biografie/Attività|'''convenzionalmente''' previste]] dalla comunità ed [[Modulo:Bio/Plurale attività|inserite nell' '''elenco''']] utilizzato dal [[template:Bio|template Bio]]";
         notaAttivita = String.format("Le attività sono quelle %s dalla comunità ed %s utilizzato dal %s", previsteAtt, elencoAtt, notaTemplate);
         notaNazionalita = String.format("Le nazionalità sono quelle %s dalla comunità ed %s utilizzato dal %s", previsteNaz, elencoNaz, notaTemplate);
@@ -392,30 +403,35 @@ public abstract class Upload {
         List<String> didascalie;
         int numSottoPagina = 2;//@todo preferenza
 
-        if (mappa != null && mappa.size() > 0) {
-            for (String key : mappa.keySet()) {
-                didascalie = mappa.get(key);
+        try {
+            if (mappa != null && mappa.size() > 0) {
+                for (String key : mappa.keySet()) {
+                    didascalie = mappa.get(key);
 
-                if (didascalie != null && didascalie.size() > numSottoPagina) {
-                    buffer.append(this.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
-                    buffer.append(String.format("%s%s%s%s%s", VEDI, wikiPaginaTitle, SLASH, key, DOPPIE_GRAFFE_END));
-                    buffer.append(A_CAPO);
-                    //                    appContext.getBean(UploadAttivita.class, attivita, AETypePagina.sottoPagina).upload();
-                    buffer.append(A_CAPO);
-                }
-                else {
-                    buffer.append(this.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
-
-                    for (String stringa : didascalie) {
-                        buffer.append(ASTERISCO);
-                        buffer.append(SPAZIO);
-                        buffer.append(stringa);
+                    if (didascalie != null && didascalie.size() > numSottoPagina) {
+                        buffer.append(this.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
+                        buffer.append(String.format("%s%s%s%s%s", VEDI, wikiPaginaTitle, SLASH, key, DOPPIE_GRAFFE_END));
+                        buffer.append(A_CAPO);
+                        //                    appContext.getBean(UploadAttivita.class, attivita, AETypePagina.sottoPagina).upload();
                         buffer.append(A_CAPO);
                     }
-                    buffer.append(A_CAPO);
+                    else {
+                        buffer.append(this.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
+
+                        for (String stringa : didascalie) {
+                            buffer.append(ASTERISCO);
+                            buffer.append(SPAZIO);
+                            buffer.append(stringa);
+                            buffer.append(A_CAPO);
+                        }
+                        buffer.append(A_CAPO);
+                    }
                 }
             }
+        } catch (Exception unErrore) {
+            logger.warn(unErrore, this.getClass(), "nomeDelMetodo");
         }
+
 
         return buffer.toString().trim();
     }
