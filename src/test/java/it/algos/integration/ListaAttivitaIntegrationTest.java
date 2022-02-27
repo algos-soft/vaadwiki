@@ -10,6 +10,7 @@ import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
+import it.algos.vaadwiki.backend.wrapper.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -156,6 +157,14 @@ public class ListaAttivitaIntegrationTest extends WTest {
             System.out.println("Nessun attività indicata");
             return;
         }
+
+        WMap map=new WMap();
+        map.setTitolo("Secondo livello");
+        map.put("alfa",new ArrayList<>());
+        map.put("beta",new ArrayList<>());
+        WMap map2=new WMap();
+        map2.put("livello",map);
+        map2.setTitolo("Primo livello");
 
         if (type == ListaAttivita.AETypeAttivita.singolare) {
             istanza = appContext.getBean(ListaAttivita.class, attivita, ListaAttivita.AETypeAttivita.singolare);

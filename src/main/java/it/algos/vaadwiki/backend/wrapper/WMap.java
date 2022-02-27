@@ -9,21 +9,16 @@ import java.util.*;
  * Date: mar, 04-gen-2022
  * Time: 11:33
  */
-public class WMap {
+public class WMap<String, List> extends LinkedHashMap<String, List> {
 
-    Map<String, List> mappa;
+    public String titolo;
 
-    public WMap(String key, List lista) {
-        this.mappa = new LinkedHashMap<>();
-        this.mappa.put(key, lista);
+    public String getTitolo() {
+        return titolo;
     }
 
-    public Map<String, List> getMappa() {
-        return mappa;
-    }
-
-    public void setMappa(Map<String, List> mappa) {
-        this.mappa = mappa;
+    public void setTitolo(String titolo) {
+        this.titolo = titolo;
     }
 
 }
