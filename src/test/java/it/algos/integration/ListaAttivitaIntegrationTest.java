@@ -158,14 +158,6 @@ public class ListaAttivitaIntegrationTest extends WTest {
             return;
         }
 
-        WMap map=new WMap();
-        map.setTitolo("Secondo livello");
-        map.put("alfa",new ArrayList<>());
-        map.put("beta",new ArrayList<>());
-        WMap map2=new WMap();
-        map2.put("livello",map);
-        map2.setTitolo("Primo livello");
-
         if (type == ListaAttivita.AETypeAttivita.singolare) {
             istanza = appContext.getBean(ListaAttivita.class, attivita, ListaAttivita.AETypeAttivita.singolare);
             assertNotNull(istanza);

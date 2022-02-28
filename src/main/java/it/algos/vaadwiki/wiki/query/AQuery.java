@@ -303,7 +303,7 @@ public abstract class AQuery {
 
         if (urlConn != null) {
             for (int i = 1; (headerName = urlConn.getHeaderFieldKey(i)) != null; i++) {
-                if (headerName.equals("set-cookie")) {
+                if (headerName.equals("set-cookie") || headerName.equals("Set-Cookie")) {
                     cookie = urlConn.getHeaderField(i);
                     cookie = cookie.substring(0, cookie.indexOf(";"));
                     name = cookie.substring(0, cookie.indexOf("="));

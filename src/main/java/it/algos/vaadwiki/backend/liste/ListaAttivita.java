@@ -1,12 +1,13 @@
 package it.algos.vaadwiki.backend.liste;
 
 import com.vaadin.flow.spring.annotation.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.packages.nazionalita.*;
+import it.algos.vaadwiki.backend.wrapper.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -204,79 +205,19 @@ public class ListaAttivita extends Lista {
         return listaNomiAttivitaSingole;
     }
 
-
     /**
      * Costruisce una mappa ordinata di didascalie suddivise per paragrafi <br>
      * DEVE essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
     @Override
     protected void fixMappaParagrafi() {
-        mappa = new LinkedHashMap<>();
-        LinkedHashMap<String, List> mappaBio = new LinkedHashMap<>();
-        String message;
-        List<Bio> lista;
-        Set<String> setNazionalita;
-        List<String> listaNazionalita;
-        List<String> didascalie;
-        String nazionalitaPlurale;
-        String didascalia;
-        LinkedHashMap<String, String> mappaNazionalita = nazionalitaService.getMappa();
+        WMap mappaBio = appContext.getBean(WMap.class, AETypeLista.attivita, listaBio);
 
-        if (listaBio == null) {
-            return;
-        }
-
-        setNazionalita = new LinkedHashSet<>();
-        listaDidascalie = new ArrayList<>();
-        for (Bio bio : listaBio) {
-            if (text.isValid(bio.nazionalita)) {
-                nazionalitaPlurale = mappaNazionalita.get(bio.nazionalita);
-                setNazionalita.add(nazionalitaPlurale);
-            }
-        }
-        listaNazionalita = new ArrayList<>(setNazionalita);
-        Collections.sort(listaNazionalita);
-
-        for (String nazPlurale : listaNazionalita) {
-            mappaBio.put(nazPlurale, new ArrayList());
-        }
-        mappaBio.put(ALTRE, new ArrayList());
-
-        for (Bio bio : listaBio) {
-            if (text.isValid(bio.nazionalita)) {
-                nazionalitaPlurale = mappaNazionalita.get(bio.nazionalita);
-                if (mappaBio.containsKey(nazionalitaPlurale)) {
-                    mappaBio.get(nazionalitaPlurale).add(bio);
-                }
-                else {
-                    message = String.format("La mappa non prevede la nazionalità %s", nazionalitaPlurale);
-                    logger.warn(message, this.getClass(), "fixMappaNazionalita");
-                }
-            }
-            else {
-                mappaBio.get(ALTRE).add(bio);
-            }
-        }
-
-        if (mappaBio.get(ALTRE) != null && mappaBio.get(ALTRE).size() == 0) {
-            mappaBio.remove(ALTRE);
-        }
-
-        if (mappaBio != null && mappaBio.size() > 0) {
-            for (String paragrafo : mappaBio.keySet()) {
-                lista = mappaBio.get(paragrafo);
-
-                didascalie = new ArrayList<>();
-                for (Bio bio : lista) {
-                    didascalia = didascaliaService.getLista(bio);
-                    didascalie.add(didascalia);
-                    listaDidascalie.add(didascalia);
-                }
-                paragrafo = text.primaMaiuscola(paragrafo);
-                mappa.put(paragrafo, didascalie);
-            }
-        }
+        mappaBio.creaPrimoLivelloNazionalita();
+        mappa = mappaBio.getMappaLivelloUno();
+        listaDidascalie = mappaBio.getListaDidascalie();
     }
+
 
     public int getNumeroAttivitaSingoleConLoStessoPlurale() {
         return switch (typeAttivita) {

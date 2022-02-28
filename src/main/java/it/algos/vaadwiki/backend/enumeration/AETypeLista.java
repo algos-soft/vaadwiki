@@ -8,19 +8,26 @@ package it.algos.vaadwiki.backend.enumeration;
  * Time: 17:24
  */
 public enum AETypeLista {
-    attivita("Progetto:Biografie/Attività/"),
-    nazionalita(""),
-    nati(""),
-    morti("");
+    attivita("Progetto:Biografie/Attività/",1),//@todo deve diventare 3
+    nazionalita("",0),
+    nati("",0),
+    morti("",0),
+    nomi("",0),
+    cognomi("",0);
 
     private String prefix;
+private int livello;
 
-
-    AETypeLista(String prefix) {
+    AETypeLista(final String prefix,final int livello) {
         this.prefix = prefix;
+        this.livello = livello;
     }
 
     public String getPrefix() {
         return prefix;
+    }
+
+    public int getLivello() {
+        return livello;
     }
 }
