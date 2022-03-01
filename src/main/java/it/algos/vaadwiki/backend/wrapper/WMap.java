@@ -113,30 +113,39 @@ public class WMap {
         this.listaDidascalie = new ArrayList<>();
     }
 
-    public void creaPrimoLivelloNazionalita() {
-        Set<String> setNazionalita = new LinkedHashSet<>();
-        String nazionalitaPlurale;
-        mappaBioLivelloUno = new LinkedHashMap<>();
-
-        //--ricerca delle chiavi
-        for (Bio bio : listaBio) {
-            if (text.isValid(bio.nazionalita)) {
-                nazionalitaPlurale = mappaNazionalita.get(bio.nazionalita);
-                setNazionalita.add(nazionalitaPlurale);
-            }
-        }
-        mappaBioLivelloUno = creaLivello(listaBio, setNazionalita);
+    public void creaLivelli() {
+        mappaBioLivelloUno = creaLivello(listaBio);
 
         if (livello == 1) {
             finalizzaPrimoLivello();
         }
     }
 
-    public LinkedHashMap<String, List<Bio>> creaLivello(final List<Bio> listaBio, final Set<String> setChiavi) {
+    private void creaSecondoLivello() {
+        mappaBioLivelloUno = creaLivello(listaBio);
+
+        if (livello == 1) {
+            finalizzaPrimoLivello();
+        }
+    }
+
+    private LinkedHashMap<String, List<Bio>> creaLivello(final List<Bio> listaBio) {
         LinkedHashMap<String, List<Bio>> mappaBio = new LinkedHashMap<>();
+        Set<String> setChiavi = new LinkedHashSet<>();
         List<String> listaChiavi;
         String keyBio;
         String message;
+
+        //--ricerca delle chiavi
+        for (Bio bio : listaBio) {
+            keyBio = switch (type) {
+                case attivita -> mappaNazionalita.get(bio.nazionalita);
+                default -> VUOTA;
+            };
+            if (text.isValid(bio.nazionalita)) {
+                setChiavi.add(keyBio);
+            }
+        }
 
         //--ordinamento delle chiavi
         listaChiavi = new ArrayList<>(setChiavi);

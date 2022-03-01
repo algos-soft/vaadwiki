@@ -213,7 +213,7 @@ public class ListaAttivita extends Lista {
     protected void fixMappaParagrafi() {
         WMap mappaBio = appContext.getBean(WMap.class, AETypeLista.attivita, listaBio);
 
-        mappaBio.creaPrimoLivelloNazionalita();
+        mappaBio.creaLivelli();
         mappa = mappaBio.getMappaLivelloUno();
         listaDidascalie = mappaBio.getListaDidascalie();
     }
