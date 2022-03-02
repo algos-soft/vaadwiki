@@ -174,7 +174,7 @@ public class UploadAttivita extends Upload {
                 case paginaPrincipale -> {
                     lista = appContext.getBean(ListaAttivita.class, attivita);
                     if (lista != null) {
-                        mappa = lista.getMappa();
+                        mappa = lista.getMappaUno();
                         numVoci = lista.getNumDidascalie();
                     }
                 }
@@ -195,7 +195,6 @@ public class UploadAttivita extends Upload {
     protected String elaboraIncipitSpecifico() {
         StringBuilder buffer = new StringBuilder();
         String nazionalita;
-        String nazionalitaLower;
 
         buffer.append("Questa è una lista");
         buffer.append(text.setRef(notaDidascalie));

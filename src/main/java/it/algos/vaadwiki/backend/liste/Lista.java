@@ -108,7 +108,9 @@ public abstract class Lista {
      * La visualizzazione dei paragrafi può anche essere esclusa, ma questi sono comunque presenti <br>
      * La mappa viene creata nel @PostConstruct dell'istanza <br>
      */
-    protected LinkedHashMap<String, List<String>> mappa;
+    protected LinkedHashMap<String, List<String>> mappaUno;
+    protected Map<String, Map<String, List<String>>> mappaDue;
+    protected LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> mappaTre;
 
 
     /**
@@ -179,9 +181,9 @@ public abstract class Lista {
         StringBuilder buffer = new StringBuilder();
         List<String> lista;
 
-        if (mappa != null && mappa.size() > 0) {
-            for (String key : mappa.keySet()) {
-                lista = mappa.get(key);
+        if (mappaUno != null && mappaUno.size() > 0) {
+            for (String key : mappaUno.keySet()) {
+                lista = mappaUno.get(key);
 
                 if (lista != null && lista.size() > 0) {
                     buffer.append(wikiUtility.setParagrafo(key));
@@ -211,8 +213,16 @@ public abstract class Lista {
         return listaDidascalie;
     }
 
-    public LinkedHashMap<String, List<String>> getMappa() {
-        return mappa;
+    public LinkedHashMap<String, List<String>> getMappaUno() {
+        return mappaUno;
+    }
+
+    public Map<String, Map<String, List<String>>> getMappaDue() {
+        return mappaDue;
+    }
+
+    public LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> getMappaTre() {
+        return mappaTre;
     }
 
     public int getNumDidascalie() {

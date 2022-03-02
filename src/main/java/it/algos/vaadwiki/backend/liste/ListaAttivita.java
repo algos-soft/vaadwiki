@@ -214,7 +214,8 @@ public class ListaAttivita extends Lista {
         WMap mappaBio = appContext.getBean(WMap.class, AETypeLista.attivita, listaBio);
 
         mappaBio.creaLivelli();
-        mappa = mappaBio.getMappaLivelloUno();
+        mappaUno = mappaBio.getMappaLivelloUno();
+        mappaDue = mappaBio.getMappaLivelloDue();
         listaDidascalie = mappaBio.getListaDidascalie();
     }
 

@@ -83,7 +83,7 @@ public class WMap {
     private LinkedHashMap<String, List<String>> mappaLivelloUno;
 
     //--property elaborata
-    private LinkedHashMap<String, LinkedHashMap<String, List<String>>> mappaLivelloDue;
+    private Map<String, Map<String, List<String>>> mappaLivelloDue;
 
     //--property elaborata
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> mappaLivelloTre;
@@ -114,22 +114,27 @@ public class WMap {
     }
 
     public void creaLivelli() {
-        mappaBioLivelloUno = creaLivello(listaBio);
+        LinkedHashMap<String, List<Bio>> mappa;
+        mappaBioLivelloUno = creaLivello(listaBio, 1);
+        finalizzaPrimoLivello();
 
-        if (livello == 1) {
-            finalizzaPrimoLivello();
+        switch (livello) {
+            case 2 -> {
+                mappaBioLivelloDue = new LinkedHashMap<>();
+
+                for (String key : mappaBioLivelloUno.keySet()) {
+                    mappa = creaLivello(mappaBioLivelloUno.get(key), 2);
+                    mappaBioLivelloDue.put(key, mappa);
+                }
+                finalizzaSecondoLivello();
+            }
+            default -> {}
         }
+
     }
 
-    private void creaSecondoLivello() {
-        mappaBioLivelloUno = creaLivello(listaBio);
 
-        if (livello == 1) {
-            finalizzaPrimoLivello();
-        }
-    }
-
-    private LinkedHashMap<String, List<Bio>> creaLivello(final List<Bio> listaBio) {
+    private LinkedHashMap<String, List<Bio>> creaLivello(final List<Bio> listaBio, final int livello) {
         LinkedHashMap<String, List<Bio>> mappaBio = new LinkedHashMap<>();
         Set<String> setChiavi = new LinkedHashSet<>();
         List<String> listaChiavi;
@@ -138,11 +143,9 @@ public class WMap {
 
         //--ricerca delle chiavi
         for (Bio bio : listaBio) {
-            keyBio = switch (type) {
-                case attivita -> mappaNazionalita.get(bio.nazionalita);
-                default -> VUOTA;
-            };
-            if (text.isValid(bio.nazionalita)) {
+            keyBio = getChiave(bio, livello);
+
+            if (text.isValid(keyBio)) {
                 setChiavi.add(keyBio);
             }
         }
@@ -159,10 +162,7 @@ public class WMap {
 
         //--riempimento della mappa con la lista dei singoli valori per ogni chiave
         for (Bio bio : listaBio) {
-            keyBio = switch (type) {
-                case attivita -> mappaNazionalita.get(bio.nazionalita);
-                default -> VUOTA;
-            };
+            keyBio = getChiave(bio, livello);
 
             if (mappaBio.containsKey(keyBio)) {
                 mappaBio.get(keyBio).add(bio);
@@ -173,78 +173,94 @@ public class WMap {
                 mappaBio.get(ALTRE).add(bio);
             }
         }
+
+        if (mappaBio.get(ALTRE).size() == 0) {
+            mappaBio.remove(ALTRE);
+        }
+
         return mappaBio;
     }
 
-    protected void creaSecondoLivelloLetteraInizialeCognome() {
-        List<Bio> lista;
-        WMap mappa = null;
-        Set<String> setPrimoCarattere = null;
-        List<String> listaPrimoCarattere;
-        String primoCarattere;
-        String message;
-        mappaLivelloUno = new LinkedHashMap<>();
+    protected String getChiave(Bio bio, final int livello) {
+        String keyBio;
+        String keyBioInt;
 
-        //--ricerca delle chiavi
-        for (Object key : mappaBioLivelloUno.keySet()) {
-            lista = mappaBioLivelloUno.get(key);
-            setPrimoCarattere = new LinkedHashSet<>();
-            for (Bio bio : lista) {
-                primoCarattere = bio.cognome.substring(0, 1);
-                setPrimoCarattere.add(primoCarattere);
+        keyBio = switch (livello) {
+            case 1 -> {
+                keyBioInt = switch (type) {
+                    case attivita -> text.primaMaiuscola(mappaNazionalita.get(bio.nazionalita));
+                    default -> VUOTA;
+                };
+                yield keyBioInt;
             }
-
-            //--ordinamento delle chiavi
-            listaPrimoCarattere = new ArrayList<>(setPrimoCarattere);
-            Collections.sort(listaPrimoCarattere);
-
-            //--creazione della mappa vuota prima dell'inserimento dei singoli valori
-            for (String primoCar : listaPrimoCarattere) {
-                mappaLivelloUno.put(primoCar, new ArrayList());
+            case 2 -> {
+                keyBioInt = switch (type) {
+                    case attivita -> bio.cognome != null ? bio.cognome.substring(0, 1) : bio.wikiTitle.substring(0, 1);
+                    default -> VUOTA;
+                };
+                yield keyBioInt;
             }
-            mappaLivelloUno.put(ALTRE, new ArrayList());
+            default -> VUOTA;
+        };
 
-            //--riempimento della mappa con la lista dei singoli valori per ogni chiave
-            for (Bio bio : lista) {
-                primoCarattere = bio.cognome.substring(0, 1);
-                if (mappaLivelloUno.containsKey(primoCarattere)) {
-                    //                    mappaLivelloUno.get(primoCarattere).add(bio);
-                }
-                else {
-                    message = String.format("La mappa non prevede il primo carattere %s", primoCarattere);
-                    logger.error(message, this.getClass(), "creaSecondoLivelloLetteraInizialeCognome");
-                }
-            }
-            //            if (mappa.get(ALTRE) == null) {
-            //                mappa.remove(ALTRE);
-            //            }
-            //
-            //            mappaBio.put(key, mappa);
-        }
+        return keyBio;
     }
+
 
     private void finalizzaPrimoLivello() {
-        List<Bio> lista;
-        List<String> didascalie;
-        String didascalia;
+        mappaLivelloUno = new LinkedHashMap<>();
+        List<Bio> listaBio;
+        List<String> listaDidascalie;
 
         if (mappaBioLivelloUno != null && mappaBioLivelloUno.size() > 0) {
-            mappaLivelloUno = new LinkedHashMap<>();
-
-            for (String paragrafo : mappaBioLivelloUno.keySet()) {
-                lista = mappaBioLivelloUno.get(paragrafo);
-
-                didascalie = new ArrayList<>();
-                for (Bio bio : lista) {
-                    didascalia = didascaliaService.getLista(bio);
-                    didascalie.add(didascalia);
-                }
-                paragrafo = text.primaMaiuscola(paragrafo);
-                mappaLivelloUno.put(paragrafo, didascalie);
-                this.listaDidascalie.addAll(didascalie);
+            for (String key : mappaBioLivelloUno.keySet()) {
+                listaBio = mappaBioLivelloUno.get(key);
+                listaDidascalie = fixLista(listaBio);
+                mappaLivelloUno.put(key, listaDidascalie);
+                this.listaDidascalie.addAll(listaDidascalie);
             }
         }
     }
+
+
+    private void finalizzaSecondoLivello() {
+        mappaLivelloDue = new LinkedHashMap<>();
+        this.listaDidascalie = new ArrayList<>();
+        LinkedHashMap<String, List<Bio>> mappaBio;
+        LinkedHashMap<String, List<String>> mappaDidascalie;
+        List<Bio> listaBio;
+        List<String> listaDidascalie;
+
+        if (mappaBioLivelloDue != null && mappaBioLivelloDue.size() > 0) {
+            for (String paragrafo : mappaBioLivelloDue.keySet()) {
+                mappaBio = mappaBioLivelloDue.get(paragrafo);
+                if (mappaBio != null && mappaBio.size() > 0) {
+                    mappaDidascalie = new LinkedHashMap<>();
+
+                    for (String key : mappaBio.keySet()) {
+                        listaBio = mappaBio.get(key);
+                        listaDidascalie = fixLista(listaBio);
+                        mappaDidascalie.put(key, listaDidascalie);
+                        this.listaDidascalie.addAll(listaDidascalie);
+                    }
+                    mappaLivelloDue.put(paragrafo, mappaDidascalie);
+                }
+            }
+        }
+    }
+
+    private List<String> fixLista(final List<Bio> listaBio) {
+        List<String> listaDidascalie = new ArrayList<>();
+        String didascalia;
+
+        for (Bio bio : listaBio) {
+            didascalia = didascaliaService.getLista(bio);
+            listaDidascalie.add(didascalia);
+        }
+
+        return listaDidascalie;
+    }
+
 
     public String getTitolo() {
         return titolo;
@@ -264,6 +280,10 @@ public class WMap {
 
     public LinkedHashMap<String, List<String>> getMappaLivelloUno() {
         return mappaLivelloUno;
+    }
+
+    public Map<String, Map<String, List<String>>> getMappaLivelloDue() {
+        return mappaLivelloDue;
     }
 
     public List<String> getListaDidascalie() {

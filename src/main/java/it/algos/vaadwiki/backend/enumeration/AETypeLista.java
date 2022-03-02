@@ -8,7 +8,7 @@ package it.algos.vaadwiki.backend.enumeration;
  * Time: 17:24
  */
 public enum AETypeLista {
-    attivita("Progetto:Biografie/Attività/",1),//@todo deve diventare 3
+    attivita("Progetto:Biografie/Attività/",2),//@todo deve diventare 3
     nazionalita("",0),
     nati("",0),
     morti("",0),

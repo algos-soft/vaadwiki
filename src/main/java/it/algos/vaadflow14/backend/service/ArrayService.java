@@ -474,7 +474,7 @@ public class ArrayService extends AbstractService {
      *
      * @return dimensioni della lista
      */
-    public int dimLista(LinkedHashMap<String, List<String>> mappaCompleta) {
+    public int dimLista(Map<String, List<String>> mappaCompleta) {
         List<String> lista = null;
 
         if (mappaCompleta != null && mappaCompleta.size() > 0) {
@@ -485,6 +485,28 @@ public class ArrayService extends AbstractService {
         }
 
         return lista != null ? lista.size() : 0;
+    }
+
+
+    /**
+     * Dimensione complessiva di tutte le liste della mappa <br>
+     *
+     * @param mappaCompleta da esaminare
+     *
+     * @return dimensione complessiva della mappa
+     */
+    public int dimMappa(Map<String, List<String>> mappaCompleta) {
+        int dimensioneComplessiva = 0;
+        List<String> lista = null;
+
+        if (mappaCompleta != null && mappaCompleta.size() > 0) {
+            for (String key : mappaCompleta.keySet()) {
+                lista = mappaCompleta.get(key);
+                dimensioneComplessiva += lista.size();
+            }
+        }
+
+        return dimensioneComplessiva;
     }
 
 }

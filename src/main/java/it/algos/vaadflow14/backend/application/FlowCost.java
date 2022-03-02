@@ -101,6 +101,8 @@ public abstract class FlowCost {
 
     public static final String PARAGRAFO = UGUALE_SEMPLICE + UGUALE_SEMPLICE;
 
+    public static final String PARAGRAFO_SUB = UGUALE_SEMPLICE + UGUALE_SEMPLICE + UGUALE_SEMPLICE;
+
     public static final String FORWARD = " -> ";
 
     public static final String PUNTO = ".";

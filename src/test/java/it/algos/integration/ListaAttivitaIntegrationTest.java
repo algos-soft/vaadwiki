@@ -6,11 +6,11 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadwiki.*;
+import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
-import it.algos.vaadwiki.backend.wrapper.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -77,6 +77,8 @@ public class ListaAttivitaIntegrationTest extends WTest {
 
 
     private Map<String, List<String>> mappaAttivita;
+
+    private Map<String, Map<String, List<String>>> mappaDueAttivita;
 
 
     /**
@@ -282,7 +284,7 @@ public class ListaAttivitaIntegrationTest extends WTest {
     @ParameterizedTest
     @MethodSource(value = "ATTIVITA")
     @Order(5)
-    @DisplayName("5 - Crea una mappa con paragrafi per l'attività singolare e plurale")
+    @DisplayName("5 - Crea una mappa con paragrafi di 1° livello")
         //--attivita
         //--AETypeAttivita
     void creaMappa(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
@@ -292,8 +294,8 @@ public class ListaAttivitaIntegrationTest extends WTest {
         }
 
         if (type == ListaAttivita.AETypeAttivita.singolare) {
-            System.out.println(String.format("5 - Crea una mappa con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
-            mappaAttivita = appContext.getBean(ListaAttivita.class, attivita, type).getMappa();
+            System.out.println(String.format("5 - Crea una mappa con paragrafi di 1° livello per l'attività (singolare) '%s'", attivita.singolare));
+            mappaAttivita = appContext.getBean(ListaAttivita.class, attivita, type).getMappaUno();
             assertNotNull(mappaAttivita);
             System.out.println(VUOTA);
             System.out.println(String.format("Mappa con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
@@ -301,9 +303,9 @@ public class ListaAttivitaIntegrationTest extends WTest {
         }
 
         if (type == ListaAttivita.AETypeAttivita.plurale) {
-            System.out.println(String.format("5 - Crea una mappa con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
+            System.out.println(String.format("5 - Crea una mappa con paragrafi di 1° livello per l'attività (plurale) '%s'", attivita.plurale));
             // si può omettere il type perché il costruttore di ListaAttivita inserisce di default ListaAttivita.AETypeAttivita.plurale
-            mappaAttivita = appContext.getBean(ListaAttivita.class, attivita).getMappa();
+            mappaAttivita = appContext.getBean(ListaAttivita.class, attivita).getMappaUno();
             assertNotNull(mappaAttivita);
             System.out.println(VUOTA);
             System.out.println(String.format("Mappa con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
@@ -315,7 +317,106 @@ public class ListaAttivitaIntegrationTest extends WTest {
     @ParameterizedTest
     @MethodSource(value = "ATTIVITA")
     @Order(6)
-    @DisplayName("6 - Crea un testo con paragrafi per l'attività singolare e plurale")
+    @DisplayName("6 - Crea una mappa (sub con paragrafo) con paragrafi di 2° livello")
+        //--attivita
+        //--AETypeAttivita
+    void creaMappa1(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
+        if (attivita == null) {
+            System.out.println("Nessun attività indicata");
+            return;
+        }
+
+        if (type == ListaAttivita.AETypeAttivita.singolare) {
+            System.out.println(String.format("6 - Crea una mappa con paragrafi di 2° livello per l'attività (singolare) '%s'", attivita.singolare));
+            mappaDueAttivita = appContext.getBean(ListaAttivita.class, attivita, type).getMappaDue();
+            assertNotNull(mappaDueAttivita);
+            System.out.println(VUOTA);
+            System.out.println(String.format("Mappa con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
+            printParagrafi2(mappaDueAttivita);
+        }
+
+        if (type == ListaAttivita.AETypeAttivita.plurale) {
+            System.out.println(String.format("6 - Crea una mappa con paragrafi di 2° livello per l'attività (plurale) '%s'", attivita.plurale));
+            // si può omettere il type perché il costruttore di ListaAttivita inserisce di default ListaAttivita.AETypeAttivita.plurale
+            mappaDueAttivita = appContext.getBean(ListaAttivita.class, attivita).getMappaDue();
+            assertNotNull(mappaDueAttivita);
+            System.out.println(VUOTA);
+            System.out.println(String.format("Mappa con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
+            printParagrafi2(mappaDueAttivita);
+        }
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "ATTIVITA")
+    @Order(7)
+    @DisplayName("7 - Crea una mappa (sub con asterisco) con paragrafi di 2° livello()")
+        //--attivita
+        //--AETypeAttivita
+    void creaMappa1A(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
+        if (attivita == null) {
+            System.out.println("Nessun attività indicata");
+            return;
+        }
+
+        if (type == ListaAttivita.AETypeAttivita.singolare) {
+            System.out.println(String.format("7 - Crea una mappa con paragrafi di 2° livello per l'attività (singolare) '%s'", attivita.singolare));
+            mappaDueAttivita = appContext.getBean(ListaAttivita.class, attivita, type).getMappaDue();
+            assertNotNull(mappaDueAttivita);
+            System.out.println(VUOTA);
+            System.out.println(String.format("Mappa con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
+            printParagrafi3(mappaDueAttivita);
+        }
+
+        if (type == ListaAttivita.AETypeAttivita.plurale) {
+            System.out.println(String.format("7 - Crea una mappa con paragrafi di 2° livello per l'attività (plurale) '%s'", attivita.plurale));
+            // si può omettere il type perché il costruttore di ListaAttivita inserisce di default ListaAttivita.AETypeAttivita.plurale
+            mappaDueAttivita = appContext.getBean(ListaAttivita.class, attivita).getMappaDue();
+            assertNotNull(mappaDueAttivita);
+            System.out.println(VUOTA);
+            System.out.println(String.format("Mappa con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
+            printParagrafi3(mappaDueAttivita);
+        }
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "ATTIVITA")
+    @Order(8)
+    @DisplayName("8 - Crea una mappa (con sottopagina) con paragrafi di 2° livello()")
+        //--attivita
+        //--AETypeAttivita
+    void creaMappa1B(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
+        if (attivita == null) {
+            System.out.println("Nessun attività indicata");
+            return;
+        }
+
+        if (type == ListaAttivita.AETypeAttivita.singolare) {
+            System.out.println(String.format("8 - Crea una mappa con paragrafi di 2° livello per l'attività (singolare) '%s'", attivita.singolare));
+            mappaDueAttivita = appContext.getBean(ListaAttivita.class, attivita, type).getMappaDue();
+            assertNotNull(mappaDueAttivita);
+            System.out.println(VUOTA);
+            System.out.println(String.format("Mappa con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
+            printParagrafi4(mappaDueAttivita);
+        }
+
+        if (type == ListaAttivita.AETypeAttivita.plurale) {
+            System.out.println(String.format("8 - Crea una mappa con paragrafi di 2° livello per l'attività (plurale) '%s'", attivita.plurale));
+            // si può omettere il type perché il costruttore di ListaAttivita inserisce di default ListaAttivita.AETypeAttivita.plurale
+            mappaDueAttivita = appContext.getBean(ListaAttivita.class, attivita).getMappaDue();
+            assertNotNull(mappaDueAttivita);
+            System.out.println(VUOTA);
+            System.out.println(String.format("Mappa con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
+            printParagrafi4(mappaDueAttivita);
+        }
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "ATTIVITA")
+    @Order(9)
+    @DisplayName("9 - Crea un testo con paragrafi per l'attività singolare e plurale")
         //--attivita
         //--AETypeAttivita
     void creaTesto(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
@@ -325,7 +426,7 @@ public class ListaAttivitaIntegrationTest extends WTest {
         }
 
         if (type == ListaAttivita.AETypeAttivita.singolare) {
-            System.out.println(String.format("4 - Crea un testo con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
+            System.out.println(String.format("9 - Crea un testo con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
             ottenuto = appContext.getBean(ListaAttivita.class, attivita, type).getTestoConParagrafi();
             System.out.println(VUOTA);
             System.out.println(String.format("Testo con paragrafi per l'attività (singolare) '%s'", attivita.singolare));
@@ -334,7 +435,7 @@ public class ListaAttivitaIntegrationTest extends WTest {
         }
 
         if (type == ListaAttivita.AETypeAttivita.plurale) {
-            System.out.println(String.format("4 - Crea un testo con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
+            System.out.println(String.format("9 - Crea un testo con paragrafi per l'attività (plurale) '%s'", attivita.plurale));
             // si può omettere il type perché il costruttore di ListaAttivita inserisce di default ListaAttivita.AETypeAttivita.plurale
             ottenuto = appContext.getBean(ListaAttivita.class, attivita).getTestoConParagrafi();
             System.out.println(VUOTA);
@@ -402,6 +503,98 @@ public class ListaAttivitaIntegrationTest extends WTest {
                         System.out.println(stringa);
                     }
                     System.out.print(A_CAPO);
+                }
+            }
+        }
+    }
+
+    private void printParagrafi2(final Map<String, Map<String, List<String>>> mappaDue) {
+        Map<String, List<String>> mappa;
+        List<String> lista;
+
+        System.out.println(VUOTA);
+        if (arrayService.isAllValid(mappaDue)) {
+            for (String key : mappaDue.keySet()) {
+                mappa = mappaDue.get(key);
+                System.out.print(wikiUtility.setParagrafo(key));
+
+                for (String keyInt : mappa.keySet()) {
+                    lista = mappa.get(keyInt);
+                    if (arrayService.isAllValid(lista)) {
+                        System.out.print(wikiUtility.setParagrafoSub(keyInt));
+                        for (String stringa : lista) {
+                            System.out.print(ASTERISCO);
+                            System.out.print(SPAZIO);
+                            System.out.println(stringa);
+                        }
+                        System.out.print(A_CAPO);
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void printParagrafi3(final Map<String, Map<String, List<String>>> mappaDue) {
+        Map<String, List<String>> mappa;
+        List<String> lista;
+
+        System.out.println(VUOTA);
+        if (arrayService.isAllValid(mappaDue)) {
+            for (String key : mappaDue.keySet()) {
+                mappa = mappaDue.get(key);
+                System.out.print(wikiUtility.setParagrafo(key));
+
+                for (String keyInt : mappa.keySet()) {
+                    lista = mappa.get(keyInt);
+                    if (arrayService.isAllValid(lista)) {
+                        System.out.print(ASTERISCO);
+                        System.out.print(SPAZIO);
+                        System.out.print(keyInt);
+                        System.out.println(SPAZIO);
+                        for (String stringa : lista) {
+                            System.out.print(ASTERISCO);
+                            System.out.print(ASTERISCO);
+                            System.out.print(SPAZIO);
+                            System.out.println(stringa);
+                        }
+                        System.out.print(A_CAPO);
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void printParagrafi4(final Map<String, Map<String, List<String>>> mappaDue) {
+        Map<String, List<String>> mappa;
+        List<String> lista;
+        int max = 50;
+        int dimMappa;
+
+        System.out.println(VUOTA);
+        if (arrayService.isAllValid(mappaDue)) {
+            for (String key : mappaDue.keySet()) {
+                mappa = mappaDue.get(key);
+                dimMappa = arrayService.dimMappa(mappa);
+                System.out.print(wikiUtility.setParagrafo(key));
+
+                if (dimMappa < max) {
+                    for (String keyDue : mappa.keySet()) {
+                        lista = mappa.get(keyDue);
+                        if (arrayService.isAllValid(lista)) {
+                            for (String stringa : lista) {
+                                System.out.print(ASTERISCO);
+                                System.out.print(SPAZIO);
+                                System.out.println(stringa);
+                            }
+                        }
+                    }
+                    System.out.println(VUOTA);
+                }
+                else {
+                    System.out.println(String.format("%s%s%s%s%s", VEDI, key, SLASH, key, DOPPIE_GRAFFE_END));
+                    System.out.println(VUOTA);
                 }
             }
         }

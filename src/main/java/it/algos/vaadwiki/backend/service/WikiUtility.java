@@ -34,6 +34,19 @@ public class WikiUtility extends AbstractService {
         return testo;
     }
 
+    public String setParagrafoSub(final String titolo) {
+        String paragrafo = VUOTA;
+
+        paragrafo += PARAGRAFO_SUB;
+        paragrafo += SPAZIO;
+        paragrafo += titolo;
+        paragrafo += SPAZIO;
+        paragrafo += PARAGRAFO_SUB;
+        paragrafo += A_CAPO;
+
+        return paragrafo;
+    }
+
     public String setParagrafo(final String titolo) {
         return setParagrafo(titolo, 0);
     }
@@ -52,7 +65,7 @@ public class WikiUtility extends AbstractService {
         paragrafo += PARAGRAFO;
         paragrafo += SPAZIO;
         paragrafo += titolo;
-        if (numero > 0 ) {
+        if (numero > 0) {
             paragrafo += SPAZIO;
             paragrafo += smallNumero(numero);
         }
