@@ -22,6 +22,10 @@ import java.time.*;
 @AIScript(sovraScrivibile = false)
 public abstract class WikiCost {
 
+    public static final String TAG_BOLD = "'''";
+
+    public static final String TAG_ITALIC = "''";
+
     public static final String TAG_WIKI_DATA = "wikiData";
 
     public static final String TAG_WIKI_VERSION = "wikiVersion";

@@ -2,6 +2,7 @@ package it.algos.vaadwiki.backend.service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.service.*;
+import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -74,6 +75,24 @@ public class WikiUtility extends AbstractService {
         paragrafo += A_CAPO;
 
         return paragrafo;
+    }
+    /**
+     * Contorna il testo con un un wiki bold. <br>
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa regolata secondo la property mediawiki
+     */
+    public String bold(String stringaIn) {
+        String stringaOut = VUOTA;
+
+        if (text.isValid(stringaIn)) {
+            stringaOut = TAG_BOLD;
+            stringaOut += stringaIn;
+            stringaOut += TAG_BOLD;
+        }
+
+        return stringaOut.trim();
     }
 
 }

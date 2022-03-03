@@ -8,7 +8,6 @@ import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.packages.professione.*;
-import it.algos.vaadwiki.wiki.query.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -26,7 +25,6 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UploadAttivita extends Upload {
 
-    private final static String WIKI_TITLE_DEBUG = QueryWrite.WIKI_TITLE_DEBUG;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -48,7 +46,7 @@ public class UploadAttivita extends Upload {
 
     protected String notaAttivitaMultiple;
 
-    protected List<String> lista;
+    protected List<String> listaDidascalie;
 
 
     /**
@@ -58,11 +56,10 @@ public class UploadAttivita extends Upload {
      * Non rimanda al costruttore della superclasse. Regola qui solo alcune property. <br>
      * La superclasse usa poi il metodo @PostConstruct inizia() per proseguire dopo l'init del costruttore <br>
      *
-     * @param entityBean di cui costruire la pagina sul server wiki
+     * @param attivita di cui costruire la pagina sul server wiki
      */
     public UploadAttivita(final Attivita attivita) {
-        this.typePagina = AETypePagina.paginaPrincipale;
-        this.attivita = attivita;
+        this(attivita, AETypePagina.paginaPrincipale, VUOTA, VUOTA, null);
     }// end of constructor
 
     /**
@@ -72,27 +69,34 @@ public class UploadAttivita extends Upload {
      * Non rimanda al costruttore della superclasse. Regola qui solo alcune property. <br>
      * La superclasse usa poi il metodo @PostConstruct inizia() per proseguire dopo l'init del costruttore <br>
      *
-     * @param entityBean di cui costruire la pagina sul server wiki
+     * @param attivita        di cui costruire la pagina sul server wiki
+     * @param typePagina      per differenziare tra pagina principale e sotto pagina
+     * @param wikiPaginaTitle eventuale titolo della pagina se diverso da AETypeLista.attivita.getPrefix() + attivita.plurale
      */
-    public UploadAttivita(final Attivita attivita, final AETypePagina typePagina) {
-        this.typePagina = typePagina;
-        this.attivita = attivita;
+    public UploadAttivita(final Attivita attivita, final AETypePagina typePagina, final String wikiPaginaTitle) {
+        this(attivita, typePagina, wikiPaginaTitle, VUOTA, null);
     }// end of constructor
 
 
     /**
-     * Costruttore alternativo con parametri per le sottopagine <br>
+     * Costruttore completo con parametri <br>
      * Not annotated with @Autowired annotation, per creare l'istanza SOLO come SCOPE_PROTOTYPE <br>
      * Uso: appContext.getBean(UploadAttivita.class, attivita) <br>
      * Non rimanda al costruttore della superclasse. Regola qui solo alcune property. <br>
      * La superclasse usa poi il metodo @PostConstruct inizia() per proseguire dopo l'init del costruttore <br>
      *
-     * @param entityBean di cui costruire la pagina sul server wiki
+     * @param attivita        di cui costruire la pagina sul server wiki
+     * @param typePagina      per differenziare tra pagina principale e sotto pagina
+     * @param wikiPaginaTitle eventuale titolo della pagina se diverso da AETypeLista.attivita.getPrefix() + attivita.plurale
+     * @param wikiSottoTitolo della pagina se typePagina=AETypePagina.sottoPagina
+     * @param mappa           con paragrafi delle didascalie se typePagina=AETypePagina.sottoPagina
      */
-    public UploadAttivita(final Attivita attivita, final LinkedHashMap<String, List<String>> mappa) {
-        this.typePagina = AETypePagina.sottoPagina;
-        this.attivita = attivita;
-        this.mappa = mappa;
+    public UploadAttivita(final Attivita attivita, final AETypePagina typePagina, final String wikiPaginaTitle, final String wikiSottoTitolo, final LinkedHashMap<String, List<String>> mappa) {
+        super.attivita = attivita;
+        super.typePagina = typePagina;
+        super.wikiPaginaTitle = wikiPaginaTitle;
+        super.wikiSottoTitolo = wikiSottoTitolo;
+        super.mappaUno = mappa;
     }// end of constructor
 
     /**
@@ -103,10 +107,13 @@ public class UploadAttivita extends Upload {
     protected void regolazioniIniziali() {
         super.regolazioniIniziali();
 
-        switch (typePagina) {
-            case sottoPagina -> super.wikiPaginaTitle += SLASH + arrayService.titoloPrima(mappa);
-        }
+        wikiPaginaTitle = switch (typePagina) {
+            case paginaPrincipale -> text.isValid(wikiPaginaTitle) ? wikiPaginaTitle : AETypeLista.attivita.getPrefix() + text.primaMaiuscola(attivita.plurale);
+            case sottoPagina -> text.isValid(wikiPaginaTitle) ? wikiPaginaTitle : AETypeLista.attivita.getPrefix() + text.primaMaiuscola(attivita.plurale) + SLASH + text.primaMaiuscola(wikiSottoTitolo);
+            default -> VUOTA;
+        };
     }
+
 
     /**
      * Le preferenze specifiche, eventualmente sovrascritte nella sottoclasse <br>
@@ -119,15 +126,21 @@ public class UploadAttivita extends Upload {
         super.fixPreferenze();
         Professione professione = null;
 
-        String attivitaTxt = html.bold("attività");
-        String unitaBio = html.bold(maxNumBio + " unità");
-        String unitaParagrafo = html.bold(maxNumParagrafo + " unità");
-        String lista = html.bold("[[Progetto:Biografie/Attività|lista]]");
-        String liste = html.bold("[[Progetto:Biografie/Attività|liste]]");
-        String paragrafi = html.bold("paragrafi");
-        String singola = html.bold("''attività''");
-        String multipla = html.bold("''attività'', ''attività2'' e ''attività3''");
-        String linkAttivita = html.bold(attivita.plurale);
+        String attivitaTxt = wikiUtility.bold("attività");
+        String unitaBio = wikiUtility.bold(maxNumBio + " unità");
+        String unitaParagrafo = wikiUtility.bold(maxNumParagrafo + " unità");
+        String lista = wikiUtility.bold("[[Progetto:Biografie/Attività|lista]]");
+        String liste = wikiUtility.bold("[[Progetto:Biografie/Attività|liste]]");
+        String paragrafi = wikiUtility.bold("paragrafi");
+        String singola = wikiUtility.bold("''attività''");
+        String multipla = wikiUtility.bold("''attività'', ''attività2'' e ''attività3''");
+        String linkAttivita = wikiUtility.bold(attivita.plurale);
+
+        typeHeadToc = switch (typePagina) {
+            case paginaPrincipale -> AETypeHeadToc.conIndice;
+            case sottoPagina -> AETypeHeadToc.senzaIndice;
+            default -> AETypeHeadToc.nessuno;
+        };
 
         try {
             professione = professioneService.findByProperty("attivita", attivita.singolare);
@@ -135,7 +148,7 @@ public class UploadAttivita extends Upload {
             logger.warn(unErrore, this.getClass(), "fixPreferenze");
         }
         if (professione != null) {
-            notaLinkAttivita = html.bold(String.format("%s%s%s%s%s", DOPPIE_QUADRE_INI, professione.getPagina(), PIPE, attivita.plurale, DOPPIE_QUADRE_END));
+            notaLinkAttivita = wikiUtility.bold(String.format("%s%s%s%s%s", DOPPIE_QUADRE_INI, professione.getPagina(), PIPE, attivita.plurale, DOPPIE_QUADRE_END));
         }
         else {
             notaLinkAttivita = String.format("%s", linkAttivita);
@@ -150,9 +163,13 @@ public class UploadAttivita extends Upload {
         }
         notaSuddivisione = String.format("La lista è suddivisa in %s per ogni nazionalità individuata. Se il numero di voci biografiche nel paragrafo supera le %s viene creata una sottopagina", paragrafi, unitaParagrafo);
 
-        super.tagCategoria = String.format("[[Categoria:Bio attività%s%s%s", PIPE, text.primaMaiuscola(attivita.plurale), DOPPIE_QUADRE_END);
+        super.tagCategoria = switch (typePagina) {
+            case paginaPrincipale -> String.format("[[Categoria:Bio attività%s%s%s", PIPE, text.primaMaiuscola(attivita.plurale), DOPPIE_QUADRE_END);
+            case sottoPagina -> String.format("[[Categoria:Bio attività%s%s%s%s%s", PIPE, text.primaMaiuscola(attivita.plurale), SLASH, wikiSottoTitolo, DOPPIE_QUADRE_END);
+            default -> VUOTA;
+        };
 
-        notaCreazioneSottoPagina = switch (typePagina) {
+        super.notaCreazioneSottoPagina = switch (typePagina) {
             case paginaPrincipale -> notaCreazione;
             case sottoPagina -> notaSottoPagina;
             default -> VUOTA;
@@ -167,18 +184,19 @@ public class UploadAttivita extends Upload {
     @Override
     public void fixMappa() {
         super.fixMappa();
-        Lista lista;
 
         if (attivita != null) {
             switch (typePagina) {
                 case paginaPrincipale -> {
                     lista = appContext.getBean(ListaAttivita.class, attivita);
                     if (lista != null) {
-                        mappa = lista.getMappaUno();
+                        mappaUno = lista.getMappaUno();
+                        mappaDue = lista.getMappaDue();
+                        mappaTre = lista.getMappaTre();
                         numVoci = lista.getNumDidascalie();
                     }
                 }
-                case sottoPagina -> numVoci = arrayService.dimLista(mappa);
+                case sottoPagina -> numVoci = arrayService.dimLista(mappaUno);
                 default -> {}
             }
         }
@@ -194,7 +212,7 @@ public class UploadAttivita extends Upload {
     @Override
     protected String elaboraIncipitSpecifico() {
         StringBuilder buffer = new StringBuilder();
-        String nazionalita;
+        String attNaz;
 
         buffer.append("Questa è una lista");
         buffer.append(text.setRef(notaDidascalie));
@@ -217,19 +235,22 @@ public class UploadAttivita extends Upload {
                 buffer.append(". Le persone sono suddivise");
                 buffer.append(text.setRef(notaSuddivisione));
                 buffer.append(" per nazionalità.");
-                buffer.append(text.setRef(notaNazionalita));
-                buffer.append(text.setRef(notaVuotoAttivita));
             }
             case sottoPagina -> {
                 buffer.append(" e sono ");
-                nazionalita = arrayService.titoloPrima(mappa);
-                nazionalita = text.primaMinuscola(nazionalita);
-                nazionalita = AETypeLista.nazionalita.getPrefix() + text.primaMaiuscola(nazionalita) + PIPE + text.primaMinuscola(nazionalita);
-                nazionalita = text.setDoppieQuadre(nazionalita);
-                nazionalita = html.bold(nazionalita);
-                buffer.append(nazionalita);
-                buffer.append(text.setRef(notaNazionalita));
+                attNaz = AETypeLista.nazionalita.getPrefix();
+                attNaz += wikiSottoTitolo;
+                attNaz += PIPE;
+                attNaz += wikiSottoTitolo.toLowerCase();
+                attNaz = text.setDoppieQuadre(attNaz);
+                attNaz = wikiUtility.bold(attNaz);
+                buffer.append(attNaz);
             }
+        }
+        buffer.append(text.setRef(notaNazionalita));
+
+        if (mappaUno.containsKey(ALTRE)) {
+            buffer.append(text.setRef(notaVuotoAttivita));
         }
 
         return buffer.toString();
@@ -244,11 +265,6 @@ public class UploadAttivita extends Upload {
     protected String fixSottoPagine(final String testoIn) {
         String testoOut = testoIn;
 
-        try {
-            attivita = attivitaService.findByKey("aforista");
-        } catch (AlgosException unErrore) {
-            int a = 87;
-        }
         if (typePagina == AETypePagina.paginaPrincipale) {
             //            appContext.getBean(UploadAttivita.class, attivita, AETypePagina.sottoPagina);
         }
@@ -269,15 +285,6 @@ public class UploadAttivita extends Upload {
         return lista;
     }
 
-    /**
-     * Titolo della pagina 'madre' <br>
-     * <p>
-     * DEVE essere sovrascritto, SENZA invocare prima il metodo della superclasse <br>
-     */
-    @Override
-    protected String getTitoloPaginaMadre() {
-        return "Pippox";
-    }
 
     @Override
     protected String getSummary() {

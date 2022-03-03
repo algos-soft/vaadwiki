@@ -5,10 +5,10 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadwiki.*;
+import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.upload.*;
-import it.algos.vaadwiki.backend.wrapper.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.params.*;
@@ -34,6 +34,7 @@ import java.util.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UploadAttivitaIntegrationTest extends WTest {
 
+    public static final String WIKI_TITLE_DEBUG = Upload.WIKI_TITLE_DEBUG;
 
     /**
      * The App context.
@@ -88,7 +89,7 @@ public class UploadAttivitaIntegrationTest extends WTest {
     @ParameterizedTest
     @MethodSource(value = "ATTIVITA")
     @Order(1)
-    @DisplayName("1 - Crea una istanza uploadAttivita da Attivita")
+    @DisplayName("1 - Crea (senza upload) una istanza uploadAttivita da Attivita")
         //--attivita
         //--AETypeAttivita
         //--flag booleano upload (non usato)
@@ -118,92 +119,43 @@ public class UploadAttivitaIntegrationTest extends WTest {
     }
 
 
-    @ParameterizedTest
-    @MethodSource(value = "ATTIVITA")
+    @Test
     @Order(2)
-    @DisplayName("2 - Crea i paragrafi di una sottoPagina")
-        //--attivita
-        //--AETypeAttivita
-        //--flag booleano upload (non usato)
-    void creaIstanzaPerSottopagina(final Attivita attivita, final ListaAttivita.AETypeAttivita type) {
-        if (attivita == null) {
-            System.out.println("Nessun attività indicata");
-            return;
+    @DisplayName("2 - Upload di una sottoPagina specifica (Britannici)")
+    void uploadSottopagina() {
+        Map<String, List<String>> mappaSub;
+        attivita = attivitaAccademico;
+        sorgente2 = "Britannici";
+        sorgente = WIKI_TITLE_DEBUG + AETypeLista.attivita.getPrefix() + textService.primaMaiuscola(attivita.plurale) + SLASH + textService.primaMaiuscola(sorgente2);
+
+        istanza = appContext.getBean(UploadAttivita.class, attivita);
+        assertNotNull(istanza);
+        mappaSub = istanza.getMappaDue().get(sorgente2);
+        istanza = appContext.getBean(UploadAttivita.class, attivita, AETypePagina.sottoPagina, sorgente, sorgente2, mappaSub);
+        assertNotNull(istanza);
+
+        //--upload effettivo
+        if (false) {
+            ottenutoRisultato = istanza.upload();
+            assertNotNull(ottenutoRisultato);
+            System.out.println(String.format("2 - Upload della sottoPagina '%s' estratta da '%s'", sorgente2, sorgente));
+            printRisultato(ottenutoRisultato, "UploadSottopagina");
         }
-
-        if (type == ListaAttivita.AETypeAttivita.singolare) {
-            System.out.println(String.format("2 - Crea i paragrafi di una sottoPagina di attività (singolare) '%s'", attivita.singolare));
-            System.out.println("Un upload con type=AETypeAttivita.singolare non ha senso.");
-            return;
-        }
-
-        if (type == ListaAttivita.AETypeAttivita.plurale) {
-            System.out.println(String.format("2 - Crea i paragrafi di una sottoPagina di attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
-            istanza = appContext.getBean(UploadAttivita.class, attivita);
-            assertNotNull(istanza);
-
-            LinkedHashMap<String, List<String>> mappaSub = arrayService.riduceAllaPrima(istanza.getMappa());
-            istanza = appContext.getBean(UploadAttivita.class, attivita, mappaSub);
-
-            ottenuto = istanza.getTestoConParagrafi();
+        else {
+            ottenuto = istanza.getTestoPagina();
             assertTrue(textService.isValid(ottenuto));
-            System.out.println(String.format("Paragrafi di upload della sottoPagina di attività (plurale) '%s'", attivita.plurale));
-            System.out.println(String.format("Ci sono %d didascalie nella sottoPagina", istanza.getNumVoci()));
+            System.out.println(String.format("2 - Testo completo di upload della sottoPagina '%s' estratta da '%s'", sorgente2, sorgente));
+            System.out.println(String.format("Ci sono %d didascalie nella pagina", istanza.getNumVoci()));
             System.out.println(VUOTA);
             System.out.println(ottenuto);
         }
     }
 
-    @Test
-    @MethodSource(value = "ATTIVITA")
-    @Order(3)
-    @DisplayName("3 - Crea il testo completo di una sottoPagina")
-    void creaIstanzaPerSottopagina3() {
-        attivita = attivitaAccademico;
-        LinkedHashMap<String, List<String>> mappaSub;
-        String key = "Britannici";
-
-
-        //Accademici argentini
-        System.out.println(String.format("3 - Crea il testo completo di una sottoPagina di attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
-        istanza = appContext.getBean(UploadAttivita.class, attivita);
-        assertNotNull(istanza);
-        mappaSub = arrayService.riduceAllaPrima(istanza.getMappa());
-        istanza = appContext.getBean(UploadAttivita.class, attivita, mappaSub);
-        ottenuto = istanza.getTestoPagina();
-        assertTrue(textService.isValid(ottenuto));
-        System.out.println(String.format("Testo completo di upload della sottoPagina di attività (plurale) '%s'", attivita.plurale));
-        System.out.println(String.format("Ci sono %d didascalie nella sottoPagina", istanza.getNumVoci()));
-        System.out.println(VUOTA);
-        System.out.println(ottenuto);
-
-        //Accademici britannici
-        System.out.println(VUOTA);
-        System.out.println(VUOTA);
-        System.out.println(String.format("3 - Crea il testo completo di una sottoPagina di attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
-        istanza = appContext.getBean(UploadAttivita.class, attivita);
-        assertNotNull(istanza);
-        mappaSub = new LinkedHashMap<>();
-        mappaSub.put(key,istanza.getMappa().get(key));
-        istanza = appContext.getBean(UploadAttivita.class, attivita, mappaSub);
-        ottenuto = istanza.getTestoPagina();
-        assertTrue(textService.isValid(ottenuto));
-        System.out.println(String.format("Testo completo di upload della sottoPagina di attività (plurale) '%s'", attivita.plurale));
-        System.out.println(String.format("Ci sono %d didascalie nella sottoPagina", istanza.getNumVoci()));
-        System.out.println(VUOTA);
-        System.out.println(ottenuto);
-
-        ottenutoRisultato = istanza.upload();
-        assertNotNull(ottenutoRisultato);
-        System.out.println(String.format("Upload effettuato per l'attività (plurale) '%s'", attivita.plurale));
-        printRisultato(ottenutoRisultato, "UploadAttivita");
-    }
-
 
     @ParameterizedTest
     @MethodSource(value = "ATTIVITA")
-    @Order(4)
-    @DisplayName("4 - Preview testo pagina completo")
+    @Order(3)
+    @DisplayName("3 - Preview testo pagina completo")
         //--attivita
         //--AETypeAttivita
         //--flag booleano upload (non usato)
@@ -214,13 +166,13 @@ public class UploadAttivitaIntegrationTest extends WTest {
         }
 
         if (type == ListaAttivita.AETypeAttivita.singolare) {
-            System.out.println(String.format("4 - Preview testo pagina completo di upload per l'attività (singolare) '%s'", attivita.singolare));
+            System.out.println(String.format("3 - Preview testo pagina completo di upload per l'attività (singolare) '%s'", attivita.singolare));
             System.out.println("Un upload con type=AETypeAttivita.singolare non ha senso.");
             return;
         }
 
         if (type == ListaAttivita.AETypeAttivita.plurale) {
-            System.out.println(String.format("4 - Preview testo pagina completo di upload per l'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
+            System.out.println(String.format("3 - Preview testo pagina completo di upload per l'attività (singolare) '%s' da cui risalire a (plurale) '%s'", attivita.singolare, attivita.plurale));
             istanza = appContext.getBean(UploadAttivita.class, attivita);
             assertNotNull(istanza);
             ottenuto = istanza.getTestoPagina();
@@ -232,14 +184,40 @@ public class UploadAttivitaIntegrationTest extends WTest {
         }
     }
 
-    @ParameterizedTest
+    @Test
+    @Order(4)
+    @DisplayName("4 - Upload di una pagina completa specifica (Accademico) con sottoPagine (tre)")
+    void uploadPagina() {
+        attivita = attivitaAccademico;
+        sorgente = WIKI_TITLE_DEBUG + AETypeLista.attivita.getPrefix() + textService.primaMaiuscola(attivita.plurale);
+        istanza = appContext.getBean(UploadAttivita.class, attivita, AETypePagina.paginaPrincipale, sorgente, VUOTA, null);
+        assertNotNull(istanza);
+
+        //--upload effettivo
+        if (true) {
+            ottenutoRisultato = istanza.upload();
+            assertNotNull(ottenutoRisultato);
+            System.out.println(String.format("Upload effettuato per l'attività '%s'", attivita.plurale));
+            printRisultato(ottenutoRisultato, "Upload");
+        }
+        else {
+            ottenuto = istanza.getTestoPagina();
+            assertTrue(textService.isValid(ottenuto));
+            System.out.println(String.format("Testo completo di upload per l'attività '%s'", attivita.plurale));
+            System.out.println(String.format("Ci sono %d didascalie nella pagina", istanza.getNumVoci()));
+            System.out.println(VUOTA);
+            System.out.println(ottenuto);
+        }
+    }
+
+    //    @ParameterizedTest
     @MethodSource(value = "ATTIVITA")
     @Order(5)
     @DisplayName("5 - Upload su pagina di servizio")
-        //--attivita
-        //--AETypeAttivita
-        //--flag booleano upload
-    void upload(final Attivita attivita, final ListaAttivita.AETypeAttivita type, final boolean upload) {
+    //--attivita
+    //--AETypeAttivita
+    //--flag booleano upload
+    void uploadPagina2(final Attivita attivita, final ListaAttivita.AETypeAttivita type, final boolean upload) {
         if (attivita == null) {
             System.out.println("Nessun attività indicata");
             return;

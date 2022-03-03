@@ -6,11 +6,11 @@ import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadwiki.backend.application.WikiCost.*;
 import it.algos.vaadwiki.backend.enumeration.*;
+import it.algos.vaadwiki.backend.liste.*;
 import it.algos.vaadwiki.backend.login.*;
 import it.algos.vaadwiki.backend.packages.attivita.*;
 import it.algos.vaadwiki.backend.service.*;
 import it.algos.vaadwiki.wiki.query.*;
-import static it.algos.vaadwiki.wiki.query.QueryWrite.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
 
@@ -45,6 +45,8 @@ public abstract class Upload {
     public final static String TAG_INDICE = "__FORCETOC__";
 
     public final static String TAG_NO_INDICE = "__NOTOC__";
+
+    public final static String WIKI_TITLE_DEBUG = "Utente:Biobot/";
 
     protected final static String TAG_NON_SCRIVERE = "<!-- NON MODIFICATE DIRETTAMENTE QUESTA PAGINA - GRAZIE -->";
 
@@ -132,7 +134,11 @@ public abstract class Upload {
      * La visualizzazione dei paragrafi può anche essere esclusa, ma questi sono comunque presenti <br>
      * La mappa viene creata nel @PostConstruct dell'istanza <br>
      */
-    protected LinkedHashMap<String, List<String>> mappa;
+    protected Map<String, List<String>> mappaUno;
+
+    protected Map<String, Map<String, List<String>>> mappaDue;
+
+    protected Map<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> mappaTre;
 
     //    protected AEntity entityBean;
     protected boolean usaHeadNonScrivere;
@@ -155,7 +161,9 @@ public abstract class Upload {
 
     protected AETypeHeadToc typeHeadToc;
 
-    protected String wikiPaginaTitle = WIKI_TITLE_DEBUG;
+    protected String wikiPaginaTitle;
+
+    protected String wikiSottoTitolo;
 
     protected String newTextPagina;
 
@@ -192,7 +200,12 @@ public abstract class Upload {
     protected String tagCategoria;
 
     protected Attivita attivita;
+
     protected AETypePagina typePagina;
+
+    protected List<WrapUploadSottoPagina> wrapSottopagine;
+
+    protected Lista lista;
 
     /**
      * Metodo invocato subito DOPO il costruttore
@@ -220,9 +233,26 @@ public abstract class Upload {
      */
     public AIResult upload() {
         AIResult result = null;
+        Attivita attivita;
+        String subTitle;
+        String subParagrafo;
+        Map<String, List<String>> mappaUno;
 
+        //--pagina principale
         if (text.isValid(newTextPagina)) {
             result = appContext.getBean(QueryWrite.class).urlRequest(wikiPaginaTitle, newTextPagina, summary);
+        }
+
+        //--sottopagine
+        if (wrapSottopagine != null && wrapSottopagine.size() > 0) {
+            for (WrapUploadSottoPagina wrap : wrapSottopagine) {
+                attivita = wrap.getAttivita();
+                subTitle = wrap.getWikiPaginaTitle();
+                subParagrafo = wrap.getWikiSottoTitolo();
+                subTitle += SLASH + subParagrafo;
+                mappaUno = wrap.getMappaUno();
+                appContext.getBean(UploadAttivita.class, attivita, AETypePagina.sottoPagina, subTitle, subParagrafo, mappaUno).upload();
+            }
         }
 
         return result;
@@ -241,14 +271,14 @@ public abstract class Upload {
      */
     protected void fixPreferenze() {
         taglioSottoPagina = 50; //@todo preferenze
-        String unitaBio = html.bold(taglioSottoPagina + " unità");
+        String unitaBio = wikiUtility.bold(taglioSottoPagina + " unità");
 
         // head
         usaHeadNonScrivere = true;
         usaHeadRitorno = switch (typePagina) {
             case paginaPrincipale -> false;
             case sottoPagina -> true;
-            default ->false;
+            default -> false;
         };
         usaHeadInclude = true;
         typeHeadToc = AETypeHeadToc.conIndice;
@@ -264,19 +294,19 @@ public abstract class Upload {
         usaVociCorrelate = true; //--normalmente false. Sovrascrivibile nelle sottoclassi
 
         // note <ref>
-        String progetto = html.bold("[[Progetto:Biografie/Didascalie|progetto biografie]]");
-        String cognome = html.bold("cognome");
-        String titolo = html.bold("titolo");
-        String previsteAtt = html.bold("[[Discussioni progetto:Biografie/Attività|convenzionalmente previste]]");
-        String elencoAtt = html.bold("[[Modulo:Bio/Plurale attività|inserite nell'elenco]]");
-        String previsteNaz = html.bold("[[Discussioni progetto:Biografie/Nazionalità|convenzionalmente previste]]");
-        String elencoNaz = html.bold("[[Modulo:Bio/Plurale nazionalità|inserite nell'elenco]]");
-        String non = html.bold("non");
-        String nazionalita = html.bold("''nazionalità''");
+        String progetto = wikiUtility.bold("[[Progetto:Biografie/Didascalie|progetto biografie]]");
+        String cognome = wikiUtility.bold("cognome");
+        String titolo = wikiUtility.bold("titolo");
+        String previsteAtt = wikiUtility.bold("[[Discussioni progetto:Biografie/Attività|convenzionalmente previste]]");
+        String elencoAtt = wikiUtility.bold("[[Modulo:Bio/Plurale attività|inserite nell'elenco]]");
+        String previsteNaz = wikiUtility.bold("[[Discussioni progetto:Biografie/Nazionalità|convenzionalmente previste]]");
+        String elencoNaz = wikiUtility.bold("[[Modulo:Bio/Plurale nazionalità|inserite nell'elenco]]");
+        String non = wikiUtility.bold("non");
+        String nazionalita = wikiUtility.bold("''nazionalità''");
         String bot = html.verde("'''bot'''");
-        String altre = html.bold(ALTRE);
+        String altre = wikiUtility.bold(ALTRE);
 
-        notaTemplate = html.bold("[[template:Bio|template Bio]]");
+        notaTemplate = wikiUtility.bold("[[template:Bio|template Bio]]");
         notaDidascalie = String.format("Le didascalie delle voci sono quelle previste nel %s", progetto);
         notaOrdinamento = String.format("Le voci, all'interno di ogni paragrafo, sono in ordine alfabetico per %s; se questo manca si utilizza il %s della pagina.", cognome, titolo);
         notaEsaustiva = String.format("La lista non è esaustiva e contiene solo le persone che sono citate nell'enciclopedia e per le quali è stato implementato correttamente il %s", notaTemplate);
@@ -293,15 +323,12 @@ public abstract class Upload {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     public void fixMappa() {
-        this.mappa = this.mappa != null ? mappa : new LinkedHashMap<>();
+        this.mappaUno = this.mappaUno != null ? mappaUno : new LinkedHashMap<>();
+        this.mappaDue = this.mappaDue != null ? mappaDue : new LinkedHashMap<>();
+        this.mappaTre = this.mappaTre != null ? mappaTre : new LinkedHashMap<>();
+        this.wrapSottopagine = new ArrayList<>();
     }
 
-    //    /**
-    //     * Calcola il numero di voci della pagina <br>
-    //     */
-    //    protected void fixVoci() {
-    //        numVoci = lista != null ? lista.getNumDidascalie() : 0;
-    //    }
 
     /**
      * Elaborazione principale della pagina
@@ -372,10 +399,10 @@ public abstract class Upload {
      * Sovrascritto
      */
     protected String elaboraBody() {
-        String testoLista = VUOTA;
+        String testoLista;
         testoLista = this.getTestoConParagrafi();
 
-        if (false) { //todo necessita preferenza
+        if (true) { //todo necessita preferenza
             testoLista = fixSottoPagine(testoLista);
         }
 
@@ -401,19 +428,27 @@ public abstract class Upload {
     public String getTestoConParagrafi() {
         StringBuilder buffer = new StringBuilder();
         List<String> didascalie;
-        int numSottoPagina = 2;//@todo preferenza
+        int numSottoPagina = 50;//@todo preferenza
+        WrapUploadSottoPagina wrap;
+        Map<String, List<String>> subMappa;
 
         try {
-            if (mappa != null && mappa.size() > 0) {
-                for (String key : mappa.keySet()) {
-                    didascalie = mappa.get(key);
+            if (mappaUno != null && mappaUno.size() > 0) {
+                for (String key : mappaUno.keySet()) {
+                    didascalie = mappaUno.get(key);
 
                     if (didascalie != null && didascalie.size() > numSottoPagina) {
                         buffer.append(this.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
                         buffer.append(String.format("%s%s%s%s%s", VEDI, wikiPaginaTitle, SLASH, key, DOPPIE_GRAFFE_END));
                         buffer.append(A_CAPO);
-                        //                    appContext.getBean(UploadAttivita.class, attivita, AETypePagina.sottoPagina).upload();
                         buffer.append(A_CAPO);
+
+                        //--@todo in futuro prevedere anche il livello 3 - cioe anche la sottopagina può avere a sua volta un'altra sottopagina
+                        if (wrapSottopagine != null) {
+                            subMappa = lista.getMappaDue().get(key);
+                            wrap = new WrapUploadSottoPagina(attivita, wikiPaginaTitle, key, subMappa);
+                            wrapSottopagine.add(wrap);
+                        }
                     }
                     else {
                         buffer.append(this.getTitoloParagrafo(key, didascalie.size()));//@todo creare preferenza per il numero
@@ -431,7 +466,6 @@ public abstract class Upload {
         } catch (Exception unErrore) {
             logger.warn(unErrore, this.getClass(), "nomeDelMetodo");
         }
-
 
         return buffer.toString().trim();
     }
@@ -516,11 +550,12 @@ public abstract class Upload {
      */
     private String elaboraRitorno() {
         String testo = VUOTA;
-        String titoloPaginaMadre = getTitoloPaginaMadre();
+        String paginaMadre;
 
         if (usaHeadRitorno) {
-            if (text.isValid(titoloPaginaMadre)) {
-                testo += "Torna a|" + titoloPaginaMadre;
+            paginaMadre = wikiPaginaTitle.substring(0, wikiPaginaTitle.lastIndexOf(SLASH));
+            if (text.isValid(paginaMadre)) {
+                testo += "Torna a|" + paginaMadre;
                 testo = text.setDoppieGraffe(testo);
             }
         }
@@ -663,12 +698,24 @@ public abstract class Upload {
         String tag = "Progetto:Biografie/Nazionalità/";
         String titolo;
 
-        tag += keyMaiuscola;
-        tag += PIPE;
-        tag += keyMaiuscola;
-        tag = text.setDoppieQuadre(tag);
+        titolo = switch (typePagina) {
+            case paginaPrincipale -> {
+                tag += keyMaiuscola;
+                tag += PIPE;
+                tag += keyMaiuscola;
+                tag = text.setDoppieQuadre(tag);
+                yield keyMaiuscola.equals(ALTRE) ? ALTRE : tag;
+            }
+            case sottoPagina -> keyMaiuscola;
+            default -> VUOTA;
+        };
 
-        titolo = keyMaiuscola.equals(ALTRE) ? ALTRE : tag;
+        //        tag += keyMaiuscola;
+        //        tag += PIPE;
+        //        tag += keyMaiuscola;
+        //        tag = text.setDoppieQuadre(tag);
+        //
+        //        titolo = keyMaiuscola.equals(ALTRE) ? ALTRE : tag;
         return wikiUtility.setParagrafo(titolo, numero);
     }
 
@@ -707,15 +754,35 @@ public abstract class Upload {
 
 
     public int getNumVoci() {
-        return numVoci;
+        return switch (typePagina) {
+            case paginaPrincipale -> numVoci;
+            case sottoPagina -> arrayService.dimMappa(mappaUno);
+            default -> 0;
+        };
     }
 
-    public LinkedHashMap<String, List<String>> getMappa() {
-        return mappa;
+    public Map<String, List<String>> getMappaUno() {
+        return mappaUno;
+    }
+
+    public Map<String, Map<String, List<String>>> getMappaDue() {
+        return mappaDue;
+    }
+
+    public Map<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> getMappaTre() {
+        return mappaTre;
     }
 
     public String getTestoPagina() {
         return newTextPagina != null ? newTextPagina : VUOTA;
+    }
+
+    public String getWikiPaginaTitle() {
+        return wikiPaginaTitle;
+    }
+
+    public void setWikiPaginaTitle(String wikiPaginaTitle) {
+        this.wikiPaginaTitle = wikiPaginaTitle;
     }
 
     public enum AETypeHeadToc {

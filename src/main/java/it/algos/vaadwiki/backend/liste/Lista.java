@@ -213,7 +213,7 @@ public abstract class Lista {
         return listaDidascalie;
     }
 
-    public LinkedHashMap<String, List<String>> getMappaUno() {
+    public Map<String, List<String>> getMappaUno() {
         return mappaUno;
     }
 
@@ -221,7 +221,7 @@ public abstract class Lista {
         return mappaDue;
     }
 
-    public LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> getMappaTre() {
+    public Map<String, LinkedHashMap<String, LinkedHashMap<String, List<String>>>> getMappaTre() {
         return mappaTre;
     }
 
