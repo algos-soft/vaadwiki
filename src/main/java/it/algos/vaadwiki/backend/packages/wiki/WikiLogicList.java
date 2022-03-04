@@ -13,6 +13,7 @@ import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadwiki.backend.enumeration.*;
 import it.algos.vaadwiki.backend.packages.bio.*;
 import it.algos.vaadwiki.backend.service.*;
+import it.algos.vaadwiki.backend.upload.*;
 import it.algos.vaadwiki.ui.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
@@ -35,6 +36,14 @@ public abstract class WikiLogicList extends LogicList {
      */
     @Autowired
     public ElaboraService elaboraService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected UploadService uploadService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -379,7 +388,7 @@ public abstract class WikiLogicList extends LogicList {
     protected Button createUploadButton(AEntity entityBean) {
         Button uploadButton = new Button(new Icon(VaadinIcon.UPLOAD));
         uploadButton.getElement().setAttribute("theme", "error");
-        //        uploadButton.addClickListener(e -> uploadService.uploadAttivita(entityBean));
+        uploadButton.addClickListener(e -> uploadPage(entityBean));
 
         return uploadButton;
     }
@@ -393,6 +402,9 @@ public abstract class WikiLogicList extends LogicList {
 
 
     protected void testWiki(AEntity entityBean) {
+    }
+
+    protected void uploadPage(AEntity entityBean) {
     }
 
 

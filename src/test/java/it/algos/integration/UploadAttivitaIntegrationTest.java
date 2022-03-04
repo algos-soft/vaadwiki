@@ -194,7 +194,7 @@ public class UploadAttivitaIntegrationTest extends WTest {
         assertNotNull(istanza);
 
         //--upload effettivo
-        if (true) {
+        if (false) {
             ottenutoRisultato = istanza.upload();
             assertNotNull(ottenutoRisultato);
             System.out.println(String.format("Upload effettuato per l'attività '%s'", attivita.plurale));

@@ -116,6 +116,14 @@ public abstract class Upload {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
+    protected UploadService uploadService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
     protected WikiUtility wikiUtility;
 
     /**
@@ -720,9 +728,10 @@ public abstract class Upload {
     }
 
     /**
-     * Elaborazione la pagina <br>
+     * Elabora la pagina <br>
      * Registra la pagina <br>
      */
+    @Deprecated
     public AIResult uploadTest() {
         AIResult result = null;
 
