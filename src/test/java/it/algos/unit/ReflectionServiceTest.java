@@ -1,6 +1,5 @@
 package it.algos.unit;
 
-import it.algos.simple.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -16,6 +15,7 @@ import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadwiki.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -42,7 +42,7 @@ import java.util.stream.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {SimpleApplication.class})
+@SpringBootTest(classes = {WikiApplication.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
 @DisplayName("ReflectionService - Reflexion dei fields e delle classi.")
