@@ -65,13 +65,6 @@ public class AFooter extends VerticalLayout {
     @Autowired
     private PreferenzaService pref;
 
-    /**
-     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
-     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
-     * Disponibile SOLO DOPO @PostConstruct <br>
-     */
-    @Autowired
-    private WLogin wLogin;
 
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
@@ -108,8 +101,8 @@ public class AFooter extends VerticalLayout {
         String tag = "all companies";
         String companyCode = login.getCompany() != null ? login.getCompany().code : "";
         String companyName = login.getCompany() != null ? login.getCompany().descrizione : "";
-        //        String userName = login.getUtente() != null ? login.getUtente().getUsername() : "";
-        String userName = wLogin != null ? wLogin.getLgusername() : "";
+        String userName = login.getUtente() != null ? login.getUtente().getUsername() : "";
+        //        String userName = wLogin != null ? wLogin.getLgusername() : "";
         this.removeAll();
 
         if (usaCompany) {

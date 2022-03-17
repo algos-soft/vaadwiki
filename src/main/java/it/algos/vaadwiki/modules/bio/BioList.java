@@ -309,7 +309,7 @@ public class BioList extends AGridViewList {
         DownloadResult result;
         int numRec = service.count();
         String message;
-        appContext.getBean(AQueryWrite.class, Upload.PAGINA_PROVA, "Prova", "Test");
+//        appContext.getBean(AQueryWrite.class, Upload.PAGINA_PROVA, "Prova", "Test");
 
         if (appContext.getBean(AQueryBot.class).isBot()) {
             if (numRec == 0) {
