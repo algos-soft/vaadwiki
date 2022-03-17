@@ -136,11 +136,11 @@ public class AnnoService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Anno newEntity(String titolo, Secolo secolo, int ordine) {
-        return Anno.builderAnno()
-                .titolo(text.isValid(titolo) ? titolo : null)
-                .secolo(secolo)
-                .ordine(ordine)
-                .build();
+        Anno anno = new Anno();
+        anno.titolo = text.isValid(titolo) ? titolo : null;
+        anno.secolo = secolo;
+        anno.ordine = ordine;
+        return anno;
     }// end of method
 
 
@@ -149,7 +149,7 @@ public class AnnoService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Anno) entityBean).getTitolo();
+        return ((Anno) entityBean).titolo;
     }// end of method
 
 
@@ -167,7 +167,7 @@ public class AnnoService extends AService {
     public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
         Anno entity = (Anno) super.beforeSave(entityBean, operation);
 
-        if (text.isEmpty(entity.titolo) || entity.getSecolo() == null || entity.ordine == 0) {
+        if (text.isEmpty(entity.titolo) || entity.secolo == null || entity.ordine == 0) {
             entity = null;
         }// end of if cycle
 

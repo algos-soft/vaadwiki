@@ -507,9 +507,9 @@ public class AArrayService extends AbstractService {
         if (listaTotale == null || listaTotale.size() < 1 || cicloCorrente == 0) {
 
             if (cicloCorrente == 0) {
-                log.warn("Algos - AArrayService.estraeSubLista(), cicloCorrente=0");
+//                log.warn("Algos - AArrayService.estraeSubLista(), cicloCorrente=0");
             } else {
-                log.warn("Algos - AArrayService.estraeSubLista(), listaTotale non valida");
+//                log.warn("Algos - AArrayService.estraeSubLista(), listaTotale non valida");
             }// end of if/else cycle
 
             return null;
@@ -604,7 +604,7 @@ public class AArrayService extends AbstractService {
                 pos++;
                 sec++;
                 if (sec == 10000) {
-                    log.info("Array. Differenza di " + text.format(pos) + " elementi in " + date.deltaText(inizio));
+//                    log.info("Array. Differenza di " + text.format(pos) + " elementi in " + date.deltaText(inizio));
                     sec = 0;
                 }// end of if cycle
             } // fine del ciclo for-each
@@ -759,7 +759,7 @@ public class AArrayService extends AbstractService {
             if (entry.getValue().size() == 1) {
                 mappaSemplice.put(entry.getKey(), entry.getValue().get(0));
             } else {
-                log.error("Qualcosa non ha funzionato");
+//                log.error("Qualcosa non ha funzionato");
                 System.out.println("Qualcosa non ha funzionato");
             }// end of if/else cycle
         }// end of for cycle

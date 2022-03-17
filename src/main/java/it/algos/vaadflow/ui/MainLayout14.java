@@ -228,7 +228,7 @@ public class MainLayout14 extends AppLayout {
                 addToDrawer(getTabMenu());
                 break;
             default:
-                log.warn("MainLayout14 - Manca la preferenza 'usaMenu'");
+//                logger.warn("MainLayout14 - Manca la preferenza 'usaMenu'");
                 break;
         } // end of switch statement
 

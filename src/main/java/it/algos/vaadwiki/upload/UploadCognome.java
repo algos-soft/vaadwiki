@@ -98,7 +98,7 @@ public class UploadCognome extends Upload {
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_COGNOMI);
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
-        super.tagCategoria = LibWiki.setCat("Liste di persone per cognome", cognome.getCognome());
+        super.tagCategoria = LibWiki.setCat("Liste di persone per cognome", cognome.cognome);
         super.usaBodySottopagine = true;
     }// fine del metodo
 

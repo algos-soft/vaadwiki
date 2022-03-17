@@ -331,7 +331,7 @@ public abstract class AMenu extends Div implements IAMenu {
                         break;
                     default:
                         userClazzList.add(viewClazz);
-                        log.warn("Switch - caso non definito");
+//                        logger.warn("Switch - caso non definito");
                         break;
                 } // end of switch statement
             } else {

@@ -94,9 +94,9 @@ public abstract class AData extends AbstractService {
 
         if (numRec == 0) {
             numRec = creaAll();
-            log.warn("Algos " + collectionName + "- Creazione dati iniziali loadData(): " + numRec + " schede");
+            logger.warn("Algos " + collectionName + "- Creazione dati iniziali loadData(): " + numRec + " schede");
         } else {
-            log.info("Algos - Data. La collezione " + collectionName + " è presente: " + numRec + " schede");
+            logger.info("Algos - Data. La collezione " + collectionName + " è presente: " + numRec + " schede");
         }// end of if/else cycle
     }// end of method
 

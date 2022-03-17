@@ -30,8 +30,7 @@ import it.algos.vaadwiki.statistiche.StatisticheService;
 import it.algos.vaadwiki.upload.Upload;
 import it.algos.wiki.Api;
 import it.algos.wiki.DownloadResult;
-import it.algos.wiki.web.AQueryBot;
-import it.algos.wiki.web.WLogin;
+import it.algos.wiki.web.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -301,7 +300,7 @@ public class BioList extends AGridViewList {
             headerGridHolder = new Label(message);
             informationCell.setComponent(headerGridHolder);
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
     }// end of method
 
@@ -310,6 +309,7 @@ public class BioList extends AGridViewList {
         DownloadResult result;
         int numRec = service.count();
         String message;
+        appContext.getBean(AQueryWrite.class, Upload.PAGINA_PROVA, "Prova", "Test");
 
         if (appContext.getBean(AQueryBot.class).isBot()) {
             if (numRec == 0) {
@@ -319,7 +319,7 @@ public class BioList extends AGridViewList {
             }// end of if/else cycle
         } else {
             message = "Non riesco a leggere le pagine dal server. Forse non sono loggato come bot";
-            log.warn(message);
+            logger.warn(message);
             logger.warn("Download - " + message);
         }// end of if/else cycle
 
@@ -437,11 +437,11 @@ public class BioList extends AGridViewList {
         String key = "pageid";
 
         grid.addColumn(new ComponentRenderer<>(entity -> {
-            long pageid = ((Bio) entity).getPageid();
+            long pageid = ((Bio) entity).pageid;
 
             // button for opening the wiki page
             Button link = new Button(pageid + "", event -> {
-                String title = ((Bio) entity).getWikiTitle();
+                String title = ((Bio) entity).wikiTitle;
                 String edit = "https://it.wikipedia.org/w/index.php?title=" + title + "&action=edit&section=0";
                 String wikiLink = "\"" + edit + "\"";
 
@@ -494,7 +494,7 @@ public class BioList extends AGridViewList {
                     grid.setItems(items);
                     headerGridHolder.setText(getGridHeaderText());
                 } catch (Exception unErrore) { // intercetta l'errore
-                    log.error(unErrore.toString());
+                    logger.error(unErrore.toString());
                 }// fine del blocco try-catch
             }// end of if cycle
         }// end of if cycle

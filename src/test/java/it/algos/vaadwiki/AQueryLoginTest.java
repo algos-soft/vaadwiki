@@ -6,6 +6,7 @@ import it.algos.wiki.web.AQueryLogin;
 import it.algos.wiki.web.WLogin;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +30,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 //@WebAppConfiguration
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AQueryLoginTest {
 
 

@@ -490,10 +490,18 @@ public abstract class WikiList extends AGridViewList {
             if (scheduledPrevisto) {
                 if (scheduledAttivo) {
                     message += tag;
-                    message += task.getNota();
+                    try {
+                        message += task.getNota();
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore, this.getClass(), "creaInfo");
+                    }
                 } else {
                     message += tag + "non attivo.";
-                    message += " Attivabile " + task.getNota() ;
+                    try {
+                        message += " Attivabile " + task.getNota() ;
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+                    }
                 }// end of if/else cycle
             } else {
                 message += tag + "non previsto.";
@@ -545,7 +553,7 @@ public abstract class WikiList extends AGridViewList {
                 message += date.toText(durata);
                 break;
             default:
-                log.warn("Switch - caso non definito");
+                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 

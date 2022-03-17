@@ -47,7 +47,7 @@ public class TaskProfessione extends WikiTask {
      * Esiste il flag di preferenze per usare o meno questa Task <br>
      * Se la si usa, controlla il flag generale di debug per 'intensificare' l'import <br>
      */
-    @PostConstruct
+//    @PostConstruct
     protected void inizia() {
         super.eaSchedule = EASchedule.giornoTerzoMinuto;
         super.usaDaemon = pref.isBool(USA_DAEMON_PROFESSIONE_DOWNLOAD);

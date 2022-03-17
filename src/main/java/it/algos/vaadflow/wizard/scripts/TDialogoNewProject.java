@@ -108,15 +108,15 @@ public class TDialogoNewProject extends TDialogo {
         this.projectBasePath = ideaProjectRootPath + SEP + PROJECT_BASE_NAME;
         this.sourcePath = projectBasePath + DIR_SOURCES;
 
-        log.info("");
-        log.info("PROJECT_BASE: " + PROJECT_BASE_NAME);
-        log.info("DIR_JAVA: " + DIR_JAVA);
-        log.info("DIR_PROJECT_BASE: " + DIR_PROJECT_BASE);
-        log.info("DIR_SOURCES: " + DIR_SOURCES);
-        log.info("userDir: " + userDir);
-        log.info("ideaProjectRootPath: " + ideaProjectRootPath);
-        log.info("projectBasePath: " + projectBasePath);
-        log.info("sourcePath: " + sourcePath);
+//        log.info("");
+//        log.info("PROJECT_BASE: " + PROJECT_BASE_NAME);
+//        log.info("DIR_JAVA: " + DIR_JAVA);
+//        log.info("DIR_PROJECT_BASE: " + DIR_PROJECT_BASE);
+//        log.info("DIR_SOURCES: " + DIR_SOURCES);
+//        log.info("userDir: " + userDir);
+//        log.info("ideaProjectRootPath: " + ideaProjectRootPath);
+//        log.info("projectBasePath: " + projectBasePath);
+//        log.info("sourcePath: " + sourcePath);
     }// end of method
 
 
@@ -235,8 +235,8 @@ public class TDialogoNewProject extends TDialogo {
             mappaInput.put(Chiave.flagRead, fieldCheckBoxRead.getValue());
             mappaInput.put(Chiave.flagGit, fieldCheckBoxGit.getValue());
             mappaInput.put(Chiave.flagPom, fieldCheckBoxPom.getValue());
-            log.info("Nome nuovo progetto: " + fieldComboProgetti.getValue());
-            log.info("Directory nuovo progetto: " + ideaNewProjectPath);
+//            log.info("Nome nuovo progetto: " + fieldComboProgetti.getValue());
+//            log.info("Directory nuovo progetto: " + ideaNewProjectPath);
         }// end of if cycle
     }// end of method
 

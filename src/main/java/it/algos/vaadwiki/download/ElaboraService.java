@@ -94,7 +94,7 @@ public class ElaboraService extends ABioService {
                 esegueSave(bio);
                 tot++;
             }// end of for cycle
-            log.info("ELABORA - Elaborate " + text.format(tot) + " voci biografiche su " + text.format(totale) + " in " + date.deltaText(inizio));
+            logger.info("ELABORA - Elaborate " + text.format(tot) + " voci biografiche su " + text.format(totale) + " in " + date.deltaText(inizio));
         }// end of for cycle
     }// end of method
 
@@ -115,7 +115,7 @@ public class ElaboraService extends ABioService {
             for (Bio bio : lista) {
                 if (check(bio)) {
                     cont++;
-                    logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss. (" + cont + ") La voce " + bio.getWikiTitle() + " ha il template diverso da quello standard.", ElaboraService.class, "checkAll");
+                    logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss. (" + cont + ") La voce " + bio.wikiTitle + " ha il template diverso da quello standard.", ElaboraService.class, "checkAll");
                 }// end of if cycle
             }// end of for cycle
         }// end of for cycle
@@ -156,7 +156,7 @@ public class ElaboraService extends ABioService {
      * Controlla se il tmpl del mongoDB è uguale a quello 'previsto' <br>
      */
     public boolean check(Bio bio) {
-        return check(bio.getTmplBioServer());
+        return check(bio.tmplBioServer);
     }// end of method
 
 
@@ -187,7 +187,7 @@ public class ElaboraService extends ABioService {
      * Registra le modifiche sul server wiki <br>
      */
     public void uploadNormaliNoLoss(Bio bioEsistente) {
-        String wikiTitle = bioEsistente.getWikiTitle();
+        String wikiTitle = bioEsistente.wikiTitle;
         String summary = "fixTmpl";
         Page page;
         Bio bio;
@@ -201,9 +201,9 @@ public class ElaboraService extends ABioService {
         if (page != null && page.isBioValida()) {
             oldTesto = page.getText();
             bio = pageService.creaBio(page);
-            oldTmpl = bio.getTmplBioServer();
+            oldTmpl = bio.tmplBioServer;
             if (ordinaNormaliNoLoss(bio)) {
-                newTmpl = bio.getTmplBioServer();
+                newTmpl = bio.tmplBioServer;
                 bioService.save(bio);
                 newTesto = text.sostituisce(oldTesto, oldTmpl, newTmpl);
                 appContext.getBean(AQueryWrite.class, wikiTitle, newTesto, summary);
@@ -241,7 +241,7 @@ public class ElaboraService extends ABioService {
 
         if (array.isValid(lista)) {
             if (pref.isBool(USA_DEBUG)) {
-                log.info("ELABORA - Inizio dell'elaborazione dei parametri di tutte le " + text.format(lista.size()) + " biografie");
+                logger.info("ELABORA - Inizio dell'elaborazione dei parametri di tutte le " + text.format(lista.size()) + " biografie");
             }// end of if cycle
 
             for (String wikiTitle : lista) {
@@ -250,14 +250,14 @@ public class ElaboraService extends ABioService {
                 parz++;
                 tot++;
                 if (parz == 10000) {
-                    log.info("ELABORA - Elaborate " + text.format(tot) + " voci biografiche su " + text.format(lista.size()) + " in " + date.deltaText(inizio));
+                    logger.info("ELABORA - Elaborate " + text.format(tot) + " voci biografiche su " + text.format(lista.size()) + " in " + date.deltaText(inizio));
                     parz = 0;
                 }// end of if cycle
             }// end of for cycle
 
-            log.debug("ELABORA - elaborati i parametri delle nuove pagine (" + text.format(lista.size()) + " elementi) in " + date.deltaText(inizio));
+            logger.debug("ELABORA - elaborati i parametri delle nuove pagine (" + text.format(lista.size()) + " elementi) in " + date.deltaText(inizio));
             if (pref.isBool(USA_DEBUG)) {
-                log.info("ELABORA - finito in " + date.deltaText(inizio));
+                logger.info("ELABORA - finito in " + date.deltaText(inizio));
             }// end of if cycle
         }// end of if cycle
 
@@ -293,10 +293,10 @@ public class ElaboraService extends ABioService {
         //--Recupera i valori base di tutti i parametri dal tmplBioServer
         mappaGrezza = libBio.getMappaDownload(bio);
 
-//        //--Elabora valori validi dei parametri significativi
-//        if (mappa != null) {
-//            elaboraValidi(mappa);
-//        }// end of if cycle
+        //        //--Elabora valori validi dei parametri significativi
+        //        if (mappa != null) {
+        //            elaboraValidi(mappa);
+        //        }// end of if cycle
 
         //--Elabora valori validi dei parametri significativi
         //--Inserisce i valori nella entity Bio
@@ -309,10 +309,10 @@ public class ElaboraService extends ABioService {
         }// end of if cycle
 
         //--Elabora i link alle tavole collegate
-//        new ElaboraLink(bio);
+        //        new ElaboraLink(bio);
 
         //--Elabora tutte le didascalie della voce
-//        new ElaboraDidascalie(bio);
+        //        new ElaboraDidascalie(bio);
         int a = 87;
 
         return bio;
@@ -362,21 +362,20 @@ public class ElaboraService extends ABioService {
 
     }// end of method
 
-
-//    /**
-//     * Estrae dal templateServer una mappa di parametri corrispondenti ai campi della tavola Bio
-//     */
-//    public HashMap<String, String> getMappaGrezzaBio(Bio bio) {
-//        HashMap<String, String> mappa = null;
-//        String tmplBioServer = bio.getTmplBioServer();
-//
-//        if (text.isValid(tmplBioServer)) {
-//            mappa = new HashMap<>();
-//            mappa = libBio.getMappaGrezzaBio(tmplBioServer);
-//        }// end of if cycle
-//
-//        return mappa;
-//    }// end of method
+    //    /**
+    //     * Estrae dal templateServer una mappa di parametri corrispondenti ai campi della tavola Bio
+    //     */
+    //    public HashMap<String, String> getMappaGrezzaBio(Bio bio) {
+    //        HashMap<String, String> mappa = null;
+    //        String tmplBioServer = bio.getTmplBioServer();
+    //
+    //        if (text.isValid(tmplBioServer)) {
+    //            mappa = new HashMap<>();
+    //            mappa = libBio.getMappaGrezzaBio(tmplBioServer);
+    //        }// end of if cycle
+    //
+    //        return mappa;
+    //    }// end of method
 
 
     //--Elabora valori validi dei parametri significativi
@@ -391,14 +390,14 @@ public class ElaboraService extends ABioService {
         try { // prova ad eseguire il codice
             if (bio != null) {
 
-//                // patch per i luoghi di nascita e morte
-//                // se è pieno il parametro link, lo usa
-//                if (text.isValid(mappa.get(ParBio.luogoNascitaLink.getTag()))) {
-//                    mappa.put(ParBio.luogoNascita.getTag(), mappa.get(ParBio.luogoNascitaLink.getTag()));
-//                }// end of if cycle
-//                if (text.isValid(mappa.get(ParBio.luogoMorteLink.getTag()))) {
-//                    mappa.put(ParBio.luogoMorte.getTag(), mappa.get(ParBio.luogoMorteLink.getTag()));
-//                }// end of if cycle
+                //                // patch per i luoghi di nascita e morte
+                //                // se è pieno il parametro link, lo usa
+                //                if (text.isValid(mappa.get(ParBio.luogoNascitaLink.getTag()))) {
+                //                    mappa.put(ParBio.luogoNascita.getTag(), mappa.get(ParBio.luogoNascitaLink.getTag()));
+                //                }// end of if cycle
+                //                if (text.isValid(mappa.get(ParBio.luogoMorteLink.getTag()))) {
+                //                    mappa.put(ParBio.luogoMorte.getTag(), mappa.get(ParBio.luogoMorteLink.getTag()));
+                //                }// end of if cycle
 
                 for (ParBio par : ParBio.values()) {
                     value = mappa.get(par.getTag());
@@ -413,7 +412,7 @@ public class ElaboraService extends ABioService {
             }// end of if cycle
 
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
     }// end of method
@@ -441,7 +440,7 @@ public class ElaboraService extends ABioService {
      * Dal bio il tmplBioServer <br>
      */
     public String getTmplBioServer(Bio bio) {
-        return bio.getTmplBioServer();
+        return bio.tmplBioServer;
     }// end of method
 
 
@@ -551,11 +550,13 @@ public class ElaboraService extends ABioService {
                 if (par.isCampoValido()) {
                     if (text.isValid(valueMongo)) {
                         valueMerged = par.sostituisceParteValida(valueServer, valueMongo);
-                    } else {
+                    }
+                    else {
                         if (text.isValid(valueServer)) {
-//                            valueMerged = eliminaDopoVirgola(par, valueServer);
+                            //                            valueMerged = eliminaDopoVirgola(par, valueServer);
                             valueMerged = par.elaboraParteValida(valueServer);
-                        } else {
+                        }
+                        else {
                             valueMerged = VUOTA;
                         }// end of if/else cycle
                     }// end of if/else cycle
@@ -563,7 +564,8 @@ public class ElaboraService extends ABioService {
                         valueRiga = par.getRiga(valueMerged);
                         tmplMerged.append(valueRiga);
                     }// end of if cycle
-                } else {
+                }
+                else {
                     if (text.isValid(valueServer)) {
                         valueRiga = par.getRiga(valueServer);
                         tmplMerged.append(valueRiga);
@@ -636,11 +638,11 @@ public class ElaboraService extends ABioService {
      */
     public boolean ordinaNormaliNoLoss(Bio bio) {
         boolean modificato = false;
-        String oldTmpl = bio.getTmplBioServer();
+        String oldTmpl = bio.tmplBioServer;
         String newTmpl = ordinaNormaliNoLoss(oldTmpl);
 
         if (!newTmpl.equals(oldTmpl)) {
-            bio.setTmplBioServer(newTmpl);
+            bio.tmplBioServer = newTmpl;
             bioService.save(bio);
             modificato = true;
         }// end of if cycle

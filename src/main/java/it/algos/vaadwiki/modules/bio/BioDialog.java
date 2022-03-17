@@ -256,8 +256,8 @@ public class BioDialog extends AViewDialog<Bio> {
 
 
     protected Component addChiaveParagrafo(WrapDidascalia wrap) {
-        String chiave = currentItem.getAttivita() != null ? currentItem.getAttivita().singolare : VUOTA;
-        String sesso = text.isValid(currentItem.getSesso()) ? currentItem.getSesso() : "M";
+        String chiave = currentItem.attivita != null ? currentItem.attivita.singolare : VUOTA;
+        String sesso = text.isValid(currentItem.sesso) ? currentItem.sesso : "M";
         Label label = new Label("Paragrafo: " + wrap.fixChiaveUno(chiave, sesso.equals("M")));
         label.getElement().setAttribute("colspan", "2");
 
@@ -266,7 +266,7 @@ public class BioDialog extends AViewDialog<Bio> {
 
 
     protected Component addProfessione(WrapDidascalia wrap) {
-        String chiave = currentItem.getAttivita() != null ? currentItem.getAttivita().singolare : VUOTA;
+        String chiave = currentItem.attivita != null ? currentItem.attivita.singolare : VUOTA;
         Label label = new Label("Professione: " + chiave);
         label.getElement().setAttribute("colspan", "2");
 
@@ -359,7 +359,7 @@ public class BioDialog extends AViewDialog<Bio> {
         tmplField.setValue(tmplOrdinato);
 
         if (pref.isBool(USA_DEBUG) && !tmplOrdinato.equals(tmplValue)) {
-            logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss. La voce " + currentItem.getWikiTitle() + " ha il template diverso da quello standard.", BioDialog.class, "riordina");
+            logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss. La voce " + currentItem.wikiTitle + " ha il template diverso da quello standard.", BioDialog.class, "riordina");
             logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss." + tmplValue, BioDialog.class, "riordina");
             logger.sendTerminale(EALogLivello.debug, "Check EAElabora.ordinaNormaliNoLoss." + tmplOrdinato, BioDialog.class, "riordina");
         }// end of if cycle
@@ -442,7 +442,7 @@ public class BioDialog extends AViewDialog<Bio> {
         long pageid = 0;
 
         if (currentItem != null) {
-            pageid = currentItem.getPageid();
+            pageid = currentItem.pageid;
         }// end of if cycle
 
         return pageid;

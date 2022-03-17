@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static it.algos.vaadwiki.application.WikiCost.*;
@@ -239,12 +238,11 @@ public class NomeService extends NomeCognomeService {
             return findByKeyUnica(nome);
         }// end of if cycle
 
-        entity = Nome.builderNome()
-                .nome(text.isValid(nome) ? nome : null)
-                .voci(voci != 0 ? voci : this.getNewOrdine())
-                .valido(valido)
-                .doppio(doppio)
-                .build();
+        entity = new Nome();
+        entity.nome = text.isValid(nome) ? nome : null;
+        entity.voci = voci != 0 ? voci : this.getNewOrdine();
+        entity.valido = valido;
+        entity.doppio = doppio;
 
         return (Nome) creaIdKeySpecifica(entity);
     }// end of method
@@ -282,7 +280,7 @@ public class NomeService extends NomeCognomeService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Nome) entityBean).getNome();
+        return ((Nome) entityBean).nome;
     }// end of method
 
 
@@ -346,7 +344,7 @@ public class NomeService extends NomeCognomeService {
         int cont = 0;
         Nome nome = null;
         String tagSpazio = " ";
-        log.info("Creazione completa nomi delle biografie. Circa 2 minuti.");
+        logger.info("Creazione completa nomi delle biografie. Circa 2 minuti.");
 
         //--Ricrea al volo (per sicurezza di aggiornamento) tutta la collezione mongoDb dei doppinomi
         doppinomiService.download();
@@ -381,7 +379,7 @@ public class NomeService extends NomeCognomeService {
         }// end of if cycle
 
         super.setLastElabora(EATempo.minuti, inizio);
-        log.info("Creazione di " + text.format(cont) + " nomi su un totale di " + text.format(tot) + " nomi distinti. Tempo impiegato: " + date.deltaText(inizio));
+        logger.info("Creazione di " + text.format(cont) + " nomi su un totale di " + text.format(tot) + " nomi distinti. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 

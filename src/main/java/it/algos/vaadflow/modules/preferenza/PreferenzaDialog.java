@@ -1,10 +1,8 @@
 package it.algos.vaadflow.modules.preferenza;
 
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
@@ -132,14 +130,14 @@ public class PreferenzaDialog extends AViewDialog<Preferenza> {
         String[] parti = null;
         super.readSpecificFields();
         if (companyField != null) {
-//            companyField.setValue(((Preferenza) getCurrentItem()).getCompany());
+            //            companyField.setValue(((Preferenza) getCurrentItem()).getCompany());
         }// end of if cycle
 
         AbstractField valueField = getField(VALUE_FIELD_NAME);
         byte[] byteValue;
         Object genericValue;
         String stringValue = "";
-        byteValue = getCurrentItem().getValue();
+        byteValue = getCurrentItem().value;
         Field reflectionJavaField = reflection.getField(Preferenza.class, "type");
         List<String> enumItems = annotation.getEnumItems(reflectionJavaField);
 
@@ -193,7 +191,7 @@ public class PreferenzaDialog extends AViewDialog<Preferenza> {
                 }// end of if cycle
                 break;
             default:
-                log.warn("Switch - caso non definito");
+                //                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 
@@ -202,7 +200,8 @@ public class PreferenzaDialog extends AViewDialog<Preferenza> {
         if (operation == EAOperation.addNew) {
             comboType.setEnabled(true);
             comboType.addValueChangeListener(e -> sincro((EAPrefType) e.getValue()));
-        } else {
+        }
+        else {
             comboType.setEnabled(false);
         }// end of if/else cycle
 
@@ -231,7 +230,7 @@ public class PreferenzaDialog extends AViewDialog<Preferenza> {
             case email:
                 valueField = new EmailField(caption + "(email)");
                 String message = "L'indirizzo eMail non è valido";
-                ((EmailField)valueField).setErrorMessage(message);
+                ((EmailField) valueField).setErrorMessage(message);
                 break;
             case integer:
                 valueField = new IntegerField(caption + "(solo numeri)");
@@ -252,12 +251,13 @@ public class PreferenzaDialog extends AViewDialog<Preferenza> {
             case enumeration:
                 if (operation == EAOperation.addNew) {
                     valueField = new ATextField(caption + "(enumeration)");
-                } else {
+                }
+                else {
                     valueField = new AComboBox(caption + "(enumeration)");
                 }// end of if/else cycle
                 break;
             default:
-                log.warn("Switch - caso non definito");
+                //                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 
@@ -302,19 +302,20 @@ public class PreferenzaDialog extends AViewDialog<Preferenza> {
                     break;
                 case enumeration:
                     if (currentItem != null && text.isValid(currentItem.id)) {
-                        mongoEnumValue = (String) currentItem.getType().bytesToObject(currentItem.value);
+                        mongoEnumValue = (String) currentItem.type.bytesToObject(currentItem.value);
                         genericFieldValue = enumService.convertToModel(mongoEnumValue, (String) genericFieldValue);
-                    } else {
+                    }
+                    else {
                         genericFieldValue = genericFieldValue;
                     }// end of if/else cycle
                     break;
                 default:
-                    log.warn("Switch - caso non definito");
+                    //                    logger.warn("Switch - caso non definito");
                     break;
             } // end of switch statement
 
             byteValue = type.objectToBytes(genericFieldValue);
-            getCurrentItem().setValue(byteValue);
+            getCurrentItem().value = byteValue;
         }// end of if cycle
 
     }// end of method
@@ -325,7 +326,7 @@ public class PreferenzaDialog extends AViewDialog<Preferenza> {
         Preferenza preferenza = getCurrentItem();
 
         if (preferenza != null) {
-            type = preferenza.getType();
+            type = preferenza.type;
         }// end of if cycle
 
         return type;

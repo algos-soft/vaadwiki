@@ -3,7 +3,6 @@ package it.algos.vaadwiki.modules.genere;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.application.FlowCost;
 import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadwiki.modules.cognome.Cognome;
 import it.algos.vaadwiki.modules.wiki.WikiService;
 import it.algos.wiki.LibWiki;
 import it.algos.wiki.web.AQueryVoce;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -122,14 +120,11 @@ public class GenereService extends WikiService {
                     singolare = text.estrae(singolare, tagApi);
                     testoPlurale = parti[1].trim();
 
-                    if (singolare.equals("arbitro di calcio")) {
-                        int a = 87;
-                    }// end of if cycle
-
                     if (testoPlurale.contains(tagM) && testoPlurale.contains(tagF)) {
                         pluraleMaschile = text.estrae(testoPlurale, tagApi);
                         pluraleFemminile = estraeFemminile(testoPlurale);
-                    } else {
+                    }
+                    else {
                         if (testoPlurale.contains(tagM)) {
                             pluraleMaschile = text.estrae(testoPlurale, tagApi);
                         }// end of if cycle
@@ -152,10 +147,10 @@ public class GenereService extends WikiService {
                 message += date.deltaText(inizio);
                 message += "), con AQueryVoce, senza login, senza cookies, urlRequest di tipo GET";
 
-                log.debug(message);
                 logger.debug(message);
             }// end of if cycle
-        } else {
+        }
+        else {
             logger.error(entityClass.getSimpleName() + " - Qualcosa non ha funzionato");
         }// end of if/else cycle
     }// end of method
@@ -263,11 +258,10 @@ public class GenereService extends WikiService {
             return findByKeyUnica(singolare);
         }// end of if cycle
 
-        entity = Genere.builderGenere()
-                .singolare(singolare.equals("") ? null : singolare)
-                .pluraleMaschile(pluraleMaschile.equals("") ? null : pluraleMaschile)
-                .pluraleFemminile(pluraleFemminile.equals("") ? null : pluraleFemminile)
-                .build();
+        entity = new Genere();
+        entity.singolare = singolare.equals("") ? null : singolare;
+        entity.pluraleMaschile = pluraleMaschile.equals("") ? null : pluraleMaschile;
+        entity.pluraleFemminile = pluraleFemminile.equals("") ? null : pluraleFemminile;
 
         return (Genere) creaIdKeySpecifica(entity);
     }// end of method
@@ -375,7 +369,7 @@ public class GenereService extends WikiService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Genere) entityBean).getSingolare();
+        return ((Genere) entityBean).singolare;
     }// end of method
 
 
@@ -387,19 +381,19 @@ public class GenereService extends WikiService {
      * Non registra la entity col nome mancante <br>
      */
     public void crea() {
-//        long inizio = System.currentTimeMillis();
-//        int cont = 0;
-//        System.out.println("Creazione completa nomi delle biografie. Circa 1 minuto.");
-//        deleteAll();
-//
-//        DistinctIterable<String> listaNomiDistinti = mongo.mongoOp.getCollection("bio").distinct("nome", String.class);
-//        for (String nome : listaNomiDistinti) {
-//            cont++;
-//            saveNumVoci(nome);
-//        }// end of for cycle
-//
-//        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
-//        System.out.println("Creazione completa di " + cont + " nomi. Tempo impiegato: " + date.deltaText(inizio));
+        //        long inizio = System.currentTimeMillis();
+        //        int cont = 0;
+        //        System.out.println("Creazione completa nomi delle biografie. Circa 1 minuto.");
+        //        deleteAll();
+        //
+        //        DistinctIterable<String> listaNomiDistinti = mongo.mongoOp.getCollection("bio").distinct("nome", String.class);
+        //        for (String nome : listaNomiDistinti) {
+        //            cont++;
+        //            saveNumVoci(nome);
+        //        }// end of for cycle
+        //
+        //        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
+        //        System.out.println("Creazione completa di " + cont + " nomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 
@@ -407,13 +401,13 @@ public class GenereService extends WikiService {
      * Controlla che ci siano almeno n voci biografiche per il singolo nome <br>
      */
     public void update() {
-//        long inizio = System.currentTimeMillis();
-//        System.out.println("Elaborazione nomi delle biografie. Meno di 1 minuto.");
-//        for (Nome nome : findAll()) {
-//            saveNumVoci(nome);
-//        }// end of for cycle
-//        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
-//        System.out.println("Elaborazione completa dei nomi. Tempo impiegato: " + date.deltaText(inizio));
+        //        long inizio = System.currentTimeMillis();
+        //        System.out.println("Elaborazione nomi delle biografie. Meno di 1 minuto.");
+        //        for (Nome nome : findAll()) {
+        //            saveNumVoci(nome);
+        //        }// end of for cycle
+        //        pref.saveValue(LAST_ELABORA_NOME, LocalDateTime.now());
+        //        System.out.println("Elaborazione completa dei nomi. Tempo impiegato: " + date.deltaText(inizio));
     }// end of method
 
 
@@ -446,22 +440,22 @@ public class GenereService extends WikiService {
             plurale = genere.pluraleFemminile;
         }// end of if cycle
 
-//        // Funziona solo per il format: { "avvocati","M", "avvocate","F"}
-//        if (plurale.contains(GRAFFA_INI) && plurale.contains(GRAFFA_END)) {
-//            plurale = LibWiki.setNoGraffe(plurale);
-//            parti = plurale.split(tagVir);
-//            for (int k = 0; k < parti.length; k++) {
-//                parti[k]=LibWiki.setNoVirgolette(parti[k]);
-//            }// end of for cycle
-//
-//            for (int k = 0; k < parti.length; k++) {
-//                if (parti[k].equals(tag)) {
-//                    if (k > 0) {
-//                        plurale = parti[k - 1];
-//                    }// end of if cycle
-//                }// end of if cycle
-//            }// end of for cycle
-//        }// end of if cycle
+        //        // Funziona solo per il format: { "avvocati","M", "avvocate","F"}
+        //        if (plurale.contains(GRAFFA_INI) && plurale.contains(GRAFFA_END)) {
+        //            plurale = LibWiki.setNoGraffe(plurale);
+        //            parti = plurale.split(tagVir);
+        //            for (int k = 0; k < parti.length; k++) {
+        //                parti[k]=LibWiki.setNoVirgolette(parti[k]);
+        //            }// end of for cycle
+        //
+        //            for (int k = 0; k < parti.length; k++) {
+        //                if (parti[k].equals(tag)) {
+        //                    if (k > 0) {
+        //                        plurale = parti[k - 1];
+        //                    }// end of if cycle
+        //                }// end of if cycle
+        //            }// end of for cycle
+        //        }// end of if cycle
 
         return plurale;
     }// end of method

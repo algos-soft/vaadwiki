@@ -67,7 +67,7 @@ public class PageService extends ABioService {
                     effettivo = result.getNumVociCreate();
                     delta = teorico - effettivo;
                     message = "New - aggiunte " + text.format(effettivo) + "/" + text.format(totale) + " (-" + delta + ") pagine totali a mongoDB.Bio in " + date.deltaText(inizio);
-                    log.info(message);
+                    logger.info(message);
                 }// end of if cycle
             }// end of for cycle
         }// end of if cycle
@@ -139,20 +139,20 @@ public class PageService extends ABioService {
             return result;
         }// end of if cycle
 
-//        if (true) {
-//            for (Page page : pages) {
-//                entity = creaBio(page, checkUpload);
-//                if (entity != null) {
-//                    if (bioService.save(entity) != null) {
-//                        logger.info("Registrata la entity " + entity.wikiTitle, PageService.class, "singoloBlocco");
-//                    } else {
-//                        logger.error("Non registrata la entity " + entity.wikiTitle, PageService.class, "singoloBlocco");
-//                    }// end of if/else cycle
-//                }// end of if cycle
-//            }// end of for cycle
-//
-//            return result;
-//        }// end of if cycle
+        //        if (true) {
+        //            for (Page page : pages) {
+        //                entity = creaBio(page, checkUpload);
+        //                if (entity != null) {
+        //                    if (bioService.save(entity) != null) {
+        //                        logger.info("Registrata la entity " + entity.wikiTitle, PageService.class, "singoloBlocco");
+        //                    } else {
+        //                        logger.error("Non registrata la entity " + entity.wikiTitle, PageService.class, "singoloBlocco");
+        //                    }// end of if/else cycle
+        //                }// end of if cycle
+        //            }// end of for cycle
+        //
+        //            return result;
+        //        }// end of if cycle
 
         for (Page page : pages) {
             entity = creaBio(page, checkUpload);
@@ -168,13 +168,15 @@ public class PageService extends ABioService {
                             result.addVoceAggiornata();
                             break;
                         default:
-                            log.warn("Switch - caso non definito");
+                            logger.warn("Switch - caso non definito");
                             break;
                     } // end of switch statement
-                } else {
+                }
+                else {
                     logger.error("I pageid sono differenti", PageService.class, "singoloBlocco");
                 }// end of if/else cycle
-            } else {
+            }
+            else {
                 result.addNo(page.getTitle());
             }// end of if/else cycle
         }// end of for cycle
@@ -184,13 +186,13 @@ public class PageService extends ABioService {
             try { // prova ad eseguire il codice
                 deleteResult = bioService.deleteBulkByPageid(vociDaCancellarePrimaDiReinserirle);
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
 
             if (deleteResult != null && deleteResult.getDeletedCount() < vociDaCancellarePrimaDiReinserirle.size()) {
-                log.error(" ");
-                log.error("Non sono riuscito a cancellare: " + (vociDaCancellarePrimaDiReinserirle.size() - deleteResult.getDeletedCount()) + " voci prima di reinserirle per aggiornarle");
-                log.error(" ");
+                logger.error(" ");
+                logger.error("Non sono riuscito a cancellare: " + (vociDaCancellarePrimaDiReinserirle.size() - deleteResult.getDeletedCount()) + " voci prima di reinserirle per aggiornarle");
+                logger.error(" ");
             }// end of if cycle
         }// end of if cycle
 
@@ -199,15 +201,15 @@ public class PageService extends ABioService {
                 mongo.insert(listaBio, Bio.class);
             } catch (Exception unErrore) { // intercetta l'errore
                 logger.error(unErrore, PageService.class, "singoloBlocco");
-//                log.error(" ");
-//                log.error(unErrore.toString());
-//                log.error("Numero pagine (bio) da registrare: " + listaBio.size());
-//                log.error(listaBio.toString());
-//                for (int k = 0; k < 10; k++) {
-//                    log.error(" ");
-//                    log.error(listaBio.get(k).wikiTitle + " " + listaBio.get(k).pageid);
-//                }// end of for cycle
-//                log.error(" ");
+                //                log.error(" ");
+                //                log.error(unErrore.toString());
+                //                log.error("Numero pagine (bio) da registrare: " + listaBio.size());
+                //                log.error(listaBio.toString());
+                //                for (int k = 0; k < 10; k++) {
+                //                    log.error(" ");
+                //                    log.error(listaBio.get(k).wikiTitle + " " + listaBio.get(k).pageid);
+                //                }// end of for cycle
+                //                log.error(" ");
 
             }// fine del blocco try-catch
         }// end of if cycle
@@ -251,9 +253,10 @@ public class PageService extends ABioService {
         if (pageid > 0 && text.isValid(wikiTitle) && text.isValid(template)) {
             entity = bioService.newEntity(pageid, wikiTitle, template, lastWikiModifica);
             entity = elaboraService.esegueNoSave(entity);
-        } else {
+        }
+        else {
             if (text.isEmpty(template)) {
-                log.warn("Algos - Manca il template Bio alla voce " + wikiTitle);
+                logger.warn("Algos - Manca il template Bio alla voce " + wikiTitle);
             }// end of if cycle
         }// end of if/else cycle
 
@@ -307,13 +310,14 @@ public class PageService extends ABioService {
 
         entity = bioService.findByKeyUnica(wikiTitle);
         if (entity != null) {
-            entity.setWikiTitle(wikiTitle);
-            entity.setTmplBioServer(template);
-            entity.setLastLettura(LocalDateTime.now());
+            entity.wikiTitle = wikiTitle;
+            entity.tmplBioServer=template;
+            entity.lastLettura=LocalDateTime.now();
             entity = elaboraService.esegueNoSave(entity);
             bioService.save(entity);
-        } else {
-            log.warn("Algos - Ciclo UPDATE - non esiste una voce che si dovrebbe modificare: " + wikiTitle);
+        }
+        else {
+            logger.warn("Algos - Ciclo UPDATE - non esiste una voce che si dovrebbe modificare: " + wikiTitle);
         }// end of if/else cycle
 
     }// end of method

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
-import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadflow.application.FlowCost.TAG_TYP;
 
 /**
  * Project vaadflow <br>
@@ -114,10 +114,10 @@ public class LogtypeService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Logtype newEntity(int ordine, String code) {
-        return Logtype.builderLogtype()
-                .ordine(ordine != 0 ? ordine : this.getNewOrdine())
-                .code(text.isValid(code) ? code : null)
-                .build();
+        Logtype logtype = new Logtype();
+        logtype.ordine = ordine != 0 ? ordine : this.getNewOrdine();
+        logtype.code = text.isValid(code) ? code : null;
+        return logtype;
     }// end of method
 
 
@@ -126,7 +126,7 @@ public class LogtypeService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Logtype) entityBean).getCode();
+        return ((Logtype) entityBean).code;
     }// end of method
 
 
@@ -183,25 +183,24 @@ public class LogtypeService extends AService {
         return numRec;
     }// end of method
 
-
-//    /**
-//     * Raggruppamento logico dei log per type di eventi (nuova entity)
-//     *
-//     * @return la entity appena trovata
-//     */
-//    public Logtype getSetup() {
-//        return repository.findByCode(LOG_SETUP);
-//    }// end of method
-//
-//
-//    /**
-//     * Raggruppamento logico dei log per type di eventi (nuova entity)
-//     *
-//     * @return la entity appena trovata
-//     */
-//    public Logtype getNew() {
-//        return repository.findByCode(LOG_NEW);
-//    }// end of method
+    //    /**
+    //     * Raggruppamento logico dei log per type di eventi (nuova entity)
+    //     *
+    //     * @return la entity appena trovata
+    //     */
+    //    public Logtype getSetup() {
+    //        return repository.findByCode(LOG_SETUP);
+    //    }// end of method
+    //
+    //
+    //    /**
+    //     * Raggruppamento logico dei log per type di eventi (nuova entity)
+    //     *
+    //     * @return la entity appena trovata
+    //     */
+    //    public Logtype getNew() {
+    //        return repository.findByCode(LOG_NEW);
+    //    }// end of method
 
 
     /**
@@ -213,24 +212,23 @@ public class LogtypeService extends AService {
         return repository.findByCode(EALogType.edit.getTag());
     }// end of method
 
-
-//    /**
-//     * Raggruppamento logico dei log per type di eventi (entity cancellata)
-//     *
-//     * @return la entity appena trovata
-//     */
-//    public Logtype getDelete() {
-//        return repository.findByCode(LOG_DELETE);
-//    }// end of method
-//
-//
-//    /**
-//     * Raggruppamento logico dei log per type di eventi (import di dati)
-//     *
-//     * @return la entity appena trovata
-//     */
-//    public Logtype getImport() {
-//        return repository.findByCode(LOG_IMPORT);
-//    }// end of method
+    //    /**
+    //     * Raggruppamento logico dei log per type di eventi (entity cancellata)
+    //     *
+    //     * @return la entity appena trovata
+    //     */
+    //    public Logtype getDelete() {
+    //        return repository.findByCode(LOG_DELETE);
+    //    }// end of method
+    //
+    //
+    //    /**
+    //     * Raggruppamento logico dei log per type di eventi (import di dati)
+    //     *
+    //     * @return la entity appena trovata
+    //     */
+    //    public Logtype getImport() {
+    //        return repository.findByCode(LOG_IMPORT);
+    //    }// end of method
 
 }// end of class

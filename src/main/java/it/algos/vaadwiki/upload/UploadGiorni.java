@@ -79,7 +79,7 @@ public abstract class UploadGiorni extends UploadCrono {
         String titolo = VUOTA;
 
         if (giorno != null) {
-            titolo += giorno.getTitolo();
+            titolo += giorno.titolo;
         }// fine del blocco if
 
         return titolo;

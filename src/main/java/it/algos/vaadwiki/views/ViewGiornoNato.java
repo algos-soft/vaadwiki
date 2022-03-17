@@ -38,7 +38,7 @@ public class ViewGiornoNato extends ViewListe {
     /**
      * Costruisce il testo con tutte le didascalie relative al giorno considerato <br>
      * Presenta le righe secondo uno dei possibili metodi di raggruppamento <br>
-     * Deve essere sovrascritto nella sottoclassse concreta <br>
+     * Deve essere sovrascritto nella sottoClasse concreta <br>
      * Dopo DEVE invocare il metodo della superclasse <br>
      */
     @Override
@@ -51,12 +51,12 @@ public class ViewGiornoNato extends ViewListe {
 
     /**
      * Costruisce il titolo della pagina <br>
-     * Deve essere sovrascritto nella sottoclassse concreta <br>
+     * Deve essere sovrascritto nella sottoClasse concreta <br>
      * Dopo DEVE invocare il metodo della superclasse <br>
      */
     @Override
     protected void addInfoTitolo() {
-        this.add("Lista biografie di " + text.format(numVoci) + " persone nate il " + giorno.getTitolo());
+        this.add("Lista biografie di " + text.format(numVoci) + " persone nate il " + giorno.titolo);
         super.addInfoTitolo();
     }// end of method
 

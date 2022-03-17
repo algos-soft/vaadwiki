@@ -340,21 +340,21 @@ public class AQueryLogin extends AQueryWiki {
             if (regolaWikiLoginSingleton()) {
                 if (checkCollegamentoComeBot()) {
                     try { // prova ad eseguire il codice
-                        log.info("Algos - Bot loggato come " + lgusername);
+                        logger.info("Algos - Bot loggato come " + lgusername);
                         logger.debug("Bot loggato come " + lgusername);
                     } catch (Exception unErrore) { // intercetta l'errore
-                        log.error(unErrore.toString());
+                        logger.error(unErrore.toString());
                     }// fine del blocco try-catch
                 } else {
-                    log.warn("Algos - Non sono riuscito a loggarmi come bot");
+                    logger.warn("Algos - Non sono riuscito a loggarmi come bot");
                     mailService.send("Login", "Non sono riuscito a loggarmi come bot");
                 }// end of if/else cycle
             } else {
-                log.warn("Algos - Non sono riuscito a loggarmi come bot");
+                logger.warn("Algos - Non sono riuscito a loggarmi come bot");
                 mailService.send("Login", "Non sono riuscito a loggarmi come bot");
             }// end of if/else cycle
         } else {
-            log.warn("Algos - Non sono riuscito a loggarmi");
+            logger.warn("Algos - Non sono riuscito a loggarmi");
             mailService.send("Login", "Non sono riuscito a loggarmi");
         }// end of if/else cycle
 
@@ -375,7 +375,7 @@ public class AQueryLogin extends AQueryWiki {
             status = true;
         } else {
             Notification.show("Loggato come ", 4000, Notification.Position.BOTTOM_START);
-            log.warn("Non trovo wLogin");
+            logger.warn("Non trovo wLogin");
         }// end of if/else cycle
 
         return status;

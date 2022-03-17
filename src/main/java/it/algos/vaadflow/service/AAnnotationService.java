@@ -312,7 +312,7 @@ public class AAnnotationService extends AbstractService {
             reflectionJavaField = entityClazz.getDeclaredField(fieldName);
             annotation = getAIField(reflectionJavaField);
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return annotation;
@@ -344,7 +344,7 @@ public class AAnnotationService extends AbstractService {
 
             }// end of if cycle
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return annotation;

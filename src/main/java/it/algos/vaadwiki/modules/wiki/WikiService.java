@@ -177,7 +177,6 @@ public abstract class WikiService extends AService {
                 message += date.deltaText(inizio);
                 message += "), con AQueryVoce, senza login, senza cookies, urlRequest di tipo GET";
 
-                log.debug(message);
                 logger.debug(message);
             }// end of if cycle
         } else {
@@ -251,7 +250,7 @@ public abstract class WikiService extends AService {
                 delta = 1000 * 60 * 60 * 24;
                 break;
             default:
-                log.warn("Switch - caso non definito");
+                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 

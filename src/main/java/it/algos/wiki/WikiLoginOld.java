@@ -246,10 +246,10 @@ public class WikiLoginOld {
         }// fine del blocco try-catch
 
         if (isValido()) {
-            log.info("login effettuato come: " + lgname);
+//            logger.info("login effettuato come: " + lgname);
         } else {
             String info = risultato != null ? risultato.messaggio : "";
-            log.warn("login non valido: " + info);
+//            logger.warn("login non valido: " + info);
         }// end of if/else cycle
     } // fine del metodo
 

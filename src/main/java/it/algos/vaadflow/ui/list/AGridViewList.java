@@ -255,7 +255,7 @@ public abstract class AGridViewList extends ALayoutViewList {
                 headerGridHolder = new Label("x");
                 informationCell.setComponent(headerGridHolder);
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
     }// end of method
@@ -346,12 +346,12 @@ public abstract class AGridViewList extends ALayoutViewList {
                             intValue = Integer.decode(searchField.getValue());
                             filtri.add(new AFiltro(Criteria.where(searchProperty).is(intValue)));
                         } catch (Exception unErrore) { // intercetta l'errore
-                            log.error(unErrore.toString());
+                            logger.error(unErrore.toString());
                         }// fine del blocco try-catch
 
                         break;
                     default:
-                        log.warn("Switch - caso non definito");
+                        logger.warn("Switch - caso non definito");
                         break;
                 } // end of switch statement
             }// end of if cycle
@@ -401,7 +401,7 @@ public abstract class AGridViewList extends ALayoutViewList {
                 grid.deselectAll();
                 grid.setItems(items);
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
         } else {
             grid.deselectAll();

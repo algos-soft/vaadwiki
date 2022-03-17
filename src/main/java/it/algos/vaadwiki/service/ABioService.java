@@ -329,6 +329,7 @@ public class ABioService {
      *
      * @return mappa col risultato
      */
+    @Deprecated
     public HashMap<String, Object> checkGraffe(String testoDaSpazzolare) {
         HashMap<String, Object> mappa = new HashMap<>();
         boolean continua = false;

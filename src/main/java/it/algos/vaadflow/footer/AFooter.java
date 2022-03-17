@@ -107,8 +107,8 @@ public class AFooter extends VerticalLayout  {
         String sep = " - ";
         String spazio = " ";
         String tag = "all companies";
-        String companyCode = login.getCompany() != null ? login.getCompany().getCode() : "";
-        String companyName = login.getCompany() != null ? login.getCompany().getDescrizione() : "";
+        String companyCode = login.getCompany() != null ? login.getCompany().code : "";
+        String companyName = login.getCompany() != null ? login.getCompany().descrizione : "";
         String userName = login.getUtente() != null ? login.getUtente().getUsername() : "";
         this.removeAll();
 

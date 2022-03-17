@@ -241,15 +241,13 @@ public class BioService extends WikiService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Bio newEntity(long pageid, String wikiTitle, String tmplBioServer, LocalDateTime lastWikiModifica, LocalDateTime lastGacLettura) {
-        Bio entity = null;
+        Bio entity = new Bio();
 
-        entity = Bio.builderBio()
-                .pageid(pageid)
-                .wikiTitle(wikiTitle.equals("") ? null : wikiTitle)
-                .tmplBioServer(tmplBioServer.equals("") ? null : tmplBioServer)
-                .lastModifica(lastWikiModifica != null ? lastWikiModifica : FlowCost.START_DATE_TIME)
-                .lastLettura(lastGacLettura != null ? lastGacLettura : LocalDateTime.now())
-                .build();
+        entity.pageid = pageid;
+        entity.wikiTitle = wikiTitle.equals("") ? null : wikiTitle;
+        entity.tmplBioServer = tmplBioServer.equals("") ? null : tmplBioServer;
+        entity.lastModifica = lastWikiModifica != null ? lastWikiModifica : FlowCost.START_DATE_TIME;
+        entity.lastLettura = lastGacLettura != null ? lastGacLettura : LocalDateTime.now();
 
         if (text.isValid(wikiTitle)) {
             entity.id = wikiTitle;
@@ -301,13 +299,14 @@ public class BioService extends WikiService {
         try { // prova ad eseguire il codice
             if (sort != null) {
                 lista = new ArrayList(repository.findAll(sort));
-            } else {
+            }
+            else {
                 //@todo troppo lento - devo disabilitarlo
-//                lista = new ArrayList(repository.findTop50ByOrderByWikiTitleAsc());
-//                lista = new ArrayList(repository.findAllByOrderByWikiTitleAsc());
+                //                lista = new ArrayList(repository.findTop50ByOrderByWikiTitleAsc());
+                //                lista = new ArrayList(repository.findAllByOrderByWikiTitleAsc());
             }// end of if/else cycle
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return lista;
@@ -557,7 +556,8 @@ public class BioService extends WikiService {
 
                 if (mappa.containsKey(ordine)) {
                     listaTmp = mappa.get(ordine);
-                } else {
+                }
+                else {
                     listaTmp = new ArrayList<>();
                 }// end of if/else cycle
                 listaTmp.add(bio);
@@ -600,11 +600,12 @@ public class BioService extends WikiService {
             mappa = new LinkedHashMap<>();
 
             for (Bio bio : listaGrezza) {
-                attivita = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
+                attivita = bio.attivita != null ? bio.attivita.singolare : "";
 
                 if (mappa.containsKey(attivita)) {
                     listaTmp = mappa.get(attivita);
-                } else {
+                }
+                else {
                     listaTmp = new ArrayList<>();
                 }// end of if/else cycle
                 listaTmp.add(bio);
@@ -756,7 +757,7 @@ public class BioService extends WikiService {
                     ordine = bio.giornoMorte != null ? bio.giornoMorte.ordine : 0;
                     break;
                 default:
-                    log.warn("Switch - caso non definito");
+                    logger.warn("Switch - caso non definito");
                     break;
             } // end of switch statement
         }// end of if cycle
@@ -780,7 +781,8 @@ public class BioService extends WikiService {
 
                 if (mappa.containsKey(nomeCognome)) {
                     listaTmp = mappa.get(nomeCognome);
-                } else {
+                }
+                else {
                     listaTmp = new ArrayList<>();
                 }// end of if/else cycle
                 listaTmp.add(bio);
@@ -817,7 +819,7 @@ public class BioService extends WikiService {
                     nomeCognome = bio.nome != null ? bio.nome : "";
                     break;
                 default:
-                    log.warn("Switch - caso non definito");
+                    logger.warn("Switch - caso non definito");
                     break;
             } // end of switch statement
         }// end of if cycle
@@ -846,16 +848,17 @@ public class BioService extends WikiService {
                     listaLong.add(((Bio) entity).pageid);
                 }// end of for cycle
                 if (pref.isBool(FlowCost.USA_DEBUG)) {
-                    log.info("Debug. Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findAllPageids()");
+                    logger.info("Debug. Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findAllPageids()");
                 }// end of if cycle
-            } else {
-                log.warn("Qualcosa non ha funzionato in BioService.findAllPageids()");
+            }
+            else {
+                logger.warn("Qualcosa non ha funzionato in BioService.findAllPageids()");
             }// end of if/else cycle
         }// end of for cycle
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             logger.debug("Recuperate " + text.format(listaLong.size()) + " pagine da bioService.findAllPageids() in " + date.deltaText(inizio));
-            log.info("Recuperata una lista di " + text.format(listaLong.size()) + " pageid da bioService.findAllPageids() in " + date.deltaText(inizio));
+            logger.info("Recuperata una lista di " + text.format(listaLong.size()) + " pageid da bioService.findAllPageids() in " + date.deltaText(inizio));
         }// end of if cycle
 
         return listaLong;
@@ -882,16 +885,17 @@ public class BioService extends WikiService {
                     listaString.add(((Bio) entity).wikiTitle);
                 }// end of for cycle
                 if (pref.isBool(FlowCost.USA_DEBUG)) {
-                    log.info("Debug. Recuperate " + text.format(listaString.size()) + " pagine da bioService.findAllTitles()");
+                    logger.info("Debug. Recuperate " + text.format(listaString.size()) + " pagine da bioService.findAllTitles()");
                 }// end of if cycle
-            } else {
-                log.warn("Qualcosa non ha funzionato in BioService.findAllTitles()");
+            }
+            else {
+                logger.warn("Qualcosa non ha funzionato in BioService.findAllTitles()");
             }// end of if/else cycle
         }// end of for cycle
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             logger.debug("Recuperate " + text.format(listaString.size()) + " pagine da bioService.findAllTitles() in " + date.deltaText(inizio));
-            log.info("Recuperata una lista di " + text.format(listaString.size()) + " pageid da bioService.findAllTitles() in " + date.deltaText(inizio));
+            logger.info("Recuperata una lista di " + text.format(listaString.size()) + " pageid da bioService.findAllTitles() in " + date.deltaText(inizio));
         }// end of if cycle
 
         return listaString;
@@ -915,7 +919,7 @@ public class BioService extends WikiService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Bio) entityBean).getWikiTitle() + "";
+        return ((Bio) entityBean).wikiTitle + "";
     }// end of method
 
 
@@ -987,7 +991,7 @@ public class BioService extends WikiService {
         if (array.isValid(listaBio)) {
             listaPageid = new ArrayList<>();
             for (Bio bio : listaBio) {
-                listaPageid.add(bio.getPageid());
+                listaPageid.add(bio.pageid);
             }// end of for cycle
         }// end of if cycle
 
@@ -1129,34 +1133,33 @@ public class BioService extends WikiService {
         return setAnni.size();
     }// end of method
 
-
-//    /**
-//     * Fetches the entities whose 'main text property' matches the given filter text.
-//     * <p>
-//     * Se esiste la company, filtrate secondo la company <br>
-//     * The matching is case insensitive. When passed an empty filter text,
-//     * the method returns all categories. The returned list is ordered by name.
-//     * The 'main text property' is different in each entity class and chosen in the specific subclass
-//     *
-//     * @param filter the filter text
-//     *
-//     * @return the list of matching entities
-//     */
-//    @Override
-//    public List<? extends AEntity> findFilter(String filter) {
-//        List<? extends AEntity> lista = null;
-//        String normalizedFilter = filter.toLowerCase();
-//
-//        lista = findAll();
-//        if (lista != null) {
-//            lista = lista.stream()
-//                    .filter(entity -> {
-//                        return ((Bio)entity).getWikiTitle().toLowerCase().startsWith(normalizedFilter);
-//                    })
-//                    .collect(Collectors.toList());
-//        }// end of if cycle
-//
-//        return lista;
-//    }// end of method
+    //    /**
+    //     * Fetches the entities whose 'main text property' matches the given filter text.
+    //     * <p>
+    //     * Se esiste la company, filtrate secondo la company <br>
+    //     * The matching is case insensitive. When passed an empty filter text,
+    //     * the method returns all categories. The returned list is ordered by name.
+    //     * The 'main text property' is different in each entity class and chosen in the specific subclass
+    //     *
+    //     * @param filter the filter text
+    //     *
+    //     * @return the list of matching entities
+    //     */
+    //    @Override
+    //    public List<? extends AEntity> findFilter(String filter) {
+    //        List<? extends AEntity> lista = null;
+    //        String normalizedFilter = filter.toLowerCase();
+    //
+    //        lista = findAll();
+    //        if (lista != null) {
+    //            lista = lista.stream()
+    //                    .filter(entity -> {
+    //                        return ((Bio)entity).getWikiTitle().toLowerCase().startsWith(normalizedFilter);
+    //                    })
+    //                    .collect(Collectors.toList());
+    //        }// end of if cycle
+    //
+    //        return lista;
+    //    }// end of method
 
 }// end of class

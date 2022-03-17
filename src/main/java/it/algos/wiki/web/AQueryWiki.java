@@ -124,7 +124,7 @@ public abstract class AQueryWiki extends AQuery {
         try { // prova ad eseguire il codice
             return text.isValid(titoloWiki) ? URLEncoder.encode(titoloWiki, ENCODE) : VUOTA;
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+//            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return titoloWiki;

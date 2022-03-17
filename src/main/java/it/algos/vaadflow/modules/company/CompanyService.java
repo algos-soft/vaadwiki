@@ -51,6 +51,7 @@ public class CompanyService extends AService {
     private static final String ALGOS = "algos";
 
     private static final String DEMO = "demo";
+
     private static final String TEST = "test";
 
     /**
@@ -174,14 +175,15 @@ public class CompanyService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Company newEntity(String code, String descrizione, Person contatto, String telefono, String mail, Address indirizzo) {
-        return Company.builderCompany()
-                .code(text.isValid(code) ? code : null)
-                .descrizione(text.isValid(descrizione) ? descrizione : null)
-                .contatto(contatto)
-                .telefono(text.isValid(telefono) ? telefono : null)
-                .mail(text.isValid(mail) ? mail : null)
-                .indirizzo(indirizzo)
-                .build();
+        Company company = new Company();
+        company.code = text.isValid(code) ? code : null;
+        company.descrizione = text.isValid(descrizione) ? descrizione : null;
+        company.contatto = contatto;
+        company.telefono = text.isValid(telefono) ? telefono : null;
+        company.mail = text.isValid(mail) ? mail : null;
+        company.indirizzo = indirizzo;
+
+        return company;
     }// end of method
 
 
@@ -190,7 +192,7 @@ public class CompanyService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Company) entityBean).getCode();
+        return ((Company) entityBean).code;
     }// end of method
 
 
@@ -241,6 +243,7 @@ public class CompanyService extends AService {
     public ArrayList<Company> findAll() {
         return (ArrayList) repository.findAllByOrderByCodeAsc();
     }// end of method
+
     /**
      * Returns all entities of the type <br>
      *

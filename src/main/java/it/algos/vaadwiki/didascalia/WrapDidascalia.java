@@ -199,9 +199,9 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
         String key = VUOTA;
 
         try { // prova ad eseguire il codice
-            sessoMaschile = bio.getSesso().equals("F") ? false : true;
+            sessoMaschile = bio.sesso.equals("F") ? false : true;
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error("Manca il sesso alla bio: " + bio.wikiTitle);
+//            logger.error("Manca il sesso alla bio: " + bio.wikiTitle);
         }// fine del blocco try-catch
 
         switch (type) {
@@ -209,117 +209,117 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
             //--uso il numero d'ordine di ogni anno
             case giornoNato:
                 didascalia = didascaliaService.getDidascaliaGiornoNato(bio);
-                key = bio.getAnnoNascita() != null ? bio.getAnnoNascita().titolo : "";
+                key = bio.annoNascita != null ? bio.annoNascita.titolo : "";
 
-                chiaveParagrafo = bio.getAnnoNascita() != null ? bio.getAnnoNascita().secolo.titolo : "";
+                chiaveParagrafo = bio.annoNascita != null ? bio.annoNascita.secolo.titolo : "";
                 chiaveSottoPagina = VUOTA;
                 chiaveSottoSottoPagina = VUOTA;
                 chiaveRiga = key;
                 chiaveOrdinamentoNumerico = text.isValid(key) ? annoService.findByKeyUnica(key).ordine : 0;
-                chiaveCognome = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
+                chiaveCognome = text.isValid(bio.cognome) ? bio.cognome : bio.wikiTitle;
                 break;
             //--i nomi dei secoli ed i numeri degli anni sono in formato testo e non possono essere ordinati
             //--uso il numero d'ordine di ogni anno
             case giornoMorto:
                 didascalia = didascaliaService.getDidascaliaGiornoMorto(bio);
-                key = bio.getAnnoMorte() != null ? bio.getAnnoMorte().titolo : "";
+                key = bio.annoMorte != null ? bio.annoMorte.titolo : "";
 
-                chiaveParagrafo = bio.getAnnoMorte() != null ? bio.getAnnoMorte().secolo.titolo : "";
+                chiaveParagrafo = bio.annoMorte != null ? bio.annoMorte.secolo.titolo : "";
                 chiaveSottoPagina = VUOTA;
                 chiaveSottoSottoPagina = VUOTA;
                 chiaveRiga = key;
                 chiaveOrdinamentoNumerico = text.isValid(key) ? annoService.findByKeyUnica(key).ordine : 0;
-                chiaveCognome = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
+                chiaveCognome = text.isValid(bio.cognome) ? bio.cognome : bio.wikiTitle;
                 break;
             //--i nomi dei mesi e dei giorni sono in formato testo e non possono essere ordinati
             //--uso il numero d'ordine di ogni giorno
             case annoNato:
                 didascalia = didascaliaService.getDidascaliaAnnoNato(bio);
-                key = bio.getGiornoNascita() != null ? bio.getGiornoNascita().titolo : "";
+                key = bio.giornoNascita != null ? bio.giornoNascita.titolo : "";
 
-                chiaveParagrafo = bio.getGiornoNascita() != null ? bio.getGiornoNascita().mese.titoloLungo : "";
+                chiaveParagrafo = bio.giornoNascita != null ? bio.giornoNascita.mese.titoloLungo : "";
                 chiaveParagrafo = text.primaMaiuscola(chiaveParagrafo);
                 chiaveSottoPagina = VUOTA;
                 chiaveSottoSottoPagina = VUOTA;
                 chiaveRiga = key;
                 chiaveOrdinamentoNumerico = text.isValid(key) ? giornoService.findByKeyUnica(key).ordine : 0;
-                chiaveCognome = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
+                chiaveCognome = text.isValid(bio.cognome) ? bio.cognome : bio.wikiTitle;
                 break;
             //--i nomi dei mesi e dei giorni sono in formato testo e non possono essere ordinati
             //--uso il numero d'ordine di ogni giorno
             case annoMorto:
                 didascalia = didascaliaService.getDidascaliaAnnoMorto(bio);
-                key = bio.getGiornoMorte() != null ? bio.getGiornoMorte().titolo : "";
+                key = bio.giornoMorte != null ? bio.giornoMorte.titolo : "";
 
-                chiaveParagrafo = bio.getGiornoMorte() != null ? bio.getGiornoMorte().mese.titoloLungo : "";
+                chiaveParagrafo = bio.giornoMorte != null ? bio.giornoMorte.mese.titoloLungo : "";
                 chiaveParagrafo = text.primaMaiuscola(chiaveParagrafo);
                 chiaveSottoPagina = VUOTA;
                 chiaveSottoSottoPagina = VUOTA;
                 chiaveRiga = key;
                 chiaveOrdinamentoNumerico = text.isValid(key) ? giornoService.findByKeyUnica(key).ordine : 0;
-                chiaveCognome = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
+                chiaveCognome = text.isValid(bio.cognome) ? bio.cognome : bio.wikiTitle;
                 break;
             case listaNomi:
-                if (text.isValid(bio.getWikiTitle())) {
+                if (text.isValid(bio.wikiTitle)) {
 
-                    if (bio.getWikiTitle().equals("Angelo Corbo")) {
+                    if (bio.wikiTitle.equals("Angelo Corbo")) {
                         int a = 87;
                     }// end of if cycle
-                    if (bio.getWikiTitle().equals("Angelo Joppi")) {
+                    if (bio.wikiTitle.equals("Angelo Joppi")) {
                         int a = 87;
                     }// end of if cycle
-                    if (bio.getWikiTitle().equals("Ciro De Vita")) {
+                    if (bio.wikiTitle.equals("Ciro De Vita")) {
                         int a = 87;
                     }// end of if cycle
-                    if (bio.getWikiTitle().equals("Ciro Sarno")) {
+                    if (bio.wikiTitle.equals("Ciro Sarno")) {
                         int a = 87;
                     }// end of if cycle
-                    if (bio.getWikiTitle().equals("Ciro Siciliano")) {
+                    if (bio.wikiTitle.equals("Ciro Siciliano")) {
                         int a = 87;
                     }// end of if cycle
-                    if (bio.getWikiTitle().equals("Giuseppe Vinci")) {
+                    if (bio.wikiTitle.equals("Giuseppe Vinci")) {
                         int a = 87;
                     }// end of if cycle
-                    if (bio.getWikiTitle().equals("Giuseppe Biancani")) {
+                    if (bio.wikiTitle.equals("Giuseppe Biancani")) {
                         int a = 87;
                     }// end of if cycle
                 }// end of if cycle
 
                 didascalia = didascaliaService.getDidascaliaListe(bio);
-                chiave = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
+                chiave = bio.attivita != null ? bio.attivita.singolare : "";
 
-                chiaveParagrafo = bio.getAttivita() != null ? bio.getAttivita().plurale : "";
-                chiaveCognome = text.isValid(bio.getCognome()) ? bio.getCognome() : bio.getWikiTitle();
+                chiaveParagrafo = bio.attivita != null ? bio.attivita.plurale : "";
+                chiaveCognome = text.isValid(bio.cognome) ? bio.cognome : bio.wikiTitle;
                 chiaveSottoPagina = text.isValid(chiaveCognome) ? chiaveCognome.substring(0, 1).toUpperCase() : "";
                 chiave = chiaveParagrafo.toLowerCase();
                 chiaveProfessione = getGenere(bio);
                 break;
             case listaCognomi:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
-                chiave = bio.getAttivita() != null ? bio.getAttivita().singolare : "";
+                chiave = bio.attivita != null ? bio.attivita.singolare : "";
 
                 chiaveParagrafo = fixChiaveUno(chiave, sessoMaschile);
-                chiaveCognome = text.isValid(bio.getNome()) ? bio.getNome() : bio.getWikiTitle();
+                chiaveCognome = text.isValid(bio.nome) ? bio.nome : bio.wikiTitle;
                 chiaveSottoPagina = text.isValid(chiaveCognome) ? chiaveCognome.substring(0, 1).toUpperCase() : "";
                 chiave = chiaveParagrafo.toLowerCase();
                 chiaveProfessione = getGenere(bio);
                 break;
             case listaAttivita:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
-                chiave = bio.getNazionalita() != null ? bio.getNazionalita().plurale : "";
+                chiave = bio.nazionalita != null ? bio.nazionalita.plurale : "";
 
                 chiaveParagrafo = chiave;
-                chiaveCognome = bio.getNazionalita() != null ? bio.getNazionalita().plurale : bio.getWikiTitle();
-                chiaveSottoPagina = text.isValid(bio.getCognome()) ? bio.getCognome().substring(0, 1) : bio.getWikiTitle().substring(0, 1);
+                chiaveCognome = bio.nazionalita != null ? bio.nazionalita.plurale : bio.wikiTitle;
+                chiaveSottoPagina = text.isValid(bio.cognome) ? bio.cognome.substring(0, 1) : bio.wikiTitle.substring(0, 1);
                 chiaveProfessione = getGenere(bio);
                 break;
             case listaNazionalita:
                 didascalia = didascaliaService.getDidascaliaListe(bio);
-                chiave = bio.getAttivita() != null ? bio.getAttivita().plurale : "";
+                chiave = bio.attivita != null ? bio.attivita.plurale : "";
 
                 chiaveParagrafo = chiave;
-                chiaveCognome = bio.getAttivita() != null ? bio.getAttivita().plurale : bio.getWikiTitle();
-                chiaveSottoPagina = text.isValid(bio.getCognome()) ? bio.getCognome().substring(0, 1) : bio.getWikiTitle().substring(0, 1);
+                chiaveCognome = bio.attivita != null ? bio.attivita.plurale : bio.wikiTitle;
+                chiaveSottoPagina = text.isValid(bio.cognome) ? bio.cognome.substring(0, 1) : bio.wikiTitle.substring(0, 1);
                 chiaveProfessione = getGenere(bio);
                 break;
             case biografie:
@@ -327,12 +327,12 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
                 this.chiave = "";
                 break;
             default:
-                log.warn("Switch - caso non definito");
+//                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 
-        String wikiTitle = bio.getWikiTitle();
-        String cognome = text.isValid(bio.getCognome()) ? bio.getCognome() : wikiTitle;
+        String wikiTitle = bio.wikiTitle;
+        String cognome = text.isValid(bio.cognome) ? bio.cognome : wikiTitle;
         this.sottoChiave = cognome + wikiTitle;
 
         if (didascalia != null) {
@@ -378,7 +378,7 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
      */
     public String getGenere(Bio bio) {
         String chiave = "";
-        Attivita attivita = bio.getAttivita();
+        Attivita attivita = bio.attivita;
         Professione professione = null;
 
         if (attivita != null) {

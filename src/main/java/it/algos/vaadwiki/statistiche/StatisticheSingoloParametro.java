@@ -223,7 +223,7 @@ public class StatisticheSingoloParametro extends Statistiche {
         if (array.isValid(lista)) {
             for (Bio bio : lista) {
                 testo += ASTERISCO;
-                testo += LibWiki.setQuadre(bio.getWikiTitle());
+                testo += LibWiki.setQuadre(bio.wikiTitle);
                 testo += A_CAPO;
             }// end of for cycle
         }// end of if cycle

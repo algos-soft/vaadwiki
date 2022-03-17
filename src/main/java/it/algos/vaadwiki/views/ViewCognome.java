@@ -54,7 +54,7 @@ public class ViewCognome extends ViewListe {
      */
     @Override
     protected void addInfoTitolo() {
-        this.add("Lista biografie di " + text.format(numVoci) + " persone di cognome " + cognome.getCognome());
+        this.add("Lista biografie di " + text.format(numVoci) + " persone di cognome " + cognome.cognome);
         super.addInfoTitolo();
     }// end of method
 

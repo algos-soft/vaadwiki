@@ -3,7 +3,9 @@ package it.algos.vaadflow.service;
 import com.vaadin.flow.component.html.Label;
 import it.algos.vaadflow.enumeration.EAFirstChar;
 import it.algos.vaadflow.enumeration.EAPrefType;
+import it.algos.vaadflow.modules.log.LogService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -84,6 +86,12 @@ public class ATextService extends AbstractService {
      */
     private static final ATextService INSTANCE = new ATextService();
 
+
+    /**
+     * Istanza (@Scope = 'singleton') inietta da Spring <br>
+     */
+    @Autowired
+    protected LogService logger;
 
     /**
      * Private constructor to avoid client applications to use constructor
@@ -523,7 +531,7 @@ public class ATextService extends AbstractService {
                         try { // prova ad eseguire il codice
                             return tatEdit + type.bytesToObject((byte[]) oldValue) + tagSep + type.bytesToObject((byte[]) newValue);
                         } catch (Exception unErrore) { // intercetta l'errore
-                            log.error(unErrore.toString() + " LibText.getDescrizione() - Sembra che il PrefType non sia del tipo corretto");
+                            logger.error(unErrore.toString() + " LibText.getDescrizione() - Sembra che il PrefType non sia del tipo corretto");
                             return "";
                         }// fine del blocco try-catch
                     } else {
@@ -1196,7 +1204,7 @@ public class ATextService extends AbstractService {
             test = prima.compareTo(seconda);
             return (prima.compareTo(seconda) < 0) ? -1 : (prima.compareTo(seconda) == 0) ? 0 : 1;
         } else {
-            log.warn("Algos - ATextService.compareStr(): valori nulli");
+            logger.warn("Algos - ATextService.compareStr(): valori nulli");
             return 0;
         }// end of if/else cycle
     }// end of method

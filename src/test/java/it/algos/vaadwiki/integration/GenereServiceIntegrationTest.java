@@ -63,7 +63,7 @@ public class GenereServiceIntegrationTest extends ATest {
         System.out.println("Lista generi associati a '" + sorgente + "'");
         System.out.println("*************");
         for (Genere genere : listaGenere) {
-            System.out.println(genere.getSingolare());
+            System.out.println(genere.singolare);
         }// end of for cycle
 
         sorgente = "danzatori";
@@ -74,7 +74,7 @@ public class GenereServiceIntegrationTest extends ATest {
         System.out.println("Lista generi associati a '" + sorgente + "'");
         System.out.println("*************");
         for (Genere genere : listaGenere) {
-            System.out.println(genere.getSingolare());
+            System.out.println(genere.singolare);
         }// end of for cycle
 
         listaGenereAll = (List<Genere>) genereService.findAll();
@@ -94,7 +94,7 @@ public class GenereServiceIntegrationTest extends ATest {
             for (Genere genere2 : listaGenere) {
                 prof= professioneService.findByKeyUnica(genere.singolare);
                 if (prof!=null) {
-                    pag=prof.getPagina();
+                    pag=prof.pagina;
                 }// end of if cycle
                 riga=riga+","+genere2.singolare+"("+pag+")";
             }// end of for cycle

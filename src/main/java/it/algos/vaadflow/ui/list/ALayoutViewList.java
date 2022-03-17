@@ -244,7 +244,7 @@ public abstract class ALayoutViewList extends APrefViewList {
                 topPlaceholder.add(buttonSearch, buttonClearFilter);
                 break;
             default:
-                log.warn("Switch - caso non definito");
+                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 

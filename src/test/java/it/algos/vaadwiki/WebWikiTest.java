@@ -1,15 +1,13 @@
 package it.algos.vaadwiki;
 
-import it.algos.vaadwiki.service.AWikiService;
-import it.algos.wiki.Page;
+import it.algos.vaadwiki.service.*;
+import it.algos.wiki.*;
 import it.algos.wiki.web.*;
-import name.falgout.jeffrey.testing.junit5.MockitoExtension;
+import name.falgout.jeffrey.testing.junit5.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.extension.*;
+import org.mockito.*;
 
 /**
  * Project vaadwiki
@@ -65,7 +63,6 @@ public class WebWikiTest extends ATest {
         aQueryPage.wikiService = wikiService;
         aQueryVoce.wikiService = wikiService;
     }// end of method
-
 
     //    @Test
     //    public void prova() {
@@ -140,7 +137,6 @@ public class WebWikiTest extends ATest {
         assertTrue(contenuto.length() > 0);
         assertTrue(contenuto.startsWith(previsto));
     }// end of single test
-
 
     //    @Test
     //    public void provaWikiTemplateBio() {

@@ -97,15 +97,15 @@ public class TDialogoUpdateProject extends TDialogo {
         this.projectBasePath = ideaProjectRootPath + SEP + PROJECT_BASE_NAME;
         this.sourcePath = projectBasePath + DIR_SOURCES;
 
-        log.info("");
-        log.info("PROJECT_BASE: " + PROJECT_BASE_NAME);
-        log.info("DIR_JAVA: " + DIR_JAVA);
-        log.info("DIR_PROJECT_BASE: " + DIR_PROJECT_BASE);
-        log.info("DIR_SOURCES: " + DIR_SOURCES);
-        log.info("userDir: " + userDir);
-        log.info("ideaProjectRootPath: " + ideaProjectRootPath);
-        log.info("projectBasePath: " + projectBasePath);
-        log.info("sourcePath: " + sourcePath);
+//        log.info("");
+//        log.info("PROJECT_BASE: " + PROJECT_BASE_NAME);
+//        log.info("DIR_JAVA: " + DIR_JAVA);
+//        log.info("DIR_PROJECT_BASE: " + DIR_PROJECT_BASE);
+//        log.info("DIR_SOURCES: " + DIR_SOURCES);
+//        log.info("userDir: " + userDir);
+//        log.info("ideaProjectRootPath: " + ideaProjectRootPath);
+//        log.info("projectBasePath: " + projectBasePath);
+//        log.info("sourcePath: " + sourcePath);
     }// end of method
 
 

@@ -1,17 +1,15 @@
 package it.algos.vaadwiki.liste;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.enumeration.EADidascalia;
-import it.algos.vaadwiki.didascalia.WrapDidascalia;
-import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.vaadwiki.modules.cognome.Cognome;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadwiki.application.WikiCost.*;
+import it.algos.vaadwiki.didascalia.*;
+import it.algos.vaadwiki.enumeration.*;
+import it.algos.vaadwiki.modules.bio.*;
+import it.algos.vaadwiki.modules.cognome.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static it.algos.vaadwiki.application.WikiCost.*;
+import java.util.*;
 
 /**
  * Project vaadwiki
@@ -28,8 +26,6 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ListaCognomi extends Lista {
-
-
 
 
     /**

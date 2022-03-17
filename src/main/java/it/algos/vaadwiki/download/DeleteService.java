@@ -45,7 +45,7 @@ public class DeleteService extends ABioService {
                 logger.error("DELETE - Non sono riuscito ad eliminare nessuna voce delle " + vociEccedenti.size() + " eccedenti");
                 for (Long pageid : vociEccedenti) {
                     bio = bioService.downloadBio(pageid);
-                    wikiTitle = bio != null ? bio.getWikiTitle() : "";
+                    wikiTitle = bio != null ? bio.wikiTitle : "";
                     logger.error("DELETE - " + (text.isEmpty(wikiTitle) ? "Questa proprio non ci sta: "+pageid+" (pageid)" : "Non pervenuta"));
                 }// end of for cycle
 

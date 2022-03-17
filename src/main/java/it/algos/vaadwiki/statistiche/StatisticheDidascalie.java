@@ -235,7 +235,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            title = bio.getWikiTitle();
+            title = bio.wikiTitle;
             if (text.isValid(title)) {
                 didascalia = didascaliaService.getBiografie(bio);
                 linkPagina = LibWiki.setQuadre(title);
@@ -257,7 +257,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina = "";
 
         if (bio != null) {
-            giorno = bio.getGiornoNascita();
+            giorno = bio.giornoNascita;
             if (giorno != null) {
                 didascalia = didascaliaService.getGiornoNatoCon(bio);
                 linkPagina = uploadService.getTitoloGiornoNato(giorno);
@@ -280,7 +280,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            giorno = bio.getGiornoMorte();
+            giorno = bio.giornoMorte;
             if (giorno != null) {
                 didascalia = didascaliaService.getGiornoMortoCon(bio);
                 linkPagina = uploadService.getTitoloGiornoMorto(giorno);
@@ -303,7 +303,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            anno = bio.getAnnoNascita();
+            anno = bio.annoNascita;
             if (anno != null) {
                 didascalia = didascaliaService.getAnnoNatoCon(bio);
                 linkPagina = uploadService.getTitoloAnnoNato(anno);
@@ -326,7 +326,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            anno = bio.getAnnoMorte();
+            anno = bio.annoMorte;
             if (anno != null) {
                 didascalia = didascaliaService.getAnnoMortoCon(bio);
                 linkPagina = uploadService.getTitoloAnnoMorto(anno);
@@ -349,7 +349,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            nome = bio.getNome();
+            nome = bio.nome;
             if (text.isValid(nome)) {
                 didascalia = didascaliaService.getListeSenza(bio);
                 linkPagina = LibWiki.setQuadre("persone di nome " + nome);
@@ -371,7 +371,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            cognome = bio.getCognome();
+            cognome = bio.cognome;
             if (text.isValid(cognome)) {
                 didascalia = didascaliaService.getListeSenza(bio);
                 linkPagina = LibWiki.setQuadre("persone di cognome " + cognome);
@@ -393,7 +393,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            attivita = bio.getAttivita() != null ? bio.getAttivita().plurale : VUOTA;
+            attivita = bio.attivita != null ? bio.attivita.plurale : VUOTA;
             if (text.isValid(attivita)) {
                 didascalia = didascaliaService.getListeSenza(bio);
                 linkPagina = LibWiki.setQuadre("Progetto:Biografie/Attività/" + text.primaMaiuscola(attivita) + "|" + attivita);
@@ -415,7 +415,7 @@ public class StatisticheDidascalie extends Statistiche {
         String linkPagina;
 
         if (bio != null) {
-            nazionalita = bio.getNazionalita() != null ? bio.getNazionalita().plurale : VUOTA;
+            nazionalita = bio.nazionalita != null ? bio.nazionalita.plurale : VUOTA;
             if (text.isValid(nazionalita)) {
                 didascalia = didascaliaService.getListeSenza(bio);
                 linkPagina = LibWiki.setQuadre("Progetto:Biografie/Nazionalità/" + text.primaMaiuscola(nazionalita) + "|" + nazionalita);

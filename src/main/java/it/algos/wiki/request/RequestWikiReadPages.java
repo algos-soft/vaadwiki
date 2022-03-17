@@ -111,7 +111,7 @@ public class RequestWikiReadPages extends RequestWiki {
         try { // prova ad eseguire il codice
             stringaPageIds= URLEncoder.encode(stringaPageIds, "UTF-8");;
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+//            logger.error(unErrore.toString());
         }// fine del blocco try-catch
         super.stringaPageIds = stringaPageIds;
         super.doRequest();

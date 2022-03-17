@@ -106,7 +106,7 @@ public class AWebService extends AbstractService {
             urlConn = getURLConnection(indirizzoWebCompleto);
             risposta = getUrlRequest(urlConn);
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return risposta;

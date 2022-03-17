@@ -1,20 +1,18 @@
 package it.algos.vaadwiki.upload;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.enumeration.EADidascalia;
-import it.algos.vaadwiki.liste.ListaAttivita;
-import it.algos.vaadwiki.modules.attivita.Attivita;
-import it.algos.wiki.LibWiki;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadwiki.application.WikiCost.*;
+import it.algos.vaadwiki.enumeration.*;
+import it.algos.vaadwiki.liste.*;
+import it.algos.vaadwiki.modules.attivita.*;
+import it.algos.wiki.*;
+import lombok.extern.slf4j.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-
-import static it.algos.vaadflow.application.FlowCost.VUOTA;
-import static it.algos.vaadwiki.application.WikiCost.*;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * Project vaadwiki
@@ -41,13 +39,15 @@ public class UploadAttivita extends Upload {
     //--property
     protected Attivita attivita;
 
+    protected String notaAttivitaSingola;
+
+    protected String notaAttivitaMultiple;
+
     private String notaSuddivisione;
 
     private String notaParagrafoVuoto;
 
     private String notaCreazione;
-    protected String notaAttivitaSingola;
-    protected String notaAttivitaMultiple;
 
 
     /**
@@ -106,7 +106,7 @@ public class UploadAttivita extends Upload {
         super.usaHeadTocIndice = pref.isBool(USA_FORCETOC_COGNOMI);
         super.usaHeadIncipit = true;
         super.usaBodyDoppiaColonna = false;
-        super.tagCategoria = LibWiki.setCat("Bio attività", text.primaMaiuscola(attivita.getPlurale()));
+        super.tagCategoria = LibWiki.setCat("Bio attività", text.primaMaiuscola(attivita.plurale));
         super.usaNote = true;
         super.usaVociCorrelate = true;
         super.usaBodySottopagine = true;

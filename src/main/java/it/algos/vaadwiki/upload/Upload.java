@@ -413,9 +413,9 @@ public abstract class Upload {
             //--nelle sottopagine non eseguo il controllo e le registro sempre (per adesso)
             if (checkPossoRegistrare(titoloPagina, testoPagina) || pref.isBool(FlowCost.USA_DEBUG)) {
                 appContext.getBean(AQueryWrite.class, titoloPagina, testoPagina, summary);
-                log.info("Registrata la pagina: " + titoloPagina);
+                logger.info("Registrata la pagina: " + titoloPagina);
             } else {
-                log.info("Non modificata la pagina: " + titoloPagina);
+                logger.info("Non modificata la pagina: " + titoloPagina);
             }// end of if/else cycle
 
             //--registra eventuali sottopagine
@@ -448,7 +448,7 @@ public abstract class Upload {
                 uploadValido = numVoci > pref.getInt(SOGLIA_ATT_NAZ_PAGINA_WIKI);
                 break;
             default:
-                log.warn("Switch - caso non definito");
+                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 
@@ -457,7 +457,7 @@ public abstract class Upload {
         }// end of if cycle
 
         if (!uploadValido) {
-            log.info("La pagina " + titoloPagina + " non contiene un numero sufficiente di voci biografiche e non è stata creata");
+            logger.info("La pagina " + titoloPagina + " non contiene un numero sufficiente di voci biografiche e non è stata creata");
         }// end of if cycle
 
         return uploadValido;

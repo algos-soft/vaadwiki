@@ -3,7 +3,6 @@ package it.algos.vaadflow.modules.mese;
 import it.algos.vaadflow.annotation.AIScript;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
-import it.algos.vaadflow.modules.secolo.EASecolo;
 import it.algos.vaadflow.service.AService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,12 +119,13 @@ public class MeseService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Mese newEntity(String titoloLungo, String titoloBreve, int giorni, int ordine) {
-        return Mese.builderMese()
-                .titoloLungo(text.isValid(titoloLungo) ? titoloLungo : null)
-                .titoloBreve(text.isValid(titoloBreve) ? titoloBreve : null)
-                .giorni(giorni)
-                .ordine(ordine)
-                .build();
+        Mese mese = new Mese();
+        mese.titoloLungo = text.isValid(titoloLungo) ? titoloLungo : null;
+        mese.titoloBreve = text.isValid(titoloBreve) ? titoloBreve : null;
+        mese.giorni = giorni;
+        mese.ordine = ordine;
+
+        return mese;
     }// end of method
 
 
@@ -134,7 +134,7 @@ public class MeseService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Mese) entityBean).getTitoloLungo();
+        return ((Mese) entityBean).titoloLungo;
     }// end of method
 
 

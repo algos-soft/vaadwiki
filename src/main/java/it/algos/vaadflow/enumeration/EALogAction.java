@@ -50,11 +50,12 @@ public enum EALogAction implements IAEnum {
         String actionStr = VUOTA;
 
         if (pref != null) {
-            actionStr = pref.getStr(EAPreferenza.logAction);
+//            actionStr = pref.getStr(EAPreferenza.logAction);
+            actionStr = "forse";
         }// end of if cycle
 
         if (actionStr.length() > 0) {
-            eaLogAction = EALogAction.valueOf(actionStr);
+//            eaLogAction = EALogAction.valueOf(actionStr);
         }// end of if cycle
 
         return eaLogAction;

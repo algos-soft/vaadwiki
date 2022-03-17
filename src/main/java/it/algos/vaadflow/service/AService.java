@@ -468,7 +468,7 @@ public abstract class AService extends AbstractService implements IAService {
                 lista = new ArrayList<>(repository.findAll());
             }// end of if/else cycle
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString() + " in AService.findAll(Sort sort)");
+            logger.error(unErrore.toString() + " in AService.findAll(Sort sort)");
         }// fine del blocco try-catch
 
         return lista;
@@ -724,20 +724,20 @@ public abstract class AService extends AbstractService implements IAService {
         tableCompanyRequired = annotation.getCompanyRequired(entityBean.getClass());
         switch (tableCompanyRequired) {
             case nonUsata:
-                log.error("C'è una discrepanza tra 'extends ACEntity' della classe " + entityBean.getClass().getSimpleName() + " e l'annotation @AIEntity della classe stessa");
+                logger.error("C'è una discrepanza tra 'extends ACEntity' della classe " + entityBean.getClass().getSimpleName() + " e l'annotation @AIEntity della classe stessa");
                 break;
             case facoltativa:
                 if (company != null) {
                     ((ACEntity) entityBean).company = company;
                 } else {
-                    log.warn("Algos- Nuova scheda senza company (facoltativa) di " + entityBean.toString() + " della classe " + entityBean.getClass().getSimpleName());
+                    logger.warn("Algos- Nuova scheda senza company (facoltativa) di " + entityBean.toString() + " della classe " + entityBean.getClass().getSimpleName());
                 }// end of if/else cycle
                 break;
             case obbligatoria:
                 if (company != null) {
                     ((ACEntity) entityBean).company = company;
                 } else {
-                    log.error("Algos- Manca la company (obbligatoria) di " + entityBean.toString() + " della classe " + entityBean.getClass().getSimpleName());
+                    logger.error("Algos- Manca la company (obbligatoria) di " + entityBean.toString() + " della classe " + entityBean.getClass().getSimpleName());
                 }// end of if/else cycle
                 break;
             default:
@@ -836,7 +836,7 @@ public abstract class AService extends AbstractService implements IAService {
             try { // prova ad eseguire il codice
                 obj = repository.save(modifiedBean);
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
                 //Notification.show("La scheda non è stata registrata", DURATA, Notification.Position.BOTTOM_START);
             }// fine del blocco try-catch
         }// end of if cycle
@@ -862,14 +862,14 @@ public abstract class AService extends AbstractService implements IAService {
                     try { // prova ad eseguire il codice
                         Notification.show(entityBean + " non è stata registrata, perché esisteva già con lo stesso code ", 3000, Notification.Position.BOTTOM_START);
                     } catch (Exception unErrore) { // intercetta l'errore
-                        log.info(unErrore.toString());
+                        logger.info(unErrore.toString());
                     }// fine del blocco try-catch
                 } else {
                     entitySaved = this.save(entityBean);
                     try { // prova ad eseguire il codice
                         Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);
                     } catch (Exception unErrore) { // intercetta l'errore
-                        log.info(unErrore.toString());
+                        logger.info(unErrore.toString());
                     }// fine del blocco try-catch
                 }// end of if/else cycle
                 break;
@@ -879,7 +879,7 @@ public abstract class AService extends AbstractService implements IAService {
                 Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);
                 break;
             default:
-                log.warn("Switch - caso non definito");
+                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 
@@ -1011,7 +1011,7 @@ public abstract class AService extends AbstractService implements IAService {
             if (entityBean instanceof ACEntity) {
                 company = ((ACEntity) entityBean).company;
                 if (company != null) {
-                    companyCode = company.getCode();
+                    companyCode = company.code;
                 }// end of if cycle
             }// end of if cycle
 
@@ -1049,7 +1049,7 @@ public abstract class AService extends AbstractService implements IAService {
         Company company = getCompany(entityBean);
 
         if (company != null) {
-            code = company.getCode();
+            code = company.code;
         }// end of if cycle
 
         return code;
@@ -1245,9 +1245,9 @@ public abstract class AService extends AbstractService implements IAService {
 
         if (numRec == 0) {
             numRec = reset();
-            log.warn("Algos - Data. La collezione " + collectionName + " è stata creata: " + numRec + " schede");
+            logger.warn("Algos - Data. La collezione " + collectionName + " è stata creata: " + numRec + " schede");
         } else {
-            log.info("Algos - Data. La collezione " + collectionName + " è già presente: " + numRec + " schede");
+            logger.info("Algos - Data. La collezione " + collectionName + " è già presente: " + numRec + " schede");
         }// end of if/else cycle
 
     }// end of method
@@ -1343,7 +1343,7 @@ public abstract class AService extends AbstractService implements IAService {
         Company company = getCompany();
 
         if (company != null) {
-            code = company.getCode();
+            code = company.code;
         }// end of if cycle
 
         return code;
@@ -1368,7 +1368,7 @@ public abstract class AService extends AbstractService implements IAService {
                 fieldSotto.set(entitySotto, value);
             }// end of for cycle
         } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
+            logger.error(unErrore.toString());
         }// fine del blocco try-catch
 
         return entitySotto;

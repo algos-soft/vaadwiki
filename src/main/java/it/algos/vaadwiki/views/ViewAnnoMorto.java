@@ -55,7 +55,7 @@ public class ViewAnnoMorto extends ViewListe {
      */
     @Override
     protected void addInfoTitolo() {
-        this.add("Lista biografie di " + text.format(numVoci) + " persone morte nel " + anno.getTitolo());
+        this.add("Lista biografie di " + text.format(numVoci) + " persone morte nel " + anno.titolo);
         super.addInfoTitolo();
     }// end of method
 

@@ -63,10 +63,6 @@ public enum PagePar {
         }// end of method
     },
     lastrevid(true, false, false, true, TypePar.sololettura, TypeField.string) ,
-
-
-
-
     csrftoken(false, false, false, true, TypePar.soloscrittura, TypeField.string),
     starttimestamp(false, false, false, true, TypePar.soloscrittura, TypeField.date),
 
@@ -159,6 +155,7 @@ public enum PagePar {
     },
     content(true, false, false, false, TypePar.letturascrittura, TypeField.string) {
     },
+
 
     //--parametri altri
     anon(true, true, false, false, TypePar.letturascrittura, TypeField.booleano) {

@@ -158,11 +158,10 @@ public class AttivitaService extends WikiService {
             return findByKeyUnica(singolare);
         }// end of if cycle
 
-        entity = Attivita.builderAttivita()
-                .singolare(singolare.equals("") ? null : singolare)
-                .plurale(plurale.equals("") ? null : plurale)
-                .aggiunta(aggiunta)
-                .build();
+        entity = new Attivita();
+        entity.singolare = singolare.equals("") ? null : singolare;
+        entity.plurale = plurale.equals("") ? null : plurale;
+        entity.aggiunta = aggiunta;
 
         return entity;
     }// end of method
@@ -267,7 +266,7 @@ public class AttivitaService extends WikiService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Attivita) entityBean).getSingolare();
+        return ((Attivita) entityBean).singolare;
     }// end of method
 
 

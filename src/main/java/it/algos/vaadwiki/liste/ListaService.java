@@ -79,7 +79,7 @@ public class ListaService extends ABioService {
             try { // prova ad eseguire il codice
                 wrap = appContext.getBean(WrapDidascalia.class, bio, typeDidascalia);
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
 
             if (wrap != null) {
@@ -350,7 +350,7 @@ public class ListaService extends ABioService {
                 mappaParagrafiOrdinata = array.sort(mappaParagrafi);
                 break;
             default:
-                log.warn("Switch - caso non definito");
+                logger.warn("Switch - caso non definito");
                 break;
         } // end of switch statement
 
@@ -734,16 +734,16 @@ public class ListaService extends ABioService {
         if (bio == null) {
             return VUOTA;
         }// end of if cycle
-        if (bio.getAttivita() == null) {
+        if (bio.attivita == null) {
             return titoloParagrafo;
         }// end of if cycle
 
-        attivitaSingolare = bio.getAttivita().singolare;
+        attivitaSingolare = bio.attivita.singolare;
         professione = professioneService.findByKeyUnica(attivitaSingolare);
         genere = genereService.findByKeyUnica(attivitaSingolare);
 
         if (professione != null) {
-            professioneTxt = professione.getPagina();
+            professioneTxt = professione.pagina;
         } else {
             professioneTxt = attivitaSingolare;
         }// end of if/else cycle
@@ -752,11 +752,11 @@ public class ListaService extends ABioService {
         }// end of if cycle
 
         if (genere != null) {
-            if (bio.getSesso().equals("M")) {
-                genereTxt = genere.getPluraleMaschile();
+            if (bio.sesso.equals("M")) {
+                genereTxt = genere.pluraleMaschile;
             } else {
-                if (bio.getSesso().equals("F")) {
-                    genereTxt = genere.getPluraleFemminile();
+                if (bio.sesso.equals("F")) {
+                    genereTxt = genere.pluraleFemminile;
                 } else {
                     //@todo errore
                 }// end of if/else cycle
@@ -784,9 +784,9 @@ public class ListaService extends ABioService {
             return VUOTA;
         }// end of if cycle
 
-        if (bio.getAttivita() != null) {
-            paginaWiki = getProfessioneDaAttivitaSingolare(bio.getAttivita().singolare);
-            linkVisibile = getGenereDaAttivitaSingolare(bio.getAttivita().singolare, bio.getSesso());
+        if (bio.attivita != null) {
+            paginaWiki = getProfessioneDaAttivitaSingolare(bio.attivita.singolare);
+            linkVisibile = getGenereDaAttivitaSingolare(bio.attivita.singolare, bio.sesso);
         }// end of if cycle
 
         if (text.isValid(paginaWiki) && text.isValid(linkVisibile)) {
@@ -823,7 +823,7 @@ public class ListaService extends ABioService {
             professione = professioneService.findByKeyUnica(genere.singolare);
         }// end of if cycle
         if (professione != null) {
-            paginaWiki = text.primaMaiuscola(professione.getPagina());
+            paginaWiki = text.primaMaiuscola(professione.pagina);
         }// end of if cycle
 
         if (text.isValid(paginaWiki)) {
@@ -842,7 +842,7 @@ public class ListaService extends ABioService {
      * @return nome della pagina wiki da linkare come riferimento
      */
     public String getProfessioneDaBio(Bio bio) {
-        return bio.getAttivita() != null ? getProfessioneDaAttivitaSingolare(bio.getAttivita().singolare) : VUOTA;
+        return bio.attivita != null ? getProfessioneDaAttivitaSingolare(bio.attivita.singolare) : VUOTA;
     }// fine del metodo
 
 
@@ -860,7 +860,7 @@ public class ListaService extends ABioService {
         professione = professioneService.findByKeyUnica(attivitaSingolare.toLowerCase());
 
         if (professione != null) {
-            professioneTxt = professione.getPagina();
+            professioneTxt = professione.pagina;
         } else {
             professioneTxt = attivitaSingolare;
         }// end of if/else cycle
@@ -881,7 +881,7 @@ public class ListaService extends ABioService {
      * @return nome della pagina wiki da linkare come riferimento
      */
     public String getGenereDaBio(Bio bio) {
-        return bio.getAttivita() != null ? getGenereDaAttivitaSingolare(bio.getAttivita().singolare, bio.sesso) : VUOTA;
+        return bio.attivita != null ? getGenereDaAttivitaSingolare(bio.attivita.singolare, bio.sesso) : VUOTA;
     }// fine del metodo
 
 
@@ -905,10 +905,10 @@ public class ListaService extends ABioService {
 
         if (genere != null) {
             if (sesso.equals("M")) {
-                genereTxt = genere.getPluraleMaschile();
+                genereTxt = genere.pluraleMaschile;
             } else {
                 if (sesso.equals("F")) {
-                    genereTxt = genere.getPluraleFemminile();
+                    genereTxt = genere.pluraleFemminile;
                 } else {
                     //@todo errore
                 }// end of if/else cycle

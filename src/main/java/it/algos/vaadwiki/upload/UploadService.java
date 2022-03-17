@@ -457,7 +457,7 @@ public class UploadService extends ABioService {
      */
     public String getTitoloGiorno(Giorno giorno, String tag) {
         String titoloLista = VUOTA;
-        String titolo = giorno.getTitolo();
+        String titolo = giorno.titolo;
         String articolo = "il";
         String articoloBis = "l'";
 
@@ -495,7 +495,7 @@ public class UploadService extends ABioService {
      */
     public String getTitoloAnno(Anno anno, String tag) {
         String titoloLista = VUOTA;
-        String titolo = anno.getTitolo();
+        String titolo = anno.titolo;
         String articolo = "nel";
         String articoloBis = "nell'";
         String TAG_AC = " a.C.";
@@ -546,7 +546,7 @@ public class UploadService extends ABioService {
      * Titolo della pagina Nomi da creare/caricare su wikipedia
      */
     public String getTitoloNome(Nome nome) {
-        return getTitoloNome(nome.getNome());
+        return getTitoloNome(nome.nome);
     }// fine del metodo
 
 
@@ -562,7 +562,7 @@ public class UploadService extends ABioService {
      * Titolo della pagina Cognome da creare/caricare su wikipedia
      */
     public String getTitoloCognome(Cognome cognome) {
-        return getTitoloCognome(cognome.getCognome());
+        return getTitoloCognome(cognome.cognome);
     }// fine del metodo
 
 
@@ -578,7 +578,7 @@ public class UploadService extends ABioService {
      * Titolo della pagina Attivita da creare/caricare su wikipedia
      */
     public String getTitoloAttivita(Attivita attivita) {
-        return getTitoloAttivita(attivita.getPlurale());
+        return getTitoloAttivita(attivita.plurale);
     }// fine del metodo
 
 
@@ -594,7 +594,7 @@ public class UploadService extends ABioService {
      * Titolo della pagina Nazionalita da creare/caricare su wikipedia
      */
     public String getTitoloNazionalita(Nazionalita nazionalita) {
-        return getTitoloNazionalita(nazionalita.getPlurale());
+        return getTitoloNazionalita(nazionalita.plurale);
     }// fine del metodo
 
 

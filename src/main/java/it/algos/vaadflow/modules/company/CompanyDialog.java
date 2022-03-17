@@ -7,17 +7,15 @@ import it.algos.vaadflow.application.StaticContextAccessor;
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAOperation;
 import it.algos.vaadflow.modules.address.Address;
-import it.algos.vaadflow.modules.address.AddressService;
 import it.algos.vaadflow.modules.address.AddressDialog;
+import it.algos.vaadflow.modules.address.AddressService;
 import it.algos.vaadflow.modules.person.Person;
-import it.algos.vaadflow.modules.person.PersonService;
 import it.algos.vaadflow.modules.person.PersonDialog;
-import it.algos.vaadflow.presenter.IAPresenter;
+import it.algos.vaadflow.modules.person.PersonService;
 import it.algos.vaadflow.service.IAService;
 import it.algos.vaadflow.ui.dialog.AViewDialog;
 import it.algos.vaadflow.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -49,16 +47,23 @@ import static it.algos.vaadflow.application.FlowCost.TAG_COM;
 public class CompanyDialog extends AViewDialog<Company> {
 
     public static String CONTATTO = "contatto";
+
     public static String INDIRIZZO = "indirizzo";
 
     protected PersonService contattoService;
+
     protected PersonDialog contattoDialog;
+
     protected Person contattoTemporaneo;
+
     protected ATextField contattoField;
 
     private AddressService indirizzoService;
+
     private AddressDialog indirizzoDialog;
+
     private Address indirizzoTemporaneo;
+
     private ATextField indirizzoField;
 
 
@@ -95,20 +100,20 @@ public class CompanyDialog extends AViewDialog<Company> {
         contattoService = StaticContextAccessor.getBean(PersonService.class);
 
         contattoDialog = StaticContextAccessor.getBean(PersonDialog.class);
-//        contattoDialog.fixFunzioni(this::saveUpdateCon, this::deleteUpdateCon, this::annullaCon);
+        //        contattoDialog.fixFunzioni(this::saveUpdateCon, this::deleteUpdateCon, this::annullaCon);
         contattoDialog.fixConfermaAndNotRegistrazione();
         contattoField = (ATextField) getField(CONTATTO);
         if (contattoField != null) {
-//            contattoField.addFocusListener(e -> contattoDialog.open(getContatto(), EAOperation.edit, null, CONTATTO));//todo cambiare OPEN
+            //            contattoField.addFocusListener(e -> contattoDialog.open(getContatto(), EAOperation.edit, null, CONTATTO));//todo cambiare OPEN
         }// end of if cycle
 
         indirizzoService = StaticContextAccessor.getBean(AddressService.class);
         indirizzoDialog = StaticContextAccessor.getBean(AddressDialog.class);
-//        indirizzoDialog.fixFunzioni(this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
+        //        indirizzoDialog.fixFunzioni(this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
         indirizzoDialog.fixConfermaAndNotRegistrazione();
         indirizzoField = (ATextField) getField(INDIRIZZO);
         if (indirizzoField != null) {
-//            indirizzoField.addFocusListener(e -> indirizzoDialog.open(getIndirizzo(), EAOperation.edit, null, INDIRIZZO));//todo cambiare OPEN
+            //            indirizzoField.addFocusListener(e -> indirizzoDialog.open(getIndirizzo(), EAOperation.edit, null, INDIRIZZO));//todo cambiare OPEN
         }// end of if cycle
     }// end of method
 
@@ -133,8 +138,8 @@ public class CompanyDialog extends AViewDialog<Company> {
      */
     protected void writeSpecificFields2() {
         Company company = super.getCurrentItem();
-        company.setContatto(contattoTemporaneo);
-        company.setIndirizzo(indirizzoTemporaneo);
+        company.contatto = contattoTemporaneo;
+        company.indirizzo = indirizzoTemporaneo;
     }// end of method
 
 
@@ -143,7 +148,7 @@ public class CompanyDialog extends AViewDialog<Company> {
         entityBean = (Person) contattoService.beforeSave(entityBean, operation);
         contattoTemporaneo = entityBean;
 
-        company.setContatto(contattoTemporaneo);
+        company.contatto = contattoTemporaneo;
         contattoField.setValue(entityBean.toString());
 
         focusOnPost(CONTATTO);
@@ -156,7 +161,7 @@ public class CompanyDialog extends AViewDialog<Company> {
         entityBean = (Address) indirizzoService.beforeSave(entityBean, operation);
         indirizzoTemporaneo = entityBean;
 
-        company.setIndirizzo(indirizzoTemporaneo);
+        company.indirizzo = indirizzoTemporaneo;
         indirizzoField.setValue(entityBean.toString());
 
         focusOnPost(INDIRIZZO);
@@ -195,7 +200,7 @@ public class CompanyDialog extends AViewDialog<Company> {
         Company company = getCurrentItem();
 
         if (company != null) {
-            indirizzo = company.getIndirizzo();
+            indirizzo = company.indirizzo;
         }// end of if cycle
 
         return indirizzo;
@@ -218,7 +223,7 @@ public class CompanyDialog extends AViewDialog<Company> {
         Company company = getCurrentItem();
 
         if (company != null) {
-            persona = company.getContatto();
+            persona = company.contatto;
         }// end of if cycle
 
         return persona;

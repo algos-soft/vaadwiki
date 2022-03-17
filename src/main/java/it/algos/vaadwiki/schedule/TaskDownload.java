@@ -51,7 +51,7 @@ public class TaskDownload extends WikiTask {
      * Esiste il flag 'usaDaemonCroci' per usare o meno questa Task <br>
      * Se la si usa, controlla il flag generale di debug per 'intensificare' l'import <br>
      */
-    @PostConstruct
+//    @PostConstruct
     protected void inizia() {
         super.eaSchedule = EASchedule.biMensile;
         super.usaDaemon = pref.isBool(USA_DAEMON_BIO);

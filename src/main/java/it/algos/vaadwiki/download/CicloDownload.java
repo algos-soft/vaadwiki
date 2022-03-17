@@ -56,8 +56,8 @@ public class CicloDownload extends ABioService {
         String message = "";
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("");
-            log.info("Inizio task di download: " + date.getTime(result.getInizio()));
+            logger.info("");
+            logger.info("Inizio task di download: " + date.getTime(result.getInizio()));
         }// end of if cycle
 
         //--Download del modulo attività
@@ -78,17 +78,17 @@ public class CicloDownload extends ABioService {
         if (pref.isBool(FlowCost.USA_DEBUG)) {
             if (result.getNumVociCategoria() == 0) {
                 message = "Numero errato di pagine sul server";
-                log.warn(message);
+                logger.warn(message);
                 logger.warn("Download - " + message);
             }// end of if cycle
             if (result.getVociDaCreare() == null) {
                 message = "Non riesco a leggere le pagine dal server. Forse non sono loggato come bot";
-                log.warn(message);
+                logger.warn(message);
                 logger.warn("Download - " + message);
             }// end of if cycle
             if (result.getNumVociCategoria() != result.getVociDaCreare().size()) {
                 message = "Le pagine della categoria non coincidono: sul server ce ne sono " + text.format(result.getNumVociCategoria()) + " e ne ha recuperate " + text.format(result.getVociDaCreare().size());
-                log.warn(message);
+                logger.warn(message);
                 logger.warn("Download - " + message);
             }// end of if cycle
         }// end of if cycle
@@ -101,9 +101,9 @@ public class CicloDownload extends ABioService {
         }// end of if cycle
 
         if (pref.isBool(FlowCost.USA_DEBUG)) {
-            log.info("Download - Ciclo totale attività, nazionalità, professione, categoria, nuove pagine in " + date.deltaText(result.getInizioLong()));
-            log.info("Fine task di download: " + date.getTime(LocalDateTime.now()));
-            log.info("");
+            logger.info("Download - Ciclo totale attività, nazionalità, professione, categoria, nuove pagine in " + date.deltaText(result.getInizioLong()));
+            logger.info("Fine task di download: " + date.getTime(LocalDateTime.now()));
+            logger.info("");
         }// end of if cycle
 
         return result;

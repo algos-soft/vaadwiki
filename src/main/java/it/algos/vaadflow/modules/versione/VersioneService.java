@@ -132,11 +132,10 @@ public class VersioneService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Versione newEntity(String sigla, String titolo, String descrizione) {
-        Versione entity = Versione.builderVersione()
-                .titolo(text.isValid(titolo) ? titolo : null)
-                .descrizione(text.isValid(descrizione) ? descrizione : null)
-                .timestamp(LocalDate.now())
-                .build();
+        Versione entity = new Versione();
+        entity.titolo = text.isValid(titolo) ? titolo : null;
+        entity.descrizione = text.isValid(descrizione) ? descrizione : null;
+        entity.timestamp = LocalDate.now();
         entity.id = getIdKey(sigla);
 
         return entity;
@@ -173,7 +172,7 @@ public class VersioneService extends AService {
         if (newOrdine == 0) {
             lista = repository.findByIdRegex(sigla);
             if (lista != null && lista.size() > 0) {
-                idKey = lista.get(lista.size() - 1).getId();
+                idKey = lista.get(lista.size() - 1).id;
                 idKey = idKey.substring(1);
                 idKey = idKey.startsWith(TAG) ? text.levaTesta(idKey, TAG) : idKey;
                 idKey = idKey.startsWith(TAG) ? text.levaTesta(idKey, TAG) : idKey;//doppio per numeri sopra i 10 e fino a 100
@@ -183,18 +182,19 @@ public class VersioneService extends AService {
                 newOrdine = Integer.decode(idKey);
                 newOrdine++;
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+                logger.error(unErrore.toString());
             }// fine del blocco try-catch
         }// end of if cycle
-
 
         if (newOrdine < 100) {
             if (newOrdine < 10) {
                 keyCode = sigla + TAG + TAG + newOrdine;
-            } else {
+            }
+            else {
                 keyCode = sigla + TAG + newOrdine;
             }// end of if/else cycle
-        } else {
+        }
+        else {
             keyCode = sigla + newOrdine;
         }// end of if/else cycle
 
@@ -218,7 +218,6 @@ public class VersioneService extends AService {
         if (text.isEmpty(entity.titolo) || text.isEmpty(entity.descrizione) || entity.timestamp == null) {
             entity = null;
         }// end of if cycle
-
 
         return entity;
     }// end of method
@@ -297,7 +296,7 @@ public class VersioneService extends AService {
      * @param value    di default della preferenza
      */
     public void creaPref(String sigla, String codePref, String descPref, EAPrefType type, Object value) {
-        pref.creaIfNotExist(codePref, descPref, type, null,value);
+        pref.creaIfNotExist(codePref, descPref, type, null, value);
         this.creaIfNotExist(sigla, "Preferenze", codePref + ", di default " + value);
     }// end of method
 

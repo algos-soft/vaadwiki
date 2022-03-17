@@ -155,7 +155,7 @@ public class BioListIntegrationTest extends ATest {
         String tag = "a";
 
         for (Bio bio : lista) {
-            if (getLastChar(bio.getNazionalita()).equals(tag)) {
+            if (getLastChar(bio.nazionalita).equals(tag)) {
                 if (!listaFemmine.contains(bio)) {
                     listaFemmine.add(bio);
                 }// end of if cycle
@@ -173,7 +173,7 @@ public class BioListIntegrationTest extends ATest {
         listaMista = new ArrayList<>();
 
         for (Bio bio : lista) {
-            nome = bio.getNome();
+            nome = bio.nome;
             if (text.isEmpty(nome)) {
                 listaSenzaNome.add(bio);
             } else {
@@ -195,22 +195,22 @@ public class BioListIntegrationTest extends ATest {
         System.out.println("");
         System.out.println("Senza nome. Ci sono " + listaSenzaNome.size() + " biografie senza nome");
         for (Bio bio : listaSenzaNome) {
-            System.out.println(bio.getWikiTitle());
+            System.out.println(bio.wikiTitle);
         }// end of for cycle
         System.out.println("");
         System.out.println("Femmine. Ci sono " + listaFemmine.size() + " biografie sicuramente femminili");
         for (Bio bio : listaFemmine) {
-            System.out.println(bio.getNome() + " della voce " + bio.getWikiTitle());
+            System.out.println(bio.nome + " della voce " + bio.wikiTitle);
         }// end of for cycle
         System.out.println("");
         System.out.println("Maschi. Ci sono " + listaMaschi.size() + " biografie sicuramente maschili");
         for (Bio bio : listaMaschi) {
-            System.out.println(bio.getNome() + " della voce " + bio.getWikiTitle());
+            System.out.println(bio.nome + " della voce " + bio.wikiTitle);
         }// end of for cycle
         System.out.println("");
         System.out.println("Incerti. Ci sono " + listaMista.size() + " biografie incerte da controllare");
         for (Bio bio : listaMista) {
-            System.out.println(bio.getNome() + " della voce " + bio.getWikiTitle());
+            System.out.println(bio.nome + " della voce " + bio.wikiTitle);
         }// end of for cycle
         System.out.println("");
 
@@ -250,7 +250,7 @@ public class BioListIntegrationTest extends ATest {
         System.out.println("Ci sono " + text.format(lista.size()) + " persone nate il " + giornoText);
         System.out.println("****");
         for (Bio bio : lista) {
-            System.out.println(bio.getAnnoNascita() + " - " + bio.getCognome() + " - " + bio.getWikiTitle());
+            System.out.println(bio.annoNascita + " - " + bio.cognome + " - " + bio.wikiTitle);
         }// end of for cycle
 
     }// end of single test
@@ -267,7 +267,7 @@ public class BioListIntegrationTest extends ATest {
         System.out.println("Ci sono " + text.format(lista.size()) + " persone morte il " + giornoText);
         System.out.println("****");
         for (Bio bio : lista) {
-            System.out.println(bio.getAnnoMorte() + " - " + bio.getCognome() + " - " + bio.getWikiTitle());
+            System.out.println(bio.annoMorte + " - " + bio.cognome + " - " + bio.wikiTitle);
         }// end of for cycle
 
     }// end of single test
@@ -284,7 +284,7 @@ public class BioListIntegrationTest extends ATest {
         System.out.println("Ci sono " + text.format(lista.size()) + " persone nate nel " + annoText);
         System.out.println("****");
         for (Bio bio : lista) {
-            System.out.println(bio.getGiornoNascita() + " - " + bio.getCognome() + " - " + bio.getWikiTitle());
+            System.out.println(bio.giornoNascita + " - " + bio.cognome + " - " + bio.wikiTitle);
         }// end of for cycle
 
     }// end of single test
@@ -301,7 +301,7 @@ public class BioListIntegrationTest extends ATest {
         System.out.println("Ci sono " + text.format(lista.size()) + " persone morte nel " + annoText);
         System.out.println("****");
         for (Bio bio : lista) {
-            System.out.println(bio.getGiornoMorte() + " - " + bio.getCognome() + " - " + bio.getWikiTitle());
+            System.out.println(bio.giornoMorte + " - " + bio.cognome + " - " + bio.wikiTitle);
         }// end of for cycle
 
     }// end of single test
@@ -318,7 +318,7 @@ public class BioListIntegrationTest extends ATest {
         System.out.println("Ci sono " + text.format(lista.size()) + " persone di nome " + nomeTxt);
         System.out.println("****");
         for (Bio bio : lista) {
-            System.out.println(bio.getAttivita() + " - " + bio.getCognome() + " - " + bio.getWikiTitle());
+            System.out.println(bio.attivita + " - " + bio.cognome + " - " + bio.wikiTitle);
         }// end of for cycle
 
     }// end of single test
@@ -335,7 +335,7 @@ public class BioListIntegrationTest extends ATest {
         System.out.println("Ci sono " + text.format(lista.size()) + " persone di cognome " + cognomeTxt);
         System.out.println("****");
         for (Bio bio : lista) {
-            System.out.println(bio.getAttivita() + " - " + bio.getNome() + " - " + bio.getWikiTitle());
+            System.out.println(bio.attivita + " - " + bio.cognome + " - " + bio.wikiTitle);
         }// end of for cycle
 
     }// end of single test

@@ -120,13 +120,13 @@ public class SecoloService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Secolo newEntity(String titolo, int inizio, int fine, boolean anteCristo, int ordine) {
-        return Secolo.builderSecolo()
-                .titolo(text.isValid(titolo) ? titolo : null)
-                .inizio(inizio)
-                .fine(fine)
-                .anteCristo(anteCristo)
-                .ordine(ordine)
-                .build();
+        Secolo secolo = new Secolo();
+        secolo.titolo = text.isValid(titolo) ? titolo : null;
+        secolo.inizio = inizio;
+        secolo.fine = fine;
+        secolo.anteCristo = anteCristo;
+        secolo.ordine = ordine;
+        return secolo;
     }// end of method
 
 
@@ -135,7 +135,7 @@ public class SecoloService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Secolo) entityBean).getTitolo();
+        return ((Secolo) entityBean).titolo;
     }// end of method
 
 

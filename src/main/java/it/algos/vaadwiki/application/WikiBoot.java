@@ -137,7 +137,7 @@ public class WikiBoot extends ABoot {
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
      * ma l'ordine con cui vengono chiamati NON è garantito
      * <p>
-     * Login inziale del bot
+     * Login iniziale del bot
      */
     @PostConstruct
     protected void inizia() {
@@ -296,7 +296,7 @@ public class WikiBoot extends ABoot {
                     server = inetAddress.getHostName();
                 }// end of if cycle
             } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
+//                logger.error(unErrore.toString());
             }// fine del blocco try-catch
 
             if (text.isValid(server) && server.equals(tag)) {

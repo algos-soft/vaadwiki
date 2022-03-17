@@ -134,11 +134,11 @@ public class GiornoService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     public Giorno newEntity(String titolo, Mese mese, int ordine) {
-        return Giorno.builderGiorno()
-                .titolo(text.isValid(titolo) ? titolo : null)
-                .mese(mese)
-                .ordine(ordine > 0 ? ordine : getNewOrdine())
-                .build();
+        Giorno giorno = new Giorno();
+        giorno.titolo = text.isValid(titolo) ? titolo : null;
+        giorno.mese = mese;
+        giorno.ordine = ordine > 0 ? ordine : getNewOrdine();
+        return giorno;
     }// end of method
 
 
@@ -147,7 +147,7 @@ public class GiornoService extends AService {
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {
-        return ((Giorno) entityBean).getTitolo();
+        return ((Giorno) entityBean).titolo;
     }// end of method
 
 
@@ -164,7 +164,7 @@ public class GiornoService extends AService {
     public AEntity beforeSave(AEntity entityBean, EAOperation operation) {
         Giorno entity = (Giorno) super.beforeSave(entityBean, operation);
 
-        if (entity.getMese() == null || entity.ordine == 0 || text.isEmpty(entity.titolo)) {
+        if (entity.mese== null || entity.ordine == 0 || text.isEmpty(entity.titolo)) {
             entity = null;
         }// end of if cycle
 
@@ -226,7 +226,7 @@ public class GiornoService extends AService {
         List<Giorno> lista = repository.findAllByOrderByOrdineAsc();
 
         if (array.isValid(lista)) {
-            listaTitoli=new ArrayList<>();
+            listaTitoli = new ArrayList<>();
             for (Giorno giorno : lista) {
                 listaTitoli.add(giorno.titolo);
             }// end of for cycle
