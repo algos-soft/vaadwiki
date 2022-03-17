@@ -1,30 +1,21 @@
 package it.algos.vaadflow.footer;
 
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.AContext;
-import it.algos.vaadflow.application.FlowCost;
-import it.algos.vaadflow.application.FlowVar;
-import it.algos.vaadflow.backend.login.ALogin;
-import it.algos.vaadflow.enumeration.EAColor;
-import it.algos.vaadflow.enumeration.EATime;
-import it.algos.vaadflow.modules.company.Company;
-import it.algos.vaadflow.modules.preferenza.PreferenzaService;
-import it.algos.vaadflow.service.ADateService;
-import it.algos.vaadflow.service.ATextService;
-import it.algos.vaadflow.service.AVaadinService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-
-import javax.annotation.PostConstruct;
-
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow.application.*;
 import static it.algos.vaadflow.application.FlowCost.*;
 import static it.algos.vaadflow.application.FlowVar.*;
+import it.algos.vaadflow.backend.login.*;
+import it.algos.vaadflow.enumeration.*;
+import it.algos.vaadflow.modules.preferenza.*;
+import it.algos.vaadflow.service.*;
+import it.algos.wiki.web.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+
+import javax.annotation.*;
 
 /**
  * Created by gac on 12/06/17
@@ -43,7 +34,7 @@ import static it.algos.vaadflow.application.FlowVar.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AFooter extends VerticalLayout  {
+public class AFooter extends VerticalLayout {
 
 
     /**
@@ -73,6 +64,14 @@ public class AFooter extends VerticalLayout  {
      */
     @Autowired
     private PreferenzaService pref;
+
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
+     * Iniettata automaticamente dal Framework @Autowired (SpringBoot/Vaadin) <br>
+     * Disponibile SOLO DOPO @PostConstruct <br>
+     */
+    @Autowired
+    private WLogin wLogin;
 
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
@@ -109,23 +108,27 @@ public class AFooter extends VerticalLayout  {
         String tag = "all companies";
         String companyCode = login.getCompany() != null ? login.getCompany().code : "";
         String companyName = login.getCompany() != null ? login.getCompany().descrizione : "";
-        String userName = login.getUtente() != null ? login.getUtente().getUsername() : "";
+        //        String userName = login.getUtente() != null ? login.getUtente().getUsername() : "";
+        String userName = wLogin != null ? wLogin.getLgusername() : "";
         this.removeAll();
 
         if (usaCompany) {
             if (text.isValid(companyCode)) {
                 message += " - " + companyCode;
-            } else {
+            }
+            else {
                 message += " - " + tag;
             }// end of if/else cycle
         }// end of if cycle
 
         if (login.isDeveloper()) {
             message += " (dev)";
-        } else {
+        }
+        else {
             if (login.isAdmin()) {
                 message += " (admin)";
-            } else {
+            }
+            else {
                 message += " (buttonUser)";
             }// end of if/else cycle
         }// end of if/else cycle
@@ -171,7 +174,7 @@ public class AFooter extends VerticalLayout  {
 
         this.add(label);
         if (pref.isBool(USA_DEBUG)) {
-            labelDebug= new Label("Sei in modalità DEBUG");
+            labelDebug = new Label("Sei in modalità DEBUG");
             labelDebug.getStyle().set("font-size", "small");
             labelDebug.getStyle().set("font-weight", "bold");
             labelDebug.getElement().getStyle().set("color", "red");
@@ -180,7 +183,6 @@ public class AFooter extends VerticalLayout  {
         }// end of if cycle
 
     }// end of method
-
 
 
 }// end of class

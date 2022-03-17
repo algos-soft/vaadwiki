@@ -86,7 +86,7 @@ public class Preferenza extends ACEntity {
      * il più importante per primo <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+//    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.integer, widthEM = 3)
     @AIColumn(name = "#", widthEM = 3)
     public int ordine;

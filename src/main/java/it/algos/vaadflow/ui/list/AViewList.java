@@ -180,7 +180,7 @@ public abstract class AViewList extends APropertyViewList implements IAView, Bef
 
 
     /**
-     * Qui va tutta la logica inizale della view <br>
+     * Qui va tutta la logica iniziale della view <br>
      */
     protected void initView() {
         this.removeAll();

@@ -141,7 +141,7 @@ public class WikiBoot extends ABoot {
      */
     @PostConstruct
     protected void inizia() {
-//        appContext.getBean(AQueryLogin.class);
+        appContext.getBean(AQueryLogin.class);
     }// end of method
 
 
