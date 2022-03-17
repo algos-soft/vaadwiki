@@ -83,7 +83,7 @@ public class Anno extends AEntity {
      * ordinamento (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Field("ord")
     @AIField(type = EAFieldType.integer, widthEM = 5)
     @AIColumn(name = "#", widthEM = 5)
@@ -106,7 +106,7 @@ public class Anno extends AEntity {
      * titolo (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("tit")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)

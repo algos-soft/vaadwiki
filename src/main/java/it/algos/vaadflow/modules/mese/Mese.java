@@ -80,7 +80,7 @@ public class Mese extends AEntity {
      * ordinamento (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Field("ord")
     @AIField(type = EAFieldType.integer, widthEM = 5)
     @AIColumn(name = "#", widthEM = 5)
@@ -101,7 +101,7 @@ public class Mese extends AEntity {
      * nome abbreviato di tre cifre (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("breve")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
@@ -113,7 +113,7 @@ public class Mese extends AEntity {
      * nome completo (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("lungo")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)

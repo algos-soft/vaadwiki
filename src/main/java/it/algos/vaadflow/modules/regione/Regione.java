@@ -82,7 +82,7 @@ public class Regione extends AEntity {
      * ordinamento (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+//    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
     @AIField(type = EAFieldType.integer, widthEM = 4)
     @AIColumn(name = "#", widthEM = 4)
     public int ordine;
@@ -91,7 +91,7 @@ public class Regione extends AEntity {
      * codice di riferimento (obbligatorio, unico) <br>
      */
     @NotNull(message = "Il codice ISO 3166-2:IT è obbligatorio")
-    @Indexed()
+//    @Indexed()
     @Size(min = 2)
     @AIField(type = EAFieldType.text, required = true, name = "Codice ISO 3166-2:IT", widthEM = 8)
     @AIColumn(name = "codice", widthEM = 5)

@@ -6,3 +6,4 @@ build
 src/main/resources/local.properties
 /classes/
 /out/
+/target/

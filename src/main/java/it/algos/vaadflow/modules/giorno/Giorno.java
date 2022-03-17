@@ -106,7 +106,7 @@ public class Giorno extends AEntity {
      * titolo (obbligatorio, unico) <br>
      */
     @NotNull
-    @Indexed(unique = true, sparse = true, direction = IndexDirection.DESCENDING)
+    @Indexed(unique = false, sparse = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
     @Field("tit")
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
