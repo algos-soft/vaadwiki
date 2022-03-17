@@ -544,9 +544,9 @@ public class ABioServiceTest extends ATest {
         page = api.leggePage(TITOLO_MURUGUZA);
         Assert.assertNotNull(page);
 
-        entity = pageService.creaBio(page);
-        Assert.assertNotNull(page);
-        stampaParametriMongo(entity);
+//        entity = pageService.creaBio(page);
+//        Assert.assertNotNull(page);
+//        stampaParametriMongo(entity);
     }// end of single test
 
 
