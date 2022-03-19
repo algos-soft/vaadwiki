@@ -75,7 +75,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     wikiPageLimit(WIKI_PAGE_LIMIT, "Numero di pagine wiki da controllare nel blocco", EAPrefType.integer, 250),
     minNatiMortiAnno(MIN_NATI_MORTI_PER_ANNO, "Numero minimo di nati o morti per la riga della tabella delle statistiche degli anni", EAPrefType.integer, 300),
 
-    sendMailCiclo(SEND_MAIL_CICLO, "Mail di conferma e controllo del ciclo giornaliero", EAPrefType.bool, true),
+    sendMailCiclo(SEND_MAIL_CICLO, "Mail di conferma e controllo del ciclo giornaliero", EAPrefType.bool, false),
     sendMailRestart(SEND_MAIL_RESTART, "Mail per il restart dell'applicazione", EAPrefType.bool, false),
 
     maxRigheColonne(MAX_RIGHE_COLONNE, "Numero massimo di rughe oltre il quale usare le colonne affiancate", EAPrefType.integer, 10),
@@ -148,7 +148,7 @@ public enum EAPreferenzaWiki implements IAPreferenza {
     statisticheNazionalita(STATISTICHE_NAZIONALITA, "Numero di nazionalità presenti nel database Mongo, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
     statisticheAttesa(STATISTICHE_ATTESA, "Numero di giorni di attesa previsti, nel momento dell'ultimo controllo statistico", EAPrefType.integer, 0),
 
-    usaSingolaVoceElaborata(USA_UPLOAD_SINGOLA_VOCE_ELABORATA, "Upload di ogni voce elaborata", EAPrefType.bool, true),
+    usaSingolaVoceElaborata(USA_UPLOAD_SINGOLA_VOCE_ELABORATA, "Upload di ogni voce elaborata", EAPrefType.bool, false),
     typeElaborazione(TYPE_ELABORAZIONE, "Elaborazione più o meno 'invasiva' dei parametri", EAPrefType.enumeration, EARole.developer, EAElabora.ordinaNormaliNoLoss),
     ;
 
