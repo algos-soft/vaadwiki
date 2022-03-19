@@ -3,6 +3,7 @@ package it.algos.vaadwiki;
 
 import it.algos.vaadflow.backend.entity.AEntity;
 import it.algos.vaadflow.enumeration.EAFieldType;
+import it.algos.vaadflow.modules.log.*;
 import it.algos.vaadflow.modules.role.Role;
 import it.algos.vaadflow.modules.role.RoleList;
 import it.algos.vaadflow.service.AAnnotationService;
@@ -117,6 +118,8 @@ public class ATest {
 
     @InjectMocks
     protected AReflectionService reflection;
+    @InjectMocks
+    public LogService logger;
 
     protected Field reflectionJavaField;
 //    protected EAFieldAccessibility previstaAccessibilità;

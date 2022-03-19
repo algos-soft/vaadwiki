@@ -156,7 +156,7 @@ public class ABioService {
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
-    protected LogService logger;
+    public LogService logger;
 
 
     /**

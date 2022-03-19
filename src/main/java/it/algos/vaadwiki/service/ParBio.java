@@ -356,7 +356,7 @@ public enum ParBio {
     luogoMorteLink("LuogoMorteLink", "luogoMortoLink", true, false, true, true, false) {
         @Override
         public void setValue(Bio bio, String value, LibBio libBio) {
-            bio.luogoNatoLink = value.equals("") ? null : libBio.fixLuogoValido(value);
+            bio.luogoMortoLink = value.equals("") ? null : libBio.fixLuogoValido(value);
         }// end of method
 
 

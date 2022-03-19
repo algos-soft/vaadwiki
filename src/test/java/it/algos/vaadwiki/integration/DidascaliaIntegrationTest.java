@@ -44,11 +44,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class DidascaliaIntegrationTest extends ATest {
 
 
-    private static String NOME_BIO_UNO = "Ron Clarke";
+    private static String NOME_BIO_UNO = "Wivine di Gran Bigard";
 
-    private static String NOME_BIO_DUE = "Giovanni di Pacheco";
+    private static String NOME_BIO_DUE = "Everardo di Salisburgo";
 
-    private static String NOME_BIO_TRE = "Sonia Todd";
+    private static String NOME_BIO_TRE = "Werburga";
 
 
     @Autowired
