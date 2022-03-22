@@ -1,41 +1,31 @@
 package it.algos.vaadwiki.service;
 
 
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.enumeration.EASchedule;
-import it.algos.vaadflow.modules.anno.Anno;
-import it.algos.vaadflow.modules.anno.AnnoService;
-import it.algos.vaadflow.modules.giorno.Giorno;
-import it.algos.vaadflow.modules.giorno.GiornoService;
-import it.algos.vaadflow.modules.log.LogService;
-import it.algos.vaadflow.modules.preferenza.PreferenzaService;
-import it.algos.vaadflow.service.ADateService;
-import it.algos.vaadflow.service.AMailService;
-import it.algos.vaadflow.service.AMongoService;
-import it.algos.vaadflow.service.ATextService;
-import it.algos.vaadwiki.download.ElaboraService;
-import it.algos.vaadwiki.enumeration.EACicloType;
-import it.algos.vaadwiki.modules.attivita.Attivita;
-import it.algos.vaadwiki.modules.attivita.AttivitaService;
-import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.vaadwiki.modules.bio.BioService;
-import it.algos.vaadwiki.modules.nazionalita.Nazionalita;
-import it.algos.vaadwiki.modules.nazionalita.NazionalitaService;
-import it.algos.wiki.DownloadResult;
-import it.algos.wiki.LibWiki;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow.application.FlowCost.*;
+import it.algos.vaadflow.enumeration.*;
+import it.algos.vaadflow.modules.anno.*;
+import it.algos.vaadflow.modules.giorno.*;
+import it.algos.vaadflow.modules.log.*;
+import it.algos.vaadflow.modules.preferenza.*;
+import it.algos.vaadflow.service.*;
+import static it.algos.vaadwiki.application.WikiCost.*;
+import it.algos.vaadwiki.download.*;
+import it.algos.vaadwiki.enumeration.*;
+import it.algos.vaadwiki.modules.attivita.*;
+import it.algos.vaadwiki.modules.bio.*;
+import it.algos.vaadwiki.modules.nazionalita.*;
+import it.algos.wiki.*;
+import lombok.extern.slf4j.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.net.InetAddress;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.net.*;
+import java.sql.*;
+import java.time.*;
 import java.util.*;
-
-import static it.algos.vaadflow.application.FlowCost.*;
-import static it.algos.vaadwiki.application.WikiCost.*;
 
 
 /**
@@ -431,7 +421,8 @@ public class LibBio {
                     chiave = (String) mappaGraffe.get(KEY_MAP_GRAFFE_NOME_PARAMETRO);
                     valore = (String) mappaGraffe.get(KEY_MAP_GRAFFE_VALORE_PARAMETRO);
                     mappa.put(chiave, valore);
-                } else {
+                }
+                else {
                     for (int k = 0; k < (Integer) mappaGraffe.get(KEY_MAP_GRAFFE_NUMERO); k++) {
                         //                        chiave = mappaGraffe.nomeParGraffe[k];
                         //                        valore = mappaGraffe.valParGraffe[k];
@@ -501,7 +492,8 @@ public class LibBio {
         if (continua) {
             if (testoTemplate.contains(tagIni) && testoTemplate.contains(tagEnd)) {
                 mappa.put(KEY_MAP_GRAFFE_ESISTONO, true);
-            } else {
+            }
+            else {
                 continua = false;
             }// fine del blocco if-else
         }// fine del blocco if
@@ -512,7 +504,8 @@ public class LibBio {
                 while (testoTemplate.contains(tagIni) && testoTemplate.contains(tagEnd)) {
                     testoTemplate = LibBio.levaGraffa(mappa, testoTemplate);
                 } //fine del ciclo while
-            } else {
+            }
+            else {
             }// end of if/else cycle
         }// fine del blocco if
 
@@ -544,7 +537,8 @@ public class LibBio {
         // controllo di esistenza delle graffe
         if (continua) {
             if (testoTemplate.contains(tagIni) && testoTemplate.contains(tagEnd)) {
-            } else {
+            }
+            else {
                 continua = false;
             }// fine del blocco if-else
         }// fine del blocco if
@@ -567,7 +561,8 @@ public class LibBio {
                 posEnd = testoTemplate.indexOf(tagEnd, posEnd + tagEnd.length());
                 if (posEnd != -1) {
                     testoGraffa = testoTemplate.substring(posIni, posEnd + tagEnd.length());
-                } else {
+                }
+                else {
                     mappa.put(KEY_MAP_GRAFFE_ESISTONO, false);
                     break;
                 }// fine del blocco if-else
@@ -642,7 +637,8 @@ public class LibBio {
             if (posIni != -1) {
                 nomeParGraffe = valRiga.substring(0, posIni).trim();
                 valParGraffe = valRiga.substring(posIni + sepParti.length()).trim();
-            } else {
+            }
+            else {
                 continua = false;
             }// fine del blocco if-else
         }// fine del blocco if
@@ -815,7 +811,8 @@ public class LibBio {
                     pos = testo.indexOf(tag, pos + tag.length());
                     numTag++;
                 }// fine di while
-            } else {
+            }
+            else {
                 numTag = 0;
             }// fine del blocco if-else
         }// fine del blocco if
@@ -910,7 +907,8 @@ public class LibBio {
             mappaGraffe = LibBio.checkGraffe(valoreIn);
 
             if (mappaGraffe.containsKey(KEY_MAP_GRAFFE_ESISTONO)) {
-            } else {
+            }
+            else {
                 pos = valoreIn.indexOf(pipeACapo);
                 valoreOut = valoreIn.substring(0, pos);
             }// fine del blocco if-else
@@ -1105,7 +1103,6 @@ public class LibBio {
         return BOLD + stringaIn.trim() + BOLD;
     } // fine del metodo
 
-
     //    /**
     //     * Elimina il testo successivo alla virgola
     //     *
@@ -1184,7 +1181,6 @@ public class LibBio {
 
         return subLista;
     } // fine del metodo
-
 
     //    /**
     //     * Recupera i pageids di tutti i records, selezionati secondo la query ricevuta
@@ -1404,7 +1400,6 @@ public class LibBio {
     public static String setNoIncludeRiga(String stringaIn) {
         return setNoIncludeBase(stringaIn, false);
     } // fine del metodo
-
 
     //    /**
     //     * Elimina gli eventuali contenuti IN CODA che non devono essere presi in considerazione <br>
@@ -1770,13 +1765,16 @@ public class LibBio {
             if (controlla) {
                 if (giornoService.isEsiste(testoValido)) {
                     return testoValido.trim();
-                } else {
+                }
+                else {
                     return VUOTA;
                 }// end of if/else cycle
-            } else {
+            }
+            else {
                 return testoValido.trim();
             }// end of if/else cycle
-        } else {
+        }
+        else {
             return VUOTA;
         }// end of if/else cycle
 
@@ -1797,11 +1795,13 @@ public class LibBio {
             if (Character.isDigit(testoSeparato.charAt(1))) {
                 giorno = testoSeparato.substring(0, 2);
                 mese = testoSeparato.substring(2);
-            } else {
+            }
+            else {
                 giorno = testoSeparato.substring(0, 1);
                 mese = testoSeparato.substring(1);
             }// end of if/else cycle
-        } else {
+        }
+        else {
             return testoSeparato;
         }// end of if/else cycle
 
@@ -1850,13 +1850,16 @@ public class LibBio {
             if (controlla) {
                 if (annoService.isEsiste(testoValido)) {
                     return testoValido.trim();
-                } else {
+                }
+                else {
                     return VUOTA;
                 }// end of if/else cycle
-            } else {
+            }
+            else {
                 return testoValido.trim();
             }// end of if/else cycle
-        } else {
+        }
+        else {
             return VUOTA;
         }// end of if/else cycle
     } // fine del metodo
@@ -1884,36 +1887,49 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
-        ////        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
-        //        if (text.isValid(testoValido)) {
-        //            return testoValido.trim();
-        //        } else {
-        //            if (testoValido.contains(tag1)) {
-        //                testoValido = testoValido.substring(testoValido.indexOf(tag1) + tag1.length()).trim();
-        //            }// end of if cycle
-        //            if (testoValido.contains(tag2)) {
-        //                testoValido = testoValido.substring(testoValido.indexOf(tag2) + tag2.length()).trim();
-        //            }// end of if cycle
-        ////                if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
-        //            if (text.isValid(testoValido)) {
-        //                return testoValido.trim();
-        //            } else {
-        //                return VUOTA;
-        //            }// end of if/else cycle
-        //        }// end of if/else cycle
-
+        //        //        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
+        //                if (text.isValid(testoValido)) {
+        //                    return testoValido.trim();
+        //                } else {
+        //                    if (testoValido.contains(tag1)) {
+        //                        testoValido = testoValido.substring(testoValido.indexOf(tag1) + tag1.length()).trim();
+        //                    }// end of if cycle
+        //                    if (testoValido.contains(tag2)) {
+        //                        testoValido = testoValido.substring(testoValido.indexOf(tag2) + tag2.length()).trim();
+        //                    }// end of if cycle
+        //        //                if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
+        //                    if (text.isValid(testoValido)) {
+        //                        return testoValido.trim();
+        //                    } else {
+        //                        return VUOTA;
+        //                    }// end of if/else cycle
+        //                }// end of if/else cycle
 
         if (text.isValid(testoValido)) {
             if (controlla) {
                 if (attivitaService.isEsiste(testoValido)) {
                     return testoValido.trim();
-                } else {
-                    return VUOTA;
+                }
+                else {
+                    if (testoValido.startsWith(tag1)) {
+                        testoValido = testoValido.substring(testoValido.indexOf(tag1) + tag1.length()).trim();
+                    }// end of if cycle
+                    if (testoValido.startsWith(tag2)) {
+                        testoValido = testoValido.substring(testoValido.indexOf(tag1) + tag1.length()).trim();
+                    }// end of if cycle
+                    if (attivitaService.isEsiste(testoValido)) {
+                        return testoValido.trim();
+                    }
+                    else {
+                        return VUOTA;
+                    }
                 }// end of if/else cycle
-            } else {
+            }
+            else {
                 return testoValido.trim();
             }// end of if/else cycle
-        } else {
+        }
+        else {
             return VUOTA;
         }// end of if/else cycle
 
@@ -1951,13 +1967,16 @@ public class LibBio {
             if (controlla) {
                 if (nazionalitaService.isEsiste(testoValido)) {
                     return testoValido.trim();
-                } else {
+                }
+                else {
                     return VUOTA;
                 }// end of if/else cycle
-            } else {
+            }
+            else {
                 return testoValido.trim();
             }// end of if/else cycle
-        } else {
+        }
+        else {
             return VUOTA;
         }// end of if/else cycle
 
@@ -2143,7 +2162,8 @@ public class LibBio {
                 try { // prova ad eseguire il codice
                     if (k < lista.size()) {
                         posEnd = (Integer) lista.get(k);
-                    } else {
+                    }
+                    else {
                         posEnd = valorePropertyTmplBioServer.length();
                     }// fine del blocco if-else
                     valore = valorePropertyTmplBioServer.substring((Integer) lista.get(k - 1), posEnd);
@@ -2336,7 +2356,8 @@ public class LibBio {
                 try { // prova ad eseguire il codice
                     if (k < lista.size()) {
                         posEnd = (Integer) lista.get(k);
-                    } else {
+                    }
+                    else {
                         posEnd = testoTemplate.length();
                     }// fine del blocco if-else
                     valore = testoTemplate.substring((Integer) lista.get(k - 1), posEnd);
@@ -2361,7 +2382,6 @@ public class LibBio {
                 }// fine del blocco if
             } // fine del ciclo for
 
-
             //            for (int chiave : mappaTmp.keySet()) {
             ////                chiave = (Integer)mappaTmp.get(posizione - 1);
             //                valore = testoTemplate.substring(chiave, chiave + mappaTmp.get(chiave).length());
@@ -2380,7 +2400,6 @@ public class LibBio {
             //                }// fine del blocco if
             //
             //            } // fine del ciclo for-each
-
 
             //            HashMap.Entry lis = mappaTmp.keySet();
             //            if (lista != null) {
@@ -2677,7 +2696,8 @@ public class LibBio {
             value = mappa.containsKey(parBio) ? mappa.get(parBio) : "";
             if (parBio.isCampoNormale()) {
                 templateText += creaRigaTemplate(parBio.getTag(), value);
-            } else {
+            }
+            else {
                 if (text.isValid(value)) {
                     templateText += creaRigaTemplate(parBio.getTag(), value);
                 }// end of if cycle
@@ -2793,16 +2813,19 @@ public class LibBio {
                 if (parBio.isCampoNormale()) {
                     if (parBio == ParBio.attivita && text.isEmpty(valueServer) && text.isValid(mappa.get(ParBio.categorie.getTag())) && text.isValid(mappa.get(ParBio.fineIncipit.getTag()))) {
                         int a = 87;
-                    } else {
+                    }
+                    else {
                         templateText += creaRigaTemplate(parBio, valueMerged);
                     }// end of if/else cycle
-                } else {
+                }
+                else {
                     //altrimenti lo aggiunge solo se non è vuoto
                     if (text.isValid(valueMerged)) {
                         templateText += creaRigaTemplate(parBio, valueMerged);
                     }// end of if cycle
                 }// end of if/else cycle
-            } else {
+            }
+            else {
                 //se mancava ed è un campo normale, lo aggiunge
                 if (parBio.isCampoNormale()) {
                     valueMongo = parBio.getValue(entity);
@@ -2840,7 +2863,6 @@ public class LibBio {
 
         return templateText;
     }// end of method
-
 
     //    /**
     //     * Costruisce il template Bio come modificato nella entity
@@ -2944,7 +2966,6 @@ public class LibBio {
 
     } // fine del metodo
 
-
     //    public void sendUpdate(DownloadResult result) {
     //        LocalDateTime end;
     //        String tag = "update";
@@ -3011,7 +3032,6 @@ public class LibBio {
         testo += A_CAPO;
         testo += "Iniziato alle " + date.getOrario(start);
         testo += A_CAPO;
-
 
         if (pref.isBool(SEND_MAIL_CICLO)) {
             end = LocalDateTime.now();

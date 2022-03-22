@@ -223,7 +223,7 @@ public abstract class AGridViewList extends ALayoutViewList {
             ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
             Grid.Column colonna = grid.addColumn(renderer);
 
-            if (pref.isBool(FlowCost.USA_TEXT_EDIT_BUTTON)) {
+            if (true) {
                 int lar = pref.getStr(FlowCost.FLAG_TEXT_EDIT).length();
                 lar += 1;
                 colonna.setWidth(lar + ".5em");
