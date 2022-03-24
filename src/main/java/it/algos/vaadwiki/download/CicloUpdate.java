@@ -1,21 +1,18 @@
 package it.algos.vaadwiki.download;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.FlowCost;
-import it.algos.vaadflow.enumeration.EALogType;
-import it.algos.vaadwiki.service.ABioService;
-import it.algos.wiki.DownloadResult;
-import it.algos.wiki.web.AQueryCatInfo;
-import it.algos.wiki.web.AQueryCatPaginePageid;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow.application.*;
+import it.algos.vaadflow.enumeration.*;
+import static it.algos.vaadwiki.application.WikiCost.*;
+import it.algos.vaadwiki.service.*;
+import it.algos.wiki.*;
+import it.algos.wiki.web.*;
+import lombok.extern.slf4j.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import static it.algos.vaadwiki.application.WikiCost.CAT_BIO;
-import static it.algos.vaadwiki.application.WikiCost.SEND_MAIL_CICLO;
+import java.time.*;
+import java.util.*;
 
 /**
  * Project vaadbio2
@@ -75,22 +72,29 @@ public class CicloUpdate extends ABioService {
 
         logger.info("");
         logger.info("Inizio task di update: " + date.getTime(result.getInizio()));
+        slf4jLogger.info("Inizio task di update");
 
         //--download del modulo attività
         attivitaService.download();
+        slf4jLogger.info("Controllate le attività");
 
         //--download del modulo nazionalità
         nazionalitaService.download();
+        slf4jLogger.info("Controllate le nazionalità");
 
         //--download del modulo professione
         professioneService.download();
+        slf4jLogger.info("Controllate le professioni");
 
         //--download del modulo genere
         genereService.download();
+        slf4jLogger.info("Controllati i generi");
 
         //--Recupera la lista delle pagine della categoria dal server wiki
         result.setNumVociCategoria(appContext.getBean(AQueryCatInfo.class, result.getNomeCategoria()).numVoci());
+        slf4jLogger.info(String.format("Nella categoria BioBot su wiki ci sono %s voci", text.format(result.getNumVociCategoria())));
         result.setVociDaCreare(appContext.getBean(AQueryCatPaginePageid.class, result.getNomeCategoria()).listaPageid);
+        slf4jLogger.info(String.format("Creo una lista di %s long per le voci del server", text.format(result.getVociDaCreare().size())));
         if (result.getNumVociCategoria() == 0) {
             message = "Numero errato di pagine sul server";
             logger.warn(message);
@@ -105,6 +109,7 @@ public class CicloUpdate extends ABioService {
 
         //--recupera la lista dei pageid dalla collezione Bio
         vociBio = bioService.findAllPageid();
+        slf4jLogger.info(String.format("Crea una lista di long %s per i records su mongoDB", text.format(vociBio.size())));
 
         //--elabora le liste delle differenze per la sincronizzazione
         inizio = System.currentTimeMillis();
@@ -122,11 +127,13 @@ public class CicloUpdate extends ABioService {
             logger.info("Ci sono " + text.format(result.getVociDaCreare().size()) + " biografie da aggiungere");
             logger.debug("Calcolate " + text.format(result.getVociDaCreare().size()) + " listaPageidsMancanti in " + date.deltaText(inizio));
         }// end of if cycle
+        slf4jLogger.info(String.format("Ci sono %s biografie da aggiungere", text.format(result.getVociDaCreare().size())));
 
         //--Scarica dal server la lista di pagine mancanti e crea le nuove entities sul mongoDB Bio
         result = newService.esegue(result);
+        slf4jLogger.info(String.format("Sono state aggiunte %s biografie", text.format(result.getNumVociCreate())));
 
-        //--aggiorna tutte le entities mongoDB Bio che sono stati modificate sul server wiki DOPO l'ultima lettura
+        //--aggiorna tutte le entities mongoDB Bio che sono state modificate sul server wiki DOPO l'ultima lettura
         result = updateService.esegue(result);
 
         if (pref.isBool(SEND_MAIL_CICLO)) {

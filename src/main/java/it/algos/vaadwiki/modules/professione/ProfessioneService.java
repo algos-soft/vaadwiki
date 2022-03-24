@@ -258,8 +258,8 @@ public class ProfessioneService extends WikiService {
     @Override
     public void download() {
         super.download();
-        System.out.println("");
-        System.out.println("download - Ci sono " + count() + " professioni");
+//        System.out.println("");
+//        System.out.println("download - Ci sono " + count() + " professioni");
 
         this.aggiungeProfessioni();
         this.aggiungeAttivitaEx();
@@ -286,8 +286,8 @@ public class ProfessioneService extends WikiService {
             }// end of for cycle
 
             dopo = countAggiunta();
-            System.out.println("");
-            System.out.println("aggiungeProfessioni - Sono state aggiunte " + (dopo - prima) + " professioni");
+//            System.out.println("");
+//            System.out.println("aggiungeProfessioni - Sono state aggiunte " + (dopo - prima) + " professioni");
         }// end of if cycle
 
     }// end of method
@@ -324,8 +324,8 @@ public class ProfessioneService extends WikiService {
             }// end of for cycle
 
             dopo = countAggiunta();
-            System.out.println("");
-            System.out.println("aggiungeAttivitaEx - Sono state aggiunte " + (dopo - prima) + " professioni");
+//            System.out.println("");
+//            System.out.println("aggiungeAttivitaEx - Sono state aggiunte " + (dopo - prima) + " professioni");
         }// end of if cycle
 
     }// end of method
@@ -350,8 +350,8 @@ public class ProfessioneService extends WikiService {
 
         prima = countAggiunta();
         dopo = countAggiunta();
-        System.out.println("");
-        System.out.println("aggiungeProfessioniMancanti - Sono state aggiunte " + (dopo - prima) + " professioni");
+//        System.out.println("");
+//        System.out.println("aggiungeProfessioniMancanti - Sono state aggiunte " + (dopo - prima) + " professioni");
     }// end of method
 
 }// end of class

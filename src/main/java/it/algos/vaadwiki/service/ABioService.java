@@ -14,6 +14,7 @@ import it.algos.vaadwiki.modules.professione.ProfessioneService;
 import it.algos.vaadwiki.upload.UploadService;
 import it.algos.wiki.Api;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -23,6 +24,8 @@ import java.util.List;
 
 import static it.algos.vaadflow.application.FlowCost.VUOTA;
 import static it.algos.vaadwiki.application.WikiCost.*;
+
+import javax.annotation.*;
 
 /**
  * Project vaadbio2
@@ -34,6 +37,27 @@ import static it.algos.vaadwiki.application.WikiCost.*;
 @Slf4j
 public class ABioService {
 
+    /**
+     * Riferimento al logger usato <br>
+     * È nella directory 'config', il file 'logback-spring.xml' <br>
+     * Deve essere creato subito dalla factory class LoggerFactory <br>
+     * Va selezionato un appender da usare e che sia presente nel file di configurazione <br>
+     */
+    protected Logger slf4jLogger;
+
+    /**
+     * Performing the initialization in a constructor is not suggested as the state of the UI is not properly set up when the constructor is invoked. <br>
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * Se viene implementata una sottoclasse, passa di qui per ogni sottoclasse oltre che per questa istanza <br>
+     * Se esistono delle sottoclassi, passa di qui per ognuna di esse (oltre a questa classe madre) <br>
+     */
+    @PostConstruct
+    private void postConstruct() {
+        slf4jLogger = LoggerFactory.getLogger("vaadwiki.admin");
+    }
 
     /**
      * La injection viene fatta da SpringBoot in automatico <br>

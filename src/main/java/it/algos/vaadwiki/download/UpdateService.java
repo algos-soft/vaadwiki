@@ -1,22 +1,19 @@
 package it.algos.vaadwiki.download;
 
-import com.google.common.collect.Lists;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.application.FlowCost;
-import it.algos.vaadwiki.service.ABioService;
-import it.algos.wiki.DownloadResult;
-import it.algos.wiki.WrapTime;
-import it.algos.wiki.web.AQueryTimestamp;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.google.common.collect.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow.application.*;
+import static it.algos.vaadwiki.application.WikiCost.*;
+import it.algos.vaadwiki.service.*;
+import it.algos.wiki.*;
+import it.algos.wiki.web.*;
+import lombok.extern.slf4j.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
-import static it.algos.vaadwiki.application.WikiCost.WIKI_PAGE_LIMIT;
+import java.sql.*;
+import java.util.*;
 
 /**
  * Project vaadbio2
@@ -89,6 +86,9 @@ public class UpdateService extends ABioService {
             logger.info(message);
         }// end of if cycle
 
+        message = String.format("Considerando che ci sono %s voci e le controllo a blocchi di %d servono %s cicli", text.format(recNum), pageLimit, numCicliLetturaPagine);
+        slf4jLogger.info(message);
+
         for (int k = 0; k < numCicliLetturaPagine; k++) {
             LinkedHashMap<Long, Timestamp> mappa = bioService.findTimestampMap(k, pageLimit, sort);
             esegueSingoloBlocco(mappa, result);
@@ -138,9 +138,9 @@ public class UpdateService extends ABioService {
             listaWrapTimeServer = ((AQueryTimestamp) appContext.getBean("AQueryTimestamp", listaVoci)).timestampResponse();
         }// end of if cycle
 
-//        if (pref.isBool(FlowCost.USA_DEBUG)) {
-//            delta = delta * 200;
-//        }// end of if cycle
+        //        if (pref.isBool(FlowCost.USA_DEBUG)) {
+        //            delta = delta * 200;
+        //        }// end of if cycle
 
         if (array.isValid(listaWrapTimeServer)) {
             vociModificateDaRileggere = new ArrayList<>();
@@ -161,7 +161,8 @@ public class UpdateService extends ABioService {
 
         if (array.isValid(vociModificateDaRileggere)) {
             return pageService.updateSingoloBlocco(result, vociModificateDaRileggere);
-        } else {
+        }
+        else {
             return result;
         }// end of if/else cycle
     }// end of method

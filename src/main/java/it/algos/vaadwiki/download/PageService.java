@@ -1,23 +1,20 @@
 package it.algos.vaadwiki.download;
 
-import com.mongodb.client.result.DeleteResult;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadwiki.enumeration.EACicloType;
-import it.algos.vaadwiki.modules.bio.Bio;
-import it.algos.vaadwiki.service.ABioService;
-import it.algos.wiki.DownloadResult;
-import it.algos.wiki.Page;
-import it.algos.wiki.web.AQueryPages;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.mongodb.client.result.*;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow.application.FlowCost.*;
+import static it.algos.vaadwiki.application.WikiCost.*;
+import it.algos.vaadwiki.enumeration.*;
+import it.algos.vaadwiki.modules.bio.*;
+import it.algos.vaadwiki.service.*;
+import it.algos.wiki.*;
+import it.algos.wiki.web.*;
+import lombok.extern.slf4j.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import static it.algos.vaadflow.application.FlowCost.USA_DEBUG;
-import static it.algos.vaadwiki.application.WikiCost.USA_UPLOAD_SINGOLA_VOCE_ELABORATA;
-import static it.algos.vaadwiki.application.WikiCost.WIKI_PAGE_LIMIT;
+import java.time.*;
+import java.util.*;
 
 /**
  * Project vaadbio2
@@ -55,6 +52,8 @@ public class PageService extends ABioService {
         int totale;
         int delta;
 
+        dimBloccoLettura = 50;//@todo patch provvisoria
+
         if (result.getVociDaCreare().size() > 0) {
             numCicliLetturaPagine = array.numCicli(result.getVociDaCreare().size(), dimBloccoLettura);
             for (int k = 0; k < numCicliLetturaPagine; k++) {
@@ -68,6 +67,7 @@ public class PageService extends ABioService {
                     delta = teorico - effettivo;
                     message = "New - aggiunte " + text.format(effettivo) + "/" + text.format(totale) + " (-" + delta + ") pagine totali a mongoDB.Bio in " + date.deltaText(inizio);
                     logger.info(message);
+                    slf4jLogger.info(message);
                 }// end of if cycle
             }// end of for cycle
         }// end of if cycle
@@ -199,6 +199,8 @@ public class PageService extends ABioService {
         if (listaBio.size() > 0) {
             try { // prova ad eseguire il codice
                 mongo.insert(listaBio, Bio.class);
+                slf4jLogger.info(String.format("Aggiunte %d voci", listaBio.size()));
+
             } catch (Exception unErrore) { // intercetta l'errore
                 logger.error(unErrore, PageService.class, "singoloBlocco");
                 //                log.error(" ");
@@ -311,8 +313,8 @@ public class PageService extends ABioService {
         entity = bioService.findByKeyUnica(wikiTitle);
         if (entity != null) {
             entity.wikiTitle = wikiTitle;
-            entity.tmplBioServer=template;
-            entity.lastLettura=LocalDateTime.now();
+            entity.tmplBioServer = template;
+            entity.lastLettura = LocalDateTime.now();
             entity = elaboraService.esegueNoSave(entity);
             bioService.save(entity);
         }
