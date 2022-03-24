@@ -298,6 +298,10 @@ public class WrapDidascalia implements Comparable<WrapDidascalia> {
                 didascalia = didascaliaService.getDidascaliaListe(bio);
                 chiave = bio.attivita != null ? bio.attivita.singolare : "";
 
+                if (bio.wikiTitle.equals("Fiammetta Rossi")) {
+                    int a =87;
+                }
+
                 chiaveParagrafo = fixChiaveUno(chiave, sessoMaschile);
                 chiaveCognome = text.isValid(bio.nome) ? bio.nome : bio.wikiTitle;
                 chiaveSottoPagina = text.isValid(chiaveCognome) ? chiaveCognome.substring(0, 1).toUpperCase() : "";

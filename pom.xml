@@ -292,6 +292,13 @@
             <version>26.0-jre</version>
         </dependency>
 
+        <!-- Logback requires the Janino library for conditional logging -->
+        <!-- https://mvnrepository.com/artifact/org.codehaus.janino/janino -->
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>3.1.6</version>
+        </dependency>
     </dependencies>
 
     <build>

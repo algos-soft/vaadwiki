@@ -1887,24 +1887,6 @@ public class LibBio {
             return VUOTA;
         }// end of if cycle
 
-        //        //        if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
-        //                if (text.isValid(testoValido)) {
-        //                    return testoValido.trim();
-        //                } else {
-        //                    if (testoValido.contains(tag1)) {
-        //                        testoValido = testoValido.substring(testoValido.indexOf(tag1) + tag1.length()).trim();
-        //                    }// end of if cycle
-        //                    if (testoValido.contains(tag2)) {
-        //                        testoValido = testoValido.substring(testoValido.indexOf(tag2) + tag2.length()).trim();
-        //                    }// end of if cycle
-        //        //                if (text.isValid(testoValido) && mongo.isEsisteByProperty(Attivita.class, "singolare", testoValido)) {
-        //                    if (text.isValid(testoValido)) {
-        //                        return testoValido.trim();
-        //                    } else {
-        //                        return VUOTA;
-        //                    }// end of if/else cycle
-        //                }// end of if/else cycle
-
         if (text.isValid(testoValido)) {
             if (controlla) {
                 if (attivitaService.isEsiste(testoValido)) {
