@@ -52,7 +52,7 @@ public class PageService extends ABioService {
         int totale;
         int delta;
 
-        dimBloccoLettura = 50;//@todo patch provvisoria
+        //        dimBloccoLettura = 50;//@todo patch provvisoria
 
         if (result.getVociDaCreare().size() > 0) {
             numCicliLetturaPagine = array.numCicli(result.getVociDaCreare().size(), dimBloccoLettura);
@@ -199,9 +199,22 @@ public class PageService extends ABioService {
         if (listaBio.size() > 0) {
             try { // prova ad eseguire il codice
                 mongo.insert(listaBio, Bio.class);
-                slf4jLogger.info(String.format("Aggiunte %d voci", listaBio.size()));
-
             } catch (Exception unErrore) { // intercetta l'errore
+                slf4jLogger.info(String.format("Nel blocco di %s voci, ce n'è (almeno) una troppo lunga (index) quindi spazzolo 'singolarmente' il blocco", listaBio.size()));
+
+                for (Bio bio : listaBio) {
+                    if (bio != null) {
+                        if (bioService.save(bio) != null) {
+                            logger.info("Registrata la entity " + bio.wikiTitle, PageService.class, "singoloBlocco");
+                            slf4jLogger.info(String.format("Registrata la entity %s", bio.wikiTitle));
+                        }
+                        else {
+                            logger.error("Non registrata la entity " + bio.wikiTitle, PageService.class, "singoloBlocco");
+                            slf4jLogger.info(String.format("Non registrata la entity %s", bio.wikiTitle));
+                        }// end of if/else cycle
+                    }// end of if cycle
+                }// end of for cycle
+
                 logger.error(unErrore, PageService.class, "singoloBlocco");
                 //                log.error(" ");
                 //                log.error(unErrore.toString());
