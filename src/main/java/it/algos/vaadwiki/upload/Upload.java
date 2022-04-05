@@ -398,7 +398,6 @@ public abstract class Upload {
 
         //footer
         //di fila nella stessa riga, senza ritorno a capo (se inizia con <include>)
-        testoPagina += A_CAPO;
         testoPagina += this.elaboraFooter();
 
         //--registra la pagina principale
